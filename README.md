@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projeto Terceirizada Frontend para a interface gráfica onde os usuários do sistema poderão interagir com a <a href="https://github.com/prefeiturasp/SME-PratoAberto-Terceirizadas" target="_blank">API TERCEIRIZADAS</a>
 
 ## Available Scripts
 
