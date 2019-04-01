@@ -40,26 +40,26 @@ export default class Login extends Component {
             <div className="card card-login mx-auto mt-5 card-width">
                 <div className="card-body">
                     <form onSubmit={this.handleSubmit}>
-                        
+
                         <div className="form-group">
                             <label>E-mail</label>
                             <input
                                   autoFocus
-                                  autoComplete="off" 
+                                  autoComplete="off"
                                   name="email"
-                                  type="email" 
-                                  value={this.state.email} 
-                                  onChange={this.handleChange} 
+                                  type="email"
+                                  value={this.state.email}
+                                  onChange={this.handleChange}
                                   className="form-control" />
                         </div>
 
                         <div className="form-group">
                             <label>Senha</label>
-                            <input  
-                                  type="password" 
-                                  name="password" 
-                                  value={this.state.password} 
-                                  onChange={this.handleChange} 
+                            <input
+                                  type="password"
+                                  name="password"
+                                  value={this.state.password}
+                                  onChange={this.handleChange}
                                   className="form-control" />
 
                             <p className="text-right mt-2"><a href="#teste" className="text-primary">Esqueci minha senha</a></p>
