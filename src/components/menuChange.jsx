@@ -1,3 +1,4 @@
+// TODO: quebrar esse componente
 import React, { Component } from 'react'
 
 class MenuChange extends Component {
@@ -45,7 +46,7 @@ class MenuChange extends Component {
           <div className="form-group row">
             <label htmlFor="data" className="col-lg-2 col-sm-2 col-md-2  col-form-label">Data da modificação</label>
             <div className="col-lg-3 col-sm-3 col-md-3">
-              <input className="form-control" type="date"  name="data" id="data"></input>
+              <input className="form-control" type="date" name="data" id="data"></input>
             </div>
           </div>
           <div className="form-group row">
@@ -58,21 +59,22 @@ class MenuChange extends Component {
           <div className="form-group row">
             <label htmlFor="de" className="col-lg-2 col-sm-2 col-md-2  col-form-label">Alterar de</label>
             <div className="col-lg-3 col-sm-3 col-md-3">
-              <input className="form-control" type="date"  name="de" id="de"></input>
+              <input className="form-control" type="date" name="de" id="de"></input>
             </div>
           </div>
           <div className="form-group row">
             <label htmlFor="para" className="col-lg-2 col-sm-2 col-md-2 col-form-label">Para</label>
             <div className="col-lg-3 col-sm-3 col-md-3">
-              <input className="form-control" type="date"  name="para" id="para"></input>
+              <input className="form-control" type="date" name="para" id="para"></input>
             </div>
           </div>
           <div className="form-group row ">
             <label htmlFor="motivo" className="col-lg-2 col-sm-2 col-md-2 col-form-label">Motivo</label>
             <div className="col-lg-3 col-sm-3 col-md-3 ">
               <select name="motivo" id="motivo" className="form-control">
-                <option selected>Escolha...</option>
+                <option>Escolha...</option>
                 <option>...</option>
+                <option>escolha 2.</option>
               </select>
             </div>
           </div>
