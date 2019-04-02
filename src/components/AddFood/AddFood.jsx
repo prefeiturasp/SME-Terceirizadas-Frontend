@@ -109,9 +109,10 @@ export default class AddFood extends Component {
                 <span className="gray-rectangle">
                   150
                 </span>
-                Informação automática disponibilizada no 
+                Informação automática disponibilizada no
+                <br />
                 <span className="purple">
-                  &nbsp;Cadastro da Unidade Escolar
+                  Cadastro da Unidade Escolar
                 </span>
               </p>
              </div>
@@ -156,8 +157,8 @@ export default class AddFood extends Component {
           </div>))}
           <div className="form-group row">
             <div className="col-sm-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={this.handleAddFoodPeriod}
                 className="col-12 btn btn-outline-dark"
               >
@@ -170,7 +171,7 @@ export default class AddFood extends Component {
               <div className="col-sm-4">
                 <label for="">Dia</label>
                 <div>
-                  <DatePicker 
+                  <DatePicker
                     dateFormat="dd/MM/yyyy"
                     selected={this.state.start}
                     onChange={this.handleDatePickerChange}
@@ -196,7 +197,7 @@ export default class AddFood extends Component {
               <div className="col-sm-4">
                 <label for="">De</label>
                 <div>
-                  <DatePicker 
+                  <DatePicker
                     selectsStart
                     dateFormat="dd/MM/yyyy"
                     selected={this.state.startDate}
@@ -211,7 +212,7 @@ export default class AddFood extends Component {
               <div className="col-sm-4">
                 <label for="">Até</label>
                 <div>
-                  <DatePicker 
+                  <DatePicker
                     selectsEnd
                     dateFormat="dd/MM/yyyy"
                     startDate={this.state.startDate}
@@ -237,8 +238,8 @@ export default class AddFood extends Component {
           ))}
           <div className="form-group row">
             <div className="col-sm-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={this.handleAddSuspensionDate}
                 className="col-12 btn btn-outline-info"
               >
@@ -246,8 +247,8 @@ export default class AddFood extends Component {
               </button>
             </div>
             <div className="col-sm-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={this.handleAddSuspensionRange}
                 className="col-12 btn btn-outline-info"
               >
@@ -261,8 +262,8 @@ export default class AddFood extends Component {
           </div>
           <div className="form-group row">
             <div className="offset-sm-4 col-sm-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={this.handleAddSuspensionDate}
                 className="col-12 btn-lg btn-outline-primary"
               >
@@ -270,8 +271,8 @@ export default class AddFood extends Component {
               </button>
             </div>
             <div className="col-sm-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={this.handleAddSuspensionRange}
                 className="col-12 btn btn-lg btn-primary"
               >

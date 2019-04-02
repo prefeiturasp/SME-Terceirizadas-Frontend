@@ -27,8 +27,8 @@ textarea {
 
 .gray-rectangle {
     margin-right: 10px;
-    padding-top: 20px;
     background: #E8E8E8;
+    float: left;
     border: 1px solid #E8E8E8;
     box-sizing: border-box;
     border-radius: 4px;
