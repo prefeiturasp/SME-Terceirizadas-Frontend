@@ -166,6 +166,7 @@ export default class AddFood extends Component {
               </button>
             </div>
           </div>
+          <label className="bold">Data de suspensão</label>
           {suspension_dates.map((suspension_date, index) => (
             <div className="form-group row">
               <div className="col-sm-4">
