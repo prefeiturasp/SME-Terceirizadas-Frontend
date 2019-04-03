@@ -1,6 +1,6 @@
 // TODO: quebrar esse componente
 import React, { Component } from 'react'
-
+import { ButtonConfirm, ButtonCancel } from './Shareable/button'
 class MenuChange extends Component {
   handleSubmit = event => {
     console.log(event)
@@ -86,8 +86,8 @@ class MenuChange extends Component {
 
           </div>
           <div className="float-right">
-            <button type="reset" className="btn btn-outline-primary">Cancelar</button>
-            <button type="submit" className="btn btn-primary">Enviar solicitação</button>
+            <ButtonCancel text='Cancelar' />
+            <ButtonConfirm text='Enviar solicitação' />
           </div>
         </form>
       </div>
