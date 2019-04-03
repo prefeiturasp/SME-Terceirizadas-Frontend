@@ -14,9 +14,10 @@ export function toCssClasses(numbers) {
 
 export class Grid extends Component {
   render() {
-    const gridClasses = toCssClasses(this.props.cols || '12 9 6 3')
+    const gridClasses = toCssClasses(this.props.cols || '')
     const extraARgs = this.props.classNameArgs || ''
     const params = gridClasses + ' ' + extraARgs
+    console.log(gridClasses)
     return (
       <div className={params}>
         {this.props.children}
@@ -24,10 +25,11 @@ export class Grid extends Component {
     )
   }
 }
+// col-xs-4 col-lg-4 col-md-4 col-sm-4
 
 export class Label extends Component {
   render() {
-    const labelClasses = toCssClasses(this.props.cols || '12 9 6 3')
+    const labelClasses = toCssClasses(this.props.cols || '')
     return (
       <label htmlFor={this.props.for}
         className={labelClasses + "col-form-label"}>
@@ -38,7 +40,7 @@ export class Label extends Component {
 
 export class Input extends Component {
   render() {
-    const inputClasses = toCssClasses(this.props.cols || '12 9 6 3')
+    const inputClasses = toCssClasses(this.props.cols || '')
     return (
       <input className={inputClasses + "form-control"}
         type={this.props.type}
