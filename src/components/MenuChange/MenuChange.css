@@ -1,0 +1,24 @@
+/* Ajustes finos
+Manter isso aqui? */
+.uppercase-label{
+  width: 82px;
+  height: 15px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: normal;
+  text-transform: uppercase;
+  color: #C8C8C8;
+}
+
+.header-form-label{
+  width: 240px;
+  height: 29px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: normal;
+  color: #353535;
+}
