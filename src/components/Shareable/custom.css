@@ -22,3 +22,12 @@ Manter isso aqui? */
   line-height: normal;
   color: #353535;
 }
+
+.session-header{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: normal;
+  color: #686868;
+}

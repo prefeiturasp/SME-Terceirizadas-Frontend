@@ -1,22 +1,32 @@
 import React from 'react'
 import { Grid, toCssClasses } from './responsiveBs4'
+import './custom.css'
 
 export function LabelAndInput(props) {
-  return (<div className={props.classNameArgs || "form-group row"}>
-    <label htmlFor={props.name} className={toCssClasses(props.colsLabel) + "col-form-label"}>
-      {props.label}</label>
-    <Grid cols={props.colsInput}>
+  // TODO: add calendar icon case type=date
+  return (
+    <Grid cols={props.cols || ''} classNameArgs={props.classNameArgs || ''}>
+      <label htmlFor={props.name} className={"col-form-label"}>{props.label}</label>
       <input className="form-control" type={props.type} name={props.name}></input>
-    </Grid>
-  </div>)
+    </Grid>)
 }
 
 export function LabelAndTextArea(props) {
-  return (<div className="form-group row">
-    <label htmlFor={props.name} className={toCssClasses(props.colsLabel) + "col-form-label"}>
+  return (<Grid cols={props.cols}>
+    <label htmlFor={props.name} className={"col-form-label"}>
       {props.label}</label>
-    <Grid cols={props.colsInput}>
-      <textarea className="form-control" rows="4" name={props.name}></textarea>
-    </Grid>
-  </div>)
+    <textarea className="form-control" rows="4" name={props.name}></textarea>
+  </Grid>
+  )
+}
+
+export function LabelAndCombo(props) {
+  return (
+    <Grid cols={props.cols || ''}>
+      <label htmlFor={props.name} className={"col-form-label"}>{props.label}</label>
+      <select name={props.name} className="form-control">
+        <option selected>Selecione</option>
+        <option>...</option>
+      </select>
+    </Grid>)
 }
