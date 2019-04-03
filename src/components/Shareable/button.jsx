@@ -1,37 +1,39 @@
 import React, { Component } from 'react'
-import { toCssClasses } from './responsiveBs4'
 
+// https://getbootstrap.com/docs/4.0/components/buttons/
+export var ButtonStyle = {
+  Primary: 'primary',
+  Secondary: 'secondary',
+  Success: 'success',
+  Danger: 'danger',
+  Warning: 'warning',
+  Info: 'info',
+  Light: 'light',
+  Dark: 'dark',
+  Link: 'link',
 
-export class ButtonCancel extends Component {
+  OutlinePrimary: 'outline-primary',
+  OutlineSecondary: 'outline-secondary',
+  OutlineSuccess: 'outline-success',
+  OutlineDanger: 'outline-danger',
+  OutlineWarning: 'outline-warning',
+  OutlineInfo: 'outline-info',
+  OutlineLight: 'outline-light',
+  OutlineDark: 'outline-dark',
+  OutlineLink: 'outline-link'
+};
+
+export var ButtonType = {
+  SUBMIT: 'submit',
+  BUTTON: 'button',
+  RESET: 'reset'
+};
+
+export default class BaseButton extends Component {
   render() {
     return (
-      <button type="reset"
-        className="btn btn-outline-primary"
-        onClick={this.props.onClick}>
-        {this.props.text}
-      </button>
-    )
-  }
-}
-
-export class ButtonConfirm extends Component {
-  render() {
-    return (
-      <button type={this.props.type}
-        className="btn btn-primary"
-        onClick={this.props.onClick}>
-        {this.props.text}
-      </button>
-    )
-  }
-}
-
-export class ButtonActionOk extends Component {
-  render() {
-    const responsiveClasses = toCssClasses(this.props.cols || '')
-    return (
-      <button type={this.props.type}
-        className={responsiveClasses + " btn btn-outline-dark " + this.props.className}
+      <button type={this.props.type || ButtonType.BUTTON}
+        className={"btn btn-" + this.props.styleBt + ' ' + this.props.className}
         onClick={this.props.onClick}>
         {this.props.text}
       </button>

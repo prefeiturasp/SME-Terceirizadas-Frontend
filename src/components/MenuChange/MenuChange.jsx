@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { ButtonConfirm, ButtonCancel, ButtonActionOk } from '../Shareable/button'
-import { Grid, Label } from '../Shareable/responsiveBs4'
+import  Button, {ButtonStyle} from '../Shareable/button'
 import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/labelAndInput'
 import '../Shareable/custom.css'
 
@@ -33,7 +32,7 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Tipo de Alimentação' ></LabelAndCombo>
             <LabelAndInput cols='3 3 3 3' type='number' label='Nº de alunos' ></LabelAndInput>
           </div>
-          <ButtonActionOk type='' text='Adicionar Período'/>
+          <Button styleBt={ButtonStyle.OutlineDark} text='Adicionar Período'/>
           <div className='form-group row-1'>
             <label className='session-header mt-3'>Data de alteração</label>
           </div>
@@ -47,8 +46,8 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Para' name='para' ></LabelAndCombo>
           </div>
           <div className='form-group row'>
-            <ButtonActionOk type='' className='ml-3' text='Adicionar dia'></ButtonActionOk>
-            <ButtonActionOk type='' className='ml-3' cols='' text='Adicionar Ciclo'></ButtonActionOk>
+            <Button styleBt={ButtonStyle.OutlineInfo} className='ml-3' text='Adicionar dia'/>
+            <Button styleBt={ButtonStyle.OutlineInfo} className='ml-3' text='Adicionar Ciclo'/>
           </div>
           <div className='form-group'>
             <LabelAndTextArea label='Observações' name='obs'></LabelAndTextArea>
