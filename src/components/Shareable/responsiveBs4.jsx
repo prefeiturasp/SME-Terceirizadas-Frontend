@@ -24,3 +24,25 @@ export class Grid extends Component {
     )
   }
 }
+
+export class Label extends Component {
+  render() {
+    const labelClasses = toCssClasses(this.props.cols || '12 9 6 3')
+    return (
+      <label htmlFor={this.props.for}
+        className={labelClasses + "col-form-label"}>
+        {this.props.text}</label>
+    )
+  }
+}
+
+export class Input extends Component {
+  render() {
+    const inputClasses = toCssClasses(this.props.cols || '12 9 6 3')
+    return (
+      <input className={inputClasses + "form-control"}
+        type={this.props.type}
+        name={this.props.name}>{this.props.text}</input>
+    )
+  }
+}

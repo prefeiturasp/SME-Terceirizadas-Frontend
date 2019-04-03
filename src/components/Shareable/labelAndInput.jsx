@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, toCssClasses } from './responsiveBs4'
+import './shareable.css'
 
 export function LabelAndInput(props) {
   return (<div className={props.classNameArgs || "form-group row"}>
@@ -10,6 +11,7 @@ export function LabelAndInput(props) {
     </Grid>
   </div>)
 }
+
 
 export function LabelAndTextArea(props) {
   return (<div className="form-group row">

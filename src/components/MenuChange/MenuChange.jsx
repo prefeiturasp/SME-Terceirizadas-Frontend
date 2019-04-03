@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ButtonConfirm, ButtonCancel } from '../Shareable/button'
 import { Grid } from '../Shareable/responsiveBs4'
-import './MenuChange.css'
 import { LabelAndInput, LabelAndTextArea } from '../Shareable/labelAndInput'
 
 class MenuChange extends Component {
@@ -14,9 +13,13 @@ class MenuChange extends Component {
           <span className="header-form-label">Alteração de Cardápio</span>
           <div className="form-group row">
             <label htmlFor="periodo" className="col-lg-2 col-sm-2 col-md-2 col-form-label">Período</label>
-            <input className="form-control col-xs-3 col-lg-3 col-md-3 col-sm-3" type="text" name="periodo" id="periodo"></input>
+            <Grid cols='3 3 3 3'>
+              <input className="form-control" type="text" name="periodo"></input>
+            </Grid>
             <label htmlFor="matriculados" className="col-lg-2 col-sm-2 col-md-2 col-form-label">Matriculados</label>
-            <input className="form-control col-xs-3 col-lg-3 col-md-3 col-sm-3" type="number" name="matriculados" id="matriculados"></input>
+            <Grid cols='3 3 3 3'>
+              <input className="form-control" type="number" name="matriculados"></input>
+            </Grid>
           </div>
           <LabelAndInput colsInput='3 3 3 3' colsLabel='2 2 2 2' name='rf_responsavel' label='R.F. esponsável' type='text' />
           <LabelAndInput colsInput='3 3 3 3' colsLabel='2 2 2 2' name='cargo' label='Cargo' type='text' />
