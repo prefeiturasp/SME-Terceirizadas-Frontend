@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class Div extends Component {
   // Usage: <Div cols='12 9 6 3'> || <Div cols='12 9 6'> || <Div cols='12 9'>
   // xs lg md sm
-    toCssClasses(numbers) {
+  toCssClasses(numbers) {
     const cols = numbers ? numbers.split(' ') : []
     let classes = ''
 
@@ -17,8 +17,10 @@ export default class Div extends Component {
 
   render() {
     const gridClasses = this.toCssClasses(this.props.cols || '12 9 6 3')
+    const extraARgs = this.props.classNameArgs || ''
+    const params = gridClasses + ' ' + extraARgs
     return (
-      <div className={gridClasses}>
+      <div className={params}>
         {this.props.children}
       </div>
     )
