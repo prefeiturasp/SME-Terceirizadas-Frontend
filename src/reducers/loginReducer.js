@@ -1,24 +1,22 @@
 import { MenuActionEnum } from '../constants/menuEnum'
-
+import { userConstants } from '../constants/user.constants'
 const INITIAL_STATE = {
-  email: 'ESTADO INICIAL CARGO',
-  password: 'ESTADO INICIAL NOME',
+  email: 'weslei.souza@amcom.com.br',
+  password: 'admin123456',
   subimitted: false
 }
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case MenuActionEnum.ADD_CYCLE:
-      return { ...state, rf: action.payload }
-    case MenuActionEnum.ADD_DAY:
-      return { ...state, cargo: action.payload }
-    case MenuActionEnum.RF_EDITED:
-      return {
-        ...state,
-        nome: action.payload,
-        rf: action.payload,
-        cargo: action.payload
-      }
+    case userConstants.LOGIN_SUCCESS:
+      console.log(userConstants.LOGIN_SUCCESS, 'xxx')
+      return 'xzxxx'
+    case userConstants.LOGIN_REQUEST:
+      console.log(userConstants.LOGIN_REQUEST, 'xxx')
+      return 'xzxxx'
+    case userConstants.LOGIN_FAILURE:
+      console.log(userConstants.LOGIN_FAILURE, 'xxx')
+      return 'xzxxx'
     default:
       return state
   }

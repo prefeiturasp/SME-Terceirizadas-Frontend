@@ -16,9 +16,9 @@ function login(email, password) {
 
   return fetch(JWT_AUTH, requestOptions)
     .then(handleResponse)
-    .then(user => {
-      localStorage.setItem('user', JSON.stringify(user));
-      return user.status;
+    .then(res => {
+      localStorage.setItem('user', JSON.stringify(res.data));
+      return res;
     });
 }
 
