@@ -1,24 +1,29 @@
 import React, { Component } from 'react'
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
+import { LabelAndInput, LabelAndCombo, LabelAndTextArea, LabelWithDate } from '../Shareable/labelAndInput'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import "react-datepicker/dist/react-datepicker.css";
-import './day-change.css'
+import '../Shareable/custom.css'
+import BaseButton, { ButtonStyle } from '../Shareable/button';
 
 
-export default class DayChange extends Component {
+export class DayChange extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      food_period: {food_period: '', student_count: '', reason: ''},
-      suspension_range: {from: new Date(), to: new Date()}
+      food_period: { food_period: '', student_count: '', reason: '' },
+      suspension_range: { from: new Date(), to: new Date() }
     };
   }
 
   validForm() {
     return true;
   }
+
 
   handleDatePickerFromChange = date => {
     this.setState({
@@ -64,103 +69,59 @@ export default class DayChange extends Component {
                   Cadastro da Unidade Escolar
                 </span>
               </p>
-             </div>
+            </div>
           </div>
           <div className="form-group row">
-            <div className="col-sm-6">
-              <label for="rf-responsible">RF Responsável</label>
-              <input type="text" className="form-control" name="rf-responsible"></input>
-            </div>
-            <div className="col-sm-6">
-              <label for="role">Cargo / Função</label>
-              <input type="text" className="form-control" name="role"></input>
-            </div>
+            <LabelAndInput placeholder='Registro funcional'
+              value={this.props.rf} cols='6 6 6 6' type='text'
+              name='rf' label='RF Responsável'>
+            </LabelAndInput>
+            <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
-          <div className="form-group">
-            <label for="name">Nome</label>
-            <input type="text" className="form-control" name="name"></input>
+          <div className="form-group row">
+            <LabelAndInput value={this.props.nome} cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
           </div>
           <div className="form-row">
-            <div className="form-group col-sm-5">
-              <label className="bold" for="food_period">Período de Alteração</label>
-              <select placeholder="Selecione" name="food_period" className="form-control">
-                <option value="" disabled selected>Selecione</option>
-                <option>1º Período - Matutino</option>
-              </select>
-            </div>
-            <div className="form-group col-sm-3">
-              <label for="student_count">Nº de alunos</label>
-              <input name="student_count" type="text" className="form-control"></input>
-            </div>
-            <div className="col-sm-4">
-              <label for="reason_day">Motivo</label>
-              <select placeholder="Selecione" name="reason_day" className="form-control">
-                <option value="" disabled selected>Selecione</option>
-                <option>1º Período - Matutino</option>
-              </select>
-            </div>
+            <LabelAndCombo cols='5 5 5 5' name='periodo' label='Período de alteração' ></LabelAndCombo>
+            <LabelAndInput cols='3 3 3 3' name='nroAlunos' value={this.props.nroAlunos} label='Nº de alunos' type='number' ></LabelAndInput>
+            <LabelAndCombo cols='4 4 4 4' name='periodo' label='Motivo' ></LabelAndCombo>
           </div>
           <label className="bold">Substituição</label>
           <div className="form-group row">
-            <div className="input-group col-sm-5">
-              <div className="input-group-prepend">
-                <span class="input-group-text">Cardápio dia</span>
-              </div>
-              <DatePicker
-                dateFormat="dd/MM/yyyy"
-                selected={suspension_range.from}
-                onChange={this.handleDatePickerFromChange}
-                className="form-control"
-                locale={ptBR}
-              />
-              <i className="fa fa-calendar fa-lg"></i>
-            </div>
+            <LabelWithDate cols='5 5 5 5'
+              label='Cardápio dia'
+              selected={suspension_range.from}
+              onChange={this.handleDatePickerFromChange} />
             <div className="col-sm-1 v-align">
               para
             </div>
             <div className="col-sm-1 v-align">
               <i className="fa fa-arrow-right" aria-hidden="true"></i>
             </div>
-            <div className="active-calendar input-group col-sm-5">
-              <div className="input-group-prepend">
-                <span class="input-group-text">Cardápio dia</span>
-              </div>
-              <DatePicker
-                dateFormat="dd/MM/yyyy"
-                selected={suspension_range.to}
-                onChange={this.handleDatePickerToChange}
-                className="form-control"
-                locale={ptBR}
-              />
-              <i className="fa fa-calendar fa-lg"></i>
-            </div>
+            <LabelWithDate cols='5 5 5 5'
+              label='Cardápio dia'
+              selected={suspension_range.to}
+              onChange={this.handleDatePickerFromChange} />
           </div>
           <div className="form-group">
-            <label>Observação <span className="gray">(campo opcional)</span></label>
-            <textarea className="form-control"></textarea>
+            <LabelAndTextArea value={this.props.obs} label='Observação' name='obs'></LabelAndTextArea>
           </div>
-          <div className="form-group row">
-            <div className="offset-sm-4 col-sm-4">
-              <button
-                type="button"
-                onClick=""
-                className="col-12 btn-lg btn-outline-primary"
-              >
-                Cancelar
-              </button>
-            </div>
-            <div className="col-sm-4">
-              <button
-                type="button"
-                onClick=""
-                className="col-12 btn btn-lg btn-primary"
-              >
-                Enviar Solicitação
-              </button>
-            </div>
+          <div className="form-group row float-right">
+            <BaseButton label='Cancelar' style={ButtonStyle.OutlinePrimary} />
+            <BaseButton label='Enviar Solicitação' style={ButtonStyle.Primary} className='ml-3' />
           </div>
         </form>
       </div>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  cargo: state.dayChange.cargo,
+  rf: state.dayChange.cargo,
+  nome: state.dayChange.nome,
+  nroAlunos: state.dayChange.nroAlunos
+})
+
+
+export default connect(mapStateToProps)(DayChange)

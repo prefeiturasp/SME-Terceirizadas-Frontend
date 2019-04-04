@@ -15,9 +15,8 @@ export function toCssClasses(numbers) {
 export class Grid extends Component {
   render() {
     const gridClasses = toCssClasses(this.props.cols || '')
-    const extraARgs = this.props.classNameArgs || ''
+    const extraARgs = this.props.className || ''
     const params = gridClasses + ' ' + extraARgs
-    console.log(gridClasses)
     return (
       <div className={params}>
         {this.props.children}
