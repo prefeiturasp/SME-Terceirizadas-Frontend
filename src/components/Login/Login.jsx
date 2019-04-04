@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Authentication} from '../../services/auth'
 
 
 export default class Login extends Component {
@@ -18,8 +19,8 @@ export default class Login extends Component {
   }
 
   handleSubmit = event => {
-    alert('email: '+ this.state.email + ' -  Password: ' + this.state.password)
     event.preventDefault();
+    Authentication(this.state.email,this.state.password)
   }
 
   handleChange = event =>{
