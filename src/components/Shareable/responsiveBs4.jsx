@@ -26,24 +26,12 @@ export class Grid extends Component {
   }
 }
 
-export class Label extends Component {
-  render() {
-    const labelClasses = toCssClasses(this.props.cols || '')
-    return (
-      <label htmlFor={this.props.for}
-        className={labelClasses + "col-form-label"}>
-        {this.props.text}</label>
-    )
-  }
-}
-
-export class Input extends Component {
-  render() {
-    const inputClasses = toCssClasses(this.props.cols || '')
-    return (
-      <input className={inputClasses + "form-control"}
-        type={this.props.type}
-        name={this.props.name}>{this.props.text}</input>
-    )
-  }
-}
+export const Input = props => (
+  <input {...props.input}
+    className='form-control'
+    placeholder={props.placeholder}
+    readOnly={props.readOnly}
+    name={props.name}
+    value={props.value}
+    type={props.type} />
+)

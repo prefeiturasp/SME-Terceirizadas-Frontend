@@ -4,12 +4,12 @@ import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/lab
 import '../Shareable/custom.css'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { addCycle, addDay } from './menuActions'
+import { addCycle, addDay, rfInputEdited } from './menuActions'
 
 
 class MenuChange extends Component {
   render() {
-    const { addCycle, description, addDay } = this.props
+    const { addCycle, description, addDay, rfInputEdited } = this.props
     console.log('PROPS', this.props)
     return (
       <div className="container">
@@ -22,7 +22,7 @@ class MenuChange extends Component {
             <label>Informação automática disponibilizada no cadastro da UE</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput value={this.props.rf} cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
+            <LabelAndInput placeholder='Registro funcional' onChange={(event) => rfInputEdited(event)} value={this.props.rf} cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
             <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
           <div className="form-group row">
@@ -84,7 +84,7 @@ const mapStateToProps = (state) => (
 //   bindActionCreators({ addCycle }, dispatch)
 // }
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addDay, addCycle }, dispatch)
+  bindActionCreators({ addDay, addCycle, rfInputEdited }, dispatch)
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuChange)

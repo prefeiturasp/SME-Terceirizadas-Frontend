@@ -10,3 +10,9 @@ export const addDay = event => ({
   type: MenuActionEnum.ADD_DAY,
   payload: 'ADD DAY CLICKED'
 })
+
+export const rfInputEdited = (payload) => ({
+  //TODO: quando tiver um RF valido, buscar da api e preencher no reducer.
+  type: MenuActionEnum.RF_EDITED,
+  payload: payload.target.value
+})

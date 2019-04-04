@@ -3,5 +3,5 @@ export var MenuActionEnum = {
   ADD_CYCLE: 'ADD_CYCLE',
   ADD_PERIOD: 'ADD_PERIOD',
 
-  FIELD_EDITED:'FIELD_EDITED'
+  RF_EDITED:'FIELD_EDITED'
 };
