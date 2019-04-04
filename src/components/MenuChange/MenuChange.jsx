@@ -4,7 +4,7 @@ import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/lab
 import '../Shareable/custom.css'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { addCycle, addDay, rfInputEdited } from './menuActions'
+import { addCycle, addDay, rfInputEdited } from '../../actions/menuActions'
 
 
 class MenuChange extends Component {

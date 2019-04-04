@@ -1,4 +1,4 @@
-import { MenuActionEnum } from '../../constants/menuEnum'
+import { MenuActionEnum } from '../constants/menuEnum'
 
 export const addCycle = event => ({
   type: MenuActionEnum.ADD_CYCLE,
