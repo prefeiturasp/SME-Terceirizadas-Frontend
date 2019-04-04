@@ -4,14 +4,16 @@ import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/lab
 import '../Shareable/custom.css'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { addCycle } from './menuActions'
+import { addCycle, addDay } from './menuActions'
+
 
 class MenuChange extends Component {
   render() {
-    const { addCycle, description } = this.props
+    const { addCycle, description, addDay} = this.props
+    console.log('PROPS', this.props)
     return (
       <div className="container">
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <div>
             <label className='header-form-label mb-5'>Nº de matriculados</label>
           </div>
@@ -20,8 +22,8 @@ class MenuChange extends Component {
             <label>Informação automática disponibilizada no cadastro da UE</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput value={this.props.description} cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
-            <LabelAndInput cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
+            <LabelAndInput value={this.props.rf} cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
+            <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
           <div className="form-group row">
             <LabelAndInput cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
@@ -50,8 +52,8 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Para' name='para' ></LabelAndCombo>
           </div>
           <div className='form-group row'>
-            <Button styleBt={ButtonStyle.OutlineInfo} className='ml-3' text='Adicionar dia' />
 
+            <Button styleBt={ButtonStyle.OutlineInfo} onClick={() => addDay(description)} className='ml-3' text='Adicionar dia' />
             {/* Aqui é chamado a action de addCycle com parametro description */}
             <Button styleBt={ButtonStyle.OutlineInfo} onClick={() => addCycle(description)} className='ml-3' text='Adicionar Ciclo' />
 
@@ -69,11 +71,20 @@ class MenuChange extends Component {
 // olhe o arquivo que agrega os reducers src/reducers.js
 // state é o global, menu é o reducer que me interessa
 // description é quem vai ser mapeado para dentro do componente
-const mapStateToProps = (state) => ({ description: state.menu.description })
+const mapStateToProps = (state) => (
+  {
+    rf: state.menu.rf,
+    cargo: state.menu.cargo,
+    nome: state.menu.nome
+  }
+)
 
 // mapea addCycle no dispatch, separar metodos por ,
 // const mapDispatchToProps = dispatch => {
 //   bindActionCreators({ addCycle }, dispatch)
 // }
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ addDay, addCycle }, dispatch)
 
-export default connect(mapStateToProps)(MenuChange)
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuChange)

@@ -1,11 +1,17 @@
 import { MenuActionEnum } from './menuEnum'
 
-const INITIAL_STATE = { description: 'MEU ESTADO INICIAL2' }
+const INITIAL_STATE = {
+  rf: 'ESTADO INICIAL RF',
+  cargo: 'ESTADO INICIAL CARGO',
+  nome: ''
+}
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case MenuActionEnum.ADD_CYCLE:
-      return {...state, description: 'ALTEROOOUUU'}
+      return { ...state, rf: action.payload }
+    case MenuActionEnum.ADD_DAY:
+      return { ...state, cargo: action.payload }
     default:
       return state
   }
