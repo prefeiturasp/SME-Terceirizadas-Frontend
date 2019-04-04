@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
-import  Button, {ButtonStyle} from '../Shareable/button'
+import Button, { ButtonStyle } from '../Shareable/button'
 import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/labelAndInput'
 import '../Shareable/custom.css'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { addCycle, addDay, rfInputEdited } from '../../actions/menuActions'
+
 
 class MenuChange extends Component {
+
   render() {
+    const { addCycle, description, addDay, rfInputEdited } = this.props
+    console.log('PROPS', this.props)
     return (
       <div className="container">
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <div>
             <label className='header-form-label mb-5'>Nº de matriculados</label>
           </div>
@@ -16,11 +23,15 @@ class MenuChange extends Component {
             <label>Informação automática disponibilizada no cadastro da UE</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
-            <LabelAndInput cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
+            <LabelAndInput placeholder='Registro funcional'
+              onChange={(payload) => rfInputEdited(payload)}
+              value={this.props.rf} cols='6 6 6 6' type='text'
+              name='rf' label='RF Responsável'>
+            </LabelAndInput>
+            <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
           <div className="form-group row">
-            <LabelAndInput cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
+            <LabelAndInput value={this.props.nome} cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
           </div>
           <div className="form-group row">
             <LabelAndCombo cols='5 5 5 5' name='periodo' label='Período de alteração' ></LabelAndCombo>
@@ -32,7 +43,7 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Tipo de Alimentação' ></LabelAndCombo>
             <LabelAndInput cols='3 3 3 3' type='number' label='Nº de alunos' ></LabelAndInput>
           </div>
-          <Button styleBt={ButtonStyle.OutlineDark} text='Adicionar Período'/>
+          <Button styleBt={ButtonStyle.OutlineDark} text='Adicionar Período' />
           <div className='form-group row-1'>
             <label className='session-header mt-3'>Data de alteração</label>
           </div>
@@ -46,8 +57,13 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Para' name='para' ></LabelAndCombo>
           </div>
           <div className='form-group row'>
-            <Button styleBt={ButtonStyle.OutlineInfo} className='ml-3' text='Adicionar dia'/>
-            <Button styleBt={ButtonStyle.OutlineInfo} className='ml-3' text='Adicionar Ciclo'/>
+            <Button styleBt={ButtonStyle.OutlineInfo}
+              onClick={() => addDay(description)}
+              className='ml-3' text='Adicionar dia' />
+            {/* Aqui é chamado a action de addCycle com parametro description */}
+            <Button styleBt={ButtonStyle.OutlineInfo}
+              onClick={() => addCycle(description)}
+              className='ml-3' text='Adicionar Ciclo' />
           </div>
           <div className='form-group'>
             <LabelAndTextArea label='Observações' name='obs'></LabelAndTextArea>
@@ -58,5 +74,24 @@ class MenuChange extends Component {
   }
 }
 
+// olhe o arquivo que agrega os reducers src/reducers.js
+// state é o global, menu é o reducer que me interessa
+// description é quem vai ser mapeado para dentro do componente
+const mapStateToProps = (state) => (
+  {
+    rf: state.menu.rf,
+    cargo: state.menu.cargo,
+    nome: state.menu.nome,
+    description: state.menu.description
+  }
+)
 
-export default MenuChange
+// mapea addCycle no dispatch, separar metodos por ,
+// const mapDispatchToProps = dispatch => {
+//   bindActionCreators({ addCycle }, dispatch)
+// }
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ addDay, addCycle, rfInputEdited }, dispatch)
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuChange)

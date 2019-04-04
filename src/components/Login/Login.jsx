@@ -1,34 +1,26 @@
 import React, { Component } from 'react'
 import {userActions} from '../../actions/user.actions'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 
-export default class Login extends Component {
+export class Login extends Component {
 
   constructor(props){
     super(props);
-
     this.props.dispatch(userActions.logout());
-
-    this.state = {
-      email: '',
-      password: '',
-      subimitted : false
-    };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   validForm(){
-    return this.state.email.length > 0 && this.state.password.length > 0;
+    return this.props.email.length > 0 && this.props.password.length > 0;
   }
 
   handleSubmit = event => {
     event.preventDefault();
     this.setState({subimitted :true});
-    const {email, password} = this.state;
+    const {email, password} = this.props;
     const {dispatch} = this.props;
 
     if(email && password){
@@ -65,7 +57,7 @@ export default class Login extends Component {
                                   autoComplete="off"
                                   name="email"
                                   type="email"
-                                  value={this.state.email}
+                                  value={this.props.email}
                                   onChange={this.handleChange}
                                   className="form-control" />
                         </div>
@@ -75,7 +67,7 @@ export default class Login extends Component {
                             <input
                                   type="password"
                                   name="password"
-                                  value={this.state.password}
+                                  value={this.props.password}
                                   onChange={this.handleChange}
                                   className="form-control" />
 
@@ -92,13 +84,11 @@ export default class Login extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  email : state.login.email,
+  password : state.login.password,
+  subimitted: state.login.subimitted,
+})
 
-function mapStateProps(state){
-  const {loggingIn} = state.authetication;
-  return {
-    loggingIn
-  };
-}
 
-const connectedLoginPage = connect(mapStateProps)(Login);
-export {connectedLoginPage as Login}
+export default connect(mapStateToProps)(Login)
