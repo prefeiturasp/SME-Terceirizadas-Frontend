@@ -25,7 +25,6 @@ export class Grid extends Component {
     )
   }
 }
-// col-xs-4 col-lg-4 col-md-4 col-sm-4
 
 export class Label extends Component {
   render() {

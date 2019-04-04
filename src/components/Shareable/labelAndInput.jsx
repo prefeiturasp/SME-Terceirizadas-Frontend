@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, toCssClasses } from './responsiveBs4'
+import { Grid } from './responsiveBs4'
 import './custom.css'
 
 export function LabelAndInput(props) {
@@ -7,7 +7,7 @@ export function LabelAndInput(props) {
   return (
     <Grid cols={props.cols || ''} classNameArgs={props.classNameArgs || ''}>
       <label htmlFor={props.name} className={"col-form-label"}>{props.label}</label>
-      <input className="form-control" type={props.type} name={props.name}></input>
+      <input className="form-control" value={props.value} type={props.type} name={props.name}></input>
     </Grid>)
 }
 
