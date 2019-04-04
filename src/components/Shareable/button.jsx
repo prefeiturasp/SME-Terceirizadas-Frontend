@@ -33,9 +33,9 @@ export default class BaseButton extends Component {
   render() {
     return (
       <button type={this.props.type || ButtonType.BUTTON}
-        className={"btn btn-" + this.props.styleBt + ' ' + this.props.className}
+        className={"btn btn-" + this.props.style + ' ' + this.props.className}
         onClick={this.props.onClick}>
-        {this.props.text}
+        {this.props.label}
       </button>
     )
   }
