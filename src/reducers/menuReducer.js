@@ -1,9 +1,9 @@
 import { MenuActionEnum } from '../constants/menuEnum'
 
 const INITIAL_STATE = {
-  rf: '',
+  rf: 'ESTADO INICIAL RF',
   cargo: 'ESTADO INICIAL CARGO',
-  nome: ''
+  nome: 'ESTADO INICIAL NOME',
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -13,8 +13,14 @@ export default (state = INITIAL_STATE, action) => {
     case MenuActionEnum.ADD_DAY:
       return { ...state, cargo: action.payload }
     case MenuActionEnum.RF_EDITED:
-      return { ...state, nome: action.payload, cargo: 'outro campo sendo alterado'}
+      return {
+        ...state,
+        nome: action.payload,
+        rf: action.payload,
+        cargo: action.payload
+      }
     default:
       return state
   }
 }
+

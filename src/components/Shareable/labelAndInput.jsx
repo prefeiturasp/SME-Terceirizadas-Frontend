@@ -7,7 +7,9 @@ export function LabelAndInput(props) {
   return (
     <Grid cols={props.cols || ''} classNameArgs={props.classNameArgs || ''}>
       <label htmlFor={props.name} className={"col-form-label"}>{props.label}</label>
-      <input {...props.input}
+      <input
+        name={props.name}
+        id={props.name}
         className='form-control'
         value={props.value}
         placeholder={props.placeholder}

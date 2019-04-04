@@ -8,6 +8,7 @@ import { addCycle, addDay, rfInputEdited } from './menuActions'
 
 
 class MenuChange extends Component {
+
   render() {
     const { addCycle, description, addDay, rfInputEdited } = this.props
     console.log('PROPS', this.props)
@@ -22,7 +23,11 @@ class MenuChange extends Component {
             <label>Informação automática disponibilizada no cadastro da UE</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput placeholder='Registro funcional' onChange={(event) => rfInputEdited(event)} value={this.props.rf} cols='6 6 6 6' type='text' name='rf' label='RF Responsável'></LabelAndInput>
+            <LabelAndInput placeholder='Registro funcional'
+              onChange={(payload) => rfInputEdited(payload)}
+              value={this.props.rf} cols='6 6 6 6' type='text'
+              name='rf' label='RF Responsável'>
+            </LabelAndInput>
             <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
           <div className="form-group row">
@@ -52,12 +57,13 @@ class MenuChange extends Component {
             <LabelAndCombo cols='4 4 4 4' label='Para' name='para' ></LabelAndCombo>
           </div>
           <div className='form-group row'>
-
-            <Button styleBt={ButtonStyle.OutlineInfo} onClick={() => addDay(description)} className='ml-3' text='Adicionar dia' />
+            <Button styleBt={ButtonStyle.OutlineInfo}
+              onClick={() => addDay(description)}
+              className='ml-3' text='Adicionar dia' />
             {/* Aqui é chamado a action de addCycle com parametro description */}
-            <Button styleBt={ButtonStyle.OutlineInfo} onClick={() => addCycle(description)} className='ml-3' text='Adicionar Ciclo' />
-
-
+            <Button styleBt={ButtonStyle.OutlineInfo}
+              onClick={() => addCycle(description)}
+              className='ml-3' text='Adicionar Ciclo' />
           </div>
           <div className='form-group'>
             <LabelAndTextArea label='Observações' name='obs'></LabelAndTextArea>
@@ -75,7 +81,8 @@ const mapStateToProps = (state) => (
   {
     rf: state.menu.rf,
     cargo: state.menu.cargo,
-    nome: state.menu.nome
+    nome: state.menu.nome,
+    description: state.menu.description
   }
 )
 
