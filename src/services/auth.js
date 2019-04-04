@@ -1,4 +1,4 @@
-import { JWT_AUTH } from '../App.settings'
+import { JWT_AUTH } from '../constants/config.constants'
 
 export const Authentication = (email, password) => {
   return fetch(JWT_AUTH, {

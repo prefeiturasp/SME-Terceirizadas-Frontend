@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import {Authentication} from '../../services/auth'
+import {userActions} from '../../actions/user.actions'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 
 export default class Login extends Component {
@@ -7,11 +9,16 @@ export default class Login extends Component {
   constructor(props){
     super(props);
 
+    this.props.dispatch(userActions.logout());
+
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      subimitted : false
     };
 
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   validForm(){
@@ -20,7 +27,14 @@ export default class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    Authentication(this.state.email,this.state.password)
+    this.setState({subimitted :true});
+    const {email, password} = this.state;
+    const {dispatch} = this.props;
+
+    if(email && password){
+        dispatch(userActions.login(email,password));
+    }
+    // Authentication(this.state.email,this.state.password)
   }
 
   handleChange = event =>{
@@ -30,6 +44,8 @@ export default class Login extends Component {
   }
 
   render() {
+    const { loggingIn } = this.props;
+    // const { email, password, submitted } = this.state;
     return (
       <div>
         <div className="container">
@@ -76,3 +92,13 @@ export default class Login extends Component {
     )
   }
 }
+
+function mapStateProps(state){
+  const {loggingIn} = state.authetication;
+  return {
+    loggingIn
+  };
+}
+
+const connectedLoginPage = connect(mapStateProps)(Login);
+export {connectedLoginPage as Login}
