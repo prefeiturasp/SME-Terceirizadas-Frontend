@@ -9,7 +9,7 @@ import { addCycle, addDay } from './menuActions'
 
 class MenuChange extends Component {
   render() {
-    const { addCycle, description, addDay} = this.props
+    const { addCycle, description, addDay } = this.props
     console.log('PROPS', this.props)
     return (
       <div className="container">
@@ -26,7 +26,7 @@ class MenuChange extends Component {
             <LabelAndInput value={this.props.cargo} cols='6 6 6 6' type='text' name='cargo' label='Cargo / Função'></LabelAndInput>
           </div>
           <div className="form-group row">
-            <LabelAndInput cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
+            <LabelAndInput value={this.props.nome} cols='12 12 12 12' name='nome' label='Nome' ></LabelAndInput>
           </div>
           <div className="form-group row">
             <LabelAndCombo cols='5 5 5 5' name='periodo' label='Período de alteração' ></LabelAndCombo>

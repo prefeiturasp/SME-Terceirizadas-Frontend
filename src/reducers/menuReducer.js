@@ -1,9 +1,9 @@
-import { MenuActionEnum } from './menuEnum'
+import { MenuActionEnum } from '../constants/menuEnum'
 
 const INITIAL_STATE = {
   rf: 'ESTADO INICIAL RF',
   cargo: 'ESTADO INICIAL CARGO',
-  nome: ''
+  nome: 'marcelus'
 }
 
 export default (state = INITIAL_STATE, action) => {
