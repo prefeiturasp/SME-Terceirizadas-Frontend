@@ -1,26 +1,22 @@
 import { JWT_AUTH, USER_URL } from '../constants/config.constants';
 import { authHeader } from '../helpers/auth-headers';
 
-export const userService = {
-  login,
-  logout,
-  getAll
-}
 
-function login(email, password) {
-  const requestOptions = {
-    method: 'POST',
-    body: JSON.stringify({ email: email, password: password }),
-    headers: { 'Content-Type': 'application/json' }
-  }
-
-  return fetch(JWT_AUTH, requestOptions)
-    .then(handleResponse)
-    .then(res => {
-      localStorage.setItem('user', JSON.stringify(res.data));
-      return res;
+const login = async (email, password) => {
+  try {
+    const response = await fetch(JWT_AUTH, {
+      method: 'POST',
+      body: JSON.stringify({ email: email, password: password }),
+      headers: { 'Content-Type': 'application/json' },
     });
-}
+    const json = await response.json();
+    localStorage.setItem('user', JSON.stringify(json));
+
+    return json
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
 function logout() {
@@ -56,4 +52,9 @@ function handleResponse(response) {
 
       return data;
     });
+}
+export const userService = {
+  login,
+  logout,
+  getAll
 }
