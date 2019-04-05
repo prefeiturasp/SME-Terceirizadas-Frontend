@@ -42,7 +42,10 @@ export function LabelAndTextArea(props) {
 }
 
 export function LabelAndCombo(props) {
-  const options = props.options || [{ value: "", label: "..." }];
+  const options = props.options || [
+    { value: "...", label: "...", disabled: true },
+    { value: "***", label: "***", selected: true }
+  ];
   return (
     <Grid cols={props.cols || ""}>
       <label htmlFor={props.name} className={"col-form-label"}>
@@ -59,11 +62,6 @@ export function LabelAndCombo(props) {
             />
           );
         })}
-        {/* <option value="opcao1">Opcão1</option>
-        <option value="opcao2">Opcão2</option>
-        <option value="opcao3">Opcão3</option>
-        <option value="opcao4">Opcão4</option>
-        <option selected value="opcao5">...</option> */}
       </select>
     </Grid>
   );
