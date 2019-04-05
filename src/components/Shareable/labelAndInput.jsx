@@ -67,7 +67,7 @@ export function LabelAndCombo(props) {
   );
 }
 
-export const LabelWithDate = props => {
+export const LabelAndDate = props => {
   return (
     <Grid cols={props.cols || ""} className="input-group">
       <div className="input-group-prepend">

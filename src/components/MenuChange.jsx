@@ -3,7 +3,8 @@ import Button, { ButtonStyle } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndCombo,
-  LabelAndTextArea
+  LabelAndTextArea,
+  LabelAndDate
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { bindActionCreators } from "redux";
@@ -13,12 +14,6 @@ import { addCycle, addDay, rfInputEdited } from "../actions/menuActions";
 class MenuChange extends Component {
   render() {
     const { addCycle, description, addDay, rfInputEdited } = this.props;
-    console.log("PROPS", this.props);
-    const options = [
-      { value: "chocolate", label: "Chocolate", disabled: true },
-      { value: "strawberry", label: "Strawberry", selected: true },
-      { value: "vanilla", label: "Vanilla" }
-    ];
     return (
       <div className="container">
         <form>
@@ -59,13 +54,11 @@ class MenuChange extends Component {
           </div>
           <div className="form-group row">
             <LabelAndCombo
-              // options={options}
               cols="5 5 5 5"
               name="periodo"
               label="Período de alteração"
             />
             <LabelAndCombo
-              options={options}
               cols="4 4 4 4"
               name="tipo"
               label="Tipo de Alimentação"
@@ -77,16 +70,8 @@ class MenuChange extends Component {
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo
-              options={options}
-              cols="5 5 5 5"
-              label="Período de alteração"
-            />
-            <LabelAndCombo
-              options={options}
-              cols="4 4 4 4"
-              label="Tipo de Alimentação"
-            />
+            <LabelAndCombo cols="5 5 5 5" label="Período de alteração" />
+            <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
             <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
           </div>
           <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
@@ -94,28 +79,8 @@ class MenuChange extends Component {
             <label className="session-header mt-3">Data de alteração</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput
-              cols="4 4 4 4"
-              type="date"
-              name="de"
-              label="Alterar dia"
-            />
-            <LabelAndCombo cols="4 4 4 4" label="Para" name="para" />
-          </div>
-          <div className="form-group row">
-            <LabelAndInput
-              cols="4 4 4 4"
-              type="date"
-              name="de"
-              label="Alterar dia"
-            />
-            <LabelAndInput cols="4 4 4 4" type="date" name="ate" label="Até" />
-            <LabelAndCombo
-              options={options}
-              cols="4 4 4 4"
-              label="Para"
-              name="para"
-            />
+            <LabelAndDate cols="4 4 4 4" name="de" label="Alterar dia" />
+            <LabelAndDate cols="4 4 4 4" name="para" label="Para" />
           </div>
           <div className="form-group row">
             <Button
@@ -124,7 +89,6 @@ class MenuChange extends Component {
               className="ml-3"
               label="Adicionar dia"
             />
-            {/* Aqui é chamado a action de addCycle com parametro description */}
             <Button
               style={ButtonStyle.OutlineInfo}
               onClick={() => addCycle(description)}
@@ -134,6 +98,14 @@ class MenuChange extends Component {
           </div>
           <div className="form-group">
             <LabelAndTextArea label="Observações" name="obs" />
+          </div>
+          <div className="form-group row float-right">
+            <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
+            <Button
+              label="Enviar Solicitação"
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
           </div>
         </form>
       </div>
