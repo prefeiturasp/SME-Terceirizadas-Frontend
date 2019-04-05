@@ -7,7 +7,8 @@ import './custom.css'
 export function LabelAndInput(props) {
   // TODO: add calendar icon case type=date
   return (
-    <Grid cols={props.cols || ''} classNameArgs={props.classNameArgs || ''}>
+    <Grid cols={props.cols || ''}
+      classNameArgs={props.classNameArgs || ''}>
       <label
         htmlFor={props.name}
         className={"col-form-label"}>
@@ -19,6 +20,11 @@ export function LabelAndInput(props) {
         className='form-control'
         value={props.value}
         placeholder={props.placeholder}
+
+
+
+
+
         readOnly={props.readOnly || false}
         type={props.type}
         onChange={props.onChange} />
