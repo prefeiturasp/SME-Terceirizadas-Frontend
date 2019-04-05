@@ -14,6 +14,11 @@ class MenuChange extends Component {
   render() {
     const { addCycle, description, addDay, rfInputEdited } = this.props;
     console.log("PROPS", this.props);
+    const options = [
+      { value: "chocolate", label: "Chocolate", disabled: true },
+      { value: "strawberry", label: "Strawberry", selected: true },
+      { value: "vanilla", label: "Vanilla" }
+    ];
     return (
       <div className="container">
         <form>
@@ -54,11 +59,13 @@ class MenuChange extends Component {
           </div>
           <div className="form-group row">
             <LabelAndCombo
+              // options={options}
               cols="5 5 5 5"
               name="periodo"
               label="Período de alteração"
             />
             <LabelAndCombo
+              options={options}
               cols="4 4 4 4"
               name="tipo"
               label="Tipo de Alimentação"
@@ -70,8 +77,16 @@ class MenuChange extends Component {
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo cols="5 5 5 5" label="Período de alteração" />
-            <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
+            <LabelAndCombo
+              options={options}
+              cols="5 5 5 5"
+              label="Período de alteração"
+            />
+            <LabelAndCombo
+              options={options}
+              cols="4 4 4 4"
+              label="Tipo de Alimentação"
+            />
             <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
           </div>
           <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
@@ -95,7 +110,12 @@ class MenuChange extends Component {
               label="Alterar dia"
             />
             <LabelAndInput cols="4 4 4 4" type="date" name="ate" label="Até" />
-            <LabelAndCombo cols="4 4 4 4" label="Para" name="para" />
+            <LabelAndCombo
+              options={options}
+              cols="4 4 4 4"
+              label="Para"
+              name="para"
+            />
           </div>
           <div className="form-group row">
             <Button
