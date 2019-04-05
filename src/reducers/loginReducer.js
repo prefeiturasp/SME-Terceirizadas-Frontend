@@ -1,7 +1,7 @@
 import { userConstants } from "../constants/user.constants";
 const INITIAL_STATE = {
-  email: "weslei.souza@amcom.com.br",
-  password: "admin123456",
+  email: '',
+  password: '',
   subimitted: false
 };
 
