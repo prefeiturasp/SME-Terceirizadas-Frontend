@@ -25,6 +25,18 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "importSort": {
+    ".js, .jsx, .es6, .es": {
+      "parser": "babylon",
+      "style": "eslint",
+      "options": {}
+    },
+    ".ts, .tsx": {
+      "parser": "typescript",
+      "style": "eslint",
+      "options": {}
+    }
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
