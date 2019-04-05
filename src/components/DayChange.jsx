@@ -3,7 +3,7 @@ import {
   LabelAndInput,
   LabelAndCombo,
   LabelAndTextArea,
-  LabelWithDate
+  LabelAndDate
 } from "./Shareable/labelAndInput";
 import { connect } from "react-redux";
 import "react-datepicker/dist/react-datepicker.css";
@@ -108,7 +108,7 @@ export class DayChange extends Component {
           </div>
           <label className="bold">Substituição</label>
           <div className="form-group row">
-            <LabelWithDate
+            <LabelAndDate
               cols="5 5 5 5"
               label="Cardápio dia"
               selected={suspension_range.from}
@@ -118,7 +118,7 @@ export class DayChange extends Component {
             <div className="col-sm-1 v-align">
               <i className="fa fa-arrow-right" aria-hidden="true" />
             </div>
-            <LabelWithDate
+            <LabelAndDate
               cols="5 5 5 5"
               label="Cardápio dia"
               selected={suspension_range.to}
