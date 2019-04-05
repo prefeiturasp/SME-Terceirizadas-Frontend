@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import DatePicker from 'react-datepicker';
 import ptBR from 'date-fns/locale/pt-BR';
 import "react-datepicker/dist/react-datepicker.css";
-import './add-food.css'
+import './Shareable/custom.css'
 
 
 export default class AddFood extends Component {
