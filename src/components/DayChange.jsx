@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import DatePicker from 'react-datepicker';
-import ptBR from 'date-fns/locale/pt-BR';
-import { LabelAndInput, LabelAndCombo, LabelAndTextArea, LabelWithDate } from '../Shareable/labelAndInput'
+import { LabelAndInput, LabelAndCombo, LabelAndTextArea, LabelWithDate } from './Shareable/labelAndInput'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import "react-datepicker/dist/react-datepicker.css";
-import '../Shareable/custom.css'
-import BaseButton, { ButtonStyle } from '../Shareable/button';
+import './Shareable/custom.css'
+import BaseButton, { ButtonStyle } from './Shareable/button';
 
 
 export class DayChange extends Component {

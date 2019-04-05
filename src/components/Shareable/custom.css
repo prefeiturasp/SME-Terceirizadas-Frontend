@@ -6,10 +6,10 @@
   font-size: 12px;
   line-height: normal;
   text-transform: uppercase;
-  color: #C8C8C8;
+  color: #c8c8c8;
 }
 
-.uppercase-label{
+.uppercase-label {
   width: 82px;
   height: 15px;
 
@@ -19,10 +19,10 @@
   font-size: 12px;
   line-height: normal;
   text-transform: uppercase;
-  color: #C8C8C8;
+  color: #c8c8c8;
 }
 
-.header-form-label{
+.header-form-label {
   width: 240px;
   height: 29px;
   font-style: normal;
@@ -33,7 +33,7 @@
 }
 
 /* Headers */
-.session-header{
+.session-header {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -48,13 +48,13 @@
 }
 
 .icon {
-  color: #A8A8A8;
+  color: #a8a8a8;
   padding-top: 34px;
   cursor: pointer;
 }
 
 .gray {
-  color: #A8A8A8;
+  color: #a8a8a8;
 }
 
 textarea {
@@ -63,18 +63,18 @@ textarea {
 
 .number-registered {
   margin-top: 15px;
-  color: #A8A8A8;
+  color: #a8a8a8;
 }
 
 .purple {
-  color: #853CB6;
+  color: #853cb6;
 }
 
 .gray-rectangle {
   margin-right: 10px;
-  background: #E8E8E8;
+  background: #e8e8e8;
   float: left;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   box-sizing: border-box;
   border-radius: 4px;
   padding: 20px 40px;
@@ -92,7 +92,7 @@ textarea {
 .fa-calendar {
   z-index: 1;
   padding-top: 12px;
-  color: #A8A8A8;
+  color: #a8a8a8;
 }
 
 div.react-datepicker-wrapper {
@@ -101,19 +101,74 @@ div.react-datepicker-wrapper {
 
 .active-calendar > .input-group-prepend > .input-group-text,
 .active-calendar > .react-datepicker-wrapper {
-  background: #E4F1FF;
-  border: 1px solid #2881BB;
-  color: #2881BB;
+  background: #e4f1ff;
+  border: 1px solid #2881bb;
+  color: #2881bb;
 }
 
 .active-calendar > .react-datepicker-wrapper .form-control {
-  color: #2881BB;
+  color: #2881bb;
 }
 
 .active-calendar > i {
-  color: #2881BB;
+  color: #2881bb;
 }
 
 .v-align {
   padding-top: 9px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.icon {
+  color: #a8a8a8;
+  padding-top: 34px;
+  cursor: pointer;
+}
+
+.gray {
+  color: #a8a8a8;
+}
+
+textarea {
+  min-height: 121px;
+}
+
+.number-registered {
+  margin-top: 15px;
+  color: #a8a8a8;
+}
+
+.purple {
+  color: #853cb6;
+}
+
+.gray-rectangle {
+  margin-right: 10px;
+  background: #e8e8e8;
+  float: left;
+  border: 1px solid #e8e8e8;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 20px 40px;
+  color: #686868;
+}
+
+.category {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: normal;
+  color: #353535;
+}
+
+.subtitle {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: normal;
+  text-transform: uppercase;
+  color: #c8c8c8;
 }

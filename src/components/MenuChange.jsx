@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Button, { ButtonStyle } from '../Shareable/button'
-import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from '../Shareable/labelAndInput'
-import '../Shareable/custom.css'
+import Button, { ButtonStyle } from './Shareable/button'
+import { LabelAndInput, LabelAndCombo, LabelAndTextArea } from './Shareable/labelAndInput'
+import './Shareable/custom.css'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { addCycle, addDay, rfInputEdited } from '../../actions/menuActions'
+import { addCycle, addDay, rfInputEdited } from '../actions/menuActions'
 
 
 class MenuChange extends Component {

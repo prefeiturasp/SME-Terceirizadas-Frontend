@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
-import { userActions } from '../../actions/user.actions'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
+import React, { Component } from "react";
+import {
+  userActions,
+  emailEdited,
+  passwordEdited
+} from "../actions/user.actions";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 // import { Link } from 'react-router-dom'
 
-
 export class Login extends Component {
-
   constructor(props) {
     super(props);
-    this.props.logout()
+    this.props.logout();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -26,20 +28,20 @@ export class Login extends Component {
     const { dispatch } = this.props;
 
     if (email && password) {
-      console.log('chamando login com ', email, password)
+      console.log("chamando login com ", email, password);
       login(email, password);
     }
     // Authentication(this.state.email,this.state.password)
-  }
+  };
 
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
     });
-  }
+  };
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     const { loggingIn } = this.props;
     // const { email, password, submitted } = this.state;
     return (
@@ -53,7 +55,6 @@ export class Login extends Component {
           <div className="card card-login mx-auto mt-5 card-width">
             <div className="card-body">
               <form onSubmit={this.handleSubmit}>
-
                 <div className="form-group">
                   <label>E-mail</label>
                   <input
@@ -62,8 +63,9 @@ export class Login extends Component {
                     name="email"
                     type="email"
                     value={this.props.email}
-                    onChange={this.handleChange}
-                    className="form-control" />
+                    onChange={this.props.emailEdited}
+                    className="form-control"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -72,31 +74,54 @@ export class Login extends Component {
                     type="password"
                     name="password"
                     value={this.props.password}
-                    onChange={this.handleChange}
-                    className="form-control" />
+                    onChange={this.props.passwordEdited}
+                    className="form-control"
+                  />
 
-                  <p className="text-right mt-2"><a href="#teste" className="text-primary">Esqueci minha senha</a></p>
+                  <p className="text-right mt-2">
+                    <a href="#teste" className="text-primary">
+                      Esqueci minha senha
+                    </a>
+                  </p>
                 </div>
 
-                <button className="btn btn-primary btn-block" disabled={!this.validForm()}>Acessar</button>
-                <p className="text-center mt-3"><a href="#teste" className="text-primary">Ainda não sou cadastrado</a></p>
+                <button
+                  className="btn btn-primary btn-block"
+                  disabled={!this.validForm()}
+                >
+                  Acessar
+                </button>
+                <p className="text-center mt-3">
+                  <a href="#teste" className="text-primary">
+                    Ainda não sou cadastrado
+                  </a>
+                </p>
               </form>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   email: state.login.email,
   password: state.login.password,
-  subimitted: state.login.subimitted,
-})
+  subimitted: state.login.subimitted
+});
 
-const mapDispatchToProps = (dispatch) => bindActionCreators(
-  { login: userActions.login, logout: userActions.logout },
-  dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      login: userActions.login,
+      logout: userActions.logout,
+      emailEdited,
+      passwordEdited
+    },
+    dispatch
+  );
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
