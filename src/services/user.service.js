@@ -15,6 +15,7 @@ const login = async (email, password) => {
     return json
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 

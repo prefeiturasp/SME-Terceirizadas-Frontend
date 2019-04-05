@@ -10,7 +10,6 @@ export const userActions = {
 };
 
 function login(email, password) {
-  console.log("BATEEEEUUU");
   return dispatch => {
     dispatch(request({ email }));
 

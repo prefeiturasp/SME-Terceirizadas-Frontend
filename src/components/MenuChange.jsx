@@ -3,7 +3,8 @@ import Button, { ButtonStyle } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndCombo,
-  LabelAndTextArea
+  LabelAndTextArea,
+  LabelAndDate
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { bindActionCreators } from "redux";
@@ -13,7 +14,6 @@ import { addCycle, addDay, rfInputEdited } from "../actions/menuActions";
 class MenuChange extends Component {
   render() {
     const { addCycle, description, addDay, rfInputEdited } = this.props;
-    console.log("PROPS", this.props);
     return (
       <div className="container">
         <form>
@@ -74,46 +74,38 @@ class MenuChange extends Component {
             <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
             <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
           </div>
-          <Button styleBt={ButtonStyle.OutlineDark} text="Adicionar Período" />
+          <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
           <div className="form-group row-1">
             <label className="session-header mt-3">Data de alteração</label>
           </div>
           <div className="form-group row">
-            <LabelAndInput
-              cols="4 4 4 4"
-              type="date"
-              name="de"
-              label="Alterar dia"
-            />
-            <LabelAndCombo cols="4 4 4 4" label="Para" name="para" />
-          </div>
-          <div className="form-group row">
-            <LabelAndInput
-              cols="4 4 4 4"
-              type="date"
-              name="de"
-              label="Alterar dia"
-            />
-            <LabelAndInput cols="4 4 4 4" type="date" name="ate" label="Até" />
-            <LabelAndCombo cols="4 4 4 4" label="Para" name="para" />
+            <LabelAndDate cols="4 4 4 4" name="de" label="Alterar dia" />
+            <LabelAndDate cols="4 4 4 4" name="para" label="Para" />
           </div>
           <div className="form-group row">
             <Button
-              styleBt={ButtonStyle.OutlineInfo}
+              style={ButtonStyle.OutlineInfo}
               onClick={() => addDay(description)}
               className="ml-3"
-              text="Adicionar dia"
+              label="Adicionar dia"
             />
-            {/* Aqui é chamado a action de addCycle com parametro description */}
             <Button
-              styleBt={ButtonStyle.OutlineInfo}
+              style={ButtonStyle.OutlineInfo}
               onClick={() => addCycle(description)}
               className="ml-3"
-              text="Adicionar Ciclo"
+              label="Adicionar Ciclo"
             />
           </div>
           <div className="form-group">
             <LabelAndTextArea label="Observações" name="obs" />
+          </div>
+          <div className="form-group row float-right">
+            <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
+            <Button
+              label="Enviar Solicitação"
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
           </div>
         </form>
       </div>
