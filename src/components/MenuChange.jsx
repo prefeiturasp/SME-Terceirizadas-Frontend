@@ -74,7 +74,7 @@ class MenuChange extends Component {
             <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
             <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
           </div>
-          <Button styleBt={ButtonStyle.OutlineDark} text="Adicionar Período" />
+          <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
           <div className="form-group row-1">
             <label className="session-header mt-3">Data de alteração</label>
           </div>
@@ -99,17 +99,17 @@ class MenuChange extends Component {
           </div>
           <div className="form-group row">
             <Button
-              styleBt={ButtonStyle.OutlineInfo}
+              style={ButtonStyle.OutlineInfo}
               onClick={() => addDay(description)}
               className="ml-3"
-              text="Adicionar dia"
+              label="Adicionar dia"
             />
             {/* Aqui é chamado a action de addCycle com parametro description */}
             <Button
-              styleBt={ButtonStyle.OutlineInfo}
+              style={ButtonStyle.OutlineInfo}
               onClick={() => addCycle(description)}
               className="ml-3"
-              text="Adicionar Ciclo"
+              label="Adicionar Ciclo"
             />
           </div>
           <div className="form-group">
