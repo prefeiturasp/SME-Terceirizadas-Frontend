@@ -33,6 +33,7 @@ export function LabelAndTextArea(props) {
         {props.label}
       </label>
       <textarea
+        {...props.textarea}
         className="form-control"
         rows="4"
         value={props.value}
@@ -44,18 +45,19 @@ export function LabelAndTextArea(props) {
 
 export function LabelAndCombo(props) {
   const options = props.options || [
-    { value: "...", label: "...", disabled: true },
-    { value: "***", label: "***", selected: true }
+    { value: "...", label: "ABC", disabled: true },
+    { value: "***", label: "CDE", selected: true }
   ];
   return (
     <Grid cols={props.cols || ""}>
       <label htmlFor={props.name} className={"col-form-label"}>
         {props.label}
       </label>
-      <select name={props.name} className="form-control">
+      <select {...props.select} name={props.name} className="form-control">
         {options.map((e, key) => {
           return (
             <option
+              {...props.option}
               value={e.value}
               selected={e.selected}
               disabled={e.disabled}

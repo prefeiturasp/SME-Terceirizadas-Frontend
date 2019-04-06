@@ -33,8 +33,8 @@ class MenuChange extends Component {
               name="rf"
               label="RF Responsável"
             />
-            <LabelAndInput
-              value={this.props.cargo}
+            <Field
+              component={LabelAndInput}
               cols="6 6 6 6"
               type="text"
               name="cargo"
@@ -42,34 +42,50 @@ class MenuChange extends Component {
             />
           </div>
           <div className="form-group row">
-            <LabelAndInput
-              value={this.props.nome}
+            <Field
+              component={LabelAndInput}
               cols="12 12 12 12"
               name="nome"
               label="Nome"
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo
+            <Field
+              component={LabelAndCombo}
               cols="5 5 5 5"
               name="periodo"
               label="Período de alteração"
             />
-            <LabelAndCombo
+            <Field
+              component={LabelAndCombo}
               cols="4 4 4 4"
               name="tipo"
               label="Tipo de Alimentação"
             />
-            <LabelAndInput
+            <Field
+              component={LabelAndInput}
               cols="3 3 3 3"
               name="nro_alunos"
               label="Nº de alunos"
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo cols="5 5 5 5" label="Período de alteração" />
-            <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
-            <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
+            <Field
+              component={LabelAndCombo}
+              cols="5 5 5 5"
+              label="Período de alteração"
+            />
+            <Field
+              component={LabelAndCombo}
+              cols="4 4 4 4"
+              label="Tipo de Alimentação"
+            />
+            <Field
+              component={LabelAndInput}
+              cols="3 3 3 3"
+              type="number"
+              label="Nº de alunos"
+            />
           </div>
           <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
           <div className="form-group row-1">
@@ -94,7 +110,11 @@ class MenuChange extends Component {
             />
           </div>
           <div className="form-group">
-            <LabelAndTextArea label="Observações" name="obs" />
+            <Field
+              component={LabelAndTextArea}
+              label="Observações"
+              name="obs"
+            />
           </div>
           <div className="form-group row float-right">
             <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
@@ -112,6 +132,5 @@ class MenuChange extends Component {
 
 // export default MenuChange;
 export default (MenuChange = reduxForm({
-  // a unique name for the form
   form: "menuChange"
 })(MenuChange));
