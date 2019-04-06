@@ -7,16 +7,14 @@ import {
   LabelAndDate
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { addCycle, addDay, rfInputEdited } from "../actions/menuActions";
+import { Field, reduxForm } from "redux-form";
 
 class MenuChange extends Component {
   render() {
     const { addCycle, description, addDay, rfInputEdited } = this.props;
     return (
       <div className="container">
-        <form>
+        <form onSubmit={this.props.handleSubmit}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
@@ -27,10 +25,9 @@ class MenuChange extends Component {
             </label>
           </div>
           <div className="form-group row">
-            <LabelAndInput
+            <Field
+              component={LabelAndInput}
               placeholder="Registro funcional"
-              onChange={payload => rfInputEdited(payload)}
-              value={this.props.rf}
               cols="6 6 6 6"
               type="text"
               name="rf"
@@ -113,24 +110,8 @@ class MenuChange extends Component {
   }
 }
 
-// olhe o arquivo que agrega os reducers src/reducers.js
-// state é o global, menu é o reducer que me interessa
-// description é quem vai ser mapeado para dentro do componente
-const mapStateToProps = state => ({
-  rf: state.menu.rf,
-  cargo: state.menu.cargo,
-  nome: state.menu.nome,
-  description: state.menu.description
-});
-
-// mapea addCycle no dispatch, separar metodos por ,
-// const mapDispatchToProps = dispatch => {
-//   bindActionCreators({ addCycle }, dispatch)
-// }
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addDay, addCycle, rfInputEdited }, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MenuChange);
+// export default MenuChange;
+export default (MenuChange = reduxForm({
+  // a unique name for the form
+  form: "menuChange"
+})(MenuChange));

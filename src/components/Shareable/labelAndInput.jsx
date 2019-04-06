@@ -12,9 +12,10 @@ export function LabelAndInput(props) {
         {props.label}
       </label>
       <input
+        {...props.input}
+        className="form-control"
         name={props.name}
         id={props.name}
-        className="form-control"
         value={props.value}
         placeholder={props.placeholder}
         readOnly={props.readOnly || false}

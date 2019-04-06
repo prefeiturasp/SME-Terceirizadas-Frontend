@@ -1,15 +1,13 @@
-import { combineReducers } from 'redux'
-import menuReducer from './reducers/menuReducer'
-import dayChangeReducer from './reducers/dayChangeReducer';
-import loginReducer from './reducers/loginReducer';
+import { combineReducers } from "redux";
+import dayChangeReducer from "./reducers/dayChangeReducer";
+import loginReducer from "./reducers/loginReducer";
+import { reducer as formReducer } from "redux-form";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
-  menu: menuReducer,
   dayChange: dayChangeReducer,
-  login: loginReducer
-  // login: loginReducer,
-  // addfood: reducer dele
-})
+  login: loginReducer,
+  form: formReducer
+});
 
-export default rootReducer
+export default rootReducer;
