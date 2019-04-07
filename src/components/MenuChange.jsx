@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Button, { ButtonStyle } from "./Shareable/button";
+import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndCombo,
@@ -9,12 +9,16 @@ import {
 import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
 
+const myDataHandler = event => {
+  console.log("handle submit chamado!", event);
+};
+
 class MenuChange extends Component {
   render() {
-    const { addCycle, description, addDay, rfInputEdited } = this.props;
+    console.log("redux forms props:_>", this.props);
     return (
       <div className="container">
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={this.props.handleSubmit(myDataHandler)}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
@@ -66,6 +70,7 @@ class MenuChange extends Component {
               component={LabelAndInput}
               cols="3 3 3 3"
               name="nro_alunos"
+              type="number"
               label="Nº de alunos"
             />
           </div>
@@ -73,17 +78,20 @@ class MenuChange extends Component {
             <Field
               component={LabelAndCombo}
               cols="5 5 5 5"
+              name="periodo_ateracao"
               label="Período de alteração"
             />
             <Field
               component={LabelAndCombo}
               cols="4 4 4 4"
+              name="tipo"
               label="Tipo de Alimentação"
             />
             <Field
               component={LabelAndInput}
               cols="3 3 3 3"
               type="number"
+              name="nroa"
               label="Nº de alunos"
             />
           </div>
@@ -98,13 +106,13 @@ class MenuChange extends Component {
           <div className="form-group row">
             <Button
               style={ButtonStyle.OutlineInfo}
-              onClick={() => addDay(description)}
+              // onClick={() => addDay(description)}
               className="ml-3"
               label="Adicionar dia"
             />
             <Button
               style={ButtonStyle.OutlineInfo}
-              onClick={() => addCycle(description)}
+              // onClick={() => addCycle(description)}
               className="ml-3"
               label="Adicionar Ciclo"
             />
@@ -120,6 +128,7 @@ class MenuChange extends Component {
             <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
             <Button
               label="Enviar Solicitação"
+              type={ButtonType.SUBMIT}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
@@ -132,5 +141,7 @@ class MenuChange extends Component {
 
 // export default MenuChange;
 export default (MenuChange = reduxForm({
-  form: "menuChange"
+  form: "menuChange",
+  //https://redux-form.com/6.0.0-alpha.4/docs/api/reduxform.md/#-destroyonunmount-boolean-optional-
+  destroyOnUnmount: false // para nao perder o estado
 })(MenuChange));

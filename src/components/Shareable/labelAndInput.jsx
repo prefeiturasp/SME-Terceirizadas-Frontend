@@ -45,8 +45,8 @@ export function LabelAndTextArea(props) {
 
 export function LabelAndCombo(props) {
   const options = props.options || [
-    { value: "...", label: "ABC", disabled: true },
-    { value: "***", label: "CDE", selected: true }
+    { value: "zzz", label: "ABC", disable: false },
+    { value: "xxx", label: "CDE", selected: true }
   ];
   return (
     <Grid cols={props.cols || ""}>
@@ -58,8 +58,9 @@ export function LabelAndCombo(props) {
           return (
             <option
               {...props.option}
+              key={key}
               value={e.value}
-              selected={e.selected}
+              // selected={e.selected}
               disabled={e.disabled}
               label={e.label}
             />
@@ -74,7 +75,7 @@ export const LabelAndDate = props => {
   return (
     <Grid cols={props.cols || ""} className="input-group">
       <div className="input-group-prepend">
-        <span class="input-group-text">{props.label}</span>
+        <span className="input-group-text">{props.label}</span>
       </div>
       <DatePicker
         dateFormat="dd/MM/yyyy"
