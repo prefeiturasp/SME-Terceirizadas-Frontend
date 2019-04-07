@@ -106,13 +106,11 @@ class MenuChange extends Component {
           <div className="form-group row">
             <Button
               style={ButtonStyle.OutlineInfo}
-              // onClick={() => addDay(description)}
               className="ml-3"
               label="Adicionar dia"
             />
             <Button
               style={ButtonStyle.OutlineInfo}
-              // onClick={() => addCycle(description)}
               className="ml-3"
               label="Adicionar Ciclo"
             />
