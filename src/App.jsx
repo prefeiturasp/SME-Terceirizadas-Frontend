@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import "./App.css";
-import MenuChange from "./components/AddFood";
-
+import MenuChange from "./components/Permissions/Permissions";
+import Router from './routes'
 
 class App extends Component {
   render() {
     return (
       <div>
-        <MenuChange />
+        <Router></Router>
+        {/* <MenuChange /> */}
       </div>
     );
   }
