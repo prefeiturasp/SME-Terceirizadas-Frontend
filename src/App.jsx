@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import MenuChange from "./components/MenuChange";
+import MenuChange from "./components/DayChange";
+
 
 class App extends Component {
   render() {

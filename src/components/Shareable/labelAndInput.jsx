@@ -7,12 +7,10 @@ import moment from "moment";
 import PropTypes from "prop-types";
 
 export const LabelAndInput = props => {
+  const {meta} = props
   return (
-    <Grid cols={props.cols || ''}
-      classNameArgs={props.classNameArgs || ''}>
-      <label
-        htmlFor={props.name}
-        className={"col-form-label"}>
+    <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
+      <label htmlFor={props.name} className={"col-form-label"}>
         {props.label}
       </label>
       <input
@@ -22,15 +20,15 @@ export const LabelAndInput = props => {
         id={props.name}
         value={props.value}
         placeholder={props.placeholder}
-
-
-
-
-
         readOnly={props.readOnly || false}
         type={props.type}
         onChange={props.onChange}
       />
+      <div>
+        {meta.touched &&
+          ((meta.error && <span>{meta.error}</span>) ||
+            (meta.warning && <span>{meta.warning}</span>))}
+      </div>
     </Grid>
   );
 };
