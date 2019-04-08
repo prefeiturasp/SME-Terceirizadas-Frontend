@@ -100,9 +100,21 @@ class MenuChange extends Component {
             <label className="session-header mt-3">Data de alteração</label>
           </div>
           <div className="form-group row">
-            <LabelAndDate cols="4 4 4 4" name="de" label="Alterar dia" />
-            <LabelAndDate cols="4 4 4 4" name="para" label="Para" />
+            <Field
+              name="de"
+              cols="6 6 6 6"
+              label="De"
+              component={LabelAndDate}
+            />
+            <Field
+              name="para"
+              cols="6 6 6 6"
+              label="Para"
+              component={LabelAndDate}
+            />
           </div>
+
+          <div className="form-group row" />
           <div className="form-group row">
             <Button
               style={ButtonStyle.OutlineInfo}
