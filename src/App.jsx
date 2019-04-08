@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import MenuChange from "./components/DayChange";
+import MenuChange from "./components/AddFood";
 
 
 class App extends Component {
