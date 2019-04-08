@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
-import MenuChange from "./components/MenuChange";
-import Routes from './routes'
-import Main from "./components/Main/Main";
+import MenuChange from "./components/AddFood";
+import Router from './routes'
 
 class App extends Component {
   render() {

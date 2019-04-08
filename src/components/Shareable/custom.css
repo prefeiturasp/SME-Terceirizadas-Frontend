@@ -87,6 +87,17 @@ textarea {
   font-size: 24px;
   line-height: normal;
   color: #353535;
+  padding: 20px;
+}
+
+.permission {
+  display: block;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: normal;
+  padding: 10px;
 }
 
 .fa-calendar {
