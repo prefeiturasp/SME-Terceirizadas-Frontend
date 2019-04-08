@@ -8,7 +8,8 @@ import moment from "moment";
 import PropTypes from "prop-types";
 
 export const LabelAndInput = props => {
-  const {meta} = props
+  //TODO: colocar primeiro valor como vazio por default.
+  const { meta } = props;
   return (
     <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
       <label htmlFor={props.name} className={"col-form-label"}>

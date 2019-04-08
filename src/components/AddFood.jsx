@@ -3,10 +3,63 @@ import DatePicker from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Shareable/custom.css";
-import { Field, reduxForm } from "redux-form";
-import { LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
-import BaseButton, { ButtonType, ButtonStyle } from "./Shareable/button";
+import { Field, FieldArray, reduxForm } from "redux-form";
+import {
+  LabelAndInput,
+  LabelAndTextArea,
+  LabelAndCombo
+} from "./Shareable/labelAndInput";
+import BaseButton, {
+  ButtonType,
+  ButtonStyle,
+  ButtonIcon
+} from "./Shareable/button";
 import { showResults } from "../helpers/utilities";
+
+const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
+  <ul>
+    {fields.map((member, index) => (
+      <ol key={index}>
+        <div className="form-group row">
+          <Field
+            name={`periodo_${index}`}
+            cols="3 3 3 3"
+            type="text"
+            component={LabelAndCombo}
+            label="Período de inclusão"
+          />
+          <Field
+            cols="3 3 3 3"
+            name={`tipo_${index}`}
+            component={LabelAndCombo}
+            label="Tipo de alimentação"
+          />
+          <Field
+            cols="3 3 3 3"
+            name={`nro_alunos_${index}`}
+            component={LabelAndInput}
+            type="number"
+            label="Número de alunos"
+          />
+          <BaseButton
+            className="ml-2"
+            onClick={() => fields.remove(index)}
+            style={ButtonStyle.Danger}
+            icon={ButtonIcon.TRASH}
+          />
+        </div>
+      </ol>
+    ))}
+    <div className="form-group row">
+      <BaseButton
+        style={ButtonStyle.OutlineDark}
+        onClick={() => fields.push({})}
+        label="Adicionar Período"
+      />
+    </div>
+    {submitFailed && error && <span>{error}</span>}
+  </ul>
+);
 
 class AddFood extends Component {
   constructor(props) {
@@ -149,59 +202,8 @@ class AddFood extends Component {
               name="nome"
             />
           </div>
-          {/* TODO: aplicar FieldArray https://redux-form.com/8.1.0/docs/api/fieldarray.md/ */}
-          {food_periods.map((food_period, index) => (
-            <div className="form-row">
-              <div className="form-group col-md-5">
-                <label className="bold" for="food_period">
-                  Período de inclusão
-                </label>
-                <select
-                  placeholder="Selecione"
-                  name="food_period"
-                  className="form-control"
-                >
-                  <option value="" disabled selected>
-                    Selecione
-                  </option>
-                  <option>1º Período - Matutino</option>
-                </select>
-              </div>
-              <div className="form-group col-md-4">
-                <label for="food_type">Tipo de alimentação</label>
-                <select name="food_type" className="form-control">
-                  <option selected>Selecione</option>
-                  <option>...</option>
-                </select>
-              </div>
-              <div className="form-group col-md-2">
-                <label for="student_count">Nº de alunos</label>
-                <input
-                  name="student_count"
-                  type="text"
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group col-md-1">
-                <i
-                  onClick={this.handleRemoveFoodPeriod(index)}
-                  className="fa fa-trash fa-2x icon"
-                  aria-hidden="true"
-                />
-              </div>
-            </div>
-          ))}
-          <div className="form-group row">
-            <div className="col-sm-4">
-              <button
-                type="button"
-                onClick={this.handleAddFoodPeriod}
-                className="col-12 btn btn-outline-dark"
-              >
-                Adicionar Período
-              </button>
-            </div>
-          </div>
+          <FieldArray name="periodosTodos" component={renderPeriodos} />
+
           <label className="bold">Data de suspensão</label>
           {suspension_dates.map((suspension_date, index) => (
             <div className="form-group row">

@@ -23,6 +23,13 @@ export var ButtonStyle = {
   OutlineLink: "outline-link"
 };
 
+export var ButtonIcon = {
+  TRASH: "trash",
+  HOME: "home",
+  CLOSE: "close",
+  FOLDER: "folder"
+};
+
 export var ButtonType = {
   SUBMIT: "submit",
   BUTTON: "button",
@@ -31,6 +38,7 @@ export var ButtonType = {
 
 export default class BaseButton extends Component {
   // TODO: desabilitar o botao quando estiver fazendo uma ação.
+  // TODO incrementar a logica de icone
   // VER> https://redux-form.com/8.1.0/examples/fieldlevelvalidation/
   render() {
     return (
@@ -40,7 +48,9 @@ export default class BaseButton extends Component {
         onClick={this.props.onClick}
       >
         {this.props.label}
+        <i class={"fa fa-" + this.props.icon} />
       </button>
     );
   }
 }
+// <button class="btn"><i class="fa fa-trash"></i> Trash</button>
