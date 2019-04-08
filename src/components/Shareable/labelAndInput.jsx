@@ -1,11 +1,12 @@
-import React from "react";
-import { Grid, Input } from "./responsiveBs4";
+import React, { Component } from "react";
+import { Grid } from "./responsiveBs4";
 import DatePicker from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
 import "./custom.css";
+import moment from "moment";
+import PropTypes from "prop-types";
 
 export const LabelAndInput = props => {
-  // TODO: add calendar icon case type=date
   return (
     <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
       <label htmlFor={props.name} className={"col-form-label"}>
@@ -67,20 +68,61 @@ export const LabelAndCombo = props => {
   );
 };
 
-export const LabelAndDate = props => {
-  return (
-    <Grid cols={props.cols || ""} className="input-group">
-      <div className="input-group-prepend">
-        <span className="input-group-text">{props.label}</span>
-      </div>
-      <DatePicker
-        dateFormat="dd/MM/yyyy"
-        selected={props.selected}
-        onChange={props.onChange}
-        className="form-control"
-        locale={ptBR}
-      />
-      <i className="fa fa-calendar fa-lg" />
-    </Grid>
-  );
-};
+export class LabelAndDate extends Component {
+  // Thanks community :D
+  // https://github.com/Hacker0x01/react-datepicker/issues/543
+
+  static propTypes = {
+    input: PropTypes.shape({
+      onChange: PropTypes.func.isRequired,
+      value: PropTypes.string.isRequired
+    }).isRequired,
+    meta: PropTypes.shape({
+      touched: PropTypes.bool,
+      error: PropTypes.bool
+    }),
+    placeholder: PropTypes.string
+  };
+
+  static defaultProps = {
+    placeholder: ""
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(date) {
+    this.props.input.onChange(
+      moment(date).format(this.props.dateFormat || "DD/MM/YYYY")
+    );
+  }
+
+  render() {
+    const {
+      input,
+      placeholder,
+      meta: { touched, error }
+    } = this.props;
+
+    return (
+      <Grid cols={this.props.cols || ""} className="input-group">
+        <div className="input-group-prepend">
+          <span className="input-group-text">{this.props.label}</span>
+        </div>
+        <DatePicker
+          {...input}
+          placeholder={placeholder}
+          dateFormat={this.props.dateFormat || "DD/MM/YYYY"}
+          selected={input.value ? new Date() : null}
+          className="form-control"
+          onChange={this.handleChange}
+          locale={ptBR}
+        />
+        <i className="fa fa-calendar fa-lg" />
+        {touched && error && <span>{error}</span>}
+      </Grid>
+    );
+  }
+}
