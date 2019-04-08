@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Button, { ButtonStyle } from "./Shareable/button";
+import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndCombo,
@@ -7,16 +7,18 @@ import {
   LabelAndDate
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { addCycle, addDay, rfInputEdited } from "../actions/menuActions";
+import { Field, reduxForm } from "redux-form";
+
+const myDataHandler = event => {
+  console.log("handle submit chamado!", event);
+};
 
 class MenuChange extends Component {
   render() {
-    const { addCycle, description, addDay, rfInputEdited } = this.props;
+    console.log("redux forms props:_>", this.props);
     return (
       <div className="container">
-        <form>
+        <form onSubmit={this.props.handleSubmit(myDataHandler)}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
@@ -27,17 +29,16 @@ class MenuChange extends Component {
             </label>
           </div>
           <div className="form-group row">
-            <LabelAndInput
+            <Field
+              component={LabelAndInput}
               placeholder="Registro funcional"
-              onChange={payload => rfInputEdited(payload)}
-              value={this.props.rf}
               cols="6 6 6 6"
               type="text"
               name="rf"
               label="RF Responsável"
             />
-            <LabelAndInput
-              value={this.props.cargo}
+            <Field
+              component={LabelAndInput}
               cols="6 6 6 6"
               type="text"
               name="cargo"
@@ -45,34 +46,54 @@ class MenuChange extends Component {
             />
           </div>
           <div className="form-group row">
-            <LabelAndInput
-              value={this.props.nome}
+            <Field
+              component={LabelAndInput}
               cols="12 12 12 12"
               name="nome"
               label="Nome"
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo
+            <Field
+              component={LabelAndCombo}
               cols="5 5 5 5"
               name="periodo"
               label="Período de alteração"
             />
-            <LabelAndCombo
+            <Field
+              component={LabelAndCombo}
               cols="4 4 4 4"
               name="tipo"
               label="Tipo de Alimentação"
             />
-            <LabelAndInput
+            <Field
+              component={LabelAndInput}
               cols="3 3 3 3"
               name="nro_alunos"
+              type="number"
               label="Nº de alunos"
             />
           </div>
           <div className="form-group row">
-            <LabelAndCombo cols="5 5 5 5" label="Período de alteração" />
-            <LabelAndCombo cols="4 4 4 4" label="Tipo de Alimentação" />
-            <LabelAndInput cols="3 3 3 3" type="number" label="Nº de alunos" />
+            <Field
+              component={LabelAndCombo}
+              cols="5 5 5 5"
+              name="periodo_ateracao"
+              label="Período de alteração"
+            />
+            <Field
+              component={LabelAndCombo}
+              cols="4 4 4 4"
+              name="tipo"
+              label="Tipo de Alimentação"
+            />
+            <Field
+              component={LabelAndInput}
+              cols="3 3 3 3"
+              type="number"
+              name="nroa"
+              label="Nº de alunos"
+            />
           </div>
           <Button style={ButtonStyle.OutlineDark} label="Adicionar Período" />
           <div className="form-group row-1">
@@ -85,24 +106,27 @@ class MenuChange extends Component {
           <div className="form-group row">
             <Button
               style={ButtonStyle.OutlineInfo}
-              onClick={() => addDay(description)}
               className="ml-3"
               label="Adicionar dia"
             />
             <Button
               style={ButtonStyle.OutlineInfo}
-              onClick={() => addCycle(description)}
               className="ml-3"
               label="Adicionar Ciclo"
             />
           </div>
           <div className="form-group">
-            <LabelAndTextArea label="Observações" name="obs" />
+            <Field
+              component={LabelAndTextArea}
+              label="Observações"
+              name="obs"
+            />
           </div>
           <div className="form-group row float-right">
             <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
             <Button
               label="Enviar Solicitação"
+              type={ButtonType.SUBMIT}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
@@ -113,24 +137,9 @@ class MenuChange extends Component {
   }
 }
 
-// olhe o arquivo que agrega os reducers src/reducers.js
-// state é o global, menu é o reducer que me interessa
-// description é quem vai ser mapeado para dentro do componente
-const mapStateToProps = state => ({
-  rf: state.menu.rf,
-  cargo: state.menu.cargo,
-  nome: state.menu.nome,
-  description: state.menu.description
-});
-
-// mapea addCycle no dispatch, separar metodos por ,
-// const mapDispatchToProps = dispatch => {
-//   bindActionCreators({ addCycle }, dispatch)
-// }
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addDay, addCycle, rfInputEdited }, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MenuChange);
+// export default MenuChange;
+export default (MenuChange = reduxForm({
+  form: "menuChange",
+  //https://redux-form.com/6.0.0-alpha.4/docs/api/reduxform.md/#-destroyonunmount-boolean-optional-
+  destroyOnUnmount: false // para nao perder o estado
+})(MenuChange));

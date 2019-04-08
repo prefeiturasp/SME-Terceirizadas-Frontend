@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
 import "./custom.css";
 
-export function LabelAndInput(props) {
+export const LabelAndInput = props => {
   // TODO: add calendar icon case type=date
   return (
     <Grid cols={props.cols || ''}
@@ -15,9 +15,10 @@ export function LabelAndInput(props) {
         {props.label}
       </label>
       <input
+        {...props.input}
+        className="form-control"
         name={props.name}
         id={props.name}
-        className="form-control"
         value={props.value}
         placeholder={props.placeholder}
 
@@ -31,15 +32,17 @@ export function LabelAndInput(props) {
       />
     </Grid>
   );
-}
+};
 
-export function LabelAndTextArea(props) {
+export const LabelAndTextArea = props => {
   return (
     <Grid cols={props.cols}>
       <label htmlFor={props.name} className={"col-form-label"}>
         {props.label}
       </label>
       <textarea
+        {...props.input}
+        id={props.name}
         className="form-control"
         rows="4"
         value={props.value}
@@ -47,11 +50,11 @@ export function LabelAndTextArea(props) {
       />
     </Grid>
   );
-}
+};
 
-export function LabelAndCombo(props) {
+export const LabelAndCombo = props => {
   const options = props.options || [
-    { value: "...", label: "...", disabled: true },
+    { value: "...", label: "...", disable: false },
     { value: "***", label: "***", selected: true }
   ];
   return (
@@ -59,27 +62,24 @@ export function LabelAndCombo(props) {
       <label htmlFor={props.name} className={"col-form-label"}>
         {props.label}
       </label>
-      <select name={props.name} className="form-control">
+      <select {...props.input} name={props.name} className="form-control">
         {options.map((e, key) => {
           return (
-            <option
-              value={e.value}
-              selected={e.selected}
-              disabled={e.disabled}
-              label={e.label}
-            />
+            <option key={key} value={e.value} disabled={e.disabled}>
+              {e.label}
+            </option>
           );
         })}
       </select>
     </Grid>
   );
-}
+};
 
 export const LabelAndDate = props => {
   return (
     <Grid cols={props.cols || ""} className="input-group">
       <div className="input-group-prepend">
-        <span class="input-group-text">{props.label}</span>
+        <span className="input-group-text">{props.label}</span>
       </div>
       <DatePicker
         dateFormat="dd/MM/yyyy"

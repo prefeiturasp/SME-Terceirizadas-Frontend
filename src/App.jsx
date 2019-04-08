@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "./App.css";
-import Routes from "./routes";
+import MenuChange from "./components/MenuChange";
 
 class App extends Component {
   render() {
     return (
       <div>
-        <Routes />
+        <MenuChange />
       </div>
     );
   }
