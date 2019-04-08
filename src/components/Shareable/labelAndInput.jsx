@@ -3,6 +3,7 @@ import { Grid } from "./responsiveBs4";
 import DatePicker from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
 import "./custom.css";
+import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import PropTypes from "prop-types";
 
