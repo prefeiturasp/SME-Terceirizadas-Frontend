@@ -28,7 +28,7 @@ export class Login extends Component {
     const { dispatch } = this.props;
 
     if (email && password) {
-      console.log("chamando login com ", email, password);
+      // console.log("chamando login com ", email, password);
       login(email, password);
     }
     // Authentication(this.state.email,this.state.password)

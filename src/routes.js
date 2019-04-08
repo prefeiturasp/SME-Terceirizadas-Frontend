@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import Login from './components/Login'
 import AddFood from './components/AddFood'
 import MenuChange from './components/MenuChange'
+import Main from './components/Main/Main';
 
 const isAuthenticate = () => {
   if (localStorage.getItem('user')) {
@@ -32,6 +33,7 @@ const Routes = () => (
       <Route exact path="/" component={Login} />
       <PrivateRouter path="/add-food" component={AddFood} />
       <PrivateRouter path="/menu-change" component={MenuChange} />
+      <PrivateRouter path="/main" component={Main} />
     </Switch>
   </BrowserRouter>
 )
