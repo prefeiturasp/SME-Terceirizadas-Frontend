@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-class Header extends Component {
+export class Header extends Component {
   state = {}
   render() {
     return (
-      <div id="wrapper">
-        <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme">
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme fixed-top">
           <div className="container-fluid">
             <div className="nav-bar">
               <a className="navbar-brand" href="#">
@@ -35,4 +35,3 @@ class Header extends Component {
   }
 }
 
-export default Header;
