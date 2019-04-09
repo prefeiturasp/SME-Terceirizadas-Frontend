@@ -12,7 +12,7 @@ export class MenuChangePage extends Component {
       <div id="wrapper">
         <Header />
         <Sidebar />
-        <div className="pt-5">
+        <div id="content-wrapper" className="pt-5">
           <MenuChange />
         </div>
       </div>

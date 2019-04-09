@@ -17,7 +17,7 @@ export class MenuChange extends Component {
   render() {
     console.log("redux forms props:_>", this.props);
     return (
-      <div id="content-wrapper" className="d-flex flex-column p-4 mt-5">
+      <div className="d-flex flex-column p-4 mt-5">
         <form onSubmit={this.props.handleSubmit(myDataHandler)}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
