@@ -1,36 +1,59 @@
-import React from "react";
-import { Grid } from "./responsiveBs4";
-import "./custom.css";
-import "react-datepicker/dist/react-datepicker.css";
+import React, { Component } from "react";
 import { Field } from "redux-form";
+import PropTypes from "prop-types";
 
-export const RadioboxGroup = props => {
-  // Thanks! https://codeburst.io/forms-with-redux-form-v7-part-2-of-2-f44ffee4a34d
-  if (props && props.input && props.options) {
-    const renderRadioButtons = (key, index) => {
+
+export default class RadioboxGroup extends Component {
+  static propTypes = {
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.string.isRequired,
+      })
+    ).isRequired
+  };
+
+  field = ({ input, meta, options }) => {
+    const { name, onChange, onBlur, onFocus } = input;
+    const { touched, error } = meta;
+    const inputValue = input.value;
+
+    const radioes = options.map(({ label, value }, index) => {
+      const handleChange = event => {
+        const arr = [...inputValue];
+        if (event.target.checked) {
+          arr.push(value);
+        } else {
+          arr.splice(arr.indexOf(value), 1);
+        }
+        onBlur(arr);
+        return onChange(arr);
+      };
+      const checked = inputValue.includes(value);
       return (
-        <label
-          className="sans-serif w-100"
-          key={`${index}`}
-          htmlFor={`${props.input.name}-${index}`}
-        >
-          <Field
-            id={`${props.input.name}`}
-            component="input"
-            name={props.input.name}
+        <label key={`radio-${index}`}>
+          <input
             type="radio"
-            value={key}
-            className="mh2"
+            name={`${name}[${index}]`}
+            value={value}
+            checked={checked}
+            onChange={handleChange}
+            onFocus={onFocus}
           />
-          {props.options[key]}
+          <span>{label}</span>
         </label>
       );
-    };
+    });
+
     return (
-      <Grid cols={props.cols || ""}>
-        {props.options && Object.keys(props.options).map(renderRadioButtons)}
-      </Grid>
+      <div>
+        <div>{radioes}</div>
+        {touched && error && <p className="error">{error}</p>}
+      </div>
     );
+  };
+
+  render() {
+    return <Field {...this.props} type="radio" component={this.field} />;
   }
-  return <div />;
-};
+}

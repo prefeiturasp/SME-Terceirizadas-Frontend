@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import PropTypes from "prop-types";
 
+//Thanks community: https://github.com/erikras/redux-form/issues/1037
 export default class CheckboxGroup extends Component {
   static propTypes = {
     options: PropTypes.arrayOf(

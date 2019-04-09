@@ -10,22 +10,22 @@ import { Field, reduxForm } from "redux-form";
 import { required } from "../helpers/validators";
 import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
-import { RadioboxGroup } from "./Shareable/RadioboxGroup";
+import RadioboxGroup from "./Shareable/RadioboxGroup";
 
 export class SelecionaKitLanche extends Component {
   render() {
-    const weekdayOptions = [
-      { value: 1, label: "Modelo de Kit nº 1" },
+    const kitOptions = [
+      { value: 1, label: "Modelo de Kit nº 1", selected: true },
       { value: 2, label: "Modelo de Kit nº 2" },
       { value: 3, label: "Modelo de Kit nº 3" }
     ];
     return (
       <div>
         <Field
-          name="weekdays"
-          label="Weekdays"
+          name="kit_lanche"
+          label="Kit Lanche"
           component={CheckboxGroup}
-          options={weekdayOptions}
+          options={kitOptions}
         />
       </div>
     );
@@ -34,17 +34,18 @@ export class SelecionaKitLanche extends Component {
 
 export class SelecionaTempoPasseio extends Component {
   render() {
+    const timeOptions = [
+      { value: "4h", label: "até 4 horas - 1 kit", selected: true },
+      { value: "5_7h", label: "de 5 a 7 horas - 2 kits" },
+      { value: "8h", label: "8 horas ou mais - 3 kits" }
+    ];
     return (
       <Field
-        name="kit_lanche"
+        name="tempo_permanencia"
         label="Tempo previsto do passeio"
         component={RadioboxGroup}
-        onChange={(e1, e2, e3, e4) => this.myEvent((e1, e2, e3, e4))}
-        options={{
-          kit4h: "até 4 horas - 1 kit",
-          kit5_7h: "5 a 7 horas - 2 kits",
-          kit8h: "8 horas ou mais - 3 kits"
-        }}
+        // onChange={(e1, e2, e3, e4) => this.myEvent((e1, e2, e3, e4))}
+        options={timeOptions}
       />
     );
   }
