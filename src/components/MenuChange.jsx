@@ -13,11 +13,11 @@ const myDataHandler = event => {
   console.log("handle submit chamado!", event);
 };
 
-class MenuChange extends Component {
+export class MenuChange extends Component {
   render() {
     console.log("redux forms props:_>", this.props);
     return (
-      <div className="container">
+      <div className="d-flex flex-column p-4 mt-5">
         <form onSubmit={this.props.handleSubmit(myDataHandler)}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
@@ -149,7 +149,6 @@ class MenuChange extends Component {
   }
 }
 
-// export default MenuChange;
 export default (MenuChange = reduxForm({
   form: "menuChange",
   //https://redux-form.com/6.0.0-alpha.4/docs/api/reduxform.md/#-destroyonunmount-boolean-optional-

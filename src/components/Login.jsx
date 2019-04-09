@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import {
   userActions,
   emailEdited,
@@ -11,11 +12,30 @@ import { bindActionCreators } from "redux";
 
 export class Login extends Component {
   constructor(props) {
+
     super(props);
-    this.props.logout();
+    // this.props.logout();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+
+
+
+
+ PrivateRouter = ({ component: Component, ...rest }) => (
+
+  <Route
+    {...rest}
+    render={props =>
+      true ? (
+        <Component {...props} />
+      ) : (
+          <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+        )
+    }
+  />
+);
 
   validForm() {
     return this.props.email.length > 0 && this.props.password.length > 0;
@@ -28,7 +48,7 @@ export class Login extends Component {
     const { dispatch } = this.props;
 
     if (email && password) {
-      console.log("chamando login com ", email, password);
+      // console.log("chamando login com ", email, password);
       login(email, password);
     }
     // Authentication(this.state.email,this.state.password)
@@ -41,7 +61,6 @@ export class Login extends Component {
   };
 
   render() {
-    console.log(this.props);
     const { loggingIn } = this.props;
     // const { email, password, submitted } = this.state;
     return (

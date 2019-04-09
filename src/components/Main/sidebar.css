@@ -1,0 +1,16 @@
+body {
+  background-color: #F7F6F8 !important;
+}
+
+.navbar-sme {
+  width: 100%;
+}
+
+.bg-gradiente-sme {
+  background-color: #8BC34A;
+  background: linear-gradient(45deg, #388E3C 0%, #8BC34A 100%);
+  box-shadow: 6px 0px 18px rgba(0, 0, 0, 0.15);
+  background-size: cover;
+  margin-left: -15px;
+  height: 100%;
+}
