@@ -24,7 +24,7 @@ export class Sidebar extends Component {
 
           <a className="sidebar-brand d-flex align-items-center justify-content-center" href="#teste">
             <div className="sidebar-brand-icon rotate-n-15">
-              <img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"></img>
+              <img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
             </div>
           </a>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
