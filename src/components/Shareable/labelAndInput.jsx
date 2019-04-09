@@ -6,10 +6,25 @@ import "./custom.css";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import PropTypes from "prop-types";
+import If from "./layout";
+
+export const ErrorAlert = ({ meta }) => {
+  const isVisible = meta !== undefined;
+  var divStyle = {
+    color: "red"
+  };
+  return (
+    <If isVisible={isVisible}>
+      <div>
+        {meta.touched &&
+          ((meta.error && <span style={divStyle}>{meta.error}</span>) ||
+            (meta.warning && <span style={divStyle}>{meta.warning}</span>))}
+      </div>
+    </If>
+  );
+};
 
 export const LabelAndInput = props => {
-  //TODO: colocar primeiro valor como vazio por default.
-  const { meta } = props;
   return (
     <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
       <label htmlFor={props.name} className={"col-form-label"}>
@@ -26,11 +41,7 @@ export const LabelAndInput = props => {
         type={props.type}
         onChange={props.onChange}
       />
-      <div>
-        {meta.touched &&
-          ((meta.error && <span>{meta.error}</span>) ||
-            (meta.warning && <span>{meta.warning}</span>))}
-      </div>
+      <ErrorAlert meta={props.meta} />
     </Grid>
   );
 };
@@ -49,6 +60,7 @@ export const LabelAndTextArea = props => {
         value={props.value}
         name={props.name}
       />
+      <ErrorAlert meta={props.meta} />
     </Grid>
   );
 };
@@ -72,6 +84,7 @@ export const LabelAndCombo = props => {
           );
         })}
       </select>
+      <ErrorAlert meta={props.meta} />
     </Grid>
   );
 };
@@ -108,11 +121,7 @@ export class LabelAndDate extends Component {
   }
 
   render() {
-    const {
-      input,
-      placeholder,
-      meta: { touched, error }
-    } = this.props;
+    const { input, placeholder, meta } = this.props;
 
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
@@ -129,7 +138,7 @@ export class LabelAndDate extends Component {
           locale={ptBR}
         />
         <i className="fa fa-calendar fa-lg" />
-        {touched && error && <span>{error}</span>}
+        <ErrorAlert meta={meta} />
       </Grid>
     );
   }

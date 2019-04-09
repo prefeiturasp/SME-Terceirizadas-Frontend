@@ -14,6 +14,12 @@ import BaseButton, {
   ButtonStyle,
   ButtonIcon
 } from "./Shareable/button";
+import {
+  alphaNumeric,
+  maxLength15,
+  required,
+  minLength2
+} from "../helpers/validators";
 import { showResults } from "../helpers/utilities";
 
 const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
@@ -40,6 +46,7 @@ const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
             component={LabelAndInput}
             type="number"
             label="Número de alunos"
+            validate={[required, maxLength15, minLength2]}
           />
           <BaseButton
             className="ml-2"
@@ -186,6 +193,7 @@ class AddFood extends Component {
               cols="6 6 6 6"
               label="RF Responsável"
               name="rf"
+              validate={[required, maxLength15, minLength2]}
             />
             <Field
               component={LabelAndInput}

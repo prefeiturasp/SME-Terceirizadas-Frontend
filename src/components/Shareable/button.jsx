@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import If from "./layout";
 // https://getbootstrap.com/docs/4.0/components/buttons/
 export var ButtonStyle = {
   Primary: "primary",
@@ -48,7 +48,9 @@ export default class BaseButton extends Component {
         onClick={this.props.onClick}
       >
         {this.props.label}
-        <i class={"fa fa-" + this.props.icon} />
+        <If isVisible={this.props.icon}>
+          <i class={`fa fa-${this.props.icon}`} />
+        </If>
       </button>
     );
   }
