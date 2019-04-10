@@ -31,6 +31,7 @@ export class SelecionaKitLanche extends Component {
       { value: KIT_ENUM.KIT2.value, label: KIT_ENUM.KIT2.label },
       { value: KIT_ENUM.KIT3.value, label: KIT_ENUM.KIT3.label }
     ];
+    let checkAll = kitOptions.length === this.props.choicesNumberLimit;
     return (
       <div>
         <Field
@@ -39,6 +40,7 @@ export class SelecionaKitLanche extends Component {
           component={CheckboxGroup}
           options={kitOptions}
           choicesNumberLimit={this.props.choicesNumberLimit}
+          checkAll={checkAll}
           validate={[requiredCheck]}
         />
       </div>
@@ -70,7 +72,7 @@ export class TourRequest extends Component {
   constructor(props) {
     super(props);
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
-    this.state = { qtd_kit_lanche: 3 };
+    this.state = { qtd_kit_lanche: 0 };
   }
   // TODO: Rever uma forma melhor de escrever isso.
   parser = {
@@ -83,7 +85,6 @@ export class TourRequest extends Component {
     this.setState({
       qtd_kit_lanche: newQuantity
     });
-    console.log("estado: ", this.state);
   };
 
   render() {
