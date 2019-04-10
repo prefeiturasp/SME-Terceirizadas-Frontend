@@ -2,13 +2,12 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import PropTypes from "prop-types";
 
-
 export default class RadioboxGroup extends Component {
   static propTypes = {
     options: PropTypes.arrayOf(
       PropTypes.shape({
         label: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired,
+        value: PropTypes.string.isRequired
       })
     ).isRequired
   };
@@ -22,9 +21,7 @@ export default class RadioboxGroup extends Component {
       const handleChange = event => {
         const arr = [...inputValue];
         if (event.target.checked) {
-          arr.push(value);
-        } else {
-          arr.splice(arr.indexOf(value), 1);
+          arr[0] = value;
         }
         onBlur(arr);
         return onChange(arr);
