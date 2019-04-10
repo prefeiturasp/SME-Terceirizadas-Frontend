@@ -25,6 +25,7 @@ export const KIT_ENUM = {
 };
 
 export class SelecionaKitLanche extends Component {
+
   render() {
     const kitOptions = [
       { value: KIT_ENUM.KIT1.value, label: KIT_ENUM.KIT1.label },
