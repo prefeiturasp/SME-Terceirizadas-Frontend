@@ -161,6 +161,5 @@ export class TourRequest extends Component {
 
 export default (TourRequest = reduxForm({
   form: "tourRequest",
-  //https://redux-form.com/6.0.0-alpha.4/docs/api/reduxform.md/#-destroyonunmount-boolean-optional-
   destroyOnUnmount: false // para nao perder o estado
 })(TourRequest));
