@@ -156,7 +156,7 @@ export class Sidebar extends Component {
 
           {/* TODO  : import images in react */}
           <div className="page-footer mx-auto justify-content-center mt-5 pb-2">
-            <img src="./logo_sme.svg" className="rounded float-left" alt="SME Educação" />
+            <img src="/assets/image/logo_sme.svg" className="rounded float-left" alt="SME Educação" />
           </div>
 
         </ul>

@@ -22,6 +22,7 @@ const login = async (email, password) => {
 
 function logout() {
   localStorage.removeItem('user');
+  window.location.reload();
 }
 
 
