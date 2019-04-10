@@ -6,8 +6,8 @@ export default class RadioboxGroup extends Component {
   static propTypes = {
     options: PropTypes.arrayOf(
       PropTypes.shape({
-        label: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired
+        value: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired
       })
     ).isRequired
   };
@@ -19,12 +19,12 @@ export default class RadioboxGroup extends Component {
 
     const radioes = options.map(({ label, value }, index) => {
       const handleChange = event => {
-        const arr = [...inputValue];
+        let selected = "";
         if (event.target.checked) {
-          arr[0] = value;
+          selected = value;
         }
-        onBlur(arr);
-        return onChange(arr);
+        onBlur(selected);
+        return onChange(selected);
       };
       const checked = inputValue.includes(value);
       return (
