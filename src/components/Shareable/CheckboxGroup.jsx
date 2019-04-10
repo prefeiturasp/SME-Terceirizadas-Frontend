@@ -13,29 +13,22 @@ export const field = ({
 }) => {
   const { name, onChange, onBlur, onFocus } = input;
   const inputValue = input.value;
+
   const checkboxes = options.map(({ label, value }, index) => {
     const handleChange = event => {
       checkboxesSensitivity(choicesNumberLimit);
-      const arr = [...inputValue];
       if (checkAll) {
-        const allCheckboxes = [];
-        const checks = $("input.compare_items").each(() => {
-          allCheckboxes.push($(this).val());
-        });
-        checks.map(index => {
-          arr.push(checks[index].value);
-        });
+        return selectAll(onBlur, onChange);
+      }
+      const arr = [...inputValue];
+      if (event.target.checked) {
+        arr.push(value);
       } else {
-        if (event.target.checked) {
-          arr.push(value);
-        } else {
-          arr.splice(arr.indexOf(value), 1);
-        }
+        arr.splice(arr.indexOf(value), 1);
       }
       onBlur(arr);
       return onChange(arr);
     };
-
     const checked = inputValue.includes(value);
     return (
       <label key={`checkbox-${index}`}>
@@ -75,6 +68,19 @@ export default class CheckboxGroup extends Component {
   render() {
     return <Field {...this.props} component={field} />;
   }
+}
+
+function selectAll(onBlur, onChange) {
+  const arr = [];
+  const allCheckboxes = [];
+  const checks = $("input.compare_items").each(() => {
+    allCheckboxes.push($(this).val());
+  });
+  checks.map(index => {
+    arr.push(checks[index].value);
+  });
+  onBlur(arr);
+  return onChange(arr);
 }
 
 function checkboxesSensitivity(choicesNumberLimit) {
