@@ -1,5 +1,10 @@
 export const required = value =>
-  value || typeof value === "number" ? undefined : "Campo obrigatório";
+  value !== undefined ? undefined : "Campo obrigatório";
+
+export const requiredCheck = value =>
+  value !== undefined
+    ? undefined
+    : "Campo obrigatório: selecione ao menos uma opção";
 
 const maxLength = max => value =>
   value && value.length > max ? `Must be ${max} characters or less` : undefined;
@@ -30,9 +35,7 @@ export const alphaNumeric = value =>
     : undefined;
 
 export const numericInteger = value =>
-    value && /[^0-9 ]/i.test(value)
-      ? "Somente números"
-      : undefined;
+  value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
 
 export const phoneNumber = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)

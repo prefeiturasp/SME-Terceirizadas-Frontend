@@ -7,7 +7,7 @@ import {
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
-import { required } from "../helpers/validators";
+import { requiredCheck, required } from "../helpers/validators";
 import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
@@ -26,7 +26,7 @@ export class SelecionaKitLanche extends Component {
           label="Kit Lanche"
           component={CheckboxGroup}
           options={kitOptions}
-          validate={[required]}
+          validate={[requiredCheck]}
         />
       </div>
     );
@@ -34,6 +34,17 @@ export class SelecionaKitLanche extends Component {
 }
 
 export class SelecionaTempoPasseio extends Component {
+  dispatchTempoPasseio = (event, newValue, previousValue, name) => {
+    // this.props.dispatch({ type: "TEMPO_PERMANENCIA", payload: event });
+    console.log(
+      "tempoPAssio",
+      event,
+      newValue,
+      previousValue,
+      name,
+      this.props
+    );
+  };
   render() {
     const timeOptions = [
       { value: "4h", label: "até 4 horas - 1 kit" },
@@ -45,7 +56,8 @@ export class SelecionaTempoPasseio extends Component {
         name="tempo_permanencia"
         label="Tempo previsto do passeio"
         component={RadioboxGroup}
-        validate={[required]}
+        validate={[requiredCheck]}
+        onChange={this.props.onChange}
         options={timeOptions}
       />
     );
@@ -53,6 +65,11 @@ export class SelecionaTempoPasseio extends Component {
 }
 
 export class TourRequest extends Component {
+  dispatchTempoPasseio = (event, newValue, previousValue, name) => {
+    this.props.dispatch({ type: "TEMPO_PERMANENCIA", payload: event });
+    console.log("tempoPAssio", event, newValue, previousValue, name, this.props);
+  };
+
   render() {
     return (
       <div className="d-flex flex-column p-4 mt-5">
@@ -91,7 +108,11 @@ export class TourRequest extends Component {
             />
           </div>
           <div className="form-group row">
-            <SelecionaTempoPasseio />
+            <SelecionaTempoPasseio
+              onChange={(event, newValue, previousValue, name) =>
+                this.dispatchTempoPasseio(event, newValue, previousValue, name)
+              }
+            />
           </div>
           <SelecionaKitLanche />
           <div className="form-group">
