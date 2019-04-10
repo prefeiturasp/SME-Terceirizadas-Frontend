@@ -12,12 +12,24 @@ import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
 
+export const HORAS_ENUM = {
+  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
+  _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
+  _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
+};
+
+export const KIT_ENUM = {
+  KIT1: { value: "kit_1", label: "Modelo de Kit nº 1" },
+  KIT2: { value: "kit_2", label: "Modelo de Kit nº 2" },
+  KIT3: { value: "kit_3", label: "Modelo de Kit nº 3" }
+};
+
 export class SelecionaKitLanche extends Component {
   render() {
     const kitOptions = [
-      { value: 1, label: "Modelo de Kit nº 1" },
-      { value: 2, label: "Modelo de Kit nº 2" },
-      { value: 3, label: "Modelo de Kit nº 3" }
+      { value: KIT_ENUM.KIT1.value, label: KIT_ENUM.KIT1.label },
+      { value: KIT_ENUM.KIT2.value, label: KIT_ENUM.KIT2.label },
+      { value: KIT_ENUM.KIT3.value, label: KIT_ENUM.KIT3.label }
     ];
     return (
       <div>
@@ -37,13 +49,13 @@ export class SelecionaKitLanche extends Component {
 export class SelecionaTempoPasseio extends Component {
   render() {
     const timeOptions = [
-      { value: "4h", label: "até 4 horas - 1 kit" },
-      { value: "5_7h", label: "de 5 a 7 horas - 2 kits" },
-      { value: "8h", label: "8 horas ou mais - 3 kits" }
+      { value: HORAS_ENUM._4.tempo, label: HORAS_ENUM._4.label },
+      { value: HORAS_ENUM._5a7.tempo, label: HORAS_ENUM._5a7.label },
+      { value: HORAS_ENUM._8.tempo, label: HORAS_ENUM._8.label }
     ];
     return (
       <Field
-        name="tempo_permanencia"
+        name="tempo_passeio"
         label="Tempo previsto do passeio"
         component={RadioboxGroup}
         validate={[requiredCheck]}
@@ -57,16 +69,21 @@ export class SelecionaTempoPasseio extends Component {
 export class TourRequest extends Component {
   constructor(props) {
     super(props);
-    this.setNumeroDeLanches = this.setNumeroDeLanches.bind(this);
-    this.state = { nro_lanches: 3};
+    this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
+    this.state = { qtd_kit_lanche: 3 };
   }
-
-  setNumeroDeLanches = (event, newValue, previousValue, name) => {
-    // random entre 1 e 3
+  // TODO: Rever uma forma melhor de escrever isso.
+  parser = {
+    "4h": HORAS_ENUM._4.qtd_kits,
+    "5_7h": HORAS_ENUM._5a7.qtd_kits,
+    "8h": HORAS_ENUM._8.qtd_kits
+  };
+  setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
+    let newQuantity = this.parser[event];
     this.setState({
-      nro_lanches: Math.floor(Math.random() * 3) + 1
+      qtd_kit_lanche: newQuantity
     });
-    console.log('estado: ', this.state);
+    console.log("estado: ", this.state);
   };
 
   render() {
@@ -109,11 +126,11 @@ export class TourRequest extends Component {
           <div className="form-group row">
             <SelecionaTempoPasseio
               onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeLanches(event, newValue, previousValue, name)
+                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
               }
             />
           </div>
-          <SelecionaKitLanche choicesNumberLimit={this.state.nro_lanches} />
+          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
           <div className="form-group">
             <Field
               component={LabelAndTextArea}
