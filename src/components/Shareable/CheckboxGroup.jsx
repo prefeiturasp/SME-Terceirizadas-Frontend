@@ -14,11 +14,16 @@ export default class CheckboxGroup extends Component {
     ).isRequired
   };
 
-  field = ({ input, meta, options }) => {
+  field = ({ input, meta, options, choicesNumberLimit }) => {
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
+    console.log(`pode escolher ate ${choicesNumberLimit} lanches... `)
 
     const checkboxes = options.map(({ label, value }, index) => {
+      const checkHowManyWasClicked = ()=>{
+        const arr = [...inputValue];
+      }
+
       const handleChange = event => {
         const arr = [...inputValue];
         if (event.target.checked) {

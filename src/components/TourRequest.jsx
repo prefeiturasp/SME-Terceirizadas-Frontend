@@ -26,6 +26,7 @@ export class SelecionaKitLanche extends Component {
           label="Kit Lanche"
           component={CheckboxGroup}
           options={kitOptions}
+          choicesNumberLimit={this.props.choicesNumberLimit}
           validate={[requiredCheck]}
         />
       </div>
@@ -34,17 +35,6 @@ export class SelecionaKitLanche extends Component {
 }
 
 export class SelecionaTempoPasseio extends Component {
-  dispatchTempoPasseio = (event, newValue, previousValue, name) => {
-    // this.props.dispatch({ type: "TEMPO_PERMANENCIA", payload: event });
-    console.log(
-      "tempoPAssio",
-      event,
-      newValue,
-      previousValue,
-      name,
-      this.props
-    );
-  };
   render() {
     const timeOptions = [
       { value: "4h", label: "até 4 horas - 1 kit" },
@@ -65,9 +55,18 @@ export class SelecionaTempoPasseio extends Component {
 }
 
 export class TourRequest extends Component {
-  dispatchTempoPasseio = (event, newValue, previousValue, name) => {
-    this.props.dispatch({ type: "TEMPO_PERMANENCIA", payload: event });
-    console.log("tempoPAssio", event, newValue, previousValue, name, this.props);
+  constructor(props) {
+    super(props);
+    this.setNumeroDeLanches = this.setNumeroDeLanches.bind(this);
+    this.state = { nro_lanches: 3};
+  }
+
+  setNumeroDeLanches = (event, newValue, previousValue, name) => {
+    // random entre 1 e 3
+    this.setState({
+      nro_lanches: Math.floor(Math.random() * 3) + 1
+    });
+    console.log('estado: ', this.state);
   };
 
   render() {
@@ -110,11 +109,11 @@ export class TourRequest extends Component {
           <div className="form-group row">
             <SelecionaTempoPasseio
               onChange={(event, newValue, previousValue, name) =>
-                this.dispatchTempoPasseio(event, newValue, previousValue, name)
+                this.setNumeroDeLanches(event, newValue, previousValue, name)
               }
             />
           </div>
-          <SelecionaKitLanche />
+          <SelecionaKitLanche choicesNumberLimit={this.state.nro_lanches} />
           <div className="form-group">
             <Field
               component={LabelAndTextArea}
