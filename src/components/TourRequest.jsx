@@ -26,6 +26,7 @@ export class SelecionaKitLanche extends Component {
           label="Kit Lanche"
           component={CheckboxGroup}
           options={kitOptions}
+          validate={[required]}
         />
       </div>
     );
@@ -35,7 +36,7 @@ export class SelecionaKitLanche extends Component {
 export class SelecionaTempoPasseio extends Component {
   render() {
     const timeOptions = [
-      { value: "4h", label: "até 4 horas - 1 kit"},
+      { value: "4h", label: "até 4 horas - 1 kit" },
       { value: "5_7h", label: "de 5 a 7 horas - 2 kits" },
       { value: "8h", label: "8 horas ou mais - 3 kits" }
     ];

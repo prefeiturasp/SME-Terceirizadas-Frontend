@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import PropTypes from "prop-types";
+import { ErrorAlert } from "./Alert";
 
 export default class RadioboxGroup extends Component {
   static propTypes = {
@@ -14,7 +15,6 @@ export default class RadioboxGroup extends Component {
 
   field = ({ input, meta, options }) => {
     const { name, onChange, onBlur, onFocus } = input;
-    const { touched, error } = meta;
     const inputValue = input.value;
 
     const radioes = options.map(({ label, value }, index) => {
@@ -45,7 +45,7 @@ export default class RadioboxGroup extends Component {
     return (
       <div>
         <div>{radioes}</div>
-        {touched && error && <p className="error">{error}</p>}
+        <ErrorAlert meta={meta} />
       </div>
     );
   };
