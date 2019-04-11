@@ -2,46 +2,17 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import PropTypes from "prop-types";
 import { ErrorAlert } from "../Shareable/Alert";
-import jq from "jquery";
-import { Grid } from "../Shareable/responsiveBs4";
-
-// function selectAll(onBlur, onChange) {
-//   const arr = [];
-//   const allCheckboxes = [];
-//   const checks = jq("input.compare_items").each(() => {
-//     allCheckboxes.push(jq(this).val());
-//   });
-//   checks.map(index => {
-//     arr.push(checks[index].value);
-//   });
-//   onBlur(arr);
-//   return onChange(arr);
-// }
-
-function checkboxesSensitivity(choicesNumberLimit) {
-  const checkedArr = [];
-  const unCheckedArr = [];
-  let checked = jq("input.compare_items:checked").each(() => {
-    checkedArr.push(jq(this).val());
-  });
-  let unchecked = jq("input.compare_items:not(:checked)").each(() => {
-    unCheckedArr.push(jq(this).val());
-  });
-  if (checked.length >= choicesNumberLimit) {
-    unchecked.map(index => {
-      unchecked[index].disabled = true;
-    });
-  } else {
-    unchecked.map(index => {
-      unchecked[index].disabled = false;
-    });
-  }
-}
 
 export class Cards extends Component {
   constructor(props) {
     super(props);
-    this.state = { checkedList: [], unCheckedList: [] };
+    this.state = {
+      checkedList: [],
+      unCheckedList: [],
+      all: this.props.options.map(({ value }) => {
+        return value;
+      })
+    };
   }
 
   render() {
@@ -50,14 +21,17 @@ export class Cards extends Component {
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
       const handleChange = event => {
-        checkboxesSensitivity(choicesNumberLimit);
         const arr = [...inputValue];
         if (event.target.checked) {
           arr.push(value);
         } else {
           arr.splice(arr.indexOf(value), 1);
         }
-        this.setState({ ...this.state, checkedList: arr });
+        this.setState({
+          ...this.state,
+          checkedList: arr,
+          unCheckedList: this.state.all.filter(val => !arr.includes(val))
+        });
         onBlur(arr);
         return onChange(arr);
       };
@@ -74,14 +48,20 @@ export class Cards extends Component {
         color: "#035D96"
       };
 
-      let extraParam = "";
+      let borderSucess = "";
       if (this.state.checkedList.includes(value)) {
-        extraParam = " border-success";
+        borderSucess = " border-success";
       }
-      console.log(this.state);
+
+      let disabled = false;
+      if (this.state.checkedList.length >= choicesNumberLimit) {
+        if (this.state.unCheckedList.includes(value)) {
+          disabled = true;
+        }
+      }
 
       return (
-        <div className={`card ml-3 ${extraParam}`} style={{ width: "18rem" }}>
+        <div className={`card ml-3 ${borderSucess}`} style={{ width: "18rem" }}>
           <div class="card-header" style={headerStyle}>
             {label}
             <div className="form-check float-right">
@@ -93,7 +73,7 @@ export class Cards extends Component {
                 name={`${name}[${index}]`}
                 id={`checkbox-${index}`}
                 index={index}
-                // disabled={}
+                disabled={disabled}
                 checked={checked}
                 onChange={handleChange}
                 onFocus={onFocus}
