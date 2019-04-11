@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import { ErrorAlert } from "../Shareable/Alert";
+import { Grid } from "../Shareable/responsiveBs4";
 
 export class Cards extends Component {
   constructor(props) {
@@ -61,31 +62,36 @@ export class Cards extends Component {
       }
 
       return (
-        <div className={`card ml-3 ${borderSucess}`} style={{ width: "18rem" }}>
-          <div class="card-header" style={headerStyle}>
-            {label}
-            <div className="form-check float-right">
-              <input
-                className="compare_items form-check-input"
-                type="checkbox"
-                value={value}
-                style={checkStyle}
-                name={`${name}[${index}]`}
-                id={`checkbox-${index}`}
-                index={index}
-                disabled={disabled}
-                checked={checked}
-                onChange={handleChange}
-                onFocus={onFocus}
-              />
+        <Grid cols="4 4 4 4">
+          <div
+            className={`card ${borderSucess}`}
+            style={{ width: "18rem", border: "1px"}}
+          >
+            <div class="card-header" style={headerStyle}>
+              {label}
+              <div className="form-check float-right">
+                <input
+                  className="compare_items form-check-input"
+                  type="checkbox"
+                  value={value}
+                  style={checkStyle}
+                  name={`${name}[${index}]`}
+                  id={`checkbox-${index}`}
+                  index={index}
+                  disabled={disabled}
+                  checked={checked}
+                  onChange={handleChange}
+                  onFocus={onFocus}
+                />
+              </div>
             </div>
+            <ul class="list-group list-group-flush">
+              {foodList.map((e, key) => {
+                return <li className="list-group-item">{e}</li>;
+              })}
+            </ul>
           </div>
-          <ul class="list-group list-group-flush">
-            {foodList.map((e, key) => {
-              return <li className="list-group-item">{e}</li>;
-            })}
-          </ul>
-        </div>
+        </Grid>
       );
     });
 

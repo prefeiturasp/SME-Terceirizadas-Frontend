@@ -172,7 +172,7 @@ export class LabelAndTextArea extends Component {
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
           className="form-control"
-          placeholder="Sua observação aqui"
+          placeholder="Seu texto aqui."
           onEditorStateChange={editorState => this.handleChange(editorState)}
         />
         <ErrorAlert meta={this.props.meta} />
