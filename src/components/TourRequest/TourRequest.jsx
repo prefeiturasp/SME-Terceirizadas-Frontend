@@ -175,11 +175,7 @@ export class TourRequest extends Component {
             }
           />
           <hr />
-          <div className="form-group row">
-            <SelecionaKitLanche
-              choicesNumberLimit={this.state.qtd_kit_lanche}
-            />
-          </div>
+          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
           <hr />
           <div className="form-group">
             <Field
