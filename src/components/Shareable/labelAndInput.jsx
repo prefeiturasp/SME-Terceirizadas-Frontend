@@ -95,9 +95,9 @@ export class LabelAndDate extends Component {
 
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
-        <div className="input-group-prepend">
-          <span className="input-group-text">{this.props.label}</span>
-        </div>
+        <label htmlFor={this.props.name} className={"col-form-label"}>
+          {this.props.label}
+        </label>
         <DatePicker
           {...input}
           placeholder={placeholder}
@@ -106,6 +106,8 @@ export class LabelAndDate extends Component {
           className="form-control"
           onChange={this.handleChange}
           locale={ptBR}
+          id={this.props.name}
+          name={this.props.name}
         />
         <i className="fa fa-calendar fa-lg" />
         <ErrorAlert meta={meta} />

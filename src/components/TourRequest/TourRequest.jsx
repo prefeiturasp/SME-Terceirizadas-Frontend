@@ -149,13 +149,13 @@ export class TourRequest extends Component {
               component={LabelAndDate}
               cols="4 4 4 4"
               label="Data do evento"
-              name="event_date"
+              name="evento_data"
             />
             <Field
               component={LabelAndInput}
               cols="8 8 8 8"
               label="Local do passeio"
-              name="event_place"
+              name="local_passeio"
             />
           </div>
           <div className="form-group row">
