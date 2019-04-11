@@ -69,42 +69,42 @@ export const field = ({
       height: "1em"
     };
     const headerStyle = {
-      "fontStyle": "normal",
-      "fontWeight": "bold",
-      "fontSize": "18px",
-      "lineHeight": "normal",
+      fontStyle: "normal",
+      fontWeight: "bold",
+      fontSize: "18px",
+      lineHeight: "normal",
       color: "#035D96"
     };
     return (
-        <div className="card" style={{ width: "18rem" }}>
-          <div class="card-header" style={headerStyle}>
-            {label}
-            <div className="form-check float-right">
-              <input
-                className="compare_items form-check-input"
-                type="checkbox"
-                value={value}
-                style={checkStyle}
-                name={`${name}[${index}]`}
-                id={`checkbox-${index}`}
-                checked={checked}
-                onChange={handleChange}
-                onFocus={onFocus}
-              />
-            </div>
+      <div className="card ml-3" style={{ width: "18rem" }}>
+        <div class="card-header" style={headerStyle}>
+          {label}
+          <div className="form-check float-right">
+            <input
+              className="compare_items form-check-input"
+              type="checkbox"
+              value={value}
+              style={checkStyle}
+              name={`${name}[${index}]`}
+              id={`checkbox-${index}`}
+              checked={checked}
+              onChange={handleChange}
+              onFocus={onFocus}
+            />
           </div>
-          <ul class="list-group list-group-flush">
-            {foodList.map((e, key) => {
-              return <li className="list-group-item">{e}</li>;
-            })}
-          </ul>
         </div>
+        <ul class="list-group list-group-flush">
+          {foodList.map((e, key) => {
+            return <li className="list-group-item">{e}</li>;
+          })}
+        </ul>
+      </div>
     );
   });
 
   return (
     <div>
-      <div className='form-group row'>{checkboxes}</div>
+      <div className="form-group row">{checkboxes}</div>
       <ErrorAlert meta={meta} />
     </div>
   );
@@ -117,7 +117,6 @@ export default class CheckboxWithCards extends Component {
       PropTypes.shape({
         label: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
-        teste: PropTypes.string.isRequired,
         foodList: PropTypes.array.isRequired
       })
     ).isRequired
