@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import PropTypes from "prop-types";
 import { ErrorAlert } from "./Alert";
-import $ from "jquery";
+import jq from "jquery";
 
 function selectAll(onBlur, onChange) {
   const arr = [];
   const allCheckboxes = [];
-  const checks = $("input.compare_items").each(() => {
-    allCheckboxes.push($(this).val());
+  const checks = jq("input.compare_items").each(() => {
+    allCheckboxes.push(jq(this).val());
   });
   checks.map(index => {
     arr.push(checks[index].value);
@@ -20,11 +20,11 @@ function selectAll(onBlur, onChange) {
 function checkboxesSensitivity(choicesNumberLimit) {
   const checkedArr = [];
   const unCheckedArr = [];
-  let checked = $("input.compare_items:checked").each(() => {
-    checkedArr.push($(this).val());
+  let checked = jq("input.compare_items:checked").each(() => {
+    checkedArr.push(jq(this).val());
   });
-  let unchecked = $("input.compare_items:not(:checked)").each(() => {
-    unCheckedArr.push($(this).val());
+  let unchecked = jq("input.compare_items:not(:checked)").each(() => {
+    unCheckedArr.push(jq(this).val());
   });
   if (checked.length >= choicesNumberLimit) {
     unchecked.map(index => {

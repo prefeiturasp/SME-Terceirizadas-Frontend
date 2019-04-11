@@ -3,12 +3,11 @@ import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndTextArea,
-  LabelAndDate,
+  LabelAndDate
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
 import { requiredCheck, required } from "../helpers/validators";
-import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
 import { validateTourRequestForm } from "../helpers/formValidators/tourRequestValidators";
@@ -44,6 +43,11 @@ export class SelecionaKitLanche extends Component {
           checkAll={checkAll}
           validate={[requiredCheck]}
         />
+        <div>
+          <label>Nº de kits</label>
+          <br/>
+          <button className="btn btn-outline-primary mr-3">000</button>
+        </div>
       </div>
     );
   }
@@ -57,14 +61,16 @@ export class SelecionaTempoPasseio extends Component {
       { value: HORAS_ENUM._8.tempo, label: HORAS_ENUM._8.label }
     ];
     return (
-      <Field
-        name="tempo_passeio"
-        label="Tempo previsto do passeio"
-        component={RadioboxGroup}
-        validate={[requiredCheck]}
-        onChange={this.props.onChange}
-        options={timeOptions}
-      />
+      <div>
+        <Field
+          name="tempo_passeio"
+          label="Tempo previsto do passeio"
+          component={RadioboxGroup}
+          validate={[requiredCheck]}
+          onChange={this.props.onChange}
+          options={timeOptions}
+        />
+      </div>
     );
   }
 }
@@ -93,9 +99,7 @@ export class TourRequest extends Component {
       <div className="d-flex flex-column p-4 mt-5">
         <form onSubmit={this.props.handleSubmit(validateTourRequestForm)}>
           <div>
-            <label className="header-form-label mb-5">
-              Nº de matriculados
-            </label>
+            <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
           <div>
             <button className="btn btn-primary mr-3">150</button>
@@ -127,23 +131,21 @@ export class TourRequest extends Component {
               validate={[required]}
             />
           </div>
-          <div className="form-group row">
-            <SelecionaTempoPasseio
-              onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(
-                  event,
-                  newValue,
-                  previousValue,
-                  name
-                )
-              }
-            />
-          </div>
-          <SelecionaKitLanche
-            choicesNumberLimit={this.state.qtd_kit_lanche}
+          <hr />
+          <SelecionaTempoPasseio
+            onChange={(event, newValue, previousValue, name) =>
+              this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+            }
           />
+          <hr />
+          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
+          <hr />
           <div className="form-group">
-            <Field component={LabelAndTextArea} label="Observações" name='obs'/>
+            <Field
+              component={LabelAndTextArea}
+              label="Observações"
+              name="obs"
+            />
           </div>
           <div className="form-group row float-right">
             <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
