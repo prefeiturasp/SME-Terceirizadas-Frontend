@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { Grid } from "./responsiveBs4";
-import DatePicker from "react-datepicker";
 import ptBR from "date-fns/locale/pt-BR";
-import "./custom.css";
-import "react-datepicker/dist/react-datepicker.css";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { ErrorAlert } from "./Alert";
+import React, { Component } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import htmlToDraft from "html-to-draftjs";
-import draftToHtml from "draftjs-to-html";
-import { convertToRaw, EditorState, ContentState } from "draft-js";
+import { ErrorAlert } from "./Alert";
+import "./custom.css";
+import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
   return (
@@ -95,6 +95,9 @@ export class LabelAndDate extends Component {
 
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
+        {/* <div className="input-group-prepend">
+          <span className="input-group-text">{this.props.label}</span>
+        </div> */}
         <label htmlFor={this.props.name} className={"col-form-label"}>
           {this.props.label}
         </label>

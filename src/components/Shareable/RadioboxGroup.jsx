@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import PropTypes from "prop-types";
 import { ErrorAlert } from "./Alert";
 
 export const field = ({ input, meta, options }) => {
