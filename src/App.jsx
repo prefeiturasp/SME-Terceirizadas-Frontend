@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import MenuChange from "./components/TourRequest";
+import MenuChange from "./components/TourRequest/TourRequest";
 import Router from './routes'
 import { MenuChangePage } from "./pages/MenuChangePage";
 
