@@ -31,8 +31,8 @@ export class Cards extends Component {
       let borderSucess = "";
 
       // if (clearAll) {
-      //   // onBlur(['']);
-      //   onChange(['']);
+      //   onBlur([this.state.all[0]]);
+      //   onChange([this.state.all[0]]);
       // }
       if (checkAll) {
         onBlur(this.state.all);

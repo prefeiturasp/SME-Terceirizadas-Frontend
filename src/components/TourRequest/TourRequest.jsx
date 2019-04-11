@@ -44,7 +44,7 @@ export const KIT_ENUM = {
   }
 };
 
-export class SelecionaKitLanche extends Component {
+export class SelecionaKitLancheBox extends Component {
   render() {
     const kitOptions = [
       {
@@ -126,9 +126,16 @@ export class TourRequest extends Component {
     this.setState({
       ...this.state,
       qtd_kit_lanche: newQuantity,
-      radioChanged: newValue !== previousValue
+      radioChanged: event !== previousValue
     });
-    console.log('STATEEEEEEEEE', this.state, event, newValue, previousValue, name)
+    console.log(
+      "STATEEEEEEEEE",
+      this.state,
+      event,
+      newValue,
+      previousValue,
+      name
+    );
   };
 
   render() {
@@ -175,9 +182,10 @@ export class TourRequest extends Component {
             }
           />
           <hr />
-          <SelecionaKitLanche
-          choicesNumberLimit={this.state.qtd_kit_lanche}
-          clearAll={this.state.radioChanged}/>
+          <SelecionaKitLancheBox
+            choicesNumberLimit={this.state.qtd_kit_lanche}
+            clearAll={this.state.radioChanged}
+          />
           <hr />
           <div className="form-group">
             <Field
