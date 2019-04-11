@@ -4,6 +4,39 @@ import PropTypes from "prop-types";
 import { ErrorAlert } from "./Alert";
 import $ from "jquery";
 
+function selectAll(onBlur, onChange) {
+  const arr = [];
+  const allCheckboxes = [];
+  const checks = $("input.compare_items").each(() => {
+    allCheckboxes.push($(this).val());
+  });
+  checks.map(index => {
+    arr.push(checks[index].value);
+  });
+  onBlur(arr);
+  return onChange(arr);
+}
+
+function checkboxesSensitivity(choicesNumberLimit) {
+  const checkedArr = [];
+  const unCheckedArr = [];
+  let checked = $("input.compare_items:checked").each(() => {
+    checkedArr.push($(this).val());
+  });
+  let unchecked = $("input.compare_items:not(:checked)").each(() => {
+    unCheckedArr.push($(this).val());
+  });
+  if (checked.length >= choicesNumberLimit) {
+    unchecked.map(index => {
+      unchecked[index].disabled = true;
+    });
+  } else {
+    unchecked.map(index => {
+      unchecked[index].disabled = false;
+    });
+  }
+}
+
 export const field = ({
   input,
   meta,
@@ -67,38 +100,5 @@ export default class CheckboxGroup extends Component {
 
   render() {
     return <Field {...this.props} component={field} />;
-  }
-}
-
-function selectAll(onBlur, onChange) {
-  const arr = [];
-  const allCheckboxes = [];
-  const checks = $("input.compare_items").each(() => {
-    allCheckboxes.push($(this).val());
-  });
-  checks.map(index => {
-    arr.push(checks[index].value);
-  });
-  onBlur(arr);
-  return onChange(arr);
-}
-
-function checkboxesSensitivity(choicesNumberLimit) {
-  const checkedArr = [];
-  const unCheckedArr = [];
-  let checked = $("input.compare_items:checked").each(() => {
-    checkedArr.push($(this).val());
-  });
-  let unchecked = $("input.compare_items:not(:checked)").each(() => {
-    unCheckedArr.push($(this).val());
-  });
-  if (checked.length >= choicesNumberLimit) {
-    unchecked.map(index => {
-      unchecked[index].disabled = true;
-    });
-  } else {
-    unchecked.map(index => {
-      unchecked[index].disabled = false;
-    });
   }
 }

@@ -3,7 +3,7 @@ import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
 import {
   LabelAndInput,
   LabelAndTextArea,
-  LabelAndDate
+  LabelAndDate,
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
@@ -93,7 +93,9 @@ export class TourRequest extends Component {
       <div className="d-flex flex-column p-4 mt-5">
         <form onSubmit={this.props.handleSubmit(validateTourRequestForm)}>
           <div>
-            <label className="header-form-label mb-5">Nº de matriculados</label>
+            <label className="header-form-label mb-5">
+              Nº de matriculados
+            </label>
           </div>
           <div>
             <button className="btn btn-primary mr-3">150</button>
@@ -128,17 +130,20 @@ export class TourRequest extends Component {
           <div className="form-group row">
             <SelecionaTempoPasseio
               onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+                this.setNumeroDeKitLanches(
+                  event,
+                  newValue,
+                  previousValue,
+                  name
+                )
               }
             />
           </div>
-          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
+          <SelecionaKitLanche
+            choicesNumberLimit={this.state.qtd_kit_lanche}
+          />
           <div className="form-group">
-            <Field
-              component={LabelAndTextArea}
-              label="Observações"
-              name="obs"
-            />
+            <Field component={LabelAndTextArea} label="Observações" name='obs'/>
           </div>
           <div className="form-group row float-right">
             <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
