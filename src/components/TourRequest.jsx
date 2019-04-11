@@ -11,6 +11,7 @@ import { requiredCheck, required } from "../helpers/validators";
 import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
+import { validateTourRequestForm } from "../helpers/formValidators";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -25,7 +26,6 @@ export const KIT_ENUM = {
 };
 
 export class SelecionaKitLanche extends Component {
-
   render() {
     const kitOptions = [
       { value: KIT_ENUM.KIT1.value, label: KIT_ENUM.KIT1.label },
@@ -91,7 +91,7 @@ export class TourRequest extends Component {
   render() {
     return (
       <div className="d-flex flex-column p-4 mt-5">
-        <form onSubmit={this.props.handleSubmit(showResults)}>
+        <form onSubmit={this.props.handleSubmit(validateTourRequestForm)}>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
