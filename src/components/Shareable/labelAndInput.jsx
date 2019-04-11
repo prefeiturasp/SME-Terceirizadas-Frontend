@@ -6,23 +6,12 @@ import "./custom.css";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import PropTypes from "prop-types";
-import If from "./layout";
-
-export const ErrorAlert = ({ meta }) => {
-  const isVisible = meta !== undefined;
-  var divStyle = {
-    color: "red"
-  };
-  return (
-    <If isVisible={isVisible}>
-      <div>
-        {meta.touched &&
-          ((meta.error && <span style={divStyle}>{meta.error}</span>) ||
-            (meta.warning && <span style={divStyle}>{meta.warning}</span>))}
-      </div>
-    </If>
-  );
-};
+import { ErrorAlert } from "./Alert";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import htmlToDraft from "html-to-draftjs";
+import draftToHtml from "draftjs-to-html";
+import { convertToRaw, EditorState, ContentState } from "draft-js";
 
 export const LabelAndInput = props => {
   return (
@@ -40,25 +29,6 @@ export const LabelAndInput = props => {
         readOnly={props.readOnly || false}
         type={props.type}
         onChange={props.onChange}
-      />
-      <ErrorAlert meta={props.meta} />
-    </Grid>
-  );
-};
-
-export const LabelAndTextArea = props => {
-  return (
-    <Grid cols={props.cols}>
-      <label htmlFor={props.name} className={"col-form-label"}>
-        {props.label}
-      </label>
-      <textarea
-        {...props.input}
-        id={props.name}
-        className="form-control"
-        rows="4"
-        value={props.value}
-        name={props.name}
       />
       <ErrorAlert meta={props.meta} />
     </Grid>
@@ -125,9 +95,9 @@ export class LabelAndDate extends Component {
 
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
-        <div className="input-group-prepend">
-          <span className="input-group-text">{this.props.label}</span>
-        </div>
+        <label htmlFor={this.props.name} className={"col-form-label"}>
+          {this.props.label}
+        </label>
         <DatePicker
           {...input}
           placeholder={placeholder}
@@ -136,9 +106,73 @@ export class LabelAndDate extends Component {
           className="form-control"
           onChange={this.handleChange}
           locale={ptBR}
+          id={this.props.name}
+          name={this.props.name}
         />
         <i className="fa fa-calendar fa-lg" />
         <ErrorAlert meta={meta} />
+      </Grid>
+    );
+  }
+}
+
+// Thanks community: https://github.com/jpuri/react-draft-wysiwyg/issues/556
+export class LabelAndTextArea extends Component {
+  constructor(props) {
+    super(props);
+    const editorState = this.initEditorState();
+    this.state = {
+      editorState
+    };
+    this.changeValue(editorState);
+  }
+
+  /**
+   * Initialising the value for <Editor />
+   */
+  initEditorState() {
+    const html = "";
+    const contentBlock = htmlToDraft(html);
+    const contentState = ContentState.createFromBlockArray(
+      contentBlock.contentBlocks
+    );
+    return EditorState.createWithContent(contentState);
+  }
+
+  /**
+   * This is used by <Editor /> to handle change
+   */
+  handleChange(editorState) {
+    this.setState({ editorState });
+    this.changeValue(editorState);
+  }
+
+  /**
+   * This updates the redux-form wrapper
+   */
+  changeValue(editorState) {
+    const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    this.props.input.onChange(value);
+  }
+
+  render() {
+    const { editorState } = this.state;
+    return (
+      <Grid id="react-wysiwyg" cols={this.props.cols}>
+        <label htmlFor={this.props.name} className={"col-form-label"}>
+          {this.props.label}
+        </label>
+        <Editor
+          editorState={editorState}
+          name={this.props.name}
+          wrapperClassName="wrapper-class"
+          editorClassName="editor-class"
+          toolbarClassName="toolbar-class"
+          className="form-control"
+          placeholder="Sua observação aqui"
+          onEditorStateChange={editorState => this.handleChange(editorState)}
+        />
+        <ErrorAlert meta={this.props.meta} />
       </Grid>
     );
   }

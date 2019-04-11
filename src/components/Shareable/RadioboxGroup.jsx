@@ -1,36 +1,65 @@
-import React from "react";
-import { Grid } from "./responsiveBs4";
-import "./custom.css";
-import "react-datepicker/dist/react-datepicker.css";
+import React, { Component } from "react";
 import { Field } from "redux-form";
+import PropTypes from "prop-types";
+import { ErrorAlert } from "./Alert";
 
-export const RadioboxGroup = props => {
-  // Thanks! https://codeburst.io/forms-with-redux-form-v7-part-2-of-2-f44ffee4a34d
-  if (props && props.input && props.options) {
-    const renderRadioButtons = (key, index) => {
-      return (
-        <label
-          className="sans-serif w-100"
-          key={`${index}`}
-          htmlFor={`${props.input.name}-${index}`}
-        >
-          <Field
-            id={`${props.input.name}`}
-            component="input"
-            name={props.input.name}
-            type="radio"
-            value={key}
-            className="mh2"
-          />
-          {props.options[key]}
-        </label>
-      );
+export const field = ({ input, meta, options }) => {
+  const { name, onChange, onBlur, onFocus } = input;
+  const inputValue = input.value;
+
+  const radioes = options.map(({ label, value }, index) => {
+    const handleChange = event => {
+      let selected = "";
+      if (event.target.checked) {
+        selected = value;
+      }
+      onBlur(selected);
+      return onChange(selected);
+    };
+    const checked = inputValue.includes(value);
+    const style = {
+      width: "2em",
+      height: "2em"
     };
     return (
-      <Grid cols={props.cols || ""}>
-        {props.options && Object.keys(props.options).map(renderRadioButtons)}
-      </Grid>
+      <div className="form-check  form-check-inline">
+        <input
+          className="form-check-input"
+          type="radio"
+          value={value}
+          style={style}
+          name={`${name}[${index}]`}
+          id={`radio-${index}`}
+          checked={checked}
+          onChange={handleChange}
+          onFocus={onFocus}
+        />
+        <label className="form-check-label ml-2" htmlFor={`radio-${index}`}>
+          {`${label}`}
+        </label>
+      </div>
     );
-  }
-  return <div />;
+  });
+
+  return (
+    <div>
+      <div>{radioes}</div>
+      <ErrorAlert meta={meta} />
+    </div>
+  );
 };
+
+export default class RadioboxGroup extends Component {
+  static propTypes = {
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        value: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired
+      })
+    ).isRequired
+  };
+
+  render() {
+    return <Field {...this.props} component={field} />;
+  }
+}
