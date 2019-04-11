@@ -11,7 +11,7 @@ import { requiredCheck, required } from "../helpers/validators";
 import { showResults } from "../helpers/utilities";
 import CheckboxGroup from "./Shareable/CheckboxGroup";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
-import { validateTourRequestForm } from "../helpers/formValidators";
+import { validateTourRequestForm } from "../helpers/formValidators/tourRequestValidators";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },

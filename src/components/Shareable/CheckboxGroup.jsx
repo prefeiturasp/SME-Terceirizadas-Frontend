@@ -63,19 +63,27 @@ export const field = ({
       return onChange(arr);
     };
     const checked = inputValue.includes(value);
+    const style = {
+      width: "2em",
+      height: "2em"
+    };
     return (
-      <label key={`checkbox-${index}`}>
+      <div className="form-check  form-check-inline">
         <input
-          className="compare_items"
+          className="compare_items form-check-input"
           type="checkbox"
-          name={`${name}[${index}]`}
           value={value}
+          style={style}
+          name={`${name}[${index}]`}
+          id={`checkbox-${index}`}
           checked={checked}
           onChange={handleChange}
           onFocus={onFocus}
         />
-        <span>{label}</span>
-      </label>
+        <label className="form-check-label ml-2" htmlFor={`checkbox-${index}`}>
+          {`${label}`}
+        </label>
+      </div>
     );
   });
 
