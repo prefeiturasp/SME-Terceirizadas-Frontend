@@ -5,18 +5,18 @@ import { ErrorAlert } from "../Shareable/Alert";
 import jq from "jquery";
 import { Grid } from "../Shareable/responsiveBs4";
 
-function selectAll(onBlur, onChange) {
-  const arr = [];
-  const allCheckboxes = [];
-  const checks = jq("input.compare_items").each(() => {
-    allCheckboxes.push(jq(this).val());
-  });
-  checks.map(index => {
-    arr.push(checks[index].value);
-  });
-  onBlur(arr);
-  return onChange(arr);
-}
+// function selectAll(onBlur, onChange) {
+//   const arr = [];
+//   const allCheckboxes = [];
+//   const checks = jq("input.compare_items").each(() => {
+//     allCheckboxes.push(jq(this).val());
+//   });
+//   checks.map(index => {
+//     arr.push(checks[index].value);
+//   });
+//   onBlur(arr);
+//   return onChange(arr);
+// }
 
 function checkboxesSensitivity(choicesNumberLimit) {
   const checkedArr = [];
@@ -38,77 +38,85 @@ function checkboxesSensitivity(choicesNumberLimit) {
   }
 }
 
-export const field = ({
-  input,
-  meta,
-  options,
-  choicesNumberLimit,
-  checkAll
-}) => {
-  const { name, onChange, onBlur, onFocus } = input;
-  const inputValue = input.value;
+export class Cards extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { checkedList: [], unCheckedList: [] };
+  }
 
-  const checkboxes = options.map(({ label, value, foodList }, index) => {
-    const handleChange = event => {
-      checkboxesSensitivity(choicesNumberLimit);
-      if (checkAll) {
-        return selectAll(onBlur, onChange);
+  render() {
+    const { input, meta, options, choicesNumberLimit, checkAll } = this.props;
+    const { name, onChange, onBlur, onFocus } = input;
+    const inputValue = input.value;
+    const checkboxes = options.map(({ label, value, foodList }, index) => {
+      const handleChange = event => {
+        checkboxesSensitivity(choicesNumberLimit);
+        const arr = [...inputValue];
+        if (event.target.checked) {
+          arr.push(value);
+        } else {
+          arr.splice(arr.indexOf(value), 1);
+        }
+        this.setState({ ...this.state, checkedList: arr });
+        onBlur(arr);
+        return onChange(arr);
+      };
+      const checked = inputValue.includes(value);
+      const checkStyle = {
+        width: "1em",
+        height: "1em"
+      };
+      const headerStyle = {
+        fontStyle: "normal",
+        fontWeight: "bold",
+        fontSize: "18px",
+        lineHeight: "normal",
+        color: "#035D96"
+      };
+
+      let extraParam = "";
+      if (this.state.checkedList.includes(value)) {
+        extraParam = " border-success";
       }
-      const arr = [...inputValue];
-      if (event.target.checked) {
-        arr.push(value);
-      } else {
-        arr.splice(arr.indexOf(value), 1);
-      }
-      onBlur(arr);
-      return onChange(arr);
-    };
-    const checked = inputValue.includes(value);
-    const checkStyle = {
-      width: "1em",
-      height: "1em"
-    };
-    const headerStyle = {
-      fontStyle: "normal",
-      fontWeight: "bold",
-      fontSize: "18px",
-      lineHeight: "normal",
-      color: "#035D96"
-    };
-    return (
-      <div className="card ml-3" style={{ width: "18rem" }}>
-        <div class="card-header" style={headerStyle}>
-          {label}
-          <div className="form-check float-right">
-            <input
-              className="compare_items form-check-input"
-              type="checkbox"
-              value={value}
-              style={checkStyle}
-              name={`${name}[${index}]`}
-              id={`checkbox-${index}`}
-              checked={checked}
-              onChange={handleChange}
-              onFocus={onFocus}
-            />
+      console.log(this.state);
+
+      return (
+        <div className={`card ml-3 ${extraParam}`} style={{ width: "18rem" }}>
+          <div class="card-header" style={headerStyle}>
+            {label}
+            <div className="form-check float-right">
+              <input
+                className="compare_items form-check-input"
+                type="checkbox"
+                value={value}
+                style={checkStyle}
+                name={`${name}[${index}]`}
+                id={`checkbox-${index}`}
+                index={index}
+                // disabled={}
+                checked={checked}
+                onChange={handleChange}
+                onFocus={onFocus}
+              />
+            </div>
           </div>
+          <ul class="list-group list-group-flush">
+            {foodList.map((e, key) => {
+              return <li className="list-group-item">{e}</li>;
+            })}
+          </ul>
         </div>
-        <ul class="list-group list-group-flush">
-          {foodList.map((e, key) => {
-            return <li className="list-group-item">{e}</li>;
-          })}
-        </ul>
+      );
+    });
+
+    return (
+      <div>
+        <div className="form-group row">{checkboxes}</div>
+        <ErrorAlert meta={meta} />
       </div>
     );
-  });
-
-  return (
-    <div>
-      <div className="form-group row">{checkboxes}</div>
-      <ErrorAlert meta={meta} />
-    </div>
-  );
-};
+  }
+}
 
 //Thanks community: https://github.com/erikras/redux-form/issues/1037
 export default class CheckboxWithCards extends Component {
@@ -123,6 +131,6 @@ export default class CheckboxWithCards extends Component {
   };
 
   render() {
-    return <Field {...this.props} component={field} />;
+    return <Field {...this.props} component={Cards} />;
   }
 }
