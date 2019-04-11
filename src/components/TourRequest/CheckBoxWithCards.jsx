@@ -17,10 +17,29 @@ export class Cards extends Component {
   }
 
   render() {
-    const { input, meta, options, choicesNumberLimit, checkAll } = this.props;
+    const {
+      input,
+      meta,
+      options,
+      choicesNumberLimit,
+      checkAll,
+      clearAll
+    } = this.props;
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
+      let borderSucess = "";
+
+      // if (clearAll) {
+      //   // onBlur(['']);
+      //   onChange(['']);
+      // }
+      if (checkAll) {
+        onBlur(this.state.all);
+        onChange(this.state.all);
+        borderSucess = " border-success";
+      }
+
       const handleChange = event => {
         const arr = [...inputValue];
         if (event.target.checked) {
@@ -49,15 +68,16 @@ export class Cards extends Component {
         color: "#035D96"
       };
 
-      let borderSucess = "";
       if (this.state.checkedList.includes(value)) {
         borderSucess = " border-success";
       }
 
       let disabled = false;
+      let opacity = 1;
       if (this.state.checkedList.length >= choicesNumberLimit) {
         if (this.state.unCheckedList.includes(value)) {
           disabled = true;
+          opacity = 0.3;
         }
       }
 
@@ -65,7 +85,12 @@ export class Cards extends Component {
         <Grid cols="4 4 4 4">
           <div
             className={`card ${borderSucess}`}
-            style={{ width: "18rem", border: "solid" }}
+            style={{
+              width: "22rem",
+              height: "16rem",
+              border: "solid",
+              opacity: opacity
+            }}
           >
             <div class="card-header" style={headerStyle}>
               {label}

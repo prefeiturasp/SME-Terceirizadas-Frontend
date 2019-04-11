@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { required, requiredCheck, minValue } from "../../helpers/fieldValidators";
+import { minValue, required, requiredCheck } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
@@ -74,6 +74,7 @@ export class SelecionaKitLanche extends Component {
           options={kitOptions}
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
+          clearAll={this.props.clearAll}
           validate={[requiredCheck]}
         />
         <div>
@@ -123,8 +124,11 @@ export class TourRequest extends Component {
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
     let newQuantity = this.parser[event];
     this.setState({
-      qtd_kit_lanche: newQuantity
+      ...this.state,
+      qtd_kit_lanche: newQuantity,
+      radioChanged: newValue !== previousValue
     });
+    console.log('STATEEEEEEEEE', this.state, event, newValue, previousValue, name)
   };
 
   render() {
@@ -171,7 +175,9 @@ export class TourRequest extends Component {
             }
           />
           <hr />
-          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
+          <SelecionaKitLanche
+          choicesNumberLimit={this.state.qtd_kit_lanche}
+          clearAll={this.state.radioChanged}/>
           <hr />
           <div className="form-group">
             <Field
