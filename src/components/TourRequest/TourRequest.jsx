@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
+import { required, requiredCheck, minValue } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
-import { required, requiredCheck } from "../../helpers/validators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
-import {
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
 import RadioboxGroup from "../Shareable/RadioboxGroup";
 import CheckboxWithCards from "./CheckBoxWithCards";
 
@@ -165,7 +161,7 @@ export class TourRequest extends Component {
               name="nro_alunos"
               type="number"
               label="Número de alunos participantes"
-              validate={[required]}
+              validate={[required, minValue(1)]}
             />
           </div>
           <hr />

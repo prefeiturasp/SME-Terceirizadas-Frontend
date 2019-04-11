@@ -65,7 +65,7 @@ export class Cards extends Component {
         <Grid cols="4 4 4 4">
           <div
             className={`card ${borderSucess}`}
-            style={{ width: "18rem", border: "1px"}}
+            style={{ width: "18rem", border: "solid" }}
           >
             <div class="card-header" style={headerStyle}>
               {label}

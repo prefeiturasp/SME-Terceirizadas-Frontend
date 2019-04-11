@@ -1,26 +1,13 @@
+import ptBR from "date-fns/locale/pt-BR";
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
-import ptBR from "date-fns/locale/pt-BR";
 import "react-datepicker/dist/react-datepicker.css";
-import "./Shareable/custom.css";
 import { Field, FieldArray, reduxForm } from "redux-form";
-import {
-  LabelAndInput,
-  LabelAndTextArea,
-  LabelAndCombo
-} from "./Shareable/labelAndInput";
-import BaseButton, {
-  ButtonType,
-  ButtonStyle,
-  ButtonIcon
-} from "./Shareable/button";
-import {
-  alphaNumeric,
-  maxLength15,
-  required,
-  minLength2
-} from "../helpers/validators";
+import { required } from "../helpers/fieldValidators";
 import { showResults } from "../helpers/utilities";
+import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
+import "./Shareable/custom.css";
+import { LabelAndCombo, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
 
 const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
   <ul>
@@ -46,7 +33,7 @@ const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
             component={LabelAndInput}
             type="number"
             label="Número de alunos"
-            validate={[required, maxLength15, minLength2]}
+            validate={[required]}
           />
           <BaseButton
             className="ml-2"
@@ -193,7 +180,7 @@ class AddFood extends Component {
               cols="6 6 6 6"
               label="RF Responsável"
               name="rf"
-              validate={[required, maxLength15, minLength2]}
+              validate={[required]}
             />
             <Field
               component={LabelAndInput}
