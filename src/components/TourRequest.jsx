@@ -165,6 +165,7 @@ export class TourRequest extends Component {
               cols="4 4 4 4"
               label="Data do evento"
               name="evento_data"
+              inline={true}
             />
             <Field
               component={LabelAndInput}

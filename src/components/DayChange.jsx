@@ -59,12 +59,14 @@ export let DayChange = props => (
         <Field
           component={LabelAndDate}
           cols="4 4 4 4"
+          placeholder="Dia a ser substituído"
           name="subst_dia_origem"
           label="De:"
         />
         <Field
           component={LabelAndDate}
           cols="4 4 4 4"
+          placeholder="Novo dia do cardápio"
           name="subst_dia_destino"
           label="Para:"
         />

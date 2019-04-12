@@ -83,7 +83,10 @@ export class LabelAndDate extends Component {
     placeholder: "",
     dateFormat: "DD/MM/YYYY",
     daysDeltaMin: 0,
-    daysDeltaMax: 3
+    daysDeltaMax: 360,
+    cols: "",
+    fullScreen: false,
+    inline: false
   };
 
   constructor(props) {
@@ -93,7 +96,7 @@ export class LabelAndDate extends Component {
 
   handleChange(date) {
     this.props.input.onChange(
-      moment(date).format(this.props.dateFormat || "DD/MM/YYYY")
+      moment(date).format(this.props.dateFormat || this.defaultProps.dateFormat)
     );
   }
 
@@ -107,21 +110,24 @@ export class LabelAndDate extends Component {
       label,
       dateFormat,
       daysDeltaMin,
-      daysDeltaMax
+      daysDeltaMax,
+      fullScreen,
+      inline
     } = this.props;
     var today = new Date();
     var future = new Date();
     return (
-      <Grid cols={cols || ""} className="input-group">
+      <Grid cols={cols} className="input-group">
         <label htmlFor={name} className={"col-form-label"}>
           {label}
         </label>
         <DatePicker
           {...input}
-          title="meu title"
-          timeIntervals={3}
-          placeholder={placeholder}
+          placeholderText={placeholder}
           dateFormat={dateFormat}
+          isClearable={true}
+          withPortal={fullScreen}
+          inline={inline}
           minDate={today.setDate(today.getDate() + daysDeltaMin)}
           maxDate={future.setDate(future.getDate() + daysDeltaMax)}
           className="form-control ml-3"
@@ -130,7 +136,7 @@ export class LabelAndDate extends Component {
           id={name}
           name={name}
         />
-        <i className="fa fa-calendar fa-lg" />
+        <i className="fa fa-calendar" />
         <ErrorAlert meta={meta} />
       </Grid>
     );
@@ -205,8 +211,9 @@ export class LabelAndTextArea extends Component {
           onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
+
           toolbar={{
-            options: ["inline", "list"],
+            options: ["inline", "list", "emoji"],
             inline: {
               inDropdown: false,
               options: ["bold", "italic", "underline", "strikethrough"]
