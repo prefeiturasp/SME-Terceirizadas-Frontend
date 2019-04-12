@@ -90,12 +90,10 @@ export class LabelAndDate extends Component {
 
   render() {
     const { input, placeholder, meta } = this.props;
-
+    var today = new Date();
+    var future = new Date();
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
-        {/* <div className="input-group-prepend">
-          <span className="input-group-text">{this.props.label}</span>
-        </div> */}
         <label htmlFor={this.props.name} className={"col-form-label"}>
           {this.props.label}
         </label>
@@ -103,8 +101,14 @@ export class LabelAndDate extends Component {
           {...input}
           placeholder={placeholder}
           dateFormat={this.props.dateFormat || "DD/MM/YYYY"}
-          selected={input.value ? new Date() : null}
-          className="form-control"
+          // selected={input.value ? today : null}
+          minDate={today.setDate(
+            today.getDate() + (this.props.daysDeltaMin || 0)
+          )}
+          maxDate={future.setDate(
+            future.getDate() + (this.props.daysDeltaMax || 360)
+          )}
+          className="form-control ml-3"
           onChange={this.handleChange}
           locale={ptBR}
           id={this.props.name}
@@ -177,9 +181,21 @@ export class LabelAndTextArea extends Component {
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
           className="form-control"
-          placeholder="Seu texto aqui."
+          placeholder={this.props.placeholder || "Seu texto aqui."}
           onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
+          // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
+          toolbar={{
+            options: ["inline", "fontSize", "fontFamily", "list", "textAlign"],
+            inline: {
+              inDropdown: false,
+              options: ["bold", "italic", "underline", "strikethrough"]
+            },
+            list: { inDropdown: true },
+            textAlign: { inDropdown: true },
+            link: { inDropdown: true },
+            history: { inDropdown: true }
+          }}
         />
         <ErrorAlert meta={this.props.meta} />
       </Grid>

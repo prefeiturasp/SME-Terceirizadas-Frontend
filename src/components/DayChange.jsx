@@ -58,15 +58,19 @@ export let DayChange = props => (
       <div className="form-row">
         <Field
           component={LabelAndDate}
-          cols="5 5 5 5"
+          cols="4 4 4 4"
           name="subst_dia_origem"
           label="De:"
+          daysDeltaMin={2}
+          daysDeltaMax={30}
         />
         <Field
           component={LabelAndDate}
-          cols="5 5 5 5"
+          cols="4 4 4 4"
           name="subst_dia_destino"
           label="Para:"
+          daysDeltaMin={5}
+          daysDeltaMax={35}
         />
       </div>
       <hr />
@@ -79,7 +83,12 @@ export let DayChange = props => (
         />
       </div>
       <div className="form-group">
-        <Field component={LabelAndTextArea} label="Observação" name="obs" />
+        <Field
+          component={LabelAndTextArea}
+          placeholder="Campo opcional"
+          label="Observação"
+          name="obs"
+        />
       </div>
       <div className="form-group row float-right">
         <BaseButton label="Cancelar" style={ButtonStyle.OutlinePrimary} />

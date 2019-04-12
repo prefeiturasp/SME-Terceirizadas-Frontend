@@ -1,8 +1,9 @@
 import React from "react";
-import "./custom.css";
 import "react-datepicker/dist/react-datepicker.css";
+import "./custom.css";
 import If from "./layout";
 
+// TODO: colocar fonte roboto
 export const ErrorAlert = ({ meta }) => {
   const isVisible = meta !== undefined;
   var divStyle = {
