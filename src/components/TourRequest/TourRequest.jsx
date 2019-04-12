@@ -74,14 +74,10 @@ export class SelecionaKitLancheBox extends Component {
           options={kitOptions}
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
+          onChange={this.props.onChange}
           clearAll={this.props.clearAll}
           validate={[requiredCheck]}
         />
-        <div>
-          <label>Nº de kits</label>
-          <br />
-          <button className="btn btn-outline-primary mr-3">000</button>
-        </div>
       </div>
     );
   }
@@ -113,29 +109,34 @@ export class TourRequest extends Component {
   constructor(props) {
     super(props);
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
-    this.state = { qtd_kit_lanche: 0 };
+    this.state = {
+      qtd_kit_lanche: 0,
+      radioChanged: false,
+      nro_matriculados: this.props.initialValues.nro_matriculados,
+      qtd_total_lanches: 0
+    };
   }
-  // TODO: Rever uma forma melhor de escrever isso.
-  parser = {
-    "4h": HORAS_ENUM._4.qtd_kits,
-    "5_7h": HORAS_ENUM._5a7.qtd_kits,
-    "8h": HORAS_ENUM._8.qtd_kits
+
+  setTotalKitLanches = (event, newValue, previousValue, name) => {
+    this.setState({
+      ...this.state,
+      qtd_total_lanches: this.state.qtd_kit_lanche * newValue
+    });
   };
+
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
-    let newQuantity = this.parser[event];
+    const parser = {
+      "4h": HORAS_ENUM._4.qtd_kits,
+      "5_7h": HORAS_ENUM._5a7.qtd_kits,
+      "8h": HORAS_ENUM._8.qtd_kits
+    };
+    let newQuantity = parser[event];
     this.setState({
       ...this.state,
       qtd_kit_lanche: newQuantity,
-      radioChanged: event !== previousValue
+      radioChanged: event !== previousValue,
+      qtd_total_lanches: this.state.qtd_kit_lanche * newQuantity
     });
-    console.log(
-      "STATEEEEEEEEE",
-      this.state,
-      event,
-      newValue,
-      previousValue,
-      name
-    );
   };
 
   render() {
@@ -145,12 +146,19 @@ export class TourRequest extends Component {
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
-          <div>
-            <button className="btn btn-primary mr-3">150</button>
-            <label>
+          <div className="form-group row">
+            <br />
+            <Field
+              component={"input"}
+              type="number"
+              className="btn btn-primary mr-3"
+              name="nro_matriculados"
+            />
+            <label htmlFor="nro_matriculados">
               Informação automática disponibilizada no cadastro da UE
             </label>
           </div>
+
           <div className="form-group row">
             <Field
               component={LabelAndDate}
@@ -171,6 +179,9 @@ export class TourRequest extends Component {
               cols="3 3 3 3"
               name="nro_alunos"
               type="number"
+              onChange={(event, newValue, previousValue, name) =>
+                this.setTotalKitLanches(event, newValue, previousValue, name)
+              }
               label="Número de alunos participantes"
               validate={[required, minValue(1)]}
             />
@@ -186,6 +197,16 @@ export class TourRequest extends Component {
             choicesNumberLimit={this.state.qtd_kit_lanche}
             clearAll={this.state.radioChanged}
           />
+          <div className="form-group row">
+            <Field
+              cols="3 3 3 3"
+              component={LabelAndInput}
+              label="Nº de kits"
+              type="number"
+              className="btn btn-outline-primary mr-3"
+              name="qtd_total"
+            />
+          </div>
           <hr />
           <div className="form-group">
             <Field
@@ -216,5 +237,8 @@ export class TourRequest extends Component {
 
 export default (TourRequest = reduxForm({
   form: "tourRequest",
-  destroyOnUnmount: false // para nao perder o estado
+  destroyOnUnmount: false, // para nao perder o estado,
+  initialValues: {
+    nro_matriculados: 333
+  }
 })(TourRequest));
