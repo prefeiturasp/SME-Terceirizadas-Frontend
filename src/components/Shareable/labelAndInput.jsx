@@ -177,24 +177,20 @@ export class LabelAndTextArea extends Component {
         <Editor
           editorState={editorState}
           name={this.props.name}
-          wrapperClassName="wrapper-class"
-          editorClassName="editor-class"
-          toolbarClassName="toolbar-class"
+          wrapperClassName="border rounded"
+          editorClassName="ml-2"
           className="form-control"
           placeholder={this.props.placeholder || "Seu texto aqui."}
           onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
           toolbar={{
-            options: ["inline", "fontSize", "fontFamily", "list", "textAlign"],
+            options: ["inline", "list"],
             inline: {
               inDropdown: false,
               options: ["bold", "italic", "underline", "strikethrough"]
             },
-            list: { inDropdown: true },
-            textAlign: { inDropdown: true },
-            link: { inDropdown: true },
-            history: { inDropdown: true }
+            list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
         />
         <ErrorAlert meta={this.props.meta} />
