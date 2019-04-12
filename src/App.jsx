@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import "./components/Shareable/custom.css";
-import MenuChange from "./components/DayChange";
+import MenuChange from "./components/TourRequest";
 
 class App extends Component {
   render() {

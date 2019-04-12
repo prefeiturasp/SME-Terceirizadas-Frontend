@@ -4,9 +4,10 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { maxValue, required, requiredCheck } from "../helpers/fieldValidators";
 import { validateTourRequestForm } from "../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
+import CheckboxWithCards from "./Shareable/CheckBoxWithCards";
 import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
 import RadioboxGroup from "./Shareable/RadioboxGroup";
-import CheckboxWithCards from "./Shareable/CheckBoxWithCards";
+import { Grid } from "./Shareable/responsiveBs4";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -135,12 +136,7 @@ export class TourRequest extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      pristine,
-      reset,
-      submitting
-    } = this.props;
+    const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
       <div className="d-flex flex-column p-4 mt-5">
         <form>
@@ -165,7 +161,7 @@ export class TourRequest extends Component {
               cols="4 4 4 4"
               label="Data do evento"
               name="evento_data"
-              inline={true}
+              fullScreen={true}
             />
             <Field
               component={LabelAndInput}
@@ -197,8 +193,20 @@ export class TourRequest extends Component {
           <SelecionaKitLancheBox
             choicesNumberLimit={this.state.qtd_kit_lanche}
           />
-          <div className="form-group row">
-            <label>{`Total de lanches: ${this.props.qtd_total || 0}`}</label>
+          <div className="form-group">
+            <label className="bold">{"Número total kits:"}</label>
+            <br />
+            <Grid
+              cols="1 1 1 1"
+              className="d-inline-flex p-2 align-content-center"
+              style={{
+                background: "#E8E8E8",
+                textAlign: "middle",
+                height: "40px"
+              }}
+            >
+              <p className="bold">{this.props.qtd_total || 0}</p>
+            </Grid>
           </div>
           <hr />
           <div className="form-group">
