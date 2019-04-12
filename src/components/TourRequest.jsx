@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { maxValue, required, requiredCheck } from "../../helpers/fieldValidators";
-import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
-import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
-import "../Shareable/custom.css";
-import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
-import RadioboxGroup from "../Shareable/RadioboxGroup";
-import CheckboxWithCards from "./CheckBoxWithCards";
+import { maxValue, required, requiredCheck } from "../helpers/fieldValidators";
+import { validateTourRequestForm } from "../helpers/formValidators/tourRequestValidators";
+import Button, { ButtonStyle, ButtonType } from "./Shareable/button";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
+import RadioboxGroup from "./Shareable/RadioboxGroup";
+import CheckboxWithCards from "./Shareable/CheckBoxWithCards";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },

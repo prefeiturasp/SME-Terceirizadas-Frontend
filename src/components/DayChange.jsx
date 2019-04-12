@@ -1,20 +1,10 @@
-import React, { Component } from "react";
-import {
-  LabelAndInput,
-  LabelAndCombo,
-  LabelAndTextArea,
-  LabelAndDate
-} from "./Shareable/labelAndInput";
-import "./Shareable/custom.css";
-import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
+import React from "react";
 import { Field, reduxForm } from "redux-form";
-import {
-  alphaNumeric,
-  maxLength15,
-  required,
-  minLength2
-} from "../helpers/validators";
+import { textAreaRequired } from "../helpers/fieldValidators";
 import { showResults } from "../helpers/utilities";
+import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
+import "./Shareable/custom.css";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
 
 export let DayChange = props => (
   <div className="container">
@@ -51,8 +41,6 @@ export let DayChange = props => (
           type="text"
           name="cargo"
           label="Cargo / Função"
-          validate={[required, maxLength15, minLength2]}
-          warn={alphaNumeric}
         />
       </div>
       <div className="form-group row">
@@ -63,48 +51,44 @@ export let DayChange = props => (
           label="Nome"
         />
       </div>
+      <hr />
+      <div className="form-row">
+        <label className="bold">Substituição de dia de cardápio</label>
+      </div>
       <div className="form-row">
         <Field
-          component={LabelAndCombo}
-          cols="5 5 5 5"
-          name="periodo"
-          label="Período de alteração"
-        />
-        <Field
-          component={LabelAndInput}
-          cols="3 3 3 3"
-          name="nroAlunos"
-          label="Nº de alunos"
-          type="number"
-        />
-        <Field
-          component={LabelAndCombo}
+          component={LabelAndDate}
           cols="4 4 4 4"
-          name="periodo"
-          label="Motivo"
+          name="subst_dia_origem"
+          label="De:"
+          daysDeltaMin={2}
+          daysDeltaMax={30}
+        />
+        <Field
+          component={LabelAndDate}
+          cols="4 4 4 4"
+          name="subst_dia_destino"
+          label="Para:"
+          daysDeltaMin={5}
+          daysDeltaMax={35}
         />
       </div>
-      <label className="bold">Substituição</label>
-      <div className="form-group row">
+      <hr />
+      <div className="form-group">
         <Field
-          component={LabelAndDate}
-          cols="5 5 5 5"
-          name="de"
-          label="Cardápio dia"
-        />
-        <div className="col-sm-1 v-align">para</div>
-        <div className="col-sm-1 v-align">
-          <i className="fa fa-arrow-right" aria-hidden="true" />
-        </div>
-        <Field
-          component={LabelAndDate}
-          cols="5 5 5 5"
-          name="para"
-          label="Cardápio dia"
+          component={LabelAndTextArea}
+          label="Motivo"
+          name="motivo"
+          validate={[textAreaRequired]}
         />
       </div>
       <div className="form-group">
-        <Field component={LabelAndTextArea} label="Observação" name="obs" />
+        <Field
+          component={LabelAndTextArea}
+          placeholder="Campo opcional"
+          label="Observação"
+          name="obs"
+        />
       </div>
       <div className="form-group row float-right">
         <BaseButton label="Cancelar" style={ButtonStyle.OutlinePrimary} />

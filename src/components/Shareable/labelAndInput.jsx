@@ -90,12 +90,10 @@ export class LabelAndDate extends Component {
 
   render() {
     const { input, placeholder, meta } = this.props;
-
+    var today = new Date();
+    var future = new Date();
     return (
       <Grid cols={this.props.cols || ""} className="input-group">
-        {/* <div className="input-group-prepend">
-          <span className="input-group-text">{this.props.label}</span>
-        </div> */}
         <label htmlFor={this.props.name} className={"col-form-label"}>
           {this.props.label}
         </label>
@@ -103,8 +101,14 @@ export class LabelAndDate extends Component {
           {...input}
           placeholder={placeholder}
           dateFormat={this.props.dateFormat || "DD/MM/YYYY"}
-          selected={input.value ? new Date() : null}
-          className="form-control"
+          // selected={input.value ? today : null}
+          minDate={today.setDate(
+            today.getDate() + (this.props.daysDeltaMin || 0)
+          )}
+          maxDate={future.setDate(
+            future.getDate() + (this.props.daysDeltaMax || 360)
+          )}
+          className="form-control ml-3"
           onChange={this.handleChange}
           locale={ptBR}
           id={this.props.name}
@@ -148,6 +152,13 @@ export class LabelAndTextArea extends Component {
     this.changeValue(editorState);
   }
 
+  onBlur(event) {
+    const value = draftToHtml(
+      convertToRaw(this.state.editorState.getCurrentContent())
+    );
+    this.props.input.onBlur(value);
+  }
+
   /**
    * This updates the redux-form wrapper
    */
@@ -166,12 +177,21 @@ export class LabelAndTextArea extends Component {
         <Editor
           editorState={editorState}
           name={this.props.name}
-          wrapperClassName="wrapper-class"
-          editorClassName="editor-class"
-          toolbarClassName="toolbar-class"
+          wrapperClassName="border rounded"
+          editorClassName="ml-2"
           className="form-control"
-          placeholder="Seu texto aqui."
+          placeholder={this.props.placeholder || "Seu texto aqui."}
+          onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
+          // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
+          toolbar={{
+            options: ["inline", "list"],
+            inline: {
+              inDropdown: false,
+              options: ["bold", "italic", "underline", "strikethrough"]
+            },
+            list: { inDropdown: false, options: ["unordered", "ordered"] }
+          }}
         />
         <ErrorAlert meta={this.props.meta} />
       </Grid>
