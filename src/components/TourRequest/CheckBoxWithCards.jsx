@@ -17,22 +17,13 @@ export class Cards extends Component {
   }
 
   render() {
-    const {
-      input,
-      meta,
-      options,
-      choicesNumberLimit,
-      checkAll,
-      clearAll
-    } = this.props;
+    const { input, meta, options, choicesNumberLimit, checkAll } = this.props;
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
       let borderSucess = "";
-
       // if (clearAll) {
-      //   onBlur([this.state.all[0]]);
-      //   onChange([this.state.all[0]]);
+      //   input.reset();
       // }
       if (checkAll) {
         onBlur(this.state.all);

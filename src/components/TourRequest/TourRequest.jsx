@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
-import { minValue, required, requiredCheck } from "../../helpers/fieldValidators";
+import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { maxValue, required, requiredCheck } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
@@ -75,7 +76,6 @@ export class SelecionaKitLancheBox extends Component {
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
           onChange={this.props.onChange}
-          clearAll={this.props.clearAll}
           validate={[requiredCheck]}
         />
       </div>
@@ -111,18 +111,9 @@ export class TourRequest extends Component {
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.state = {
       qtd_kit_lanche: 0,
-      radioChanged: false,
-      nro_matriculados: this.props.initialValues.nro_matriculados,
-      qtd_total_lanches: 0
+      radioChanged: false
     };
   }
-
-  setTotalKitLanches = (event, newValue, previousValue, name) => {
-    this.setState({
-      ...this.state,
-      qtd_total_lanches: this.state.qtd_kit_lanche * newValue
-    });
-  };
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
     const parser = {
@@ -134,8 +125,7 @@ export class TourRequest extends Component {
     this.setState({
       ...this.state,
       qtd_kit_lanche: newQuantity,
-      radioChanged: event !== previousValue,
-      qtd_total_lanches: this.state.qtd_kit_lanche * newQuantity
+      radioChanged: event !== previousValue
     });
   };
 
@@ -179,11 +169,11 @@ export class TourRequest extends Component {
               cols="3 3 3 3"
               name="nro_alunos"
               type="number"
-              onChange={(event, newValue, previousValue, name) =>
-                this.setTotalKitLanches(event, newValue, previousValue, name)
-              }
               label="Número de alunos participantes"
-              validate={[required, minValue(1)]}
+              validate={[
+                required,
+                maxValue(this.props.initialValues.nro_matriculados)
+              ]}
             />
           </div>
           <hr />
@@ -195,17 +185,9 @@ export class TourRequest extends Component {
           <hr />
           <SelecionaKitLancheBox
             choicesNumberLimit={this.state.qtd_kit_lanche}
-            clearAll={this.state.radioChanged}
           />
           <div className="form-group row">
-            <Field
-              cols="3 3 3 3"
-              component={LabelAndInput}
-              label="Nº de kits"
-              type="number"
-              className="btn btn-outline-primary mr-3"
-              name="qtd_total"
-            />
+            <label>{`Total de lanches: ${this.props.qtd_total || 0}`}</label>
           </div>
           <hr />
           <div className="form-group">
@@ -235,10 +217,20 @@ export class TourRequest extends Component {
   }
 }
 
-export default (TourRequest = reduxForm({
+TourRequest = reduxForm({
   form: "tourRequest",
   destroyOnUnmount: false, // para nao perder o estado,
   initialValues: {
     nro_matriculados: 333
   }
-})(TourRequest));
+})(TourRequest);
+
+const selector = formValueSelector("tourRequest");
+
+TourRequest = connect(state => {
+  const nro_alunos = selector(state, "nro_alunos");
+  const kit_lanche = selector(state, "kit_lanche") || [];
+  return { qtd_total: kit_lanche.length * nro_alunos };
+})(TourRequest);
+
+export default TourRequest;
