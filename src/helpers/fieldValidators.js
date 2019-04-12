@@ -1,6 +1,10 @@
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
+// XXX: Workaround for labelAndTextArea component
+export const textAreaRequired = value =>
+  value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+
 export const requiredCheck = value =>
   value !== undefined
     ? undefined

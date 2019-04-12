@@ -148,6 +148,13 @@ export class LabelAndTextArea extends Component {
     this.changeValue(editorState);
   }
 
+  onBlur(event) {
+    const value = draftToHtml(
+      convertToRaw(this.state.editorState.getCurrentContent())
+    );
+    this.props.input.onBlur(value);
+  }
+
   /**
    * This updates the redux-form wrapper
    */
@@ -171,6 +178,7 @@ export class LabelAndTextArea extends Component {
           toolbarClassName="toolbar-class"
           className="form-control"
           placeholder="Seu texto aqui."
+          onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
         />
         <ErrorAlert meta={this.props.meta} />
