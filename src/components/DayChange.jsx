@@ -61,16 +61,12 @@ export let DayChange = props => (
           cols="4 4 4 4"
           name="subst_dia_origem"
           label="De:"
-          daysDeltaMin={2}
-          daysDeltaMax={30}
         />
         <Field
           component={LabelAndDate}
           cols="4 4 4 4"
           name="subst_dia_destino"
           label="Para:"
-          daysDeltaMin={5}
-          daysDeltaMax={35}
         />
       </div>
       <hr />

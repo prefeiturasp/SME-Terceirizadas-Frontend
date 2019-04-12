@@ -70,11 +70,20 @@ export class LabelAndDate extends Component {
       touched: PropTypes.bool,
       error: PropTypes.bool
     }),
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    cols: PropTypes.string,
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    dateFormat: PropTypes.string,
+    daysDeltaMin: PropTypes.number,
+    daysDeltaMax: PropTypes.number
   };
 
   static defaultProps = {
-    placeholder: ""
+    placeholder: "",
+    dateFormat: "DD/MM/YYYY",
+    daysDeltaMin: 0,
+    daysDeltaMax: 3
   };
 
   constructor(props) {
@@ -89,30 +98,37 @@ export class LabelAndDate extends Component {
   }
 
   render() {
-    const { input, placeholder, meta } = this.props;
+    const {
+      input,
+      placeholder,
+      meta,
+      cols,
+      name,
+      label,
+      dateFormat,
+      daysDeltaMin,
+      daysDeltaMax
+    } = this.props;
     var today = new Date();
     var future = new Date();
     return (
-      <Grid cols={this.props.cols || ""} className="input-group">
-        <label htmlFor={this.props.name} className={"col-form-label"}>
-          {this.props.label}
+      <Grid cols={cols || ""} className="input-group">
+        <label htmlFor={name} className={"col-form-label"}>
+          {label}
         </label>
         <DatePicker
           {...input}
+          title="meu title"
+          timeIntervals={3}
           placeholder={placeholder}
-          dateFormat={this.props.dateFormat || "DD/MM/YYYY"}
-          // selected={input.value ? today : null}
-          minDate={today.setDate(
-            today.getDate() + (this.props.daysDeltaMin || 0)
-          )}
-          maxDate={future.setDate(
-            future.getDate() + (this.props.daysDeltaMax || 360)
-          )}
+          dateFormat={dateFormat}
+          minDate={today.setDate(today.getDate() + daysDeltaMin)}
+          maxDate={future.setDate(future.getDate() + daysDeltaMax)}
           className="form-control ml-3"
           onChange={this.handleChange}
           locale={ptBR}
-          id={this.props.name}
-          name={this.props.name}
+          id={name}
+          name={name}
         />
         <i className="fa fa-calendar fa-lg" />
         <ErrorAlert meta={meta} />
@@ -131,6 +147,10 @@ export class LabelAndTextArea extends Component {
     };
     this.changeValue(editorState);
   }
+
+  static defaultProps = {
+    placeholder: "Seu texto aqui."
+  };
 
   /**
    * Initialising the value for <Editor />
@@ -169,18 +189,19 @@ export class LabelAndTextArea extends Component {
 
   render() {
     const { editorState } = this.state;
+    const { cols, name, label, placeholder, meta } = this.props;
     return (
-      <Grid id="react-wysiwyg" cols={this.props.cols}>
-        <label htmlFor={this.props.name} className={"col-form-label"}>
-          {this.props.label}
+      <Grid id="react-wysiwyg" cols={cols}>
+        <label htmlFor={name} className={"col-form-label"}>
+          {label}
         </label>
         <Editor
           editorState={editorState}
-          name={this.props.name}
+          name={name}
           wrapperClassName="border rounded"
           editorClassName="ml-2"
           className="form-control"
-          placeholder={this.props.placeholder || "Seu texto aqui."}
+          placeholder={placeholder}
           onBlur={event => this.onBlur(event)}
           onEditorStateChange={editorState => this.handleChange(editorState)}
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
@@ -193,7 +214,7 @@ export class LabelAndTextArea extends Component {
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
         />
-        <ErrorAlert meta={this.props.meta} />
+        <ErrorAlert meta={meta} />
       </Grid>
     );
   }
