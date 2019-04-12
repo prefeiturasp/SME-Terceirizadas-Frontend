@@ -9,16 +9,18 @@ export const requiredCheck = value =>
 const maxLength = max => value =>
   value && value.length > max ? `Must be ${max} characters or less` : undefined;
 
-export const maxLength15 = maxLength(15);
 export const minLength = min => value =>
-  value && value.length < min ? `Must be ${min} characters or more` : undefined;
+  value && value.length < min ? `Deve ter ao menos ${min} letra(s)` : undefined;
 
-export const minLength2 = minLength(2);
 const number = value =>
-  value && isNaN(Number(value)) ? "Must be a number" : undefined;
-const minValue = min => value =>
-  value && value < min ? `Must be at least ${min}` : undefined;
-const minValue13 = minValue(13);
+  value && isNaN(Number(value)) ? "Deve ser um número" : undefined;
+
+export const minValue = min => value =>
+  value && value < min ? `Deve ser ao menos ${min}` : undefined;
+
+export const maxValue = max => value =>
+  value && value > max ? `Não pode ser maior que ${max}` : undefined;
+
 const email = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
     ? "Invalid email address"

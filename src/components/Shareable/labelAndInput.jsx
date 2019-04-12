@@ -24,11 +24,9 @@ export const LabelAndInput = props => {
         className="form-control"
         name={props.name}
         id={props.name}
-        value={props.value}
         placeholder={props.placeholder}
         readOnly={props.readOnly || false}
         type={props.type}
-        onChange={props.onChange}
       />
       <ErrorAlert meta={props.meta} />
     </Grid>

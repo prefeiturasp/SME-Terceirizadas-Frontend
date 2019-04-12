@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { maxValue, required, requiredCheck } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
-import { required, requiredCheck } from "../../helpers/validators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
-import {
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
 import RadioboxGroup from "../Shareable/RadioboxGroup";
 import CheckboxWithCards from "./CheckBoxWithCards";
 
@@ -48,7 +45,7 @@ export const KIT_ENUM = {
   }
 };
 
-export class SelecionaKitLanche extends Component {
+export class SelecionaKitLancheBox extends Component {
   render() {
     const kitOptions = [
       {
@@ -78,13 +75,9 @@ export class SelecionaKitLanche extends Component {
           options={kitOptions}
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
+          onChange={this.props.onChange}
           validate={[requiredCheck]}
         />
-        <div>
-          <label>Nº de kits</label>
-          <br />
-          <button className="btn btn-outline-primary mr-3">000</button>
-        </div>
       </div>
     );
   }
@@ -116,31 +109,54 @@ export class TourRequest extends Component {
   constructor(props) {
     super(props);
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
-    this.state = { qtd_kit_lanche: 0 };
+    this.state = {
+      qtd_kit_lanche: 0,
+      radioChanged: false
+    };
+
+    this.onSubmit = this.onSubmit.bind(this);
   }
-  // TODO: Rever uma forma melhor de escrever isso.
-  parser = {
-    "4h": HORAS_ENUM._4.qtd_kits,
-    "5_7h": HORAS_ENUM._5a7.qtd_kits,
-    "8h": HORAS_ENUM._8.qtd_kits
-  };
+
+  onSubmit(values) {
+    validateTourRequestForm(values);
+  }
+
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
-    let newQuantity = this.parser[event];
+    const parser = {
+      "4h": HORAS_ENUM._4.qtd_kits,
+      "5_7h": HORAS_ENUM._5a7.qtd_kits,
+      "8h": HORAS_ENUM._8.qtd_kits
+    };
+    let newQuantity = parser[event];
     this.setState({
-      qtd_kit_lanche: newQuantity
+      ...this.state,
+      qtd_kit_lanche: newQuantity,
+      radioChanged: event !== previousValue
     });
   };
 
   render() {
+    const {
+      handleSubmit,
+      pristine,
+      reset,
+      submitting
+    } = this.props;
     return (
       <div className="d-flex flex-column p-4 mt-5">
-        <form onSubmit={this.props.handleSubmit(validateTourRequestForm)}>
+        <form>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
-          <div>
-            <button className="btn btn-primary mr-3">150</button>
-            <label>
+          <div className="form-group row">
+            <br />
+            <Field
+              component={"input"}
+              type="number"
+              className="btn btn-primary mr-3"
+              name="nro_matriculados"
+            />
+            <label htmlFor="nro_matriculados">
               Informação automática disponibilizada no cadastro da UE
             </label>
           </div>
@@ -165,7 +181,10 @@ export class TourRequest extends Component {
               name="nro_alunos"
               type="number"
               label="Número de alunos participantes"
-              validate={[required]}
+              validate={[
+                required,
+                maxValue(this.props.initialValues.nro_matriculados)
+              ]}
             />
           </div>
           <hr />
@@ -175,7 +194,12 @@ export class TourRequest extends Component {
             }
           />
           <hr />
-          <SelecionaKitLanche choicesNumberLimit={this.state.qtd_kit_lanche} />
+          <SelecionaKitLancheBox
+            choicesNumberLimit={this.state.qtd_kit_lanche}
+          />
+          <div className="form-group row">
+            <label>{`Total de lanches: ${this.props.qtd_total || 0}`}</label>
+          </div>
           <hr />
           <div className="form-group">
             <Field
@@ -185,15 +209,35 @@ export class TourRequest extends Component {
             />
           </div>
           <div className="form-group row float-right">
-            <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
+            <Button
+              label="Cancelar"
+              onClick={reset}
+              disabled={pristine || submitting}
+              style={ButtonStyle.OutlinePrimary}
+            />
             <Button
               label="Salvar"
+              disabled={pristine || submitting}
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values,
+                  Acao: "Salvar"
+                })
+              )}
               className="ml-3"
+              type={ButtonType.SUBMIT}
               style={ButtonStyle.OutlinePrimary}
             />
             <Button
               label="Enviar Solicitação"
+              disabled={pristine || submitting}
               type={ButtonType.SUBMIT}
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values,
+                  Acao: "Enviar solicitação"
+                })
+              )}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
@@ -204,7 +248,20 @@ export class TourRequest extends Component {
   }
 }
 
-export default (TourRequest = reduxForm({
+TourRequest = reduxForm({
   form: "tourRequest",
-  destroyOnUnmount: false // para nao perder o estado
-})(TourRequest));
+  destroyOnUnmount: false, // para nao perder o estado,
+  initialValues: {
+    nro_matriculados: 333
+  }
+})(TourRequest);
+
+const selector = formValueSelector("tourRequest");
+
+TourRequest = connect(state => {
+  const nro_alunos = selector(state, "nro_alunos");
+  const kit_lanche = selector(state, "kit_lanche") || [];
+  return { qtd_total: kit_lanche.length * nro_alunos };
+})(TourRequest);
+
+export default TourRequest;
