@@ -113,6 +113,12 @@ export class TourRequest extends Component {
       qtd_kit_lanche: 0,
       radioChanged: false
     };
+
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(values) {
+    validateTourRequestForm(values);
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -130,9 +136,15 @@ export class TourRequest extends Component {
   };
 
   render() {
+    const {
+      handleSubmit,
+      pristine,
+      reset,
+      submitting
+    } = this.props;
     return (
       <div className="d-flex flex-column p-4 mt-5">
-        <form onSubmit={this.props.handleSubmit(validateTourRequestForm)}>
+        <form>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
@@ -148,7 +160,6 @@ export class TourRequest extends Component {
               Informação automática disponibilizada no cadastro da UE
             </label>
           </div>
-
           <div className="form-group row">
             <Field
               component={LabelAndDate}
@@ -198,15 +209,35 @@ export class TourRequest extends Component {
             />
           </div>
           <div className="form-group row float-right">
-            <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
+            <Button
+              label="Cancelar"
+              onClick={reset}
+              disabled={pristine || submitting}
+              style={ButtonStyle.OutlinePrimary}
+            />
             <Button
               label="Salvar"
+              disabled={pristine || submitting}
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values,
+                  Acao: "Salvar"
+                })
+              )}
               className="ml-3"
+              type={ButtonType.SUBMIT}
               style={ButtonStyle.OutlinePrimary}
             />
             <Button
               label="Enviar Solicitação"
+              disabled={pristine || submitting}
               type={ButtonType.SUBMIT}
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values,
+                  Acao: "Enviar solicitação"
+                })
+              )}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
