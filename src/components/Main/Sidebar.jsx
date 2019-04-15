@@ -1,18 +1,32 @@
 import React, { Component } from 'react';
+import {Link, NavLink} from 'react-router-dom'
 import './sidebar.css'
 import $ from 'jquery/dist/jquery.slim'
 import easing from 'jquery.easing/jquery.easing'
 import bootstrap from 'bootstrap/dist/js/bootstrap'
 import { closeToggle } from './jQClick'
+import Home from '../../pages/Home';
+import AddFood from '../AddFood';
+import { MenuChangePage } from '../../pages/MenuChangePage';
+import PermissionsPage from '../../pages/PermissionsPage';
+import TourRequestPage from '../../pages/TourRequestPage';
+import DayChangePage from '../../pages/DayChangePage';
+import AddFoodPage from '../../pages/AddFoodPage';
+import FoodSuspensionPage from '../../pages/FoodSuspensionPage';
 
 
 export class Sidebar extends Component {
   state = {}
 
+  constructor(props){
+    super(props)
+
+    this.handleToggle = this.handleToggle.bind(this);
+  }
+
   handleToggle = event => (
     closeToggle()
   );
-
 
   render() {
     return (
@@ -22,11 +36,11 @@ export class Sidebar extends Component {
 
           <div className="sidebar-divider my-0"></div>
 
-          <a className="sidebar-brand d-flex align-items-center justify-content-center" href="#teste">
+          <Link className="sidebar-brand d-flex align-items-center justify-content-center" component={Home} to="/">
             <div className="sidebar-brand-icon rotate-n-15">
               <img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
             </div>
-          </a>
+          </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
             <div className="nav-item">
               <div className="sidebar-brand-text text-center">
@@ -34,10 +48,10 @@ export class Sidebar extends Component {
                   Valeria Luna
                 </span>
               </div>
-              <a className="nav-link text-white small text-center collapsed" href="#teste">
+              <Link className="nav-link text-white small text-center collapsed" href="#teste">
                 <i className="fas fa-user-edit"></i>
                 <span>Perfil</span>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -45,36 +59,38 @@ export class Sidebar extends Component {
           <hr className="sidebar-divider my-0" />
 
 
-          <li className="nav-item active">
-            <a className="nav-link" href="#teste">
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/" exact component={Home}>
               <i className="fas fa-home"></i>
-              <span>Home</span></a>
+              <span>Home</span></NavLink>
           </li>
 
           <li className="nav-item">
-            <a className="nav-link collapsed"
-              href="#teste"
+            <NavLink className="nav-link collapsed"
               data-toggle="collapse"
               data-target="#collapseSchool"
-              aria-expanded="false"
+              aria-expanded="true"
               aria-controls="collapseTwo">
               <i className="fa fa-school"></i>
               <span>Escola</span>
-            </a>
+            </NavLink>
             <div id="collapseSchool"
-              className="collapse"
+              className="collapse show"
               aria-labelledby="headingSchool"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Cad 1</h6>
-                <a className="collapse-item" href="#teste">Cad 2</a>
-                <a className="collapse-item" href="#teste">Cad 3</a>
+                <h6 className="collapse-header">Solicitações</h6>
+                <NavLink activeClassName="active" className="collapse-item" to="/add-food" component={AddFood}>Adicionar Cardápio</NavLink>
+                <NavLink activeClassName="active" className="collapse-item" to="/menu-change" component={MenuChangePage}>Alterar Cardápio</NavLink>
+                <NavLink activeClassName="active" className="collapse-item" to="/tour-request" component={TourRequestPage}>Kit Lanche</NavLink>
+                <NavLink activeClassName="active" className="collapse-item" to="/day-change" component={DayChangePage}>Alterar dia Cardápio</NavLink>
+                <NavLink activeClassName="active" className="collapse-item" to="/food-suspension" component={FoodSuspensionPage}>Suspender Alimentação</NavLink>
               </div>
             </div>
           </li>
 
           <li className="nav-item">
-            <a className="nav-link collapsed"
+            <Link className="nav-link collapsed"
               href="#teste"
               data-toggle="collapse"
               data-target="#collapseDre"
@@ -82,15 +98,15 @@ export class Sidebar extends Component {
               aria-controls="collapseTwo">
               <i className="fas fa-filter"></i>
               <span>DRE</span>
-            </a>
+            </Link>
             <div id="collapseDre"
-              className="collapse"
+              className="collapse show"
               aria-labelledby="headingDre"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Cad 1</h6>
-                <a className="collapse-item" href="#teste">Cad 2</a>
-                <a className="collapse-item" href="#teste">Cad 3</a>
+                <Link className="collapse-item" href="#teste">Cad 2</Link>
+                <Link className="collapse-item" href="#teste">Cad 3</Link>
               </div>
             </div>
           </li>
@@ -98,7 +114,7 @@ export class Sidebar extends Component {
 
 
           <li className="nav-item">
-            <a className="nav-link collapsed"
+            <Link className="nav-link collapsed"
               href="#teste"
               data-toggle="collapse"
               data-target="#collapseCodae"
@@ -106,22 +122,22 @@ export class Sidebar extends Component {
               aria-controls="collapseCodae">
               <i className="fas fa-funnel-dollar"></i>
               <span>CODAE</span>
-            </a>
+            </Link>
             <div id="collapseCodae"
-              className="collapse"
+              className="collapse show"
               aria-labelledby="headingCodae"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Cad 1</h6>
-                <a className="collapse-item" href="#teste">Cad 2</a>
-                <a className="collapse-item" href="#teste">Cad 3</a>
+                <Link className="collapse-item" href="#teste">Cad 2</Link>
+                <Link className="collapse-item" href="#teste">Cad 3</Link>
               </div>
             </div>
           </li>
 
 
           <li className="nav-item">
-            <a className="nav-link collapsed"
+            <Link className="nav-link collapsed"
               href="#teste"
               data-toggle="collapse"
               data-target="#collapseTerc"
@@ -129,22 +145,33 @@ export class Sidebar extends Component {
               aria-controls="collapseTwo">
               <i className="fas fa-building"></i>
               <span>Terceirizada</span>
-            </a>
-            <div id="collapseTerc"
-              className="collapse" aria-labelledby="headingTerc" data-parent="#accordionSidebar">
+            </Link>
+            <div id="collapseTerc" className="collapse show" aria-labelledby="headingTerc" data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Cad 1</h6>
-                <a className="collapse-item" href="#test">Cad 2</a>
-                <a className="collapse-item" href="#test">Cad 3</a>
+                <Link className="collapse-item" href="#test">Cad 2</Link>
+                <Link className="collapse-item" href="#test">Cad 3</Link>
               </div>
             </div>
           </li>
 
           <li className="nav-item">
-            <a className="nav-link collapsed" href="#test" aria-expanded="false">
-              <i className="fas fa-fw fa-cog"></i>
-              <span>Configurações</span>
-            </a>
+            <Link className="nav-link collapsed"
+              href="#teste"
+              data-toggle="collapse"
+              data-target="#collapseConfig"
+              aria-expanded="false"
+              aria-controls="collapseTwo">
+              <i className="fas fa-cog"></i>
+              <span>Configrações</span>
+            </Link>
+            <div id="collapseConfig"
+                 className="collapse" aria-labelledby="headingConfig" data-parent="#accordionSidebar">
+              <div className="bg-white py-2 collapse-inner rounded">
+                <h6 className="collapse-header">Dados</h6>
+                <NavLink activeClassName="active" className="collapse-item" to="/permissions-root" component={PermissionsPage}>Permissões</NavLink>
+              </div>
+            </div>
           </li>
 
           <hr className="sidebar-divider" />
@@ -154,7 +181,6 @@ export class Sidebar extends Component {
           </div>
 
 
-          {/* TODO  : import images in react */}
           <div className="page-footer mx-auto justify-content-center mt-5 pb-2">
             <img src="/assets/image/logo_sme.svg" className="rounded float-left" alt="SME Educação" />
           </div>

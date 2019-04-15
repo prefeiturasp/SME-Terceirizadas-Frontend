@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom'
+import Home from '../../pages/Home';
 
 export class Header extends Component {
   state = {}
@@ -8,9 +10,9 @@ export class Header extends Component {
         <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme fixed-top">
           <div className="container-fluid">
             <div className="nav-bar">
-              <a className="navbar-brand" href="#">
+              <Link className="navbar-brand" exact to="/" component={Home}>
                 <img src="http://placehold.it/150x50?text=Logo" alt="" />
-              </a>
+              </Link>
             </div>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
               aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,10 +23,10 @@ export class Header extends Component {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">Profile &nbsp;<i className="fa fa-1x fa-user-circle"></i></a>
+                  <a className="nav-link" href="#profile">Profile &nbsp;<i className="fa fa-1x fa-user-circle"></i></a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">Sair &nbsp;<i className="fas fa-1x fa-power-off"></i></a>
+                  <a className="nav-link" href="#logout">Sair &nbsp;<i className="fas fa-1x fa-power-off"></i></a>
                 </li>
               </ul>
             </div>

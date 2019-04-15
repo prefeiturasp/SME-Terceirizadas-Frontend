@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import {
   userActions,
   emailEdited,
@@ -17,18 +16,21 @@ export class Login extends Component {
     // this.props.logout();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      email : '',
+      password: ''
+    }
   }
 
 
   componentDidMount(){
-    if(localStorage.getItem('user')){
-      window.location.href = "/menu-change"
-    }
+
   }
 
-// validForm() {
-//   return this.props.email.length > 0 && this.props.password.length > 0;
-// }
+validForm() {
+  return this.props.email.length > 0 && this.props.password.length > 0;
+}
 
 handleSubmit = event => {
   event.preventDefault();
@@ -95,7 +97,7 @@ render() {
 
               <button
                 className="btn btn-primary btn-block"
-              // disabled={!this.validForm()}
+                disabled={!this.validForm()}
               >
                 Acessar
                 </button>

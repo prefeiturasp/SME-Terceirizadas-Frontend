@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter as Router } from 'react-router-dom'
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'startbootstrap-sb-admin-2/css/sb-admin-2.css'
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'startbootstrap-sb-admin-2/css/sb-admin-2.css'
 
 import './styles/sb-admin-2.css';
 import './styles/custom.css';
@@ -32,7 +33,9 @@ const store = applyMiddleware(thunk, multi, promise)(createStore)(reducers, devT
 // store é o carinha que recebe todos os estados
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

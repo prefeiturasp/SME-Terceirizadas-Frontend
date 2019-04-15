@@ -1,11 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import Login from './components/Login'
-import AddFood from './components/AddFood'
-import MenuChange from './components/MenuChange'
-import Permissions from './components/Permissions/Permissions'
-import PermissionsCheckBoxes from './components/Permissions/PermissionsCheckBoxes'
-import {MenuChangePage} from './pages/MenuChangePage'
+import RoutesConfig from './configs/RoutesConfig'
 
 const isAuthenticate = () => {
   if (localStorage.getItem('user')) {
@@ -32,11 +28,12 @@ const PrivateRouter = ({ component: Component, ...rest }) => (
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/login" component={Login} />
-      <PrivateRouter exact path="/add-food" component={AddFood} />
-      <PrivateRouter exact path="/menu-change" component={MenuChangePage} />
-      <PrivateRouter exact path="/permissions-root" component={Permissions} />
-      <PrivateRouter exact path="/permissions-root" component={Permissions} />
+      <Route path="/login" component={Login} />
+
+        {RoutesConfig.map((value, key)=>{
+          return <PrivateRouter key={key} path={value.path} exact={value.exact} component={value.component} />
+        })}
+
     </Switch>
   </BrowserRouter>
 )

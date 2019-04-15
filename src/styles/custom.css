@@ -43,7 +43,7 @@
 }
 
 html {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -59,7 +59,7 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #212529;
+  color: #686868;
   text-align: left;
   background-color: #fff;
 }
@@ -10055,4 +10055,41 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+.page-title {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: normal;
+}
+
+.blockquote-sme {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: normal;
+  color: #686868;
+}
+
+.badge-sme {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 75%;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.badge-secondary-sme {
+  background-color: #E8E8E8;
+  color:  #686868;
+}
+
+.text-color-sme-silver {
+  color : #A8A8A8;
 }
