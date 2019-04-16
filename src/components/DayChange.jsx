@@ -5,8 +5,7 @@ import { change, Field, reduxForm } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
-import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
-
+import { LabelAndDate, LabelAndTextArea, MyStatefulEditor } from "./Shareable/labelAndInput";
 
 export class DayChangeItemList extends Component {
   static propTypes = {
@@ -97,12 +96,15 @@ export class DayChangeEditor extends Component {
   }
 
   OnEditButtonClicked(param, reset) {
-    reset()
+    reset();
     this.props.dispatch(change("dayChange", "motivo", "<p>kkkkkkkkkk</p> \n"));
-    this.props.dispatch(change("dayChange", "subst_dia_origem", param.subst_dia_origem));
-    this.props.dispatch(change("dayChange", "subst_dia_destino", param.subst_dia_destino));
+    this.props.dispatch(
+      change("dayChange", "subst_dia_origem", param.subst_dia_origem)
+    );
+    this.props.dispatch(
+      change("dayChange", "subst_dia_destino", param.subst_dia_destino)
+    );
     console.log(param);
-
   }
 
   componentDidMount() {
@@ -151,7 +153,9 @@ export class DayChangeEditor extends Component {
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-            OnEditButtonClicked={params => this.OnEditButtonClicked(params, reset)}
+            OnEditButtonClicked={params =>
+              this.OnEditButtonClicked(params, reset)
+            }
           />
           <hr />
           <div className="form-row">
@@ -177,6 +181,7 @@ export class DayChangeEditor extends Component {
           <div className="form-group">
             <Field
               component={LabelAndTextArea}
+              initialValue={'TESTES!!!'}
               label="Motivo"
               name="motivo"
               validate={[textAreaRequired]}

@@ -1,5 +1,5 @@
 import ptBR from "date-fns/locale/pt-BR";
-import { ContentState, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
@@ -9,11 +9,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import RichTextEditor from "react-rte";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
 import { Grid } from "./responsiveBs4";
-
-
 
 export const LabelAndInput = props => {
   return (
@@ -149,7 +148,11 @@ export class LabelAndDate extends Component {
 export class LabelAndTextArea extends Component {
   constructor(props) {
     super(props);
-    const editorState = this.initEditorState();
+    const editorState = EditorState.createWithContent(
+      ContentState.createFromBlockArray(
+        convertFromHTML(`<p>${this.props.initialValue}.</p>`)
+      )
+    );
     this.state = {
       editorState
     };
@@ -225,6 +228,36 @@ export class LabelAndTextArea extends Component {
         />
         <ErrorAlert meta={meta} />
       </Grid>
+    );
+  }
+}
+
+export class MyStatefulEditor extends Component {
+  static propTypes = {
+    onChange: PropTypes.func
+  };
+
+  state = {
+    value: RichTextEditor.createEmptyValue()
+  };
+
+  onChange = value => {
+    console.log(value, "xxxxxxxxxxxx", this.state);
+    this.setState({ value });
+    if (this.props.input) {
+      this.props.input.onChange(value.toString("html"));
+    }
+  };
+
+  setValue(value) {}
+
+  render() {
+    return (
+      <RichTextEditor
+        {...this.props.input}
+        value={this.state.value}
+        onChange={this.onChange}
+      />
     );
   }
 }
