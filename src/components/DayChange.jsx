@@ -6,60 +6,56 @@ import { showResults } from "../helpers/utilities";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
+
 export class DayChangeItemList extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayChange: "" };
+    this.state = { dayChange: [] };
   }
 
   componentWillMount() {
-    axios.get(`http://localhost:3004/daychange/5`).then(res => {
+    axios.get(`http://localhost:3004/daychange/`).then(res => {
       const dayChange = res.data;
       this.setState({ dayChange });
     });
   }
 
   render() {
-    const {
-      status,
-      id,
-      save_date,
-      subst_dia_origem,
-      subst_dia_destino
-    } = this.state.dayChange;
-    // debugger;
-    return (
-
-      <div className="border rounded">
-        <label className="bold ml-3">{status}</label>
-        <div>
-          <label className="bold ml-3">
-            Alteração de Dia de cardápio {`# ${id}`}
-          </label>
-          <div className="float-right">
-            <input
-              className="float-right mt-2 mr-2"
-              type="checkbox"
-              name={id}
-              id={id}
-            />
+    const todosDias = this.state.dayChange.map(p => {
+      const { status, id, salvo_em, subst_dia_origem, subst_dia_destino } = p;
+      return (
+        <div className="border rounded mt-3">
+          <label className="bold ml-3">{status}</label>
+          <div>
+            <label className="bold ml-3">
+              Alteração de Dia de cardápio {`# ${id}`}
+            </label>
+            <div className="float-right">
+              <input
+                className="float-right mt-2 mr-3"
+                type="checkbox"
+                name={id}
+                id={id}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="float-right">
+              Salvo em: {salvo_em}
+              <BaseButton icon={ButtonIcon.TRASH} />
+              <BaseButton icon={ButtonIcon.EDIT} />
+            </div>
+          </div>
+          <div className="ml-3">
+            <p>
+              Substituição do dia: <b>{subst_dia_origem}</b> para o dia:<b>
+              {subst_dia_destino}</b>
+            </p>
           </div>
         </div>
-        <div>
-          <div className="float-right">
-            Salvo em: {save_date}
-            <BaseButton icon={ButtonIcon.TRASH} />
-            <BaseButton icon={ButtonIcon.EDIT} />
-          </div>
-        </div>
-        <div className="ml-3">
-          <p>
-            Substituição do dia: {subst_dia_origem} para o dia:{" "}
-            {subst_dia_destino}
-          </p>
-        </div>
-      </div>
-    );
+      );
+    });
+    return <div>{todosDias}</div>;
   }
 }
 
