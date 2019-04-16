@@ -6,6 +6,7 @@ import PermissionsPage from "../pages/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
+import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 
 const routesConfig = [
   {
@@ -29,6 +30,11 @@ const routesConfig = [
     exact : false
   },
   {
+    path : "/permission-root/permissions/:type/:subtype",
+    component : PermissionsCheckBoxesPage,
+    exact : null
+  },
+  {
     path : "/permissions-root",
     component : PermissionsPage,
     exact : false
@@ -48,6 +54,7 @@ const routesConfig = [
     component : FoodSuspensionPage,
     exact : false
   }
+
 
 ]
 

@@ -1,4 +1,6 @@
+import React from 'react';
 import { userConstants } from "../constants/user.constants";
+import {Redirect} from 'react-router-dom'
 const INITIAL_STATE = {
   email: '',
   password: '',
@@ -8,7 +10,9 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case userConstants.LOGIN_SUCCESS:
-      return "xzxxx";
+      return () =>(
+        <Redirect to="/" />
+      );
     case userConstants.LOGIN_REQUEST:
       return "xzxxx";
     case userConstants.LOGIN_FAILURE:

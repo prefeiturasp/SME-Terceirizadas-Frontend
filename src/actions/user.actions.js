@@ -16,7 +16,7 @@ function login(email, password) {
     userService.login(email, password).then(
       user => {
         dispatch(success(user));
-        history.push("/menu-change");
+        history.push("/");
       },
       error => {
         dispatch(failure(error));

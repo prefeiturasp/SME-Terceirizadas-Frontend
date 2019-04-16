@@ -5,6 +5,7 @@ import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import If from "./layout";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
@@ -190,7 +191,7 @@ export class LabelAndTextArea extends Component {
    */
   changeValue(editorState) {
     const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    this.props.input.onChange(value);
+    // this.props.input.onChange(value);
   }
 
   render() {
@@ -221,8 +222,10 @@ export class LabelAndTextArea extends Component {
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
         />
+        <If isVisible={meta}>
         <ErrorAlert meta={meta} />
-      </Grid>
+        </If>
+        </Grid>
     );
   }
 }

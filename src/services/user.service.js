@@ -11,7 +11,6 @@ const login = async (email, password) => {
     });
     const json = await response.json();
     localStorage.setItem('user', JSON.stringify(json));
-
     return json
   } catch (error) {
     console.log(error);

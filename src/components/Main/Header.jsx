@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
-import Home from '../../pages/Home';
+import Home from '../../pages/Home'
 
 export class Header extends Component {
   state = {}

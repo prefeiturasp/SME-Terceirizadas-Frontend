@@ -75,7 +75,7 @@ export class Sidebar extends Component {
               <span>Escola</span>
             </NavLink>
             <div id="collapseSchool"
-              className="collapse show"
+              className="collapse"
               aria-labelledby="headingSchool"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
@@ -100,7 +100,7 @@ export class Sidebar extends Component {
               <span>DRE</span>
             </Link>
             <div id="collapseDre"
-              className="collapse show"
+              className="collapse"
               aria-labelledby="headingDre"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
@@ -124,7 +124,7 @@ export class Sidebar extends Component {
               <span>CODAE</span>
             </Link>
             <div id="collapseCodae"
-              className="collapse show"
+              className="collapse"
               aria-labelledby="headingCodae"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
@@ -146,7 +146,7 @@ export class Sidebar extends Component {
               <i className="fas fa-building"></i>
               <span>Terceirizada</span>
             </Link>
-            <div id="collapseTerc" className="collapse show" aria-labelledby="headingTerc" data-parent="#accordionSidebar">
+            <div id="collapseTerc" className="collapse" aria-labelledby="headingTerc" data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Cad 1</h6>
                 <Link className="collapse-item" href="#test">Cad 2</Link>
