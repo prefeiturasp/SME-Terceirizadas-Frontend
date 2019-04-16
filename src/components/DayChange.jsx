@@ -1,12 +1,12 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Field, reduxForm, change } from "redux-form";
+import { change, Field, reduxForm } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
+
 
 export class DayChangeItemList extends Component {
   static propTypes = {
@@ -96,11 +96,13 @@ export class DayChangeEditor extends Component {
     });
   }
 
-  OnEditButtonClicked(param) {
-    // debugger;
-    this.props.dispatch(change("dayChange", "motivo", '<p>hahahahaha</p>\n'));
-    this.props.dispatch(change('dayChange', 'subst_dia_origem', '25/04/2019'))
+  OnEditButtonClicked(param, reset) {
+    reset()
+    this.props.dispatch(change("dayChange", "motivo", "<p>kkkkkkkkkk</p> \n"));
+    this.props.dispatch(change("dayChange", "subst_dia_origem", param.subst_dia_origem));
+    this.props.dispatch(change("dayChange", "subst_dia_destino", param.subst_dia_destino));
     console.log(param);
+
   }
 
   componentDidMount() {
@@ -149,7 +151,7 @@ export class DayChangeEditor extends Component {
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-            OnEditButtonClicked={this.OnEditButtonClicked}
+            OnEditButtonClicked={params => this.OnEditButtonClicked(params, reset)}
           />
           <hr />
           <div className="form-row">
