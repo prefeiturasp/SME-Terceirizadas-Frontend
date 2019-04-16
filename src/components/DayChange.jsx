@@ -1,7 +1,8 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { Field, reduxForm, change } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
@@ -54,7 +55,7 @@ export class DayChangeItemList extends Component {
               <BaseButton
                 icon={ButtonIcon.EDIT}
                 onClick={p =>
-                  this.props.OnEditButtonClicked(
+                  this.props.OnEditButtonClicked({
                     status,
                     id,
                     salvo_em,
@@ -62,7 +63,7 @@ export class DayChangeItemList extends Component {
                     subst_dia_destino,
                     motivo,
                     obs
-                  )
+                  })
                 }
               />
             </div>
@@ -86,33 +87,27 @@ export class DayChangeEditor extends Component {
     this.state = { dayChangeList: [] };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
-    this.getDayChangeList = this.getDayChangeList.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
     axios.delete(`http://localhost:3004/daychange/${id}`).then(res => {
-      console.log(`APAGOU ITEM: ${id}`);
+      this.refresh();
     });
-    this.getDayChangeList();
   }
 
-  OnEditButtonClicked(
-    status,
-    id,
-    salvo_em,
-    subst_dia_origem,
-    subst_dia_destino,
-    motivo,
-    obs
-  ) {
-    console.log(`EDITOU ITEM: ${salvo_em}`);
+  OnEditButtonClicked(param) {
+    // debugger;
+    this.props.dispatch(change("dayChange", "motivo", '<p>hahahahaha</p>\n'));
+    this.props.dispatch(change('dayChange', 'subst_dia_origem', '25/04/2019'))
+    console.log(param);
   }
 
   componentDidMount() {
-    this.getDayChangeList();
+    this.refresh();
   }
 
-  getDayChangeList() {
+  refresh() {
     axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
       const dayChangeList = res.data;
       this.setState({ dayChangeList });
@@ -121,11 +116,11 @@ export class DayChangeEditor extends Component {
 
   onSubmit(values) {
     axios.post(`http://localhost:3004/daychange/`, values).then(res => {
+      this.refresh();
       console.log("POST", res.data);
     });
-    // atualizando lista
-    this.getDayChangeList();
   }
+
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
@@ -153,26 +148,8 @@ export class DayChangeEditor extends Component {
           <hr />
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
-            OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
-            OnEditButtonClicked={(
-              status,
-              id,
-              salvo_em,
-              subst_dia_origem,
-              subst_dia_destino,
-              motivo,
-              obs
-            ) =>
-              this.OnEditButtonClicked(
-                status,
-                id,
-                salvo_em,
-                subst_dia_origem,
-                subst_dia_destino,
-                motivo,
-                obs
-              )
-            }
+            OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+            OnEditButtonClicked={this.OnEditButtonClicked}
           />
           <hr />
           <div className="form-row">
@@ -252,7 +229,8 @@ export class DayChangeEditor extends Component {
   }
 }
 
-export default (DayChangeEditor = reduxForm({
-  form: "dayChange",
-  destroyOnUnmount: false
-})(DayChangeEditor));
+DayChangeEditor = reduxForm({
+  form: "dayChange"
+})(DayChangeEditor);
+
+export default DayChangeEditor;
