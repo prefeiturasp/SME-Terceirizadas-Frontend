@@ -1,12 +1,69 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
 import { showResults } from "../helpers/utilities";
-import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
+import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
+export class DayChangeItemList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { dayChange: "" };
+  }
 
-export class DayChange extends Component {
+  componentWillMount() {
+    axios.get(`http://localhost:3004/daychange/5`).then(res => {
+      const dayChange = res.data;
+      this.setState({ dayChange });
+    });
+  }
+
+  render() {
+    const {
+      status,
+      id,
+      save_date,
+      subst_dia_origem,
+      subst_dia_destino
+    } = this.state.dayChange;
+    // debugger;
+    return (
+
+      <div className="border rounded">
+        <label className="bold ml-3">{status}</label>
+        <div>
+          <label className="bold ml-3">
+            Alteração de Dia de cardápio {`# ${id}`}
+          </label>
+          <div className="float-right">
+            <input
+              className="float-right mt-2 mr-2"
+              type="checkbox"
+              name={id}
+              id={id}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="float-right">
+            Salvo em: {save_date}
+            <BaseButton icon={ButtonIcon.TRASH} />
+            <BaseButton icon={ButtonIcon.EDIT} />
+          </div>
+        </div>
+        <div className="ml-3">
+          <p>
+            Substituição do dia: {subst_dia_origem} para o dia:{" "}
+            {subst_dia_destino}
+          </p>
+        </div>
+      </div>
+    );
+  }
+}
+
+export class DayChangeEditor extends Component {
   onSubmit(values) {
     showResults(values);
   }
@@ -34,6 +91,8 @@ export class DayChange extends Component {
               </p>
             </div>
           </div>
+          <hr />
+          <DayChangeItemList />
           <hr />
           <div className="form-row">
             <label className="bold">Substituição de dia de cardápio</label>
@@ -111,7 +170,7 @@ export class DayChange extends Component {
   }
 }
 
-export default (DayChange = reduxForm({
+export default (DayChangeEditor = reduxForm({
   form: "dayChange",
   destroyOnUnmount: false
-})(DayChange));
+})(DayChangeEditor));

@@ -26,6 +26,7 @@ export var ButtonStyle = {
 export var ButtonIcon = {
   TRASH: "trash",
   HOME: "home",
+  EDIT: "edit",
   CLOSE: "close",
   FOLDER: "folder"
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { DayChange } from "../components/DayChange";
+import { DayChangeEditor } from "../components/DayChange";
 import { Header } from "../components/Main/Header";
 import { Sidebar } from "../components/Main/Sidebar";
 
@@ -9,7 +9,7 @@ export default props => (
     <Sidebar />
     <div id="content-wrapper" className="pt-5">
       <div className="d-flex flex-column p-4 mt-5">
-        <DayChange />
+        <DayChangeEditor />
       </div>
     </div>
   </div>
