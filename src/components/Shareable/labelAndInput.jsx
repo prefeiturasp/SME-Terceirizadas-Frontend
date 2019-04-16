@@ -213,7 +213,7 @@ export class LabelAndTextArea extends Component {
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
 
           toolbar={{
-            options: ["inline", "list", "emoji"],
+            options: ["inline", "list"],
             inline: {
               inDropdown: false,
               options: ["bold", "italic", "underline", "strikethrough"]
