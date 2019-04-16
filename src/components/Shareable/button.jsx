@@ -55,4 +55,3 @@ export default class BaseButton extends Component {
     );
   }
 }
-// <button class="btn"><i class="fa fa-trash"></i> Trash</button>

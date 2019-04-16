@@ -6,7 +6,6 @@ import { textAreaRequired } from "../helpers/fieldValidators";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
-import "./Shareable/custom.css";
 
 export class DayChangeItemList extends Component {
   static propTypes = {
@@ -17,15 +16,6 @@ export class DayChangeItemList extends Component {
     id: PropTypes.number.isRequired
   };
 
-  delete(id) {
-    axios.delete(`http://localhost:3004/daychange/${id}`).then(res => {
-      console.log("DELETE", res.data);
-    });
-  }
-  edit(p) {
-    console.log("edit apertado", p);
-  }
-
   render() {
     const { dayChangeList } = this.props;
     const allDaysInfo = dayChangeList.map(dayChange => {
@@ -34,7 +24,9 @@ export class DayChangeItemList extends Component {
         id,
         salvo_em,
         subst_dia_origem,
-        subst_dia_destino
+        subst_dia_destino,
+        motivo,
+        obs
       } = dayChange;
       return (
         <div className="border rounded mt-3">
@@ -57,9 +49,22 @@ export class DayChangeItemList extends Component {
               Salvo em: {salvo_em}
               <BaseButton
                 icon={ButtonIcon.TRASH}
-                onClick={p => this.delete(id)}
+                onClick={p => this.props.OnDeleteButtonClicked(id)}
               />
-              <BaseButton icon={ButtonIcon.EDIT} />
+              <BaseButton
+                icon={ButtonIcon.EDIT}
+                onClick={p =>
+                  this.props.OnEditButtonClicked(
+                    status,
+                    id,
+                    salvo_em,
+                    subst_dia_origem,
+                    subst_dia_destino,
+                    motivo,
+                    obs
+                  )
+                }
+              />
             </div>
           </div>
           <div className="ml-3">
@@ -79,6 +84,28 @@ export class DayChangeEditor extends Component {
   constructor(props) {
     super(props);
     this.state = { dayChangeList: [] };
+    this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
+    this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
+    this.getDayChangeList = this.getDayChangeList.bind(this);
+  }
+
+  OnDeleteButtonClicked(id) {
+    axios.delete(`http://localhost:3004/daychange/${id}`).then(res => {
+      console.log(`APAGOU ITEM: ${id}`);
+    });
+    this.getDayChangeList();
+  }
+
+  OnEditButtonClicked(
+    status,
+    id,
+    salvo_em,
+    subst_dia_origem,
+    subst_dia_destino,
+    motivo,
+    obs
+  ) {
+    console.log(`EDITOU ITEM: ${salvo_em}`);
   }
 
   componentDidMount() {
@@ -124,7 +151,29 @@ export class DayChangeEditor extends Component {
             </div>
           </div>
           <hr />
-          <DayChangeItemList dayChangeList={this.state.dayChangeList} />
+          <DayChangeItemList
+            dayChangeList={this.state.dayChangeList}
+            OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
+            OnEditButtonClicked={(
+              status,
+              id,
+              salvo_em,
+              subst_dia_origem,
+              subst_dia_destino,
+              motivo,
+              obs
+            ) =>
+              this.OnEditButtonClicked(
+                status,
+                id,
+                salvo_em,
+                subst_dia_origem,
+                subst_dia_destino,
+                motivo,
+                obs
+              )
+            }
+          />
           <hr />
           <div className="form-row">
             <label className="bold">Substituição de dia de cardápio</label>
