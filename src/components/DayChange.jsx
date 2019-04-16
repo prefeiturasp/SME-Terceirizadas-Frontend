@@ -10,19 +10,19 @@ import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
 export class DayChangeItemList extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayChange: [] };
+    this.state = { dayChangeList: [] };
   }
 
   componentWillMount() {
-    axios.get(`http://localhost:3004/daychange/`).then(res => {
-      const dayChange = res.data;
-      this.setState({ dayChange });
+    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
+      const dayChangeList = res.data;
+      this.setState({ dayChangeList });
     });
   }
 
   render() {
-    const todosDias = this.state.dayChange.map(p => {
-      const { status, id, salvo_em, subst_dia_origem, subst_dia_destino } = p;
+    const todosDias = this.state.dayChangeList.map(dayChange => {
+      const { status, id, salvo_em, subst_dia_origem, subst_dia_destino } = dayChange;
       return (
         <div className="border rounded mt-3">
           <label className="bold ml-3">{status}</label>
@@ -48,8 +48,8 @@ export class DayChangeItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              Substituição do dia: <b>{subst_dia_origem}</b> para o dia:<b>
-              {subst_dia_destino}</b>
+              Substituição do dia: <b>{subst_dia_origem}</b> para o dia:
+              <b>{subst_dia_destino}</b>
             </p>
           </div>
         </div>
@@ -61,7 +61,11 @@ export class DayChangeItemList extends Component {
 
 export class DayChangeEditor extends Component {
   onSubmit(values) {
+    debugger;
     showResults(values);
+    axios.post(`http://localhost:3004/daychange/`, values ).then(res => {
+      console.log("POST", res.data);
+    });
   }
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
@@ -139,7 +143,8 @@ export class DayChangeEditor extends Component {
               onClick={handleSubmit(values =>
                 this.onSubmit({
                   ...values,
-                  Acao: "Salvar"
+                  status: "SALVO",
+                  salvo_em: new Date()
                 })
               )}
               className="ml-3"
