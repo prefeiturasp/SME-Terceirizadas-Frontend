@@ -1,28 +1,41 @@
 import axios from "axios";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
-import { showResults } from "../helpers/utilities";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
+import "./Shareable/custom.css";
 
 export class DayChangeItemList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { dayChangeList: [] };
-  }
+  static propTypes = {
+    motivo: PropTypes.string.isRequired,
+    obs: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    salvo_em: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired
+  };
 
-  componentWillMount() {
-    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
-      const dayChangeList = res.data;
-      this.setState({ dayChangeList });
+  delete(id) {
+    axios.delete(`http://localhost:3004/daychange/${id}`).then(res => {
+      console.log("DELETE", res.data);
     });
+  }
+  edit(p) {
+    console.log("edit apertado", p);
   }
 
   render() {
-    const todosDias = this.state.dayChangeList.map(dayChange => {
-      const { status, id, salvo_em, subst_dia_origem, subst_dia_destino } = dayChange;
+    const { dayChangeList } = this.props;
+    const allDaysInfo = dayChangeList.map(dayChange => {
+      const {
+        status,
+        id,
+        salvo_em,
+        subst_dia_origem,
+        subst_dia_destino
+      } = dayChange;
       return (
         <div className="border rounded mt-3">
           <label className="bold ml-3">{status}</label>
@@ -42,7 +55,10 @@ export class DayChangeItemList extends Component {
           <div>
             <div className="float-right">
               Salvo em: {salvo_em}
-              <BaseButton icon={ButtonIcon.TRASH} />
+              <BaseButton
+                icon={ButtonIcon.TRASH}
+                onClick={p => this.delete(id)}
+              />
               <BaseButton icon={ButtonIcon.EDIT} />
             </div>
           </div>
@@ -55,17 +71,33 @@ export class DayChangeItemList extends Component {
         </div>
       );
     });
-    return <div>{todosDias}</div>;
+    return <div>{allDaysInfo}</div>;
   }
 }
 
 export class DayChangeEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { dayChangeList: [] };
+  }
+
+  componentDidMount() {
+    this.getDayChangeList();
+  }
+
+  getDayChangeList() {
+    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
+      const dayChangeList = res.data;
+      this.setState({ dayChangeList });
+    });
+  }
+
   onSubmit(values) {
-    debugger;
-    showResults(values);
-    axios.post(`http://localhost:3004/daychange/`, values ).then(res => {
+    axios.post(`http://localhost:3004/daychange/`, values).then(res => {
       console.log("POST", res.data);
     });
+    // atualizando lista
+    this.getDayChangeList();
   }
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
@@ -92,7 +124,7 @@ export class DayChangeEditor extends Component {
             </div>
           </div>
           <hr />
-          <DayChangeItemList />
+          <DayChangeItemList dayChangeList={this.state.dayChangeList} />
           <hr />
           <div className="form-row">
             <label className="bold">Substituição de dia de cardápio</label>

@@ -39,13 +39,12 @@ export var ButtonType = {
 
 export default class BaseButton extends Component {
   // TODO: desabilitar o botao quando estiver fazendo uma ação.
-  // TODO incrementar a logica de icone
   // VER> https://redux-form.com/8.1.0/examples/fieldlevelvalidation/
   render() {
     return (
       <button
         type={this.props.type || ButtonType.BUTTON}
-        className={"btn btn-" + this.props.style + " " + this.props.className}
+        className={`btn btn-${this.props.style} ${this.props.className}`}
         onClick={this.props.onClick}
       >
         {this.props.label}
