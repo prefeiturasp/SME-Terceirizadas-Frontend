@@ -1,11 +1,11 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { change, Field, reduxForm } from "redux-form";
+import { Field, reduxForm } from "redux-form";
 import { textAreaRequired } from "../helpers/fieldValidators";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
-import { LabelAndDate, LabelAndTextArea, MyStatefulEditor } from "./Shareable/labelAndInput";
+import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
 
 export class DayChangeItemList extends Component {
   static propTypes = {
@@ -95,16 +95,12 @@ export class DayChangeEditor extends Component {
     });
   }
 
-  OnEditButtonClicked(param, reset) {
-    reset();
-    this.props.dispatch(change("dayChange", "motivo", param.motivo));
-    this.props.dispatch(change("dayChange", "obs", param.obs));
-    this.props.dispatch(
-      change("dayChange", "subst_dia_origem", param.subst_dia_origem)
-    );
-    this.props.dispatch(
-      change("dayChange", "subst_dia_destino", param.subst_dia_destino)
-    );
+  OnEditButtonClicked(param) {
+    this.props.reset();
+    this.props.change("motivo", param.motivo);
+    this.props.change("obs", param.obs);
+    this.props.change("subst_dia_origem", param.subst_dia_origem);
+    this.props.change("subst_dia_destino", param.subst_dia_destino);
   }
 
   componentDidMount() {
@@ -154,7 +150,7 @@ export class DayChangeEditor extends Component {
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
             OnEditButtonClicked={params =>
-              this.OnEditButtonClicked(params, reset)
+              this.OnEditButtonClicked(params)
             }
           />
           <hr />
@@ -181,7 +177,6 @@ export class DayChangeEditor extends Component {
           <div className="form-group">
             <Field
               component={LabelAndTextArea}
-              initialValue={'TESTES!!!'}
               label="Motivo"
               name="motivo"
               validate={[textAreaRequired]}

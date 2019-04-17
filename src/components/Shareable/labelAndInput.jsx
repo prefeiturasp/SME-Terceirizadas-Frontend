@@ -1,5 +1,5 @@
 import ptBR from "date-fns/locale/pt-BR";
-import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
@@ -9,7 +9,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import RichTextEditor from "react-rte";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
 import { Grid } from "./responsiveBs4";
@@ -155,25 +154,6 @@ export class LabelAndTextArea extends Component {
     this.changeValue(editorState);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps', nextProps)
-    const { input } = nextProps;
-    if (
-      input.value &&
-      input.value !== this.props.value &&
-      input.value !== "<p></p>\n"
-    ) {
-      const contentBlock = htmlToDraft(input.value);
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      );
-      const editorState = EditorState.createWithContent(contentState);
-      this.setState({
-        editorState: editorState
-      });
-    }
-  }
-
   static defaultProps = {
     placeholder: "Seu texto aqui."
   };
@@ -196,6 +176,25 @@ export class LabelAndTextArea extends Component {
   handleChange(editorState) {
     this.setState({ editorState });
     this.changeValue(editorState);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // this loads data from previus state.
+    const { input } = nextProps;
+    if (
+      input.value &&
+      input.value !== this.props.value &&
+      input.value !== "<p></p>\n"
+    ) {
+      const contentBlock = htmlToDraft(input.value);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
+      const editorState = EditorState.moveFocusToEnd(
+        EditorState.createWithContent(contentState)
+      );
+      this.setState({ editorState });
+    }
   }
 
   onBlur(event) {
@@ -246,4 +245,3 @@ export class LabelAndTextArea extends Component {
     );
   }
 }
-
