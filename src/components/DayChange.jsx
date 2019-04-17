@@ -97,14 +97,14 @@ export class DayChangeEditor extends Component {
 
   OnEditButtonClicked(param, reset) {
     reset();
-    this.props.dispatch(change("dayChange", "motivo", "<p>kkkkkkkkkk</p> \n"));
+    this.props.dispatch(change("dayChange", "motivo", param.motivo));
+    this.props.dispatch(change("dayChange", "obs", '<p>teste oibs</p>'));
     this.props.dispatch(
       change("dayChange", "subst_dia_origem", param.subst_dia_origem)
     );
     this.props.dispatch(
       change("dayChange", "subst_dia_destino", param.subst_dia_destino)
     );
-    console.log(param);
   }
 
   componentDidMount() {

@@ -148,15 +148,30 @@ export class LabelAndDate extends Component {
 export class LabelAndTextArea extends Component {
   constructor(props) {
     super(props);
-    const editorState = EditorState.createWithContent(
-      ContentState.createFromBlockArray(
-        convertFromHTML(`<p>${this.props.initialValue}.</p>`)
-      )
-    );
+    const editorState = EditorState.createEmpty();
     this.state = {
       editorState
     };
     this.changeValue(editorState);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps', nextProps)
+    const { input } = nextProps;
+    if (
+      input.value &&
+      input.value !== this.props.value &&
+      input.value !== "<p></p>\n"
+    ) {
+      const contentBlock = htmlToDraft(input.value);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
+      const editorState = EditorState.createWithContent(contentState);
+      this.setState({
+        editorState: editorState
+      });
+    }
   }
 
   static defaultProps = {

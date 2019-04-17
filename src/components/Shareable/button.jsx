@@ -49,7 +49,7 @@ export default class BaseButton extends Component {
       >
         {this.props.label}
         <If isVisible={this.props.icon}>
-          <i class={`fa fa-${this.props.icon}`} />
+          <i className={`fa fa-${this.props.icon}`} />
         </If>
       </button>
     );
