@@ -247,32 +247,3 @@ export class LabelAndTextArea extends Component {
   }
 }
 
-export class MyStatefulEditor extends Component {
-  static propTypes = {
-    onChange: PropTypes.func
-  };
-
-  state = {
-    value: RichTextEditor.createEmptyValue()
-  };
-
-  onChange = value => {
-    console.log(value, "xxxxxxxxxxxx", this.state);
-    this.setState({ value });
-    if (this.props.input) {
-      this.props.input.onChange(value.toString("html"));
-    }
-  };
-
-  setValue(value) {}
-
-  render() {
-    return (
-      <RichTextEditor
-        {...this.props.input}
-        value={this.state.value}
-        onChange={this.onChange}
-      />
-    );
-  }
-}
