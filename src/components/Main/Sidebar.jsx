@@ -11,12 +11,16 @@ import { MenuChangePage } from '../../pages/MenuChangePage';
 import PermissionsPage from '../../pages/PermissionsPage';
 import TourRequestPage from '../../pages/TourRequestPage';
 import DayChangePage from '../../pages/DayChangePage';
-import AddFoodPage from '../../pages/AddFoodPage';
 import FoodSuspensionPage from '../../pages/FoodSuspensionPage';
 
 
+window.jQuery = $
+
+
 export class Sidebar extends Component {
-  state = {}
+  state = {
+    isVisible : true
+  }
 
   constructor(props){
     super(props)
@@ -24,9 +28,10 @@ export class Sidebar extends Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
 
-  handleToggle = event => (
+  handleToggle = event => {
     closeToggle()
-  );
+    // this.setState({isVisible : false})
+   }
 
   render() {
     return (
@@ -181,7 +186,7 @@ export class Sidebar extends Component {
           </div>
 
 
-          <div className="page-footer mx-auto justify-content-center mt-5 pb-2">
+          <div style={{display : !this.state.isVisible ? 'none' : 'block'}} className="page-footer mx-auto justify-content-center mt-5 pb-2">
             <img src="/assets/image/logo_sme.svg" className="rounded float-left" alt="SME Educação" />
           </div>
 

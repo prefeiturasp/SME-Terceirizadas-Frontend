@@ -23,10 +23,10 @@ export class Header extends Component {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <a className="nav-link" href="#profile">Profile &nbsp;<i className="fa fa-1x fa-user-circle"></i></a>
+                  <Link className="nav-link">Profile &nbsp;<i className="fa fa-1x fa-user-circle"></i></Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#logout">Sair &nbsp;<i className="fas fa-1x fa-power-off"></i></a>
+                  <Link className="nav-link">Sair &nbsp;<i className="fas fa-1x fa-power-off"></i></Link>
                 </li>
               </ul>
             </div>

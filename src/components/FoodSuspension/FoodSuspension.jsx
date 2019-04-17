@@ -13,17 +13,19 @@ class FoodSuspension extends Component {
     background: "#FFF7CB"
   }
 
-  state = {}
   render() {
+
+    const { enrolled, reasons, typeFood, day, periods } = this.props
+      
     return (
       <div>
-        <form>
+        <form onSubmit={this.props.handleSubmit}>
           <span className="page-title">Suspensão de Alimentação</span>
           <div className="card mt-3">
             <div className="card-body">
               <span className="blockquote-sme">Nº de Matriculados</span>
               <div></div>
-              <span class="badge-sme badge-secondary-sme">{this.props.enrolled}</span>
+              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
               <span className="blockquote-sme pl-2 text-color-sme-silver">Informaçâo automática disponibilizada no Cadastro da Unidade Escolar</span>
             </div>
           </div>
@@ -39,80 +41,30 @@ class FoodSuspension extends Component {
                 </tr>
               </table>
 
-              <InputRowSuspension
-                labelCheck={"1º Período - Matutino"}
-                nameCheck={"teste"}
-                valueCheck={"1"}
-                nameSelect={"teste1"}
-                optionsSelect={[{
-                  key: "1",
-                  value: "Teste"
-                }]}
-                nameNumber={"teste3"}
-                valueNumber={10}
-              />
 
-              <InputRowSuspension
-                labelCheck={"2º Período - Intermediário"}
-                nameCheck={"teste"}
-                valueCheck={"1"}
-                nameSelect={"teste1"}
-                optionsSelect={[{
-                  key: "1",
-                  value: "Teste"
-                }]}
-                nameNumber={"teste3"}
-                valueNumber={10}
-              />
 
-              <InputRowSuspension
-                labelCheck={"3º Período - Vespertino"}
-                nameCheck={"teste"}
-                valueCheck={"1"}
-                nameSelect={"teste1"}
-                optionsSelect={[{
-                  key: "1",
-                  value: "Teste"
-                }]}
-                nameNumber={"teste3"}
-                valueNumber={10}
-              />
+              {periods.map((value, key)=>{
+                  return <InputRowSuspension
+                              labelCheck={value}
+                              nameCheck={"teste"}
+                              valueCheck={"1"}
+                              nameSelect={"teste1"}
+                              optionsSelect={typeFood}
+                              nameNumber={key}
+                          />
+              })}
 
-              <InputRowSuspension
-                labelCheck={"4º Período - Noturno"}
-                nameCheck={"teste"}
-                valueCheck={"1"}
-                nameSelect={"teste1"}
-                optionsSelect={[{
-                  key: "1",
-                  value: "Teste"
-                }]}
-                nameNumber={"teste3"}
-                valueNumber={10}
-              />
 
-              <InputRowSuspension
-                labelCheck={"Integral"}
-                nameCheck={"teste"}
-                valueCheck={"1"}
-                nameSelect={"teste1"}
-                optionsSelect={[{
-                  key: "1",
-                  value: "Teste"
-                }]}
-                nameNumber={"teste3"}
-                valueNumber={10}
-              />
               <hr className="w-100" />
 
               <div className="card-title font-weight-bold" style={this.fontHeader}>Data da Suspensão</div>
 
               <div className="form-row">
-                <div className="form-group col-sm-8">
+                <div className="form-group col-sm-8 pt-3">
                   <label>Motivo</label><br />
                   <select className="form-control">
                     <option>--MOTIVO--</option>
-                    {this.props.reasons.map((value,key)=>{
+                    {reasons.map((value,key)=>{
                       return <option key={key} value={value.key}>{value.value}</option>
                     })}
                   </select>
@@ -120,14 +72,15 @@ class FoodSuspension extends Component {
 
                 <div className="input-group col-sm-2">
                   <label>Dia</label><br/>
+                  {/* https://reactdatepicker.com/ */}
+
                   <DatePicker
-                    //https://reactdatepicker.com/
-                    // placeholderText={"Dia"}
                     dateFormat={"dd/MM/YYYY"}
-                    selected={this.props.day}
+                    selected={day}
                     className="form-control ml-3"
                     locale={ptBR}
-                    onChange={value => {this.props.handleDate(value)}}
+                    onChange={this.props.handleDate}
+                    minDate={new Date()}
                   />
                   {/* <div class="input-group-append">
                     <i className="fa fa-calendar" />
@@ -164,6 +117,16 @@ class FoodSuspension extends Component {
 
                 </div>
               </div>
+              <div className="form-row pt-3">
+                <div className="form-group col-sm-11">
+                    <button type="submit" className="btn btn-primary float-right m-2">Enviar Solicitação</button>
+                    <button type="button" className="btn btn-outline-primary float-right m-2">Salvar Rascunho</button>
+                    <button type="reset" className="btn btn-outline-primary float-right m-2">Cancelar</button>
+                </div>
+
+              </div>
+
+
             </div>
           </div>
         </form>
