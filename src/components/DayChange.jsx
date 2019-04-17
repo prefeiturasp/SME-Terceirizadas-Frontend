@@ -149,81 +149,86 @@ export class DayChangeEditor extends Component {
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-            OnEditButtonClicked={params =>
-              this.OnEditButtonClicked(params)
-            }
+            OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-          <hr />
-          <div className="form-row">
-            <label className="bold">Substituição de dia de cardápio</label>
+          <div className="form-row mt-3">
+            <h3 className="bold" style={{ color: "#353535" }}>
+              Nova solicitação
+            </h3>
           </div>
-          <div className="form-row">
-            <Field
-              component={LabelAndDate}
-              cols="4 4 4 4"
-              placeholder="Dia a ser substituído"
-              name="subst_dia_origem"
-              label="De:"
-            />
-            <Field
-              component={LabelAndDate}
-              cols="4 4 4 4"
-              placeholder="Novo dia do cardápio"
-              name="subst_dia_destino"
-              label="Para:"
-            />
-          </div>
-          <hr />
-          <div className="form-group">
-            <Field
-              component={LabelAndTextArea}
-              label="Motivo"
-              name="motivo"
-              validate={[textAreaRequired]}
-            />
-          </div>
-          <div className="form-group">
-            <Field
-              component={LabelAndTextArea}
-              placeholder="Campo opcional"
-              label="Observação"
-              name="obs"
-            />
-          </div>
-          <div className="form-group row float-right">
-            <BaseButton
-              label="Cancelar"
-              onClick={reset}
-              disabled={pristine || submitting}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <BaseButton
-              label="Salvar"
-              disabled={pristine || submitting}
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values,
-                  status: "SALVO",
-                  salvo_em: new Date()
-                })
-              )}
-              className="ml-3"
-              type={ButtonType.SUBMIT}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <BaseButton
-              label="Enviar Solicitação"
-              disabled={pristine || submitting}
-              type={ButtonType.SUBMIT}
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values,
-                  Acao: "Enviar solicitação"
-                })
-              )}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
+          <div className="border rounded mt-2">
+            <div className="form-row">
+              <label className="bold">
+                Substituição de dia de cardápio
+              </label>
+            </div>
+            <div className="form-row">
+              <Field
+                component={LabelAndDate}
+                cols="4 4 4 4"
+                placeholder="Dia a ser substituído"
+                name="subst_dia_origem"
+                label="De:"
+              />
+              <Field
+                component={LabelAndDate}
+                cols="4 4 4 4"
+                placeholder="Novo dia do cardápio"
+                name="subst_dia_destino"
+                label="Para:"
+              />
+            </div>
+            <div className="form-group">
+              <Field
+                component={LabelAndTextArea}
+                label="Motivo"
+                name="motivo"
+                validate={[textAreaRequired]}
+              />
+            </div>
+            <div className="form-group">
+              <Field
+                component={LabelAndTextArea}
+                placeholder="Campo opcional"
+                label="Observação"
+                name="obs"
+              />
+            </div>
+            <div className="form-group row float-right">
+              <BaseButton
+                label="Cancelar"
+                onClick={reset}
+                disabled={pristine || submitting}
+                style={ButtonStyle.OutlinePrimary}
+              />
+              <BaseButton
+                label="Salvar"
+                disabled={pristine || submitting}
+                onClick={handleSubmit(values =>
+                  this.onSubmit({
+                    ...values,
+                    status: "SALVO",
+                    salvo_em: new Date()
+                  })
+                )}
+                className="ml-3"
+                type={ButtonType.SUBMIT}
+                style={ButtonStyle.OutlinePrimary}
+              />
+              <BaseButton
+                label="Enviar Solicitação"
+                disabled={pristine || submitting}
+                type={ButtonType.SUBMIT}
+                onClick={handleSubmit(values =>
+                  this.onSubmit({
+                    ...values,
+                    Acao: "Enviar solicitação"
+                  })
+                )}
+                style={ButtonStyle.Primary}
+                className="ml-3"
+              />
+            </div>
           </div>
         </form>
       </div>
