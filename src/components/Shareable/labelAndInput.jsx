@@ -221,7 +221,7 @@ export class LabelAndTextArea extends Component {
    */
   changeValue(editorState) {
     const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    // this.props.input.onChange(value);
+    this.props.input.onChange(value);
   }
 
   render() {
