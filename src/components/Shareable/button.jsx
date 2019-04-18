@@ -46,6 +46,7 @@ export default class BaseButton extends Component {
         type={this.props.type || ButtonType.BUTTON}
         className={`btn btn-${this.props.style} ${this.props.className}`}
         onClick={this.props.onClick}
+        disabled={this.props.disabled}
       >
         {this.props.label}
         <If isVisible={this.props.icon}>

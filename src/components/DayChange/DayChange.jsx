@@ -1,84 +1,12 @@
 import axios from "axios";
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { textAreaRequired } from "../helpers/fieldValidators";
-import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
-import "./Shareable/custom.css";
-import { LabelAndDate, LabelAndTextArea } from "./Shareable/labelAndInput";
+import { textAreaRequired } from "../../helpers/fieldValidators";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import "../Shareable/custom.css";
+import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
+import { DayChangeItemList } from "./DayChangeItemList";
 
-export class DayChangeItemList extends Component {
-  static propTypes = {
-    motivo: PropTypes.string.isRequired,
-    obs: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    salvo_em: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
-  };
-
-  render() {
-    const { dayChangeList } = this.props;
-    const allDaysInfo = dayChangeList.map(dayChange => {
-      const {
-        status,
-        id,
-        salvo_em,
-        subst_dia_origem,
-        subst_dia_destino,
-        motivo,
-        obs
-      } = dayChange;
-      return (
-        <div className="border rounded mt-3">
-          <label className="bold ml-3">{status}</label>
-          <div>
-            <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${id}`}
-            </label>
-            <div className="float-right">
-              <input
-                className="float-right mt-2 mr-3"
-                type="checkbox"
-                name={id}
-                id={id}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="float-right">
-              Salvo em: {salvo_em}
-              <BaseButton
-                icon={ButtonIcon.TRASH}
-                onClick={p => this.props.OnDeleteButtonClicked(id)}
-              />
-              <BaseButton
-                icon={ButtonIcon.EDIT}
-                onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    status,
-                    id,
-                    salvo_em,
-                    subst_dia_origem,
-                    subst_dia_destino,
-                    motivo,
-                    obs
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className="ml-3">
-            <p>
-              Substituição do dia: <b>{subst_dia_origem}</b> para o dia:
-              <b>{subst_dia_destino}</b>
-            </p>
-          </div>
-        </div>
-      );
-    });
-    return <div>{allDaysInfo}</div>;
-  }
-}
 
 export class DayChangeEditor extends Component {
   constructor(props) {
@@ -108,7 +36,7 @@ export class DayChangeEditor extends Component {
   }
 
   refresh() {
-    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
+    axios.get(`http://localhost:3004/daychange/`).then(res => {
       const dayChangeList = res.data;
       this.setState({ dayChangeList });
     });
@@ -202,12 +130,12 @@ export class DayChangeEditor extends Component {
                 style={ButtonStyle.OutlinePrimary}
               />
               <BaseButton
-                label="Salvar"
+                label="Salvar rascunho"
                 disabled={pristine || submitting}
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    status: "SALVO",
+                    status: "RASCUNHO",
                     salvo_em: new Date()
                   })
                 )}
@@ -222,7 +150,8 @@ export class DayChangeEditor extends Component {
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    Acao: "Enviar solicitação"
+                    status: "COMPLETO",
+                    salvo_em: new Date()
                   })
                 )}
                 style={ButtonStyle.Primary}
