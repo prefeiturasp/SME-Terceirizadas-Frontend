@@ -13,6 +13,30 @@ export class DayChangeItemList extends Component {
     id: PropTypes.number.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = { checkedObjects: [] };
+    this.onCheckChange = this.onCheckChange.bind(this);
+  }
+
+  onCheckChange(event, object) {
+    let { checkedObjects } = this.state;
+    switch (event.target.checked) {
+      case true:
+        checkedObjects.push(object);
+        this.setState({ checkedObjects });
+        break;
+      case false:
+        checkedObjects = checkedObjects.filter(obj => {
+          return obj.id !== object.id;
+        });
+        this.setState({ checkedObjects });
+        break;
+      default:
+        break;
+    }
+  }
+
   render() {
     const { dayChangeList } = this.props;
     const allDaysInfo = dayChangeList.map(dayChange => {
@@ -44,6 +68,17 @@ export class DayChangeItemList extends Component {
                 type="checkbox"
                 name={id}
                 id={id}
+                onClick={event =>
+                  this.onCheckChange(event, {
+                    status,
+                    id,
+                    salvo_em,
+                    subst_dia_origem,
+                    subst_dia_destino,
+                    motivo,
+                    obs
+                  })
+                }
               />
             </div>
           </div>
@@ -57,15 +92,17 @@ export class DayChangeItemList extends Component {
               <Button
                 icon={ButtonIcon.EDIT}
                 onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    status,
-                    id,
-                    salvo_em,
-                    subst_dia_origem,
-                    subst_dia_destino,
-                    motivo,
-                    obs
-                  })
+                  this.props.OnEditButtonClicked(
+                    {
+                      status,
+                      id,
+                      salvo_em,
+                      subst_dia_origem,
+                      subst_dia_destino,
+                      motivo,
+                      obs
+                    },
+                  )
                 }
               />
             </div>

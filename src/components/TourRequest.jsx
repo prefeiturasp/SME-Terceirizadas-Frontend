@@ -92,7 +92,7 @@ export class SelecionaTempoPasseio extends Component {
     ];
     return (
       <div>
-        <Field component={RadioboxGroup}
+        <RadioboxGroup
           name="tempo_passeio"
           label="Tempo previsto do passeio"
           validate={[requiredCheck]}
