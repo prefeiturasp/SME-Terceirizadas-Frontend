@@ -5,6 +5,12 @@ import "../Shareable/custom.css";
 import If from "../Shareable/layout";
 
 export class DayChangeItemList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { checkedObjects: [] };
+    this.onCheckChange = this.onCheckChange.bind(this);
+  }
+
   static propTypes = {
     motivo: PropTypes.string.isRequired,
     obs: PropTypes.string.isRequired,
@@ -13,28 +19,23 @@ export class DayChangeItemList extends Component {
     id: PropTypes.number.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.state = { checkedObjects: [] };
-    this.onCheckChange = this.onCheckChange.bind(this);
-  }
-
   onCheckChange(event, object) {
     let { checkedObjects } = this.state;
-    switch (event.target.checked) {
-      case true:
-        checkedObjects.push(object);
-        this.setState({ checkedObjects });
-        break;
-      case false:
-        checkedObjects = checkedObjects.filter(obj => {
-          return obj.id !== object.id;
-        });
-        this.setState({ checkedObjects });
-        break;
-      default:
-        break;
+    if (event.target.checked) {
+      checkedObjects.push(object);
+      this.setState({ checkedObjects });
+    } else {
+      checkedObjects = checkedObjects.filter(obj => {
+        return obj.id !== object.id;
+      });
+      this.setState({ checkedObjects });
     }
+  }
+
+  onEnviarSolicitacoesBtClicked(event) {
+    this.state.checkedObjects.map(obj=>{
+      console.log(obj.id)
+    })
   }
 
   render() {
@@ -92,17 +93,15 @@ export class DayChangeItemList extends Component {
               <Button
                 icon={ButtonIcon.EDIT}
                 onClick={p =>
-                  this.props.OnEditButtonClicked(
-                    {
-                      status,
-                      id,
-                      salvo_em,
-                      subst_dia_origem,
-                      subst_dia_destino,
-                      motivo,
-                      obs
-                    },
-                  )
+                  this.props.OnEditButtonClicked({
+                    status,
+                    id,
+                    salvo_em,
+                    subst_dia_origem,
+                    subst_dia_destino,
+                    motivo,
+                    obs
+                  })
                 }
               />
             </div>
@@ -129,6 +128,7 @@ export class DayChangeItemList extends Component {
             style={ButtonStyle.Primary}
             label="Enviar solicitações"
             className="float-right mt-2"
+            onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
           />
         </If>
       </div>
