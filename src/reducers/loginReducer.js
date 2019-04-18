@@ -10,9 +10,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case userConstants.LOGIN_SUCCESS:
-      return () =>(
-        <Redirect to="/" />
-      );
+      return 'xxxx'
     case userConstants.LOGIN_REQUEST:
       return "xzxxx";
     case userConstants.LOGIN_FAILURE:

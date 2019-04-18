@@ -15,8 +15,11 @@ function login(email, password) {
 
     userService.login(email, password).then(
       user => {
-        dispatch(success(user));
-        history.push("/");
+
+        // history.push("/");
+        // dispatch(success(user));
+        window.location.href="/"
+
       },
       error => {
         dispatch(failure(error));
