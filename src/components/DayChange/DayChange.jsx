@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { textAreaRequired } from "../../helpers/fieldValidators";
+import { textAreaRequired, required } from "../../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
@@ -10,7 +10,12 @@ import { DayChangeItemList } from "./DayChangeItemList";
 export class DayChangeEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayChangeList: [], status: "SEM STATUS", id: "" };
+    this.state = {
+      dayChangeList: [],
+      status: "SEM STATUS",
+      title: "Nova solicitação",
+      salvarAtualizarLbl: "Salvar"
+    };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -23,12 +28,15 @@ export class DayChangeEditor extends Component {
   }
 
   onCancelButtonClicked(event) {
-    // rich text field doesn't become clear by props.reset()...
     this.props.reset();
-    const resetCmd = "";
-    this.props.change("motivo", resetCmd);
-    this.props.change("obs", resetCmd);
-    this.setState({ status: "SEM STATUS" });
+    // rich text field doesn't become clear by props.reset()...
+    this.props.change("motivo", "");
+    this.props.change("obs", "");
+    this.setState({
+      status: "SEM STATUS",
+      title: "Nova solicitação",
+      salvarAtualizarLbl: "Salvar"
+    });
   }
 
   OnEditButtonClicked(param) {
@@ -37,8 +45,11 @@ export class DayChangeEditor extends Component {
     this.props.change("obs", param.obs);
     this.props.change("subst_dia_origem", param.subst_dia_origem);
     this.props.change("subst_dia_destino", param.subst_dia_destino);
-    this.setState({ status: param.status });
-    this.setState({ id: param.id });
+    this.setState({
+      status: param.status,
+      title: `Solicitação # ${param.id}`,
+      salvarAtualizarLbl: "Atualizar"
+    });
   }
 
   componentDidMount() {
@@ -60,10 +71,6 @@ export class DayChangeEditor extends Component {
   }
 
   render() {
-    let title = "Nova solicitação";
-    if (this.state.id) {
-      title = `Solicitação # ${this.state.id}`;
-    }
     const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
       <div className="container">
@@ -87,7 +94,6 @@ export class DayChangeEditor extends Component {
               </p>
             </div>
           </div>
-          <hr />
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
@@ -95,18 +101,18 @@ export class DayChangeEditor extends Component {
           />
           <div className="form-row mt-3 ml-1">
             <h3 className="bold" style={{ color: "#353535" }}>
-              {title}
+              {this.state.title}
             </h3>
           </div>
           <div className="border rounded mt-2 p-3">
             <div>
               <label className="bold">Substituição de dia de cardápio</label>
-              <span
+              {/* <span
                 className="float-right  p-1 border rounded"
                 style={{ background: "#DADADA" }}
               >
                 {this.state.status}
-              </span>
+              </span> */}
             </div>
             <div className="form-row">
               <Field
@@ -115,6 +121,7 @@ export class DayChangeEditor extends Component {
                 placeholder="Dia a ser substituído"
                 name="subst_dia_origem"
                 label="De:"
+                validate={required}
               />
               <Field
                 component={LabelAndDate}
@@ -122,6 +129,7 @@ export class DayChangeEditor extends Component {
                 placeholder="Novo dia do cardápio"
                 name="subst_dia_destino"
                 label="Para:"
+                validate={required}
               />
             </div>
             <div className="form-group">
@@ -148,12 +156,12 @@ export class DayChangeEditor extends Component {
                 style={ButtonStyle.OutlinePrimary}
               />
               <BaseButton
-                label="Salvar rascunho"
+                label={this.state.salvarAtualizarLbl}
                 disabled={pristine || submitting}
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    status: "RASCUNHO",
+                    status: "SALVO",
                     salvo_em: new Date()
                   })
                 )}

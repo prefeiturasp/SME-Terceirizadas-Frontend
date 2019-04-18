@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
 import "../Shareable/custom.css";
+import If from "../Shareable/layout";
 
 export class DayChangeItemList extends Component {
   static propTypes = {
@@ -24,8 +25,7 @@ export class DayChangeItemList extends Component {
         motivo,
         obs
       } = dayChange;
-      let backgroundColor = status === "RASCUNHO" ? "#DADADA" : "#82B7E8";
-      let disabled = status === "COMPLETO" ? true : false;
+      let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
           <div className="mt-2">
@@ -34,7 +34,7 @@ export class DayChangeItemList extends Component {
             </label>
             <span
               className="ml-3 p-1 border rounded"
-              style={{background: backgroundColor}}
+              style={{ background: backgroundColor }}
             >
               {status}
             </span>
@@ -43,7 +43,6 @@ export class DayChangeItemList extends Component {
                 className="float-right mt-2 mr-3"
                 type="checkbox"
                 name={id}
-                disabled={disabled}
                 id={id}
               />
             </div>
@@ -53,12 +52,10 @@ export class DayChangeItemList extends Component {
               Salvo em: {salvo_em}
               <Button
                 icon={ButtonIcon.TRASH}
-                disabled={disabled}
                 onClick={p => this.props.OnDeleteButtonClicked(id)}
               />
               <Button
                 icon={ButtonIcon.EDIT}
-                disabled={disabled}
                 onClick={p =>
                   this.props.OnEditButtonClicked({
                     status,
@@ -90,22 +87,13 @@ export class DayChangeItemList extends Component {
     return (
       <div>
         {allDaysInfo}
-        <Button
-          style={ButtonStyle.Primary}
-          label="Enviar solicitações"
-          className="float-right mt-2"
-          // onClick={p =>
-          //   this.props.OnEditButtonClicked({
-          //     status,
-          //     id,
-          //     salvo_em,
-          //     subst_dia_origem,
-          //     subst_dia_destino,
-          //     motivo,
-          //     obs
-          //   })
-          // }
-        />
+        <If isVisible={this.props.dayChangeList.length >= 1}>
+          <Button
+            style={ButtonStyle.Primary}
+            label="Enviar solicitações"
+            className="float-right mt-2"
+          />
+        </If>
       </div>
     );
   }
