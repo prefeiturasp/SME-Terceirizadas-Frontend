@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { textAreaRequired, required } from "../../helpers/fieldValidators";
+import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
@@ -14,6 +14,7 @@ export class DayChangeEditor extends Component {
       dayChangeList: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
+      id: "",
       salvarAtualizarLbl: "Salvar"
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
@@ -27,7 +28,7 @@ export class DayChangeEditor extends Component {
     });
   }
 
-  onCancelButtonClicked(event) {
+  resetForm(event) {
     this.props.reset();
     // rich text field doesn't become clear by props.reset()...
     this.props.change("motivo", "");
@@ -35,7 +36,8 @@ export class DayChangeEditor extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar"
+      salvarAtualizarLbl: "Salvar",
+      id: ''
     });
   }
 
@@ -48,7 +50,8 @@ export class DayChangeEditor extends Component {
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
-      salvarAtualizarLbl: "Atualizar"
+      salvarAtualizarLbl: "Atualizar",
+      id: param.id
     });
   }
 
@@ -57,17 +60,27 @@ export class DayChangeEditor extends Component {
   }
 
   refresh() {
-    axios.get(`http://localhost:3004/daychange/`).then(res => {
+    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
       const dayChangeList = res.data;
       this.setState({ dayChangeList });
     });
   }
 
   onSubmit(values) {
-    axios.post(`http://localhost:3004/daychange/`, values).then(res => {
-      this.refresh();
-      console.log("POST", res.data);
-    });
+    if (values.id) {
+      //put
+      axios
+        .put(`http://localhost:3004/daychange/${values.id}`, values)
+        .then(res => {
+          this.refresh();
+          console.log("PUT", res.data);
+        });
+    } else {
+      axios.post(`http://localhost:3004/daychange/`, values).then(res => {
+        this.refresh();
+        console.log("POST", res.data);
+      });
+    }
   }
 
   render() {
@@ -97,6 +110,7 @@ export class DayChangeEditor extends Component {
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+            resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
           <div className="form-row mt-3 ml-1">
@@ -107,12 +121,6 @@ export class DayChangeEditor extends Component {
           <div className="border rounded mt-2 p-3">
             <div>
               <label className="bold">Substituição de dia de cardápio</label>
-              {/* <span
-                className="float-right  p-1 border rounded"
-                style={{ background: "#DADADA" }}
-              >
-                {this.state.status}
-              </span> */}
             </div>
             <div className="form-row">
               <Field
@@ -151,7 +159,7 @@ export class DayChangeEditor extends Component {
             <div className="form-group row float-right mt-4">
               <BaseButton
                 label="Cancelar"
-                onClick={event => this.onCancelButtonClicked(event)}
+                onClick={event => this.resetForm(event)}
                 disabled={pristine || submitting}
                 style={ButtonStyle.OutlinePrimary}
               />
@@ -162,7 +170,8 @@ export class DayChangeEditor extends Component {
                   this.onSubmit({
                     ...values,
                     status: "SALVO",
-                    salvo_em: new Date()
+                    salvo_em: new Date(),
+                    id: this.state.id
                   })
                 )}
                 className="ml-3"
