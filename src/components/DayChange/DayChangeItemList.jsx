@@ -32,10 +32,20 @@ export class DayChangeItemList extends Component {
     }
   }
 
+  OnDeleteButtonClicked(id) {
+    // para o pai apagar o elemento
+    this.props.OnDeleteButtonClicked(id);
+    let { checkedObjects } = this.state;
+    checkedObjects = checkedObjects.filter(obj => {
+      return obj.id !== id;
+    });
+    this.setState({ checkedObjects });
+  }
+
   onEnviarSolicitacoesBtClicked(event) {
-    this.state.checkedObjects.map(obj=>{
-      console.log(obj.id)
-    })
+    this.state.checkedObjects.map(obj => {
+      console.log(obj.id);
+    });
   }
 
   render() {
@@ -88,7 +98,7 @@ export class DayChangeItemList extends Component {
               Salvo em: {salvo_em}
               <Button
                 icon={ButtonIcon.TRASH}
-                onClick={p => this.props.OnDeleteButtonClicked(id)}
+                onClick={p => this.OnDeleteButtonClicked(id)}
               />
               <Button
                 icon={ButtonIcon.EDIT}
@@ -128,6 +138,7 @@ export class DayChangeItemList extends Component {
             style={ButtonStyle.Primary}
             label="Enviar solicitações"
             className="float-right mt-2"
+            disabled={(this.state.checkedObjects.length === 0)}
             onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
           />
         </If>
