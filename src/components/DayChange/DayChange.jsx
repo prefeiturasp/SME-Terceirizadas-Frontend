@@ -28,7 +28,7 @@ export class DayChangeEditor extends Component {
     });
   }
 
-  onCancelButtonClicked(event) {
+  resetForm(event) {
     this.props.reset();
     // rich text field doesn't become clear by props.reset()...
     this.props.change("motivo", "");
@@ -60,7 +60,7 @@ export class DayChangeEditor extends Component {
   }
 
   refresh() {
-    axios.get(`http://localhost:3004/daychange/`).then(res => {
+    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
       const dayChangeList = res.data;
       this.setState({ dayChangeList });
     });
@@ -110,6 +110,7 @@ export class DayChangeEditor extends Component {
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+            resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
           <div className="form-row mt-3 ml-1">
@@ -158,7 +159,7 @@ export class DayChangeEditor extends Component {
             <div className="form-group row float-right mt-4">
               <BaseButton
                 label="Cancelar"
-                onClick={event => this.onCancelButtonClicked(event)}
+                onClick={event => this.resetForm(event)}
                 disabled={pristine || submitting}
                 style={ButtonStyle.OutlinePrimary}
               />

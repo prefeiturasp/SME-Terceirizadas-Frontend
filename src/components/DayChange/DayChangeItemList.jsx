@@ -33,13 +33,15 @@ export class DayChangeItemList extends Component {
   }
 
   OnDeleteButtonClicked(id) {
-    // para o pai apagar o elemento
+    // faz o pai apagar o elemento
+    // atualiza o estado do componente e limpa o form do pai
     this.props.OnDeleteButtonClicked(id);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
       return obj.id !== id;
     });
     this.setState({ checkedObjects });
+    this.props.resetForm();
   }
 
   onEnviarSolicitacoesBtClicked(event) {
@@ -138,7 +140,7 @@ export class DayChangeItemList extends Component {
             style={ButtonStyle.Primary}
             label="Enviar solicitações"
             className="float-right mt-2"
-            disabled={(this.state.checkedObjects.length === 0)}
+            disabled={this.state.checkedObjects.length === 0}
             onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
           />
         </If>
