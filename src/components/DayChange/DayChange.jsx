@@ -7,11 +7,10 @@ import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
 
-
 export class DayChangeEditor extends Component {
   constructor(props) {
     super(props);
-    this.state = { dayChangeList: [] };
+    this.state = { dayChangeList: [], status: "SEM STATUS", id: "" };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -23,12 +22,23 @@ export class DayChangeEditor extends Component {
     });
   }
 
+  onCancelButtonClicked(event) {
+    // rich text field doesn't become clear by props.reset()...
+    this.props.reset();
+    const resetCmd = "";
+    this.props.change("motivo", resetCmd);
+    this.props.change("obs", resetCmd);
+    this.setState({ status: "SEM STATUS" });
+  }
+
   OnEditButtonClicked(param) {
     this.props.reset();
     this.props.change("motivo", param.motivo);
     this.props.change("obs", param.obs);
     this.props.change("subst_dia_origem", param.subst_dia_origem);
     this.props.change("subst_dia_destino", param.subst_dia_destino);
+    this.setState({ status: param.status });
+    this.setState({ id: param.id });
   }
 
   componentDidMount() {
@@ -50,6 +60,10 @@ export class DayChangeEditor extends Component {
   }
 
   render() {
+    let title = "Nova solicitação";
+    if (this.state.id) {
+      title = `Solicitação # ${this.state.id}`;
+    }
     const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
       <div className="container">
@@ -79,16 +93,20 @@ export class DayChangeEditor extends Component {
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-          <div className="form-row mt-3">
+          <div className="form-row mt-3 ml-1">
             <h3 className="bold" style={{ color: "#353535" }}>
-              Nova solicitação
+              {title}
             </h3>
           </div>
-          <div className="border rounded mt-2">
-            <div className="form-row">
-              <label className="bold">
-                Substituição de dia de cardápio
-              </label>
+          <div className="border rounded mt-2 p-3">
+            <div>
+              <label className="bold">Substituição de dia de cardápio</label>
+              <span
+                className="float-right  p-1 border rounded"
+                style={{ background: "#DADADA" }}
+              >
+                {this.state.status}
+              </span>
             </div>
             <div className="form-row">
               <Field
@@ -122,10 +140,10 @@ export class DayChangeEditor extends Component {
                 name="obs"
               />
             </div>
-            <div className="form-group row float-right">
+            <div className="form-group row float-right mt-4">
               <BaseButton
                 label="Cancelar"
-                onClick={reset}
+                onClick={event => this.onCancelButtonClicked(event)}
                 disabled={pristine || submitting}
                 style={ButtonStyle.OutlinePrimary}
               />

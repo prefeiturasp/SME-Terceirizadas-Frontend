@@ -5,13 +5,13 @@ import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import If from "./layout";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
+import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
@@ -182,6 +182,11 @@ export class LabelAndTextArea extends Component {
   componentWillReceiveProps(nextProps) {
     // this loads data from previus state.
     const { input } = nextProps;
+    if (input.value === "") {
+      const editorState = EditorState.createEmpty();
+      this.setState({ editorState });
+      return;
+    }
     if (
       input.value &&
       input.value !== this.props.value &&
@@ -242,9 +247,9 @@ export class LabelAndTextArea extends Component {
           }}
         />
         <If isVisible={meta}>
-        <ErrorAlert meta={meta} />
+          <ErrorAlert meta={meta} />
         </If>
-        </Grid>
+      </Grid>
     );
   }
 }
