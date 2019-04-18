@@ -16,7 +16,7 @@ import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
   return (
-    <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
+    <Grid cols={props.cols}>
       <label htmlFor={props.name} className={"col-form-label"}>
         {props.label}
       </label>
@@ -87,7 +87,8 @@ export class LabelAndDate extends Component {
     daysDeltaMax: 360,
     cols: "",
     fullScreen: false,
-    inline: false
+    inline: false,
+    hasIcon: true
   };
 
   constructor(props) {
@@ -113,31 +114,36 @@ export class LabelAndDate extends Component {
       daysDeltaMin,
       daysDeltaMax,
       fullScreen,
-      inline
+      inline,
+      hasIcon
     } = this.props;
     var today = new Date();
     var future = new Date();
     return (
-      <Grid cols={cols} className="input-group">
+      <Grid cols={cols}>
         <label htmlFor={name} className={"col-form-label"}>
           {label}
         </label>
-        <DatePicker
-          {...input}
-          placeholderText={placeholder}
-          dateFormat={dateFormat}
-          isClearable={true}
-          withPortal={fullScreen}
-          inline={inline}
-          minDate={today.setDate(today.getDate() + daysDeltaMin)}
-          maxDate={future.setDate(future.getDate() + daysDeltaMax)}
-          className="form-control ml-3"
-          onChange={this.handleChange}
-          locale={ptBR}
-          id={name}
-          name={name}
-        />
-        <i className="fa fa-calendar" />
+        <div>
+          <DatePicker
+            {...input}
+            placeholderText={placeholder}
+            dateFormat={dateFormat}
+            isClearable={true}
+            withPortal={fullScreen}
+            inline={inline}
+            minDate={today.setDate(today.getDate() + daysDeltaMin)}
+            maxDate={future.setDate(future.getDate() + daysDeltaMax)}
+            className="form-control"
+            onChange={this.handleChange}
+            locale={ptBR}
+            id={name}
+            name={name}
+          />
+          <If isVisible={hasIcon}>
+            <i className="fa fa-calendar" />
+          </If>
+        </div>
         <ErrorAlert meta={meta} />
       </Grid>
     );

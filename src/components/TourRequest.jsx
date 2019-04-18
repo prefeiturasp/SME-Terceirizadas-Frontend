@@ -159,8 +159,9 @@ export class TourRequest extends Component {
               component={LabelAndDate}
               cols="4 4 4 4"
               label="Data do evento"
+              hasIcon={false}
               name="evento_data"
-              fullScreen={true}
+              // fullScreen={true}
             />
             <Field
               component={LabelAndInput}
