@@ -67,7 +67,8 @@ export class SelecionaKitLancheBox extends Component {
     let checkAll = kitOptions.length === this.props.choicesNumberLimit;
 
     return (
-      <div>
+      <div className={this.props.className}>
+        <h5 className="bold">Selecione a opção desejada</h5>
         <Field
           name="kit_lanche"
           label="Kit Lanche"
@@ -91,7 +92,8 @@ export class SelecionaTempoPasseio extends Component {
       { value: HORAS_ENUM._8.tempo, label: HORAS_ENUM._8.label }
     ];
     return (
-      <div>
+      <div className={this.props.className}>
+        <h5 className="bold">Tempo previsto do passeio</h5>
         <RadioboxGroup
           name="tempo_passeio"
           label="Tempo previsto do passeio"
@@ -99,6 +101,20 @@ export class SelecionaTempoPasseio extends Component {
           onChange={this.props.onChange}
           options={timeOptions}
         />
+        <div className="border rounded p-3">
+          <label>
+            <b>Até 4 horas</b> = 1 kit lanche/aluno: Escolher 1 kit entre os 3
+            modelos estabelecidos contratualmente;
+          </label>
+          <label>
+            <b>De 5 a 7 horas</b> = 2 kits lanche/alunos: Escolher 2 kits
+            distintos entre os 3 modelos estabelecidos contratualmente;
+          </label>
+          <label>
+            <b>8 horas ou mais</b> = 3 kits lanche/aluno: Será autorizado o
+            fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
+          </label>
+        </div>
       </div>
     );
   }
@@ -183,14 +199,14 @@ export class TourRequest extends Component {
               ]}
             />
           </div>
-          <hr />
           <SelecionaTempoPasseio
+            className="mt-3"
             onChange={(event, newValue, previousValue, name) =>
               this.setNumeroDeKitLanches(event, newValue, previousValue, name)
             }
           />
-          <hr />
           <SelecionaKitLancheBox
+            className="mt-3"
             choicesNumberLimit={this.state.qtd_kit_lanche}
           />
           <div className="form-group">
@@ -198,14 +214,14 @@ export class TourRequest extends Component {
             <br />
             <Grid
               cols="1 1 1 1"
-              className="d-inline-flex p-2 align-content-center"
+              className="border rounded p-2"
               style={{
-                background: "#E8E8E8",
-                textAlign: "middle",
-                height: "40px"
+                background: "#E8E8E8"
               }}
             >
-              <p className="bold">{this.props.qtd_total || 0}</p>
+              <spam className="bold d-flex justify-content-center">
+                {this.props.qtd_total || 0}
+              </spam>
             </Grid>
           </div>
           <hr />
@@ -214,6 +230,7 @@ export class TourRequest extends Component {
               component={LabelAndTextArea}
               label="Observações"
               name="obs"
+              placeholder='Campo opcional'
             />
           </div>
           <div className="form-group row float-right">

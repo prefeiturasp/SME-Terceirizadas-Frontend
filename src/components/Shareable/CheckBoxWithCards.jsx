@@ -22,9 +22,6 @@ export class Cards extends Component {
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
       let borderSucess = "";
-      // if (clearAll) {
-      //   input.reset();
-      // }
       if (checkAll) {
         onBlur(this.state.all);
         onChange(this.state.all);
