@@ -1,43 +1,72 @@
 import React, { Component } from 'react'
 
-class InputRowSupension extends Component {
+export default class InputRowSupension extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
-      labelCheck: this.props.labelCheck,
-      nameCheck: this.props.nameCheck,
-      valueCheck: this.props.valueCheck,
-      nameSelect: this.props.nameSelect,
-      optionsSelect: this.props.optionsSelect,
-      nameNumber: this.props.nameNumber,
-      valueNumber: this.props.valueNumber,
+      isEnable: false,
+      numberStudents: 0
     }
   }
+
+  handleChangeCheck(event) {
+    this.setState({ isEnable: event.target.checked })
+  }
+
+  handleClick(e) {
+    this.setState({
+      numberStudents: e.target.value
+    })
+  }
+
+
   render() {
+    const { nameCheck, labelCheck, valueCheck, nameSelect, optionsSelect, nameNumber, bg } = this.props
+    const colors = {
+      "1º Período - Matutino":"#FFF7CB",
+      "2º Período - Intermediário":"#EAFFE3",
+      "3º Período - Vespertino":"#FFEED6",
+      "4º Período - Noturno":"#E4F1FF",
+      "Integral":"#EBEDFF",
+    }
+    const styling = {marginLeft : "-1.4rem",background : colors[labelCheck], borderRadius : "7px"}
     return (
       <div className="form-row">
         <div className="form-check col-md-3 mr-4 ml-4">
-          <input className="form-check-input" type="checkbox" name={this.state.nameCheck} value={this.props.valueCheck} />
-          <label className="form-check-label"> {this.state.labelCheck}</label>
+          <div className="pl-5 pt-2 pb-2" style={styling}>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              name={nameCheck}
+              value={valueCheck}
+              onChange={this.handleChangeCheck.bind(this)}
+            />
+            <label className="form-check-label"> {labelCheck}</label>
+          </div>
         </div>
 
         <div className="form-group col-md-5 mr-5">
-          <select className="form-control" name={this.state.nameSelect}>
+          <select className="form-control" name={nameSelect} disabled={!this.state.isEnable}>
             <option>--SELECIONE--</option>
-            {this.state.optionsSelect.map((value,key) =>{
+            {optionsSelect.map((value, key) => {
               return <option value={value.key}>{value.value}</option>
             })}
 
           </select>
         </div>
         <div className="form-group col-md-2">
-          <input type="number" name={this.state.nameNumber} required value={this.state.valueNumber} className="form-control" />
+          <input
+            onChange={this.handleClick.bind(this)}
+            type="number"
+            name={nameNumber}
+            value={this.state.numberStudents}
+            disabled={!this.state.isEnable}
+            className="form-control"
+          />
         </div>
       </div>
     );
   }
 }
 
-export default InputRowSupension;
