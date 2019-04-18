@@ -5,13 +5,13 @@ import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import If from "./layout";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
+import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
@@ -148,7 +148,7 @@ export class LabelAndDate extends Component {
 export class LabelAndTextArea extends Component {
   constructor(props) {
     super(props);
-    const editorState = this.initEditorState();
+    const editorState = EditorState.createEmpty();
     this.state = {
       editorState
     };
@@ -177,6 +177,30 @@ export class LabelAndTextArea extends Component {
   handleChange(editorState) {
     this.setState({ editorState });
     this.changeValue(editorState);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // this loads data from previus state.
+    const { input } = nextProps;
+    if (input.value === "") {
+      const editorState = EditorState.createEmpty();
+      this.setState({ editorState });
+      return;
+    }
+    if (
+      input.value &&
+      input.value !== this.props.value &&
+      input.value !== "<p></p>\n"
+    ) {
+      const contentBlock = htmlToDraft(input.value);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
+      const editorState = EditorState.moveFocusToEnd(
+        EditorState.createWithContent(contentState)
+      );
+      this.setState({ editorState });
+    }
   }
 
   onBlur(event) {
@@ -214,7 +238,7 @@ export class LabelAndTextArea extends Component {
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
 
           toolbar={{
-            options: ["inline", "list", "emoji"],
+            options: ["inline", "list"],
             inline: {
               inDropdown: false,
               options: ["bold", "italic", "underline", "strikethrough"]
@@ -223,9 +247,9 @@ export class LabelAndTextArea extends Component {
           }}
         />
         <If isVisible={meta}>
-        <ErrorAlert meta={meta} />
+          <ErrorAlert meta={meta} />
         </If>
-        </Grid>
+      </Grid>
     );
   }
 }

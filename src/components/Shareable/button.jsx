@@ -26,6 +26,7 @@ export var ButtonStyle = {
 export var ButtonIcon = {
   TRASH: "trash",
   HOME: "home",
+  EDIT: "edit",
   CLOSE: "close",
   FOLDER: "folder"
 };
@@ -38,21 +39,20 @@ export var ButtonType = {
 
 export default class BaseButton extends Component {
   // TODO: desabilitar o botao quando estiver fazendo uma ação.
-  // TODO incrementar a logica de icone
   // VER> https://redux-form.com/8.1.0/examples/fieldlevelvalidation/
   render() {
     return (
       <button
         type={this.props.type || ButtonType.BUTTON}
-        className={"btn btn-" + this.props.style + " " + this.props.className}
+        className={`btn btn-${this.props.style} ${this.props.className}`}
         onClick={this.props.onClick}
+        disabled={this.props.disabled}
       >
         {this.props.label}
         <If isVisible={this.props.icon}>
-          <i class={`fa fa-${this.props.icon}`} />
+          <i className={`fa fa-${this.props.icon}`} />
         </If>
       </button>
     );
   }
 }
-// <button class="btn"><i class="fa fa-trash"></i> Trash</button>
