@@ -35,6 +35,7 @@ export class Cards extends Component {
         return { checkedList: [], unCheckedList: [] };
       }
     }
+    return null;
   }
 
   render() {
@@ -85,7 +86,7 @@ export class Cards extends Component {
       }
 
       return (
-        <Grid cols="4 4 4 4">
+        <Grid cols="4 4 4 4" key={index}>
           <div
             className={`card ${borderSucess}`}
             style={{
@@ -95,7 +96,7 @@ export class Cards extends Component {
               opacity: opacity
             }}
           >
-            <div class="card-header" style={headerStyle}>
+            <div className="card-header" style={headerStyle}>
               {label}
               <div className="form-check float-right">
                 <input
@@ -113,9 +114,17 @@ export class Cards extends Component {
                 />
               </div>
             </div>
-            <ul class="list-group list-group-flush">
+            <ul className="list-group list-group-flush">
               {foodList.map((e, key) => {
-                return <li className="list-group-item">{e}</li>;
+                return (
+                  <li
+                    // key={`${(cont += 1)}-${e.substring(0, 4)}`}
+                    key={key}
+                    className="list-group-item"
+                  >
+                    {e}
+                  </li>
+                );
               })}
             </ul>
           </div>
@@ -141,10 +150,14 @@ export default class CheckboxWithCards extends Component {
         value: PropTypes.string.isRequired,
         foodList: PropTypes.array.isRequired
       })
-    ).isRequired
+    ).isRequired,
+    choicesNumberLimit: PropTypes.number.isRequired,
+    checkAll: PropTypes.bool
   };
 
   render() {
-    return <Field {...this.props} component={Cards} />;
+    return (
+      <Field {...this.props} name={this.props.input.name} component={Cards} />
+    );
   }
 }

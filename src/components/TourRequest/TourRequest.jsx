@@ -113,9 +113,9 @@ export class TourRequest extends Component {
                 background: "#E8E8E8"
               }}
             >
-              <spam className="bold d-flex justify-content-center">
+              <span className="bold d-flex justify-content-center">
                 {this.props.qtd_total || 0}
-              </spam>
+              </span>
             </Grid>
           </div>
           <hr />
