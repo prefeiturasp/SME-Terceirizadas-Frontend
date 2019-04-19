@@ -10,4 +10,5 @@ export const showResults = values =>
 export const dateDelta = daysDelta => {
   let today = new Date();
   today.setDate(today.getDate() + daysDelta);
+  return today;
 };

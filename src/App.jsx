@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import "./components/Shareable/custom.css";
-import Routes from "./components/MenuChange";
+import Routes from "./components/TourRequest/TourRequest";
 
 class App extends Component {
   render() {

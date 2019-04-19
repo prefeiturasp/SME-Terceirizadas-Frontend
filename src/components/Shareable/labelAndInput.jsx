@@ -144,7 +144,6 @@ export class LabelAndDate extends Component {
       inline,
       hasIcon
     } = this.props;
-
     return (
       <Grid cols={cols}>
         <label htmlFor={name} className={"col-form-label"}>
@@ -214,7 +213,8 @@ export class LabelAndTextArea extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // this loads data from previus state.
+    // TODO: esse metodo ta deprecado, trocar por getDerivedStateFromProps
+    // this loads data from previous state.
     const { input } = nextProps;
     if (input.value === "") {
       const editorState = EditorState.createEmpty();

@@ -4,9 +4,17 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
+import {
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
-import { SelecionaKitLancheBox, SelecionaTempoPasseio } from "./TourRequestCheck";
+import {
+  SelecionaKitLancheBox,
+  SelecionaTempoPasseio
+} from "./TourRequestCheck";
+import { dateDelta } from "../../helpers/utilities";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -68,10 +76,9 @@ export class TourRequest extends Component {
             <Field
               component={LabelAndDate}
               cols="4 4 4 4"
+              hasIcon={true}
               label="Data do evento"
-              hasIcon={false}
               name="evento_data"
-              // fullScreen={true}
             />
             <Field
               component={LabelAndInput}
