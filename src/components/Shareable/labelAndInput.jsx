@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { dateDelta } from "../../helpers/utilities";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
 import If from "./layout";
@@ -73,18 +74,17 @@ export class LabelAndDate extends Component {
     }),
     placeholder: PropTypes.string,
     cols: PropTypes.string,
-    name: PropTypes.string.isRequired,
     label: PropTypes.string,
     dateFormat: PropTypes.string,
-    daysDeltaMin: PropTypes.number,
-    daysDeltaMax: PropTypes.number
+    minDate: PropTypes.instanceOf(Date),
+    maxDate: PropTypes.instanceOf(Date)
   };
 
   static defaultProps = {
     placeholder: "",
     dateFormat: "DD/MM/YYYY",
-    daysDeltaMin: 0,
-    daysDeltaMax: 360,
+    minDate: dateDelta(0),
+    maxDate: dateDelta(360),
     cols: "",
     fullScreen: false,
     inline: false,
@@ -111,14 +111,13 @@ export class LabelAndDate extends Component {
       name,
       label,
       dateFormat,
-      daysDeltaMin,
-      daysDeltaMax,
+      minDate,
+      maxDate,
       fullScreen,
       inline,
       hasIcon
     } = this.props;
-    var today = new Date();
-    var future = new Date();
+
     return (
       <Grid cols={cols}>
         <label htmlFor={name} className={"col-form-label"}>
@@ -132,8 +131,8 @@ export class LabelAndDate extends Component {
             isClearable={true}
             withPortal={fullScreen}
             inline={inline}
-            minDate={today.setDate(today.getDate() + daysDeltaMin)}
-            maxDate={future.setDate(future.getDate() + daysDeltaMax)}
+            minDate={minDate}
+            maxDate={maxDate}
             className="form-control"
             onChange={this.handleChange}
             locale={ptBR}

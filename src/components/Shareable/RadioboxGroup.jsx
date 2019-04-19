@@ -22,7 +22,7 @@ export const field = ({ input, meta, options }) => {
       height: "2em"
     };
     return (
-      <div className="form-check  form-check-inline">
+      <div className="form-check  form-check-inline" key={index}>
         <input
           className="form-check-input"
           type="radio"

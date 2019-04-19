@@ -6,3 +6,8 @@ export const showResults = values =>
       resolve();
     }, 1500);
   });
+
+export const dateDelta = daysDelta => {
+  let today = new Date();
+  today.setDate(today.getDate() + daysDelta);
+};
