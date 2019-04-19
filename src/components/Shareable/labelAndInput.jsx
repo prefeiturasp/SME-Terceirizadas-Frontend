@@ -16,36 +16,42 @@ import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
+  const { cols, name, label, input, placeholder, readOnly, type, meta } = props;
   return (
-    <Grid cols={props.cols}>
-      <label htmlFor={props.name} className={"col-form-label"}>
-        {props.label}
+    <Grid cols={cols}>
+      <label htmlFor={name} className={"col-form-label"}>
+        {label}
       </label>
       <input
-        {...props.input}
+        {...input}
         className="form-control"
-        name={props.name}
-        id={props.name}
-        placeholder={props.placeholder}
-        readOnly={props.readOnly || false}
-        type={props.type}
+        name={name}
+        id={name}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        type={type}
       />
-      <ErrorAlert meta={props.meta} />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
     </Grid>
   );
 };
+LabelAndInput.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool
+};
 
 export const LabelAndCombo = props => {
-  const options = props.options || [
-    { value: "...", label: "...", disable: false },
-    { value: "***", label: "***", selected: true }
-  ];
+  const { cols, name, label, input, meta, options } = props;
+
   return (
-    <Grid cols={props.cols || ""}>
-      <label htmlFor={props.name} className={"col-form-label"}>
-        {props.label}
+    <Grid cols={cols}>
+      <label htmlFor={name} className={"col-form-label"}>
+        {label}
       </label>
-      <select {...props.input} name={props.name} className="form-control">
+      <select {...input} name={name} className="form-control">
         {options.map((e, key) => {
           return (
             <option key={key} value={e.value} disabled={e.disabled}>
@@ -54,9 +60,30 @@ export const LabelAndCombo = props => {
           );
         })}
       </select>
-      <ErrorAlert meta={props.meta} />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
     </Grid>
   );
+};
+LabelAndCombo.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+      disable: PropTypes.bool,
+      selected: PropTypes.bool
+    })
+  )
+};
+LabelAndCombo.defaultProps = {
+  options: [
+    { value: "...", label: "op1", disable: false },
+    { value: "***", label: "op2", selected: true }
+  ]
 };
 
 export class LabelAndDate extends Component {
@@ -143,7 +170,9 @@ export class LabelAndDate extends Component {
             <i className="fa fa-calendar" />
           </If>
         </div>
-        <ErrorAlert meta={meta} />
+        <If isVisible={meta}>
+          <ErrorAlert meta={meta} />
+        </If>
       </Grid>
     );
   }
