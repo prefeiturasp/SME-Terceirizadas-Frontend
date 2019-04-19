@@ -19,18 +19,21 @@ export class Cards extends Component {
   static getDerivedStateFromProps(nextProps, state) {
     const {
       checkAll,
-      clearAll,
       input: { onBlur, onChange }
     } = nextProps;
+    // marca tudo e atualiza o estado interno
     if (checkAll) {
       onBlur(state.all);
       onChange(state.all);
       return { checkedList: state.all, unCheckedList: [] };
-    }
-    if (clearAll) {
-      onBlur([]);
-      onChange([]);
-      return ({ checkedList: [], unCheckedList: [] });
+    } else {
+      // atualiza o state pra vazio e limpa o estado interno...
+      // se todos estão marcados então limpa.
+      if (state.checkedList.length === state.all.length) {
+        onBlur([]);
+        onChange([]);
+        return { checkedList: [], unCheckedList: [] };
+      }
     }
   }
 
