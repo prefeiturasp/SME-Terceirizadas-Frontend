@@ -28,9 +28,9 @@ export class Cards extends Component {
       return { checkedList: state.all, unCheckedList: [] };
     }
     if (clearAll) {
-      this.setState({ checkedList: [], unCheckedList: [] });
       onBlur([]);
       onChange([]);
+      return ({ checkedList: [], unCheckedList: [] });
     }
   }
 

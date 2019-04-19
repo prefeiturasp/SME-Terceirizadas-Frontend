@@ -76,6 +76,7 @@ export class SelecionaKitLancheBox extends Component {
           options={kitOptions}
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
+          clearAll={false}
           onChange={this.props.onChange}
           validate={[requiredCheck]}
         />
