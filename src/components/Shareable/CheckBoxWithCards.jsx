@@ -16,18 +16,29 @@ export class Cards extends Component {
     };
   }
 
+  static getDerivedStateFromProps(nextProps, state) {
+    const {
+      checkAll,
+      clearAll,
+      input: { onBlur, onChange }
+    } = nextProps;
+    if (checkAll) {
+      onBlur(state.all);
+      onChange(state.all);
+      return { checkedList: state.all, unCheckedList: [] };
+    }
+    if (clearAll) {
+      this.setState({ checkedList: [], unCheckedList: [] });
+      onBlur([]);
+      onChange([]);
+    }
+  }
+
   render() {
     const { input, meta, options, choicesNumberLimit, checkAll } = this.props;
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
-      let borderSucess = "";
-      if (checkAll) {
-        onBlur(this.state.all);
-        onChange(this.state.all);
-        borderSucess = " border-success";
-      }
-
       const handleChange = event => {
         const arr = [...inputValue];
         if (event.target.checked) {
@@ -56,6 +67,7 @@ export class Cards extends Component {
         color: "#035D96"
       };
 
+      let borderSucess = "";
       if (this.state.checkedList.includes(value)) {
         borderSucess = " border-success";
       }
