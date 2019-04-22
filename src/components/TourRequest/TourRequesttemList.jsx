@@ -93,24 +93,26 @@ export class TourRequestItemList extends Component {
               />
             </div>
             <div className="ml-3">
-              <p>
-                Data do evento: <b>{evento_data}</b> Local do passeio:{" "}
-                <b>{local_passeio}</b>
-              </p>
               <div>
-                <div className="float-right">
-                  Salvo em: {salvo_em}
-                  <Button
-                    icon={ButtonIcon.TRASH}
-                    onClick={p => this.OnDeleteButtonClicked(id)}
-                  />
-                  <Button
-                    icon={ButtonIcon.EDIT}
-                    onClick={p => this.props.OnEditButtonClicked(tourRequest)}
-                  />
-                </div>
+                <label>
+                  Data do evento: <b>{evento_data}</b> Local do passeio:{" "}
+                  <b>{local_passeio}</b>
+                </label>
               </div>
-              Nº de Alunos participantes: <b>{nro_alunos}</b>
+              <div className="float-right">
+                Salvo em: {salvo_em}
+                <Button
+                  icon={ButtonIcon.TRASH}
+                  onClick={p => this.OnDeleteButtonClicked(id)}
+                />
+                <Button
+                  icon={ButtonIcon.EDIT}
+                  onClick={p => this.props.OnEditButtonClicked(tourRequest)}
+                />
+              </div>
+              <label>
+                Nº de Alunos participantes: <b>{nro_alunos}</b>
+              </label>
             </div>
           </div>
         </div>
@@ -120,13 +122,14 @@ export class TourRequestItemList extends Component {
       <div>
         {allDaysInfo}
         <If isVisible={this.props.tourRequestList.length >= 1}>
-          <Button
-            style={ButtonStyle.Primary}
-            label="Enviar solicitações"
-            className="float-right mt-2"
-            disabled={this.state.checkedObjects.length === 0}
-            onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
-          />
+          <div className="float-right mt-2">
+            <Button
+              style={ButtonStyle.Primary}
+              label="Enviar solicitações"
+              disabled={this.state.checkedObjects.length === 0}
+              onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
+            />
+          </div>
         </If>
       </div>
     );
