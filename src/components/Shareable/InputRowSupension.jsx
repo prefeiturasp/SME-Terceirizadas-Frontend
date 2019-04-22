@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import StatefulMultiSelect from '@khanacademy/react-multi-select';
+import './custom.css';
 
 export default class InputRowSupension extends Component {
 
@@ -6,10 +8,11 @@ export default class InputRowSupension extends Component {
     super(props)
     this.state = {
       isEnable: false,
-      isEnable2: false,
       numberStudents: 0,
       type: null,
       period : null
+      selectedOptions: [],
+      isEnable2: false
     }
 
     this.handleNumberStudents = this.handleNumberStudents.bind(this)
@@ -33,6 +36,11 @@ export default class InputRowSupension extends Component {
     })
 
   }
+
+  handleSelectedChanged = (selectedOptions) => (
+    this.setState({ selectedOptions })
+  )
+
 
   handleNumberStudents(e) {
     let value = e.target.value
@@ -72,7 +80,7 @@ export default class InputRowSupension extends Component {
 
 
   render() {
-    const { nameCheck, labelCheck, valueCheck, nameSelect, optionsSelect, nameNumber } = this.props
+    const { nameCheck, labelCheck, valueCheck, nameSelect, optionsSelect, nameNumber, multipleSelect } = this.props
     const colors = {
       "1º Período - Matutino": "#FFF7CB",
       "2º Período - Intermediário": "#EAFFE3",
@@ -80,7 +88,8 @@ export default class InputRowSupension extends Component {
       "4º Período - Noturno": "#E4F1FF",
       "Integral": "#EBEDFF",
     }
-    const styling = { marginLeft: "-1.4rem", background: colors[labelCheck], borderRadius: "7px" }
+    const { selectedOptions } = this.state;
+    const styling = {marginLeft : "-1.4rem", background : colors[labelCheck], borderRadius : "7px"}
     return (
       <div className="form-row">
         <div className="form-check col-md-3 mr-4 ml-4">
@@ -95,8 +104,22 @@ export default class InputRowSupension extends Component {
             <label className="form-check-label"> {labelCheck}</label>
           </div>
         </div>
-
-        <div className="form-group col-md-5 mr-5">
+          <div className="form-group col-md-5 mr-5">
+          {multipleSelect ?
+            <div className={!this.state.isEnable ? "multiselect-wrapper-disabled" : "multiselect-wrapper-enabled"}>
+              <StatefulMultiSelect
+                selected={selectedOptions}
+                options={optionsSelect}
+                onSelectedChanged={this.handleSelectedChanged}
+                disableSearch={true}
+                overrideStrings={{
+                  selectSomeItems: "--SELECIONE--",
+                  allItemsAreSelected: "Todos os itens estão selecionados",
+                  selectAll: "Todos"
+                }}
+                />
+            </div>
+          :
           <select className="form-control"
                   name={nameSelect}
                   id={nameSelect}
@@ -107,8 +130,10 @@ export default class InputRowSupension extends Component {
               return <option key={key} value={value.key}>{value.value}</option>
             })}
 
-          </select>
-        </div>
+
+            </select>
+          }
+          </div>
         <div className="form-group col-md-2">
           <input
             onBlur={this.handleOnBlurNumber.bind(this)}
