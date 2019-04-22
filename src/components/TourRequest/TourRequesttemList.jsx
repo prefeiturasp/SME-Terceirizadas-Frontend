@@ -20,7 +20,7 @@ export class TourRequestItemList extends Component {
         id: PropTypes.number,
         tempo_passeio: PropTypes.string.isRequired,
         kit_lanche: PropTypes.array.isRequired,
-        nro_alunos: PropTypes.number.isRequired
+        nro_alunos: PropTypes.string.isRequired
       })
     )
   };
@@ -58,9 +58,8 @@ export class TourRequestItemList extends Component {
 
   render() {
     const { tourRequestList } = this.props;
-    const allDaysInfo = tourRequestList.map(dayChange => {
+    const allDaysInfo = tourRequestList.map(tourRequest => {
       const {
-        obs,
         status,
         salvo_em,
         id,
@@ -69,13 +68,14 @@ export class TourRequestItemList extends Component {
         nro_alunos,
         local_passeio,
         evento_data
-      } = dayChange;
+      } = tourRequest;
       let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="border rounded mt-3">
+        <div className="border rounded mt-3" key={id}>
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${id}`}
+              Solicitação de Kit Lanche/Passeio{" "}
+              {`${tempo_passeio.replace("_", " a ")} # ${id}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -89,62 +89,32 @@ export class TourRequestItemList extends Component {
                 type="checkbox"
                 name={id}
                 id={id}
-                onClick={event =>
-                  this.onCheckChange(event, {
-                    obs,
-                    status,
-                    salvo_em,
-                    id,
-                    tempo_passeio,
-                    kit_lanche,
-                    nro_alunos
-                  })
-                }
+                onClick={event => this.onCheckChange(event, tourRequest)}
               />
             </div>
-          </div>
-          <div>
-            <div className="float-right">
-              Salvo em: {salvo_em}
-              <Button
-                icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(id)}
-              />
-              <Button
-                icon={ButtonIcon.EDIT}
-                onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    obs,
-                    status,
-                    salvo_em,
-                    id,
-                    tempo_passeio,
-                    kit_lanche,
-                    nro_alunos
-                  })
-                }
-              />
-            </div>
-          </div>
-          <div className="ml-3">
-            <p>
-              Data do evento: <b>{evento_data}</b>
-              {"  "}Local do passeio: <b>{local_passeio}</b>
-            </p>
-          </div>
-          <div className="ml-3 row">
-            <p>Nº de Alunos participantes: {nro_alunos} </p>
-            <p>
-              Tempo de passeio: <b>{tempo_passeio.replace("_", " a ")}</b> Kit
-              lanche(s):{" "}
-              <b>
-                {kit_lanche.map(kit => {
-                  return ` ${kit}`.replace("kit_", "");
-                })}
-              </b>
-            </p>
-            <div className='float-right'>
-            Total de lanches: {nro_alunos * kit_lanche.length}
+            <div className="ml-3">
+              <p>
+                Data do evento: <b>{evento_data}</b> Local do passeio:{" "}
+                <b>{local_passeio}</b>
+              </p>
+              <p>
+                <div>
+                  <div className="float-right">
+                    Salvo em: {salvo_em}
+                    <Button
+                      icon={ButtonIcon.TRASH}
+                      onClick={p => this.OnDeleteButtonClicked(id)}
+                    />
+                    <Button
+                      icon={ButtonIcon.EDIT}
+                      onClick={p =>
+                        this.props.OnEditButtonClicked(tourRequest)
+                      }
+                    />
+                  </div>
+                </div>
+                Nº de Alunos participantes: <b>{nro_alunos}</b>
+              </p>
             </div>
           </div>
         </div>
