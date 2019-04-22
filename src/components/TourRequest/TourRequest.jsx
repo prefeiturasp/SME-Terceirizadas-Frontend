@@ -1,20 +1,14 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
-import {
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
-import {
-  SelecionaKitLancheBox,
-  SelecionaTempoPasseio
-} from "./TourRequestCheck";
-import { dateDelta } from "../../helpers/utilities";
+import { SelecionaKitLancheBox, SelecionaTempoPasseio } from "./TourRequestCheck";
+import { TourRequestItemList } from "./TourRequesttemList";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -28,7 +22,8 @@ export class TourRequest extends Component {
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.state = {
       qtd_kit_lanche: 0,
-      radioChanged: false
+      radioChanged: false,
+      dayChangeList: []
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -36,6 +31,27 @@ export class TourRequest extends Component {
 
   onSubmit(values) {
     validateTourRequestForm(values);
+    if (values.id) {
+      //put
+      axios
+        .put(`http://localhost:3004/tourRequest/${values.id}`, values)
+        .then(res => {
+          // this.refresh();
+          console.log("PUT", res.data);
+        });
+    } else {
+      axios.post(`http://localhost:3004/tourRequest/`, values).then(res => {
+        // this.refresh();
+        console.log("POST", res.data);
+      });
+    }
+  }
+
+  refresh() {
+    axios.get(`http://localhost:3004/tourRequest/?status=SALVO`).then(res => {
+      const dayChangeList = res.data;
+      this.setState({ dayChangeList });
+    });
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -72,6 +88,24 @@ export class TourRequest extends Component {
               Informação automática disponibilizada no cadastro da UE
             </label>
           </div>
+          <TourRequestItemList
+            tourRequestList={[{
+              "obs": "<p>123213213</p>\n",
+              "tempo_passeio": "8h",
+              "kit_lanche": [
+                "kit_1",
+                "kit_2",
+                "kit_3"
+              ],
+              "nro_alunos": "333",
+              "status": "SALVO",
+              "salvo_em": "2019-04-22T13:03:25.926Z",
+              "id": 1
+            }]}
+            OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+            resetForm={event => this.resetForm(event)}
+            OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+          />
           <div className="form-group row">
             <Field
               component={LabelAndDate}
@@ -147,7 +181,8 @@ export class TourRequest extends Component {
               onClick={handleSubmit(values =>
                 this.onSubmit({
                   ...values,
-                  Acao: "Salvar"
+                  status: "SALVO",
+                  salvo_em: new Date()
                 })
               )}
               className="ml-3"
