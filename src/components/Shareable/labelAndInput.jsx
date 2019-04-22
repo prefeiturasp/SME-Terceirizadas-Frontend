@@ -5,46 +5,53 @@ import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import If from "./layout";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { dateDelta } from "../../helpers/utilities";
 import { ErrorAlert } from "./Alert";
 import "./custom.css";
+import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
+  const { cols, name, label, input, placeholder, readOnly, type, meta } = props;
   return (
-    <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
-      <label htmlFor={props.name} className={"col-form-label"}>
-        {props.label}
+    <Grid cols={cols}>
+      <label htmlFor={name} className={"col-form-label"}>
+        {label}
       </label>
       <input
-        {...props.input}
+        {...input}
         className="form-control"
-        name={props.name}
-        id={props.name}
-        placeholder={props.placeholder}
-        readOnly={props.readOnly || false}
-        type={props.type}
+        name={name}
+        id={name}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        type={type}
       />
-      <ErrorAlert meta={props.meta} />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
     </Grid>
   );
 };
+LabelAndInput.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool
+};
 
 export const LabelAndCombo = props => {
-  const options = props.options || [
-    { value: "...", label: "...", disable: false },
-    { value: "***", label: "***", selected: true }
-  ];
+  const { cols, name, label, input, meta, options } = props;
+
   return (
-    <Grid cols={props.cols || ""}>
-      <label htmlFor={props.name} className={"col-form-label"}>
-        {props.label}
+    <Grid cols={cols}>
+      <label htmlFor={name} className={"col-form-label"}>
+        {label}
       </label>
-      <select {...props.input} name={props.name} className="form-control">
+      <select {...input} name={name} className="form-control">
         {options.map((e, key) => {
           return (
             <option key={key} value={e.value} disabled={e.disabled}>
@@ -53,9 +60,30 @@ export const LabelAndCombo = props => {
           );
         })}
       </select>
-      <ErrorAlert meta={props.meta} />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
     </Grid>
   );
+};
+LabelAndCombo.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+      disable: PropTypes.bool,
+      selected: PropTypes.bool
+    })
+  )
+};
+LabelAndCombo.defaultProps = {
+  options: [
+    { value: "...", label: "op1", disable: false },
+    { value: "***", label: "op2", selected: true }
+  ]
 };
 
 export class LabelAndDate extends Component {
@@ -73,21 +101,21 @@ export class LabelAndDate extends Component {
     }),
     placeholder: PropTypes.string,
     cols: PropTypes.string,
-    name: PropTypes.string.isRequired,
     label: PropTypes.string,
     dateFormat: PropTypes.string,
-    daysDeltaMin: PropTypes.number,
-    daysDeltaMax: PropTypes.number
+    minDate: PropTypes.instanceOf(Date),
+    maxDate: PropTypes.instanceOf(Date)
   };
 
   static defaultProps = {
     placeholder: "",
     dateFormat: "DD/MM/YYYY",
-    daysDeltaMin: 0,
-    daysDeltaMax: 360,
+    minDate: dateDelta(0),
+    maxDate: dateDelta(360),
     cols: "",
     fullScreen: false,
-    inline: false
+    inline: false,
+    hasIcon: true
   };
 
   constructor(props) {
@@ -110,35 +138,40 @@ export class LabelAndDate extends Component {
       name,
       label,
       dateFormat,
-      daysDeltaMin,
-      daysDeltaMax,
+      minDate,
+      maxDate,
       fullScreen,
-      inline
+      inline,
+      hasIcon
     } = this.props;
-    var today = new Date();
-    var future = new Date();
     return (
-      <Grid cols={cols} className="input-group">
+      <Grid cols={cols}>
         <label htmlFor={name} className={"col-form-label"}>
           {label}
         </label>
-        <DatePicker
-          {...input}
-          placeholderText={placeholder}
-          dateFormat={dateFormat}
-          isClearable={true}
-          withPortal={fullScreen}
-          inline={inline}
-          minDate={today.setDate(today.getDate() + daysDeltaMin)}
-          maxDate={future.setDate(future.getDate() + daysDeltaMax)}
-          className="form-control ml-3"
-          onChange={this.handleChange}
-          locale={ptBR}
-          id={name}
-          name={name}
-        />
-        <i className="fa fa-calendar" />
-        <ErrorAlert meta={meta} />
+        <div>
+          <DatePicker
+            {...input}
+            placeholderText={placeholder}
+            dateFormat={dateFormat}
+            isClearable={true}
+            withPortal={fullScreen}
+            inline={inline}
+            minDate={minDate}
+            maxDate={maxDate}
+            className="form-control"
+            onChange={this.handleChange}
+            locale={ptBR}
+            id={name}
+            name={name}
+          />
+          <If isVisible={hasIcon}>
+            <i className="fa fa-calendar" />
+          </If>
+        </div>
+        <If isVisible={meta}>
+          <ErrorAlert meta={meta} />
+        </If>
       </Grid>
     );
   }
@@ -148,7 +181,7 @@ export class LabelAndDate extends Component {
 export class LabelAndTextArea extends Component {
   constructor(props) {
     super(props);
-    const editorState = this.initEditorState();
+    const editorState = EditorState.createEmpty();
     this.state = {
       editorState
     };
@@ -179,6 +212,31 @@ export class LabelAndTextArea extends Component {
     this.changeValue(editorState);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // TODO: esse metodo ta deprecado, trocar por getDerivedStateFromProps
+    // this loads data from previous state.
+    const { input } = nextProps;
+    if (input.value === "") {
+      const editorState = EditorState.createEmpty();
+      this.setState({ editorState });
+      return;
+    }
+    if (
+      input.value &&
+      input.value !== this.props.value &&
+      input.value !== "<p></p>\n"
+    ) {
+      const contentBlock = htmlToDraft(input.value);
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
+      const editorState = EditorState.moveFocusToEnd(
+        EditorState.createWithContent(contentState)
+      );
+      this.setState({ editorState });
+    }
+  }
+
   onBlur(event) {
     const value = draftToHtml(
       convertToRaw(this.state.editorState.getCurrentContent())
@@ -191,7 +249,7 @@ export class LabelAndTextArea extends Component {
    */
   changeValue(editorState) {
     const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    // this.props.input.onChange(value);
+    this.props.input.onChange(value);
   }
 
   render() {
@@ -214,7 +272,7 @@ export class LabelAndTextArea extends Component {
           // how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
 
           toolbar={{
-            options: ["inline", "list", "emoji"],
+            options: ["inline", "list"],
             inline: {
               inDropdown: false,
               options: ["bold", "italic", "underline", "strikethrough"]
@@ -223,9 +281,9 @@ export class LabelAndTextArea extends Component {
           }}
         />
         <If isVisible={meta}>
-        <ErrorAlert meta={meta} />
+          <ErrorAlert meta={meta} />
         </If>
-        </Grid>
+      </Grid>
     );
   }
 }

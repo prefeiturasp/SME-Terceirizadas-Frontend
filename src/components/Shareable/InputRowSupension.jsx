@@ -9,16 +9,30 @@ export default class InputRowSupension extends Component {
     this.state = {
       isEnable: false,
       numberStudents: 0,
-      selectedOptions: []
+      selectedOptions: [],
+      isEnable2: false
     }
+
+    this.handleNumberStudents = this.handleNumberStudents.bind(this)
   }
 
-  result(params) {
-    console.log(params);
-  }
 
   handleChangeCheck(event) {
-    this.setState({ isEnable: event.target.checked })
+
+    let checked = event.target.checked
+
+    this.props.verifyChecked(true)
+
+    if(!checked){
+      this.setState({
+        isEnable2 : false
+      })
+    }
+
+    this.setState({
+      isEnable: checked,
+    })
+
   }
 
   handleSelectedChanged = (selectedOptions) => (
@@ -26,24 +40,34 @@ export default class InputRowSupension extends Component {
   )
 
 
-  handleClick(e) {
+  handleNumberStudents(e) {
+    let value = e.target.value
     this.setState({
-      numberStudents: e.target.value
+      numberStudents: value
     })
+  }
+
+  handleValidSelect(e){
+    let value = e.target.value
+    if(value > 0){
+      this.setState({isEnable2 : true})
+    }else{
+      this.setState({isEnable2 : false})
+    }
   }
 
 
   render() {
-    const { nameCheck, labelCheck, valueCheck, nameSelect, optionsSelect, nameNumber, multipleSelect, bg } = this.props
+    const { nameCheck, labelCheck, valueCheck, nameSelect, optionsSelect, nameNumber, multipleSelect } = this.props
     const colors = {
-      "1º Período - Matutino":"#FFF7CB",
-      "2º Período - Intermediário":"#EAFFE3",
-      "3º Período - Vespertino":"#FFEED6",
-      "4º Período - Noturno":"#E4F1FF",
-      "Integral":"#EBEDFF",
+      "1º Período - Matutino": "#FFF7CB",
+      "2º Período - Intermediário": "#EAFFE3",
+      "3º Período - Vespertino": "#FFEED6",
+      "4º Período - Noturno": "#E4F1FF",
+      "Integral": "#EBEDFF",
     }
     const { selectedOptions } = this.state;
-    const styling = {marginLeft : "-1.4rem",background : colors[labelCheck], borderRadius : "7px"}
+    const styling = {marginLeft : "-1.4rem", background : colors[labelCheck], borderRadius : "7px"}
     return (
       <div className="form-row">
         <div className="form-check col-md-3 mr-4 ml-4">
@@ -74,23 +98,26 @@ export default class InputRowSupension extends Component {
                 />
             </div>
           :
-            <select className="form-control" name={nameSelect} disabled={!this.state.isEnable}>
-              <option>--SELECIONE--</option>
-              {optionsSelect.map((value, key) => {
-                return <option value={value.value}>{value.label}</option>
-              })}
+          <select className="form-control"
+                  name={nameSelect}
+                  disabled={!this.state.isEnable}
+                  onChange={this.handleValidSelect.bind(this)}>
+            <option value="0">--SELECIONE--</option>
+            {optionsSelect.map((value, key) => {
+              return <option value={value.key}>{value.value}</option>
+            })}
+
 
             </select>
           }
           </div>
-
         <div className="form-group col-md-2">
           <input
-            onChange={this.handleClick.bind(this)}
+            onChange={this.handleNumberStudents}
             type="number"
             name={nameNumber}
             value={this.state.numberStudents}
-            disabled={!this.state.isEnable}
+            disabled={!this.state.isEnable2}
             className="form-control"
           />
         </div>

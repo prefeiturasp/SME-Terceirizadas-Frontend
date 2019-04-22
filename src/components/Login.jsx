@@ -7,15 +7,11 @@ import {
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-// import { Link } from 'react-router-dom'
-
 export class Login extends Component {
   constructor(props) {
 
     super(props);
-    // this.props.logout();
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       email : '',
@@ -23,10 +19,10 @@ export class Login extends Component {
     }
   }
 
-
   componentDidMount(){
-
+    
   }
+
 
 validForm() {
   return this.props.email.length > 0 && this.props.password.length > 0;
@@ -42,7 +38,6 @@ handleSubmit = event => {
     // console.log("chamando login com ", email, password);
     login(email, password);
   }
-  // Authentication(this.state.email,this.state.password)
 };
 
 handleChange = event => {
