@@ -27,7 +27,8 @@ export class TourRequest extends Component {
       status: "SEM STATUS",
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
-      id: ""
+      id: "",
+      nro_matriculados: 100
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -75,11 +76,10 @@ export class TourRequest extends Component {
   onSubmit(values) {
     validateTourRequestForm(values);
     if (values.id) {
-      //put
       axios
         .put(`http://localhost:3004/tourRequest/${values.id}`, values)
         .then(res => {
-          // this.refresh();
+          this.refresh();
           console.log("PUT", res.data);
         });
     } else {
@@ -119,18 +119,17 @@ export class TourRequest extends Component {
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
           </div>
-          <div className="form-group row">
-            <br />
-            <Field
-              component={"input"}
-              type="number"
-              className="btn btn-primary mr-3"
-              name="nro_matriculados"
-            />
-            <label htmlFor="nro_matriculados">
-              Informação automática disponibilizada no cadastro da UE
-            </label>
-          </div>
+          <Grid
+            cols="1 1 1 1"
+            className="border rounded p-2"
+            style={{
+              background: "#E8E8E8"
+            }}
+          >
+            <span className="bold d-flex justify-content-center">
+              {this.state.nro_matriculados}
+            </span>
+          </Grid>
           <TourRequestItemList
             tourRequestList={this.state.tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
@@ -165,10 +164,7 @@ export class TourRequest extends Component {
                 name="nro_alunos"
                 type="number"
                 label="Número de alunos participantes"
-                validate={[
-                  required,
-                  maxValue(this.props.initialValues.nro_matriculados)
-                ]}
+                validate={[required, maxValue(this.state.nro_matriculados)]}
               />
             </div>
             <SelecionaTempoPasseio
@@ -249,10 +245,7 @@ export class TourRequest extends Component {
 
 TourRequest = reduxForm({
   form: "tourRequest",
-  destroyOnUnmount: false, // para nao perder o estado,
-  initialValues: {
-    nro_matriculados: 333
-  }
+  destroyOnUnmount: false // para nao perder o estado,
 })(TourRequest);
 
 const selector = formValueSelector("tourRequest");

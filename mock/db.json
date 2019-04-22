@@ -1,20 +1,5 @@
 {
-  "tourRequest": [
-    {
-      "nro_matriculados": 333,
-      "obs": "<p></p>\n",
-      "tempo_passeio": "8h",
-      "kit_lanche": [
-        "kit_1",
-        "kit_2",
-        "kit_3"
-      ],
-      "nro_alunos": "3",
-      "status": "SALVO",
-      "salvo_em": "2019-04-22T16:38:56.881Z",
-      "id": 1
-    }
-  ],
+  "tourRequest": [],
   "daychange": [
     {
       "subst_dia_origem": "20/04/2019",
