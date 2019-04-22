@@ -39,6 +39,22 @@ export class TourRequest extends Component {
     });
   }
 
+  OnEditButtonClicked(param) {
+    this.props.reset();
+    this.props.change("obs", param.obs);
+    this.props.change("evento_data", param.evento_data);
+    this.props.change("local_passeio", param.local_passeio);
+    this.props.change("nro_alunos", param.nro_alunos);
+    this.props.change("tempo_passeio", param.tempo_passeio);
+    this.props.change("kit_lanche", param.kit_lanche);
+    this.setState({
+      status: param.status,
+      title: `Solicitação # ${param.id}`,
+      salvarAtualizarLbl: "Atualizar",
+      id: param.id
+    });
+  }
+
   resetForm(event) {
     this.props.reset();
     // rich text field doesn't become clear by props.reset()...
@@ -121,6 +137,11 @@ export class TourRequest extends Component {
             resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
+          <div className="form-row mt-3 ml-1">
+            <h3 className="bold" style={{ color: "#353535" }}>
+              {this.state.title}
+            </h3>
+          </div>
           <div className="border rounded p-3">
             <div className="form-group row">
               <Field
@@ -192,7 +213,7 @@ export class TourRequest extends Component {
               style={ButtonStyle.OutlinePrimary}
             />
             <Button
-              label="Salvar"
+              label={this.state.salvarAtualizarLbl}
               disabled={pristine || submitting}
               onClick={handleSubmit(values =>
                 this.onSubmit({

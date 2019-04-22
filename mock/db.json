@@ -3,28 +3,16 @@
     {
       "nro_matriculados": 333,
       "obs": "<p></p>\n",
-      "tempo_passeio": "5_7h",
+      "tempo_passeio": "8h",
       "kit_lanche": [
         "kit_1",
-        "kit_2"
+        "kit_2",
+        "kit_3"
       ],
-      "nro_alunos": "33",
+      "nro_alunos": "3",
       "status": "SALVO",
-      "salvo_em": "2019-04-22T16:21:21.888Z",
+      "salvo_em": "2019-04-22T16:38:56.881Z",
       "id": 1
-    },
-    {
-      "nro_matriculados": 333,
-      "obs": "<p></p>\n",
-      "tempo_passeio": "5_7h",
-      "kit_lanche": [
-        "kit_1",
-        "kit_2"
-      ],
-      "nro_alunos": "33",
-      "status": "SALVO",
-      "salvo_em": "2019-04-22T16:21:23.989Z",
-      "id": 2
     }
   ],
   "daychange": [

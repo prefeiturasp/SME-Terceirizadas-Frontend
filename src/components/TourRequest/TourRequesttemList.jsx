@@ -97,24 +97,20 @@ export class TourRequestItemList extends Component {
                 Data do evento: <b>{evento_data}</b> Local do passeio:{" "}
                 <b>{local_passeio}</b>
               </p>
-              <p>
-                <div>
-                  <div className="float-right">
-                    Salvo em: {salvo_em}
-                    <Button
-                      icon={ButtonIcon.TRASH}
-                      onClick={p => this.OnDeleteButtonClicked(id)}
-                    />
-                    <Button
-                      icon={ButtonIcon.EDIT}
-                      onClick={p =>
-                        this.props.OnEditButtonClicked(tourRequest)
-                      }
-                    />
-                  </div>
+              <div>
+                <div className="float-right">
+                  Salvo em: {salvo_em}
+                  <Button
+                    icon={ButtonIcon.TRASH}
+                    onClick={p => this.OnDeleteButtonClicked(id)}
+                  />
+                  <Button
+                    icon={ButtonIcon.EDIT}
+                    onClick={p => this.props.OnEditButtonClicked(tourRequest)}
+                  />
                 </div>
-                Nº de Alunos participantes: <b>{nro_alunos}</b>
-              </p>
+              </div>
+              Nº de Alunos participantes: <b>{nro_alunos}</b>
             </div>
           </div>
         </div>
