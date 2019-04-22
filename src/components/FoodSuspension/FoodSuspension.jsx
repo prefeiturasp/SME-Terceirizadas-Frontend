@@ -3,21 +3,47 @@ import { Editor } from "react-draft-wysiwyg";
 import DatePicker from "react-datepicker";
 import { ptBR } from 'date-fns/esm/locale';
 import InputRowSuspension from '../Shareable/InputRowSupension'
+import { ContentState, convertToRaw, EditorState} from 'draft-js'
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 
 class FoodSuspension extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      isEnable: false
+      isEnable: false,
+      editorState : EditorState.createEmpty(),
+      periods : []
     }
     this.verifyChecked = this.verifyChecked.bind(this)
+    this.getPeriods = this.getPeriods.bind(this)
   }
 
+  handleReason(e){
+    let value = e.target.value
+    this.props.handleSelectedReason(value)
+  }
 
+  onEditorStateChange =  (editorState) => {
+    const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
+    this.props.handleDescription(value)
+
+      this.setState({
+        editorState,
+      })
+  }
+
+  getPeriods(period){
+
+    if(period){
+      this.props.periodsList.push(period)
+    }
+
+  }
 
   verifyChecked(event) {
-    console.log(event)
 
     if (event) {
       this.setState({
@@ -37,14 +63,10 @@ class FoodSuspension extends Component {
     background: "#FFF7CB"
   }
 
-  validAllChecked(e) {
-    console.log(e)
-  }
-
   render() {
 
     const { enrolled, reasons, typeFood, day, periods } = this.props
-
+    const {editorState} = this.state
     return (
       <div>
         <form onSubmit={this.props.handleSubmit}>
@@ -73,13 +95,16 @@ class FoodSuspension extends Component {
 
               {periods.map((value, key) => {
                 return <InputRowSuspension
-                  labelCheck={value}
-                  nameCheck={"teste"}
-                  valueCheck={"1"}
-                  nameSelect={"teste1"}
+                  key={key}
+                  labelCheck={value.value}
+                  nameCheck={`period_${value.id}`}
+                  valueCheck={value.id}
+                  nameSelect={`tipo_alimentacao_${value.id}`}
                   optionsSelect={typeFood}
-                  nameNumber={key}
+                  nameNumber={`number_studant_${value.id}`}
                   verifyChecked={this.verifyChecked}
+                  getPeriods={this.getPeriods}
+                  {...this.props}
                 />
               })}
 
@@ -91,10 +116,10 @@ class FoodSuspension extends Component {
               <div className="form-row">
                 <div className="form-group col-sm-8 pt-3">
                   <label>Motivo</label><br />
-                  <select className="form-control" disabled={!this.state.isEnable} onChange={this.validAllChecked.bind(this)}>
+                  <select className="form-control" name="reasos" disabled={!this.state.isEnable} onChange={this.handleReason.bind(this)}>
                     <option>--MOTIVO--</option>
-                    {reasons.map((value) => {
-                      return <option value={value.key}>{value.value}</option>
+                    {reasons.map((value,key) => {
+                      return <option key={key} value={value.key}>{value.value}</option>
                     })}
                   </select>
                 </div>
@@ -111,6 +136,7 @@ class FoodSuspension extends Component {
                     onChange={this.props.handleDate}
                     minDate={new Date()}
                     withPortal={true}
+                    disabled={!this.state.isEnable}
                   />
                   {/* <div class="input-group-append">
                     <i className="fa fa-calendar" />
@@ -129,11 +155,13 @@ class FoodSuspension extends Component {
                   <label className="font-weight-bold">Observações</label>
                   <Editor
                     //how to config: https://jpuri.github.io/react-draft-wysiwyg/#/docs
+                    editorState={editorState}
                     name={"description"}
                     wrapperClassName="border rounded"
                     editorClassName="ml-2"
                     className="form-control"
                     placeholder={"Digite seu texto"}
+                    onEditorStateChange={this.onEditorStateChange}
 
                     toolbar={{
                       options: ["inline", "list"],

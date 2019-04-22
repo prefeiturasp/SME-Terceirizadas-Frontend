@@ -39,22 +39,28 @@ class FoodSuspensionContainer extends Component {
   ]
 
   periods = [
-    "1º Período - Matutino",
-    "2º Período - Intermediário",
-    "3º Período - Vespertino",
-    "4º Período - Noturno",
-    "Integral"
+
+    {id : 1, value : "1º Período - Matutino"},
+    {id : 2, value :"2º Período - Intermediário"},
+    {id : 3, value :"3º Período - Vespertino"},
+    {id : 4, value :"4º Período - Noturno"},
+    {id : 5, value :"Integral"}
+
   ]
   constructor(props){
     super(props)
     this.state = {
       enrolled : 300,
       reasons : this.reasons,
+      reason: null,
       day : new Date(),
       typeFood : this.typeFood,
-      periods : this.periods
+      periods : this.periods,
+      descripion : null,
+      periodsList : []
     }
 
+    this.handleSelectedReason = this.handleSelectedReason.bind(this)
   }
 
 
@@ -62,11 +68,30 @@ class FoodSuspensionContainer extends Component {
     this.setState({day : e})
   }
 
-  handleSubmit(e){
+
+  handleDescription(value){
+
+    this.setState({
+      descripion : value
+    })
+  }
+
+  handleSelectedReason(value){
+
+    this.setState({
+      reason : value
+    })
+  }
+
+  handleSubmit(e) {
     e.preventDefault();
 
-    console.log(e)
+    console.log("Motivo", this.state.reason)
+    console.log("Date", this.state.day)
+    console.log("Description", this.state.descripion)
+    console.log("Periods", this.state.periodsList)
   }
+
 
 
   render() {
@@ -75,6 +100,8 @@ class FoodSuspensionContainer extends Component {
                 {...this.state}
                 handleDate={this.handleDate.bind(this)}
                 handleSubmit={this.handleSubmit.bind(this)}
+                handleSelectedReason={this.handleSelectedReason}
+                handleDescription={this.handleDescription.bind(this)}
       />
     );
   }

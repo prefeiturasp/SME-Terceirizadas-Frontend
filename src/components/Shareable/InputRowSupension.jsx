@@ -8,21 +8,23 @@ export default class InputRowSupension extends Component {
       isEnable: false,
       isEnable2: false,
       numberStudents: 0,
+      type: null,
+      period : null
     }
 
     this.handleNumberStudents = this.handleNumberStudents.bind(this)
   }
 
-
   handleChangeCheck(event) {
 
     let checked = event.target.checked
+    let value = event.target.value
 
-    this.props.verifyChecked(true)
 
     if(!checked){
       this.setState({
-        isEnable2 : false
+        isEnable2 : false,
+        period : value
       })
     }
 
@@ -34,6 +36,13 @@ export default class InputRowSupension extends Component {
 
   handleNumberStudents(e) {
     let value = e.target.value
+
+    if(value > 0 || value !== null || value !== '' || value !== '0'){
+      this.props.verifyChecked(true)
+    }else{
+      this.props.verifyChecked(false)
+    }
+
     this.setState({
       numberStudents: value
     })
@@ -41,11 +50,24 @@ export default class InputRowSupension extends Component {
 
   handleValidSelect(e){
     let value = e.target.value
+
+
+
     if(value > 0){
-      this.setState({isEnable2 : true})
+      this.setState({isEnable2 : true, type : value})
     }else{
       this.setState({isEnable2 : false})
     }
+  }
+
+  handleOnBlurNumber(e){
+    let select = {
+      idPeriod : this.state.period,
+      type : this.state.type,
+      count : this.state.numberStudents
+    }
+
+    this.props.getPeriods(select)
   }
 
 
@@ -77,19 +99,22 @@ export default class InputRowSupension extends Component {
         <div className="form-group col-md-5 mr-5">
           <select className="form-control"
                   name={nameSelect}
+                  id={nameSelect}
                   disabled={!this.state.isEnable}
                   onChange={this.handleValidSelect.bind(this)}>
             <option value="0">--SELECIONE--</option>
             {optionsSelect.map((value, key) => {
-              return <option value={value.key}>{value.value}</option>
+              return <option key={key} value={value.key}>{value.value}</option>
             })}
 
           </select>
         </div>
         <div className="form-group col-md-2">
           <input
+            onBlur={this.handleOnBlurNumber.bind(this)}
             onChange={this.handleNumberStudents}
             type="number"
+            max={this.props.enrolled}
             name={nameNumber}
             value={this.state.numberStudents}
             disabled={!this.state.isEnable2}
