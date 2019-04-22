@@ -1,5 +1,5 @@
 import React from "react";
-import { DayChangeEditor } from "../components/DayChange";
+import { DayChangeEditor } from "../components/DayChange/DayChange";
 import { Header } from "../components/Main/Header";
 import { Sidebar } from "../components/Main/Sidebar";
 
