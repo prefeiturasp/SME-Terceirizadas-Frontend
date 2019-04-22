@@ -47,7 +47,8 @@ export class TourRequest extends Component {
       status: "SEM STATUS",
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
-      id: ""
+      id: "",
+      qtd_kit_lanche: 0
     });
   }
 
@@ -120,72 +121,73 @@ export class TourRequest extends Component {
             resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-          <div className="form-group row">
-            <Field
-              component={LabelAndDate}
-              cols="4 4 4 4"
-              hasIcon={true}
-              label="Data do evento"
-              name="evento_data"
+          <div className="border rounded p-3">
+            <div className="form-group row">
+              <Field
+                component={LabelAndDate}
+                cols="4 4 4 4"
+                hasIcon={true}
+                label="Data do evento"
+                name="evento_data"
+              />
+              <Field
+                component={LabelAndInput}
+                cols="8 8 8 8"
+                label="Local do passeio"
+                name="local_passeio"
+              />
+            </div>
+            <div className="form-group row">
+              <Field
+                component={LabelAndInput}
+                cols="3 3 3 3"
+                name="nro_alunos"
+                type="number"
+                label="Número de alunos participantes"
+                validate={[
+                  required,
+                  maxValue(this.props.initialValues.nro_matriculados)
+                ]}
+              />
+            </div>
+            <SelecionaTempoPasseio
+              className="mt-3"
+              onChange={(event, newValue, previousValue, name) =>
+                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+              }
             />
-            <Field
-              component={LabelAndInput}
-              cols="8 8 8 8"
-              label="Local do passeio"
-              name="local_passeio"
+            <SelecionaKitLancheBox
+              className="mt-3"
+              choicesNumberLimit={this.state.qtd_kit_lanche}
             />
+            <div className="form-group">
+              <label className="bold">{"Número total kits:"}</label>
+              <br />
+              <Grid
+                cols="1 1 1 1"
+                className="border rounded p-2"
+                style={{
+                  background: "#E8E8E8"
+                }}
+              >
+                <span className="bold d-flex justify-content-center">
+                  {this.props.qtd_total || 0}
+                </span>
+              </Grid>
+            </div>
+            <div className="form-group">
+              <Field
+                component={LabelAndTextArea}
+                label="Observações"
+                name="obs"
+                placeholder="Campo opcional"
+              />
+            </div>
           </div>
-          <div className="form-group row">
-            <Field
-              component={LabelAndInput}
-              cols="3 3 3 3"
-              name="nro_alunos"
-              type="number"
-              label="Número de alunos participantes"
-              validate={[
-                required,
-                maxValue(this.props.initialValues.nro_matriculados)
-              ]}
-            />
-          </div>
-          <SelecionaTempoPasseio
-            className="mt-3"
-            onChange={(event, newValue, previousValue, name) =>
-              this.setNumeroDeKitLanches(event, newValue, previousValue, name)
-            }
-          />
-          <SelecionaKitLancheBox
-            className="mt-3"
-            choicesNumberLimit={this.state.qtd_kit_lanche}
-          />
-          <div className="form-group">
-            <label className="bold">{"Número total kits:"}</label>
-            <br />
-            <Grid
-              cols="1 1 1 1"
-              className="border rounded p-2"
-              style={{
-                background: "#E8E8E8"
-              }}
-            >
-              <span className="bold d-flex justify-content-center">
-                {this.props.qtd_total || 0}
-              </span>
-            </Grid>
-          </div>
-          <hr />
-          <div className="form-group">
-            <Field
-              component={LabelAndTextArea}
-              label="Observações"
-              name="obs"
-              placeholder="Campo opcional"
-            />
-          </div>
-          <div className="form-group row float-right">
+          <div className="form-group row float-right mt-3">
             <Button
               label="Cancelar"
-              onClick={e => this.reset(e)}
+              onClick={e => this.resetForm(e)}
               disabled={pristine || submitting}
               style={ButtonStyle.OutlinePrimary}
             />

@@ -66,7 +66,9 @@ export class TourRequestItemList extends Component {
         id,
         tempo_passeio,
         kit_lanche,
-        nro_alunos
+        nro_alunos,
+        local_passeio,
+        evento_data
       } = dayChange;
       let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
@@ -126,6 +128,13 @@ export class TourRequestItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
+              Data do evento: <b>{evento_data}</b>
+              {"  "}Local do passeio: <b>{local_passeio}</b>
+            </p>
+          </div>
+          <div className="ml-3 row">
+            <p>Nº de Alunos participantes: {nro_alunos} </p>
+            <p>
               Tempo de passeio: <b>{tempo_passeio.replace("_", " a ")}</b> Kit
               lanche(s):{" "}
               <b>
@@ -134,6 +143,9 @@ export class TourRequestItemList extends Component {
                 })}
               </b>
             </p>
+            <div className='float-right'>
+            Total de lanches: {nro_alunos * kit_lanche.length}
+            </div>
           </div>
         </div>
       );
