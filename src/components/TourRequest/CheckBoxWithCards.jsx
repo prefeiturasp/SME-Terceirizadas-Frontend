@@ -86,12 +86,12 @@ export class Cards extends Component {
       }
 
       return (
-        <Grid cols="4 4 4 4" key={index}>
+        <Grid cols="3 3 3 3" key={index}>
           <div
             className={`card ${borderSucess}`}
             style={{
-              width: "22rem",
-              height: "16rem",
+              width: "14rem",
+              height: "15rem",
               border: "solid",
               opacity: opacity
             }}
@@ -120,6 +120,7 @@ export class Cards extends Component {
                   <li
                     key={key}
                     className="list-group-item"
+                    style={{fontSize:'13px'}}
                   >
                     {e}
                   </li>

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import { requiredCheck } from "../../helpers/fieldValidators";
-import CheckboxWithCards from "../Shareable/CheckBoxWithCards";
-import RadioboxGroup from "../Shareable/RadioboxGroup";
+import CheckboxWithCards from "./CheckBoxWithCards";
+import RadioboxGroup from "./RadioboxGroup";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
