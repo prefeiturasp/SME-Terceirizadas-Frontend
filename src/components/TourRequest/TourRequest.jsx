@@ -23,10 +23,36 @@ export class TourRequest extends Component {
     this.state = {
       qtd_kit_lanche: 0,
       radioChanged: false,
-      dayChangeList: []
+      tourRequestList: [],
+      status: "SEM STATUS",
+      title: "Nova solicitação",
+      salvarAtualizarLbl: "Salvar",
+      id: ""
     };
 
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  OnDeleteButtonClicked(id) {
+    axios.delete(`http://localhost:3004/tourRequest/${id}`).then(res => {
+      this.refresh();
+    });
+  }
+
+  resetForm(event) {
+    this.props.reset();
+    // rich text field doesn't become clear by props.reset()...
+    this.props.change("obs", "");
+    this.setState({
+      status: "SEM STATUS",
+      title: "Nova solicitação",
+      salvarAtualizarLbl: "Salvar",
+      id: ""
+    });
+  }
+
+  componentDidMount() {
+    this.refresh();
   }
 
   onSubmit(values) {
@@ -41,7 +67,7 @@ export class TourRequest extends Component {
         });
     } else {
       axios.post(`http://localhost:3004/tourRequest/`, values).then(res => {
-        // this.refresh();
+        this.refresh();
         console.log("POST", res.data);
       });
     }
@@ -49,8 +75,8 @@ export class TourRequest extends Component {
 
   refresh() {
     axios.get(`http://localhost:3004/tourRequest/?status=SALVO`).then(res => {
-      const dayChangeList = res.data;
-      this.setState({ dayChangeList });
+      const tourRequestList = res.data;
+      this.setState({ tourRequestList });
     });
   }
 
@@ -89,20 +115,8 @@ export class TourRequest extends Component {
             </label>
           </div>
           <TourRequestItemList
-            tourRequestList={[{
-              "obs": "<p>123213213</p>\n",
-              "tempo_passeio": "8h",
-              "kit_lanche": [
-                "kit_1",
-                "kit_2",
-                "kit_3"
-              ],
-              "nro_alunos": "333",
-              "status": "SALVO",
-              "salvo_em": "2019-04-22T13:03:25.926Z",
-              "id": 1
-            }]}
-            OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+            tourRequestList={this.state.tourRequestList}
+            OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
             resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
@@ -171,7 +185,7 @@ export class TourRequest extends Component {
           <div className="form-group row float-right">
             <Button
               label="Cancelar"
-              onClick={reset}
+              onClick={e => this.reset(e)}
               disabled={pristine || submitting}
               style={ButtonStyle.OutlinePrimary}
             />
@@ -182,7 +196,8 @@ export class TourRequest extends Component {
                 this.onSubmit({
                   ...values,
                   status: "SALVO",
-                  salvo_em: new Date()
+                  salvo_em: new Date(),
+                  id: this.state.id
                 })
               )}
               className="ml-3"

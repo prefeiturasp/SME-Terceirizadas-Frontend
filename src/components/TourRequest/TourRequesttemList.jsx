@@ -126,7 +126,8 @@ export class TourRequestItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              Tempo de passeio: <b>{tempo_passeio}</b> Kit lanche(s):{" "}
+              Tempo de passeio: <b>{tempo_passeio.replace("_", " a ")}</b> Kit
+              lanche(s):{" "}
               <b>
                 {kit_lanche.map(kit => {
                   return ` ${kit}`.replace("kit_", "");
