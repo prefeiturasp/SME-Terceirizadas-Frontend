@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { ErrorAlert } from "./Alert";
-import { Grid } from "./responsiveBs4";
+import { ErrorAlert } from "../Shareable/Alert";
+import { Grid } from "../Shareable/responsiveBs4";
 
 export class Cards extends Component {
   constructor(props) {
@@ -118,7 +118,6 @@ export class Cards extends Component {
               {foodList.map((e, key) => {
                 return (
                   <li
-                    // key={`${(cont += 1)}-${e.substring(0, 4)}`}
                     key={key}
                     className="list-group-item"
                   >
