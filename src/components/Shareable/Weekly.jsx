@@ -6,16 +6,23 @@ export default class Weekly extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      clicked: null
+      clicked: []
     }
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick(value) {
-    this.setState({
-      ...this.state,
-      clicked: value
-    })
-  }
+
+    if (this.state.clicked.includes(value)){
+        this.state.clicked.splice(this.state.clicked.indexOf(value), 1);
+      } else {
+        this.state.clicked.push(value);
+      }
+      this.setState({
+        ...this.state
+      });
+    }
+
+
   render() {
     const props = this.props;
     const week = [{
@@ -47,7 +54,6 @@ export default class Weekly extends Component {
       value: 'Domingo'
     }
     ]
-    const { clicked } = this.state;
     return (
       <Grid cols={props.cols || ""} classNameArgs={props.classNameArgs || ""}>
         <label htmlFor={props.name} className={"col-form-label"}>
@@ -57,7 +63,7 @@ export default class Weekly extends Component {
         {week.map((day) => {
           return <span
             onClick={() => this.handleClick(day.value)}
-            className={(clicked === day.value) ? "week-circle-clicked" : "week-circle"}
+            className={this.state.clicked.includes(day.value) ? "week-circle-clicked" : "week-circle"}
             value={day.value}>{day.label}</span>
           }
         )}

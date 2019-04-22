@@ -10,7 +10,7 @@ export default class InputRowSupension extends Component {
       isEnable: false,
       numberStudents: 0,
       type: null,
-      period : null
+      period : null,
       selectedOptions: [],
       isEnable2: false
     }
