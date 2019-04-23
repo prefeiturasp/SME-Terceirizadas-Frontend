@@ -1,0 +1,13 @@
+language: bash
+services: docker
+
+script:
+  - docker build -t marcelomaia/terceirizadas_frontend .
+  - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend
+  - docker ps -a
+
+deploy:
+  provider: script
+  script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push marcelomaia/terceirizadas_frontend
+  on:
+    branch: master
