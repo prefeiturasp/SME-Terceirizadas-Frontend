@@ -3,7 +3,7 @@ import { Editor } from "react-draft-wysiwyg";
 import DatePicker from "react-datepicker";
 import { ptBR } from 'date-fns/esm/locale';
 import InputRowSuspension from '../Shareable/InputRowSupension'
-import { ContentState, convertToRaw, EditorState} from 'draft-js'
+import { ContentState, convertToRaw, EditorState } from 'draft-js'
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
@@ -13,34 +13,61 @@ class FoodSuspension extends Component {
     super(props)
     this.state = {
       isEnable: false,
-      editorState : EditorState.createEmpty(),
-      periods : []
+      editorState: EditorState.createEmpty(),
+      periods: []
     }
     this.verifyChecked = this.verifyChecked.bind(this)
     this.getPeriods = this.getPeriods.bind(this)
   }
 
-  handleReason(e){
+  handleReason(e) {
     let value = e.target.value
     this.props.handleSelectedReason(value)
   }
 
-  onEditorStateChange =  (editorState) => {
+  onEditorStateChange = (editorState) => {
     const value = draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
     this.props.handleDescription(value)
 
-      this.setState({
-        editorState,
-      })
+    this.setState({
+      editorState,
+    })
   }
 
-  getPeriods(period){
+  getPeriods(period) {
 
-    if(period){
-      this.props.periodsList.push(period)
+    let list = this.props.periodsList
+
+    if (list.length > 0) {
+      let index = this.findIndexFromArrayByItens(list, period)
+
+      list = this.removeItemFromArrayByIndex(index)
     }
 
+    if (period) {
+      list.push(period)
+    }
+
+  }
+
+
+  findIndexFromArrayByItens(list, period) {
+    return list.findIndex(x => x.period === period.period)
+  }
+
+
+  removeItemFromArrayByIndex(index) {
+
+    let list = this.props.periodsList
+
+    for (let i = 0; i < list.length; i++) {
+      if (i === index) {
+        list.splice(index, 1)
+      }
+    }
+
+    return list
   }
 
   verifyChecked(event) {
@@ -49,7 +76,7 @@ class FoodSuspension extends Component {
       this.setState({
         isEnable: true
       })
-    }else{
+    } else {
       this.setState({
         isEnable: false
       })
@@ -66,7 +93,7 @@ class FoodSuspension extends Component {
   render() {
 
     const { enrolled, reasons, typeFood, day, periods } = this.props
-    const {editorState} = this.state
+    const { editorState } = this.state
     return (
       <div>
         <form onSubmit={this.props.handleSubmit}>
@@ -104,6 +131,7 @@ class FoodSuspension extends Component {
                   nameNumber={`number_studant_${value.id}`}
                   verifyChecked={this.verifyChecked}
                   getPeriods={this.getPeriods}
+                  multipleSelect={value.value === 'Integral'}
                   {...this.props}
                 />
               })}
@@ -118,8 +146,8 @@ class FoodSuspension extends Component {
                   <label>Motivo</label><br />
                   <select className="form-control" name="reasos" disabled={!this.state.isEnable} onChange={this.handleReason.bind(this)}>
                     <option>--MOTIVO--</option>
-                    {reasons.map((value,key) => {
-                      return <option key={key} value={value.key}>{value.value}</option>
+                    {reasons.map((value, key) => {
+                      return <option key={key} value={value.value}>{value.label}</option>
                     })}
                   </select>
                 </div>

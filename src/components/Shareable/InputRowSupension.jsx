@@ -10,7 +10,7 @@ export default class InputRowSupension extends Component {
       isEnable: false,
       numberStudents: 0,
       type: null,
-      period : null,
+      period: null,
       selectedOptions: [],
       isEnable2: false
     }
@@ -23,17 +23,20 @@ export default class InputRowSupension extends Component {
     let checked = event.target.checked
     let value = event.target.value
 
-
-    if(!checked){
+    if (!checked) {
+      console.log(this.state.period)
       this.setState({
-        isEnable2 : false,
-        period : value
+        isEnable2: false,
+        period: value,
+        numberStudents : 0
       })
     }
 
     this.setState({
+      period: value,
       isEnable: checked,
     })
+
 
   }
 
@@ -43,12 +46,16 @@ export default class InputRowSupension extends Component {
 
 
   handleNumberStudents(e) {
-    let value = e.target.value
 
-    if(value > 0 || value !== null || value !== '' || value !== '0'){
-      this.props.verifyChecked(true)
-    }else{
+    let value = e.target.value
+    if(value){
+      value = parseInt(value)
+    }
+
+    if (value <= 0 || value === null) {
       this.props.verifyChecked(false)
+    } else {
+      this.props.verifyChecked(true)
     }
 
     this.setState({
@@ -56,25 +63,23 @@ export default class InputRowSupension extends Component {
     })
   }
 
-  handleValidSelect(e){
+  handleValidSelect(e) {
     let value = e.target.value
 
-
-
-    if(value > 0){
-      this.setState({isEnable2 : true, type : value})
-    }else{
-      this.setState({isEnable2 : false})
+    if (value > 0) {
+      this.setState({ isEnable2: true, type: value })
+    } else {
+      this.setState({ isEnable2: false })
     }
   }
 
-  handleOnBlurNumber(e){
-    let select = {
-      idPeriod : this.state.period,
-      type : this.state.type,
-      count : this.state.numberStudents
-    }
+  handleOnBlurNumber() {
 
+    let select = {
+      period: this.state.period,
+      type: this.state.type,
+      count: this.state.numberStudents
+    }
     this.props.getPeriods(select)
   }
 
@@ -89,7 +94,7 @@ export default class InputRowSupension extends Component {
       "Integral": "#EBEDFF",
     }
     const { selectedOptions } = this.state;
-    const styling = {marginLeft : "-1.4rem", background : colors[labelCheck], borderRadius : "7px"}
+    const styling = { marginLeft: "-1.4rem", background: colors[labelCheck], borderRadius: "7px" }
     return (
       <div className="form-row">
         <div className="form-check col-md-3 mr-4 ml-4">
@@ -104,7 +109,7 @@ export default class InputRowSupension extends Component {
             <label className="form-check-label"> {labelCheck}</label>
           </div>
         </div>
-          <div className="form-group col-md-5 mr-5">
+        <div className="form-group col-md-5 mr-5">
           {multipleSelect ?
             <div className={!this.state.isEnable ? "multiselect-wrapper-disabled" : "multiselect-wrapper-enabled"}>
               <StatefulMultiSelect
@@ -117,23 +122,23 @@ export default class InputRowSupension extends Component {
                   allItemsAreSelected: "Todos os itens estão selecionados",
                   selectAll: "Todos"
                 }}
-                />
+              />
             </div>
-          :
-          <select className="form-control"
-                  name={nameSelect}
-                  id={nameSelect}
-                  disabled={!this.state.isEnable}
-                  onChange={this.handleValidSelect.bind(this)}>
-            <option value="0">--SELECIONE--</option>
-            {optionsSelect.map((value, key) => {
-              return <option key={key} value={value.key}>{value.value}</option>
-            })}
+            :
+            <select className="form-control"
+              name={nameSelect}
+              id={nameSelect}
+              disabled={!this.state.isEnable}
+              onChange={this.handleValidSelect.bind(this)}>
+              <option selected={!this.state.isEnable} value="0">--SELECIONE--</option>
+              {optionsSelect.map((value, key) => {
+                return <option key={key} value={value.value}>{value.label}</option>
+              })}
 
 
             </select>
           }
-          </div>
+        </div>
         <div className="form-group col-md-2">
           <input
             onBlur={this.handleOnBlurNumber.bind(this)}
@@ -141,7 +146,7 @@ export default class InputRowSupension extends Component {
             type="number"
             max={this.props.enrolled}
             name={nameNumber}
-            value={this.state.numberStudents}
+            value={this.state.isEnable ? this.state.numberStudents : 0}
             disabled={!this.state.isEnable2}
             className="form-control"
           />

@@ -5,35 +5,35 @@ class FoodSuspensionContainer extends Component {
 
   typeFood = [
     {
-      key : 1,
-      value : 'Lanche 4 Horas'
+      value : 1,
+      label : 'Lanche 4 Horas'
     },
     {
-      key : 2,
-      value : 'Refeição/Sobremesa'
+      value : 2,
+      label : 'Refeição/Sobremesa'
     },
     {
-      key : 1,
-      value : 'Lanche 5/6 Horas'
+      value : 3,
+      label : 'Lanche 5/6 Horas'
     },
     {
-      key : 3,
-      value : 'Todos'
+      value : 4,
+      label : 'Todos'
     },
   ]
 
   reasons = [
     {
-      key : 1,
-      value : 'Descrição motivos 1'
+      value : 1,
+      label : 'Descrição motivos 1'
     },
     {
-      key : 2,
-      value : 'Descrição motivos 2'
+      value : 2,
+      label : 'Descrição motivos 2'
     },
     {
-      key : 3,
-      value : 'Descrição motivos 3'
+      value : 3,
+      label : 'Descrição motivos 3'
     },
 
   ]
