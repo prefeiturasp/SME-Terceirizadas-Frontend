@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+import { API_MOCK } from "../../constants/config.constants";
 import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
@@ -9,7 +10,6 @@ import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labe
 import { Grid } from "../Shareable/responsiveBs4";
 import { SelecionaKitLancheBox, SelecionaTempoPasseio } from "./TourRequestCheck";
 import { TourRequestItemList } from "./TourRequesttemList";
-
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
@@ -91,7 +91,8 @@ export class TourRequest extends Component {
   }
 
   refresh() {
-    axios.get(`http://localhost:3004/tourRequest/?status=SALVO`).then(res => {
+    console.log(API_MOCK, "mock");
+    axios.get(`${API_MOCK}/tourRequest/?status=SALVO`).then(res => {
       const tourRequestList = res.data;
       this.setState({ tourRequestList });
     });
