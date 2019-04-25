@@ -1,32 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+import { userActions } from "../actions/user.actions";
 import { required } from "../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
 export class Login extends Component {
   handleSubmit = values => {
-    console.log("chamando login com ", values);
-    // event.preventDefault();
-    // this.setState({ subimitted: true });
-    // const { email, password, login } = this.props;
-    // const { dispatch } = this.props;
-
-    // if (email && password) {
-    //   // console.log("chamando login com ", email, password);
-    //   login(email, password);
-    // }
-  };
-
-  handleChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+    const { email, password } = values;
+    if (email && password) {
+      console.log("chamando login com ", email, password);
+      userActions.login(email, password);
+    }
   };
 
   render() {
-    const { error, handleSubmit, pristine, reset, submitting } = this.props;
-    // const { email, password, submitted } = this.state;
+    const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div>
         <div className="container">
@@ -65,6 +54,7 @@ export class Login extends Component {
                   type={ButtonType.SUBMIT}
                   style={ButtonStyle.Primary}
                   label="Acessar"
+                  disabled={pristine || submitting}
                   className="btn-block"
                 />
 
@@ -81,11 +71,10 @@ export class Login extends Component {
     );
   }
 }
-//       login: userActions.login,
-// logout: userActions.logout,
+
 Login = reduxForm({
   form: "login",
-  destroyOnUnmount: false // para nao perder o estado
+  destroyOnUnmount: false
 })(Login);
 
 const selector = formValueSelector("login");
