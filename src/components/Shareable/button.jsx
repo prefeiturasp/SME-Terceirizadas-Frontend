@@ -38,8 +38,6 @@ export var ButtonType = {
 };
 
 export default class BaseButton extends Component {
-  // TODO: desabilitar o botao quando estiver fazendo uma ação.
-  // VER> https://redux-form.com/8.1.0/examples/fieldlevelvalidation/
   render() {
     return (
       <button

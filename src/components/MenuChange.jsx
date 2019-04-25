@@ -151,6 +151,5 @@ export class MenuChange extends Component {
 
 export default (MenuChange = reduxForm({
   form: "menuChange",
-  //https://redux-form.com/6.0.0-alpha.4/docs/api/reduxform.md/#-destroyonunmount-boolean-optional-
   destroyOnUnmount: false // para nao perder o estado
 })(MenuChange));
