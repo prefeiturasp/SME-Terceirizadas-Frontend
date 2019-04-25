@@ -121,6 +121,13 @@ class AddFoodEditor extends Component {
       this.props.change("fourth_period_select", '');
       this.props.change("fourth_period_number", '');
     }
+    if (prevProps.integrateCheck && !this.props.integrateCheck){
+      this.setState({
+        ...this.state,
+        integrateOptions: []
+      })
+      this.props.change("integrate_number", '');
+    }
     if (this.props.period !== 'Programa Contínuo - Mais Educação'){
       this.props.change("reason_from", '');
       this.props.change("reason_to", '');
