@@ -43,48 +43,67 @@ LabelAndInput.propTypes = {
   readOnly: PropTypes.bool
 };
 
-export const LabelAndCombo = props => {
-  const { cols, name, label, input, meta, options } = props;
+export class LabelAndCombo extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
 
-  return (
-    <Grid cols={cols}>
-      <label htmlFor={name} className={"col-form-label"}>
-        {label}
-      </label>
-      <select {...input} name={name} className="form-control">
-        {options.map((e, key) => {
-          return (
-            <option key={key} value={e.value} disabled={e.disabled}>
-              {e.label}
-            </option>
-          );
-        })}
-      </select>
-      <If isVisible={meta}>
-        <ErrorAlert meta={meta} />
-      </If>
-    </Grid>
-  );
-};
-LabelAndCombo.propTypes = {
-  cols: PropTypes.string,
-  name: PropTypes.string,
-  readOnly: PropTypes.bool,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
-      disable: PropTypes.bool,
-      selected: PropTypes.bool
-    })
-  )
-};
-LabelAndCombo.defaultProps = {
-  options: [
-    { value: "...", label: "op1", disable: false },
-    { value: "***", label: "op2", selected: true }
-  ]
-};
+  handleChange(event) {
+    const value = event.target.value;
+    this.props.input.onChange(value);
+    if (this.props.selectOnChange) this.props.selectOnChange(event)
+  }
+
+  static propTypes = {
+    cols: PropTypes.string,
+    name: PropTypes.string,
+    selectOnChange: PropTypes.func,
+    readOnly: PropTypes.bool,
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        value: PropTypes.string,
+        label: PropTypes.string,
+        disable: PropTypes.bool,
+        selected: PropTypes.bool
+      })
+    )
+  };
+  static defaultProps = {
+    options: [
+      { value: "...", label: "op1", disable: false },
+      { value: "***", label: "op2", selected: true }
+    ]
+  };
+  render() {
+    const { cols, name, label, input, meta, options, disabled } = this.props;
+    return (
+      <Grid cols={cols}>
+        {label && <label htmlFor={name} className={"col-form-label"}>
+          {label}
+        </label>}
+        <select
+          {...input}
+          disabled={disabled}
+          onChange={event => this.handleChange(event)}
+          name={name}
+          className="form-control"
+        >
+          {options.map((e, key) => {
+            return (
+              <option key={key} value={e.value} disabled={e.disabled}>
+                {e.label}
+              </option>
+            );
+          })}
+        </select>
+        <If isVisible={meta}>
+          <ErrorAlert meta={meta} />
+        </If>
+      </Grid>
+    );
+  }
+}
 
 export class LabelAndDate extends Component {
   // Thanks community :D
