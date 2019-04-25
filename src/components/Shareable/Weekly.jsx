@@ -20,11 +20,13 @@ export default class Weekly extends Component {
       this.setState({
         ...this.state
       });
+      this.props.input.onChange(this.state.clicked)
     }
 
 
   render() {
     const props = this.props;
+    const arrayToUse = this.props.input.value.length ? this.props.input.value : this.state.clicked;
     const week = [{
       label: 'S',
       value: 'Segunda'
@@ -63,7 +65,9 @@ export default class Weekly extends Component {
         {week.map((day) => {
           return <span
             onClick={() => this.handleClick(day.value)}
-            className={this.state.clicked.includes(day.value) ? "week-circle-clicked" : "week-circle"}
+            className={
+              arrayToUse.includes(day.value) ? "week-circle-clicked" : "week-circle"
+            }
             value={day.value}>{day.label}</span>
           }
         )}
