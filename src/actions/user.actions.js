@@ -1,7 +1,5 @@
 import { userConstants } from "../constants/user.constants";
 import { userService } from "../services/user.service";
-import { alertActions } from "./alerts.actions";
-import { history } from "../helpers/history";
 
 export const userActions = {
   login,
@@ -10,32 +8,15 @@ export const userActions = {
 };
 
 function login(email, password) {
-  return dispatch => {
-    dispatch(request({ email }));
-
-    userService.login(email, password).then(
-      user => {
-
-        // history.push("/");
-        // dispatch(success(user));
-        window.location.href="/"
-
-      },
-      error => {
-        dispatch(failure(error));
-        dispatch(alertActions.error(error));
-      }
-    );
-  };
-  function request(user) {
-    return { type: userConstants.LOGIN_REQUEST, user };
-  }
-  function success(user) {
-    return { type: userConstants.LOGIN_SUCCESS, user };
-  }
-  function failure(error) {
-    return { type: userConstants.LOGIN_FAILURE, error };
-  }
+  debugger;
+  userService.login(email, password).then(
+    user => {
+      window.location.href = "/";
+    },
+    error => {
+      console.log(error);
+    }
+  );
 }
 
 function logout() {
@@ -65,14 +46,3 @@ function success(users) {
 function failure(error) {
   return { type: userConstants.GETALL_FAILURE, error };
 }
-
-// TODO: Dá pra refatorar esses 2? são muito parecidos...
-export const emailEdited = event => ({
-  type: userConstants.EMAIL_EDITED,
-  payload: event.target.value
-});
-
-export const passwordEdited = event => ({
-  type: userConstants.PASSWD_EDITED,
-  payload: event.target.value
-});

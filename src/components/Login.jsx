@@ -1,16 +1,19 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { userActions } from "../actions/user.actions";
+import { JWT_AUTH } from "../constants/config.constants";
 import { required } from "../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
+
 export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      console.log("chamando login com ", email, password);
-      userActions.login(email, password);
+      axios.post(JWT_AUTH, values).then(res => {
+        console.log("POST", res.data);
+      });
     }
   };
 
@@ -32,7 +35,7 @@ export class Login extends Component {
                     component={LabelAndInput}
                     label="E-mail"
                     name="email"
-                    type="email"
+                    // type="email"
                     validate={[required]}
                   />
                 </div>

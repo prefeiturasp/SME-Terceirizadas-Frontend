@@ -2,7 +2,7 @@ let API_URL = process.env.REACT_APP_API_URL;
 let JWT_AUTH = process.env.REACT_APP_JWT_AUTH;
 let USER_URL = process.env.REACT_APP_USER_URL;
 let API_MOCK = process.env.REACT_APP_API_MOCK;
-
+console.log(JWT_AUTH, 'jwt')
 if (process.env.NODE_ENV === "production") {
   // This way we can pass params to static files. see Dockerfile.
   // when build default env is production
