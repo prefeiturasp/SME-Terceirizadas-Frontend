@@ -43,7 +43,7 @@ export class Sidebar extends Component {
 
           <Link className="sidebar-brand d-flex align-items-center justify-content-center" component={Home} to="/">
             <div className="sidebar-brand-icon rotate-n-15">
-              <img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
+              <img alt="Imagem ilustrativa" className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
@@ -174,7 +174,7 @@ export class Sidebar extends Component {
                  className="collapse" aria-labelledby="headingConfig" data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Dados</h6>
-                <NavLink activeClassName="active" className="collapse-item" to="/permissions-root" component={PermissionsPage}>Permissões</NavLink>
+                <NavLink activeClassName="active" className="collapse-item" to="/permissions" component={PermissionsPage}>Permissões</NavLink>
               </div>
             </div>
           </li>

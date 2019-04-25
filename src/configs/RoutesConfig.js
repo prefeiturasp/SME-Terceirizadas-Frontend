@@ -35,7 +35,7 @@ const routesConfig = [
     exact : null
   },
   {
-    path : "/permissions-root",
+    path : "/permissions",
     component : PermissionsPage,
     exact : false
   },
@@ -53,7 +53,7 @@ const routesConfig = [
     path : "/food-suspension",
     component : FoodSuspensionPage,
     exact : false
-  }
+  },
 
 
 ]
