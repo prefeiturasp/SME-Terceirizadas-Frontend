@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
-import Home from '../../pages/Home'
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Home from "../../pages/Home";
+import { userService } from "../../services/user.service";
+import BaseButton, { ButtonIcon } from "../Shareable/button";
 
 export class Header extends Component {
-  state = {}
+  state = {};
   render() {
     return (
       <div>
@@ -14,26 +16,39 @@ export class Header extends Component {
                 <img src="http://placehold.it/150x50?text=Logo" alt="" />
               </Link>
             </div>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-              aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarResponsive"
+              aria-controls="navbarResponsive"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon" />
             </button>
-
 
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link className="nav-link">Profile &nbsp;<i className="fa fa-1x fa-user-circle"></i></Link>
+                  <Link className="nav-link">
+                    Profile &nbsp;
+                    <i className="fa fa-1x fa-user-circle" />
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link">Sair &nbsp;<i className="fas fa-1x fa-power-off"></i></Link>
+                  <BaseButton
+                    className="nav-link"
+                    icon={ButtonIcon.POWER_OFF}
+                    label="Sair &nbsp;"
+                    onClick={() => userService.logout()}
+                  />
                 </li>
               </ul>
             </div>
           </div>
         </nav>
       </div>
-    )
+    );
   }
 }
-

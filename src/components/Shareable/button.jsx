@@ -28,7 +28,8 @@ export var ButtonIcon = {
   HOME: "home",
   EDIT: "edit",
   CLOSE: "close",
-  FOLDER: "folder"
+  FOLDER: "folder",
+  POWER_OFF: "power-off"
 };
 
 export var ButtonType = {
