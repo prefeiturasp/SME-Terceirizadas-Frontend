@@ -1,8 +1,6 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { JWT_AUTH } from "../constants/config.constants";
 import { required } from "../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
@@ -11,8 +9,15 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      axios.post(JWT_AUTH, values).then(res => {
-        console.log("POST", res.data);
+      fetch("http://localhost:8000/api-token-auth/", {
+        method: "post",
+        body: JSON.stringify(values),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      }).then(function(response) {
+        console.log(response);
       });
     }
   };
@@ -57,7 +62,8 @@ export class Login extends Component {
                   type={ButtonType.SUBMIT}
                   style={ButtonStyle.Primary}
                   label="Acessar"
-                  disabled={pristine || submitting}
+                  // disabled={pristine || submitting}
+                  disabled={submitting}
                   className="btn-block"
                 />
 
@@ -77,6 +83,7 @@ export class Login extends Component {
 
 Login = reduxForm({
   form: "login",
+  initialValues: { email: "mmaia.cc@gmail.com", password: "adminadmin" },
   destroyOnUnmount: false
 })(Login);
 
