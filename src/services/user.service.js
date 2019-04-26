@@ -1,74 +1,42 @@
-import { JWT_AUTH, USER_URL } from '../constants/config.constants';
-import { authHeader } from '../helpers/auth-headers';
+import { JWT_AUTH } from "../constants/config.constants";
 
+export const TOKEN_ALIAS = "userToken";
 
 const login = async (email, password) => {
   try {
     const response = await fetch(JWT_AUTH, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ email: email, password: password }),
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
     });
     const json = await response.json();
-    let resp = validResponse(json)
-    // localStorage.setItem('user', JSON.stringify(json));
-    return resp
+    return validResponse(json);
   } catch (error) {
     return error;
   }
 };
 
-function validResponse(json){
-  let key = Object.keys(json)
-  let value = Object.values(json)
-
-  if(key[0] === 'token' && value[0].length >= 208){
-    localStorage.setItem('user', JSON.stringify(json));
-    return json
-  }else{
-    window.location.href="/login"
-    return null
+function validResponse(json) {
+  let key = Object.keys(json);
+  let value = Object.values(json);
+  if (key[0] === "token" && value[0].length >= 203) {
+    localStorage.setItem(TOKEN_ALIAS, json.token);
+    window.location.href = "/";
+    return json;
+  } else {
+    return null;
   }
 }
 
-
 function logout() {
-  localStorage.removeItem('user');
+  localStorage.removeItem(TOKEN_ALIAS);
   window.location.reload();
 }
 
-
-function getAll() {
-  const requestOptions = {
-    method: 'GET',
-    headers: authHeader()
-  }
-
-  return fetch(USER_URL, requestOptions)
-    .then(handleResponse);
-}
-
-
-function handleResponse(response) {
-  return response.text()
-    .then(text => {
-      const data = text && JSON.parse(text);
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          logout();
-          // location.reload();
-        }
-
-        const error = (data && data.message) || response.statusText;
-        return Promise.reject(error);
-      }
-
-      return data;
-    });
-}
 export const userService = {
   login,
-  logout,
-  getAll
-}
+  logout
+};

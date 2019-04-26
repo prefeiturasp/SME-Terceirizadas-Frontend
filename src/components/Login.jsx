@@ -1,132 +1,90 @@
 import React, { Component } from "react";
-import {
-  userActions,
-  emailEdited,
-  passwordEdited
-} from "../actions/user.actions";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { required } from "../helpers/fieldValidators";
+import { userService } from "../services/user.service";
+import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
+import { LabelAndInput } from "./Shareable/labelAndInput";
 
 export class Login extends Component {
-  constructor(props) {
-
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {
-      email : '',
-      password: ''
+  handleSubmit = values => {
+    const { email, password } = values;
+    if (email && password) {
+      userService.login(email, password);
     }
-  }
+  };
 
-  componentDidMount(){
-    
-  }
-
-
-validForm() {
-  return this.props.email.length > 0 && this.props.password.length > 0;
-}
-
-handleSubmit = event => {
-  event.preventDefault();
-  // this.setState({ subimitted: true });
-  const { email, password, login } = this.props;
-  const { dispatch } = this.props;
-
-  if (email && password) {
-    // console.log("chamando login com ", email, password);
-    login(email, password);
-  }
-};
-
-handleChange = event => {
-  this.setState({
-    [event.target.name]: event.target.value
-  });
-};
-
-render() {
-  const { loggingIn } = this.props;
-  // const { email, password, submitted } = this.state;
-  return (
-    <div>
-      <div className="container">
-        <div className="card mb-5 mt-5 mx-auto card-width bg-dark">
-          <div className="card-body">
-            <div className="card-body text-center text-white">LOGO</div>
+  render() {
+    const { handleSubmit, pristine, submitting } = this.props;
+    return (
+      <div>
+        <div className="container">
+          <div className="card mb-5 mt-5 mx-auto card-width bg-dark">
+            <div className="card-body">
+              <div className="card-body text-center text-white">LOGO</div>
+            </div>
           </div>
-        </div>
-        <div className="card card-login mx-auto mt-5 card-width">
-          <div className="card-body">
-            <form onSubmit={this.handleSubmit}>
-              <div className="form-group">
-                <label>E-mail</label>
-                <input
-                  autoFocus
-                  autoComplete="off"
-                  name="email"
-                  type="email"
-                  value={this.props.email}
-                  onChange={this.props.emailEdited}
-                  className="form-control"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Senha</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={this.props.password}
-                  onChange={this.props.passwordEdited}
-                  className="form-control"
-                />
-
-                <p className="text-right mt-2">
-                  <a href="#teste" className="text-primary">
-                    Esqueci minha senha
+          <div className="card card-login mx-auto mt-5 card-width">
+            <div className="card-body">
+              <form onSubmit={handleSubmit(this.handleSubmit)}>
+                <div className="form-group">
+                  <Field
+                    component={LabelAndInput}
+                    label="E-mail"
+                    name="email"
+                    // type="email"
+                    validate={[required]}
+                  />
+                </div>
+                <div className="form-group">
+                  <Field
+                    component={LabelAndInput}
+                    label="Senha"
+                    type="password"
+                    name="password"
+                    validate={required}
+                  />
+                  <p className="text-right mt-2">
+                    <a href="#teste" className="text-primary">
+                      Esqueci minha senha
                     </a>
-                </p>
-              </div>
+                  </p>
+                </div>
+                <BaseButton
+                  type={ButtonType.SUBMIT}
+                  style={ButtonStyle.Primary}
+                  label="Acessar"
+                  // disabled={pristine || submitting}
+                  disabled={submitting}
+                  className="btn-block"
+                />
 
-              <button
-                className="btn btn-primary btn-block"
-                disabled={!this.validForm()}
-              >
-                Acessar
-                </button>
-              <p className="text-center mt-3">
-                <a href="#teste" className="text-primary">
-                  Ainda não sou cadastrado
+                <p className="text-center mt-3">
+                  <a href="#teste" className="text-primary">
+                    Ainda não sou cadastrado
                   </a>
-              </p>
-            </form>
+                </p>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-}
-const mapStateToProps = state => ({
-  email: state.login.email,
-  password: state.login.password,
-  subimitted: state.login.subimitted
-});
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      login: userActions.login,
-      logout: userActions.logout,
-      emailEdited,
-      passwordEdited
-    },
-    dispatch
-  );
+Login = reduxForm({
+  form: "login",
+  initialValues: { email: "mmaia.cc@gmail.com", password: "adminadmin" },
+  destroyOnUnmount: false
+})(Login);
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Login);
+const selector = formValueSelector("login");
+const mapStateToProps = state => {
+  return {
+    email: selector(state, "email"),
+    password: selector(state, "password")
+  };
+};
+
+export default connect(mapStateToProps)(Login);

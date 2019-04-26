@@ -29,9 +29,9 @@ export const minValue = min => value =>
 export const maxValue = max => value =>
   value && value > max ? `Não pode ser maior que ${max}` : undefined;
 
-const email = value =>
+export const email = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? "Invalid email address"
+    ? "Email inválido"
     : undefined;
 
 export const prefeituraEmail = value =>
