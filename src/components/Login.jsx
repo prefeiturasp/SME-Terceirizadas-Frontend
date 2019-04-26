@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { required } from "../helpers/fieldValidators";
+import { userService } from "../services/user.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
 
@@ -9,16 +10,7 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      fetch("http://localhost:8000/api-token-auth/", {
-        method: "post",
-        body: JSON.stringify(values),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      }).then(function(response) {
-        console.log(response);
-      });
+      userService.login(email, password);
     }
   };
 
