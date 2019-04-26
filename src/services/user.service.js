@@ -24,6 +24,7 @@ function validResponse(json) {
   let value = Object.values(json);
   if (key[0] === "token" && value[0].length >= 203) {
     localStorage.setItem(TOKEN_ALIAS, json.token);
+    window.location.href = "/";
     return json;
   } else {
     return null;
