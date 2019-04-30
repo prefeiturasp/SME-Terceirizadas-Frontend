@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, reduxForm } from "redux-form";
 import { required } from "../helpers/fieldValidators";
 import { userService } from "../services/user.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
@@ -32,7 +31,7 @@ export class Login extends Component {
                     component={LabelAndInput}
                     label="E-mail"
                     name="email"
-                    // type="email"
+                    type="email"
                     validate={[required]}
                   />
                 </div>
@@ -54,7 +53,7 @@ export class Login extends Component {
                   type={ButtonType.SUBMIT}
                   style={ButtonStyle.Primary}
                   label="Acessar"
-                  // disabled={pristine || submitting}
+                  disabled={pristine || submitting}
                   disabled={submitting}
                   className="btn-block"
                 />
@@ -75,16 +74,7 @@ export class Login extends Component {
 
 Login = reduxForm({
   form: "login",
-  initialValues: { email: "mmaia.cc@gmail.com", password: "adminadmin" },
   destroyOnUnmount: false
 })(Login);
 
-const selector = formValueSelector("login");
-const mapStateToProps = state => {
-  return {
-    email: selector(state, "email"),
-    password: selector(state, "password")
-  };
-};
-
-export default connect(mapStateToProps)(Login);
+export default Login;
