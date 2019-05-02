@@ -42,7 +42,9 @@ LabelAndInput.propTypes = {
   name: PropTypes.string,
   readOnly: PropTypes.bool
 };
-
+LabelAndInput.defaultProps = {
+  readOnly: false
+};
 export class LabelAndCombo extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +54,7 @@ export class LabelAndCombo extends Component {
   handleChange(event) {
     const value = event.target.value;
     this.props.input.onChange(value);
-    if (this.props.selectOnChange) this.props.selectOnChange(event)
+    if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
 
   static propTypes = {
@@ -79,9 +81,11 @@ export class LabelAndCombo extends Component {
     const { cols, name, label, input, meta, options, disabled } = this.props;
     return (
       <Grid cols={cols}>
-        {label && <label htmlFor={name} className={"col-form-label"}>
-          {label}
-        </label>}
+        {label && (
+          <label htmlFor={name} className={"col-form-label"}>
+            {label}
+          </label>
+        )}
         <select
           {...input}
           disabled={disabled}
