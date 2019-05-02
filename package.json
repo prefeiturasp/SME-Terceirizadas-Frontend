@@ -5,6 +5,7 @@
   "dependencies": {
     "@khanacademy/react-multi-select": "^0.3.2",
     "axios": "^0.18.0",
+    "babel-jest": "^24.7.1",
     "bootstrap": "^4.3.1",
     "date-fns": "^2.0.0-alpha.27",
     "draft-js": "^0.10.5",
@@ -56,5 +57,13 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "devDependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-to-json": "^3.3.5"
+  },
+  "setupFiles": [
+    "./src/setupTests.js"
   ]
 }
