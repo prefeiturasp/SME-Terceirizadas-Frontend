@@ -1,24 +1,28 @@
-import React,{Component} from 'react'
+import React, { Component } from 'react'
 import Permissions from './Permissions';
+import { connect } from 'react-redux'
+// import { bindActionCreators } from "redux";
+import  * as actions  from '../../actions/permission.action'
 
 class PermissionsContainer extends Component {
 
-  constructor(props){
-    super(props)
-
-    this.state = {
-
-    }
-
-
+  componentWillMount(){
+    this.props.getPermissions()
   }
 
-  render(){
+
+  render() {
+    const {perms} = this.props
+
     return (
-      <Permissions {...this.state}  />
+      <Permissions {...this.state} permissions={perms} />
     )
   }
 
 }
 
-export default PermissionsContainer;
+const mapStateToProps = state =>({
+  perms : state.permissions.perms
+})
+
+export default connect(mapStateToProps, actions)(PermissionsContainer)

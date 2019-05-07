@@ -1,22 +1,27 @@
 import React, { Component } from "react";
-import Collapse from '../Shareable/Collapse'
+
+import CollapseWithCheck from '../Shareable/CollapseWithCheck'
 
 class Permissions extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-
-    };
-  }
   render() {
+    const {permissions} = this.props
     return (
       <div id="accordion">
-      <span className="page-title">Permissões</span>
+        <span className="page-title">Permissões</span>
         <div className="card mt-4">
           <div className="card-body">
-            <Collapse idHeading={'teste1'} dataTarget={'content1'} labelLink={'Label1'} />
-            <Collapse idHeading={'teste2'} dataTarget={'content2'} labelLink={'Label2'} />
+          {
+            permissions.map((value, key) => {
+              return <CollapseWithCheck 
+                            key={key} 
+                            idHeading={'ESCOLA'} 
+                            dataTarget={key}
+                            labelLink={value.institutions} 
+                      />
+              
+            })
+          }
           </div>
         </div>
       </div>
@@ -24,4 +29,4 @@ class Permissions extends Component {
   }
 }
 
-export default Permissions;
+export default Permissions

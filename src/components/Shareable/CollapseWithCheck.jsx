@@ -1,24 +1,53 @@
 import React, { Component } from 'react'
+import {Collapse} from 'react-bootstrap'
 
-class Collapse extends Component {
+class CollapseWithCheck extends Component {
+
+  constructor(props, context){
+    super(props, context)
+
+    this.state = {
+      open : false
+    }
+  }
+
+  handleClick = ()=>{
+    this.setState({
+      open : !this.state.open
+    })
+  }
+
+
   render() {
     const { idHeading, dataTarget, labelLink } = this.props
     const styling = { color: "#686868", fontSize: "14px" }
+    const {open} = this.state
+
     return (
       <div className="card mb-2">
         <div className="card-header" id={idHeading}>
           <h5 className="mt-2 float-left">{labelLink}</h5>
           <h5 className="mb-0 float-right">
-            <button className="btn btn-link" data-toggle="collapse" data-target={`#${dataTarget}`} aria-expanded="false" aria-controls={dataTarget}>
+
+
+            <button className="btn btn-link" 
+                    arial-expanded={open}
+                    aria-controls={dataTarget}
+                    onClick={this.handleClick.bind(this)}>
               <span style={styling} >
-                <i class="fas fa-chevron-down"></i>
+                <i className="fas fa-chevron-down"></i>
               </span>
             </button>
+
+
           </h5>
         </div>
 
-        <div id={dataTarget} className="collapse" aria-labelledby={idHeading} data-parent="#accordion">
-          <div className="card-body">
+        {/* <div id={dataTarget} className="collapse" aria-labelledby={idHeading} data-parent="#accordion"> */}
+        <Collapse in={open}>  
+          
+          
+          <div id={dataTarget} className="card-body">
 
             <ul className="list-group">
               <li className="list-group-item">
@@ -48,10 +77,13 @@ class Collapse extends Component {
               </li>
             </ul>
           </div>
-        </div>
+
+
+          </Collapse>
+        {/* </div> */}
       </div>
     );
   }
 }
 
-export default Collapse;
+export default CollapseWithCheck;
