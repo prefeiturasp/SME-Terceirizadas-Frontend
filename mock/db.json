@@ -84,5 +84,43 @@
       "salvo_em": "2019-04-24T13:29:22.547Z",
       "id": 6
     }
+  ],
+   
+  "permissions": [
+    { "institutions": "CODAE", 
+      "profiles": [
+                  { "name": "Nutricionista" }, 
+                  { "name" : "Supervisor"},
+                  { "name" : "Supervisor"}
+                ],
+      "id" : 1
+    },
+    { "institutions": "DRE", 
+      "profiles": [
+                  { "name": "Nutricionista" }, 
+                  { "name" : "Supervisor"},
+                  { "name" : "Supervisor"}
+                ],
+      "id" : 2
+    },
+    { "institutions": "ESCOLA", 
+      "profiles": [
+                  { "name": "Nutricionista" }, 
+                  { "name" : "Supervisor"},
+                  { "name" : "Supervisor"}
+                ],
+      "id" : 3
+    },
+    { "institutions": "TERCEIRIZADAS", 
+      "profiles": [
+                  { "name": "Nutricionista" }, 
+                  { "name" : "Supervisor"},
+                  { "name" : "Supervisor"}
+                ],
+      "id" : 4
+    }
+
   ]
+
+
 }
