@@ -85,42 +85,66 @@
       "id": 6
     }
   ],
-   
   "permissions": [
-    { "institutions": "CODAE", 
+    {
+      "institutions": "CODAE",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 1
+        {
+          "name": "Nutricionista"
+        },
+        {
+          "name": "Supervisor"
+        },
+        {
+          "name": "Supervisor"
+        }
+      ],
+      "id": 1
     },
-    { "institutions": "DRE", 
+    {
+      "institutions": "DRE",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 2
+        {
+          "name": "Nutricionista"
+        },
+        {
+          "name": "Supervisor"
+        },
+        {
+          "name": "Supervisor"
+        }
+      ],
+      "id": 2
     },
-    { "institutions": "ESCOLA", 
+    {
+      "institutions": "ESCOLA",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 3
+        {
+          "name": "Nutricionista"
+        },
+        {
+          "name": "Supervisor"
+        },
+        {
+          "name": "Supervisor"
+        }
+      ],
+      "id": 3
     },
-    { "institutions": "TERCEIRIZADAS", 
+    {
+      "institutions": "TERCEIRIZADAS",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 4
+        {
+          "name": "Nutricionista"
+        },
+        {
+          "name": "Supervisor"
+        },
+        {
+          "name": "Supervisor"
+        }
+      ],
+      "id": 4
     }
-
   ]
-
-
 }

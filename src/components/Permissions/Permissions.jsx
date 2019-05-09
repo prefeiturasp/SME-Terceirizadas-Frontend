@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import CollapseWithCheck from '../Shareable/CollapseWithCheck'
+import CollapseWithCheck from './CollapseWithCheck'
 
 class Permissions extends Component {
 
