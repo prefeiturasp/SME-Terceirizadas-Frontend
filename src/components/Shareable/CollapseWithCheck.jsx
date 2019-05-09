@@ -43,7 +43,6 @@ class CollapseWithCheck extends Component {
           </h5>
         </div>
 
-        {/* <div id={dataTarget} className="collapse" aria-labelledby={idHeading} data-parent="#accordion"> */}
         <Collapse in={open}>  
           
           
@@ -78,9 +77,7 @@ class CollapseWithCheck extends Component {
             </ul>
           </div>
 
-
           </Collapse>
-        {/* </div> */}
       </div>
     );
   }
