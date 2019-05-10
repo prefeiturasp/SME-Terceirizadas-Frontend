@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Collapse } from 'react-bootstrap'
 import InputCheck from './InputCheck';
 
 const btStyle = { color: "#686868" }
@@ -10,7 +9,8 @@ class collapsePermission extends Component {
         super(props, context)
 
         this.state = {
-            open: false
+            open: false,
+            checked : false
         }
     }
 
@@ -34,25 +34,48 @@ class collapsePermission extends Component {
                             data-target={`#${idProfile}`}
                             aria-expanded={open}
                             aria-controls={idProfile}>
-                            <i class="fas fa-clipboard-check"></i> {labelProfile}
+                            <i class="fas fa-clipboard-check justify-content-end"></i> {labelProfile}
                         </button>
+
+                        <div className="float-right">
+                            <button
+                                onClick={this.handleToggle.bind(this)}
+                                style={btStyle}
+                                className="btn btn-link"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={`#${idProfile}`}
+                                aria-expanded={open}
+                                aria-controls={idProfile}>
+                                <i class={open ? "fas fa-minus-circle" : "fas fa-plus-circle"}></i>
+                            </button>
+                        </div>
                     </li>
                     <div className={`${open ? 'collapse show' : 'collapse'}`} id={idProfile}>
-                        <li className="list-group-item pl-5" id={idProfile} aria-labelledby={idProfile}>
-                            <InputCheck key={1000} name="Todos" />
+                        <li className="list-group-item pl-5"
+                            id={idProfile}
+                            aria-labelledby={idProfile}>
+
+                            <InputCheck 
+                                    key={1000} name="todos" 
+                                    label="Todos" />
                         </li>
 
                         {permissionList.map((value, key) => {
                             return (
-                                <li className="list-group-item pl-5" id={idProfile} aria-labelledby={idProfile}>
-                                    <InputCheck name={value.name} key={key} />
+                                <li
+                                    className="list-group-item pl-5"
+                                    id={idProfile}
+                                    aria-labelledby={idProfile}>
+
+                                    <InputCheck
+                                        label={value.name}
+                                        name={value.name}
+                                        _key={key} />
                                 </li>
                             )
                         })}
 
-                        <li className="list-group-item" id={idProfile} aria-labelledby={idProfile}>
-                            <button type="button" className="btn btn-outline-primary btn-lg btn-block">+ Adicionar Novo Perfil</button>
-                        </li>
                     </div>
                 </ul>
             </div>
