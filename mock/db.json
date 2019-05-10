@@ -90,13 +90,16 @@
       "institutions": "CODAE",
       "profiles": [
         {
-          "name": "Nutricionista"
+          "role": "Nutricionista"
         },
         {
-          "name": "Supervisor"
+          "role": "Supervisor"
         },
         {
-          "name": "Supervisor"
+          "role": "Gestor Financeiro"
+        },
+        {
+          "role": "Fiscal"
         }
       ],
       "id": 1
@@ -105,14 +108,12 @@
       "institutions": "DRE",
       "profiles": [
         {
-          "name": "Nutricionista"
+          "role": "Cogestor"
         },
         {
-          "name": "Supervisor"
-        },
-        {
-          "name": "Supervisor"
+          "role": "Suplente"
         }
+        
       ],
       "id": 2
     },
@@ -120,13 +121,13 @@
       "institutions": "ESCOLA",
       "profiles": [
         {
-          "name": "Nutricionista"
+          "role": "Diretora"
         },
         {
-          "name": "Supervisor"
+          "role": "Professora"
         },
         {
-          "name": "Supervisor"
+          "role": "Subdiretora"
         }
       ],
       "id": 3
@@ -135,13 +136,13 @@
       "institutions": "TERCEIRIZADAS",
       "profiles": [
         {
-          "name": "Nutricionista"
+          "role": "Gestor"
         },
         {
-          "name": "Supervisor"
+          "role": "Auxiliar"
         },
         {
-          "name": "Supervisor"
+          "role": "Assistente"
         }
       ],
       "id": 4

@@ -1,54 +1,76 @@
 import React, { Component } from 'react'
+import { Collapse } from 'react-bootstrap'
+import CollapsePermission from './CollapsePermission';
 
-const btStyle = { color: "#686868" }
+class CollapseProfile extends Component {
 
+  PERMISSIONS = [
+    { id_: 1, name: "Suspender Alimentação" },
+    { id_: 2, name: "Adicionar Alimentação" },
+    { id_: 3, name: "Solicitar Kit Lanche" },
+    { id_: 4, name: "Cadastro de Usuário" },
+    { id_: 5, name: "Alterar alimetação" },
+    { id_: 6, name: "Cadastro de unidade escolar" },
+  ]
 
-class collapseProfile extends Component {
-    constructor(props, context) {
-        super(props, context)
+  constructor(props, context) {
+    super(props, context)
 
-        this.state = {
-            open : false
-        }
+    this.state = {
+      open: false
     }
 
-    handleToggle = ()=>{
-        this.setState({
-            open : !this.state.open
-        })
-    }
+  }
 
-    render() {
-        const { labelProfile, idProfile } = this.props
-        const {open} = this.state
-
-        return (
-            <div>
-                <ul className="list-group">
-                    <li className="list-group-item">
-                        <button className="btn btn-link"
-                            style={btStyle}
-                            data-toggle="collapse"
-                            data-target={`#${idProfile}`}
-                            aria-expanded={open}
-                            aria-controls="collapsePermission">
-                            <i class="fas fa-clipboard-check"></i> {labelProfile}
-                        </button>
-                    </li>
+  handleClick = () => {
+    this.setState({
+      open: !this.state.open
+    })
+  }
 
 
-                    <li className="list-group-item collapse pl-5" id={idProfile} aria-labelledby={idProfile}>
-                        <div className="form-check">
-                            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                            <label className="form-check-label" for="exampleCheck1">Permissão 1</label>
-                        </div>
-                    </li>
+  render() {
+    const { idHeading, dataTarget, labelLink, profileList } = this.props
+    const styling = { color: "#686868", fontSize: "14px" }
 
-                </ul>
-            </div>
+    const { open } = this.state
 
-        )
-    }
+    return (
+      <div className="card mb-2">
+        <div className="card-header" id={idHeading}>
+          <h5 className="mt-2 float-left">{labelLink}</h5>
+          <h5 className="mb-0 float-right">
+            <button type="button" className="btn btn-link"
+              arial-expanded={open}
+              aria-controls={dataTarget}
+              onClick={this.handleClick.bind(this)}>
+              <span style={styling} >
+                <i className="fas fa-chevron-down"></i>
+              </span>
+            </button>
+          </h5>
+        </div>
+
+        <Collapse in={open}>
+
+
+          <div id={dataTarget} className="card-body">
+            {profileList.map((value, key) => {
+
+              return <CollapsePermission
+                labelProfile={value.role}
+                idProfile={key}
+                permissionList={this.PERMISSIONS}
+              />
+
+            })}
+
+          </div>
+
+        </Collapse>
+      </div>
+    );
+  }
 }
 
-export default collapseProfile
+export default CollapseProfile;
