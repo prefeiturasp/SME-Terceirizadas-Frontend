@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import axios from "axios";
-import StatefulMultiSelect from '@khanacademy/react-multi-select';
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector } from "redux-form";
-import { LabelAndDate, LabelAndTextArea, LabelAndCombo } from "../Shareable/labelAndInput";
+import {
+  LabelAndDate,
+  LabelAndTextArea,
+  LabelAndCombo
+} from "../Shareable/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
 import "../Shareable/custom.css";
-import Weekly from '../Shareable/Weekly'
+import Weekly from "../Shareable/Weekly";
 import { AddFoodItemList } from "./addFoodItemList";
 
 class AddFoodEditor extends Component {
@@ -27,26 +31,25 @@ class AddFoodEditor extends Component {
     this.refresh = this.refresh.bind(this);
   }
 
-
   handleReason(e) {
-    let value = e.target.value
-    this.props.handleSelectedReason(value)
+    let value = e.target.value;
+    this.props.handleSelectedReason(value);
   }
 
-  handleSelectedChanged = (integrateOptions) => {
+  handleSelectedChanged = integrateOptions => {
     this.setState({
       ...this.state,
       integrateOptions
-    })
+    });
     this.props.change("integrate_select", integrateOptions);
-  }
+  };
 
   fontHeader = {
     color: "#686868"
-  }
+  };
   bgMorning = {
     background: "#FFF7CB"
-  }
+  };
 
   OnDeleteButtonClicked(id) {
     axios.delete(`http://localhost:3004/addfood/${id}`).then(res => {
@@ -60,7 +63,7 @@ class AddFoodEditor extends Component {
       status: "SEM STATUS",
       title: "Nova Inclusão de Cardápio",
       salvarAtualizarLbl: "Salvar",
-      id: '',
+      id: "",
       integrateOptions: []
     });
   }
@@ -70,17 +73,47 @@ class AddFoodEditor extends Component {
     this.props.change("motivo", param.dayChange.motivo);
     this.props.change("obs", param.dayChange.obs);
     this.props.change("first_period_check", param.dayChange.first_period_check);
-    this.props.change("first_period_select", param.dayChange.first_period_select);
-    this.props.change("first_period_number", param.dayChange.first_period_number);
-    this.props.change("second_period_check", param.dayChange.second_period_check);
-    this.props.change("second_period_select", param.dayChange.second_period_select);
-    this.props.change("second_period_number", param.dayChange.second_period_number);
+    this.props.change(
+      "first_period_select",
+      param.dayChange.first_period_select
+    );
+    this.props.change(
+      "first_period_number",
+      param.dayChange.first_period_number
+    );
+    this.props.change(
+      "second_period_check",
+      param.dayChange.second_period_check
+    );
+    this.props.change(
+      "second_period_select",
+      param.dayChange.second_period_select
+    );
+    this.props.change(
+      "second_period_number",
+      param.dayChange.second_period_number
+    );
     this.props.change("third_period_check", param.dayChange.third_period_check);
-    this.props.change("third_period_select", param.dayChange.third_period_select);
-    this.props.change("third_period_number", param.dayChange.third_period_number);
-    this.props.change("fourth_period_check", param.dayChange.fourth_period_check);
-    this.props.change("fourth_period_select", param.dayChange.fourth_period_select);
-    this.props.change("fourth_period_number", param.dayChange.fourth_period_number);
+    this.props.change(
+      "third_period_select",
+      param.dayChange.third_period_select
+    );
+    this.props.change(
+      "third_period_number",
+      param.dayChange.third_period_number
+    );
+    this.props.change(
+      "fourth_period_check",
+      param.dayChange.fourth_period_check
+    );
+    this.props.change(
+      "fourth_period_select",
+      param.dayChange.fourth_period_select
+    );
+    this.props.change(
+      "fourth_period_number",
+      param.dayChange.fourth_period_number
+    );
     this.props.change("integrate_check", param.dayChange.integrate_check);
     this.props.change("integrate_select", param.dayChange.integrate_select);
     this.props.change("integrate_number", param.dayChange.integrate_number);
@@ -94,9 +127,10 @@ class AddFoodEditor extends Component {
       title: `Inclusão de Cardápio # ${param.dayChange.id}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
-      integrateOptions: param.dayChange.integrate_select !== undefined ?
-                          param.dayChange.integrate_select :
-                          this.state.integrateOptions
+      integrateOptions:
+        param.dayChange.integrate_select !== undefined
+          ? param.dayChange.integrate_select
+          : this.state.integrateOptions
     });
   }
 
@@ -105,33 +139,33 @@ class AddFoodEditor extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.firstPeriodCheck && !this.props.firstPeriodCheck){
-      this.props.change("first_period_select", '');
-      this.props.change("first_period_number", '');
+    if (prevProps.firstPeriodCheck && !this.props.firstPeriodCheck) {
+      this.props.change("first_period_select", "");
+      this.props.change("first_period_number", "");
     }
-    if (prevProps.secondPeriodCheck && !this.props.secondPeriodCheck){
-      this.props.change("second_period_select", '');
-      this.props.change("second_period_number", '');
+    if (prevProps.secondPeriodCheck && !this.props.secondPeriodCheck) {
+      this.props.change("second_period_select", "");
+      this.props.change("second_period_number", "");
     }
-    if (prevProps.thirdPeriodCheck && !this.props.thirdPeriodCheck){
-      this.props.change("third_period_select", '');
-      this.props.change("third_period_number", '');
+    if (prevProps.thirdPeriodCheck && !this.props.thirdPeriodCheck) {
+      this.props.change("third_period_select", "");
+      this.props.change("third_period_number", "");
     }
-    if (prevProps.fourthPeriodCheck && !this.props.fourthPeriodCheck){
-      this.props.change("fourth_period_select", '');
-      this.props.change("fourth_period_number", '');
+    if (prevProps.fourthPeriodCheck && !this.props.fourthPeriodCheck) {
+      this.props.change("fourth_period_select", "");
+      this.props.change("fourth_period_number", "");
     }
-    if (prevProps.integrateCheck && !this.props.integrateCheck){
+    if (prevProps.integrateCheck && !this.props.integrateCheck) {
       this.setState({
         ...this.state,
         integrateOptions: []
-      })
-      this.props.change("integrate_number", '');
+      });
+      this.props.change("integrate_number", "");
     }
-    if (this.props.period !== 'Programa Contínuo - Mais Educação'){
-      this.props.change("reason_from", '');
-      this.props.change("reason_to", '');
-      this.props.change("week", '');
+    if (this.props.period !== "Programa Contínuo - Mais Educação") {
+      this.props.change("reason_from", "");
+      this.props.change("reason_to", "");
+      this.props.change("week", "");
     }
   }
 
@@ -160,32 +194,48 @@ class AddFoodEditor extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, submitting, enrolled, reasons, typeFood, periods,
-            firstPeriodCheck, secondPeriodCheck, thirdPeriodCheck, fourthPeriodCheck,
-            integrateCheck, firstPeriodSelect, secondPeriodSelect, thirdPeriodSelect,
-            fourthPeriodSelect, period, typeFoodMulti } = this.props;
+    const {
+      handleSubmit,
+      pristine,
+      submitting,
+      enrolled,
+      reasons,
+      typeFood,
+      periods,
+      firstPeriodCheck,
+      secondPeriodCheck,
+      thirdPeriodCheck,
+      fourthPeriodCheck,
+      integrateCheck,
+      firstPeriodSelect,
+      secondPeriodSelect,
+      thirdPeriodSelect,
+      fourthPeriodSelect,
+      period,
+      typeFoodMulti
+    } = this.props;
     const { title, integrateOptions } = this.state;
     const checkMap = {
-      "first_period": firstPeriodCheck,
-      "second_period": secondPeriodCheck,
-      "third_period": thirdPeriodCheck,
-      "fourth_period": fourthPeriodCheck,
-      "integrate": integrateCheck
-    }
+      first_period: firstPeriodCheck,
+      second_period: secondPeriodCheck,
+      third_period: thirdPeriodCheck,
+      fourth_period: fourthPeriodCheck,
+      integrate: integrateCheck
+    };
     const selectMap = {
-      "first_period": firstPeriodSelect,
-      "second_period": secondPeriodSelect,
-      "third_period": thirdPeriodSelect,
-      "fourth_period": fourthPeriodSelect,
-      "integrate": integrateOptions.length > 0
-    }
+      first_period: firstPeriodSelect,
+      second_period: secondPeriodSelect,
+      third_period: thirdPeriodSelect,
+      fourth_period: fourthPeriodSelect,
+      integrate: integrateOptions.length > 0
+    };
     const colors = {
-      "first_period": "#FFF7CB",
-      "second_period": "#EAFFE3",
-      "third_period": "#FFEED6",
-      "fourth_period": "#E4F1FF",
-      "integrate": "#EBEDFF",
-    }
+      first_period: "#FFF7CB",
+      second_period: "#EAFFE3",
+      third_period: "#FFEED6",
+      fourth_period: "#E4F1FF",
+      integrate: "#EBEDFF"
+    };
     return (
       <div>
         <form onSubmit={this.props.handleSubmit}>
@@ -193,9 +243,12 @@ class AddFoodEditor extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <span className="blockquote-sme">Nº de Matriculados</span>
-              <div></div>
+              <div />
               <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">Informaçâo automática disponibilizada no Cadastro da Unidade Escolar</span>
+              <span className="blockquote-sme pl-2 text-color-sme-silver">
+                Informaçâo automática disponibilizada no Cadastro da Unidade
+                Escolar
+              </span>
             </div>
           </div>
           <div className="card mt-3">
@@ -215,114 +268,150 @@ class AddFoodEditor extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold" style={this.fontHeader}>Descrição da Inclusão</div>
+              <div
+                className="card-title font-weight-bold"
+                style={this.fontHeader}
+              >
+                Descrição da Inclusão
+              </div>
               <table className="table table-borderless">
                 <tr>
                   <td>Período</td>
-                  <td style={{"paddingLeft" : "9rem"}}>Tipo de Alimentação</td>
+                  <td style={{ paddingLeft: "9rem" }}>Tipo de Alimentação</td>
                   <td>Nº de Alunos</td>
                 </tr>
               </table>
-              {periods.map((period, key)=>{
-                return <div className="form-row">
-                  <div className="form-check col-md-3 mr-4 ml-4">
-                    <div className="pl-5 pt-2 pb-2" style={{marginLeft: "-1.4rem", background: colors[period.value], borderRadius: "7px" }}>
+              {periods.map((period, key) => {
+                return (
+                  <div className="form-row">
+                    <div className="form-check col-md-3 mr-4 ml-4">
+                      <div
+                        className="pl-5 pt-2 pb-2"
+                        style={{
+                          marginLeft: "-1.4rem",
+                          background: colors[period.value],
+                          borderRadius: "7px"
+                        }}
+                      >
+                        <Field
+                          component={"input"}
+                          className="form-check-input"
+                          type="checkbox"
+                          name={`${period.value}_check`}
+                        />
+                        <label
+                          htmlFor={`${period.value}_check`}
+                          className="form-check-label"
+                        >
+                          {" "}
+                          {period.label}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="form-group col-md-5 mr-5">
+                      {period.value === "integrate" ? (
+                        <div
+                          className={
+                            !integrateCheck
+                              ? "multiselect-wrapper-disabled"
+                              : "multiselect-wrapper-enabled"
+                          }
+                        >
+                          <Field
+                            component={StatefulMultiSelect}
+                            name={`${period.value}_select`}
+                            selected={integrateOptions}
+                            options={typeFoodMulti}
+                            onSelectedChanged={this.handleSelectedChanged}
+                            disableSearch={true}
+                            overrideStrings={{
+                              selectSomeItems: "Selecione",
+                              allItemsAreSelected:
+                                "Todos os itens estão selecionados",
+                              selectAll: "Todos"
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <Field
+                          component={LabelAndCombo}
+                          disabled={!checkMap[period.value]}
+                          className="form-control"
+                          name={`${period.value}_select`}
+                          options={typeFood}
+                        />
+                      )}
+                    </div>
+                    <div className="form-group col-md-2">
                       <Field
                         component={"input"}
-                        className="form-check-input"
-                        type="checkbox"
-                        name={`${period.value}_check`}
+                        disabled={
+                          !selectMap[period.value] || !checkMap[period.value]
+                        }
+                        type="number"
+                        name={`${period.value}_number`}
+                        className="form-control"
                       />
-                      <label htmlFor={`${period.value}_check`} className="form-check-label"> {period.label}</label>
                     </div>
                   </div>
-                  <div className="form-group col-md-5 mr-5">
-                    {period.value === 'integrate' ?
-                      <div className={!integrateCheck ? "multiselect-wrapper-disabled" : "multiselect-wrapper-enabled"}>
-                        <Field
-                          component={StatefulMultiSelect}
-                          name={`${period.value}_select`}
-                          selected={integrateOptions}
-                          options={typeFoodMulti}
-                          onSelectedChanged={this.handleSelectedChanged}
-                          disableSearch={true}
-                          overrideStrings={{
-                            selectSomeItems: "Selecione",
-                            allItemsAreSelected: "Todos os itens estão selecionados",
-                            selectAll: "Todos"
-                          }}
-                        />
-                      </div>
-                      :
-                      <Field
-                        component={LabelAndCombo}
-                        disabled={!checkMap[period.value]}
-                        className="form-control"
-                        name={`${period.value}_select`}
-                        options={typeFood}
-                      />
-                    }
-                  </div>
-                  <div className="form-group col-md-2">
-                    <Field
-                      component={"input"}
-                      disabled={!selectMap[period.value] || !checkMap[period.value]}
-                      type="number"
-                      name={`${period.value}_number`}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
+                );
               })}
               <hr className="w-100" />
-              <div className="card-title font-weight-bold" style={this.fontHeader}>Data da Inclusão</div>
+              <div
+                className="card-title font-weight-bold"
+                style={this.fontHeader}
+              >
+                Data da Inclusão
+              </div>
               <div className="form-row">
                 <div className="form-group col-sm-8">
-                 <Field
+                  <Field
                     component={LabelAndCombo}
                     name="period"
                     label="Período de alteração"
                     options={reasons}
                   />
                 </div>
-                {period !== 'Programa Contínuo - Mais Educação' && <div className="form-group col-sm-4">
-                  <Field
-                    component={LabelAndDate}
-                    name="reason_day"
-                    label="Dia"
-                    validate={required}
-                  />
-                </div>}
+                {period !== "Programa Contínuo - Mais Educação" && (
+                  <div className="form-group col-sm-4">
+                    <Field
+                      component={LabelAndDate}
+                      name="reason_day"
+                      label="Dia"
+                      validate={required}
+                    />
+                  </div>
+                )}
               </div>
-              {period === 'Programa Contínuo - Mais Educação' &&
-              <div className="form-row">
-                <div className="form-group col-sm-3">
+              {period === "Programa Contínuo - Mais Educação" && (
+                <div className="form-row">
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      cols="4"
+                      name="reason_from"
+                      label="De"
+                      validate={required}
+                    />
+                  </div>
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      cols="4"
+                      name="reason_to"
+                      label="Até"
+                      validate={required}
+                    />
+                  </div>
                   <Field
-                    component={LabelAndDate}
-                    cols="4"
-                    name="reason_from"
-                    label="De"
-                    validate={required}
+                    component={Weekly}
+                    name="week"
+                    cols="12"
+                    classNameArgs="form-group col-sm-4"
+                    label="Repetir"
                   />
                 </div>
-                <div className="form-group col-sm-3">
-                  <Field
-                    component={LabelAndDate}
-                    cols="4"
-                    name="reason_to"
-                    label="Até"
-                    validate={required}
-                  />
-                </div>
-                <Field
-                  component={Weekly}
-                  name="week"
-                  cols="12"
-                  classNameArgs="form-group col-sm-4"
-                  label="Repetir"
-                />
-              </div>
-              }
+              )}
               <hr className="w-100" />
               <div className="form-group">
                 <Field
@@ -380,20 +469,20 @@ class AddFoodEditor extends Component {
 const AddFoodEditorForm = reduxForm({
   form: "addFood"
 })(AddFoodEditor);
-const selector = formValueSelector('addFood')
+const selector = formValueSelector("addFood");
 const mapStateToProps = state => {
   return {
-    firstPeriodCheck: selector(state, 'first_period_check'),
-    secondPeriodCheck: selector(state, 'second_period_check'),
-    thirdPeriodCheck: selector(state, 'third_period_check'),
-    fourthPeriodCheck: selector(state, 'fourth_period_check'),
-    integrateCheck: selector(state, 'integrate_check'),
-    firstPeriodSelect: selector(state, 'first_period_select'),
-    secondPeriodSelect: selector(state, 'second_period_select'),
-    thirdPeriodSelect: selector(state, 'third_period_select'),
-    fourthPeriodSelect: selector(state, 'fourth_period_select'),
-    period: selector(state, 'period')
-  }
-}
+    firstPeriodCheck: selector(state, "first_period_check"),
+    secondPeriodCheck: selector(state, "second_period_check"),
+    thirdPeriodCheck: selector(state, "third_period_check"),
+    fourthPeriodCheck: selector(state, "fourth_period_check"),
+    integrateCheck: selector(state, "integrate_check"),
+    firstPeriodSelect: selector(state, "first_period_select"),
+    secondPeriodSelect: selector(state, "second_period_select"),
+    thirdPeriodSelect: selector(state, "third_period_select"),
+    fourthPeriodSelect: selector(state, "fourth_period_select"),
+    period: selector(state, "period")
+  };
+};
 
 export default connect(mapStateToProps)(AddFoodEditorForm);
