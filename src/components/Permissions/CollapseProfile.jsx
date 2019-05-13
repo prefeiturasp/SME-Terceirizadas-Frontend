@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Collapse } from 'react-bootstrap'
+import { Collapse, Modal } from 'react-bootstrap'
 import CollapsePermission from './CollapsePermission';
+import ModalProfile from "./ModalProfile";
 
 class CollapseProfile extends Component {
 
@@ -17,7 +18,8 @@ class CollapseProfile extends Component {
     super(props, context)
 
     this.state = {
-      open: false
+      open: false,
+      show : false
     }
 
   }
@@ -28,14 +30,33 @@ class CollapseProfile extends Component {
     })
   }
 
+  handleShow = ()=>{
+    this.setState({
+      show : true
+    })
+  }
+
+  handleClose = ()=>{
+    this.setState({
+      show : false
+    })
+  }
+
 
   render() {
-    const { idHeading, dataTarget, labelLink, profileList } = this.props
+    const { idHeading, dataTarget, labelLink, profileList, _id } = this.props
     const styling = { color: "#686868", fontSize: "14px" }
 
     const { open } = this.state
 
     return (
+      <div>
+        <ModalProfile 
+                    show={this.state.show} 
+                    close={this.handleClose.bind(this)}  
+                    role={labelLink}
+                    _id={_id} />
+      
       <div className="card mb-2">
         <div className="card-header" id={idHeading}>
           <h5 className="mt-2 float-left">{labelLink}</h5>
@@ -45,15 +66,13 @@ class CollapseProfile extends Component {
               aria-controls={dataTarget}
               onClick={this.handleClick.bind(this)}>
               <span style={styling} >
-                <i className="fas fa-chevron-down"></i>
+                <i className={open ? "fas fa-chevron-up" : "fas fa-chevron-down"}></i>
               </span>
             </button>
           </h5>
         </div>
 
         <Collapse in={open}>
-
-
           <div id={dataTarget} className="card-body">
             {profileList.map((value, key) => {
 
@@ -64,10 +83,13 @@ class CollapseProfile extends Component {
               />
 
             })}
-
+            <button
+              onClick={this.handleShow.bind(this)}
+              type="button"
+              className="mt-1 btn btn-outline-primary btn-lg btn-block">+ Adicionar Novo Perfil</button>
           </div>
-
         </Collapse>
+      </div>
       </div>
     );
   }
