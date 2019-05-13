@@ -29,6 +29,7 @@ class AddFoodEditor extends Component {
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.titleRef = React.createRef();
   }
 
   handleReason(e) {
@@ -124,7 +125,7 @@ class AddFoodEditor extends Component {
     this.props.change("period", param.dayChange.period);
     this.setState({
       status: param.dayChange.status,
-      title: `Inclusão de Cardápio # ${param.dayChange.id}`,
+      title: `Edição - Inclusão de Cardápio # ${param.dayChange.id}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
       integrateOptions:
@@ -132,6 +133,7 @@ class AddFoodEditor extends Component {
           ? param.dayChange.integrate_select
           : this.state.integrateOptions
     });
+    window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
   componentDidMount() {
@@ -261,7 +263,7 @@ class AddFoodEditor extends Component {
               />
             </div>
           </div>
-          <div className="form-row mt-3 ml-1">
+          <div ref={this.titleRef} className="form-row mt-3 ml-1">
             <h3 className="bold" style={{ color: "#353535" }}>
               {title}
             </h3>
