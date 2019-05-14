@@ -1,7 +1,7 @@
 import { Login } from "../components/Login";
 import { MenuChangePage } from "../pages/MenuChangePage";
 import Home from "../pages/Home";
-import AddFoodPage from "../pages/AddFoodPage";
+import FoodInclusionPage from "../pages/FoodInclusionPage";
 import PermissionsPage from "../pages/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
 import DayChangePage from "../pages/DayChangePage";
@@ -26,7 +26,7 @@ const routesConfig = [
   },
   {
     path : "/add-food",
-    component : AddFoodPage,
+    component : FoodInclusionPage,
     exact : false
   },
   {

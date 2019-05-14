@@ -4,7 +4,7 @@ import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
 import "../Shareable/custom.css";
 import If from "../Shareable/layout";
 
-export class AddFoodItemList extends Component {
+export class FoodInclusionItemList extends Component {
   constructor(props) {
     super(props);
     this.state = { checkedObjects: [] };
@@ -12,11 +12,7 @@ export class AddFoodItemList extends Component {
   }
 
   static propTypes = {
-    motivo: PropTypes.string.isRequired,
-    obs: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    salvo_em: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
+    salvo_em: PropTypes.string.isRequired
   };
 
   onCheckChange(event, object) {
@@ -51,33 +47,21 @@ export class AddFoodItemList extends Component {
   }
 
   render() {
-    const { addFoodList } = this.props;
-    console.log(addFoodList);
-    const allDaysInfo = addFoodList.map(dayChange => {
-      const {
-        status,
-        id,
-        salvo_em,
-        motivo,
-        periodo,
-        first_period_check,
-        first_period_select,
-        first_period_number,
-        reason_day,
-        obs
-      } = dayChange;
-      let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
+    const { foodInclusionList } = this.props;
+    const allDaysInfo = foodInclusionList.map(dayChange => {
+      const { id } = dayChange;
+      let backgroundColor = dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${id}`}
+              Alteração de Dia de cardápio {`# ${dayChange.id}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {status}
+              {dayChange.status}
             </span>
             <div className="float-right">
               <input
@@ -87,16 +71,7 @@ export class AddFoodItemList extends Component {
                 id={id}
                 onClick={event =>
                   this.onCheckChange(event, {
-                    status,
                     id,
-                    salvo_em,
-                    first_period_check,
-                    first_period_select,
-                    first_period_number,
-                    reason_day,
-                    motivo,
-                    periodo,
-                    obs
                   })
                 }
               />
@@ -104,7 +79,7 @@ export class AddFoodItemList extends Component {
           </div>
           <div>
             <div className="float-right">
-              Salvo em: {salvo_em}
+              Salvo em: {dayChange.created_at}
               <Button
                 icon={ButtonIcon.TRASH}
                 onClick={p => this.OnDeleteButtonClicked(id)}
@@ -120,13 +95,12 @@ export class AddFoodItemList extends Component {
             </div>
           </div>
           <div className="ml-3">
-              {addFoodList.map((addFoodItem)=>{
-                return <p>{addFoodItem.period} - {
-                  addFoodItem.reason_day ?
-                  addFoodItem.reason_day :
-                  '(' + addFoodItem.reason_from + ' - ' + addFoodItem.reason_to + ')'
-                }</p>
-              })}
+            <p>
+              {dayChange.reason} -{" "}
+              {dayChange.date
+                ? dayChange.date
+                : "(" + dayChange.date_from + " - " + dayChange.date_to + ")"}
+            </p>
           </div>
         </div>
       );
@@ -134,7 +108,7 @@ export class AddFoodItemList extends Component {
     return (
       <div>
         {allDaysInfo}
-        <If isVisible={this.props.addFoodList.length >= 1}>
+        <If isVisible={this.props.foodInclusionList.length >= 1}>
           <Button
             style={ButtonStyle.Primary}
             label="Enviar solicitações"

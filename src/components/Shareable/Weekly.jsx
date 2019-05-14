@@ -29,31 +29,31 @@ export default class Weekly extends Component {
     const arrayToUse = this.props.input.value.length ? this.props.input.value : this.state.clicked;
     const week = [{
       label: 'S',
-      value: 'Segunda'
+      value: '0'
     },
     {
       label: 'T',
-      value: 'Terça'
+      value: '1'
     },
     {
       label: 'Q',
-      value: 'Quarta'
+      value: '2'
     },
     {
       label: 'Q',
-      value: 'Quinta'
+      value: '3'
     },
     {
       label: 'S',
-      value: 'Sexta'
+      value: '4'
     },
     {
       label: 'S',
-      value: 'Sábado'
+      value: '5'
     },
     {
       label: 'D',
-      value: 'Domingo'
+      value: '6'
     }
     ]
     return (
