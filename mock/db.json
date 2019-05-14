@@ -85,42 +85,67 @@
       "id": 6
     }
   ],
-   
   "permissions": [
-    { "institutions": "CODAE", 
+    {
+      "institutions": "CODAE",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 1
+        {
+          "role": "Nutricionista"
+        },
+        {
+          "role": "Supervisor"
+        },
+        {
+          "role": "Gestor Financeiro"
+        },
+        {
+          "role": "Fiscal"
+        }
+      ],
+      "id": 1
     },
-    { "institutions": "DRE", 
+    {
+      "institutions": "DRE",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 2
+        {
+          "role": "Cogestor"
+        },
+        {
+          "role": "Suplente"
+        }
+        
+      ],
+      "id": 2
     },
-    { "institutions": "ESCOLA", 
+    {
+      "institutions": "ESCOLA",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 3
+        {
+          "role": "Diretora"
+        },
+        {
+          "role": "Professora"
+        },
+        {
+          "role": "Subdiretora"
+        }
+      ],
+      "id": 3
     },
-    { "institutions": "TERCEIRIZADAS", 
+    {
+      "institutions": "TERCEIRIZADAS",
       "profiles": [
-                  { "name": "Nutricionista" }, 
-                  { "name" : "Supervisor"},
-                  { "name" : "Supervisor"}
-                ],
-      "id" : 4
+        {
+          "role": "Gestor"
+        },
+        {
+          "role": "Auxiliar"
+        },
+        {
+          "role": "Assistente"
+        }
+      ],
+      "id": 4
     }
-
   ]
-
-
 }
