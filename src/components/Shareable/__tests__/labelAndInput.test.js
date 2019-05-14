@@ -48,7 +48,7 @@ describe("LabelAndInput", () => {
         name="myInput"
         label="mylabel"
         placeholder="myPlaceholder"
-        type="date"
+        type="number"
       />
     );
   });
