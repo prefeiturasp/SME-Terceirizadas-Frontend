@@ -1,10 +1,25 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
+import { getEmailConfiguration, setEmailConfiguration } from "../../../services/email";
+import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import { generateOptions } from "./helper";
 class EmailConfiguration extends Component {
+  onSubmit(values) {
+    const resp = setEmailConfiguration();
+    resp.then(e => console.log("PUT", e));
+  }
+
+  componentWillMount() {
+    const conf = getEmailConfiguration();
+    conf.then(resp => {
+      console.log(resp);
+    });
+  }
+
   render() {
+    const { handleSubmit } = this.props;
     return (
       <div className="container">
         <div>
@@ -46,7 +61,7 @@ class EmailConfiguration extends Component {
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
-                cols="5 5 5 5"
+                cols="6 6 6 6"
                 label="Servidor SMTP"
                 validate={required}
                 placeholder="smtp.sme.prefeitura.sp.gov.br"
@@ -55,18 +70,36 @@ class EmailConfiguration extends Component {
               <Field
                 component={LabelAndCombo}
                 cols="2 2 2 2"
-                options={generateOptions([587, 465, 25])}
+                options={generateOptions(["", "587", "465", "25"])}
                 label="Porta"
                 name="port"
               />
               <Field
                 component={LabelAndCombo}
                 cols="2 2 2 2"
-                options={generateOptions(["SSL", "TLS"])}
+                options={generateOptions(["", "SSL", "TLS"])}
                 label="Segurança"
                 name="security"
               />
             </div>
+          </div>
+          <div className="form-group row float-right">
+            <BaseButton
+              label="Cancelar"
+              type={ButtonType.RESET}
+              style={ButtonStyle.OutlinePrimary}
+            />
+            <BaseButton
+              label="Enviar Configuração"
+              type={ButtonType.SUBMIT}
+              className="ml-2"
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values
+                })
+              )}
+              style={ButtonStyle.Primary}
+            />
           </div>
         </form>
       </div>
