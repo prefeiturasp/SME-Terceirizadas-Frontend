@@ -7,7 +7,14 @@ import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import { generateOptions } from "./helper";
 class EmailConfiguration extends Component {
   onSubmit(values) {
-    const resp = setEmailConfiguration();
+    if (values.security === "TLS") {
+      values.use_tls = true;
+      values.use_ssl = false;
+    } else {
+      values.use_tls = false;
+      values.use_ssl = true;
+    }
+    const resp = setEmailConfiguration(values);
     resp.then(e => console.log("PUT", e));
   }
 
@@ -109,5 +116,13 @@ class EmailConfiguration extends Component {
 
 export default (EmailConfiguration = reduxForm({
   form: "emailConfiguration",
-  destroyOnUnmount: false
+  destroyOnUnmount: false,
+  initialValues: {
+    username: "mmaia.cc@gmail.com",
+    password: "asoidjasiod",
+    from_email: "mmaia.cc@gmail.com",
+    host: "smtp.gmail.com",
+    security: "TLS",
+    port: "587"
+  }
 })(EmailConfiguration));
