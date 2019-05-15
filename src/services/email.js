@@ -36,3 +36,20 @@ export const setEmailConfiguration = async values => {
     console.log(`setEmailConfigurationError ${error}`);
   }
 };
+
+export const testEmailConfiguration = async to_email => {
+  try {
+    const response = await fetch(`${CONFIG.API_URL}/email-test/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getToken()
+      },
+      body: JSON.stringify({ to_email: to_email })
+    });
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.log(`testEmailConfigurationError ${error}`);
+  }
+};

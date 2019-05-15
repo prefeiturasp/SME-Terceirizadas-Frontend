@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
-import { getEmailConfiguration, setEmailConfiguration } from "../../../services/email";
+import { getEmailConfiguration, setEmailConfiguration, testEmailConfiguration } from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import IsVisible from "../../Shareable/layout";
@@ -20,8 +20,11 @@ class EmailConfiguration extends Component {
     resp.then(e => console.log("PUT", e));
   }
 
-  onTestConfiguration(values) {
-    console.log("TESTANDO", values);
+  onTestConfiguration(toEmail) {
+    const prom = testEmailConfiguration(toEmail);
+    prom.then(resp => {
+      console.log("RESPOSTA....", resp);
+    });
   }
 
   componentDidMount() {
@@ -129,9 +132,7 @@ class EmailConfiguration extends Component {
                   className="ml-3"
                   type={ButtonType.SUBMIT}
                   onClick={handleSubmit(values =>
-                    this.onTestConfiguration(
-                      values.testEmail
-                    )
+                    this.onTestConfiguration(values.testEmail)
                   )}
                   style={ButtonStyle.OutlineDark}
                 />
