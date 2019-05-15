@@ -7,6 +7,8 @@ import {
 } from "../../services/foodInclusion.service";
 import { validateSubmit } from "./FoodInclusionValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
   LabelAndDate,
@@ -34,8 +36,23 @@ class FoodInclusionEditor extends Component {
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
+    this.onEnviarSolicitacoesBtClicked = this.onEnviarSolicitacoesBtClicked.bind(
+      this
+    );
     this.refresh = this.refresh.bind(this);
   }
+
+  notifySuccess = message => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER
+    });
+  };
+
+  notifyError = message => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER
+    });
+  };
 
   handleReason(e) {
     let value = e.target.value;
@@ -57,25 +74,35 @@ class FoodInclusionEditor extends Component {
     background: "#FFF7CB"
   };
 
-  OnDeleteButtonClicked(uuid) {
+  OnDeleteButtonClicked(id, uuid) {
     deleteFoodInclusion(
       "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990",
       JSON.stringify({ uuid: uuid })
     ).then(
       res => {
-        this.refresh();
+        if (res.code === 200) {
+          this.notifySuccess(
+            `Inclusão de Alimentação # ${id} excluída com sucesso`
+          );
+          this.refresh();
+        } else {
+          this.notifyError(res.log_content[0]);
+        }
       },
       function(error) {
         console.log("erro");
+        this.notifyError("Houve um erro ao excluir a inclusão de alimentação");
       }
     );
   }
+
+  onEnviarSolicitacoesBtClicked(uuids) {}
 
   resetForm(event) {
     this.props.reset();
     this.setState({
       status: "SEM STATUS",
-      title: "Nova Inclusão de Cardápio",
+      title: "Nova Inclusão de Alimentação",
       salvarAtualizarLbl: "Salvar",
       id: "",
       integrateOptions: []
@@ -121,6 +148,8 @@ class FoodInclusionEditor extends Component {
           ? param.dayChange.description_integrate.select
           : this.state.integrateOptions
     });
+    this.notifySuccess = this.notifySuccess.bind(this);
+    this.notifyError = this.notifyError.bind(this);
   }
 
   componentDidMount() {
@@ -186,16 +215,16 @@ class FoodInclusionEditor extends Component {
   refresh() {
     getSavedFoodInclusions("8b0673c4-34bb-4ca5-aaa6-d5ccc9588990").then(
       res => {
-        console.log(res);
         this.setState({
           ...this.state,
           foodInclusionList: res.content.food_inclusions
         });
       },
       function(error) {
-        console.log("erro");
+        this.notifyError("Erro ao carregar as inclusões salvas");
       }
     );
+    this.resetForm();
   }
 
   onSubmit(values) {
@@ -205,10 +234,19 @@ class FoodInclusionEditor extends Component {
       JSON.stringify(values)
     ).then(
       res => {
-        this.refresh();
+        if (res.code === 200) {
+          this.notifySuccess(
+            "Inclusão de Alimentação " +
+              (values.status === "SALVO" ? "salva" : "enviada") +
+              " com sucesso"
+          );
+          this.refresh();
+        } else {
+          this.notifyError(res.log_content[0]);
+        }
       },
       function(error) {
-        console.log("erro");
+        this.notifyError("Houve um erro ao salvar a inclusão de alimentação");
       }
     );
   }
@@ -268,16 +306,21 @@ class FoodInclusionEditor extends Component {
               </span>
             </div>
           </div>
-          <div className="card mt-3">
-            <div className="card-body">
-              <FoodInclusionItemList
-                foodInclusionList={foodInclusionList}
-                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                resetForm={event => this.resetForm(event)}
-                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-              />
+          {foodInclusionList.length > 0 && (
+            <div className="card mt-3">
+              <div className="card-body">
+                <span className="page-title">Formulários salvos</span>
+                <FoodInclusionItemList
+                  foodInclusionList={foodInclusionList}
+                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                  resetForm={event => this.resetForm(event)}
+                  OnEditButtonClicked={params =>
+                    this.OnEditButtonClicked(params)
+                  }
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="form-row mt-3 ml-1">
             <h3 className="bold" style={{ color: "#353535" }}>
               {title}
@@ -485,6 +528,7 @@ class FoodInclusionEditor extends Component {
             </div>
           </div>
         </form>
+        <ToastContainer />
       </div>
     );
   }

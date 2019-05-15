@@ -28,10 +28,10 @@ export class FoodInclusionItemList extends Component {
     }
   }
 
-  OnDeleteButtonClicked(id) {
+  OnDeleteButtonClicked(id, uuid) {
     // faz o pai apagar o elemento
     // atualiza o estado do componente e limpa o form do pai
-    this.props.OnDeleteButtonClicked(id);
+    this.props.OnDeleteButtonClicked(id, uuid);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
       return obj.id !== id;
@@ -49,7 +49,8 @@ export class FoodInclusionItemList extends Component {
   render() {
     const { foodInclusionList } = this.props;
     const allDaysInfo = foodInclusionList.map(dayChange => {
-      const { id, uuid } = dayChange;
+      const { id } = dayChange;
+      console.log(dayChange)
       let backgroundColor = dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
@@ -82,7 +83,7 @@ export class FoodInclusionItemList extends Component {
               Salvo em: {dayChange.created_at}
               <Button
                 icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(uuid)}
+                onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
               />
               <Button
                 icon={ButtonIcon.EDIT}
