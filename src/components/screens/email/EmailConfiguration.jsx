@@ -4,10 +4,12 @@ import { email, required } from "../../../helpers/fieldValidators";
 import { getEmailConfiguration, setEmailConfiguration } from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
-import { generateOptions } from "./helper";
+import IsVisible from "../../Shareable/layout";
+import { generateOptions, SECURITY_OPTIONS } from "./helper";
 class EmailConfiguration extends Component {
+  state = { showTest: false };
   onSubmit(values) {
-    if (values.security === "TLS") {
+    if (values.security === SECURITY_OPTIONS.TLS) {
       values.use_tls = true;
       values.use_ssl = false;
     } else {
@@ -18,11 +20,30 @@ class EmailConfiguration extends Component {
     resp.then(e => console.log("PUT", e));
   }
 
-  componentWillMount() {
+  onTestConfiguration(values) {
+    console.log("TESTANDO", values);
+  }
+
+  componentDidMount() {
     const conf = getEmailConfiguration();
-    conf.then(resp => {
-      console.log(resp);
-    });
+    conf
+      .then(resp => {
+        this.props.reset();
+        this.props.change("username", resp.username);
+        this.props.change("from_email", resp.from_email);
+        this.props.change("host", resp.host);
+        this.props.change("port", resp.port);
+        this.props.change("password", resp.password);
+        if (resp.use_tls) {
+          this.props.change("security", SECURITY_OPTIONS.TLS);
+        } else {
+          this.props.change("security", SECURITY_OPTIONS.SSL);
+        }
+        this.setState({ showTest: true });
+      })
+      .catch(resp => {
+        this.setState({ showTest: false });
+      });
   }
 
   render() {
@@ -84,11 +105,38 @@ class EmailConfiguration extends Component {
               <Field
                 component={LabelAndCombo}
                 cols="2 2 2 2"
-                options={generateOptions(["", "SSL", "TLS"])}
+                options={generateOptions([
+                  "",
+                  SECURITY_OPTIONS.SSL,
+                  SECURITY_OPTIONS.TLS
+                ])}
                 label="Segurança"
                 name="security"
               />
             </div>
+            <IsVisible isVisible={this.state.showTest}>
+              <div className="form-group row">
+                <Field
+                  component={LabelAndInput}
+                  name="testEmail"
+                  cols="3 3 3 3"
+                  label="Insira um email pessoal para testar"
+                  validate={email}
+                  placeholder="seu-email@sme.com"
+                />
+                <BaseButton
+                  label="Testar"
+                  className="ml-3"
+                  type={ButtonType.SUBMIT}
+                  onClick={handleSubmit(values =>
+                    this.onTestConfiguration(
+                      values.testEmail
+                    )
+                  )}
+                  style={ButtonStyle.OutlineDark}
+                />
+              </div>
+            </IsVisible>
           </div>
           <div className="form-group row float-right">
             <BaseButton
@@ -116,13 +164,13 @@ class EmailConfiguration extends Component {
 
 export default (EmailConfiguration = reduxForm({
   form: "emailConfiguration",
-  destroyOnUnmount: false,
-  initialValues: {
-    username: "mmaia.cc@gmail.com",
-    password: "asoidjasiod",
-    from_email: "mmaia.cc@gmail.com",
-    host: "smtp.gmail.com",
-    security: "TLS",
-    port: "587"
-  }
+  destroyOnUnmount: false
+  // initialValues: {
+  //   username: "mmaia.cc@gmail.com",
+  //   password: "asoidjasiod",
+  //   from_email: "mmaia.cc@gmail.com",
+  //   host: "smtp.gmail.com",
+  //   security: "TLS",
+  //   port: "587"
+  // }
 })(EmailConfiguration));
