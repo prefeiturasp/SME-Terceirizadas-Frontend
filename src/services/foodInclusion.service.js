@@ -17,12 +17,29 @@ export const createOrUpdateFoodInclusion = (user_uuid, payload) => {
       })
 }
 
+export const deleteFoodInclusion = (user_uuid, payload) => {
+  const url = API_URL + `/food_inclusion/${user_uuid}/delete/`
+  return fetch(url, {
+      method: "DELETE",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      })
+      .then(result => {
+          return result.json()
+      }).catch(error => {
+          return error.json()
+      })
+}
+
 export const getSavedFoodInclusions = (user_uuid) => {
   const url = API_URL + `/food_inclusion/${user_uuid}/get_saved_food_inclusions/`
   return fetch(url)
       .then(result => {
           return result.json()
       }).catch(error => {
-          return error.json()
+          console.log(error);
       })
 }

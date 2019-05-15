@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 import {
   createOrUpdateFoodInclusion,
+  deleteFoodInclusion,
   getSavedFoodInclusions
 } from "../../services/foodInclusion.service";
 import { validateSubmit } from "./FoodInclusionValidation";
@@ -11,7 +11,8 @@ import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
   LabelAndDate,
   LabelAndTextArea,
-  LabelAndCombo
+  LabelAndCombo,
+  LabelAndInput
 } from "../Shareable/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
@@ -46,7 +47,7 @@ class FoodInclusionEditor extends Component {
       ...this.state,
       integrateOptions
     });
-    this.props.change("integrate_select", integrateOptions);
+    this.props.change("description_integrate.select", integrateOptions);
   };
 
   fontHeader = {
@@ -56,10 +57,18 @@ class FoodInclusionEditor extends Component {
     background: "#FFF7CB"
   };
 
-  OnDeleteButtonClicked(id) {
-    axios.delete(`http://localhost:3004/food_inclusion/${id}`).then(res => {
-      this.refresh();
-    });
+  OnDeleteButtonClicked(uuid) {
+    deleteFoodInclusion(
+      "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990",
+      JSON.stringify({ uuid: uuid })
+    ).then(
+      res => {
+        this.refresh();
+      },
+      function(error) {
+        console.log("erro");
+      }
+    );
   }
 
   resetForm(event) {
@@ -175,12 +184,18 @@ class FoodInclusionEditor extends Component {
   }
 
   refresh() {
-    getSavedFoodInclusions("8b0673c4-34bb-4ca5-aaa6-d5ccc9588990").then(res => {
-      this.setState({
-        ...this.state,
-        foodInclusionList: res.content.food_inclusions
-      });
-    });
+    getSavedFoodInclusions("8b0673c4-34bb-4ca5-aaa6-d5ccc9588990").then(
+      res => {
+        console.log(res);
+        this.setState({
+          ...this.state,
+          foodInclusionList: res.content.food_inclusions
+        });
+      },
+      function(error) {
+        console.log("erro");
+      }
+    );
   }
 
   onSubmit(values) {
@@ -188,11 +203,14 @@ class FoodInclusionEditor extends Component {
     createOrUpdateFoodInclusion(
       "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990",
       JSON.stringify(values)
-    ).then(res => {
-      console.log(res);
-      this.refresh();
-    })
-
+    ).then(
+      res => {
+        this.refresh();
+      },
+      function(error) {
+        console.log("erro");
+      }
+    );
   }
 
   render() {
@@ -321,7 +339,7 @@ class FoodInclusionEditor extends Component {
                           >
                             <Field
                               component={StatefulMultiSelect}
-                              name="select"
+                              name=".select"
                               selected={integrateOptions}
                               options={typeFoodMulti}
                               onSelectedChanged={this.handleSelectedChanged}
@@ -341,18 +359,21 @@ class FoodInclusionEditor extends Component {
                             className="form-control"
                             name="select"
                             options={typeFood}
+                            validate={checkMap[period.value] ? required : null}
                           />
                         )}
                       </div>
                       <div className="form-group col-md-2">
                         <Field
-                          component={"input"}
+                          component={LabelAndInput}
                           disabled={
                             !selectMap[period.value] || !checkMap[period.value]
                           }
                           type="number"
                           name="number"
+                          min="0"
                           className="form-control"
+                          validate={checkMap[period.value] ? required : null}
                         />
                       </div>
                     </div>
@@ -373,6 +394,7 @@ class FoodInclusionEditor extends Component {
                     name="reason"
                     label="Período de alteração"
                     options={reasons}
+                    validate={required}
                   />
                 </div>
                 {reason !== "Programa Contínuo - Mais Educação" && (

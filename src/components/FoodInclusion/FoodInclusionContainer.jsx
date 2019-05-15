@@ -40,6 +40,11 @@ class FoodInclusionContainer extends Component {
 
   reasons = [
     {
+      key: 0,
+      label: 'Selecione',
+      value: ''
+    },
+    {
       key : 1,
       value : 'Descrição motivos 1',
       label : 'Descrição motivos 1'

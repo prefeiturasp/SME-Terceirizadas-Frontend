@@ -49,7 +49,7 @@ export class FoodInclusionItemList extends Component {
   render() {
     const { foodInclusionList } = this.props;
     const allDaysInfo = foodInclusionList.map(dayChange => {
-      const { id } = dayChange;
+      const { id, uuid } = dayChange;
       let backgroundColor = dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
@@ -82,7 +82,7 @@ export class FoodInclusionItemList extends Component {
               Salvo em: {dayChange.created_at}
               <Button
                 icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(id)}
+                onClick={p => this.OnDeleteButtonClicked(uuid)}
               />
               <Button
                 icon={ButtonIcon.EDIT}

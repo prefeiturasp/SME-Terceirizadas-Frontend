@@ -16,20 +16,22 @@ import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
-  const { cols, name, label, input, placeholder, readOnly, type, meta } = props;
+  const { cols, name, label, input, min, placeholder, readOnly, type, meta, disabled } = props;
   return (
     <Grid cols={cols}>
-      <label htmlFor={name} className={"col-form-label"}>
+      {label && <label htmlFor={name} className={"col-form-label"}>
         {label}
-      </label>
+      </label>}
       <input
         {...input}
         className="form-control"
+        disabled={disabled}
         name={name}
         id={name}
         placeholder={placeholder}
         readOnly={readOnly}
         type={type}
+        min={min}
       />
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
