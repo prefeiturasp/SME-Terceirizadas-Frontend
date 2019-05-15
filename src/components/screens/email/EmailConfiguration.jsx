@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "react-toastify/dist/ReactToastify.css";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
 import { getEmailConfiguration, setEmailConfiguration, testEmailConfiguration } from "../../../services/email";
@@ -12,12 +11,17 @@ import { generateOptions, SECURITY_OPTIONS } from "./helper";
 class EmailConfiguration extends Component {
   state = { showTest: false, response: { error: "", detail: "" } };
   onSubmit(values) {
-    if (values.security === SECURITY_OPTIONS.TLS) {
-      values.use_tls = true;
-      values.use_ssl = false;
-    } else {
-      values.use_tls = false;
-      values.use_ssl = true;
+    switch (values.security) {
+      case SECURITY_OPTIONS.TLS:
+        values.use_tls = true;
+        values.use_ssl = false;
+        break;
+      case SECURITY_OPTIONS.SSL:
+        values.use_tls = false;
+        values.use_ssl = true;
+        break;
+      default:
+        break;
     }
     const resp = setEmailConfiguration(values);
     resp
@@ -61,7 +65,8 @@ class EmailConfiguration extends Component {
         this.props.change("password", resp.password);
         if (resp.use_tls) {
           this.props.change("security", SECURITY_OPTIONS.TLS);
-        } else {
+        }
+        if (resp.use_ssl) {
           this.props.change("security", SECURITY_OPTIONS.SSL);
         }
         this.setState({ showTest: true });

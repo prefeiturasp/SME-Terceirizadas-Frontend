@@ -1,3 +1,4 @@
+import decode from "jwt-decode";
 import { JWT_AUTH } from "../constants/config.constants";
 
 export const TOKEN_ALIAS = "userToken";
@@ -35,6 +36,35 @@ function logout() {
   localStorage.removeItem(TOKEN_ALIAS);
   window.location.reload();
 }
+
+export const isLoggedIn = () => {
+  if (localStorage.getItem(TOKEN_ALIAS)) {
+    return true;
+  }
+  return false;
+};
+
+export const isTokenExpired = token => {
+  try {
+    const decoded = decode(token);
+    if (decoded.exp < Date.now() / 1000) {
+      logout();
+      return true;
+    } else return false;
+  } catch (err) {
+    console.log("Falha ao verificar token expirado");
+    return false;
+  }
+};
+
+export const needsToRefreshToken = () => {
+  const token = localStorage.getItem(TOKEN_ALIAS);
+  const decoded = decode(token);
+  const secondsLeft = new Date(decoded.exp) - new Date(Date.now() / 1000);
+  if (secondsLeft < 300) {
+    return true;
+  } else return false;
+};
 
 export const userService = {
   login,
