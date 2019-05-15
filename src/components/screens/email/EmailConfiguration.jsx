@@ -72,6 +72,7 @@ class EmailConfiguration extends Component {
         this.setState({ showTest: true });
       })
       .catch(resp => {
+        console.log('error', resp)
         this.setState({ showTest: false });
       });
   }

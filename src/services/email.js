@@ -1,8 +1,9 @@
 import CONFIG from "../constants/config.constants";
+import { getToken } from "./user.service";
 
-const getToken = () => {
-  return "JWT  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6Im1tYWlhLmNjQGdtYWlsLmNvbSIsImV4cCI6MTU1Nzk5NDkxNiwiZW1haWwiOiJtbWFpYS5jY0BnbWFpbC5jb20ifQ.Ca4YOM2o4SeWvVrfFFHZ5GtMdVmRCkEoS91B6s2Zmpo";
-};
+const authData = ()=>{
+  return `JWT ${getToken()}`
+}
 
 export const getEmailConfiguration = async () => {
   try {
@@ -10,7 +11,7 @@ export const getEmailConfiguration = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken()
+        Authorization: authData()
       }
     });
     const json = await response.json();
@@ -26,7 +27,7 @@ export const setEmailConfiguration = async values => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken()
+        Authorization: authData()
       },
       body: JSON.stringify(values)
     });
@@ -43,7 +44,7 @@ export const testEmailConfiguration = async to_email => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: getToken()
+        Authorization: authData()
       },
       body: JSON.stringify({ to_email: to_email })
     });
