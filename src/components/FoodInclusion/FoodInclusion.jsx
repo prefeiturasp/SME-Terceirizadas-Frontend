@@ -5,10 +5,9 @@ import {
   deleteFoodInclusion,
   getSavedFoodInclusions
 } from "../../services/foodInclusion.service";
+import { getWorkingDays } from "../../services/workingDays.service";
 import { validateSubmit } from "./FoodInclusionValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
   LabelAndDate,
@@ -20,7 +19,11 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
 import "../Shareable/custom.css";
 import Weekly from "../Shareable/Weekly";
+import { Modal } from "react-bootstrap";
 import { FoodInclusionItemList } from "./FoodInclusionItemList";
+import { toastSuccess, toastError } from "../Shareable/dialogs";
+
+const USER_ID = "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990";
 
 class FoodInclusionEditor extends Component {
   constructor(props) {
@@ -30,6 +33,9 @@ class FoodInclusionEditor extends Component {
       status: "SEM STATUS",
       title: "Nova Inclusão de Cardápio",
       id: "",
+      two_working_days: null,
+      five_working_days: null,
+      showModal: false,
       salvarAtualizarLbl: "Salvar",
       integrateOptions: [],
       periodsList: []
@@ -39,24 +45,22 @@ class FoodInclusionEditor extends Component {
     this.onEnviarSolicitacoesBtClicked = this.onEnviarSolicitacoesBtClicked.bind(
       this
     );
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.refresh = this.refresh.bind(this);
   }
-
-  notifySuccess = message => {
-    toast.success(message, {
-      position: toast.POSITION.TOP_CENTER
-    });
-  };
-
-  notifyError = message => {
-    toast.error(message, {
-      position: toast.POSITION.TOP_CENTER
-    });
-  };
 
   handleReason(e) {
     let value = e.target.value;
     this.props.handleSelectedReason(value);
+  }
+
+  handleClose() {
+    this.setState({ ...this.state, showModal: false });
+  }
+
+  handleShow() {
+    this.setState({ ...this.state, showModal: true });
   }
 
   handleSelectedChanged = integrateOptions => {
@@ -76,22 +80,19 @@ class FoodInclusionEditor extends Component {
 
   OnDeleteButtonClicked(id, uuid) {
     deleteFoodInclusion(
-      "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990",
+      USER_ID,
       JSON.stringify({ uuid: uuid })
     ).then(
       res => {
         if (res.code === 200) {
-          this.notifySuccess(
-            `Inclusão de Alimentação # ${id} excluída com sucesso`
-          );
+          toastSuccess(`Inclusão de Alimentação # ${id} excluída com sucesso`);
           this.refresh();
         } else {
-          this.notifyError(res.log_content[0]);
+          toastError(res.log_content[0]);
         }
       },
       function(error) {
-        console.log("erro");
-        this.notifyError("Houve um erro ao excluir a inclusão de alimentação");
+        toastError("Houve um erro ao excluir a inclusão de alimentação");
       }
     );
   }
@@ -148,12 +149,17 @@ class FoodInclusionEditor extends Component {
           ? param.dayChange.description_integrate.select
           : this.state.integrateOptions
     });
-    this.notifySuccess = this.notifySuccess.bind(this);
-    this.notifyError = this.notifyError.bind(this);
   }
 
   componentDidMount() {
     this.refresh();
+    getWorkingDays().then(res => {
+      this.setState({
+        ...this.state,
+        two_working_days: res[0].date_two_working_days,
+        five_working_days: res[0].date_five_working_days
+      });
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -213,7 +219,7 @@ class FoodInclusionEditor extends Component {
   }
 
   refresh() {
-    getSavedFoodInclusions("8b0673c4-34bb-4ca5-aaa6-d5ccc9588990").then(
+    getSavedFoodInclusions(USER_ID).then(
       res => {
         this.setState({
           ...this.state,
@@ -221,34 +227,64 @@ class FoodInclusionEditor extends Component {
         });
       },
       function(error) {
-        this.notifyError("Erro ao carregar as inclusões salvas");
+        toastError("Erro ao carregar as inclusões salvas");
       }
     );
     this.resetForm();
   }
 
   onSubmit(values) {
-    validateSubmit(values);
-    createOrUpdateFoodInclusion(
-      "8b0673c4-34bb-4ca5-aaa6-d5ccc9588990",
-      JSON.stringify(values)
-    ).then(
-      res => {
-        if (res.code === 200) {
-          this.notifySuccess(
-            "Inclusão de Alimentação " +
-              (values.status === "SALVO" ? "salva" : "enviada") +
-              " com sucesso"
-          );
-          this.refresh();
-        } else {
-          this.notifyError(res.log_content[0]);
-        }
-      },
-      function(error) {
-        this.notifyError("Houve um erro ao salvar a inclusão de alimentação");
+    const _date = values.date.split("/");
+    const _two_working_days = this.state.two_working_days.split("/");
+    const _five_working_days = this.state.five_working_days.split("/");
+    const is_priority =
+      new Date(
+        _two_working_days[2],
+        _two_working_days[1] - 1,
+        _two_working_days[0]
+      ) <= new Date(_date[2], _date[1] - 1, _date[0]) &&
+      new Date(_date[2], _date[1] - 1, _date[0]) <
+        new Date(
+          _five_working_days[2],
+          _five_working_days[1] - 1,
+          _five_working_days[0]
+        );
+    if (values.status === "A_VALIDAR" && !this.state.showModal && is_priority) {
+      this.setState({
+        ...this.state,
+        showModal: true
+      });
+    } else {
+      const error = validateSubmit(values, this.state);
+      if (!error) {
+        createOrUpdateFoodInclusion(
+          USER_ID,
+          JSON.stringify(values)
+        ).then(
+          res => {
+            if (res.code === 200) {
+              toastSuccess(
+                "Inclusão de Alimentação " +
+                  (values.status === "SALVO" ? "salva" : "enviada") +
+                  " com sucesso"
+              );
+              this.refresh();
+            } else {
+              toastError(res.log_content[0]);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a inclusão de alimentação");
+          }
+        );
+        this.setState({
+          ...this.state,
+          showModal: false
+        });
+      } else {
+        toastError(error);
       }
-    );
+    }
   }
 
   render() {
@@ -527,8 +563,38 @@ class FoodInclusionEditor extends Component {
               </div>
             </div>
           </div>
+          <Modal show={this.state.showModal} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Atenção</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Entre <b>2 e 5 dias úteis</b> é considerado pedido fora do prazo e
+              será necessário aprovação tanto da DRE quanto da Empresa
+              Terceirizada. Deseja prosseguir?
+            </Modal.Body>
+            <Modal.Footer>
+              <BaseButton
+                label="Cancelar"
+                onClick={() => this.handleClose()}
+                disabled={pristine || submitting}
+                style={ButtonStyle.OutlinePrimary}
+              />
+              <BaseButton
+                label="Enviar Solicitação"
+                disabled={pristine || submitting}
+                type={ButtonType.SUBMIT}
+                onClick={handleSubmit(values =>
+                  this.onSubmit({
+                    ...values,
+                    status: "A_VALIDAR"
+                  })
+                )}
+                style={ButtonStyle.Primary}
+                className="ml-3"
+              />
+            </Modal.Footer>
+          </Modal>
         </form>
-        <ToastContainer />
       </div>
     );
   }

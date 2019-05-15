@@ -50,7 +50,6 @@ export class FoodInclusionItemList extends Component {
     const { foodInclusionList } = this.props;
     const allDaysInfo = foodInclusionList.map(dayChange => {
       const { id } = dayChange;
-      console.log(dayChange)
       let backgroundColor = dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
