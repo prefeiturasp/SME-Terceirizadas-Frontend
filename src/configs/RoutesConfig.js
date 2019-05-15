@@ -1,13 +1,13 @@
 import { Login } from "../components/Login";
-import EmailConfiguration from "../components/screens/email/EmailConfiguration";
-import AddFoodPage from "../pages/AddFoodPage";
-import DayChangePage from "../pages/DayChangePage";
-import FoodSuspensionPage from "../pages/FoodSuspensionPage";
-import Home from "../pages/Home";
 import { MenuChangePage } from "../pages/MenuChangePage";
-import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
+import Home from "../pages/Home";
+import FoodInclusionPage from "../pages/FoodInclusionPage";
 import PermissionsPage from "../pages/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
+import EmailConfiguration from "../components/screens/email/EmailConfiguration";
+import DayChangePage from "../pages/DayChangePage";
+import FoodSuspensionPage from "../pages/FoodSuspensionPage";
+import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 
 const routesConfig = [
   {
@@ -26,9 +26,9 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/add-food",
-    component: AddFoodPage,
-    exact: false
+    path : "/add-food",
+    component : FoodInclusionPage,
+    exact : false
   },
   {
     path: "/permission-root/permissions/:type/:subtype",
