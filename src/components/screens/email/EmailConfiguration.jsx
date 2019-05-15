@@ -1,13 +1,16 @@
 import React, { Component } from "react";
+import "react-toastify/dist/ReactToastify.css";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
 import { getEmailConfiguration, setEmailConfiguration, testEmailConfiguration } from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import { toastError, toastSuccess } from "../../Shareable/dialogs";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
+
 class EmailConfiguration extends Component {
-  state = { showTest: false };
+  state = { showTest: false, response: { error: "", detail: "" } };
   onSubmit(values) {
     if (values.security === SECURITY_OPTIONS.TLS) {
       values.use_tls = true;
@@ -17,14 +20,33 @@ class EmailConfiguration extends Component {
       values.use_ssl = true;
     }
     const resp = setEmailConfiguration(values);
-    resp.then(e => console.log("PUT", e));
+    resp
+      .then(() => {
+        toastSuccess(
+          "Salvo com sucesso! Por favor, teste para ver se deu tudo certo."
+        );
+      })
+      .catch(() => {
+        toastError("Ops! Algo deu errado...");
+      });
   }
 
   onTestConfiguration(toEmail) {
     const prom = testEmailConfiguration(toEmail);
     prom.then(resp => {
-      console.log("RESPOSTA....", resp);
+      this.setState({ response: resp });
+      this.emailAlert();
     });
+  }
+
+  emailAlert() {
+    const error = this.state.response.error;
+    const detail = this.state.response.detail;
+    if (error) {
+      toastError(error);
+    } else {
+      toastSuccess(detail);
+    }
   }
 
   componentDidMount() {
@@ -50,7 +72,7 @@ class EmailConfiguration extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div className="container">
         <div>
@@ -127,26 +149,21 @@ class EmailConfiguration extends Component {
                   validate={email}
                   placeholder="seu-email@sme.com"
                 />
-                <BaseButton
-                  label="Testar"
-                  className="ml-3"
-                  type={ButtonType.SUBMIT}
-                  onClick={handleSubmit(values =>
-                    this.onTestConfiguration(values.testEmail)
-                  )}
-                  style={ButtonStyle.OutlineDark}
-                />
               </div>
             </IsVisible>
           </div>
           <div className="form-group row float-right">
             <BaseButton
-              label="Cancelar"
-              type={ButtonType.RESET}
+              label="Testar"
+              type={ButtonType.SUBMIT}
+              disabled={pristine || submitting}
               style={ButtonStyle.OutlinePrimary}
+              onClick={handleSubmit(values =>
+                this.onTestConfiguration(values.testEmail)
+              )}
             />
             <BaseButton
-              label="Enviar Configuração"
+              label="Salvar"
               type={ButtonType.SUBMIT}
               className="ml-2"
               onClick={handleSubmit(values =>
@@ -166,12 +183,4 @@ class EmailConfiguration extends Component {
 export default (EmailConfiguration = reduxForm({
   form: "emailConfiguration",
   destroyOnUnmount: false
-  // initialValues: {
-  //   username: "mmaia.cc@gmail.com",
-  //   password: "asoidjasiod",
-  //   from_email: "mmaia.cc@gmail.com",
-  //   host: "smtp.gmail.com",
-  //   security: "TLS",
-  //   port: "587"
-  // }
 })(EmailConfiguration));
