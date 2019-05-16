@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import AddFood from './AddFood';
+import { getPeriods } from "../../services/school.service"
+import FoodInclusion from './FoodInclusion';
 
-class AddFoodContainer extends Component {
+class FoodInclusionContainer extends Component {
 
   typeFood = [
     {
@@ -39,6 +40,11 @@ class AddFoodContainer extends Component {
 
   reasons = [
     {
+      key: 0,
+      label: 'Selecione',
+      value: ''
+    },
+    {
       key : 1,
       value : 'Descrição motivos 1',
       label : 'Descrição motivos 1'
@@ -56,28 +62,6 @@ class AddFoodContainer extends Component {
 
   ]
 
-  periods = [
-    {
-      label: "1º Período - Matutino",
-      value: "first_period"
-    },
-    {
-      label: "2º Período - Intermediário",
-      value: "second_period"
-    },
-    {
-      label: "3º Período - Vespertino",
-      value: "third_period"
-    },
-    {
-      label: "4º Período - Noturno",
-      value: "fourth_period"
-    },
-    {
-      label: "Integral",
-      value: "integrate"
-    }
-  ]
   constructor(props){
     super(props)
     this.state = {
@@ -86,18 +70,26 @@ class AddFoodContainer extends Component {
       day : new Date(),
       typeFood : this.typeFood,
       typeFoodMulti: this.typeFoodMulti,
-      periods : this.periods
+      periods : []
     }
+  }
 
+  componentDidMount(){
+    getPeriods('8b0673c4-34bb-4ca5-aaa6-d5ccc9588990').then(res => {
+      this.setState({
+        ...this.state,
+        periods: res.content.school_periods
+      })
+    })
   }
 
   render() {
     return (
-      <AddFood
+      <FoodInclusion
         {...this.state}
       />
     );
   }
 }
 
-export default AddFoodContainer
+export default FoodInclusionContainer

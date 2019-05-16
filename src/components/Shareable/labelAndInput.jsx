@@ -16,20 +16,22 @@ import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
-  const { cols, name, label, input, placeholder, readOnly, type, meta } = props;
+  const { cols, name, label, input, min, placeholder, readOnly, type, meta, disabled } = props;
   return (
     <Grid cols={cols}>
-      <label htmlFor={name} className={"col-form-label"}>
+      {label && <label htmlFor={name} className={"col-form-label"}>
         {label}
-      </label>
+      </label>}
       <input
         {...input}
         className="form-control"
+        disabled={disabled}
         name={name}
         id={name}
         placeholder={placeholder}
         readOnly={readOnly}
         type={type}
+        min={min}
       />
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
@@ -42,7 +44,9 @@ LabelAndInput.propTypes = {
   name: PropTypes.string,
   readOnly: PropTypes.bool
 };
-
+LabelAndInput.defaultProps = {
+  readOnly: false
+};
 export class LabelAndCombo extends Component {
   constructor(props) {
     super(props);
@@ -52,7 +56,7 @@ export class LabelAndCombo extends Component {
   handleChange(event) {
     const value = event.target.value;
     this.props.input.onChange(value);
-    if (this.props.selectOnChange) this.props.selectOnChange(event)
+    if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
 
   static propTypes = {
@@ -79,9 +83,11 @@ export class LabelAndCombo extends Component {
     const { cols, name, label, input, meta, options, disabled } = this.props;
     return (
       <Grid cols={cols}>
-        {label && <label htmlFor={name} className={"col-form-label"}>
-          {label}
-        </label>}
+        {label && (
+          <label htmlFor={name} className={"col-form-label"}>
+            {label}
+          </label>
+        )}
         <select
           {...input}
           disabled={disabled}
@@ -276,7 +282,7 @@ export class LabelAndTextArea extends Component {
     const { cols, name, label, placeholder, meta } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
-        <label htmlFor={name} className={"col-form-label"}>
+        <label htmlFor={name} className={"session-header col-form-label"}>
           {label}
         </label>
         <Editor

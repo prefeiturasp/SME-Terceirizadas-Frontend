@@ -3,20 +3,13 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./components/Login";
 import RoutesConfig from "./configs/RoutesConfig";
 import NotFoundPage from "./pages/NotFoundPage";
-import { TOKEN_ALIAS } from "./services/user.service";
-
-const isAuthenticate = () => {
-  if (localStorage.getItem(TOKEN_ALIAS)) {
-    return true;
-  }
-  return false;
-};
+import authService from "./services/auth";
 
 const PrivateRouter = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      isAuthenticate() ? (
+      authService.isLoggedIn() ? (
         <Component {...props} />
       ) : (
         <Redirect

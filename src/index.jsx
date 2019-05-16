@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // Redux
 import { applyMiddleware, createStore } from "redux";
 import multi from "redux-multi";
@@ -15,6 +17,8 @@ import "./styles/custom.css";
 // import 'bootstrap/dist/css/bootstrap.css';
 // import 'startbootstrap-sb-admin-2/css/sb-admin-2.css'
 import "./styles/sb-admin-2.css";
+
+toast.configure();
 
 // see https://github.com/zalmoxisus/redux-devtools-extension
 let devTools = undefined;
@@ -48,4 +52,3 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
- 
