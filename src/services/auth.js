@@ -115,6 +115,7 @@ export const calculateTokenSecondsLeft = token => {
 
 const authService = {
   login,
+  logout,
   getToken,
   isLoggedIn,
   isValidResponse
