@@ -60,9 +60,8 @@ export const isLoggedIn = () => {
   return false;
 };
 
-export const needsToRefreshToken = () => {
-  //TODO: verificar essa func para ver se esta correta. 
-  const token = localStorage.getItem(TOKEN_ALIAS);
+export const needsToRefreshToken = token => {
+  //TODO: verificar essa func para ver se esta correta.
   const decoded = decode(token);
   const secondsLeft = new Date(decoded.exp) - new Date(Date.now() / 1000);
   if (secondsLeft < CONFIG.REFRESH_TOKEN_TIMEOUT) {
@@ -70,9 +69,22 @@ export const needsToRefreshToken = () => {
   } else return false;
 };
 
+export const isTokenExpired = token => {
+  try {
+    const decoded = decode(token);
+    if (decoded.exp < Date.now() / 1000) {
+      return true;
+    } else return false;
+  } catch (err) {
+    console.log("Falha ao verificar token expirado");
+    return false;
+  }
+};
+
 export const getToken = () => {
   let token = localStorage.getItem(TOKEN_ALIAS);
   if (token) {
+    if (isTokenExpired(token)) logout();
     if (needsToRefreshToken(token)) {
       refreshToken(token).then(json => {
         localStorage.setItem(TOKEN_ALIAS, json.token);
@@ -82,19 +94,6 @@ export const getToken = () => {
     return token;
   } else {
     logout();
-  }
-};
-
-export const isTokenExpired = token => {
-  try {
-    const decoded = decode(token);
-    if (decoded.exp < Date.now() / 1000) {
-      logout();
-      return true;
-    } else return false;
-  } catch (err) {
-    console.log("Falha ao verificar token expirado");
-    return false;
   }
 };
 
