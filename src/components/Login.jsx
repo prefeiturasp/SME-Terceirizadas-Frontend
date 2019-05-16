@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { required } from "../helpers/fieldValidators";
-import { authService } from "../services/auth";
+import authService from "../services/auth";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
 

@@ -56,8 +56,11 @@ const isLoggedIn = () => {
 };
 
 const isValidResponse = json => {
-  const isValid = json.token.length >= 203 ? true : false;
-  return isValid;
+  try {
+    return json.token.length >= 203 ? true : false;
+  } catch (error) {
+    return false;
+  }
 };
 
 const refreshToken = async token => {
@@ -103,9 +106,12 @@ const calculateTokenSecondsLeft = token => {
   return secondsLeft;
 };
 
-export const authService = {
+const authService = {
   login,
   logout,
   getToken,
-  isLoggedIn
+  isLoggedIn,
+  isValidResponse
 };
+
+export default authService;

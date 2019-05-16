@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Home from "../../pages/Home";
-import { authService } from "../../services/auth";
+import authService from "../../services/auth";
 import BaseButton, { ButtonIcon } from "../Shareable/button";
 
 export class Header extends Component {
