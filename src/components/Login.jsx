@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { required } from "../helpers/fieldValidators";
-import { userService } from "../services/user.service";
+import { authService } from "../services/auth";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
 import { LabelAndInput } from "./Shareable/labelAndInput";
 
@@ -9,7 +9,7 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      userService.login(email, password);
+      authService.login(email, password);
     }
   };
 

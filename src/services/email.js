@@ -1,8 +1,8 @@
 import CONFIG from "../constants/config.constants";
-import { getToken } from "./user.service";
+import { authService } from "./auth";
 
 const authData = ()=>{
-  return `JWT ${getToken()}`
+  return `JWT ${authService.getToken()}`
 }
 
 export const getEmailConfiguration = async () => {
