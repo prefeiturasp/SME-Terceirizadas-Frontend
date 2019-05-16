@@ -42,8 +42,6 @@ const getToken = () => {
       token = localStorage.getItem(TOKEN_ALIAS);
     }
     return token;
-  } else {
-    logout();
   }
 };
 

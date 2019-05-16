@@ -37,8 +37,12 @@ describe("AuthService Helper functions", () => {
     const resp = calculateTokenSecondsLeft(token);
     expect(resp).toBe(-536.077);
   });
-  it("should return true on token expired", () => {
+  it("isTokenExpired should return true on token expired", () => {
     const resp = isTokenExpired(token);
+    expect(resp).toBe(true);
+  });
+  it("isTokenExpired should return true when undefined", () => {
+    const resp = isTokenExpired(undefined);
     expect(resp).toBe(true);
   });
 });
