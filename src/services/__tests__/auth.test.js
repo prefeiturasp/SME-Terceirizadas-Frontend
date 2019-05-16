@@ -5,15 +5,17 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage("./scratch");
 }
 
-const token =
+const expiredToken =
   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6Im1tYWlhLmNjQGdtYWlsLmNvbSIsImV4cCI6MTU1ODAxOTU3OSwiZW1haWwiOiJtbWFpYS5jY0BnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1ODAxNTk3OX0.1dd6FpIpKagM5K6Qk8PL499oHi9PCrcoAGRJOqKeBf8";
-localStorage.setItem(TOKEN_ALIAS, token);
+const nonExpiredToken =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6Im1tYWlhLmNjQGdtYWlsLmNvbSIsImV4cCI6MTU1ODAzMTA4NiwiZW1haWwiOiJtbWFpYS5jY0BnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1ODAyNzQ4Nn0.V65suJw4LACKhQMNltbi7emIlmxGsYP4VHhEK83O8EU";
+localStorage.setItem(TOKEN_ALIAS, expiredToken);
 const mock = jest.fn();
 Date.now = mock.mockReturnValue(new Date(1558020115077));
 
 describe("AuthService isValidResponse", () => {
   it("Should pass token Valid", () => {
-    const resp = authService.isValidResponse({ token });
+    const resp = authService.isValidResponse({ token: expiredToken });
     expect(resp).toBe(true);
   });
 
@@ -23,7 +25,7 @@ describe("AuthService isValidResponse", () => {
   });
 
   it("Should not pass plain string", () => {
-    const resp = authService.isValidResponse(token);
+    const resp = authService.isValidResponse(expiredToken);
     expect(resp).toBe(false);
   });
 });
@@ -34,15 +36,23 @@ describe("AuthService Helper functions", () => {
     expect(resp).toBe(true);
   });
   it("should return correct seconds", () => {
-    const resp = calculateTokenSecondsLeft(token);
+    const resp = calculateTokenSecondsLeft(expiredToken);
     expect(resp).toBe(-536.077);
   });
-  it("isTokenExpired should return true on token expired", () => {
-    const resp = isTokenExpired(token);
+  it("isTokenExpired should return true when expired", () => {
+    const resp = isTokenExpired(expiredToken);
     expect(resp).toBe(true);
+  });
+  it("isTokenExpired should return false when non expired", () => {
+    const resp = isTokenExpired(nonExpiredToken);
+    expect(resp).toBe(false);
   });
   it("isTokenExpired should return true when undefined", () => {
     const resp = isTokenExpired(undefined);
+    expect(resp).toBe(true);
+  });
+  it("isTokenExpired should return true when null", () => {
+    const resp = isTokenExpired(null);
     expect(resp).toBe(true);
   });
 });
