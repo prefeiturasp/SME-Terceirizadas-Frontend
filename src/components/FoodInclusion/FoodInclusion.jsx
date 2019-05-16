@@ -36,17 +36,14 @@ class FoodInclusionEditor extends Component {
       two_working_days: null,
       five_working_days: null,
       showModal: false,
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       integrateOptions: [],
       periodsList: []
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
-    this.onEnviarSolicitacoesBtClicked = this.onEnviarSolicitacoesBtClicked.bind(
-      this
-    );
-    this.handleShow = this.handleShow.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
     this.refresh = this.refresh.bind(this);
   }
 
@@ -55,11 +52,11 @@ class FoodInclusionEditor extends Component {
     this.props.handleSelectedReason(value);
   }
 
-  handleClose() {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 
-  handleShow() {
+  showModal() {
     this.setState({ ...this.state, showModal: true });
   }
 
@@ -79,32 +76,27 @@ class FoodInclusionEditor extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodInclusion(
-      USER_ID,
-      JSON.stringify({ uuid: uuid })
-    ).then(
+    deleteFoodInclusion(USER_ID, JSON.stringify({ uuid: uuid })).then(
       res => {
         if (res.code === 200) {
-          toastSuccess(`Inclusão de Alimentação # ${id} excluída com sucesso`);
+          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
           this.refresh();
         } else {
           toastError(res.log_content[0]);
         }
       },
       function(error) {
-        toastError("Houve um erro ao excluir a inclusão de alimentação");
+        toastError("Houve um erro ao excluir o rascunho");
       }
     );
   }
-
-  onEnviarSolicitacoesBtClicked(uuids) {}
 
   resetForm(event) {
     this.props.reset();
     this.setState({
       status: "SEM STATUS",
       title: "Nova Inclusão de Alimentação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       id: "",
       integrateOptions: []
     });
@@ -250,23 +242,17 @@ class FoodInclusionEditor extends Component {
           _five_working_days[0]
         );
     if (values.status === "A_VALIDAR" && !this.state.showModal && is_priority) {
-      this.setState({
-        ...this.state,
-        showModal: true
-      });
+      this.showModal();
     } else {
       const error = validateSubmit(values, this.state);
       if (!error) {
-        createOrUpdateFoodInclusion(
-          USER_ID,
-          JSON.stringify(values)
-        ).then(
+        createOrUpdateFoodInclusion(USER_ID, JSON.stringify(values)).then(
           res => {
             if (res.code === 200) {
               toastSuccess(
-                "Inclusão de Alimentação " +
-                  (values.status === "SALVO" ? "salva" : "enviada") +
-                  " com sucesso"
+                (values.status === "SALVO"
+                  ? "Rascunho salvo"
+                  : "Inclusão de Alimentação enviada") + " com sucesso"
               );
               this.refresh();
             } else {
@@ -277,10 +263,7 @@ class FoodInclusionEditor extends Component {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         );
-        this.setState({
-          ...this.state,
-          showModal: false
-        });
+        this.closeModal();
       } else {
         toastError(error);
       }
@@ -305,7 +288,7 @@ class FoodInclusionEditor extends Component {
       typeFoodMulti
     } = this.props;
     const { title, integrateOptions, foodInclusionList } = this.state;
-    const checkMap = {
+    let checkMap = {
       first_period: firstPeriod && firstPeriod.check,
       second_period: secondPeriod && secondPeriod.check,
       third_period: thirdPeriod && thirdPeriod.check,
@@ -345,7 +328,7 @@ class FoodInclusionEditor extends Component {
           {foodInclusionList.length > 0 && (
             <div className="card mt-3">
               <div className="card-body">
-                <span className="page-title">Formulários salvos</span>
+                <span className="page-title">Rascunhos</span>
                 <FoodInclusionItemList
                   foodInclusionList={foodInclusionList}
                   OnDeleteButtonClicked={this.OnDeleteButtonClicked}
@@ -370,6 +353,56 @@ class FoodInclusionEditor extends Component {
               >
                 Descrição da Inclusão
               </div>
+              <div className="form-row">
+                {reason !== "Programa Contínuo - Mais Educação" && (
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      name="date"
+                      label="Dia"
+                      validate={required}
+                    />
+                  </div>
+                )}
+                <div className="form-group col-sm-8">
+                  <Field
+                    component={LabelAndCombo}
+                    name="reason"
+                    label="Motivo"
+                    options={reasons}
+                    validate={required}
+                  />
+                </div>
+              </div>
+              {reason === "Programa Contínuo - Mais Educação" && (
+                <div className="form-row">
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      cols="4"
+                      name="date_from"
+                      label="De"
+                      validate={required}
+                    />
+                  </div>
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      cols="4"
+                      name="date_to"
+                      label="Até"
+                      validate={required}
+                    />
+                  </div>
+                  <Field
+                    component={Weekly}
+                    name="weekdays"
+                    cols="12"
+                    classNameArgs="form-group col-sm-4"
+                    label="Repetir"
+                  />
+                </div>
+              )}
               <table className="table table-borderless">
                 <tr>
                   <td>Período</td>
@@ -395,14 +428,21 @@ class FoodInclusionEditor extends Component {
                             borderRadius: "7px"
                           }}
                         >
-                          <Field
-                            component={"input"}
-                            className="form-check-input"
-                            type="checkbox"
-                            name="check"
-                          />
-                          <label htmlFor="check" className="form-check-label">
-                            {" "}
+                          <label htmlFor="check" className="checkbox-label">
+                            <Field
+                              component={"input"}
+                              type="checkbox"
+                              name="check"
+                            />
+                            <span
+                              onClick={() =>
+                                this.props.change(
+                                  `description_${period.value}.check`,
+                                  !checkMap[period.value]
+                                )
+                              }
+                              className="checkbox-custom"
+                            />{" "}
                             {period.label}
                           </label>
                         </div>
@@ -460,63 +500,6 @@ class FoodInclusionEditor extends Component {
                 );
               })}
               <hr className="w-100" />
-              <div
-                className="card-title font-weight-bold"
-                style={this.fontHeader}
-              >
-                Data da Inclusão
-              </div>
-              <div className="form-row">
-                <div className="form-group col-sm-8">
-                  <Field
-                    component={LabelAndCombo}
-                    name="reason"
-                    label="Período de alteração"
-                    options={reasons}
-                    validate={required}
-                  />
-                </div>
-                {reason !== "Programa Contínuo - Mais Educação" && (
-                  <div className="form-group col-sm-4">
-                    <Field
-                      component={LabelAndDate}
-                      name="date"
-                      label="Dia"
-                      validate={required}
-                    />
-                  </div>
-                )}
-              </div>
-              {reason === "Programa Contínuo - Mais Educação" && (
-                <div className="form-row">
-                  <div className="form-group col-sm-3">
-                    <Field
-                      component={LabelAndDate}
-                      cols="4"
-                      name="date_from"
-                      label="De"
-                      validate={required}
-                    />
-                  </div>
-                  <div className="form-group col-sm-3">
-                    <Field
-                      component={LabelAndDate}
-                      cols="4"
-                      name="date_to"
-                      label="Até"
-                      validate={required}
-                    />
-                  </div>
-                  <Field
-                    component={Weekly}
-                    name="weekdays"
-                    cols="12"
-                    classNameArgs="form-group col-sm-4"
-                    label="Repetir"
-                  />
-                </div>
-              )}
-              <hr className="w-100" />
               <div className="form-group">
                 <Field
                   component={LabelAndTextArea}
@@ -563,7 +546,7 @@ class FoodInclusionEditor extends Component {
               </div>
             </div>
           </div>
-          <Modal show={this.state.showModal} onHide={this.handleClose}>
+          <Modal show={this.state.showModal} onHide={this.closeModal}>
             <Modal.Header closeButton>
               <Modal.Title>Atenção</Modal.Title>
             </Modal.Header>
@@ -575,7 +558,7 @@ class FoodInclusionEditor extends Component {
             <Modal.Footer>
               <BaseButton
                 label="Cancelar"
-                onClick={() => this.handleClose()}
+                onClick={() => this.closeModal()}
                 disabled={pristine || submitting}
                 style={ButtonStyle.OutlinePrimary}
               />

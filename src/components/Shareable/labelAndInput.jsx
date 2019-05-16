@@ -282,7 +282,7 @@ export class LabelAndTextArea extends Component {
     const { cols, name, label, placeholder, meta } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
-        <label htmlFor={name} className={"col-form-label"}>
+        <label htmlFor={name} className={"session-header col-form-label"}>
           {label}
         </label>
         <Editor
