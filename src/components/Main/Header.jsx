@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Home from "../../pages/Home";
-import { userService } from "../../services/user.service";
+import authService from "../../services/auth";
 import BaseButton, { ButtonIcon } from "../Shareable/button";
 
 export class Header extends Component {
@@ -41,7 +41,7 @@ export class Header extends Component {
                     className="nav-link"
                     icon={ButtonIcon.POWER_OFF}
                     label="Sair &nbsp;"
-                    onClick={() => userService.logout()}
+                    onClick={() => authService.logout()}
                   />
                 </li>
               </ul>

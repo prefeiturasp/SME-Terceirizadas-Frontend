@@ -1,18 +1,16 @@
 import CONFIG from "../constants/config.constants";
-import { getToken } from "./user.service";
+import authService from "./auth";
 
-const authData = ()=>{
-  return `JWT ${getToken()}`
-}
+const authHeader = {
+  "Content-Type": "application/json",
+  Authorization: `JWT ${authService.getToken()}`
+};
 
 export const getEmailConfiguration = async () => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email/1/`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authData()
-      }
+      headers: authHeader
     });
     const json = await response.json();
     return json;
@@ -25,10 +23,7 @@ export const setEmailConfiguration = async values => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email/1/`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authData()
-      },
+      headers: authHeader,
       body: JSON.stringify(values)
     });
     const json = await response.json();
@@ -42,10 +37,7 @@ export const testEmailConfiguration = async to_email => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email-test/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authData()
-      },
+      headers: authHeader,
       body: JSON.stringify({ to_email: to_email })
     });
     const json = await response.json();
