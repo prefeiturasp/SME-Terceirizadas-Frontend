@@ -1,7 +1,7 @@
 import decode from "jwt-decode";
 import CONFIG from "../constants/config.constants";
 
-const TOKEN_ALIAS = "TOKEN";
+export const TOKEN_ALIAS = "TOKEN";
 
 const login = async (email, password) => {
   try {
@@ -21,7 +21,7 @@ const login = async (email, password) => {
     }
     return isValid;
   } catch (error) {
-    return error;
+    return false;
   }
 };
 
@@ -57,13 +57,20 @@ const isLoggedIn = () => {
 
 const isValidResponse = json => {
   try {
-    return json.token.length >= 203 ? true : false;
+    const decoded = decode(json.token);
+    const test2 =
+      decoded.user_id !== undefined &&
+      decoded.username !== undefined &&
+      decoded.exp !== undefined &&
+      decoded.email !== undefined;
+    const test1 = json.token.length >= 203 ? true : false;
+    return test1 && test2;
   } catch (error) {
     return false;
   }
 };
 
-const refreshToken = async token => {
+export const refreshToken = async token => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/api-token-refresh/`, {
       method: "POST",
@@ -86,7 +93,7 @@ const needsToRefreshToken = token => {
   } else return false;
 };
 
-const isTokenExpired = token => {
+export const isTokenExpired = token => {
   try {
     const secondsLeft = calculateTokenSecondsLeft(token);
     if (secondsLeft <= 0) {
@@ -98,7 +105,7 @@ const isTokenExpired = token => {
   }
 };
 
-const calculateTokenSecondsLeft = token => {
+export const calculateTokenSecondsLeft = token => {
   const decoded = decode(token);
   const dateToken = new Date(decoded.exp * 1000);
   const dateVerify = new Date(Date.now());
@@ -108,7 +115,6 @@ const calculateTokenSecondsLeft = token => {
 
 const authService = {
   login,
-  logout,
   getToken,
   isLoggedIn,
   isValidResponse
