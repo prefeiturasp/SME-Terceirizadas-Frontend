@@ -40,12 +40,6 @@ export class FoodInclusionItemList extends Component {
     this.props.resetForm();
   }
 
-  onEnviarSolicitacoesBtClicked(event) {
-    this.state.checkedObjects.map(obj => {
-      console.log(obj.id);
-    });
-  }
-
   render() {
     const { foodInclusionList } = this.props;
     const allDaysInfo = foodInclusionList.map(dayChange => {
@@ -63,19 +57,6 @@ export class FoodInclusionItemList extends Component {
             >
               {dayChange.status}
             </span>
-            <div className="float-right">
-              <input
-                className="float-right mt-2 mr-3"
-                type="checkbox"
-                name={id}
-                id={id}
-                onClick={event =>
-                  this.onCheckChange(event, {
-                    id,
-                  })
-                }
-              />
-            </div>
           </div>
           <div>
             <div className="float-right">
@@ -108,15 +89,6 @@ export class FoodInclusionItemList extends Component {
     return (
       <div>
         {allDaysInfo}
-        <If isVisible={this.props.foodInclusionList.length >= 1}>
-          <Button
-            style={ButtonStyle.Primary}
-            label="Enviar solicitações"
-            className="float-right mt-2"
-            disabled={this.state.checkedObjects.length === 0}
-            onClick={event => this.onEnviarSolicitacoesBtClicked(event)}
-          />
-        </If>
       </div>
     );
   }
