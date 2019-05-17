@@ -8,8 +8,11 @@ import { validateTourRequestForm } from "../../helpers/formValidators/tourReques
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
-import { SelecionaKitLancheBox, SelecionaTempoPasseio } from "./TourRequestCheck";
+import SelecionaTempoPasseio from "./TourRequestCheck";
+import SelecionaKitLancheBox from './SelecionaKitLancheBox'
 import { TourRequestItemList } from "./TourRequesttemList";
+
+
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
@@ -111,6 +114,11 @@ export class TourRequest extends Component {
       radioChanged: event !== previousValue
     });
   };
+
+
+  componentWillMount(){
+
+  }
 
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;

@@ -1,6 +1,7 @@
 {
   "tourRequest": [
     {
+      "obs": "<p>Teste de descrição</p>\n",
       "evento_data": "24/04/2019",
       "local_passeio": "iyuiuyiyuiyui",
       "nro_alunos": "11",
@@ -9,9 +10,8 @@
         "kit_2",
         "kit_1"
       ],
-      "obs": "<p>21 3123 123 123 21</p>\n",
       "status": "SALVO",
-      "salvo_em": "2019-04-22T18:52:54.197Z",
+      "salvo_em": "2019-05-17T22:30:49.316Z",
       "id": 1
     },
     {
@@ -113,7 +113,6 @@
         {
           "role": "Suplente"
         }
-        
       ],
       "id": 2
     },
