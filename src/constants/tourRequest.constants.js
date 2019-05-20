@@ -1,0 +1,1 @@
+export const GET_KITS = 'GET_KITS'
