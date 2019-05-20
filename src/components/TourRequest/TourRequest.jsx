@@ -11,6 +11,7 @@ import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
 import SelecionaKitLancheBox from './SelecionaKitLancheBox'
 import { TourRequestItemList } from "./TourRequesttemList";
+import { getQuatidadeAlunoApi, salvarKitLanche, atualizarKitLanche } from '../../services/tourRequest.service'
 
 
 export const HORAS_ENUM = {
@@ -23,6 +24,7 @@ export class TourRequest extends Component {
   constructor(props) {
     super(props);
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
+
     this.state = {
       qtd_kit_lanche: 0,
       radioChanged: false,
@@ -31,7 +33,7 @@ export class TourRequest extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       id: "",
-      nro_matriculados: 100
+      nro_matriculados: 0
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -74,18 +76,26 @@ export class TourRequest extends Component {
 
   componentDidMount() {
     this.refresh();
+    getQuatidadeAlunoApi().then(resp =>{
+      this.setState({
+        nro_alunos : this.state.nro_matriculados = resp.students
+      })
+    })
   }
+
 
   onSubmit(values) {
     validateTourRequestForm(values);
+
     if (values.id) {
       axios
-        .put(`http://localhost:3004/tourRequest/${values.id}`, values)
-        .then(res => {
-          this.refresh();
-          console.log("PUT", res.data);
-        });
+      .put(`http://localhost:3004/tourRequest/${values.id}`, values)
+      .then(res => {
+        this.refresh();
+        // console.log("PUT", res.data);
+      });
     } else {
+      salvarKitLanche(values)
       axios.post(`http://localhost:3004/tourRequest/`, values).then(res => {
         this.refresh();
         console.log("POST", res.data);
@@ -116,7 +126,7 @@ export class TourRequest extends Component {
   };
 
 
-  componentWillMount(){
+  componentWillMount() {
 
   }
 
