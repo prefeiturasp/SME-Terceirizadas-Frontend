@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from 'redux'
 import {
   createOrUpdateFoodInclusion,
   deleteFoodInclusion,
@@ -22,6 +23,7 @@ import Weekly from "../Shareable/Weekly";
 import { Modal } from "react-bootstrap";
 import { FoodInclusionItemList } from "./FoodInclusionItemList";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { loadFoodInclusion } from "../../reducers/foodInclusionReducer"
 
 class FoodInclusionEditor extends Component {
   constructor(props) {
@@ -193,7 +195,7 @@ class FoodInclusionEditor extends Component {
   }
 
   resetForm(event) {
-    this.props.reset();
+    this.props.loadFoodInclusion(null);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Inclusão de Alimentação",
@@ -214,41 +216,8 @@ class FoodInclusionEditor extends Component {
   }
 
   OnEditButtonClicked(param) {
-    const props = this.props;
-    /* TODO: inicializar valores via redux */
-    this.props.reset();
-    this.props.change("uuid", param.dayChange.uuid);
-    this.props.change("obs", param.dayChange.obs);
-    this.props.change(
-      "description_first_period",
-      param.dayChange.description_first_period
-    );
-    this.props.change(
-      "description_second_period",
-      param.dayChange.description_second_period
-    );
-    this.props.change(
-      "description_third_period",
-      param.dayChange.description_third_period
-    );
-    this.props.change(
-      "description_fourth_period",
-      param.dayChange.description_fourth_period
-    );
-    this.props.change(
-      "description_integrate",
-      param.dayChange.description_integrate
-    );
-    this.props.change("date", param.dayChange.date);
-    this.props.change("date_from", param.dayChange.date_from);
-    this.props.change("date_to", param.dayChange.date_to);
-    this.props.change("weekdays", param.dayChange.weekdays);
-    this.props.change("reason", param.dayChange.reason);
-    this.props.change("which_reason", param.dayChange.which_reason);
-    this.props.change("day_reasons", param.dayChange.day_reasons);
-    param.dayChange.day_reasons.forEach(function(day_reason) {
-      props.change(`day_reasons_${day_reason.id}`, day_reason);
-    });
+    this.props.reset('foodInclusion');
+    this.props.loadFoodInclusion(param.dayChange);
     this.setState({
       status: param.dayChange.status,
       title: `Inclusão de Cardápio # ${param.dayChange.id}`,
@@ -344,7 +313,7 @@ class FoodInclusionEditor extends Component {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
-    this.resetForm();
+    this.resetForm('foodInclusion');
   }
 
   onSubmit(values) {
@@ -761,19 +730,27 @@ class FoodInclusionEditor extends Component {
 }
 
 const FoodInclusionEditorForm = reduxForm({
-  form: "foodInclusion"
+  form: "foodInclusion",
+  enableReinitialize: true
 })(FoodInclusionEditor);
 const selector = formValueSelector("foodInclusion");
 const mapStateToProps = state => {
   return {
+    initialValues: state.foodInclusion.data,
     firstPeriod: selector(state, "description_first_period"),
     secondPeriod: selector(state, "description_second_period"),
     thirdPeriod: selector(state, "description_third_period"),
     fourthPeriod: selector(state, "description_fourth_period"),
-    integrate: selector(state, "description_integrate"),
-    reason: selector(state, "reason"),
-    day_reasons: selector(state, "day_reasons")
+    integrate: selector(state, "description_integrate")
   };
 };
 
-export default connect(mapStateToProps)(FoodInclusionEditorForm);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadFoodInclusion,
+    },
+    dispatch
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(FoodInclusionEditorForm);
