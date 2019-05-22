@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getPeriods } from "../../services/school.service";
 import { getReasons } from "../../services/foodInclusion.service";
+import { getWorkingDays } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
@@ -34,11 +35,14 @@ class FoodInclusionContainer extends Component {
       day: new Date(),
       periods: [],
       user_id: this.USER_ID,
-      typeFoodContinuousProgram: this.typeFoodContinuousProgram
+      typeFoodContinuousProgram: this.typeFoodContinuousProgram,
+      two_working_days: null,
+      five_working_days: null
     };
   }
 
   componentDidMount() {
+    let _two, _five, periods, reasons_simple, reasons_continuous_program = null;
     getPeriods(this.USER_ID).then(resPeriods => {
       getReasons(this.USER_ID).then(resReasons => {
         this.setState({
@@ -47,6 +51,15 @@ class FoodInclusionContainer extends Component {
           reasons_simple: resReasons.content.reasons_simple,
           reasons_continuous_program: resReasons.content.reasons_continuous_program
         });
+      });
+    });
+    getWorkingDays().then(res => {
+      _two = res[0].date_two_working_days.split("/");
+      _five = res[0].date_five_working_days.split("/");
+      this.setState({
+        ...this.state,
+        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
+        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
       });
     });
   }

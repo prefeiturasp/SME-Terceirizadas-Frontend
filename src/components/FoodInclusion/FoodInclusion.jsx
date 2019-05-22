@@ -6,7 +6,6 @@ import {
   deleteFoodInclusion,
   getSavedFoodInclusions
 } from "../../services/foodInclusion.service";
-import { getWorkingDays } from "../../services/workingDays.service";
 import { validateSubmit } from "./FoodInclusionValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -31,10 +30,8 @@ class FoodInclusionEditor extends Component {
     this.state = {
       foodInclusionList: [],
       status: "SEM STATUS",
-      title: "Nova Inclusão de Cardápio",
+      title: "Nova Inclusão de Alimentação",
       id: "",
-      two_working_days: null,
-      five_working_days: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       day_reasons: [
@@ -55,7 +52,7 @@ class FoodInclusionEditor extends Component {
           value: ""
         }
       ]
-    };
+    }
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.addDay = this.addDay.bind(this);
@@ -92,9 +89,9 @@ class FoodInclusionEditor extends Component {
     let showModal = false;
     const _date = value.split("/");
     if (
-      this.state.two_working_days <=
+      this.props.two_working_days <=
         new Date(_date[2], _date[1] - 1, _date[0]) &&
-      new Date(_date[2], _date[1] - 1, _date[0]) < this.state.five_working_days
+      new Date(_date[2], _date[1] - 1, _date[0]) < this.props.five_working_days
     ) {
       showModal = true;
     }
@@ -195,13 +192,14 @@ class FoodInclusionEditor extends Component {
   }
 
   resetForm(event) {
+    this.props.reset('foodInclusion');
     this.props.loadFoodInclusion(null);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Inclusão de Alimentação",
-      salvarAtualizarLbl: "Salvar Rascunho",
       id: "",
-      integrateOptions: [],
+      showModal: false,
+      salvarAtualizarLbl: "Salvar Rascunho",
       day_reasons: [
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
@@ -210,6 +208,14 @@ class FoodInclusionEditor extends Component {
           date_from: null,
           date_to: null,
           weekdays: []
+        }
+      ],
+      integrateOptions: [],
+      selectDefault: [
+        {
+          key: 0,
+          label: "Selecione",
+          value: ""
         }
       ]
     });
@@ -234,15 +240,6 @@ class FoodInclusionEditor extends Component {
 
   componentDidMount() {
     this.refresh();
-    getWorkingDays().then(res => {
-      const _two = res[0].date_two_working_days.split("/");
-      const _five = res[0].date_five_working_days.split("/");
-      this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
-      });
-    });
   }
 
   componentDidUpdate(prevProps) {
@@ -360,6 +357,7 @@ class FoodInclusionEditor extends Component {
       thirdPeriod,
       fourthPeriod,
       integrate,
+      two_working_days,
       typeFoodContinuousProgram
     } = this.props;
     const {
@@ -367,7 +365,6 @@ class FoodInclusionEditor extends Component {
       integrateOptions,
       foodInclusionList,
       selectDefault,
-      two_working_days,
       day_reasons,
       showModal
     } = this.state;
