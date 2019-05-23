@@ -56,10 +56,11 @@ export const salvarKitLanche = async (values) => {
 export const atualizarKitLanche = async (values) => {
     OBJ_REQUEST['method'] = 'PUT'
     OBJ_REQUEST['body'] = JSON.stringify(values)
-
-    return await fetch(URL_SOLICITAR, OBJ_REQUEST)
+    console.log(values)
+    return await fetch(URL_SOLICITAR + values.id+'/', OBJ_REQUEST)
         .then(response => {
-            return response.json()
+            const resp = response.json()
+            return resp
         })
         .catch(erro => {
             console.log('Atualizar Kit Lanche: ', erro)
@@ -72,11 +73,39 @@ export const removeKitLanche = async (idKit) => {
     OBJ_REQUEST['method'] = 'DELETE'
     OBJ_REQUEST['body'] = JSON.stringify({'id':idKit})
 
-    return await fetch(URL_SOLICITAR + '/'+ idKit, OBJ_REQUEST)
+    return await fetch(URL_SOLICITAR + idKit, OBJ_REQUEST)
         .then(response => {
             return response.json()
         })
         .catch(erro => {
             console.log('Remover Kit Lanche: ', erro)
+        })
+}
+
+
+export const getSolicitacoesKitLancheApi = async ()=>{
+    OBJ_REQUEST['method'] = 'GET'
+
+    return await fetch(URL_SOLICITAR , OBJ_REQUEST)
+        .then(response => {
+            const resp = response.json()
+            return resp
+        })
+        .catch(erro => {
+            console.log('Pega Kit Lanches Salvo: ', erro)
+        })
+}
+
+export const getRefeicoesApi = async ()=>{
+    OBJ_REQUEST['method'] = 'GET'
+
+    return await fetch(API_URL + '/kit-lanche/'  , OBJ_REQUEST)
+        .then(response => {
+            const resp = response.json()
+            return resp
+        })
+        .catch(erro => {
+            console.log('Pega Refeições2: ', erro)
+            return erro
         })
 }

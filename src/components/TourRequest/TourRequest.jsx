@@ -1,8 +1,8 @@
-import axios from "axios";
+// import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { API_MOCK } from "../../constants/config.constants";
+// import { API_MOCK } from "../../constants/config.constants";
 import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
@@ -11,8 +11,8 @@ import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
 import SelecionaKitLancheBox from './SelecionaKitLancheBox'
 import { TourRequestItemList } from "./TourRequesttemList";
-import { getQuatidadeAlunoApi, salvarKitLanche, atualizarKitLanche } from '../../services/tourRequest.service'
-
+import { removeKitLanche, getQuatidadeAlunoApi, salvarKitLanche, atualizarKitLanche, getSolicitacoesKitLancheApi, getRefeicoesApi, getRefeicoesApi2 } from '../../services/tourRequest.service'
+import { convertToFormat, adapterEnumKits } from './ConvertToFormat'
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -33,19 +33,24 @@ export class TourRequest extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       id: "",
-      nro_matriculados: 0
+      nro_matriculados: 0,
+      enumKits: null
     };
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.refresh = this.refresh.bind(this)
   }
 
   OnDeleteButtonClicked(id) {
-    axios.delete(`http://localhost:3004/tourRequest/${id}`).then(res => {
-      this.refresh();
-    });
+    if (window.confirm('Deseja remover esta solicitação salva?')) {
+      removeKitLanche(id).then(resp => {
+        this.refresh()
+      })
+    }
   }
 
   OnEditButtonClicked(param) {
+    console.log(param)
     this.props.reset();
     this.props.change("obs", param.obs);
     this.props.change("evento_data", param.evento_data);
@@ -74,41 +79,53 @@ export class TourRequest extends Component {
     });
   }
 
+  componentWillMount() {
+    getRefeicoesApi().then(response =>{
+      this.setState({
+        enumKits: adapterEnumKits(response)
+      })
+    })
+    
+    getSolicitacoesKitLancheApi().then(resp => {
+      this.setState({ tourRequestList: convertToFormat(resp) });
+    })
+  }
+
   componentDidMount() {
     this.refresh();
-    getQuatidadeAlunoApi().then(resp =>{
+    this.getQuatidadeAlunos()
+
+  }
+
+  getQuatidadeAlunos() {
+    getQuatidadeAlunoApi().then(resp => {
       this.setState({
-        nro_alunos : this.state.nro_matriculados = resp.students
+        ...this.state,
+        nro_alunos: this.state.nro_matriculados = resp.students
       })
     })
   }
 
-
   onSubmit(values) {
+
     validateTourRequestForm(values);
 
     if (values.id) {
-      axios
-      .put(`http://localhost:3004/tourRequest/${values.id}`, values)
-      .then(res => {
-        this.refresh();
-        // console.log("PUT", res.data);
-      });
+      atualizarKitLanche(values).then(resp => {
+        this.refresh()
+      })
     } else {
-      salvarKitLanche(values)
-      axios.post(`http://localhost:3004/tourRequest/`, values).then(res => {
-        this.refresh();
-        console.log("POST", res.data);
-      });
+      salvarKitLanche(values).then(resp => {
+        this.resetForm()
+        this.refresh()
+      })
     }
   }
 
   refresh() {
-    console.log(API_MOCK, "mock");
-    axios.get(`${API_MOCK}/tourRequest/?status=SALVO`).then(res => {
-      const tourRequestList = res.data;
-      this.setState({ tourRequestList });
-    });
+      getSolicitacoesKitLancheApi().then(resp => {
+          this.setState({ tourRequestList: convertToFormat(resp) });
+      })
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -126,12 +143,9 @@ export class TourRequest extends Component {
   };
 
 
-  componentWillMount() {
-
-  }
-
   render() {
     const { handleSubmit, pristine, reset, submitting } = this.props;
+    const { enumKits, tourRequestList } = this.state;
     return (
       <div className="d-flex flex-column p-4 mt-5">
         <form>
@@ -150,7 +164,7 @@ export class TourRequest extends Component {
             </span>
           </Grid>
           <TourRequestItemList
-            tourRequestList={this.state.tourRequestList}
+            tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
             resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
@@ -192,10 +206,11 @@ export class TourRequest extends Component {
                 this.setNumeroDeKitLanches(event, newValue, previousValue, name)
               }
             />
-            <SelecionaKitLancheBox
+            {enumKits && <SelecionaKitLancheBox
               className="mt-3"
               choicesNumberLimit={this.state.qtd_kit_lanche}
-            />
+              kits={enumKits}
+            />}
             <div className="form-group">
               <label className="bold">{"Número total kits:"}</label>
               <br />
