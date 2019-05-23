@@ -1,4 +1,5 @@
 import { API_URL } from '../constants/config.constants'
+import {get} from 'axios'
 
 export const TOKEN_ALIAS = "TOKEN";
 export const TOKEN = localStorage.getItem(TOKEN_ALIAS)
@@ -17,8 +18,7 @@ export const getKitsByApi = async () => {
     OBJ_REQUEST['method'] = 'GET'
     return await fetch(url, OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         })
         .catch(error => {
             console.log('Error Kit Lanche: ', error)
@@ -50,17 +50,28 @@ export const salvarKitLanche = async (values) => {
         })
         .catch(error => {
             console.log('Salvar Kit Lanche: ', error)
+            return {}
+        })
+}
+
+export const solicitarKitsLanche = async (values) => {
+    OBJ_REQUEST['method'] = 'POST'
+    OBJ_REQUEST['body'] = JSON.stringify({ids : values})
+    return await fetch(URL_SOLICITAR+'solicitacoes/', OBJ_REQUEST)
+        .then(response => {
+            return response.json()
+        })
+        .catch(error => {
+            console.log('Salvar Kit Lanche: ', error)
         })
 }
 
 export const atualizarKitLanche = async (values) => {
     OBJ_REQUEST['method'] = 'PUT'
     OBJ_REQUEST['body'] = JSON.stringify(values)
-    console.log(values)
     return await fetch(URL_SOLICITAR + values.id+'/', OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         })
         .catch(erro => {
             console.log('Atualizar Kit Lanche: ', erro)
@@ -86,9 +97,10 @@ export const removeKitLanche = async (idKit) => {
 export const getSolicitacoesKitLancheApi = async ()=>{
     OBJ_REQUEST['method'] = 'GET'
 
-    return await fetch(URL_SOLICITAR , OBJ_REQUEST)
+    return await fetch(URL_SOLICITAR, OBJ_REQUEST)
         .then(response => {
             const resp = response.json()
+            console.log(resp)
             return resp
         })
         .catch(erro => {
@@ -101,8 +113,7 @@ export const getRefeicoesApi = async ()=>{
 
     return await fetch(API_URL + '/kit-lanche/'  , OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         })
         .catch(erro => {
             console.log('Pega Refeições2: ', erro)

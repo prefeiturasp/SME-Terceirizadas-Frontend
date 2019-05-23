@@ -50,7 +50,6 @@ export class TourRequest extends Component {
   }
 
   OnEditButtonClicked(param) {
-    console.log(param)
     this.props.reset();
     this.props.change("obs", param.obs);
     this.props.change("evento_data", param.evento_data);
@@ -80,15 +79,7 @@ export class TourRequest extends Component {
   }
 
   componentWillMount() {
-    getRefeicoesApi().then(response =>{
-      this.setState({
-        enumKits: adapterEnumKits(response)
-      })
-    })
-    
-    getSolicitacoesKitLancheApi().then(resp => {
-      this.setState({ tourRequestList: convertToFormat(resp) });
-    })
+    this.refresh()
   }
 
   componentDidMount() {
@@ -112,19 +103,32 @@ export class TourRequest extends Component {
 
     if (values.id) {
       atualizarKitLanche(values).then(resp => {
+        this.resetForm()
         this.refresh()
+        // window.location.reload()
       })
     } else {
       salvarKitLanche(values).then(resp => {
         this.resetForm()
         this.refresh()
+        // window.location.reload()
       })
     }
   }
 
   refresh() {
-      getSolicitacoesKitLancheApi().then(resp => {
+    getSolicitacoesKitLancheApi().then(resp => {
           this.setState({ tourRequestList: convertToFormat(resp) });
+      }).catch(error =>{
+        console.log(error)
+      })
+
+      getRefeicoesApi().then(response =>{
+        this.setState({
+          enumKits: adapterEnumKits(response)
+        })
+      }).catch(error =>{
+        console.log(error)
       })
   }
 

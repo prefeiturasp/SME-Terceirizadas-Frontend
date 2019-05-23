@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
 import "../Shareable/custom.css";
 import If from "../Shareable/layout";
+import { solicitarKitsLanche, removeKitLanche } from '../../services/tourRequest.service'
 
 export class TourRequestItemList extends Component {
   constructor(props) {
@@ -51,9 +52,14 @@ export class TourRequestItemList extends Component {
   }
 
   onEnviarSolicitacoesBtClicked(event) {
+    const listIds = []
     this.state.checkedObjects.map(obj => {
-      console.log(obj.id);
+      listIds.push(obj.id)
     });
+
+    if(listIds.length > 0){
+      solicitarKitsLanche(listIds)
+    }
   }
 
   render() {

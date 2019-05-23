@@ -1,5 +1,6 @@
 export const convertToFormat = (data)=>{
     const list = []
+
         data.map((value) => {
             const obj = {}
             obj['evento_data'] = value.order_date
@@ -13,7 +14,6 @@ export const convertToFormat = (data)=>{
             obj['tempo_passeio'] = value.scheduled_time
             list.push(obj)
         })
-        console.log(list)
     return list
 }
 
@@ -25,12 +25,6 @@ const extractKits = (data)=>{
     })
 
     return list
-}
-
-const formatDate = (date)=>{
-    const data = date.split('-')
-    return data[2] + '/' + data[1] + '/'+ data[0]
-
 }
 
 export const adapterEnumKits = (data)=>{
