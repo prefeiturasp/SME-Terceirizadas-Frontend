@@ -22,6 +22,8 @@ class UnifiedSolicitation extends Component {
     super(props);
     this.state = {
       schoolsFiltered: [],
+      schoolsTotal: 0,
+      kitsTotal: 0,
       day_reasons: [
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
@@ -45,6 +47,11 @@ class UnifiedSolicitation extends Component {
     this.filterList = this.filterList.bind(this);
   }
 
+  componentDidMount() {
+    this.props.change("schools_total", 0);
+    this.props.change("kits_total", 0);
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.schools.length !== prevProps.schools.length) {
       this.setState({
@@ -56,6 +63,13 @@ class UnifiedSolicitation extends Component {
 
   handleCheck(school) {
     school.check = !school.check;
+    if (school.check) {
+      this.setState({ schoolsTotal: this.state.schoolsTotal + 1 });
+      this.props.change("schools_total", this.state.schoolsTotal + 1);
+    } else {
+      this.setState({ schoolsTotal: this.state.schoolsTotal - 1 });
+      this.props.change("schools_total", this.state.schoolsTotal - 1);
+    }
     this.props.change(`${school.slug}.check`, school.check);
   }
 
@@ -252,91 +266,156 @@ class UnifiedSolicitation extends Component {
               Realizar pedido múltiplo
             </label>
           </div>
+          <Collapse isOpened={multipleOrder}>
+            <div className="col-md-12">
+              <div className="form-group row">
+                <Field
+                  component={LabelAndInput}
+                  cols="3 3 3 3"
+                  name="nro_alunos"
+                  onChange={() => this.handleNumberOfKitsChange}
+                  type="number"
+                  label="Número de alunos participantes"
+                  validate={[required, maxValue(this.state.nro_matriculados)]}
+                />
+              </div>
+            </div>
+            <SelecionaTempoPasseio className="mt-3" />
+            <SelecionaKitLancheBox className="mt-3" choicesNumberLimit={3} />
+            <div className="form-group">
+              <label className="bold">{"Número total kits:"}</label>
+              <br />
+              <Grid
+                cols="1 1 1 1"
+                className="border rounded p-2"
+                style={{
+                  background: "#E8E8E8"
+                }}
+              >
+                <span className="bold d-flex justify-content-center">
+                  {this.props.qtd_total || 0}
+                </span>
+              </Grid>
+            </div>
+          </Collapse>
           <input
             type="text"
-            className="form-control form-control-lg"
+            className="form-control"
             placeholder="Pesquisar"
             onChange={this.filterList}
           />
           <div className="schools-group">
-            {schoolsFiltered.map((school, key) => {
-              return (
-                <FormSection name={school.slug}>
-                  <div>
-                    <div
-                      className="school-container col-md-12 mr-4"
-                      style={
-                        school.burger_active ? { background: "#F2FBFE" } : {}
-                      }
-                    >
+            {schoolsFiltered.length === 0 && (
+              <p>
+                Carregando escolas...{" "}
+                <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
+              </p>
+            )}
+            {schoolsFiltered.length > 0 &&
+              schoolsFiltered.map((school, key) => {
+                return (
+                  <FormSection name={school.slug}>
+                    <div>
                       <div
-                        className="col-md-12 pt-2 pb-2"
-                        style={{ paddingLeft: "2rem" }}
+                        className="school-container col-md-12 mr-4"
+                        style={
+                          school.burger_active ? { background: "#F2FBFE" } : {}
+                        }
                       >
-                        <label htmlFor="check" className="checkbox-label">
-                          <Field
-                            component={"input"}
-                            type="checkbox"
-                            name="check"
-                          />
-                          <span
-                            onClick={() => this.handleCheck(school)}
-                            className="checkbox-custom"
-                          />{" "}
-                          {school._id + " - " + school.nome}
-                        </label>
-                        <Stand
-                          onClick={() => this.changeBurger(school)}
-                          color={"#C8C8C8"}
-                          width={30}
-                          padding={0}
-                          lineSpacing={5}
-                          className="float-right"
-                          active={school.burger_active}
-                        />
-                      </div>
-                      <Collapse isOpened={school.burger_active}>
-                        <div className="col-md-12">
-                          <div className="form-group row">
+                        <div
+                          className="col-md-12 pt-2 pb-2"
+                          style={{ paddingLeft: "2rem" }}
+                        >
+                          <label htmlFor="check" className="checkbox-label">
                             <Field
-                              component={LabelAndInput}
-                              cols="3 3 3 3"
-                              name="nro_alunos"
-                              type="number"
-                              label="Número de alunos participantes"
-                              validate={[
-                                required,
-                                maxValue(this.state.nro_matriculados)
-                              ]}
+                              component={"input"}
+                              type="checkbox"
+                              name="check"
                             />
+                            <span
+                              onClick={() => this.handleCheck(school)}
+                              className="checkbox-custom"
+                            />{" "}
+                            {school._id + " - " + school.nome}
+                          </label>
+                          {!multipleOrder && (
+                            <Stand
+                              onClick={() => this.changeBurger(school)}
+                              color={"#C8C8C8"}
+                              width={30}
+                              padding={0}
+                              lineSpacing={5}
+                              className="float-right"
+                              active={school.burger_active}
+                            />
+                          )}
+                        </div>
+                        <Collapse isOpened={school.burger_active}>
+                          <div className="col-md-12">
+                            <div className="form-group row">
+                              <Field
+                                component={LabelAndInput}
+                                cols="3 3 3 3"
+                                name="nro_alunos"
+                                type="number"
+                                label="Número de alunos participantes"
+                                validate={[
+                                  required,
+                                  maxValue(this.state.nro_matriculados)
+                                ]}
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <SelecionaTempoPasseio className="mt-3" />
-                        <SelecionaKitLancheBox
-                          className="mt-3"
-                          choicesNumberLimit={3}
-                        />
-                        <div className="form-group">
-                          <label className="bold">{"Número total kits:"}</label>
-                          <br />
-                          <Grid
-                            cols="1 1 1 1"
-                            className="border rounded p-2"
-                            style={{
-                              background: "#E8E8E8"
-                            }}
-                          >
-                            <span className="bold d-flex justify-content-center">
-                              {this.props.qtd_total || 0}
-                            </span>
-                          </Grid>
-                        </div>
-                      </Collapse>
+                          <SelecionaTempoPasseio className="mt-3" />
+                          <SelecionaKitLancheBox
+                            className="mt-3"
+                            choicesNumberLimit={3}
+                          />
+                          <div className="form-group">
+                            <label className="bold">
+                              {"Número total kits:"}
+                            </label>
+                            <br />
+                            <Grid
+                              cols="1 1 1 1"
+                              className="border rounded p-2"
+                              style={{
+                                background: "#E8E8E8"
+                              }}
+                            >
+                              <span className="bold d-flex justify-content-center">
+                                {this.props.qtd_total || 0}
+                              </span>
+                            </Grid>
+                          </div>
+                        </Collapse>
+                      </div>
                     </div>
-                  </div>
-                </FormSection>
-              );
-            })}
+                  </FormSection>
+                );
+              })}
+          </div>
+          <div
+            className="form-group"
+            style={{ paddingTop: "30px", paddingBottom: "50px" }}
+          >
+            <div style={{ display: "grid" }} className="float-left">
+              <label className="bold">Total de Unidades Escolares</label>
+              <label>{this.props.schoolsTotal}</label>
+            </div>
+            <div style={{ display: "grid" }} className="float-right">
+              <label className="bold">Total de Kits</label>
+              <label>{this.props.kitsTotal}</label>
+            </div>
+          </div>
+          <hr className="w-100" />
+          <div className="form-group">
+            <Field
+              component={LabelAndTextArea}
+              placeholder="Campo opcional"
+              label="Observações"
+              name="obs"
+            />
           </div>
           <Modal show={showModal} onHide={this.closeModal}>
             <Modal.Header closeButton>
@@ -372,7 +451,9 @@ const UnifiedSolicitationForm = reduxForm({
 const selector = formValueSelector("unifiedSolicitation");
 const mapStateToProps = state => {
   return {
-    multipleOrder: selector(state, "multiple_order")
+    multipleOrder: selector(state, "multiple_order"),
+    schoolsTotal: selector(state, "schools_total"),
+    kitsTotal: selector(state, "kits_total")
   };
 };
 
