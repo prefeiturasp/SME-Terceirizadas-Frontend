@@ -35,6 +35,16 @@ export const adapterEnumKits = (data)=>{
         objChild['foodList'] = value.meals[0].foods
         objRoot['KIT'+(key+1)] = objChild
     })
-    console.log(objRoot)
     return objRoot
+}
+
+
+export const convertStringToDate = (value)=>{
+    if(value){
+        const dia = parseInt(value.split("/")[0])
+        const mes = parseInt(value.split("/")[1])-1
+        const ano = parseInt(value.split("/")[2])
+        return new Date(ano,mes,dia)
+    }
+    return value
 }

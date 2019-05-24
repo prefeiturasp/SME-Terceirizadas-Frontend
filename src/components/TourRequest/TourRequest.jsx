@@ -1,9 +1,7 @@
-// import axios from "axios";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-// import { API_MOCK } from "../../constants/config.constants";
-import { maxValue, required } from "../../helpers/fieldValidators";
+import { maxValue, required, diasAntecedencia } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
@@ -11,14 +9,18 @@ import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
 import SelecionaKitLancheBox from './SelecionaKitLancheBox'
 import { TourRequestItemList } from "./TourRequesttemList";
-import { removeKitLanche, getQuatidadeAlunoApi, salvarKitLanche, atualizarKitLanche, getSolicitacoesKitLancheApi, getRefeicoesApi, getRefeicoesApi2 } from '../../services/tourRequest.service'
-import { convertToFormat, adapterEnumKits } from './ConvertToFormat'
+import { removeKitLanche, getQuatidadeAlunoApi, solicitarKitLanche,RegistroSalvarKitLanche, getDiasUteis, getSolicitacoesKitLancheApi, getRefeicoesApi } from '../../services/tourRequest.service'
+import { convertToFormat, adapterEnumKits, convertStringToDate } from './ConvertToFormat'
+import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
+import { Modal } from "react-bootstrap";
+import BaseButton from "../Shareable/button";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
+export let segundoDia = ''
 
 export class TourRequest extends Component {
   constructor(props) {
@@ -34,17 +36,26 @@ export class TourRequest extends Component {
       salvarAtualizarLbl: "Salvar",
       id: "",
       nro_matriculados: 0,
-      enumKits: null
+      enumKits: null,
+      showModal: false,
     };
+
 
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this)
+    this.validaDiasUteis = this.validaDiasUteis.bind(this)
+    this.handleShowModal = this.handleShowModal.bind(this)
   }
 
   OnDeleteButtonClicked(id) {
     if (window.confirm('Deseja remover esta solicitação salva?')) {
       removeKitLanche(id).then(resp => {
         this.refresh()
+        if(resp.success){
+          toastSuccess(resp.success)
+        }else{
+          toastError(resp.error)
+        }
       })
     }
   }
@@ -78,10 +89,23 @@ export class TourRequest extends Component {
     });
   }
 
+
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos()
+  }
 
+  validaDiasUteis = (event)=>{
+    const diaSelecionado = convertStringToDate(event.target.value)
+    getDiasUteis().then(resp =>{
+      const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
+      const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
+      if(diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil){
+        this.setState({
+          showModal : true
+        })
+      }
+    })
   }
 
   getQuatidadeAlunos() {
@@ -96,18 +120,35 @@ export class TourRequest extends Component {
   onSubmit(values) {
 
     validateTourRequestForm(values);
+    this.salvarOuEnviar(values)
+  }
 
-    if (values.id) {
-      atualizarKitLanche(values).then(resp => {
-        this.resetForm()
-        this.refresh()
-      })
-    } else {
-      salvarKitLanche(values).then(resp => {
-        this.resetForm()
-        this.refresh()
-      })
-    }
+  salvarOuEnviar(values){
+    if(values.status === "SALVO"){
+      RegistroSalvarKitLanche(values).then(resp => {
+          this.resetForm()
+          this.refresh()
+          if(resp.success){
+            toastSuccess(resp.success)
+          }else{
+            toastError(resp.error)
+          }
+        }).catch(erro => {
+          toastError(erro.details)
+        })
+      }else{
+        solicitarKitLanche(values).then(resp =>{
+          this.resetForm()
+          this.refresh()
+          if(resp.success){
+            toastSuccess(resp.success)
+          }else{
+            toastError(resp.error)
+          }
+        }).catch(error =>{
+          toastError(error.details)
+        })
+      }
   }
 
   refresh() {
@@ -126,6 +167,10 @@ export class TourRequest extends Component {
     })
   }
 
+  handleShowModal(){
+    this.setState({...this.state,  showModal : false})
+  }
+
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
     const parser = {
       "4h": HORAS_ENUM._4.qtd_kits,
@@ -142,10 +187,31 @@ export class TourRequest extends Component {
 
 
   render() {
-    const { handleSubmit, pristine, reset, submitting } = this.props;
-    const { enumKits, tourRequestList } = this.state;
+    const { handleSubmit, pristine, submitting } = this.props;
+    const { enumKits, tourRequestList, showModal } = this.state;
     return (
+      
       <div className="d-flex flex-column p-4 mt-5">
+        <Modal show={showModal} onHide={this.handleShowModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Atenção</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Atenção, a solicitação está fora do prazo contratual (entre{" "}
+              <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
+              disponibilidade dos alimentos adequados para o cumprimento do
+              cardápio.
+            </Modal.Body>
+            <Modal.Footer>
+              <BaseButton
+                label="OK"
+                type={ButtonType.BUTTON}
+                onClick={this.handleShowModal}
+                style={ButtonStyle.Primary}
+                className="ml-3"
+              />
+            </Modal.Footer>
+          </Modal>
         <form>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
@@ -165,6 +231,7 @@ export class TourRequest extends Component {
             tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
             resetForm={event => this.resetForm(event)}
+            refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
           <div className="form-row mt-3 ml-1">
@@ -180,6 +247,7 @@ export class TourRequest extends Component {
                 hasIcon={true}
                 label="Data do evento"
                 name="evento_data"
+                onBlur={event => this.validaDiasUteis(event)}
               />
               <Field
                 component={LabelAndInput}

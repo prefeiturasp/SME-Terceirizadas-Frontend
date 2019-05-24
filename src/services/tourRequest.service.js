@@ -45,7 +45,25 @@ export const getQuatidadeAlunoApi = async () => {
         })
 }
 
-export const salvarKitLanche = async (values) => {
+export const getDiasUteis = async () => {
+
+    const OBJ_REQUEST = {
+        // headers: authToken,
+        method: 'GET'
+    }
+
+    const url = API_URL + '/working_days/'
+    return await fetch(url)
+        .then(response => {
+            return response.json()
+        })
+        .catch(erro => {
+            console.log('Error dias uteis: ', erro)
+            return {}
+        })
+}
+
+export const solicitarKitLanche = async (values) => {
 
     const OBJ_REQUEST = {
         headers: authToken,
@@ -54,6 +72,24 @@ export const salvarKitLanche = async (values) => {
     }
 
     return await fetch(URL_SOLICITAR, OBJ_REQUEST)
+        .then(response => {
+            return response.json()
+        })
+        .catch(error => {
+            console.log('Salvar Kit Lanche: ', error)
+            return {}
+        })
+}
+
+export const RegistroSalvarKitLanche = async (values) => {
+
+    const OBJ_REQUEST = {
+        headers: authToken,
+        method: 'POST',
+        body: JSON.stringify(values)
+    }
+
+    return await fetch(URL_SOLICITAR + 'salvar/', OBJ_REQUEST)
         .then(response => {
             return response.json()
         })
