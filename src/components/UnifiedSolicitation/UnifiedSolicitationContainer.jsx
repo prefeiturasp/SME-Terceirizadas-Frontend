@@ -3,6 +3,7 @@ import { getSchools } from "../../services/school.service";
 import { getReasons } from "../../services/foodInclusion.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import UnifiedSolicitation from "./UnifiedSolicitation";
+import { string_to_slug } from "../../helpers/utilities";
 
 class UnifiedSolicitationContainer extends Component {
   USER_ID = "7c82b8c9-184e-4a52-9e11-4cb4e844e983";
@@ -21,30 +22,28 @@ class UnifiedSolicitationContainer extends Component {
 
   componentDidMount() {
     getSchools().then(res => {
-      let schools = res.slice(0, 100);
-      schools.forEach(function(school) {
-        school["burger_active"] = false;
-      })
-      console.log(schools);
-      this.setState({
-        ...this.state,
-        schools: schools
-      });
       getReasons(this.USER_ID).then(resReasons => {
-        this.setState({
-          ...this.state,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program: resReasons.content.reasons_continuous_program
-        });
-      });
-      let _two, _five = null;
-      getWorkingDays().then(res => {
-        _two = res[0].date_two_working_days.split("/");
-        _five = res[0].date_five_working_days.split("/");
-        this.setState({
-          ...this.state,
-          two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-          five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        getWorkingDays().then(resWD => {
+          let schools = res.slice(0, 10);
+          schools.forEach(function(school) {
+            school["id"] = school["_id"].toString();
+            school["burger_active"] = false;
+            school["checked"] = false;
+            school["slug"] = string_to_slug(school["nome"]);
+          });
+          let _two,
+            _five = null;
+          _two = resWD[0].date_two_working_days.split("/");
+          _five = resWD[0].date_five_working_days.split("/");
+          this.setState({
+            ...this.state,
+            reasons_simple: resReasons.content.reasons_simple,
+            reasons_continuous_program:
+              resReasons.content.reasons_continuous_program,
+            two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
+            five_working_days: new Date(_five[2], _five[1] - 1, _five[0]),
+            schools: schools
+          });
         });
       });
     });
