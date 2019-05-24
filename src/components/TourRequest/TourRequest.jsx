@@ -78,10 +78,6 @@ export class TourRequest extends Component {
     });
   }
 
-  componentWillMount() {
-    this.refresh()
-  }
-
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos()
@@ -105,31 +101,29 @@ export class TourRequest extends Component {
       atualizarKitLanche(values).then(resp => {
         this.resetForm()
         this.refresh()
-        // window.location.reload()
       })
     } else {
       salvarKitLanche(values).then(resp => {
         this.resetForm()
         this.refresh()
-        // window.location.reload()
       })
     }
   }
 
   refresh() {
     getSolicitacoesKitLancheApi().then(resp => {
-          this.setState({ tourRequestList: convertToFormat(resp) });
-      }).catch(error =>{
-        console.log(error)
-      })
+      this.setState({ tourRequestList: convertToFormat(resp) });
+    }).catch(error => {
+      console.log(error)
+    })
 
-      getRefeicoesApi().then(response =>{
-        this.setState({
-          enumKits: adapterEnumKits(response)
-        })
-      }).catch(error =>{
-        console.log(error)
+    getRefeicoesApi().then(response => {
+      this.setState({
+        enumKits: adapterEnumKits(response)
       })
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {

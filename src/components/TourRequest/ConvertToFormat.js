@@ -1,6 +1,5 @@
 export const convertToFormat = (data)=>{
     const list = []
-
         data.map((value) => {
             const obj = {}
             obj['evento_data'] = value.order_date
