@@ -39,7 +39,7 @@ export class Cards extends Component {
   }
 
   render() {
-    const { input, meta, options, choicesNumberLimit } = this.props;
+    const { input, meta, options, choicesNumberLimit, showOptions } = this.props;
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
@@ -91,8 +91,8 @@ export class Cards extends Component {
             className={`card ${borderSucess}`}
             style={{
               width: "14rem",
-              height: "15rem",
               border: "solid",
+              height: showOptions ? "15rem" : "",
               opacity: opacity
             }}
           >
@@ -114,7 +114,7 @@ export class Cards extends Component {
                 />
               </div>
             </div>
-            <ul className="list-group list-group-flush">
+            {showOptions && <ul className="list-group list-group-flush">
               {foodList.map((e, key) => {
                 return (
                   <li
@@ -126,7 +126,7 @@ export class Cards extends Component {
                   </li>
                 );
               })}
-            </ul>
+            </ul>}
           </div>
         </Grid>
       );

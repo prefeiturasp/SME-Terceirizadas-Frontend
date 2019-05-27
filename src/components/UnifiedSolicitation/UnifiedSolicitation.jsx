@@ -15,7 +15,15 @@ import { Stand } from "react-burgers";
 import { required, maxValue } from "../../helpers/fieldValidators";
 import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
 import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
+import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
+import { getRefeicoesApi } from "../../services/tourRequest.service";
 import "../Shareable/custom.css";
+
+export const HORAS_ENUM = {
+  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
+  _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
+  _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
+};
 
 class UnifiedSolicitation extends Component {
   constructor(props) {
@@ -23,6 +31,9 @@ class UnifiedSolicitation extends Component {
     this.state = {
       schoolsFiltered: [],
       schoolsTotal: 0,
+      qtd_kit_lanche: 0,
+      radioChanged: false,
+      enumKits: null,
       kitsTotal: 0,
       day_reasons: [
         {
@@ -45,11 +56,79 @@ class UnifiedSolicitation extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.filterList = this.filterList.bind(this);
+    this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
   }
 
   componentDidMount() {
     this.props.change("schools_total", 0);
     this.props.change("kits_total", 0);
+
+    getRefeicoesApi()
+      .then(response => {
+        this.setState({
+          enumKits: adapterEnumKits(response)
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
+    const parser = {
+      "4h": HORAS_ENUM._4.qtd_kits,
+      "5_7h": HORAS_ENUM._5a7.qtd_kits,
+      "8h": HORAS_ENUM._8.qtd_kits
+    };
+    let newQuantity = parser[event];
+    this.setState({
+      ...this.state,
+      qtd_kit_lanche: newQuantity,
+      radioChanged: event !== previousValue
+    });
+  };
+
+  handleSelecionaKitLancheBox(school, value) {
+    var foundIndex = this.state.schoolsFiltered.findIndex(
+      x => x.id === school.id
+    );
+    var schoolsFiltered = this.state.schoolsFiltered;
+    schoolsFiltered[foundIndex].number_of_choices = value.length;
+    schoolsFiltered = this.setNumberOfMealKits(school)
+    this.setState({
+      ...this.state,
+      schoolsFiltered: schoolsFiltered
+    });
+    this.handleKitsTotal();
+  }
+
+  handleNumberOfStudents(school, event) {
+    var foundIndex = this.state.schoolsFiltered.findIndex(
+      x => x.id === school.id
+    );
+    let schoolsFiltered = this.state.schoolsFiltered;
+    schoolsFiltered[foundIndex].number_of_students = event.target.value;
+    schoolsFiltered = this.setNumberOfMealKits(school)
+    this.setState({
+      ...this.state,
+      schoolsFiltered: schoolsFiltered
+    });
+    this.handleKitsTotal();
+  }
+
+  setNumberOfMealKits(school) {
+    var foundIndex = this.state.schoolsFiltered.findIndex(
+      x => x.id === school.id
+    );
+    var schoolsFiltered = this.state.schoolsFiltered;
+    if (schoolsFiltered[foundIndex].checked) {
+      schoolsFiltered[foundIndex].number_of_meal_kits =
+        schoolsFiltered[foundIndex].number_of_choices *
+        schoolsFiltered[foundIndex].number_of_students;
+    } else {
+      schoolsFiltered[foundIndex].number_of_meal_kits = 0
+    }
+    return schoolsFiltered
   }
 
   componentDidUpdate(prevProps) {
@@ -62,15 +141,36 @@ class UnifiedSolicitation extends Component {
   }
 
   handleCheck(school) {
-    school.check = !school.check;
-    if (school.check) {
-      this.setState({ schoolsTotal: this.state.schoolsTotal + 1 });
-      this.props.change("schools_total", this.state.schoolsTotal + 1);
-    } else {
-      this.setState({ schoolsTotal: this.state.schoolsTotal - 1 });
-      this.props.change("schools_total", this.state.schoolsTotal - 1);
-    }
-    this.props.change(`${school.slug}.check`, school.check);
+    var foundIndex = this.state.schoolsFiltered.findIndex(
+      x => x.id === school.id
+    );
+    let schoolsFiltered = this.state.schoolsFiltered;
+    school.checked = !school.checked;
+    schoolsFiltered[foundIndex].checked = school.checked;
+    this.props.change(`${school.slug}.check`, school.checked);
+    schoolsFiltered = this.setNumberOfMealKits(school)
+    this.setState({
+      ...this.state,
+      schoolsFiltered: schoolsFiltered
+    });
+    this.handleKitsTotal();
+  }
+
+  handleKitsTotal() {
+    const schoolsFiltered = this.state.schoolsFiltered;
+    let kitsTotal = 0;
+    let schoolsTotal = 0;
+    schoolsFiltered.forEach(function(school) {
+      if (school.checked) {
+        kitsTotal += school.number_of_choices * school.number_of_students;
+        schoolsTotal += 1;
+      }
+    });
+    this.setState({
+      ...this.state,
+      kitsTotal: kitsTotal,
+      schoolsTotal: schoolsTotal
+    });
   }
 
   handleField(field, value, id) {
@@ -94,6 +194,7 @@ class UnifiedSolicitation extends Component {
       }
     }
   }
+
   addDay() {
     this.setState({
       day_reasons: this.state.day_reasons.concat([
@@ -147,7 +248,10 @@ class UnifiedSolicitation extends Component {
       day_reasons,
       selectDefault,
       showModal,
-      schoolsFiltered
+      schoolsFiltered,
+      enumKits,
+      kitsTotal,
+      schoolsTotal
     } = this.state;
     return (
       <div>
@@ -271,17 +375,29 @@ class UnifiedSolicitation extends Component {
               <div className="form-group row">
                 <Field
                   component={LabelAndInput}
-                  cols="3 3 3 3"
-                  name="nro_alunos"
+                  cols="6"
+                  name="number_of_students"
                   onChange={() => this.handleNumberOfKitsChange}
                   type="number"
-                  label="Número de alunos participantes"
+                  label="Número total de alunos participantes de todas as escolas"
                   validate={[required, maxValue(this.state.nro_matriculados)]}
                 />
               </div>
             </div>
-            <SelecionaTempoPasseio className="mt-3" />
-            <SelecionaKitLancheBox className="mt-3" choicesNumberLimit={3} />
+            <SelecionaTempoPasseio
+              className="mt-3"
+              onChange={(event, newValue, previousValue, name) =>
+                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+              }
+            />
+            {enumKits && (
+              <SelecionaKitLancheBox
+                className="mt-3"
+                choicesNumberLimit={this.state.qtd_kit_lanche}
+                showOptions={false}
+                kits={enumKits}
+              />
+            )}
             <div className="form-group">
               <label className="bold">{"Número total kits:"}</label>
               <br />
@@ -356,8 +472,11 @@ class UnifiedSolicitation extends Component {
                               <Field
                                 component={LabelAndInput}
                                 cols="3 3 3 3"
-                                name="nro_alunos"
+                                name="number_of_students"
                                 type="number"
+                                onChange={event =>
+                                  this.handleNumberOfStudents(school, event)
+                                }
                                 label="Número de alunos participantes"
                                 validate={[
                                   required,
@@ -366,14 +485,31 @@ class UnifiedSolicitation extends Component {
                               />
                             </div>
                           </div>
-                          <SelecionaTempoPasseio className="mt-3" />
-                          <SelecionaKitLancheBox
+                          <SelecionaTempoPasseio
                             className="mt-3"
-                            choicesNumberLimit={3}
+                            onChange={(event, newValue, previousValue, name) =>
+                              this.setNumeroDeKitLanches(
+                                event,
+                                newValue,
+                                previousValue,
+                                name
+                              )
+                            }
                           />
+                          {enumKits && (
+                            <SelecionaKitLancheBox
+                              kits={enumKits}
+                              showOptions={false}
+                              className="mt-3"
+                              onChange={value =>
+                                this.handleSelecionaKitLancheBox(school, value)
+                              }
+                              choicesNumberLimit={this.state.qtd_kit_lanche}
+                            />
+                          )}
                           <div className="form-group">
                             <label className="bold">
-                              {"Número total kits:"}
+                              {"Número total de kits dessa escola:"}
                             </label>
                             <br />
                             <Grid
@@ -384,7 +520,7 @@ class UnifiedSolicitation extends Component {
                               }}
                             >
                               <span className="bold d-flex justify-content-center">
-                                {this.props.qtd_total || 0}
+                                {school.number_of_meal_kits || 0}
                               </span>
                             </Grid>
                           </div>
@@ -401,11 +537,11 @@ class UnifiedSolicitation extends Component {
           >
             <div style={{ display: "grid" }} className="float-left">
               <label className="bold">Total de Unidades Escolares</label>
-              <label>{this.props.schoolsTotal}</label>
+              <label>{schoolsTotal || 0}</label>
             </div>
             <div style={{ display: "grid" }} className="float-right">
               <label className="bold">Total de Kits</label>
-              <label>{this.props.kitsTotal}</label>
+              <label>{kitsTotal || 0}</label>
             </div>
           </div>
           <hr className="w-100" />

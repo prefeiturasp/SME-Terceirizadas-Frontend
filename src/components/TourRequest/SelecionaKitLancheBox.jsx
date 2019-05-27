@@ -10,12 +10,10 @@ export const HORAS_ENUM = {
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
 
-class SelecionaKitLancheBox extends Component {
-
+class  SelecionaKitLancheBox extends Component {
 
   render() {
-
-    const KIT_ENUM = this.props.kits;    
+    const KIT_ENUM = this.props.kits;
 
     const kitOptions = [
       {
@@ -47,6 +45,7 @@ class SelecionaKitLancheBox extends Component {
           label="Kit Lanche"
           component={CheckboxWithCards}
           options={kitOptions}
+          showOptions={this.props.showOptions !== undefined ? this.props.showOptions : true}
           choicesNumberLimit={this.props.choicesNumberLimit}
           checkAll={checkAll}
           clearAll={false}
