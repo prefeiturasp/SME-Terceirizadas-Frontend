@@ -10,40 +10,12 @@ export const HORAS_ENUM = {
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
 
-export const KIT_ENUM = {
-  KIT1: {
-    value: "9d7dff8a-b205-4e6a-9c41-8f04e5098fdf",
-    label: "Modelo de Kit nº 1",
-    foodList: [
-      "- Bebida Láctea UHT Sabor Chocolate (200 ml)",
-      "- Pão tipo hot dog (50g) com queijo (40g, duas fatias)",
-      "- Fruta"
-    ]
-  },
-  KIT2: {
-    value: "372bd8ac-1c22-433a-a941-577d6e6c0f43",
-    label: "Modelo de Kit nº 2",
-    foodList: [
-      "- Bebida Láctea UHT Sabor Chocolate (200 ml)",
-      "- Biscoito Integral Salgado (mín. de 25g embalagem individual)",
-      "- Fruta"
-    ]
-  },
-  KIT3: {
-    value: "cc626de4-75a6-4bbf-9468-0aa3a81cfe89",
-    label: "Modelo de Kit nº 3",
-    foodList: [
-      "- Néctar UHT ou Suco Tropical UHT (200 ml)",
-      "- Pão tipo Bisnaguinha (2 unidades - 40 g )",
-      "- Barra de Cereal (20 a 25 g embalagem individual)"
-    ]
-  }
-};
-
-
 class SelecionaKitLancheBox extends Component {
 
+
   render() {
+
+    const KIT_ENUM = this.props.kits;    
 
     const kitOptions = [
       {
