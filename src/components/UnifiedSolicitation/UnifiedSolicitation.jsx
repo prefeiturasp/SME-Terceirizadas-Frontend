@@ -35,6 +35,8 @@ class UnifiedSolicitation extends Component {
       radioChanged: false,
       enumKits: null,
       kitsTotal: 0,
+      choicesTotal: 0,
+      studentsTotal: 0,
       day_reasons: [
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
@@ -94,7 +96,7 @@ class UnifiedSolicitation extends Component {
     );
     var schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].number_of_choices = value.length;
-    schoolsFiltered = this.setNumberOfMealKits(school)
+    schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
       schoolsFiltered: schoolsFiltered
@@ -108,7 +110,7 @@ class UnifiedSolicitation extends Component {
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].number_of_students = event.target.value;
-    schoolsFiltered = this.setNumberOfMealKits(school)
+    schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
       schoolsFiltered: schoolsFiltered
@@ -126,9 +128,9 @@ class UnifiedSolicitation extends Component {
         schoolsFiltered[foundIndex].number_of_choices *
         schoolsFiltered[foundIndex].number_of_students;
     } else {
-      schoolsFiltered[foundIndex].number_of_meal_kits = 0
+      schoolsFiltered[foundIndex].number_of_meal_kits = 0;
     }
-    return schoolsFiltered
+    return schoolsFiltered;
   }
 
   componentDidUpdate(prevProps) {
@@ -148,7 +150,7 @@ class UnifiedSolicitation extends Component {
     school.checked = !school.checked;
     schoolsFiltered[foundIndex].checked = school.checked;
     this.props.change(`${school.slug}.check`, school.checked);
-    schoolsFiltered = this.setNumberOfMealKits(school)
+    schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
       schoolsFiltered: schoolsFiltered
@@ -223,6 +225,10 @@ class UnifiedSolicitation extends Component {
     this.setState({ ...this.state, showModal: true });
   }
 
+  handleSubmit = values => {
+    console.log(values);
+  }
+
   filterList(event) {
     if (event === undefined) event = { target: { value: "" } };
     let schoolsFiltered = this.props.schools;
@@ -238,6 +244,9 @@ class UnifiedSolicitation extends Component {
 
   render() {
     const {
+      handleSubmit,
+      pristine,
+      submitting,
       enrolled,
       two_working_days,
       reasons_continuous_program,
@@ -251,11 +260,13 @@ class UnifiedSolicitation extends Component {
       schoolsFiltered,
       enumKits,
       kitsTotal,
+      choicesTotal,
+      studentsTotal,
       schoolsTotal
     } = this.state;
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit(this.handleSubmit)}>
           <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
             <div className="card-body">
@@ -377,7 +388,9 @@ class UnifiedSolicitation extends Component {
                   component={LabelAndInput}
                   cols="6"
                   name="number_of_students"
-                  onChange={() => this.handleNumberOfKitsChange}
+                  onChange={event =>
+                    this.setState({ studentsTotal: event.target.value })
+                  }
                   type="number"
                   label="Número total de alunos participantes de todas as escolas"
                   validate={[required, maxValue(this.state.nro_matriculados)]}
@@ -394,6 +407,9 @@ class UnifiedSolicitation extends Component {
               <SelecionaKitLancheBox
                 className="mt-3"
                 choicesNumberLimit={this.state.qtd_kit_lanche}
+                onChange={value =>
+                  this.setState({ choicesTotal: value.length })
+                }
                 showOptions={false}
                 kits={enumKits}
               />
@@ -409,7 +425,7 @@ class UnifiedSolicitation extends Component {
                 }}
               >
                 <span className="bold d-flex justify-content-center">
-                  {this.props.qtd_total || 0}
+                  {choicesTotal * studentsTotal}
                 </span>
               </Grid>
             </div>
@@ -541,7 +557,9 @@ class UnifiedSolicitation extends Component {
             </div>
             <div style={{ display: "grid" }} className="float-right">
               <label className="bold">Total de Kits</label>
-              <label>{kitsTotal || 0}</label>
+              <label>
+                {multipleOrder ? choicesTotal * studentsTotal : kitsTotal}
+              </label>
             </div>
           </div>
           <hr className="w-100" />
@@ -551,6 +569,29 @@ class UnifiedSolicitation extends Component {
               placeholder="Campo opcional"
               label="Observações"
               name="obs"
+            />
+          </div>
+          <div className="form-group row float-right mt-4">
+            <BaseButton
+              label="Cancelar"
+              onClick={event => this.resetForm(event)}
+              disabled={pristine || submitting}
+              style={ButtonStyle.OutlinePrimary}
+            />
+            <BaseButton
+              label={"Salvar Rascunho"}
+              disabled={pristine || submitting}
+              onClick={this.handleSubmit}
+              className="ml-3"
+              type={ButtonType.BUTTON}
+              style={ButtonStyle.OutlinePrimary}
+            />
+            <BaseButton
+              label="Enviar Solicitação"
+              //disabled={pristine || submitting}
+              type={"submit"}
+              style={ButtonStyle.Primary}
+              className="ml-3"
             />
           </div>
           <Modal show={showModal} onHide={this.closeModal}>
