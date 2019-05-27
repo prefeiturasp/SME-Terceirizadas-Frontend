@@ -31,5 +31,5 @@ export const validateTourRequestForm = values => {
     default:
       break;
   }
-  window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
+  // window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
 };

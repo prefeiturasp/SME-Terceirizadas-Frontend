@@ -44,7 +44,8 @@ export class FoodInclusionItemList extends Component {
     const { foodInclusionList } = this.props;
     const allDaysInfo = foodInclusionList.map(dayChange => {
       const { id } = dayChange;
-      let backgroundColor = dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
+      let backgroundColor =
+        dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
           <div className="mt-2">
@@ -77,19 +78,23 @@ export class FoodInclusionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.reason} -{" "}
-              {dayChange.date
-                ? dayChange.date
-                : "(" + dayChange.date_from + " - " + dayChange.date_to + ")"}
+              {dayChange.day_reasons.length > 1
+                ? dayChange.day_reasons.length + " Dias"
+                : dayChange.day_reasons[0].reason.includes("Programa Contínuo")
+                ? dayChange.day_reasons[0].reason +
+                  " (" +
+                  dayChange.day_reasons[0].date_from +
+                  " - " +
+                  dayChange.day_reasons[0].date_to +
+                  ")"
+                : dayChange.day_reasons[0].reason +
+                  " - " +
+                  dayChange.day_reasons[0].date}
             </p>
           </div>
         </div>
       );
     });
-    return (
-      <div>
-        {allDaysInfo}
-      </div>
-    );
+    return <div>{allDaysInfo}</div>;
   }
 }

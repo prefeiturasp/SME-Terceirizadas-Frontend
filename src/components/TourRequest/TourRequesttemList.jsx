@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
 import "../Shareable/custom.css";
 import If from "../Shareable/layout";
+import { solicitarKitsLanche } from '../../services/tourRequest.service'
+import { toastSuccess, toastError } from "../Shareable/dialogs";
 
 export class TourRequestItemList extends Component {
   constructor(props) {
@@ -51,9 +53,21 @@ export class TourRequestItemList extends Component {
   }
 
   onEnviarSolicitacoesBtClicked(event) {
+    const listIds = []
     this.state.checkedObjects.map(obj => {
-      console.log(obj.id);
+      listIds.push(obj.id)
     });
+
+    if(listIds.length > 0){
+      solicitarKitsLanche(listIds).then(resp => {
+        this.props.refreshComponent()
+        if(resp.success){
+          toastSuccess(resp.success)
+        }else{
+          toastError(resp.error)
+        }
+      })
+    }
   }
 
   render() {
