@@ -7,6 +7,7 @@ import TourRequestPage from "../pages/TourRequestPage";
 import EmailConfiguration from "../components/screens/email/EmailConfiguration";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
+import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 
 const routesConfig = [
@@ -53,6 +54,11 @@ const routesConfig = [
   {
     path: "/food-suspension",
     component: FoodSuspensionPage,
+    exact: false
+  },
+  {
+    path: "/unified-solicitation",
+    component: UnifiedSolicitationPage,
     exact: false
   },
   {
