@@ -44,7 +44,13 @@ class FoodInclusionEditor extends Component {
           weekdays: []
         }
       ],
-      integrateOptions: [],
+      options: {
+        'first_period': [],
+        'second_period': [],
+        'third_period': [],
+        'fourth_period': [],
+        'integrate': []
+      },
       selectDefault: [
         {
           key: 0,
@@ -65,23 +71,23 @@ class FoodInclusionEditor extends Component {
   handleField(field, value, id) {
     var foundIndex = this.state.day_reasons.findIndex(x => x.id === id);
     var day_reasons = this.state.day_reasons;
-    if (field === 'which_reason') value = value.target.value;
+    if (field === "which_reason") value = value.target.value;
     day_reasons[foundIndex][field] = value;
     this.setState({
       ...this.state,
       day_reasons: day_reasons
     });
-    if (field === 'date'){
+    if (field === "date") {
       const _date = value.split("/");
       if (
         this.props.two_working_days <=
           new Date(_date[2], _date[1] - 1, _date[0]) &&
-        new Date(_date[2], _date[1] - 1, _date[0]) < this.props.five_working_days
+        new Date(_date[2], _date[1] - 1, _date[0]) <
+          this.props.five_working_days
       ) {
         this.showModal();
       }
     }
-
   }
 
   closeModal(e) {
@@ -107,12 +113,14 @@ class FoodInclusionEditor extends Component {
     this.setState({ ...this.state, showModal: true });
   }
 
-  handleSelectedChanged = integrateOptions => {
+  handleSelectedChanged = (selectedOptions, period) => {
+    let options = this.state.options;
+    options[period.value] = selectedOptions
     this.setState({
       ...this.state,
-      integrateOptions
+      options: options
     });
-    this.props.change("description_integrate.select", integrateOptions);
+    this.props.change(`description_${period.value}.select`, selectedOptions);
   };
 
   fontHeader = {
@@ -160,7 +168,13 @@ class FoodInclusionEditor extends Component {
           weekdays: []
         }
       ],
-      integrateOptions: [],
+      options: {
+        'first_period': [],
+        'second_period': [],
+        'third_period': [],
+        'fourth_period': [],
+        'integrate': []
+      },
       selectDefault: [
         {
           key: 0,
@@ -180,10 +194,28 @@ class FoodInclusionEditor extends Component {
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
       day_reasons: param.dayChange.day_reasons,
-      integrateOptions:
-        param.dayChange.description_integrate !== null
-          ? param.dayChange.description_integrate.select
-          : this.state.integrateOptions
+      options: {
+        'first_period':
+          param.dayChange.description_first_period !== null
+            ? param.dayChange.description_first_period.select
+            : [],
+        'second_period':
+          param.dayChange.description_second_period !== null
+            ? param.dayChange.description_second_period.select
+            : [],
+        'third_period':
+          param.dayChange.description_third_period !== null
+            ? param.dayChange.description_third_period.select
+            : [],
+        'fourth_period':
+          param.dayChange.description_fourth_period !== null
+            ? param.dayChange.description_fourth_period.select
+            : [],
+        'integrate':
+          param.dayChange.description_integrate !== null
+            ? param.dayChange.description_integrate.select
+            : []
+      }
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -193,37 +225,31 @@ class FoodInclusionEditor extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const props = this.props;
-    const fields = ['description_first_period', 'description_second_period', 'description_third_period',
-      'description_fourth_period']
+    const fields = [
+      "description_first_period",
+      "description_second_period",
+      "description_third_period",
+      "description_fourth_period",
+      "description_integrate"
+    ];
     fields.forEach(function(field) {
       if (
         prevProps[field] &&
         prevProps[field].check &&
-        props[field] &&
-        !props[field].check
+        this.props[field] &&
+        !this.props[field].check
       ) {
-        props.change(field + '.select', "");
-        props.change(field + '.number', "");
+        let options = this.state.options;
+        const value = field.split("description_")[1];
+        options[value] = []
+        this.setState({
+          ...this.state,
+          options: options
+        })
+        this.props.change(field + ".select", []);
+        this.props.change(field + ".number", "");
       }
-    })
-    if (
-      prevProps.integrate &&
-      prevProps.integrate.check &&
-      this.props.integrate &&
-      !this.props.integrate.check
-    ) {
-      this.setState({
-        ...this.state,
-        integrateOptions: []
-      });
-      this.props.change("description_integrate.number", "");
-    }
-    if (this.props.reason && !this.props.reason.includes("Programa Contínuo")) {
-      this.props.change("date_from", "");
-      this.props.change("date_to", "");
-      this.props.change("weekdays", "");
-    }
+    }.bind(this));
   }
 
   refresh() {
@@ -284,13 +310,13 @@ class FoodInclusionEditor extends Component {
       description_second_period,
       description_third_period,
       description_fourth_period,
-      integrate,
+      description_integrate,
       two_working_days,
       typeFoodContinuousProgram
     } = this.props;
     const {
       title,
-      integrateOptions,
+      options,
       foodInclusionList,
       selectDefault,
       day_reasons,
@@ -298,17 +324,12 @@ class FoodInclusionEditor extends Component {
     } = this.state;
     let checkMap = {
       first_period: description_first_period && description_first_period.check,
-      second_period: description_second_period && description_second_period.check,
+      second_period:
+        description_second_period && description_second_period.check,
       third_period: description_third_period && description_third_period.check,
-      fourth_period: description_fourth_period && description_fourth_period.check,
-      integrate: integrate && integrate.check
-    };
-    const selectMap = {
-      first_period: description_first_period && description_first_period.select,
-      second_period: description_second_period && description_second_period.select,
-      third_period: description_third_period && description_third_period.select,
-      fourth_period: description_fourth_period && description_fourth_period.select,
-      integrate: integrate && integrateOptions.length > 0
+      fourth_period:
+        description_fourth_period && description_fourth_period.check,
+      integrate: description_integrate && description_integrate.check
     };
     const colors = {
       first_period: "#FFF7CB",
@@ -372,7 +393,7 @@ class FoodInclusionEditor extends Component {
                             component={LabelAndDate}
                             name="date"
                             onChange={value =>
-                              this.handleField('date', value, day_reason.id)
+                              this.handleField("date", value, day_reason.id)
                             }
                             minDate={two_working_days}
                             label="Dia"
@@ -386,7 +407,7 @@ class FoodInclusionEditor extends Component {
                           name="reason"
                           label="Motivo"
                           onChange={value =>
-                            this.handleField('reason', value, day_reason.id)
+                            this.handleField("reason", value, day_reason.id)
                           }
                           options={
                             day_reasons.length > 1
@@ -415,7 +436,11 @@ class FoodInclusionEditor extends Component {
                             component={LabelAndInput}
                             label="Qual o motivo?"
                             onChange={event =>
-                              this.handleField('which_reason', event, day_reason.id)
+                              this.handleField(
+                                "which_reason",
+                                event,
+                                day_reason.id
+                              )
                             }
                             name="which_reason"
                             className="form-control"
@@ -432,7 +457,11 @@ class FoodInclusionEditor extends Component {
                               component={LabelAndDate}
                               cols="4"
                               onChange={value =>
-                                this.handleField('date_from', value, day_reason.id)
+                                this.handleField(
+                                  "date_from",
+                                  value,
+                                  day_reason.id
+                                )
                               }
                               name="date_from"
                               label="De"
@@ -444,7 +473,11 @@ class FoodInclusionEditor extends Component {
                               component={LabelAndDate}
                               cols="4"
                               onChange={value =>
-                                this.handleField('date_to', value, day_reason.id)
+                                this.handleField(
+                                  "date_to",
+                                  value,
+                                  day_reason.id
+                                )
                               }
                               name="date_to"
                               label="Até"
@@ -456,7 +489,7 @@ class FoodInclusionEditor extends Component {
                             name="weekdays"
                             cols="12"
                             onChange={value =>
-                              this.handleField('weekdays', value, day_reason.id)
+                              this.handleField("weekdays", value, day_reason.id)
                             }
                             classNameArgs="form-group col-sm-4"
                             label="Repetir"
@@ -521,54 +554,41 @@ class FoodInclusionEditor extends Component {
                         </div>
                       </div>
                       <div className="form-group col-md-5 mr-5">
-                        {period.value === "integrate" ? (
-                          <div
-                            className={
-                              integrate && integrate.check
-                                ? "multiselect-wrapper-enabled"
-                                : "multiselect-wrapper-disabled"
-                            }
-                          >
-                            <Field
-                              component={StatefulMultiSelect}
-                              name=".select"
-                              selected={integrateOptions}
-                              options={typeFoodContinuousProgram}
-                              onSelectedChanged={this.handleSelectedChanged}
-                              disableSearch={true}
-                              overrideStrings={{
-                                selectSomeItems: "Selecione",
-                                allItemsAreSelected:
-                                  "Todos os itens estão selecionados",
-                                selectAll: "Todos"
-                              }}
-                            />
-                          </div>
-                        ) : (
+                        <div
+                          className={
+                            checkMap[period.value]
+                              ? "multiselect-wrapper-enabled"
+                              : "multiselect-wrapper-disabled"
+                          }
+                        >
                           <Field
-                            component={LabelAndCombo}
-                            disabled={!checkMap[period.value]}
-                            className="form-control"
-                            name="select"
+                            component={StatefulMultiSelect}
+                            name=".select"
+                            selected={options[period.value] || []}
                             options={
                               day_reasons[0].reason &&
                               day_reasons[0].reason.includes(
                                 "Programa Contínuo"
                               )
-                                ? selectDefault.concat(
-                                    typeFoodContinuousProgram
-                                  )
-                                : selectDefault.concat(period.meal_types)
+                                ? typeFoodContinuousProgram
+                                : period.meal_types
                             }
-                            validate={checkMap[period.value] ? required : null}
+                            onSelectedChanged={(values) => this.handleSelectedChanged(values, period)}
+                            disableSearch={true}
+                            overrideStrings={{
+                              selectSomeItems: "Selecione",
+                              allItemsAreSelected:
+                                "Todos os itens estão selecionados",
+                              selectAll: "Todos"
+                            }}
                           />
-                        )}
+                        </div>
                       </div>
                       <div className="form-group col-md-2">
                         <Field
                           component={LabelAndInput}
                           disabled={
-                            !selectMap[period.value] || !checkMap[period.value]
+                            options[period.value].length === 0 || !checkMap[period.value]
                           }
                           type="number"
                           name="number"
@@ -666,7 +686,7 @@ const mapStateToProps = state => {
     description_second_period: selector(state, "description_second_period"),
     description_third_period: selector(state, "description_third_period"),
     description_fourth_period: selector(state, "description_fourth_period"),
-    integrate: selector(state, "description_integrate")
+    description_integrate: selector(state, "description_integrate")
   };
 };
 

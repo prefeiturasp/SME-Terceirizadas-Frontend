@@ -5,7 +5,7 @@ import { getWorkingDays } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
-  USER_ID = "c6582290-a344-470c-aad9-5630af8be4f9";
+  USER_ID = "d6de34e7-5fcc-4b15-be0c-182fa0ff6abf";
 
   typeFoodContinuousProgram = [
     {
