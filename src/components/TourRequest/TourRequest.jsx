@@ -190,7 +190,7 @@ export class TourRequest extends Component {
     const { handleSubmit, pristine, submitting } = this.props;
     const { enumKits, tourRequestList, showModal } = this.state;
     return (
-      
+
       <div className="d-flex flex-column p-4 mt-5">
         <Modal show={showModal} onHide={this.handleShowModal}>
             <Modal.Header closeButton>

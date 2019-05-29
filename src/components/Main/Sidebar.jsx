@@ -12,6 +12,7 @@ import PermissionsPage from '../../pages/PermissionsPage';
 import TourRequestPage from '../../pages/TourRequestPage';
 import DayChangePage from '../../pages/DayChangePage';
 import FoodSuspensionPage from '../../pages/FoodSuspensionPage';
+import UnifiedSolicitationPage from '../../pages/UnifiedSolicitationPage';
 
 
 window.jQuery = $
@@ -109,9 +110,7 @@ export class Sidebar extends Component {
               aria-labelledby="headingDre"
               data-parent="#accordionSidebar">
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Cad 1</h6>
-                <Link className="collapse-item" href="#teste">Cad 2</Link>
-                <Link className="collapse-item" href="#teste">Cad 3</Link>
+                <NavLink activeClassName="active" className="collapse-item" to="/unified-solicitation" component={UnifiedSolicitationPage}>Solicitação Unificada</NavLink>
               </div>
             </div>
           </li>

@@ -5,7 +5,7 @@ import { getWorkingDays } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
-  USER_ID = "1be5b045-5c28-4ff2-92b4-d35271f507d3";
+  USER_ID = "d6de34e7-5fcc-4b15-be0c-182fa0ff6abf";
 
   typeFoodContinuousProgram = [
     {
@@ -42,7 +42,7 @@ class FoodInclusionContainer extends Component {
   }
 
   componentDidMount() {
-    let _two, _five, periods, reasons_simple, reasons_continuous_program = null;
+    let _two, _five = null;
     getPeriods(this.USER_ID).then(resPeriods => {
       getReasons(this.USER_ID).then(resReasons => {
         this.setState({

@@ -192,6 +192,24 @@ div.react-datepicker-wrapper {
   color: #2881bb;
 }
 
+.schools-group {
+  height: 299px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 1000px;
+}
+
+.school-container {
+  padding-left: 1rem !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background: #FFFFFF;
+  border: 1px solid #EEEEEE;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
 .v-align {
   padding-top: 9px;
 }
