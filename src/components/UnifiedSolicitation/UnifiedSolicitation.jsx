@@ -155,6 +155,9 @@ class UnifiedSolicitation extends Component {
   }
 
   handleCheck(school) {
+    if (this.props.multipleOrder){
+      this.props.change(`${school.slug}.number_of_students_per_school`, this.state.studentsTotal);
+    }
     var foundIndex = this.state.schoolsFiltered.findIndex(
       x => x.id === school.id
     );
@@ -375,7 +378,7 @@ class UnifiedSolicitation extends Component {
                     this.setState({ studentsTotal: event.target.value })
                   }
                   type="number"
-                  label="Número total de alunos participantes de todas as escolas"
+                  label="Número MÁXIMO de alunos participantes por escola"
                   validate={
                     multipleOrder !== undefined && [
                       required,
@@ -447,28 +450,37 @@ class UnifiedSolicitation extends Component {
                       <div
                         className="school-container col-md-12 mr-4"
                         style={
-                          school.burger_active ? { background: "#F2FBFE" } : {}
+                          school.burger_active
+                            ? { background: "#F2FBFE" }
+                            : {}
                         }
                       >
                         <div
                           className="col-md-12 pt-2 pb-2"
                           style={{ paddingLeft: "2rem" }}
                         >
-                          <label htmlFor="check" className="checkbox-label">
+                          <label
+                            htmlFor="check"
+                            className="checkbox-label"
+                          >
                             <Field
                               component={"input"}
                               type="checkbox"
                               name="check"
                             />
                             <span
-                              onClick={() => this.handleCheck(school)}
+                              onClick={() =>
+                                this.handleCheck(school)
+                              }
                               className="checkbox-custom"
                             />{" "}
                             {school._id + " - " + school.nome}
                           </label>
                           {!multipleOrder && (
                             <Stand
-                              onClick={() => this.changeBurger(school)}
+                              onClick={() =>
+                                this.changeBurger(school)
+                              }
                               color={"#C8C8C8"}
                               width={30}
                               padding={0}
@@ -477,8 +489,21 @@ class UnifiedSolicitation extends Component {
                               active={school.burger_active}
                             />
                           )}
+                          {multipleOrder && school.checked && (
+                            <Field
+                              component={"input"}
+                              className="float-right"
+                              type={"number"}
+                              min={0}
+                              max={studentsTotal}
+                              style={{width: '70px', textAlign: 'center'}}
+                              name="number_of_students_per_school"
+                            />
+                          )}
                         </div>
-                        <Collapse isOpened={school.burger_active}>
+                        <Collapse
+                          isOpened={school.burger_active}
+                        >
                           <div className="col-md-12">
                             <div className="form-group row">
                               <Field
@@ -487,13 +512,19 @@ class UnifiedSolicitation extends Component {
                                 name="number_of_students"
                                 type="number"
                                 onChange={event =>
-                                  this.handleNumberOfStudents(school, event)
+                                  this.handleNumberOfStudents(
+                                    school,
+                                    event
+                                  )
                                 }
                                 label="Número de alunos participantes"
                                 validate={
-                                  school.checked && [
+                                  school.checked && !multipleOrder && [
                                     required,
-                                    maxValue(this.state.nro_matriculados)
+                                    maxValue(
+                                      this.state
+                                        .nro_matriculados
+                                    )
                                   ]
                                 }
                               />
@@ -501,8 +532,13 @@ class UnifiedSolicitation extends Component {
                           </div>
                           <SelecionaTempoPasseio
                             className="mt-3"
-                            validate={school.checked}
-                            onChange={(event, newValue, previousValue, name) =>
+                            validate={school.checked && !multipleOrder}
+                            onChange={(
+                              event,
+                              newValue,
+                              previousValue,
+                              name
+                            ) =>
                               this.setNumeroDeKitLanches(
                                 event,
                                 newValue,
@@ -516,17 +552,24 @@ class UnifiedSolicitation extends Component {
                             <SelecionaKitLancheBox
                               kits={enumKits}
                               showOptions={false}
-                              validate={school.checked}
+                              validate={school.checked && !multipleOrder}
                               className="mt-3"
                               onChange={value =>
-                                this.handleSelecionaKitLancheBox(school, value)
+                                this.handleSelecionaKitLancheBox(
+                                  school,
+                                  value
+                                )
                               }
-                              choicesNumberLimit={school.limit_of_meal_kits}
+                              choicesNumberLimit={
+                                school.limit_of_meal_kits
+                              }
                             />
                           )}
                           <div className="form-group">
                             <label className="bold">
-                              {"Número total de kits dessa escola:"}
+                              {
+                                "Número total de kits dessa escola:"
+                              }
                             </label>
                             <br />
                             <Grid
@@ -537,7 +580,8 @@ class UnifiedSolicitation extends Component {
                               }}
                             >
                               <span className="bold d-flex justify-content-center">
-                                {school.number_of_meal_kits || 0}
+                                {school.number_of_meal_kits ||
+                                  0}
                               </span>
                             </Grid>
                           </div>
