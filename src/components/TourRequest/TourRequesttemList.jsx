@@ -95,7 +95,7 @@ export class TourRequestItemList extends Component {
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {status}
+              {status.replace('SAVED', 'SALVO')}
             </span>
             <div className="float-right">
               <input
