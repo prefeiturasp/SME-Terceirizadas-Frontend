@@ -24,14 +24,18 @@ class SelecionaTempoPasseio extends Component {
         <RadioboxGroup
           name="tempo_passeio"
           label="Tempo previsto do passeio"
-          validate={[requiredCheck]}
+          validate={
+            this.props.validate !== undefined
+              ? this.props.validate && [requiredCheck]
+              : [requiredCheck]
+          }
           onChange={this.props.onChange}
           options={timeOptions}
         />
         <div className="border rounded p-3">
           <label>
-            <b>Até 4 horas</b> = 1 kit lanche/aluno: Escolher 1 kit entre os 3
-            modelos estabelecidos contratualmente;
+            <b>Até 4 horas</b> = 1 kit lanche/aluno: Escolher 1 kit entre os
+            3 modelos estabelecidos contratualmente;
           </label>
           <label>
             <b>De 5 a 7 horas</b> = 2 kits lanche/alunos: Escolher 2 kits

@@ -59,6 +59,7 @@ class UnifiedSolicitation extends Component {
     this.handleCheck = this.handleCheck.bind(this);
     this.filterList = this.filterList.bind(this);
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -76,16 +77,27 @@ class UnifiedSolicitation extends Component {
       });
   }
 
-  setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
+  setNumeroDeKitLanches = (event, newValue, previousValue, name, school) => {
     const parser = {
       "4h": HORAS_ENUM._4.qtd_kits,
       "5_7h": HORAS_ENUM._5a7.qtd_kits,
       "8h": HORAS_ENUM._8.qtd_kits
     };
     let newQuantity = parser[event];
+    let qtd_kit_lanche = this.state.qtd_kit_lanche;
+    let schoolsFiltered = this.state.schoolsFiltered;
+    if (school) {
+      var foundIndex = this.state.schoolsFiltered.findIndex(
+        x => x.id === school.id
+      );
+      schoolsFiltered[foundIndex].limit_of_meal_kits = newQuantity;
+    } else {
+      qtd_kit_lanche = newQuantity;
+    }
     this.setState({
       ...this.state,
-      qtd_kit_lanche: newQuantity,
+      qtd_kit_lanche,
+      schoolsFiltered,
       radioChanged: event !== previousValue
     });
   };
@@ -197,21 +209,6 @@ class UnifiedSolicitation extends Component {
     }
   }
 
-  addDay() {
-    this.setState({
-      day_reasons: this.state.day_reasons.concat([
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
-        }
-      ])
-    });
-  }
-
   changeBurger(school) {
     school.burger_active = !school.burger_active;
     this.forceUpdate();
@@ -225,7 +222,7 @@ class UnifiedSolicitation extends Component {
     this.setState({ ...this.state, showModal: true });
   }
 
-  handleSubmit = values => {
+  handleSubmit(values) {
     console.log(values);
   }
 
@@ -266,7 +263,7 @@ class UnifiedSolicitation extends Component {
     } = this.state;
     return (
       <div>
-        <form onSubmit={handleSubmit(this.handleSubmit)}>
+        <form onSubmit={this.props.handleSubmit}>
           <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
             <div className="card-body">
@@ -283,21 +280,18 @@ class UnifiedSolicitation extends Component {
             return (
               <FormSection name={`day_reasons_${day_reason.id}`}>
                 <div className="form-row">
-                  {(!day_reason.reason ||
-                    !day_reason.reason.includes("Programa Contínuo")) && (
-                    <div className="form-group col-sm-3">
-                      <Field
-                        component={LabelAndDate}
-                        name="date"
-                        onChange={value =>
-                          this.handleField("date", value, day_reason.id)
-                        }
-                        minDate={two_working_days}
-                        label="Dia"
-                        validate={required}
-                      />
-                    </div>
-                  )}
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      name="date"
+                      onChange={value =>
+                        this.handleField("date", value, day_reason.id)
+                      }
+                      minDate={two_working_days}
+                      label="Dia"
+                      validate={required}
+                    />
+                  </div>
                   <div className="form-group col-sm-8">
                     <Field
                       component={LabelAndCombo}
@@ -343,17 +337,6 @@ class UnifiedSolicitation extends Component {
               </FormSection>
             );
           })}
-          <BaseButton
-            label="Adicionar dia"
-            type={ButtonType.BUTTON}
-            className="col-sm-3"
-            onClick={() => this.addDay()}
-            disabled={
-              day_reasons[0].reason &&
-              day_reasons[0].reason.includes("Programa Contínuo")
-            }
-            style={ButtonStyle.OutlinePrimary}
-          />
           <div style={{ paddingTop: "15px", paddingBottom: "30px" }}>
             <Field
               component={LabelAndInput}
@@ -393,19 +376,32 @@ class UnifiedSolicitation extends Component {
                   }
                   type="number"
                   label="Número total de alunos participantes de todas as escolas"
-                  validate={[required, maxValue(this.state.nro_matriculados)]}
+                  validate={
+                    multipleOrder !== undefined && [
+                      required,
+                      maxValue(this.state.nro_matriculados)
+                    ]
+                  }
                 />
               </div>
             </div>
             <SelecionaTempoPasseio
               className="mt-3"
+              validate={multipleOrder !== undefined}
               onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+                this.setNumeroDeKitLanches(
+                  event,
+                  newValue,
+                  previousValue,
+                  name,
+                  null
+                )
               }
             />
             {enumKits && (
               <SelecionaKitLancheBox
                 className="mt-3"
+                validate={multipleOrder !== undefined}
                 choicesNumberLimit={this.state.qtd_kit_lanche}
                 onChange={value =>
                   this.setState({ choicesTotal: value.length })
@@ -494,21 +490,25 @@ class UnifiedSolicitation extends Component {
                                   this.handleNumberOfStudents(school, event)
                                 }
                                 label="Número de alunos participantes"
-                                validate={[
-                                  required,
-                                  maxValue(this.state.nro_matriculados)
-                                ]}
+                                validate={
+                                  school.checked && [
+                                    required,
+                                    maxValue(this.state.nro_matriculados)
+                                  ]
+                                }
                               />
                             </div>
                           </div>
                           <SelecionaTempoPasseio
                             className="mt-3"
+                            validate={school.checked}
                             onChange={(event, newValue, previousValue, name) =>
                               this.setNumeroDeKitLanches(
                                 event,
                                 newValue,
                                 previousValue,
-                                name
+                                name,
+                                school
                               )
                             }
                           />
@@ -516,11 +516,12 @@ class UnifiedSolicitation extends Component {
                             <SelecionaKitLancheBox
                               kits={enumKits}
                               showOptions={false}
+                              validate={school.checked}
                               className="mt-3"
                               onChange={value =>
                                 this.handleSelecionaKitLancheBox(school, value)
                               }
-                              choicesNumberLimit={this.state.qtd_kit_lanche}
+                              choicesNumberLimit={school.limit_of_meal_kits}
                             />
                           )}
                           <div className="form-group">
@@ -588,8 +589,9 @@ class UnifiedSolicitation extends Component {
             />
             <BaseButton
               label="Enviar Solicitação"
-              //disabled={pristine || submitting}
-              type={"submit"}
+              disabled={pristine || submitting}
+              type={ButtonType.SUBMIT}
+              onClick={handleSubmit(values => this.handleSubmit(values))}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
