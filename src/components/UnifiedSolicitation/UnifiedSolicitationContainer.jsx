@@ -6,7 +6,7 @@ import UnifiedSolicitation from "./UnifiedSolicitation";
 import { string_to_slug } from "../../helpers/utilities";
 
 class UnifiedSolicitationContainer extends Component {
-  USER_ID = "c6582290-a344-470c-aad9-5630af8be4f9";
+  USER_ID = "d6de34e7-5fcc-4b15-be0c-182fa0ff6abf";
 
   constructor(props) {
     super(props);
@@ -28,9 +28,10 @@ class UnifiedSolicitationContainer extends Component {
           schools.forEach(function(school) {
             school["id"] = school["_id"].toString();
             school["burger_active"] = false;
-            school["number_of_choices"] = 0
-            school["number_of_meal_kits"] = 0
-            school["number_of_students"] = 0
+            school["limit_of_meal_kits"] = 0;
+            school["number_of_choices"] = 0;
+            school["number_of_meal_kits"] = 0;
+            school["number_of_students"] = 0;
             school["checked"] = false;
             school["slug"] = string_to_slug(school["nome"]);
           });
