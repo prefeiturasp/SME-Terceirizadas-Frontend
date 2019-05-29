@@ -61,6 +61,66 @@ label {
   color: #a8a8a8;
 }
 
+.badge-sme .id-of-solicitation {
+  font-weight: bold;
+  font-size: 34px;
+  line-height: 40px;
+  text-align: center;
+  color: #353535;
+}
+
+.badge-sme .number-of-order-label {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  color: #353535;
+}
+
+.requester {
+  font-family: Roboto;
+  font-size: 14px;
+  line-height: 16px;
+  color: #686868;
+}
+
+.dre-name {
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 18px;
+  color: #353535;
+}
+
+.report-label-value {
+  margin-top: 20px;
+  font-family: Roboto;
+  font-size: 14px;
+  line-height: 16px;
+  color: #686868;
+}
+
+.report-label-value .value {
+  font-weight: bold;
+}
+
+table.report-table {
+  width: 100%;
+}
+
+table.report-table th {
+  background: #333333;
+  color: #ffffff;
+  padding: 10px;
+}
+
+table.report-table td {
+  text-align: center;
+  color: #353535;
+  border-bottom: 1px solid #353535;
+
+}
+
 textarea {
   min-height: 121px;
 }
@@ -130,7 +190,7 @@ textarea {
   height: 0px;
   width: 0px;
   border-radius: 5px;
-  border: solid #009BFF;
+  border: solid #009bff;
   border-width: 0 3px 3px 0;
   transform: rotate(0deg) scale(0);
   opacity: 1;
@@ -168,7 +228,6 @@ textarea {
   padding: 2rem !important;
 }
 
-
 .DraftEditor-root {
   z-index: 0;
 }
@@ -203,8 +262,8 @@ div.react-datepicker-wrapper {
   padding-left: 1rem !important;
   margin-top: 5px;
   margin-bottom: 5px;
-  background: #FFFFFF;
-  border: 1px solid #EEEEEE;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   box-sizing: border-box;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -274,13 +333,19 @@ textarea {
   background-color: #e9ecef !important;
 }
 
-.multiselect-wrapper-disabled .dropdown .dropdown-heading
-.dropdown-heading-value span {
+.multiselect-wrapper-disabled
+  .dropdown
+  .dropdown-heading
+  .dropdown-heading-value
+  span {
   color: #5d515b !important;
 }
 
-.multiselect-wrapper-enabled .dropdown .dropdown-heading
-.dropdown-heading-value span {
+.multiselect-wrapper-enabled
+  .dropdown
+  .dropdown-heading
+  .dropdown-heading-value
+  span {
   color: #5d515b !important;
 }
 
@@ -291,7 +356,7 @@ textarea {
   margin-left: 5px;
   color: #686868;
   background-color: #fff;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   border-radius: 50%;
   display: inline-block;
   cursor: pointer;
@@ -304,7 +369,7 @@ textarea {
   margin-left: 5px;
   color: #fff;
   background-color: #686868;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   border-radius: 50%;
   display: inline-block;
   cursor: pointer;
