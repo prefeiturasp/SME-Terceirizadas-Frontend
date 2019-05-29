@@ -50,7 +50,11 @@ class  SelecionaKitLancheBox extends Component {
           checkAll={checkAll}
           clearAll={false}
           onChange={this.props.onChange}
-          validate={[requiredCheck]}
+          validate={
+            this.props.validate !== undefined
+              ? this.props.validate && [requiredCheck]
+              : [requiredCheck]
+          }
         />
       </div>
     );
