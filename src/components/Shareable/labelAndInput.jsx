@@ -77,7 +77,8 @@ export class LabelAndCombo extends Component {
     options: [
       { value: "...", label: "op1", disable: false },
       { value: "***", label: "op2", selected: true }
-    ]
+    ],
+    disabled: false
   };
   render() {
     const { cols, name, label, input, meta, options, disabled } = this.props;

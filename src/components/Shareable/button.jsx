@@ -1,5 +1,7 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import If from "./layout";
+
 // https://getbootstrap.com/docs/4.0/components/buttons/
 export var ButtonStyle = {
   Primary: "primary",
@@ -38,18 +40,40 @@ export var ButtonType = {
   RESET: "reset"
 };
 
-export default class BaseButton extends Component {
+export default class Button extends Component {
+  static propTypes = {
+    type: PropTypes.string,
+    style: PropTypes.string,
+    className: PropTypes.string,
+    disabled: PropTypes.bool
+  };
+
+  static defaultProps = {
+    type: ButtonType.BUTTON,
+    style: ButtonStyle.Primary,
+    disabled: false
+  };
+
   render() {
+    const {
+      type,
+      style,
+      className,
+      onClick,
+      disabled,
+      label,
+      icon
+    } = this.props;
     return (
       <button
-        type={this.props.type || ButtonType.BUTTON}
-        className={`btn btn-${this.props.style} ${this.props.className}`}
-        onClick={this.props.onClick}
-        disabled={this.props.disabled}
+        type={type}
+        className={`btn btn-${style} ${className}`}
+        onClick={onClick}
+        disabled={disabled}
       >
-        {this.props.label}
-        <If isVisible={this.props.icon}>
-          <i className={`fa fa-${this.props.icon}`} />
+        {label}
+        <If isVisible={icon}>
+          <i className={`fa fa-${icon}`} />
         </If>
       </button>
     );
