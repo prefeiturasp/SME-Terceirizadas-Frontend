@@ -81,7 +81,8 @@ export const solicitarKitLanche = async (values) => {
         })
 }
 
-export const RegistroSalvarKitLanche = async (values) => {
+
+export const registroSalvarKitLanche = async (values) => {
 
     const OBJ_REQUEST = {
         headers: authToken,

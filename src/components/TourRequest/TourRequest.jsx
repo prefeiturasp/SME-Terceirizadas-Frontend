@@ -9,7 +9,7 @@ import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
 import SelecionaKitLancheBox from './SelecionaKitLancheBox'
 import { TourRequestItemList } from "./TourRequesttemList";
-import { removeKitLanche, getQuatidadeAlunoApi, solicitarKitLanche,RegistroSalvarKitLanche, getDiasUteis, getSolicitacoesKitLancheApi, getRefeicoesApi } from '../../services/tourRequest.service'
+import { removeKitLanche, getQuatidadeAlunoApi, solicitarKitLanche, registroSalvarKitLanche, getDiasUteis, getSolicitacoesKitLancheApi, getRefeicoesApi } from '../../services/tourRequest.service'
 import { convertToFormat, adapterEnumKits, convertStringToDate } from './ConvertToFormat'
 import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
@@ -125,11 +125,11 @@ export class TourRequest extends Component {
 
   salvarOuEnviar(values){
     if(values.status === "SALVO"){
-      RegistroSalvarKitLanche(values).then(resp => {
+      registroSalvarKitLanche(values).then(resp => {
+        if(resp.success){
+          toastSuccess(resp.success)
           this.resetForm()
           this.refresh()
-          if(resp.success){
-            toastSuccess(resp.success)
           }else{
             toastError(resp.error)
           }
@@ -138,10 +138,10 @@ export class TourRequest extends Component {
         })
       }else{
         solicitarKitLanche(values).then(resp =>{
-          this.resetForm()
-          this.refresh()
           if(resp.success){
             toastSuccess(resp.success)
+            this.resetForm()
+            this.refresh()
           }else{
             toastError(resp.error)
           }
