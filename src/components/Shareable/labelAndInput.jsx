@@ -16,12 +16,25 @@ import If from "./layout";
 import { Grid } from "./responsiveBs4";
 
 export const LabelAndInput = props => {
-  const { cols, name, label, input, min, placeholder, readOnly, type, meta, disabled } = props;
+  const {
+    cols,
+    name,
+    label,
+    input,
+    min,
+    placeholder,
+    readOnly,
+    type,
+    meta,
+    disabled
+  } = props;
   return (
     <Grid cols={cols}>
-      {label && <label htmlFor={name} className={"col-form-label"}>
-        {label}
-      </label>}
+      {label && (
+        <label htmlFor={name} className={"col-form-label"}>
+          {label}
+        </label>
+      )}
       <input
         {...input}
         className="form-control"
@@ -215,7 +228,8 @@ export class LabelAndTextArea extends Component {
   }
 
   static defaultProps = {
-    placeholder: "Seu texto aqui."
+    placeholder: "Seu texto aqui.",
+    cols: "12 12 12 12"
   };
 
   /**

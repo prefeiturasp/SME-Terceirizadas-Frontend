@@ -32,6 +32,7 @@ export class Login extends Component {
                     label="E-mail"
                     name="email"
                     type="email"
+                    cols="12 12 12 12"
                     validate={[required]}
                   />
                 </div>
@@ -41,6 +42,7 @@ export class Login extends Component {
                     label="Senha"
                     type="password"
                     name="password"
+                    cols="12 12 12 12"
                     validate={required}
                   />
                   <p className="text-right mt-2">
