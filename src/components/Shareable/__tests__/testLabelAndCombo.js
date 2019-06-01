@@ -44,10 +44,10 @@ describe("LabelAndCombo", () => {
     expect(input.onChange).toHaveBeenCalledWith("TEST@@@@");
   });
 
-  it("onChange called 2 times", () => {
+  it("onChange called 3 times", () => {
     const select = wrapper.find("select");
     select.simulate("change", { target: { value: "A" } });
     select.simulate("change", { target: { value: "B" } });
-    expect(input.onChange).toHaveBeenCalledTimes(2);
+    expect(input.onChange).toHaveBeenCalledTimes(3);
   });
 });
