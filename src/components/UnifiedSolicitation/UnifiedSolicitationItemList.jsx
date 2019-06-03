@@ -3,16 +3,12 @@ import React, { Component } from "react";
 import Button, { ButtonIcon } from "../Shareable/button";
 import "../Shareable/custom.css";
 
-export class FoodInclusionItemList extends Component {
+export class UnifiedSolicitationItemList extends Component {
   constructor(props) {
     super(props);
     this.state = { checkedObjects: [] };
     this.onCheckChange = this.onCheckChange.bind(this);
   }
-
-  static propTypes = {
-    salvo_em: PropTypes.string.isRequired
-  };
 
   onCheckChange(event, object) {
     let { checkedObjects } = this.state;
@@ -40,8 +36,8 @@ export class FoodInclusionItemList extends Component {
   }
 
   render() {
-    const { foodInclusionList } = this.props;
-    const allDaysInfo = foodInclusionList.map(dayChange => {
+    const { unifiedSolicitationList } = this.props;
+    const allDaysInfo = unifiedSolicitationList.map(dayChange => {
       const { id } = dayChange;
       let backgroundColor =
         dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
@@ -49,13 +45,13 @@ export class FoodInclusionItemList extends Component {
         <div className="border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${dayChange.id}`}
+              Solicitação Unificada {`# ${dayChange.id}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {dayChange.status}
+              SALVO
             </span>
           </div>
           <div>
@@ -77,18 +73,7 @@ export class FoodInclusionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.day_reasons.length > 1
-                ? dayChange.day_reasons.length + " Dias"
-                : dayChange.day_reasons[0].reason.includes("Programa Contínuo")
-                ? dayChange.day_reasons[0].reason +
-                  " (" +
-                  dayChange.day_reasons[0].date_from +
-                  " - " +
-                  dayChange.day_reasons[0].date_to +
-                  ")"
-                : dayChange.day_reasons[0].reason +
-                  " - " +
-                  dayChange.day_reasons[0].date}
+              {dayChange.dia} - {dayChange.razao}
             </p>
           </div>
         </div>
