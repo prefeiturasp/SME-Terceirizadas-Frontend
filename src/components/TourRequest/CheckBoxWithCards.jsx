@@ -19,14 +19,14 @@ export class Cards extends Component {
   static getDerivedStateFromProps(nextProps, state) {
     const {
       checkAll,
-      input: { onBlur, onChange }
+      input: { onBlur, onChange, value }
     } = nextProps;
     // marca tudo e atualiza o estado interno
     if (checkAll) {
       onBlur(state.all);
       onChange(state.all);
       return { checkedList: state.all, unCheckedList: [] };
-    } else {
+    }  else {
       // atualiza o state pra vazio e limpa o estado interno...
       // se todos estão marcados então limpa.
       if (state.checkedList.length === state.all.length) {
@@ -72,14 +72,14 @@ export class Cards extends Component {
       };
 
       let borderSucess = "";
-      if (this.state.checkedList.includes(value)) {
+      if (this.state.checkedList.includes(value) || (this.state.checkedList.length === 0 && inputValue.includes(value))) {
         borderSucess = " border-success";
       }
 
       let disabled = false;
       let opacity = 1;
-      if (this.state.checkedList.length >= choicesNumberLimit) {
-        if (this.state.unCheckedList.includes(value)) {
+      if (this.state.checkedList.length >= choicesNumberLimit || (inputValue.length && this.state.checkedList.length === 0 && !inputValue.includes(value))) {
+        if (this.state.unCheckedList.includes(value) || (inputValue.length && this.state.checkedList.length === 0 && !inputValue.includes(value))) {
           disabled = true;
           opacity = 0.3;
         }

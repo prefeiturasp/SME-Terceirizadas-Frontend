@@ -38,6 +38,11 @@ class UnifiedSolicitation extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      status: "SALVO",
+      title: "Nova Solicitação Unificada",
+      salvarAtualizarLbl: "Salvar Rascunho",
+      id: "",
+      showModal: false,
       schoolsFiltered: [],
       schoolsTotal: 0,
       qtd_kit_lanche: 0,
@@ -47,13 +52,6 @@ class UnifiedSolicitation extends Component {
       choicesTotal: 0,
       studentsTotal: 0,
       unifiedSolicitationList: [],
-      dias_razoes: [
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          dia: null,
-          razao: null
-        }
-      ],
       selectDefault: [
         {
           key: 0,
@@ -74,24 +72,72 @@ class UnifiedSolicitation extends Component {
   }
 
   OnEditButtonClicked(param) {
-    this.props.reset("unifiedSolicitation");
-    const state = this.state;
+    this.resetForm();
     this.props.loadUnifiedSolicitation(param.dayChange);
-    let schoolsFiltered = state.schoolsFiltered;
+    let schoolsFiltered = this.state.schoolsFiltered;
+    const parser = {
+      "4h": HORAS_ENUM._4.qtd_kits,
+      "5_7h": HORAS_ENUM._5a7.qtd_kits,
+      "8h": HORAS_ENUM._8.qtd_kits
+    };
+    let kitsTotal = 0;
+    let studentsTotal = 0;
+    let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
-      var foundIndex = state.schoolsFiltered.findIndex(x => x.id == escola.id);
-      schoolsFiltered[foundIndex].checked = escola.check;
+      var foundIndex = schoolsFiltered.findIndex(x => x.id == escola.id);
+      if (param.dayChange.pedido_multiplo)
+        schoolsFiltered[foundIndex].checked = escola.check;
+      schoolsFiltered[foundIndex].number_of_choices =
+        parser[escola.tempo_passeio];
+      schoolsFiltered[foundIndex].limit_of_meal_kits = parser[escola.tempo_passeio];
+      if (escola.check) {
+        if (escola.kit_lanche) {
+          schoolsFiltered[foundIndex].number_of_meal_kits =
+            escola.kit_lanche.length * escola.nro_alunos;
+          kitsTotal += escola.kit_lanche.length * escola.nro_alunos;
+        }
+        schoolsTotal += 1;
+        if (escola.numero_alunos)
+          studentsTotal += escola.numero_alunos;
+      }
     });
+    this.props.change("pedido_multiplo", param.dayChange.pedido_multiplo)
     this.setState({
-      ...this.state,
       schoolsFiltered: schoolsFiltered,
-      studentsTotal: param.dayChange.max_numero_alunos_por_escola,
-      choicesTotal: param.dayChange.kit_lanche.length
+      choicesTotal: param.dayChange.kit_lanche.length,
+      qtd_kit_lanche: param.dayChange.tempo_passeio ? parser[param.dayChange.tempo_passeio] : 0,
+      kitsTotal: kitsTotal,
+      studentsTotal: studentsTotal,
+      schoolsTotal: schoolsTotal,
+      status: "SALVO",
+      title: `Solicitação Unificada # ${param.dayChange.id}`,
+      salvarAtualizarLbl: "Atualizar",
+      id: param.dayChange.id
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
   OnDeleteButtonClicked() {}
+
+  resetForm(event) {
+    this.props.reset("unifiedSolicitation");
+    this.props.loadUnifiedSolicitation(null);
+    this.setState({
+      status: "SEM STATUS",
+      title: "Nova Solicitação Unificada",
+      id: "",
+      showModal: false,
+      salvarAtualizarLbl: "Salvar Rascunho",
+      schoolsFiltered: this.props.schools,
+      schoolsTotal: 0,
+      qtd_kit_lanche: 0,
+      radioChanged: false,
+      enumKits: null,
+      kitsTotal: 0,
+      choicesTotal: 0,
+      studentsTotal: 0
+    });
+  }
 
   componentDidMount() {
     this.props.change("schools_total", 0);
@@ -165,6 +211,18 @@ class UnifiedSolicitation extends Component {
     this.handleKitsTotal();
   }
 
+   handleStudentsTotal() {
+    const schoolsFiltered = this.state.schoolsFiltered;
+    let studentsTotal = 0;
+    schoolsFiltered.forEach(function(school) {
+      if (school.checked) {
+        studentsTotal += parseInt(school.numero_alunos);
+      }
+    });
+    return studentsTotal;
+
+  }
+
   handleNumberOfStudentsPerSchool(school, event) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
       x => x.id === school.id
@@ -174,9 +232,9 @@ class UnifiedSolicitation extends Component {
     schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
+      studentsTotal: this.handleStudentsTotal(),
       schoolsFiltered: schoolsFiltered
     });
-    this.handleKitsTotal();
   }
 
   setNumberOfMealKits(school) {
@@ -204,12 +262,6 @@ class UnifiedSolicitation extends Component {
   }
 
   handleCheck(school) {
-    if (this.props.multipleOrder) {
-      this.props.change(
-        `school_${school.id}.numero_alunos`,
-        this.state.studentsTotal
-      );
-    }
     var foundIndex = this.state.schoolsFiltered.findIndex(
       x => x.id === school.id
     );
@@ -217,12 +269,29 @@ class UnifiedSolicitation extends Component {
     school.checked = !school.checked;
     schoolsFiltered[foundIndex].checked = school.checked;
     this.props.change(`school_${school.id}.check`, school.checked);
+    if (this.props.multipleOrder) {
+      schoolsFiltered[foundIndex].numero_alunos = this.props.max_alunos;
+      this.props.change(`school_${school.id}.numero_alunos`, this.props.max_alunos)
+    }
     schoolsFiltered = this.setNumberOfMealKits(school);
+    let studentsTotal = 0;
+    let kitsTotal = 0;
+    let schoolsTotal = 0;
+    schoolsFiltered.forEach(function(school) {
+      if (school.checked) {
+        studentsTotal += parseInt(school.numero_alunos);
+        kitsTotal += school.number_of_choices * school.nro_alunos;
+        schoolsTotal += 1;
+      }
+    });
     this.setState({
       ...this.state,
-      schoolsFiltered: schoolsFiltered
+      schoolsFiltered: schoolsFiltered,
+      studentsTotal: studentsTotal,
+      kitsTotal: kitsTotal,
+      schoolsTotal: schoolsTotal
     });
-    this.handleKitsTotal();
+    //this.handleKitsTotal();
   }
 
   handleKitsTotal() {
@@ -244,34 +313,15 @@ class UnifiedSolicitation extends Component {
 
   handleDate(event) {
     const value = event.target.value;
-    if (checaSeDataEstaEntre2e5DiasUteis(
-      value,
-      this.props.two_working_days,
-      this.props.five_working_days
-    )) this.showModal();
-    this.props.change('dia', value);
-  }
-
-
-  handleField(field, value, id) {
-    const foundIndex = this.state.dias_razoes.findIndex(x => x.id === id);
-    let dias_razoes = this.state.dias_razoes;
-    if (field === "qual_razao") value = value.target.value;
-    dias_razoes[foundIndex][field] = value;
-    this.setState({
-      ...this.state,
-      dias_razoes: dias_razoes
-    });
     if (
-      field === "dia" &&
       checaSeDataEstaEntre2e5DiasUteis(
         value,
         this.props.two_working_days,
         this.props.five_working_days
       )
-    ) {
+    )
       this.showModal();
-    }
+    this.props.change("dia", value);
   }
 
   changeBurger(school) {
@@ -302,21 +352,15 @@ class UnifiedSolicitation extends Component {
   }
 
   handleSubmit(values) {
-    values.dias_razoes = this.state.dias_razoes;
     values.escolas = this.state.schoolsFiltered;
     values.kits_total = this.state.kitsTotal;
     createOrUpdateUnifiedSolicitation(JSON.stringify(values)).then(
       res => {
-        if (res.code === 200) {
-          console.log(res);
-          toastSuccess(
-            (values.status === "SALVO"
-              ? "Rascunho salvo"
-              : "Inclusão de Alimentação enviada") + " com sucesso"
-          );
+        if (res.status === 200) {
+          toastSuccess(res.data.success);
           this.refresh();
         } else {
-          toastError(res.log_content[0]);
+          toastError(res.data.error);
         }
       },
       function(error) {
@@ -348,11 +392,13 @@ class UnifiedSolicitation extends Component {
       reasons_continuous_program,
       reasons_simple,
       multipleOrder,
-      razao
+      razao,
+      max_alunos
     } = this.props;
     const {
-      dias_razoes,
+      title,
       selectDefault,
+      qtd_kit_lanche,
       showModal,
       schoolsFiltered,
       enumKits,
@@ -386,9 +432,7 @@ class UnifiedSolicitation extends Component {
         </Modal>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <span ref={this.titleRef} className="page-title">
-            Solicitação Unificada
-          </span>
+          <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
             <div className="card-body">
               <span className="blockquote-sme">Nº de Matriculados</span>
@@ -415,6 +459,11 @@ class UnifiedSolicitation extends Component {
               </div>
             </div>
           )}
+          <div ref={this.titleRef} className="form-row mt-3 ml-1">
+            <h3 className="bold" style={{ color: "#353535" }}>
+              {title}
+            </h3>
+          </div>
           <div className="form-row">
             <div className="form-group col-sm-3">
               <Field
@@ -431,10 +480,10 @@ class UnifiedSolicitation extends Component {
                 component={LabelAndCombo}
                 name="razao"
                 label="Motivo"
-                onChange={value => this.props.change('razao', value)}
-                options={
-                  selectDefault.concat(reasons_simple).concat(reasons_continuous_program)
-                }
+                onChange={value => this.props.change("razao", value)}
+                options={selectDefault
+                  .concat(reasons_simple)
+                  .concat(reasons_continuous_program)}
                 validate={required}
               />
             </div>
@@ -445,7 +494,7 @@ class UnifiedSolicitation extends Component {
                 <Field
                   component={LabelAndInput}
                   label="Qual o motivo?"
-                  onChange={event => this.handleField("qual_razao", event)}
+                  onChange={value => this.props.change("qual_razao", value)}
                   name="qual_razao"
                   className="form-control"
                   validate={required}
@@ -488,14 +537,14 @@ class UnifiedSolicitation extends Component {
                   cols="6"
                   name="max_numero_alunos_por_escola"
                   onChange={event =>
-                    this.setState({ studentsTotal: event.target.value })
+                    this.props.change('max_numero_alunos_por_escola', event.target.value)
                   }
                   type="number"
                   label="Número MÁXIMO de alunos participantes por escola"
                   validate={
                     multipleOrder !== undefined && [
                       required,
-                      maxValue(this.state.nro_matriculados)
+                      maxValue(max_alunos)
                     ]
                   }
                 />
@@ -518,7 +567,7 @@ class UnifiedSolicitation extends Component {
               <SelecionaKitLancheBox
                 className="mt-3"
                 validate={multipleOrder !== undefined}
-                choicesNumberLimit={this.state.qtd_kit_lanche}
+                choicesNumberLimit={qtd_kit_lanche}
                 onChange={value =>
                   this.setState({ choicesTotal: value.length })
                 }
@@ -526,21 +575,6 @@ class UnifiedSolicitation extends Component {
                 kits={enumKits}
               />
             )}
-            <div className="form-group">
-              <label className="bold">{"Número total kits:"}</label>
-              <br />
-              <Grid
-                cols="1 1 1 1"
-                className="border rounded p-2"
-                style={{
-                  background: "#E8E8E8"
-                }}
-              >
-                <span className="bold d-flex justify-content-center">
-                  {choicesTotal * studentsTotal}
-                </span>
-              </Grid>
-            </div>
           </Collapse>
           <input
             type="text"
@@ -627,7 +661,7 @@ class UnifiedSolicitation extends Component {
                                   school.checked &&
                                   !multipleOrder && [
                                     required,
-                                    maxValue(this.state.nro_matriculados)
+                                    maxValue(max_alunos)
                                   ]
                                 }
                               />
@@ -693,7 +727,9 @@ class UnifiedSolicitation extends Component {
             <div style={{ display: "grid" }} className="float-right">
               <label className="bold">Total de Kits</label>
               <label>
-                {multipleOrder ? choicesTotal * studentsTotal : kitsTotal}
+                {multipleOrder
+                  ? choicesTotal * studentsTotal
+                  : kitsTotal}
               </label>
             </div>
           </div>
@@ -710,7 +746,7 @@ class UnifiedSolicitation extends Component {
             <BaseButton
               label="Cancelar"
               onClick={event => this.resetForm(event)}
-              disabled={pristine || submitting}
+              disabled={submitting}
               style={ButtonStyle.OutlinePrimary}
             />
             <BaseButton
@@ -746,9 +782,9 @@ const mapStateToProps = state => {
   return {
     initialValues: state.unifiedSolicitation.data,
     multipleOrder: selector(state, "pedido_multiplo"),
-    schoolsTotal: selector(state, "schools_total"),
     kitsTotal: selector(state, "kits_total"),
-    razao: selector(state, "razao")
+    razao: selector(state, "razao"),
+    max_alunos: selector(state, "max_numero_alunos_por_escola")
   };
 };
 
