@@ -295,6 +295,9 @@ textarea {
   margin-top: 15px;
   color: #a8a8a8;
 }
+.label-n-alunos span{
+  padding-right: 10px;
+}
 
 .purple {
   color: #853cb6;

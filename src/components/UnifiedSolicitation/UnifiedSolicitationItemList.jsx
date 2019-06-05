@@ -70,7 +70,12 @@ export class UnifiedSolicitationItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.pedido_multiplo ? "Pedido Múltiplo - " : dayChange.escolas.length + " escolas - "}{dayChange.dia} - {dayChange.razao}
+              {dayChange.pedido_multiplo
+                ? "Pedido Múltiplo - "
+                : dayChange.escolas.length > 1
+                ? dayChange.escolas.length + " escolas - "
+                : dayChange.escolas.length + " escola - "}
+              {dayChange.dia} - {dayChange.razao}
             </p>
           </div>
         </div>
