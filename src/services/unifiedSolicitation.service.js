@@ -41,3 +41,22 @@ export const getUnifiedSolicitations = async () => {
       return {};
     });
 };
+
+export const removeUnifiedSolicitation = async uuid => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "DELETE"
+  };
+  let status = 0;
+  return await fetch(API_URL + "/solicitacao-unificada/" + uuid, OBJ_REQUEST)
+  .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
+    });
+};

@@ -21,12 +21,14 @@ import { getRefeicoesApi } from "../../services/tourRequest.service";
 import "../Shareable/custom.css";
 import {
   createOrUpdateUnifiedSolicitation,
-  getUnifiedSolicitations
+  getUnifiedSolicitations,
+  removeUnifiedSolicitation
 } from "../../services/unifiedSolicitation.service";
 import { UnifiedSolicitationItemList } from "./UnifiedSolicitationItemList";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
+import { validateSubmit } from "./UnifiedSolicitationValidation";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -85,8 +87,11 @@ class UnifiedSolicitation extends Component {
     let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
       var foundIndex = schoolsFiltered.findIndex(x => x.id == escola.id);
-      if (param.dayChange.pedido_multiplo)
-        schoolsFiltered[foundIndex].checked = escola.check;
+      schoolsFiltered[foundIndex].checked = escola.check;
+      schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
+      schoolsFiltered[foundIndex].numero_alunos = escola.numero_alunos;
+      schoolsFiltered[foundIndex].nro_alunos = escola.nro_alunos;
+      schoolsFiltered[foundIndex].kit_lanche = escola.kit_lanche;
       schoolsFiltered[foundIndex].number_of_choices =
         parser[escola.tempo_passeio];
       schoolsFiltered[foundIndex].limit_of_meal_kits = parser[escola.tempo_passeio];
@@ -117,26 +122,56 @@ class UnifiedSolicitation extends Component {
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
-  OnDeleteButtonClicked() {}
+  OnDeleteButtonClicked(id, uuid) {
+    removeUnifiedSolicitation(
+      uuid
+    ).then(
+      res => {
+        if (res.status === 200) {
+          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
+          this.refresh();
+        } else {
+          toastError(res.log_content[0]);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao excluir o rascunho");
+      }
+    );
+  }
 
   resetForm(event) {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
+    let schools = this.props.schools;
+    schools.forEach(function(school) {
+      school["id"] = school["_id"].toString();
+      school["burger_active"] = false;
+      school["limit_of_meal_kits"] = 0;
+      school["number_of_choices"] = 0;
+      school["number_of_meal_kits"] = 0;
+      school["nro_alunos"] = 0;
+      school["numero_alunos"] = 0;
+      school["tempo_passeio"] = null;
+      school["kit_lanche"] = null;
+      school["checked"] = false;
+    });
     this.setState({
       status: "SEM STATUS",
       title: "Nova Solicitação Unificada",
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-      schoolsFiltered: this.props.schools,
+      schoolsFiltered: schools,
       schoolsTotal: 0,
       qtd_kit_lanche: 0,
       radioChanged: false,
-      enumKits: null,
       kitsTotal: 0,
       choicesTotal: 0,
       studentsTotal: 0
     });
+    this.props.change("pedido_multiplo", false);
+    this.refresh();
   }
 
   componentDidMount() {
@@ -279,7 +314,7 @@ class UnifiedSolicitation extends Component {
     let schoolsTotal = 0;
     schoolsFiltered.forEach(function(school) {
       if (school.checked) {
-        studentsTotal += parseInt(school.numero_alunos);
+        studentsTotal += school.numero_alunos ? parseInt(school.numero_alunos) : 0;
         kitsTotal += school.number_of_choices * school.nro_alunos;
         schoolsTotal += 1;
       }
@@ -291,7 +326,6 @@ class UnifiedSolicitation extends Component {
       kitsTotal: kitsTotal,
       schoolsTotal: schoolsTotal
     });
-    //this.handleKitsTotal();
   }
 
   handleKitsTotal() {
@@ -354,19 +388,24 @@ class UnifiedSolicitation extends Component {
   handleSubmit(values) {
     values.escolas = this.state.schoolsFiltered;
     values.kits_total = this.state.kitsTotal;
-    createOrUpdateUnifiedSolicitation(JSON.stringify(values)).then(
-      res => {
-        if (res.status === 200) {
-          toastSuccess(res.data.success);
-          this.refresh();
-        } else {
-          toastError(res.data.error);
+    const error = validateSubmit(values, this.state);
+    if (!error) {
+      createOrUpdateUnifiedSolicitation(JSON.stringify(values)).then(
+        res => {
+          if (res.status === 200) {
+            toastSuccess(res.data.success);
+            this.resetForm();
+          } else {
+            toastError(res.data.error);
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao salvar a inclusão de alimentação");
-      }
-    );
+      );
+    } else {
+      toastError(error);
+    }
   }
 
   filterList(event) {
@@ -385,8 +424,6 @@ class UnifiedSolicitation extends Component {
   render() {
     const {
       handleSubmit,
-      pristine,
-      submitting,
       enrolled,
       two_working_days,
       reasons_continuous_program,
@@ -660,8 +697,7 @@ class UnifiedSolicitation extends Component {
                                 validate={
                                   school.checked &&
                                   !multipleOrder && [
-                                    required,
-                                    maxValue(max_alunos)
+                                    required
                                   ]
                                 }
                               />
@@ -746,12 +782,10 @@ class UnifiedSolicitation extends Component {
             <BaseButton
               label="Cancelar"
               onClick={event => this.resetForm(event)}
-              disabled={submitting}
               style={ButtonStyle.OutlinePrimary}
             />
             <BaseButton
               label={"Salvar Rascunho"}
-              disabled={pristine || submitting}
               onClick={handleSubmit(values => this.handleSubmit(values))}
               className="ml-3"
               type={ButtonType.BUTTON}
@@ -759,7 +793,6 @@ class UnifiedSolicitation extends Component {
             />
             <BaseButton
               label="Enviar Solicitação"
-              disabled={pristine || submitting}
               type={ButtonType.SUBMIT}
               onClick={handleSubmit(values => this.handleSubmit(values))}
               style={ButtonStyle.Primary}

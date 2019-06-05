@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Button, { ButtonIcon } from "../Shareable/button";
 import "../Shareable/custom.css";
@@ -24,8 +23,6 @@ export class UnifiedSolicitationItemList extends Component {
   }
 
   OnDeleteButtonClicked(id, uuid) {
-    // faz o pai apagar o elemento
-    // atualiza o estado do componente e limpa o form do pai
     this.props.OnDeleteButtonClicked(id, uuid);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
@@ -56,7 +53,7 @@ export class UnifiedSolicitationItemList extends Component {
           </div>
           <div>
             <div className="float-right">
-              Salvo em: {dayChange.created_at}
+              Criado em: {dayChange.criado_em}
               <Button
                 icon={ButtonIcon.TRASH}
                 onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
@@ -73,7 +70,7 @@ export class UnifiedSolicitationItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.dia} - {dayChange.razao}
+              {dayChange.pedido_multiplo ? "Pedido Múltiplo - " : dayChange.escolas.length + " escolas - "}{dayChange.dia} - {dayChange.razao}
             </p>
           </div>
         </div>

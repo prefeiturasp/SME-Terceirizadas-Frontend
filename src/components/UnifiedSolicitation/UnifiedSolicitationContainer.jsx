@@ -3,10 +3,9 @@ import { getSchools } from "../../services/school.service";
 import { getReasons } from "../../services/foodInclusion.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import UnifiedSolicitation from "./UnifiedSolicitation";
-import { string_to_slug } from "../../helpers/utilities";
 
 class UnifiedSolicitationContainer extends Component {
-  USER_ID = "c9545b15-070a-48c2-ae4c-f57ae7fed03e";
+  USER_ID = "a7ba4604-4025-460e-945a-38ac7e37a65d";
 
   constructor(props) {
     super(props);
@@ -36,7 +35,6 @@ class UnifiedSolicitationContainer extends Component {
             school["tempo_passeio"] = null;
             school["kit_lanche"] = null;
             school["checked"] = false;
-            school["slug"] = string_to_slug(school["nome"]);
           });
           let _two,
             _five = null;
