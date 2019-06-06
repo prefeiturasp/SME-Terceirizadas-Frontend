@@ -50,7 +50,7 @@ export default class Button extends Component {
 
   static defaultProps = {
     type: ButtonType.BUTTON,
-    style: ButtonStyle.Primary,
+    style: ButtonStyle.Link,
     disabled: false
   };
 

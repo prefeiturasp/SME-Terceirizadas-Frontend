@@ -38,6 +38,7 @@ export class TourRequest extends Component {
       nro_matriculados: 0,
       enumKits: null,
       showModal: false,
+      segundoDiaUtil: ''
     };
 
 
@@ -45,15 +46,16 @@ export class TourRequest extends Component {
     this.refresh = this.refresh.bind(this)
     this.validaDiasUteis = this.validaDiasUteis.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
+
   }
 
   OnDeleteButtonClicked(id) {
     if (window.confirm('Deseja remover esta solicitação salva?')) {
       removeKitLanche(id).then(resp => {
         this.refresh()
-        if(resp.success){
+        if (resp.success) {
           toastSuccess(resp.success)
-        }else{
+        } else {
           toastError(resp.error)
         }
       })
@@ -90,22 +92,38 @@ export class TourRequest extends Component {
   }
 
 
+  pegaSegundoDiaUtil(){
+    getDiasUteis().then(resp => {
+       return convertStringToDate(resp[0].date_two_working_days)
+    }).catch(erro => {
+      return null
+    })
+  }
+
+
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos()
+    getDiasUteis().then(resp =>{
+      this.setState({
+        segundoDiaUtil : convertStringToDate(resp[0].date_two_working_days)
+      })
+    })
   }
 
-  validaDiasUteis = (event)=>{
-    const diaSelecionado = convertStringToDate(event.target.value)
-    getDiasUteis().then(resp =>{
-      const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
-      const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
-      if(diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil){
-        this.setState({
-          showModal : true
+  validaDiasUteis = (event) => {
+      if(event.target.value){
+        const diaSelecionado = convertStringToDate(event.target.value)
+        getDiasUteis().then(resp => {
+          const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
+          const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
+          if (diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil) {
+            this.setState({
+              showModal: true
+            })
+          }
         })
       }
-    })
   }
 
   getQuatidadeAlunos() {
@@ -123,32 +141,32 @@ export class TourRequest extends Component {
     this.salvarOuEnviar(values)
   }
 
-  salvarOuEnviar(values){
-    if(values.status === "SALVO"){
+  salvarOuEnviar(values) {
+    if (values.status === "SALVO") {
       registroSalvarKitLanche(values).then(resp => {
-        if(resp.success){
+        if (resp.success) {
           toastSuccess(resp.success)
           this.resetForm()
           this.refresh()
-          }else{
-            toastError(resp.error)
-          }
-        }).catch(erro => {
-          toastError(erro.details)
-        })
-      }else{
-        solicitarKitLanche(values).then(resp =>{
-          if(resp.success){
-            toastSuccess(resp.success)
-            this.resetForm()
-            this.refresh()
-          }else{
-            toastError(resp.error)
-          }
-        }).catch(error =>{
-          toastError(error.details)
-        })
-      }
+        } else {
+          toastError(resp.error)
+        }
+      }).catch(erro => {
+        toastError(erro.details)
+      })
+    } else {
+      solicitarKitLanche(values).then(resp => {
+        if (resp.success) {
+          toastSuccess(resp.success)
+          this.resetForm()
+          this.refresh()
+        } else {
+          toastError(resp.error)
+        }
+      }).catch(error => {
+        toastError(error.details)
+      })
+    }
   }
 
   refresh() {
@@ -167,8 +185,8 @@ export class TourRequest extends Component {
     })
   }
 
-  handleShowModal(){
-    this.setState({...this.state,  showModal : false})
+  handleShowModal() {
+    this.setState({ ...this.state, showModal: false })
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -188,30 +206,30 @@ export class TourRequest extends Component {
 
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
-    const { enumKits, tourRequestList, showModal } = this.state;
+    const { enumKits, tourRequestList, showModal, segundoDiaUtil } = this.state;
     return (
 
       <div className="d-flex flex-column p-4 mt-5">
         <Modal show={showModal} onHide={this.handleShowModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Atenção</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Atenção, a solicitação está fora do prazo contratual (entre{" "}
-              <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-              disponibilidade dos alimentos adequados para o cumprimento do
-              cardápio.
+          <Modal.Header closeButton>
+            <Modal.Title>Atenção</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Atenção, a solicitação está fora do prazo contratual (entre{" "}
+            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
+            disponibilidade dos alimentos adequados para o cumprimento do
+            cardápio.
             </Modal.Body>
-            <Modal.Footer>
-              <BaseButton
-                label="OK"
-                type={ButtonType.BUTTON}
-                onClick={this.handleShowModal}
-                style={ButtonStyle.Primary}
-                className="ml-3"
-              />
-            </Modal.Footer>
-          </Modal>
+          <Modal.Footer>
+            <BaseButton
+              label="OK"
+              type={ButtonType.BUTTON}
+              onClick={this.handleShowModal}
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Modal>
         <form>
           <div>
             <label className="header-form-label mb-5">Nº de matriculados</label>
@@ -248,6 +266,7 @@ export class TourRequest extends Component {
                 label="Data do evento"
                 name="evento_data"
                 onBlur={event => this.validaDiasUteis(event)}
+                minDate={segundoDiaUtil}
               />
               <Field
                 component={LabelAndInput}
