@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
 import "../Shareable/custom.css";
+import { getUnifiedSolicitations } from "../../services/unifiedSolicitation.service";
+import { toastSuccess, toastError } from "../Shareable/dialogs";
 
 class UnifiedSolicitationFilled extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      unifiedSolicitationList: [],
       solicitation: {
         id_of_solicitation: null,
         dre_name: null,
@@ -22,6 +25,17 @@ class UnifiedSolicitationFilled extends Component {
   }
 
   componentDidMount() {
+    getUnifiedSolicitations().then(
+      res => {
+        this.setState({
+          ...this.state,
+          unifiedSolicitationList: res
+        });
+      },
+      function(error) {
+        toastError("Erro ao carregar as inclusões salvas");
+      }
+    );
     this.setState({
       solicitation: {
         id_of_solicitation: 10000,
@@ -71,87 +85,97 @@ class UnifiedSolicitationFilled extends Component {
       kits_total,
       obs
     } = this.state.solicitation;
+    const { unifiedSolicitationList } = this.state;
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit}>
-          <span className="page-title">
-            Solicitação Unificada nº {id_of_solicitation}
-          </span>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="row">
-                <div className="col-2">
-                  <span className="badge-sme badge-secondary-sme">
-                    <span className="id-of-solicitation">
-                      {id_of_solicitation}
+        {unifiedSolicitationList.map((unifiedSolicitation, key) => {
+          return (
+            <div>
+              <p>{unifiedSolicitation.dre} - {unifiedSolicitation.lote} - {unifiedSolicitation.formulario.dia}</p>
+            </div>
+          );
+        })}
+        {false && (
+          <form onSubmit={this.props.handleSubmit}>
+            <span className="page-title">
+              Solicitação Unificada nº {id_of_solicitation}
+            </span>
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-2">
+                    <span className="badge-sme badge-secondary-sme">
+                      <span className="id-of-solicitation">
+                        {id_of_solicitation}
+                      </span>
+                      <br />{" "}
+                      <span className="number-of-order-label">Nº PEDIDO</span>
                     </span>
-                    <br />{" "}
-                    <span className="number-of-order-label">Nº PEDIDO</span>
-                  </span>
+                  </div>
+                  <div className="my-auto col-8">
+                    <span className="requester">Solicitante</span>
+                    <br />
+                    <span className="dre-name">{dre_name}</span>
+                  </div>
                 </div>
-                <div className="my-auto col-8">
-                  <span className="requester">Solicitante</span>
-                  <br />
-                  <span className="dre-name">{dre_name}</span>
+                <div className="row">
+                  <div className="col-7 report-label-value">
+                    <p>Motivo</p>
+                    <p className="value">{reason}</p>
+                  </div>
+                  <div className="col-5 report-label-value">
+                    <p>Data do evento</p>
+                    <p className="value">{date}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-7 report-label-value">
-                  <p>Motivo</p>
-                  <p className="value">{reason}</p>
+                <div className="row">
+                  <div className="col-12 report-label-value">
+                    <p>Local do passeio</p>
+                    <p className="value">{local_of_event}</p>
+                  </div>
                 </div>
-                <div className="col-5 report-label-value">
-                  <p>Data do evento</p>
-                  <p className="value">{date}</p>
+                <table className="report-table">
+                  <tr>
+                    <th>Código</th>
+                    <th>Unidade Escolar</th>
+                    <th>Nº de alunos participantes</th>
+                    <th>Tempo de passeio</th>
+                    <th>Opção desejada</th>
+                    <th>Nº Total de Kits</th>
+                  </tr>
+                  {schools.map((school, key) => {
+                    return (
+                      <tr>
+                        <td>{school.id}</td>
+                        <td>{school.name}</td>
+                        <td>{school.number_of_students} alunos</td>
+                        <td>{school.travel_time}</td>
+                        <td>{school.options}</td>
+                        <td>{school.number_of_kits} kits</td>
+                      </tr>
+                    );
+                  })}
+                </table>
+                <div className="row">
+                  <div className="col-10 report-label-value">
+                    <p>Total de Unidades Escolares Beneficiadas</p>
+                    <p className="value">{students_total} unidades escolares</p>
+                  </div>
+                  <div className="col-2 float-right report-label-value">
+                    <p>Total de Kits</p>
+                    <p className="value">{kits_total} kits</p>
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12 report-label-value">
-                  <p>Local do passeio</p>
-                  <p className="value">{local_of_event}</p>
-                </div>
-              </div>
-              <table className="report-table">
-                <tr>
-                  <th>Código</th>
-                  <th>Unidade Escolar</th>
-                  <th>Nº de alunos participantes</th>
-                  <th>Tempo de passeio</th>
-                  <th>Opção desejada</th>
-                  <th>Nº Total de Kits</th>
-                </tr>
-                {schools.map((school, key) => {
-                  return (
-                    <tr>
-                      <td>{school.id}</td>
-                      <td>{school.name}</td>
-                      <td>{school.number_of_students} alunos</td>
-                      <td>{school.travel_time}</td>
-                      <td>{school.options}</td>
-                      <td>{school.number_of_kits} kits</td>
-                    </tr>
-                  );
-                })}
-              </table>
-              <div className="row">
-                <div className="col-10 report-label-value">
-                  <p>Total de Unidades Escolares Beneficiadas</p>
-                  <p className="value">{students_total} unidades escolares</p>
-                </div>
-                <div className="col-2 float-right report-label-value">
-                  <p>Total de Kits</p>
-                  <p className="value">{kits_total} kits</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-12 report-label-value">
-                  <p>Observações</p>
-                  <p className="value">{obs}</p>
+                <div className="row">
+                  <div className="col-12 report-label-value">
+                    <p>Observações</p>
+                    <p className="value">{obs}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     );
   }

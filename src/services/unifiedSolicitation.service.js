@@ -6,8 +6,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const createOrUpdateUnifiedSolicitation = payload => {
-  const url = API_URL + `/solicitacao-unificada/salvar/`;
+export const createOrUpdateUnifiedSolicitationForm = payload => {
+  const url = API_URL + `/solicitacao-unificada-formulario/salvar/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
@@ -26,6 +26,41 @@ export const createOrUpdateUnifiedSolicitation = payload => {
     });
 };
 
+export const getUnifiedSolicitationsForm = async () => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  const url = API_URL + "/solicitacao-unificada-formulario/";
+  return await fetch(url, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      console.log("Error Kit Lanche: ", error);
+      return {};
+    });
+};
+
+export const removeUnifiedSolicitationForm = async uuid => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "DELETE"
+  };
+  let status = 0;
+  return await fetch(API_URL + "/solicitacao-unificada-formulario/" + uuid, OBJ_REQUEST)
+  .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
+    });
+};
+
 export const getUnifiedSolicitations = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
@@ -39,24 +74,5 @@ export const getUnifiedSolicitations = async () => {
     .catch(error => {
       console.log("Error Kit Lanche: ", error);
       return {};
-    });
-};
-
-export const removeUnifiedSolicitation = async uuid => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "DELETE"
-  };
-  let status = 0;
-  return await fetch(API_URL + "/solicitacao-unificada/" + uuid, OBJ_REQUEST)
-  .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return { data: error, status: status };
     });
 };

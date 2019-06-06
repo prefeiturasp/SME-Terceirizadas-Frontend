@@ -20,9 +20,9 @@ import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
 import { getRefeicoesApi } from "../../services/tourRequest.service";
 import "../Shareable/custom.css";
 import {
-  createOrUpdateUnifiedSolicitation,
-  getUnifiedSolicitations,
-  removeUnifiedSolicitation
+  createOrUpdateUnifiedSolicitationForm,
+  getUnifiedSolicitationsForm,
+  removeUnifiedSolicitationForm
 } from "../../services/unifiedSolicitation.service";
 import { UnifiedSolicitationItemList } from "./UnifiedSolicitationItemList";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
@@ -125,7 +125,7 @@ class UnifiedSolicitation extends Component {
   }
 
   OnDeleteButtonClicked(id, uuid) {
-    removeUnifiedSolicitation(uuid).then(
+    removeUnifiedSolicitationForm(uuid).then(
       res => {
         if (res.status === 200) {
           toastSuccess(`Rascunho # ${id} excluído com sucesso`);
@@ -381,7 +381,7 @@ class UnifiedSolicitation extends Component {
   }
 
   refresh() {
-    getUnifiedSolicitations().then(
+    getUnifiedSolicitationsForm().then(
       res => {
         this.setState({
           ...this.state,
@@ -399,7 +399,7 @@ class UnifiedSolicitation extends Component {
     values.kits_total = this.state.kitsTotal;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateUnifiedSolicitation(JSON.stringify(values)).then(
+      createOrUpdateUnifiedSolicitationForm(JSON.stringify(values)).then(
         res => {
           if (res.status === 200) {
             toastSuccess(res.data.success);
@@ -481,13 +481,30 @@ class UnifiedSolicitation extends Component {
           <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
             <div className="card-body">
-              <span className="blockquote-sme">Nº de Matriculados</span>
+              <span className="blockquote-sme">Nº de Matriculados DRE Ipiranga</span>
               <div />
               <span className="badge-sme badge-secondary-sme">{enrolled}</span>
               <span className="blockquote-sme pl-2 text-color-sme-silver">
                 Informação automática disponibilizada no Cadastro da Unidade
                 Escolar
               </span>
+              <p className="pt-3 blockquote-sme">Lotes pertencentes à DRE</p>
+              <div>
+                <table className="table-lote">
+                  <tr>
+                    <th>Lote</th>
+                    <th>Tipo de Gestão</th>
+                  </tr>
+                  <tr>
+                    <td>7A IP I IPIRANGA</td>
+                    <td>TERC TOTAL</td>
+                  </tr>
+                  <tr>
+                    <td>7A IP II IPIRANGA</td>
+                    <td>TERC TOTAL</td>
+                  </tr>
+                </table>
+              </div>
             </div>
           </div>
           {unifiedSolicitationList.length > 0 && (
@@ -803,7 +820,7 @@ class UnifiedSolicitation extends Component {
             <BaseButton
               label="Enviar Solicitação"
               type={ButtonType.SUBMIT}
-              onClick={handleSubmit(values => this.handleSubmit(values))}
+              onClick={handleSubmit(values => this.handleSubmit({...values, status: "A_APROVAR"}))}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
