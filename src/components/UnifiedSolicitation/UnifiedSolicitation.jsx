@@ -820,7 +820,7 @@ class UnifiedSolicitation extends Component {
             <BaseButton
               label="Enviar Solicitação"
               type={ButtonType.SUBMIT}
-              onClick={handleSubmit(values => this.handleSubmit({...values, status: "A_APROVAR"}))}
+              onClick={handleSubmit(values => this.handleSubmit({...values, status: "A APROVAR"}))}
               style={ButtonStyle.Primary}
               className="ml-3"
             />

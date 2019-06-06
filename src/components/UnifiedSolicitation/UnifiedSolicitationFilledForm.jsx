@@ -11,12 +11,12 @@ class UnifiedSolicitationFilled extends Component {
     this.state = {
       unifiedSolicitationList: [],
       solicitation: {
-        id_of_solicitation: null,
-        dre_name: null,
+        id: null,
+        dre: null,
         reason: null,
         date: null,
         local_of_event: null,
-        schools: [],
+        escolas: [],
         students_total: null,
         kits_total: null,
         obs: null
@@ -36,78 +36,46 @@ class UnifiedSolicitationFilled extends Component {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
+  }
+
+  preencherFormulario(solicitation) {
     this.setState({
-      solicitation: {
-        id_of_solicitation: 10000,
-        dre_name: "DRE Ipiranga",
-        reason: "Programa Contínuo - Mais Educação",
-        date: "08/06/2019",
-        local_of_event:
-          "R. Alexander Bain, 89 - Jardim Nordeste, São Paulo - SP, 03690-060",
-        schools: [
-          {
-            id: "094633",
-            name: "EMEF CELSO LEITE RIBEIRO FILHO",
-            number_of_students: 20,
-            travel_time: "5 a 7 horas (2 kits)",
-            options: "Modelo 1, 2, 3",
-            number_of_kits: 40
-          },
-          {
-            id: "094633",
-            name: "EMEF CELSO LEITE RIBEIRO FILHO",
-            number_of_students: 20,
-            travel_time: "5 a 7 horas (2 kits)",
-            options: "Modelo 1, 2, 3",
-            number_of_kits: 40
-          }
-        ],
-        students_total: 300,
-        kits_total: 600,
-        obs:
-          "A observação é uma das etapas do método científico." +
-          "Consiste em perceber, ver e não interpretar. A observação " +
-          "é relatada como foi visualizada, sem que, a princípio, as" +
-          " idéias interpretativas dos observadores sejam tomadas."
-      }
+      ...this.state,
+      solicitation
     });
   }
 
   render() {
     const {
-      id_of_solicitation,
-      dre_name,
-      reason,
-      date,
-      local_of_event,
-      schools,
-      students_total,
-      kits_total,
-      obs
+      id,
+      lote,
+      formulario,
+      dre,
+      kits_total
     } = this.state.solicitation;
-    const { unifiedSolicitationList } = this.state;
+    const { solicitation, unifiedSolicitationList } = this.state;
     return (
       <div>
+        <span className="page-title">Pedidos</span>
         {unifiedSolicitationList.map((unifiedSolicitation, key) => {
           return (
             <div>
-              <p>{unifiedSolicitation.dre} - {unifiedSolicitation.lote} - {unifiedSolicitation.formulario.dia}</p>
+              <p onClick={() => this.preencherFormulario(unifiedSolicitation)}>
+                {unifiedSolicitation.dre} - {unifiedSolicitation.lote} -{" "}
+                {unifiedSolicitation.formulario.dia}
+              </p>
             </div>
           );
         })}
-        {false && (
+        {solicitation.id && (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">
-              Solicitação Unificada nº {id_of_solicitation}
-            </span>
+            <span className="page-title">Solicitação Unificada nº {id}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
-                      <span className="id-of-solicitation">
-                        {id_of_solicitation}
-                      </span>
+                      <span className="id-of-solicitation">{id}</span>
                       <br />{" "}
                       <span className="number-of-order-label">Nº PEDIDO</span>
                     </span>
@@ -115,23 +83,25 @@ class UnifiedSolicitationFilled extends Component {
                   <div className="my-auto col-8">
                     <span className="requester">Solicitante</span>
                     <br />
-                    <span className="dre-name">{dre_name}</span>
+                    <span className="dre-name">
+                      {dre} - Lote {lote}
+                    </span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-7 report-label-value">
                     <p>Motivo</p>
-                    <p className="value">{reason}</p>
+                    <p className="value">{formulario.razao}</p>
                   </div>
                   <div className="col-5 report-label-value">
                     <p>Data do evento</p>
-                    <p className="value">{date}</p>
+                    <p className="value">{formulario.dia}</p>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Local do passeio</p>
-                    <p className="value">{local_of_event}</p>
+                    <p className="value">{formulario.local_passeio}</p>
                   </div>
                 </div>
                 <table className="report-table">
@@ -143,15 +113,35 @@ class UnifiedSolicitationFilled extends Component {
                     <th>Opção desejada</th>
                     <th>Nº Total de Kits</th>
                   </tr>
-                  {schools.map((school, key) => {
+                  {formulario.escolas.map((escola, key) => {
                     return (
                       <tr>
-                        <td>{school.id}</td>
-                        <td>{school.name}</td>
-                        <td>{school.number_of_students} alunos</td>
-                        <td>{school.travel_time}</td>
-                        <td>{school.options}</td>
-                        <td>{school.number_of_kits} kits</td>
+                        <td>{escola.id}</td>
+                        <td>{escola.nome}</td>
+                        <td>
+                          {formulario.pedido_multiplo
+                            ? escola.numero_alunos
+                            : escola.nro_alunos}
+                          {" alunos"}
+                        </td>
+                        <td>
+                          {formulario.pedido_multiplo
+                            ? formulario.tempo_passeio_formulario
+                            : escola.tempo_passeio_formulario}
+                        </td>
+                        <td>
+                          {formulario.pedido_multiplo
+                            ? formulario.opcao_desejada
+                            : escola.opcao_desejada}
+                        </td>
+                        <td>
+                          {formulario.pedido_multiplo
+                            ? formulario.kit_lanche.length *
+                              parseInt(escola.numero_alunos)
+                            : escola.kit_lanche.length *
+                              parseInt(escola.nro_alunos)}
+                          {" kits"}
+                        </td>
                       </tr>
                     );
                   })}
@@ -159,7 +149,7 @@ class UnifiedSolicitationFilled extends Component {
                 <div className="row">
                   <div className="col-10 report-label-value">
                     <p>Total de Unidades Escolares Beneficiadas</p>
-                    <p className="value">{students_total} unidades escolares</p>
+                    <p className="value">{formulario.escolas.length} unidades escolares</p>
                   </div>
                   <div className="col-2 float-right report-label-value">
                     <p>Total de Kits</p>
@@ -169,7 +159,7 @@ class UnifiedSolicitationFilled extends Component {
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
-                    <p className="value">{obs}</p>
+                    <p className="value" dangerouslySetInnerHTML={{__html:formulario.obs}} />
                   </div>
                 </div>
               </div>
@@ -189,7 +179,7 @@ const UnifiedSolicitationFilledForm = reduxForm({
 const selector = formValueSelector("unifiedSolicitationFilledForm");
 const mapStateToProps = state => {
   return {
-    id_of_solicitation: null
+    id: null
   };
 };
 export default connect(mapStateToProps)(UnifiedSolicitationFilledForm);
