@@ -60,7 +60,7 @@ class UnifiedSolicitationFilled extends Component {
         {unifiedSolicitationList.map((unifiedSolicitation, key) => {
           return (
             <div>
-              <p onClick={() => this.preencherFormulario(unifiedSolicitation)}>
+              <p style={{cursor: 'pointer'}} onClick={() => this.preencherFormulario(unifiedSolicitation)}>
                 {unifiedSolicitation.dre} - {unifiedSolicitation.lote} -{" "}
                 {unifiedSolicitation.formulario.dia}
               </p>

@@ -45,6 +45,8 @@ class UnifiedSolicitation extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       id: "",
       showModal: false,
+      schoolExists: false,
+      schoolsExistArray: [],
       schoolsFiltered: [],
       schoolsTotal: 0,
       qtd_kit_lanche: 0,
@@ -166,6 +168,8 @@ class UnifiedSolicitation extends Component {
       title: "Nova Solicitação Unificada",
       id: "",
       showModal: false,
+      schoolExists: false,
+      schoolsExistArray: [],
       salvarAtualizarLbl: "Salvar Rascunho",
       schoolsFiltered: schools,
       schoolsTotal: 0,
@@ -175,7 +179,6 @@ class UnifiedSolicitation extends Component {
       choicesTotal: 0,
       studentsTotal: 0
     });
-    this.props.change("pedido_multiplo", false);
     this.refresh();
   }
 
@@ -405,6 +408,7 @@ class UnifiedSolicitation extends Component {
             toastSuccess(res.data.success);
             this.resetForm();
           } else {
+            this.setState({ schoolExists: true, schoolsExistArray: res.data.escolas })
             toastError(res.data.error);
           }
         },
@@ -439,10 +443,13 @@ class UnifiedSolicitation extends Component {
       reasons_simple,
       multipleOrder,
       razao,
-      max_alunos
+      max_alunos,
+      prosseguir
     } = this.props;
     const {
       title,
+      schoolExists,
+      schoolsExistArray,
       selectDefault,
       qtd_kit_lanche,
       showModal,
@@ -476,7 +483,7 @@ class UnifiedSolicitation extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
           <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
@@ -512,6 +519,7 @@ class UnifiedSolicitation extends Component {
               <div className="card-body">
                 <span className="page-title">Rascunhos</span>
                 <UnifiedSolicitationItemList
+                  schoolsLoaded={schoolsFiltered.length > 0}
                   unifiedSolicitationList={unifiedSolicitationList}
                   OnDeleteButtonClicked={this.OnDeleteButtonClicked}
                   resetForm={event => this.resetForm(event)}
@@ -804,6 +812,28 @@ class UnifiedSolicitation extends Component {
               name="obs"
             />
           </div>
+          {schoolExists && <div className="col-md-12 pt-2 pb-2" style={{ paddingLeft: "2rem" }}>
+            <label htmlFor="check" className="checkbox-label">
+              <Field
+                component={"input"}
+                type="checkbox"
+                name="prosseguir"
+              />
+              <span
+                onClick={() =>
+                  this.props.change("prosseguir", !prosseguir)
+                }
+                className="checkbox-custom"
+                style={{ borderRadius: "15px" }}
+              />{" "}
+              Reconheço que já existe um evento para as escolas abaixo e desejo continuar mesmo assim
+            </label>
+            <ul>
+              {schoolsExistArray.map((school, key) => {
+                return (<li>{school}</li>)
+              })}
+            </ul>
+          </div>}
           <div className="form-group row float-right mt-4">
             <BaseButton
               label="Cancelar"
@@ -843,7 +873,8 @@ const mapStateToProps = state => {
     multipleOrder: selector(state, "pedido_multiplo"),
     kitsTotal: selector(state, "kits_total"),
     razao: selector(state, "razao"),
-    max_alunos: selector(state, "max_numero_alunos_por_escola")
+    max_alunos: selector(state, "max_numero_alunos_por_escola"),
+    prosseguir: selector(state, "prosseguir")
   };
 };
 

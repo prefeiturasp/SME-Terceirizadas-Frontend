@@ -60,6 +60,7 @@ export class UnifiedSolicitationItemList extends Component {
               />
               <Button
                 icon={ButtonIcon.EDIT}
+                disabled={!this.props.schoolsLoaded}
                 onClick={p =>
                   this.props.OnEditButtonClicked({
                     dayChange
