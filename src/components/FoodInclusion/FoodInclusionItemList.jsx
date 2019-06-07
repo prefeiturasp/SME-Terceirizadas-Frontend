@@ -49,7 +49,7 @@ export class FoodInclusionItemList extends Component {
         <div className="border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${dayChange.id}`}
+              Inclusão de Alimentação {`# ${dayChange.id}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -78,7 +78,7 @@ export class FoodInclusionItemList extends Component {
           <div className="ml-3">
             <p>
               {dayChange.day_reasons.length > 1
-                ? dayChange.day_reasons.length + " Dias"
+                ? dayChange.day_reasons.length + " dias"
                 : dayChange.day_reasons[0].reason.includes("Programa Contínuo")
                 ? dayChange.day_reasons[0].reason +
                   " (" +
