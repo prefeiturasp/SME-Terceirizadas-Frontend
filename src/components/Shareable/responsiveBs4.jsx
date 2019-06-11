@@ -20,7 +20,7 @@ export class Grid extends Component {
   };
 
   static defaultProps = {
-    cols: "4 4"
+    cols: "12 12 12 12"
   };
 
   render() {

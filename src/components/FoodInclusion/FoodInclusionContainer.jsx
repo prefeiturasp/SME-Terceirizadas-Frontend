@@ -5,8 +5,6 @@ import { getWorkingDays } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
-  USER_ID = "a7ba4604-4025-460e-945a-38ac7e37a65d";
-
   typeFoodContinuousProgram = [
     {
       label: "Lanche 4 Horas",
@@ -34,7 +32,6 @@ class FoodInclusionContainer extends Component {
       reasons_continuous_program: [],
       day: new Date(),
       periods: [],
-      user_id: this.USER_ID,
       typeFoodContinuousProgram: this.typeFoodContinuousProgram,
       two_working_days: null,
       five_working_days: null
@@ -42,14 +39,16 @@ class FoodInclusionContainer extends Component {
   }
 
   componentDidMount() {
-    let _two, _five = null;
-    getPeriods(this.USER_ID).then(resPeriods => {
-      getReasons(this.USER_ID).then(resReasons => {
+    let _two,
+      _five = null;
+    getPeriods().then(resPeriods => {
+      getReasons().then(resReasons => {
         this.setState({
           ...this.state,
           periods: resPeriods.content.school_periods,
           reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program: resReasons.content.reasons_continuous_program
+          reasons_continuous_program:
+            resReasons.content.reasons_continuous_program
         });
       });
     });

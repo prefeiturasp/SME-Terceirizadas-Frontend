@@ -11,7 +11,7 @@ describe("test <Grid>", () => {
   });
 
   it("correct cols", () => {
-    expect(wrapper.props().cols).toBe("4 4");
+    expect(wrapper.props().cols).toBe("12 12 12 12");
   });
 
   it("correct className", () => {
@@ -20,7 +20,7 @@ describe("test <Grid>", () => {
 
   it("correct default div className", () => {
     expect(wrapper.find("div").props().className).toBe(
-      "col-sm-4 col-lg-4 TEST CLASSNAME"
+      "col-sm-12 col-lg-12 col-md-12 col-xs-12 TEST CLASSNAME"
     );
   });
 

@@ -9,9 +9,9 @@ import loadUnifiedReducer from './reducers/unifiedSolicitation.reducer'
 const rootReducer = combineReducers({
   form: formReducer,
   permissions : permissionReducer,
-  foodInclusion: foodInclusionReducer,
   tourRequests : tourRequestReducer,
-  unifiedSolicitation: loadUnifiedReducer
+  unifiedSolicitation: loadUnifiedReducer,
+  foodInclusion: foodInclusionReducer
 });
 
 export default rootReducer;

@@ -5,8 +5,6 @@ import { getWorkingDays } from "../../services/workingDays.service";
 import UnifiedSolicitation from "./UnifiedSolicitation";
 
 class UnifiedSolicitationContainer extends Component {
-  USER_ID = "a7ba4604-4025-460e-945a-38ac7e37a65d";
-
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +19,7 @@ class UnifiedSolicitationContainer extends Component {
 
   componentDidMount() {
     getSchools().then(res => {
-      getReasons(this.USER_ID).then(resReasons => {
+      getReasons().then(resReasons => {
         getWorkingDays().then(resWD => {
           let schools = res.slice(0, 10);
           schools.forEach(function(school) {

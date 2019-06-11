@@ -1,14 +1,18 @@
-import { API_URL } from '../constants/config.constants'
+import { API_URL } from "../constants/config.constants";
+import authService from "./auth";
 
-export const createOrUpdateFoodInclusion = (user_uuid, payload) => {
-  const url = API_URL + `/food_inclusion/${user_uuid}/create_or_update/`
+const authToken = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
+};
+
+
+export const createOrUpdateFoodInclusion = (payload) => {
+  const url = API_URL + `/food_inclusion/create_or_update/`
   return fetch(url, {
       method: "POST",
         body: payload,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }
+        headers: authToken
       })
       .then(result => {
           return result.json()
@@ -17,15 +21,12 @@ export const createOrUpdateFoodInclusion = (user_uuid, payload) => {
       })
 }
 
-export const deleteFoodInclusion = (user_uuid, payload) => {
-  const url = API_URL + `/food_inclusion/${user_uuid}/delete/`
+export const deleteFoodInclusion = (payload) => {
+  const url = API_URL + `/food_inclusion/delete/`
   return fetch(url, {
       method: "DELETE",
         body: payload,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }
+        headers: authToken
       })
       .then(result => {
           return result.json()
@@ -34,9 +35,13 @@ export const deleteFoodInclusion = (user_uuid, payload) => {
       })
 }
 
-export const getSavedFoodInclusions = (user_uuid) => {
-  const url = API_URL + `/food_inclusion/${user_uuid}/get_saved_food_inclusions/`
-  return fetch(url)
+export const getSavedFoodInclusions = () => {
+  const url = API_URL + `/food_inclusion/get_saved_food_inclusions/`
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
       .then(result => {
           return result.json()
       }).catch(error => {
@@ -44,9 +49,13 @@ export const getSavedFoodInclusions = (user_uuid) => {
       })
 }
 
-export const getReasons = (user_uuid) => {
-  const url = API_URL + `/food_inclusion/${user_uuid}/get_reasons/`
-  return fetch(url)
+export const getReasons = () => {
+  const url = API_URL + `/food_inclusion/get_reasons/`
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
       .then(result => {
           return result.json()
       }).catch(error => {

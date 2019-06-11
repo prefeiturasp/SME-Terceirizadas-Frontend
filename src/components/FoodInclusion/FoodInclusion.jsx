@@ -132,7 +132,6 @@ class FoodInclusionEditor extends Component {
 
   OnDeleteButtonClicked(id, uuid) {
     deleteFoodInclusion(
-      this.props.user_id,
       JSON.stringify({ uuid: uuid })
     ).then(
       res => {
@@ -253,7 +252,7 @@ class FoodInclusionEditor extends Component {
   }
 
   refresh() {
-    getSavedFoodInclusions(this.props.user_id).then(
+    getSavedFoodInclusions().then(
       res => {
         this.setState({
           ...this.state,
@@ -272,7 +271,6 @@ class FoodInclusionEditor extends Component {
     const error = validateSubmit(values, this.state);
     if (!error) {
       createOrUpdateFoodInclusion(
-        this.props.user_id,
         JSON.stringify(values)
       ).then(
         res => {
