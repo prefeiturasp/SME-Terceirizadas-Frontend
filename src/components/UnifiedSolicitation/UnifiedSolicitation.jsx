@@ -270,7 +270,7 @@ class UnifiedSolicitation extends Component {
       x => x.id === school.id
     );
     let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[foundIndex].numero_alunos = event.target.value;
+    schoolsFiltered[foundIndex].numero_alunos = event.target.value || 0;
     schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
