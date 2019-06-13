@@ -8,8 +8,9 @@ import EmailConfiguration from "../components/screens/email/EmailConfiguration";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
-import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage"
+import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
+import DashboardDREPage from "../pages/DashboardDREPage";
 
 const routesConfig = [
   {
@@ -28,9 +29,9 @@ const routesConfig = [
     exact: false
   },
   {
-    path : "/add-food",
-    component : FoodInclusionPage,
-    exact : false
+    path: "/add-food",
+    component: FoodInclusionPage,
+    exact: false
   },
   {
     path: "/permission-root/permissions/:type/:subtype",
@@ -65,6 +66,11 @@ const routesConfig = [
   {
     path: "/unified-solicitation",
     component: UnifiedSolicitationPage,
+    exact: false
+  },
+  {
+    path: "/dashboard-dre",
+    component: DashboardDREPage,
     exact: false
   },
   {
