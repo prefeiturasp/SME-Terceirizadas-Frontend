@@ -21,7 +21,7 @@ class UnifiedSolicitationContainer extends Component {
     getSchools().then(res => {
       getReasons().then(resReasons => {
         getWorkingDays().then(resWD => {
-          let schools = res.slice(0, 10);
+          let schools = res.slice(0, 50);
           schools.forEach(function(school) {
             school["id"] = school["_id"].toString();
             school["burger_active"] = false;

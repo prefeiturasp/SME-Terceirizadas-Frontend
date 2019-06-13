@@ -273,7 +273,7 @@ div.react-datepicker-wrapper {
 
 .schools-group {
   height: 520px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   max-height: 1000px;
 }
