@@ -145,6 +145,10 @@ textarea {
   min-height: 121px;
 }
 
+.title-color {
+  color: #353535;
+}
+
 .number-registered {
   margin-top: 15px;
   color: #a8a8a8;
@@ -349,6 +353,20 @@ textarea {
   line-height: normal;
   text-transform: uppercase;
   color: #c8c8c8;
+}
+
+.dashboard-card-title {
+  font-size: 14px;
+  color:  #035D96;
+}
+
+.dashboard-card-title i {
+  padding-right: 15px;
+}
+
+.dashboard-card-title i:nth-child(2) {
+  padding-left: 15px;
+  color: #C2CFE0;
 }
 
 .multiselect-wrapper-disabled .dropdown-heading {

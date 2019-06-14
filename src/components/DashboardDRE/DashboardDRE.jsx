@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import "../Shareable/custom.css";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class DashboardDRE extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold">Pedido Genérico</div>
+              <div className="card-title font-weight-bold title-color">Pedido Genérico</div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
               <BaseButton
                 label="Solicitação Unificada"
@@ -61,14 +62,27 @@ class DashboardDRE extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold"><i class="fas fa-thumbtack"></i>Notificações</div>
-              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <BaseButton
-                label="Solicitação Unificada"
-                onClick={handleSubmit(values => this.handleSubmit(values))}
-                type={ButtonType.BUTTON}
-                style={ButtonStyle.OutlinePrimary}
-              />
+              <div className="dashboard-card-title">
+                <i class="fas fa-thumbtack" />Notificações
+                <i class="fas fa-pen" />
+              </div>
+              <div className="card mt-3">
+                <div className="card-body">
+                  <div className="dre-name">
+                    Solicitações
+                    <i class="fas fa-pen" />
+                  </div>
+                  <p>
+                    Acesse o formulário para fazer uma Solicitação Unificada
+                  </p>
+                  <BaseButton
+                    label="Solicitação Unificada"
+                    onClick={handleSubmit(values => this.handleSubmit(values))}
+                    type={ButtonType.BUTTON}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </form>
