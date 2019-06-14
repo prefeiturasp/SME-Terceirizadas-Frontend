@@ -4,13 +4,15 @@ WORKDIR /app
 COPY . ./
 RUN npm install
 RUN npm run-script build
+RUN npm install -g serve
+RUN chmod +x /app/entrypoint.sh
 
-FROM nginx:1.15.12-alpine
-COPY --from=builder /app/build /usr/share/nginx/html
-
-COPY ./entrypoint.sh /
-RUN chmod +x entrypoint.sh
+# Remove `node_modules` directory, it's no more
+# necessary since project is built.
+# Drastically reduce image size
+RUN rm -r /app/node_modules/
 
 # replace strings, this way we can pass parameters to static files.
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+# docker run  -p 80:5000 -e API_URL=$API_URL_HERE front:latest
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["serve", "-s", "build", "--listen", "5000"]
