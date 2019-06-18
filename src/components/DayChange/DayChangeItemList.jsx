@@ -12,11 +12,11 @@ export class DayChangeItemList extends Component {
   }
 
   static propTypes = {
-    motivo: PropTypes.string.isRequired,
-    obs: PropTypes.string.isRequired,
+    descricao: PropTypes.string.isRequired,
+    observacao: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    salvo_em: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired
+    registro: PropTypes.string.isRequired,
+    uuid: PropTypes.number.isRequired
   };
 
   onCheckChange(event, object) {
@@ -26,19 +26,19 @@ export class DayChangeItemList extends Component {
       this.setState({ checkedObjects });
     } else {
       checkedObjects = checkedObjects.filter(obj => {
-        return obj.id !== object.id;
+        return obj.uuid !== object.uuid;
       });
       this.setState({ checkedObjects });
     }
   }
 
-  OnDeleteButtonClicked(id) {
+  OnDeleteButtonClicked(uuid) {
     // faz o pai apagar o elemento
     // atualiza o estado do componente e limpa o form do pai
-    this.props.OnDeleteButtonClicked(id);
+    this.props.OnDeleteButtonClicked(uuid);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
-      return obj.id !== id;
+      return obj.uuid !== uuid;
     });
     this.setState({ checkedObjects });
     this.props.resetForm();
@@ -46,7 +46,7 @@ export class DayChangeItemList extends Component {
 
   onEnviarSolicitacoesBtClicked(event) {
     this.state.checkedObjects.map(obj => {
-      console.log(obj.id);
+      console.log(obj.uuid);
     });
   }
 
@@ -55,41 +55,41 @@ export class DayChangeItemList extends Component {
     const allDaysInfo = dayChangeList.map(dayChange => {
       const {
         status,
-        id,
-        salvo_em,
-        subst_dia_origem,
-        subst_dia_destino,
-        motivo,
-        obs
+        uuid,
+        registro,
+        data_de,
+        data_para,
+        descricao,
+        observacao,
       } = dayChange;
-      let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
+      let backgroundColor = status === "ESCOLA_SALVOU" ? "#82B7E8" : "#DADADA";
       return (
         <div className="border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${id}`}
+              Alteração de Dia de cardápio {`# ${uuid}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {status}
+              {'SALVO'}
             </span>
             <div className="float-right">
               <input
                 className="float-right mt-2 mr-3"
                 type="checkbox"
-                name={id}
-                id={id}
+                name={uuid}
+                uuid={uuid}
                 onClick={event =>
                   this.onCheckChange(event, {
                     status,
-                    id,
-                    salvo_em,
-                    subst_dia_origem,
-                    subst_dia_destino,
-                    motivo,
-                    obs
+                    uuid,
+                    registro,
+                    data_de,
+                    data_para,
+                    descricao,
+                    observacao,
                   })
                 }
               />
@@ -97,22 +97,22 @@ export class DayChangeItemList extends Component {
           </div>
           <div>
             <div className="float-right">
-              Salvo em: {salvo_em}
+              Salvo em: {registro}
               <Button
                 icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(id)}
+                onClick={p => this.OnDeleteButtonClicked(uuid)}
               />
               <Button
                 icon={ButtonIcon.EDIT}
                 onClick={p =>
                   this.props.OnEditButtonClicked({
                     status,
-                    id,
-                    salvo_em,
-                    subst_dia_origem,
-                    subst_dia_destino,
-                    motivo,
-                    obs
+                    uuid,
+                    registro,
+                    data_de,
+                    data_para,
+                    descricao,
+                    observacao,
                   })
                 }
               />
@@ -120,13 +120,13 @@ export class DayChangeItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              Substituição do dia: <b>{subst_dia_origem}</b>{" "}
+              Substituição do dia: <b>{data_de}</b>{" "}
               <i
                 className={"fa fa-arrow-right ml-2 mr-2"}
                 style={{ color: "#2881BB" }}
               />{" "}
               para o dia:
-              <b>{subst_dia_destino}</b>
+              <b>{data_para}</b>
             </p>
           </div>
         </div>

@@ -6,7 +6,7 @@
 set -xe
   : "${API_URL?Need an api url}"
 
-sed -i "s,API_URL_REPLACE_ME,$API_URL,g" /usr/share/nginx/html/static/js/main*.js
-sed -i "s,API_MOCK_REPLACE_ME,$API_MOCK,g" /usr/share/nginx/html/static/js/main*.js
+sed -i "s,API_URL_REPLACE_ME,$API_URL,g" /app/build/static/js/main*.js
+sed -i "s,API_MOCK_REPLACE_ME,$API_MOCK,g" /app/build/static/js/main*.js
 
 exec "$@"

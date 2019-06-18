@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
@@ -6,6 +5,8 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
+import {carregarInversoes, salvarInversao, deletaInversao} from '../../services/dayChange.service'
+import { toastSuccess, toastError } from "../Shareable/dialogs";
 
 export class DayChangeEditor extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export class DayChangeEditor extends Component {
       dayChangeList: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
-      id: "",
+      uuid: "",
       salvarAtualizarLbl: "Salvar"
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
@@ -22,17 +23,22 @@ export class DayChangeEditor extends Component {
     this.refresh = this.refresh.bind(this);
   }
 
-  OnDeleteButtonClicked(id) {
-    axios.delete(`http://localhost:3004/daychange/${id}`).then(res => {
-      this.refresh();
-    });
+  OnDeleteButtonClicked(uuid) {
+    if(window.confirm('Deseja realmente remover esta solicitação?')){
+      deletaInversao(uuid).then(response => {
+        toastSuccess('Solicitação para alteração de dia de cardápio')
+        this.refresh()
+      }).catch(error => {
+        toastError('Erro ao tentar solicitar alteração de dia de cardápio, tente novamente')
+      })
+    }
   }
 
   resetForm(event) {
     this.props.reset();
     // rich text field doesn't become clear by props.reset()...
-    this.props.change("motivo", "");
-    this.props.change("obs", "");
+    this.props.change("descricao", "");
+    this.props.change("observacao", "");
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
@@ -43,15 +49,15 @@ export class DayChangeEditor extends Component {
 
   OnEditButtonClicked(param) {
     this.props.reset();
-    this.props.change("motivo", param.motivo);
-    this.props.change("obs", param.obs);
-    this.props.change("subst_dia_origem", param.subst_dia_origem);
-    this.props.change("subst_dia_destino", param.subst_dia_destino);
+    this.props.change("descricao", param.descricao);
+    this.props.change("observacao", param.observacao);
+    this.props.change("data_de", param.data_de);
+    this.props.change("data_para", param.data_para);
     this.setState({
       status: param.status,
-      title: `Solicitação # ${param.id}`,
+      title: `Solicitação # ${param.uuid}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.id
+      uuid: param.uuid
     });
   }
 
@@ -60,27 +66,34 @@ export class DayChangeEditor extends Component {
   }
 
   refresh() {
-    axios.get(`http://localhost:3004/daychange/?status=SALVO`).then(res => {
-      const dayChangeList = res.data;
+    carregarInversoes().then(res => {
+      const dayChangeList = res
       this.setState({ dayChangeList });
     });
   }
 
   onSubmit(values) {
-    if (values.id) {
-      //put
-      axios
-        .put(`http://localhost:3004/daychange/${values.id}`, values)
-        .then(res => {
-          this.refresh();
-          console.log("PUT", res.data);
-        });
-    } else {
-      axios.post(`http://localhost:3004/daychange/`, values).then(res => {
-        this.refresh();
-        console.log("POST", res.data);
-      });
+    if (values.status === 'SALVAR'){
+      salvarInversao(values).then(response => {
+        this.resetForm()
+        this.refresh()
+        toastSuccess(response.details)
+      })
     }
+    // if (values.uuid) {
+    //   //put
+    //   axios
+    //     .put(`http://localhost:3004/daychange/${values.id}`, values)
+    //     .then(res => {
+    //       this.refresh();
+    //       console.log("PUT", res.data);
+    //     });
+    // } else {
+    //   axios.post(`http://localhost:3004/daychange/`, values).then(res => {
+    //     this.refresh();
+    //     console.log("POST", res.data);
+    //   });
+    // }
   }
 
   render() {
@@ -127,7 +140,7 @@ export class DayChangeEditor extends Component {
                 component={LabelAndDate}
                 cols="4 4 4 4"
                 placeholder="Dia a ser substituído"
-                name="subst_dia_origem"
+                name="data_de"
                 label="De:"
                 validate={required}
               />
@@ -135,7 +148,7 @@ export class DayChangeEditor extends Component {
                 component={LabelAndDate}
                 cols="4 4 4 4"
                 placeholder="Novo dia do cardápio"
-                name="subst_dia_destino"
+                name="data_para"
                 label="Para:"
                 validate={required}
               />
@@ -144,7 +157,7 @@ export class DayChangeEditor extends Component {
               <Field
                 component={LabelAndTextArea}
                 label="Motivo"
-                name="motivo"
+                name="descricao"
                 validate={[textAreaRequired]}
               />
             </div>
@@ -153,7 +166,7 @@ export class DayChangeEditor extends Component {
                 component={LabelAndTextArea}
                 placeholder="Campo opcional"
                 label="Observação"
-                name="obs"
+                name="observacao"
               />
             </div>
             <div className="form-group row float-right mt-4">
@@ -169,9 +182,9 @@ export class DayChangeEditor extends Component {
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    status: "SALVO",
+                    status: "SALVAR",
                     salvo_em: new Date(),
-                    id: this.state.id
+                    uuid: this.state.uuid
                   })
                 )}
                 className="ml-3"

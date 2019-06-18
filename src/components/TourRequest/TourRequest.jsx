@@ -38,7 +38,9 @@ export class TourRequest extends Component {
       nro_matriculados: 0,
       enumKits: null,
       showModal: false,
-      segundoDiaUtil: ''
+      segundoDiaUtil: '',
+      modalConfirmation: false,
+      modalMessage : ''
     };
 
 
@@ -46,7 +48,7 @@ export class TourRequest extends Component {
     this.refresh = this.refresh.bind(this)
     this.validaDiasUteis = this.validaDiasUteis.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
-
+    this.handleConfirmation = this.handleConfirmation.bind(this)
   }
 
   OnDeleteButtonClicked(id) {
@@ -92,9 +94,9 @@ export class TourRequest extends Component {
   }
 
 
-  pegaSegundoDiaUtil(){
+  pegaSegundoDiaUtil() {
     getDiasUteis().then(resp => {
-       return convertStringToDate(resp[0].date_two_working_days)
+      return convertStringToDate(resp[0].date_two_working_days)
     }).catch(erro => {
       return null
     })
@@ -104,26 +106,26 @@ export class TourRequest extends Component {
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos()
-    getDiasUteis().then(resp =>{
+    getDiasUteis().then(resp => {
       this.setState({
-        segundoDiaUtil : convertStringToDate(resp[0].date_two_working_days)
+        segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
       })
     })
   }
 
   validaDiasUteis = (event) => {
-      if(event.target.value){
-        const diaSelecionado = convertStringToDate(event.target.value)
-        getDiasUteis().then(resp => {
-          const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
-          const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
-          if (diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil) {
-            this.setState({
-              showModal: true
-            })
-          }
-        })
-      }
+    if (event.target.value) {
+      const diaSelecionado = convertStringToDate(event.target.value)
+      getDiasUteis().then(resp => {
+        const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
+        const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
+        if (diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil) {
+          this.setState({
+            showModal: true
+          })
+        }
+      })
+    }
   }
 
   getQuatidadeAlunos() {
@@ -139,6 +141,7 @@ export class TourRequest extends Component {
 
     validateTourRequestForm(values);
     this.salvarOuEnviar(values)
+    this.handleConfirmation()
   }
 
   salvarOuEnviar(values) {
@@ -161,7 +164,12 @@ export class TourRequest extends Component {
           this.resetForm()
           this.refresh()
         } else {
-          toastError(resp.error)
+          // toastError(resp.error)
+          this.setState({
+            ...this.state,
+            modalMessage : resp.error,
+            modalConfirmation : true
+          })
         }
       }).catch(error => {
         toastError(error.details)
@@ -189,6 +197,10 @@ export class TourRequest extends Component {
     this.setState({ ...this.state, showModal: false })
   }
 
+  handleConfirmation(){
+    this.setState({...this.state,modalConfirmation: false})
+  }
+
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
     const parser = {
       "4h": HORAS_ENUM._4.qtd_kits,
@@ -206,10 +218,12 @@ export class TourRequest extends Component {
 
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
-    const { enumKits, tourRequestList, showModal, segundoDiaUtil } = this.state;
+    const { enumKits, tourRequestList, showModal,modalMessage, modalConfirmation, segundoDiaUtil } = this.state;
     return (
 
       <div className="d-flex flex-column p-4 mt-5">
+
+
         <Modal show={showModal} onHide={this.handleShowModal}>
           <Modal.Header closeButton>
             <Modal.Title>Atenção</Modal.Title>
@@ -349,13 +363,47 @@ export class TourRequest extends Component {
               onClick={handleSubmit(values =>
                 this.onSubmit({
                   ...values,
-                  Acao: "Enviar solicitação"
+                  Acao: "Enviar solicitação",
+                  id: this.state.id
                 })
               )}
               style={ButtonStyle.Primary}
               className="ml-3"
             />
           </div>
+
+          <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
+          <Modal.Header closeButton>
+            <Modal.Title>Atenção</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <strong>{modalMessage}</strong>
+          </Modal.Body>
+          <Modal.Footer>
+            <BaseButton
+              label="CONFIRMAR MESMO ASSIM"
+              type={ButtonType.BUTTON}
+              onClick={handleSubmit(values =>
+                this.onSubmit({
+                  ...values,
+                  status: "Enviar solicitação",
+                  salvo_em: new Date(),
+                  id: this.state.id, 
+                  confirmar : true
+                })
+              )}
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
+            <BaseButton
+              label="CANCELAR"
+              type={ButtonType.BUTTON}
+              onClick={this.handleConfirmation}
+              style={ButtonStyle.Warning}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Modal>
         </form>
       </div>
     );
