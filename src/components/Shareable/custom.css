@@ -369,6 +369,25 @@ textarea {
   color: #C2CFE0;
 }
 
+.dashboard-card-title span:nth-child(2) i {
+  color: #686868;
+}
+
+input.input-search {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 0.5px solid #A4A4A4;
+  color: #A4A4A4;
+  text-align: right;
+  font-style: italic;
+}
+
+input.input-search::placeholder {
+  color: #A4A4A4;
+  padding-right: 5px;
+}
+
 .current-date {
   font-size: 13px;
 }
@@ -484,6 +503,79 @@ div.caption-choices span:nth-child(4) i {
   color: #000000;
 }
 
+.card-pendency {
+  border: 1px solid #DADADA;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.card-pendency .card-title {
+  padding: 10px 15px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #353535;
+}
+
+.card-pendency hr {
+  margin-top: -10px;
+}
+
+.card-pendency .order-box {
+  display: grid;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  background: #036AA8;
+  border: 0.5px solid #E8E8E8;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.card-pendency .order-box span {
+  font-weight: bold;
+  font-size: 34px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.card-pendency .order-box .order {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.card-pendency .order-lines {
+  padding-top: 5px;
+  display: inline-flex;
+}
+
+.card-pendency .order-lines .label {
+  width: 25.61px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+.card-pendency .order-lines:nth-child(1) .label {
+  background: #C9251B;
+}
+
+.card-pendency .order-lines:nth-child(2) .label {
+  background: #E1A303;
+}
+
+.card-pendency .order-lines:nth-child(3) .label {
+  background: #5EC430;
+}
+
+.card-pendency .order-lines .text {
+  font-size: 14px;
+  color: #686868;
+}
+
+.card-pendency .order-lines .text .value {
+  padding-left: 10px;
+  font-weight: bold;
+}
 
 .multiselect-wrapper-disabled .dropdown-heading {
   pointer-events: none;
