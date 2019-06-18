@@ -50,7 +50,9 @@ class DashboardDRE extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold title-color">Pedido Genérico</div>
+              <div className="card-title font-weight-bold title-color">
+                Pedido Genérico
+              </div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
               <BaseButton
                 label="Solicitação Unificada"
@@ -62,26 +64,134 @@ class DashboardDRE extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="dashboard-card-title">
-                <i class="fas fa-thumbtack" />Notificações
-                <i class="fas fa-pen" />
+              <div className="card-title font-weight-bold dashboard-card-title">
+                <i className="fas fa-thumbtack" />
+                Painel de Status de Solicitações
+                <i className="fas fa-pen" />
               </div>
-              <div className="card mt-3">
-                <div className="card-body">
-                  <div className="dre-name">
-                    Solicitações
-                    <i class="fas fa-pen" />
+              <div>
+                <p className="current-date">
+                  Data: <span>28 de março de 2019</span>
+                </p>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <div className="card card-panel card-authorized">
+                    <div className="card-title-status">
+                      <i className="fas fa-check" />
+                      Autorizadas
+                    </div>
+                    <hr />
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">11:19</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação de Kit Lanche
+                      <span className="float-right">Qua 11:07</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">Qua 10:07</span>
+                    </p>
+                    <a href="#" className="see-more">
+                      Ver Mais
+                    </a>
                   </div>
-                  <p>
-                    Acesse o formulário para fazer uma Solicitação Unificada
-                  </p>
-                  <BaseButton
-                    label="Solicitação Unificada"
-                    onClick={handleSubmit(values => this.handleSubmit(values))}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
                 </div>
+                <div className="col-6">
+                  <div className="card card-panel card-pending">
+                    <div className="card-title-status">
+                      <i className="fas fa-exclamation-triangle" />
+                      Pendente Aprovação
+                    </div>
+                    <hr />
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">11:19</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação de Kit Lanche
+                      <span className="float-right">Qua 11:07</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">Qua 10:07</span>
+                    </p>
+                    <a href="#" className="see-more">
+                      Ver Mais
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <div className="card card-panel card-denied">
+                    <div className="card-title-status">
+                      <i className="fas fa-ban" />
+                      Recusadas
+                    </div>
+                    <hr />
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">11:19</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação de Kit Lanche
+                      <span className="float-right">Qua 11:07</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">Qua 10:07</span>
+                    </p>
+                    <a href="#" className="see-more">
+                      Ver Mais
+                    </a>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="card card-panel card-cancelled">
+                    <div className="card-title-status">
+                      <i className="fas fa-times-circle" />
+                      Canceladas
+                    </div>
+                    <hr />
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">11:19</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação de Kit Lanche
+                      <span className="float-right">Qua 11:07</span>
+                    </p>
+                    <p className="data">
+                      12083 - 7A IP I - Solicitação Unificada
+                      <span className="float-right">Qua 10:07</span>
+                    </p>
+                    <a href="#" className="see-more">
+                      Ver Mais
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <p className="caption">Legenda</p>
+              <div className="caption-choices">
+                <span>
+                  <i className="fas fa-check" />
+                  Solicitação Autorizada
+                </span>
+                <span>
+                  <i className="fas fa-exclamation-triangle" />
+                  Solicitação Pendente Aprovação
+                </span>
+                <span>
+                  <i className="fas fa-ban" />
+                  Solicitação Recusadas
+                </span>
+                <span>
+                  <i className="fas fa-times-circle" />
+                  Solicitação Canceladas
+                </span>
               </div>
             </div>
           </div>

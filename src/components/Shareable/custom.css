@@ -356,11 +356,11 @@ textarea {
 }
 
 .dashboard-card-title {
-  font-size: 14px;
   color:  #035D96;
 }
 
 .dashboard-card-title i {
+  color: #334D6E;
   padding-right: 15px;
 }
 
@@ -368,6 +368,122 @@ textarea {
   padding-left: 15px;
   color: #C2CFE0;
 }
+
+.current-date {
+  font-size: 13px;
+}
+
+.current-date span {
+  color: #4C5862;
+}
+
+.card .card-title-status {
+  font-weight: 600;
+  font-size: 13px;
+  color: #323C47;
+  letter-spacing: 0.01em;
+  padding-top: 5px;
+}
+
+.card-panel {
+  border-left: 10px solid !important;
+}
+
+.card-panel i {
+  padding: 0 10px;
+}
+
+.card-panel hr {
+  margin-top: 5px;
+}
+
+.card-panel p.data {
+  padding: 0 10px;
+  font-weight: bold;
+  font-size: 13px;
+  color: #707683;
+}
+
+.card-panel p.data span {
+  font-weight: normal;
+}
+
+.card-panel a.see-more {
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  color: #035D96;
+  padding-bottom: 10px;
+}
+
+.card-authorized {
+  border-left-color: #5EC430 !important;
+}
+
+.card-authorized i {
+  color: #5EC430;
+}
+
+.card-pending {
+  border-left-color: #EB8002 !important;
+}
+
+.card-pending i {
+  color: #EB8002;
+}
+
+.card-denied {
+  border-left-color: #C9251B !important;
+}
+
+.card-denied i {
+  color: #C9251B;
+}
+
+.card-cancelled {
+  border-left-color: #000000 !important;
+}
+
+.card-cancelled i {
+  color: #000000;;
+}
+
+p.caption {
+  font-size: 10px;
+  color: #353535;
+  padding-top: 15px;
+}
+
+div.caption-choices {
+  font-size: 10px;
+  color: #4C5862;
+  display: inline-flex;
+}
+
+div.caption-choices span {
+  padding-right: 30px;
+}
+
+div.caption-choices i {
+  padding: 0 5px;
+}
+
+div.caption-choices span:nth-child(1) i {
+  color: #5EC430;
+}
+
+div.caption-choices span:nth-child(2) i {
+  color: #EB8002;
+}
+
+div.caption-choices span:nth-child(3) i {
+  color: #C9251B
+}
+
+div.caption-choices span:nth-child(4) i {
+  color: #000000;
+}
+
 
 .multiselect-wrapper-disabled .dropdown-heading {
   pointer-events: none;
