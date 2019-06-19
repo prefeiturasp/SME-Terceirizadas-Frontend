@@ -3,7 +3,12 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import {
+  SolicitationStatusCard,
+  PendencyCard
+} from "../Shareable/DashboardShared";
 import "../Shareable/custom.css";
+import { LabelAndCombo } from "../Shareable/labelAndInput";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -12,7 +17,7 @@ class DashboardDRE extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit } = this.props;
+    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -82,102 +87,34 @@ class DashboardDRE extends Component {
               </div>
               <div className="row">
                 <div className="col-6">
-                  <div className="card card-panel card-authorized">
-                    <div className="card-title-status">
-                      <i className="fas fa-check" />
-                      Autorizadas
-                    </div>
-                    <hr />
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">11:19</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação de Kit Lanche
-                      <span className="float-right">Qua 11:07</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">Qua 10:07</span>
-                    </p>
-                    <a href="#" className="see-more">
-                      Ver Mais
-                    </a>
-                  </div>
+                  <SolicitationStatusCard
+                    cardTitle={"Autorizadas"}
+                    cardType={"card-authorized"}
+                    solicitations={solicitations}
+                  />
                 </div>
                 <div className="col-6">
-                  <div className="card card-panel card-pending">
-                    <div className="card-title-status">
-                      <i className="fas fa-exclamation-triangle" />
-                      Pendente Aprovação
-                    </div>
-                    <hr />
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">11:19</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação de Kit Lanche
-                      <span className="float-right">Qua 11:07</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">Qua 10:07</span>
-                    </p>
-                    <a href="#" className="see-more">
-                      Ver Mais
-                    </a>
-                  </div>
+                  <SolicitationStatusCard
+                    cardTitle={"Pendente Aprovação"}
+                    cardType={"card-pending"}
+                    solicitations={solicitations}
+                  />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <div className="card card-panel card-denied">
-                    <div className="card-title-status">
-                      <i className="fas fa-ban" />
-                      Recusadas
-                    </div>
-                    <hr />
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">11:19</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação de Kit Lanche
-                      <span className="float-right">Qua 11:07</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">Qua 10:07</span>
-                    </p>
-                    <a href="#" className="see-more">
-                      Ver Mais
-                    </a>
-                  </div>
+                  <SolicitationStatusCard
+                    cardTitle={"Recusadas"}
+                    cardType={"card-denied"}
+                    solicitations={solicitations}
+                  />
                 </div>
                 <div className="col-6">
-                  <div className="card card-panel card-cancelled">
-                    <div className="card-title-status">
-                      <i className="fas fa-times-circle" />
-                      Canceladas
-                    </div>
-                    <hr />
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">11:19</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação de Kit Lanche
-                      <span className="float-right">Qua 11:07</span>
-                    </p>
-                    <p className="data">
-                      12083 - 7A IP I - Solicitação Unificada
-                      <span className="float-right">Qua 10:07</span>
-                    </p>
-                    <a href="#" className="see-more">
-                      Ver Mais
-                    </a>
-                  </div>
+                  <SolicitationStatusCard
+                    cardTitle={"Canceladas"}
+                    cardType={"card-cancelled"}
+                    solicitations={solicitations}
+                  />
                 </div>
               </div>
               <p className="caption">Legenda</p>
@@ -192,11 +129,11 @@ class DashboardDRE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-ban" />
-                  Solicitação Recusadas
+                  Solicitação Recusada
                 </span>
                 <span>
                   <i className="fas fa-times-circle" />
-                  Solicitação Canceladas
+                  Solicitação Cancelada
                 </span>
               </div>
             </div>
@@ -206,42 +143,83 @@ class DashboardDRE extends Component {
               <div className="card-title font-weight-bold dashboard-card-title">
                 <i className="fas fa-lock" />
                 Pendências
+                <span className="float-right">
+                  <LabelAndCombo
+                    onChange={value => this.handleField("reason", value)}
+                    placeholder={"Visão por"}
+                    options={vision_by}
+                  />
+                </span>
               </div>
-              <div className="row h-100">
+              <div className="pt-3"></div>
+              <div className="row">
                 <div className="col-6">
-                  <div className="card card-pendency">
-                    <div className="card-title">Inclusão de Refeição</div>
-                    <hr />
-                    <div className="row">
-                      <div className="col-4">
-                        <div className="order-box">
-                          <span className="number">16</span>
-                          <span className="order">pedidos</span>
-                        </div>
-                      </div>
-                      <div className="col-8">
-                        <div className="order-lines">
-                          <div className="label" />
-                          <span className="text">
-                            <span className="value">5 </span>Próximo ao prazo de
-                            vencimento
-                          </span>
-                        </div>
-                        <div className="order-lines">
-                          <div className="label" />
-                          <span className="text">
-                            <span className="value">5 </span>Pedidos no prazo limite
-                          </span>
-                        </div>
-                        <div className="order-lines">
-                          <div className="label" />
-                          <span className="text">
-                            <span className="value">5 </span>Pedidos no prazo regular
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PendencyCard
+                    cardTitle={"Inclusão de Refeição"}
+                    totalOfOrders={16}
+                    priorityOrders={8}
+                    onLimitOrders={2}
+                    regularOrders={6}
+                  />
+                </div>
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Alteração de Dias de Cardápio"}
+                    totalOfOrders={50}
+                    priorityOrders={2}
+                    onLimitOrders={18}
+                    regularOrders={30}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Alteração de Cardápio"}
+                    totalOfOrders={20}
+                    priorityOrders={5}
+                    onLimitOrders={10}
+                    regularOrders={10}
+                  />
+                </div>
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Kit Lanche"}
+                    totalOfOrders={120}
+                    priorityOrders={20}
+                    onLimitOrders={40}
+                    regularOrders={60}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Pedido Unificado"}
+                    totalOfOrders={2}
+                    priorityOrders={1}
+                    onLimitOrders={0}
+                    regularOrders={1}
+                  />
+                </div>
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Suspensão de Refeição"}
+                    totalOfOrders={47}
+                    priorityOrders={10}
+                    onLimitOrders={7}
+                    regularOrders={30}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <PendencyCard
+                    cardTitle={"Lotes"}
+                    totalOfOrders={47}
+                    priorityOrders={10}
+                    onLimitOrders={7}
+                  />
                 </div>
               </div>
             </div>
