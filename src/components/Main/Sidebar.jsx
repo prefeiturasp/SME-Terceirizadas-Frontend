@@ -1,37 +1,36 @@
-import React, { Component } from 'react';
-import {Link, NavLink} from 'react-router-dom'
-import './sidebar.css'
-import $ from 'jquery/dist/jquery.slim'
-import { closeToggle } from './jQClick'
-import Home from '../../pages/Home';
-import AddFood from '../AddFood';
-import { MenuChangePage } from '../../pages/MenuChangePage';
-import PermissionsPage from '../../pages/PermissionsPage';
-import TourRequestPage from '../../pages/TourRequestPage';
-import DayChangePage from '../../pages/DayChangePage';
-import FoodSuspensionPage from '../../pages/FoodSuspensionPage';
-import UnifiedSolicitationPage from '../../pages/UnifiedSolicitationPage';
-import UnifiedSolicitationHistoricPage from '../../pages/UnifiedSolicitationHistoricPage';
+import React, { Component } from "react";
+import { Link, NavLink } from "react-router-dom";
+import "./sidebar.css";
+import $ from "jquery/dist/jquery.slim";
+import { closeToggle } from "./jQClick";
+import Home from "../../pages/Home";
+import AddFood from "../AddFood";
+import { MenuChangePage } from "../../pages/MenuChangePage";
+import PermissionsPage from "../../pages/PermissionsPage";
+import TourRequestPage from "../../pages/TourRequestPage";
+import DayChangePage from "../../pages/DayChangePage";
+import FoodSuspensionPage from "../../pages/FoodSuspensionPage";
+import UnifiedSolicitationPage from "../../pages/UnifiedSolicitationPage";
+import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHistoricPage";
+import DashboardDREPage from "../../pages/DashboardDREPage";
 
-
-window.jQuery = $
-
+window.jQuery = $;
 
 export class Sidebar extends Component {
   state = {
-    isVisible : true
-  }
+    isVisible: true
+  };
 
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.handleToggle = this.handleToggle.bind(this);
   }
 
   handleToggle = event => {
-    closeToggle()
+    closeToggle();
     // this.setState({isVisible : false})
-   }
+  };
 
   render() {
     return (
@@ -167,6 +166,14 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
+                  to="/dashboard-dre"
+                  component={DashboardDREPage}
+                >
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
                   to="/unified-solicitation"
                   component={UnifiedSolicitationPage}
                 >
@@ -296,4 +303,4 @@ export class Sidebar extends Component {
   }
 }
 
-    // export default connect()(Sidebar);
+// export default connect()(Sidebar);
