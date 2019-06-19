@@ -91,6 +91,7 @@ class DashboardDRE extends Component {
                     cardTitle={"Autorizadas"}
                     cardType={"card-authorized"}
                     solicitations={solicitations}
+                    icon={"fa-check"}
                   />
                 </div>
                 <div className="col-6">
@@ -98,6 +99,7 @@ class DashboardDRE extends Component {
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
                     solicitations={solicitations}
+                    icon={"fa-exclamation-triangle"}
                   />
                 </div>
               </div>
@@ -107,6 +109,7 @@ class DashboardDRE extends Component {
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
                     solicitations={solicitations}
+                    icon={"fa-ban"}
                   />
                 </div>
                 <div className="col-6">
@@ -114,6 +117,7 @@ class DashboardDRE extends Component {
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
+                    icon={"fa-times-circle"}
                   />
                 </div>
               </div>
@@ -219,6 +223,7 @@ class DashboardDRE extends Component {
                     totalOfOrders={47}
                     priorityOrders={10}
                     onLimitOrders={7}
+                    regularOrders={30}
                   />
                 </div>
               </div>

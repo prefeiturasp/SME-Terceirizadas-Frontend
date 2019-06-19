@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import "./custom.css";
 
 export const SolicitationStatusCard = props => {
-  const { cardTitle, cardType, solicitations } = props;
+  const { cardTitle, cardType, solicitations, icon } = props;
   return (
     <div className={"card card-panel " + cardType}>
       <div className="card-title-status">
-        <i className="fas fa-times-circle" />
+        <i className={"fas " + icon} />
         {cardTitle}
       </div>
       <hr />
