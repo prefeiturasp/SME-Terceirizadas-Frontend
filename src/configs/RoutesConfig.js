@@ -11,6 +11,7 @@ import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DashboardDREPage";
+import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
 
 const routesConfig = [
   {
@@ -76,6 +77,11 @@ const routesConfig = [
   {
     path: "/settings",
     component: EmailConfiguration,
+    exact: false
+  },
+  {
+    path: "/painel-escola",
+    component: DashboardEscolaPage,
     exact: false
   }
 ];
