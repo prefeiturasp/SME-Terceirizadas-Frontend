@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import { permissionReducer } from './reducers/permission.reducers'
 import foodInclusionReducer from './reducers/foodInclusionReducer'
+import foodSuspensionReducer from './reducers/foodSuspensionReducer'
 import { tourRequestReducer } from './reducers/tourRequest.reducer'
 import loadUnifiedReducer from './reducers/unifiedSolicitation.reducer'
 
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   permissions : permissionReducer,
   tourRequests : tourRequestReducer,
   unifiedSolicitation: loadUnifiedReducer,
-  foodInclusion: foodInclusionReducer
+  foodInclusion: foodInclusionReducer,
+  foodSuspension: foodSuspensionReducer
 });
 
 export default rootReducer;
