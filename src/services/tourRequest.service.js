@@ -64,13 +64,12 @@ export const getDiasUteis = async () => {
 }
 
 export const solicitarKitLanche = async (values) => {
-
     const OBJ_REQUEST = {
         headers: authToken,
         method: 'POST',
         body: JSON.stringify(values)
     }
-
+    
     return await fetch(URL_SOLICITAR, OBJ_REQUEST)
         .then(response => {
             return response.json()
@@ -101,7 +100,6 @@ export const registroSalvarKitLanche = async (values) => {
 }
 
 export const solicitarKitsLanche = async (values) => {
-
     const OBJ_REQUEST = {
         headers: authToken,
         method: 'POST',
