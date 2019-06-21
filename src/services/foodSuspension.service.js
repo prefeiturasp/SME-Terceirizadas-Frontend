@@ -27,7 +27,7 @@ export const createOrUpdateFoodSuspension = payload => {
 };
 
 export const deleteFoodSuspension = payload => {
-  const url = API_URL + `/suspensao-de-alimentacao/delete/`;
+  const url = API_URL + `/suspensao-de-alimentacao/remover/`;
   return fetch(url, {
     method: "DELETE",
     body: payload,

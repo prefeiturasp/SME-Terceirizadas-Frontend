@@ -453,7 +453,6 @@ class FoodInclusionEditor extends Component {
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
-                              cols="4"
                               onChange={value =>
                                 this.handleField(
                                   "date_from",
@@ -469,7 +468,6 @@ class FoodInclusionEditor extends Component {
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
-                              cols="4"
                               onChange={value =>
                                 this.handleField(
                                   "date_to",
@@ -485,7 +483,6 @@ class FoodInclusionEditor extends Component {
                           <Field
                             component={Weekly}
                             name="weekdays"
-                            cols="12"
                             onChange={value =>
                               this.handleField("weekdays", value, day_reason.id)
                             }

@@ -453,7 +453,6 @@ class FoodSuspensionEditor extends Component {
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
-                              cols="4"
                               onChange={value =>
                                 this.handleField(
                                   "data_de",
@@ -469,7 +468,6 @@ class FoodSuspensionEditor extends Component {
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
-                              cols="4"
                               onChange={value =>
                                 this.handleField(
                                   "data_ate",
@@ -484,10 +482,9 @@ class FoodSuspensionEditor extends Component {
                           </div>
                           <Field
                             component={Weekly}
-                            name="weekdays"
-                            cols="12"
+                            name="dias_de_semana"
                             onChange={value =>
-                              this.handleField("weekdays", value, dia_razao.id)
+                              this.handleField("dias_de_semana", value, dia_razao.id)
                             }
                             classNameArgs="form-group col-sm-4"
                             label="Repetir"
