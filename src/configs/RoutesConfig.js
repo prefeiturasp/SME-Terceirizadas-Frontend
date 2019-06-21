@@ -10,7 +10,8 @@ import FoodSuspensionPage from "../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
-import DashboardDREPage from "../pages/DashboardDREPage";
+import DashboardDREPage from "../pages/DRE/DashboardDREPage";
+import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
 
 const routesConfig = [
   {
@@ -71,6 +72,11 @@ const routesConfig = [
   {
     path: "/dashboard-dre",
     component: DashboardDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/kits-lanche",
+    component: KitsLancheOrdersPage,
     exact: false
   },
   {

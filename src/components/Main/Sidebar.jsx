@@ -12,7 +12,8 @@ import DayChangePage from "../../pages/DayChangePage";
 import FoodSuspensionPage from "../../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHistoricPage";
-import DashboardDREPage from "../../pages/DashboardDREPage";
+import DashboardDREPage from "../../pages/DRE/DashboardDREPage";
+import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage"
 
 window.jQuery = $;
 
@@ -170,6 +171,14 @@ export class Sidebar extends Component {
                   component={DashboardDREPage}
                 >
                   Dashboard
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/dre/kits-lanche"
+                  component={KitLancheOrdersPage}
+                >
+                  Kit Lanche
                 </NavLink>
                 <NavLink
                   activeClassName="active"
