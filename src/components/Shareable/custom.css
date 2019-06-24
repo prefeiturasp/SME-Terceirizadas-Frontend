@@ -577,6 +577,113 @@ div.caption-choices span:nth-child(4) i {
   font-weight: bold;
 }
 
+.card-pendency-approval {
+  padding: 16px 44px;
+  border: 1px solid #DADADA;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.card-pendency-approval .card-title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.card-pendency-approval .card-title.priority {
+  color: #C9251B;
+}
+
+.card-pendency-approval .card-title.on-limit {
+  color: #E1A303;
+}
+
+.card-pendency-approval .card-title.regular {
+  color: #5EC530;
+}
+
+.card-pendency-approval .order-box {
+  display: grid;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border: 0.5px solid #E8E8E8;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.card-pendency-approval .order-box.priority {
+  background: #C9251B;
+}
+
+.card-pendency-approval .order-box.on-limit {
+  background: #E1A303;
+}
+
+.card-pendency-approval .order-box.regular {
+  background: #5EC530;
+}
+
+.card-pendency-approval .order-box span {
+  font-weight: bold;
+  font-size: 34px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.card-pendency-approval .order-box .order {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.card-pendency-approval .order-lines .text {
+  font-size: 14px;
+  color: #353535;
+}
+
+.orders-table {
+  width: 100%;
+}
+
+.orders-table th {
+  font-weight: normal;
+  font-size: 14px;
+  color: #686868;
+}
+
+.orders-table tr th:nth-child(1),
+.orders-table tr td:nth-child(1) {
+  width: 10%;
+}
+
+.orders-table tr th:nth-child(2),
+.orders-table tr td:nth-child(2) {
+  width: 10%;
+}
+
+.orders-table tr th:nth-child(3),
+.orders-table tr td:nth-child(3) {
+  width: 80%;
+}
+
+.orders-table td {
+  font-weight: bold;
+  font-size: 15px;
+  color: #353535;
+  border-bottom: 1px solid #C0C0C0;
+  padding: 10px 0;
+}
+
+thead, tbody { display: block;}
+
+tbody {
+  height: 200px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+
+
+
 .multiselect-wrapper-disabled .dropdown-heading {
   pointer-events: none;
   background-color: #e9ecef !important;
