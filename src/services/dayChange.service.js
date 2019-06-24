@@ -15,8 +15,7 @@ export const carregarInversoes = async () => {
 
     return await fetch(url, OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         }).catch(error => {
             console.log('ERROR GET INVERSÃO DE DIA CARDAPIO', error)
         })
@@ -29,10 +28,9 @@ export const salvarInversao = async (values) => {
         method: 'POST',
         body: JSON.stringify(values)
     }
-    return fetch(url, OBJ_REQUEST)
+    return await fetch(url, OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         }).catch(erro => {
             console.log('ERROR SALVAR INVERSÃO DE DIA CARDAPIO', erro)
         })
@@ -46,10 +44,9 @@ export const solicitarInversao = async (values) => {
         body: JSON.stringify(values)
     }
 
-    return fetch(url, OBJ_REQUEST)
+    return await fetch(url, OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         }).catch(erro => {
             console.log('ERROR SOLICITAÇÃO INVERSÃO DE DIA CARDAPIO', erro)
         })
@@ -62,10 +59,9 @@ export const deletaInversao = async (uuid) => {
         method: 'DELETE',
     }
 
-    return fetch(url, OBJ_REQUEST)
+    return await fetch(url, OBJ_REQUEST)
         .then(response => {
-            const resp = response.json()
-            return resp
+            return response.json()
         }).catch(erro => {
             console.log('ERROR DELETAR INVERSÃO DE DIA CARDAPIO', erro)
         })

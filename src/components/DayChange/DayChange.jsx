@@ -5,8 +5,8 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
-import {carregarInversoes, salvarInversao, deletaInversao} from '../../services/dayChange.service'
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import {carregarInversoes, salvarInversao, deletaInversao, solicitarInversao} from '../../services/dayChange.service'
+import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
 
 export class DayChangeEditor extends Component {
   constructor(props) {
@@ -26,10 +26,10 @@ export class DayChangeEditor extends Component {
   OnDeleteButtonClicked(uuid) {
     if(window.confirm('Deseja realmente remover esta solicitação?')){
       deletaInversao(uuid).then(response => {
-        toastSuccess('Solicitação para alteração de dia de cardápio')
+        toastSuccess(response.details)
         this.refresh()
-      }).catch(error => {
-        toastError('Erro ao tentar solicitar alteração de dia de cardápio, tente novamente')
+      }).catch(resp => {
+        toastError(resp.details)
       })
     }
   }
@@ -75,25 +75,25 @@ export class DayChangeEditor extends Component {
   onSubmit(values) {
     if (values.status === 'SALVAR'){
       salvarInversao(values).then(response => {
-        this.resetForm()
-        this.refresh()
-        toastSuccess(response.details)
+        if(response.success){
+          this.resetForm()
+          this.refresh()
+          toastSuccess(response.success)
+        }else{
+          toastError(response.error)
+        }
+      })
+    }else if(values.status === 'COMPLETO'){
+      solicitarInversao(values).then(response => {
+        if(response.success){
+          this.resetForm()
+          this.refresh()
+          toastSuccess(response.success)
+        }else{
+          toastError(response.error)
+        }
       })
     }
-    // if (values.uuid) {
-    //   //put
-    //   axios
-    //     .put(`http://localhost:3004/daychange/${values.id}`, values)
-    //     .then(res => {
-    //       this.refresh();
-    //       console.log("PUT", res.data);
-    //     });
-    // } else {
-    //   axios.post(`http://localhost:3004/daychange/`, values).then(res => {
-    //     this.refresh();
-    //     console.log("POST", res.data);
-    //   });
-    // }
   }
 
   render() {
@@ -199,7 +199,8 @@ export class DayChangeEditor extends Component {
                   this.onSubmit({
                     ...values,
                     status: "COMPLETO",
-                    salvo_em: new Date()
+                    salvo_em: new Date(),
+                    uuid : this.state.uuid
                   })
                 )}
                 style={ButtonStyle.Primary}

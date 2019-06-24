@@ -1,110 +1,71 @@
-import React, { Component } from 'react';
-import FoodSuspension from './FoodSuspension';
+import React, { Component } from "react";
+import { getPeriods } from "../../services/school.service";
+import { getReasons } from "../../services/foodSuspension.service";
+import { getWorkingDays } from "../../services/workingDays.service";
+import FoodSuspension from "./FoodSuspension";
 
 class FoodSuspensionContainer extends Component {
-
-  typeFood = [
+  typeFoodContinuousProgram = [
     {
-      value : 1,
-      label : 'Lanche 4 Horas'
+      label: "Lanche 4 Horas",
+      value: "Lanche 4 Horas"
     },
     {
-      value : 2,
-      label : 'Refeição/Sobremesa'
+      label: "Refeição/Sobremesa",
+      value: "Refeição/Sobremesa"
     },
     {
-      value : 3,
-      label : 'Lanche 5/6 Horas'
+      label: "Lanche 5/6 Horas",
+      value: "Lanche 5/6 Horas"
     },
     {
-      value : 4,
-      label : 'Todos'
-    },
-  ]
-
-  reasons = [
-    {
-      value : 1,
-      label : 'Descrição motivos 1'
-    },
-    {
-      value : 2,
-      label : 'Descrição motivos 2'
-    },
-    {
-      value : 3,
-      label : 'Descrição motivos 3'
-    },
-
-  ]
-
-  periods = [
-
-    {id : 1, value : "1º Período - Matutino"},
-    {id : 2, value :"2º Período - Intermediário"},
-    {id : 3, value :"3º Período - Vespertino"},
-    {id : 4, value :"4º Período - Noturno"},
-    {id : 5, value :"Integral"}
-
-  ]
-  constructor(props){
-    super(props)
-    this.state = {
-      enrolled : 300,
-      reasons : this.reasons,
-      reason: null,
-      day : new Date(),
-      typeFood : this.typeFood,
-      periods : this.periods,
-      descripion : null,
-      periodsList : []
+      label: "Sobremesa",
+      value: "Sobremesa"
     }
+  ];
 
-    this.handleSelectedReason = this.handleSelectedReason.bind(this)
+  constructor(props) {
+    super(props);
+    this.state = {
+      enrolled: 300,
+      reasons_simple: [],
+      reasons_continuous_program: [],
+      day: new Date(),
+      periods: [],
+      typeFoodContinuousProgram: this.typeFoodContinuousProgram,
+      two_working_days: null,
+      five_working_days: null
+    };
   }
 
-
-  handleDate(e){
-    this.setState({day : e})
+  componentDidMount() {
+    let _two,
+      _five = null;
+    getPeriods().then(resPeriods => {
+      getReasons().then(resReasons => {
+        this.setState({
+          ...this.state,
+          periods: resPeriods.content.school_periods,
+          reasons_simple: resReasons.content.reasons_simple,
+          reasons_continuous_program:
+            resReasons.content.reasons_continuous_program
+        });
+      });
+    });
+    getWorkingDays().then(res => {
+      _two = res[0].date_two_working_days.split("/");
+      _five = res[0].date_five_working_days.split("/");
+      this.setState({
+        ...this.state,
+        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
+        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+      });
+    });
   }
-
-
-  handleDescription(value){
-
-    this.setState({
-      descripion : value
-    })
-  }
-
-  handleSelectedReason(value){
-
-    this.setState({
-      reason : value
-    })
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-
-    console.log("Motivo", this.state.reason)
-    console.log("Date", this.state.day)
-    console.log("Description", this.state.descripion)
-    console.log("Periods", this.state.periodsList)
-  }
-
-
 
   render() {
-    return (
-      <FoodSuspension
-                {...this.state}
-                handleDate={this.handleDate.bind(this)}
-                handleSubmit={this.handleSubmit.bind(this)}
-                handleSelectedReason={this.handleSelectedReason}
-                handleDescription={this.handleDescription.bind(this)}
-      />
-    );
+    return <FoodSuspension {...this.state} />;
   }
 }
 
-export default FoodSuspensionContainer
+export default FoodSuspensionContainer;
