@@ -29,5 +29,6 @@ export const validateSubmit = (values, state) => {
   if (values.dias_razoes[0].razao.includes("Programa Contínuo")) {
     delete values.dias_razoes[0]["date"];
   }
+  if (values['descricoes'].length === 0) return "Obrigatório ao menos um período"
   return false;
 };
