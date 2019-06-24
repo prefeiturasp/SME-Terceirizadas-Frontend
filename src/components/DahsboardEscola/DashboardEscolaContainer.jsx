@@ -18,15 +18,55 @@ export default class DashboardEscolaContainer extends Component {
                   text: "12083 - 7A IP I - Solicitação Unificada",
                   date: "Qua 10:07"
                 }
-              ]
+              ],
+            theadList : [
+              'Nº Solicitação',
+              'Escola',
+              'Quantidade de Alimentações solicitadas'
+            ],
+            trs : [
+              {
+                '_id': 12083,
+                'escola': 'EMEF CACILDA BECKER',
+                'quantidade' : 1705
+              },
+              {
+                '_id': 12084,
+                'escola': 'EMEF AMORIM LIMA, DES.',
+                'quantidade' : 150
+              },
+              {
+                '_id': 12085,
+                'escola': 'EMEF AMORIM LIMA, DES.',
+                'quantidade' : 150
+              },
+              {
+                '_id': 12086,
+                'escola': 'EMEF AMORIM LIMA, DES.',
+                'quantidade' : 150
+              },
+              {
+                '_id': 12087,
+                'escola': 'EMEF AMORIM LIMA, DES.',
+                'quantidade' : 150
+              },
+              {
+                '_id': 12088,
+                'escola': 'EMEF AMORIM LIMA, DES.',
+                'quantidade' : 150
+              },
+            ]
         }
     }
     render() {
-        const {autorizadas} = this.state
+        const {autorizadas, theadList, trs} = this.state
         return (
             <div>
                 <DashboardEscola numeroAlunos={250}
-                                 autorizadas={autorizadas} />
+                                 autorizadas={autorizadas} 
+                                 theadList={theadList}
+                                 trs={trs}
+                />
             </div>
         )
     }

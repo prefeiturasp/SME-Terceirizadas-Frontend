@@ -9,7 +9,7 @@ import CardHistorico from './CardHistorico';
 
 export default class DashboardEscola extends Component {
     render() {
-        const { numeroAlunos, autorizadas } = this.props
+        const { numeroAlunos, autorizadas, theadList, trs } = this.props
         return (
             <div>
                 <CardHeader numeroAlunos={numeroAlunos} />
@@ -87,7 +87,11 @@ export default class DashboardEscola extends Component {
                     />
                 </div>
 
-                <CardHistorico />
+                <CardHistorico 
+                    thead={theadList} 
+                    trs={trs} 
+                    titulo={'Histórico de Alimentações solicitadas'}
+                />
 
             </div>
         )
