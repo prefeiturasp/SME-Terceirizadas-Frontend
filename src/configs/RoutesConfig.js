@@ -12,6 +12,7 @@ import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistori
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DashboardDREPage";
 import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
+import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
 
 const routesConfig = [
   {
@@ -83,7 +84,12 @@ const routesConfig = [
     path: "/painel-escola",
     component: DashboardEscolaPage,
     exact: false
-  }
+  },
+  {
+    path: "/status-solicitacoes-escola",
+    component: StatusSolicitacoesPage,
+    exact: false
+  },
 ];
 
 export default routesConfig;

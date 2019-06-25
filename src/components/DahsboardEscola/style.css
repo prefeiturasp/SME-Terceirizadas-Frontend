@@ -1,0 +1,12 @@
+
+/* hide the blue outline */
+.form-control:focus {
+    outline: 0 !important;
+    border-color: initial;
+    box-shadow: none;
+}
+
+/* webkit solution */
+::-webkit-input-placeholder { text-align:right; }
+/* mozilla solution */
+input:-moz-placeholder { text-align:right; }

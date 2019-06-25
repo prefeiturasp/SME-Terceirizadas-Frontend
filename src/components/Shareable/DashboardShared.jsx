@@ -51,23 +51,17 @@ export const PendencyCard = props => {
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{priorityOrders} </span>Próximo ao prazo
-              de vencimento
-            </span>
+              <span className="value">{priorityOrders} </span>Próximo ao prazo de vencimento</span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{onLimitOrders} </span>Pedidos no prazo
-              limite
-            </span>
+              <span className="value">{onLimitOrders} </span>Pedidos no prazo limite</span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{regularOrders} </span>Pedidos no prazo
-              regular
-            </span>
+              <span className="value">{regularOrders} </span>Pedidos no prazo regular</span>
           </div>
         </div>
       </div>
