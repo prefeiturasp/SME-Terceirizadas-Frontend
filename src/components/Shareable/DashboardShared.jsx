@@ -109,12 +109,7 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const {
-      titulo,
-      tipoDeCard,
-      totalDePedidos,
-      totalDeEscolas
-    } = this.props;
+    const { titulo, tipoDeCard, totalDePedidos, totalDeEscolas } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -183,3 +178,29 @@ export class CardPendenciaAprovacao extends Component {
     );
   }
 }
+
+export const StatusFlow = props => {
+  const { listaDeStatus } = props;
+  return (
+    <div className="w-100">
+      <ul className="progressbar-titles">
+        {listaDeStatus.map((status, key) => {
+          return <li>{status.nome}</li>;
+        })}
+      </ul>
+      <ul className="progressbar">
+        {listaDeStatus.map((status, key) => {
+          return (
+            <li 
+              className={status.status === "aprovado" ? 
+                "active" : status.status === "reprovado" ? 
+                "disapproved": ""} 
+              style={{width: 100 / listaDeStatus.length + "%" }}>
+              {status.timestamp}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};

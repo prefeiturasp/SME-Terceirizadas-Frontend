@@ -14,6 +14,7 @@ import UnifiedSolicitationPage from "../../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHistoricPage";
 import DashboardDREPage from "../../pages/DRE/DashboardDREPage";
 import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage"
+import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage"
 
 window.jQuery = $;
 
@@ -179,6 +180,14 @@ export class Sidebar extends Component {
                   component={KitLancheOrdersPage}
                 >
                   Kit Lanche
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/dre/kits-lanche/relatorio"
+                  component={KitLancheRelatorioPage}
+                >
+                  Relatório Kit Lanche
                 </NavLink>
                 <NavLink
                   activeClassName="active"
