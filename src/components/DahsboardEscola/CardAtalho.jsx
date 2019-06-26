@@ -30,6 +30,7 @@ const styleLink = {
 }
 const styleFooter = {
     backgroundColor: '#fff',
+    borderTop: 'none'
     
 }
 export default props => (

@@ -21,7 +21,8 @@ export default class DashboardEscola extends Component {
                                 cardType={"card-authorized"}
                                 solicitations={autorizadas}
                                 icon={"fa-check"}
-                            />
+                                href={'/status-solicitacoes-escola'}
+                                />
                         </div>
                         <div className="col-6">
                             <SolicitationStatusCard
@@ -29,7 +30,8 @@ export default class DashboardEscola extends Component {
                                 cardType={"card-pending"}
                                 solicitations={autorizadas}
                                 icon={"fa-exclamation-triangle"}
-                            />
+                                href={'/status-solicitacoes-escola'}
+                                />
                         </div>
                     </div>
                     <div className="row pt-3">
@@ -39,7 +41,8 @@ export default class DashboardEscola extends Component {
                                 cardType={"card-denied"}
                                 solicitations={autorizadas}
                                 icon={"fa-ban"}
-                            />
+                                href={'/status-solicitacoes-escola'}
+                                />
                         </div>
                         <div className="col-6">
                             <SolicitationStatusCard
@@ -47,6 +50,7 @@ export default class DashboardEscola extends Component {
                                 cardType={"card-cancelled"}
                                 solicitations={autorizadas}
                                 icon={"fa-times-circle"}
+                                href={'/status-solicitacoes-escola'}
                             />
                         </div>
                     </div>

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./custom.css";
 
 export const SolicitationStatusCard = props => {
-  const { cardTitle, cardType, solicitations, icon } = props;
+  const { cardTitle, cardType, solicitations, icon, href } = props;
   return (
     <div className={"card card-panel " + cardType}>
       <div className="card-title-status">
@@ -20,7 +20,7 @@ export const SolicitationStatusCard = props => {
         );
       })}
       {solicitations.length > 2 && (
-        <a href="#" className="see-more">
+        <a href={`${href}`} className="see-more">
           Ver Mais
         </a>
       )}

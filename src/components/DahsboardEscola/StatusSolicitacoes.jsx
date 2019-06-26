@@ -35,9 +35,8 @@ const solicitacoes = [
 export default class StatusSolicitacoes extends Component {
     render() {
         return (
-            <div className="card">
+            <div className="card mt-3">
                 <div className='card-body'>
-                    {/* <input className="form-control" type='text' placeholder='Pesquisa' /> */}
                     <InputSearch />
                     <div className="pb-3"></div>
                     <CardDashboard
@@ -45,6 +44,24 @@ export default class StatusSolicitacoes extends Component {
                         solicitacoes={solicitacoes}
                         tipo={'card-authorized'}
                         icone={'fa-check'}
+                    />
+                    <CardDashboard
+                        titulo={'Pendente Aprovação'}
+                        solicitacoes={solicitacoes}
+                        tipo={'card-pending'}
+                        icone={'fa-exclamation-triangle'}
+                    />
+                    <CardDashboard
+                        titulo={'Recusadas'}
+                        solicitacoes={solicitacoes}
+                        tipo={'card-denied'}
+                        icone={'fa-check'}
+                    />
+                    <CardDashboard
+                        titulo={'Canceladas'}
+                        solicitacoes={solicitacoes}
+                        tipo={'card-cancelled'}
+                        icone={'fa-times-circle'}
                     />
                 </div>
             </div>
