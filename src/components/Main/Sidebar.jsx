@@ -15,6 +15,7 @@ import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHist
 import DashboardDREPage from "../../pages/DRE/DashboardDREPage";
 import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage"
 import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage"
+import DashboardEscolaPage from "../../pages/ESCOLA/DashboardEscolaPage";
 
 window.jQuery = $;
 
@@ -31,7 +32,6 @@ export class Sidebar extends Component {
 
   handleToggle = event => {
     closeToggle();
-    // this.setState({isVisible : false})
   };
 
   render() {
@@ -102,6 +102,14 @@ export class Sidebar extends Component {
             >
               <div className="bg-white py-2 collapse-inner rounded">
                 <h6 className="collapse-header">Solicitações</h6>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/painel-escola"
+                  component={DashboardEscolaPage}
+                >
+                  Painel de Controle
+                </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"

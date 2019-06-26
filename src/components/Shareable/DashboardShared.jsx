@@ -5,7 +5,7 @@ import { Collapse } from "react-collapse";
 import "./custom.css";
 
 export const SolicitationStatusCard = props => {
-  const { cardTitle, cardType, solicitations, icon } = props;
+  const { cardTitle, cardType, solicitations, icon, href } = props;
   return (
     <div className={"card card-panel " + cardType}>
       <div className="card-title-status">
@@ -22,7 +22,7 @@ export const SolicitationStatusCard = props => {
         );
       })}
       {solicitations.length > 2 && (
-        <a href="#" className="see-more">
+        <a href={`${href}`} className="see-more">
           Ver Mais
         </a>
       )}
@@ -53,23 +53,17 @@ export const PendencyCard = props => {
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{priorityOrders} </span>Próximo ao prazo
-              de vencimento
-            </span>
+              <span className="value">{priorityOrders} </span>Próximo ao prazo de vencimento</span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{onLimitOrders} </span>Pedidos no prazo
-              limite
-            </span>
+              <span className="value">{onLimitOrders} </span>Pedidos no prazo limite</span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{regularOrders} </span>Pedidos no prazo
-              regular
-            </span>
+              <span className="value">{regularOrders} </span>Pedidos no prazo regular</span>
           </div>
         </div>
       </div>

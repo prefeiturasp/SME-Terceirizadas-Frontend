@@ -13,6 +13,8 @@ import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/KitLancheRelatorioPage";
+import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
+import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
 
 const routesConfig = [
   {
@@ -89,7 +91,17 @@ const routesConfig = [
     path: "/settings",
     component: EmailConfiguration,
     exact: false
-  }
+  },
+  {
+    path: "/painel-escola",
+    component: DashboardEscolaPage,
+    exact: false
+  },
+  {
+    path: "/status-solicitacoes-escola",
+    component: StatusSolicitacoesPage,
+    exact: false
+  },
 ];
 
 export default routesConfig;
