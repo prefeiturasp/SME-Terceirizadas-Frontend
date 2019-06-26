@@ -8,8 +8,11 @@ import EmailConfiguration from "../components/screens/email/EmailConfiguration";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
-import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage"
+import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
+import DashboardDREPage from "../pages/DashboardDREPage";
+import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
+import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
 
 const routesConfig = [
   {
@@ -28,9 +31,9 @@ const routesConfig = [
     exact: false
   },
   {
-    path : "/add-food",
-    component : FoodInclusionPage,
-    exact : false
+    path: "/add-food",
+    component: FoodInclusionPage,
+    exact: false
   },
   {
     path: "/permission-root/permissions/:type/:subtype",
@@ -68,10 +71,25 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/dashboard-dre",
+    component: DashboardDREPage,
+    exact: false
+  },
+  {
     path: "/settings",
     component: EmailConfiguration,
     exact: false
-  }
+  },
+  {
+    path: "/painel-escola",
+    component: DashboardEscolaPage,
+    exact: false
+  },
+  {
+    path: "/status-solicitacoes-escola",
+    component: StatusSolicitacoesPage,
+    exact: false
+  },
 ];
 
 export default routesConfig;
