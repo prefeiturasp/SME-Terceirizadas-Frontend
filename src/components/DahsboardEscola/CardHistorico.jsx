@@ -47,13 +47,13 @@ const CardHistorico = props => {
                                 <thead>
                                     <td></td>
                                     {thead.map((value) => {
-                                        return <td>{value}</td>
+                                        return <td scope="row">{value}</td>
                                     })}
                                 </thead>
                                 <tbody>
                                     {trs.map((value, key) => {
                                         return <tr>
-                                            <th>
+                                            <th scope="row">
                                                 <Field
                                                     component={'input'}
                                                     type='checkbox'
@@ -61,9 +61,9 @@ const CardHistorico = props => {
                                                     value={value._id}
                                                 />
                                             </th>
-                                            <th>{value._id}</th>
-                                            <th>{value.escola}</th>
-                                            <th>{value.quantidade}</th>
+                                            <th scope="row">{value._id}</th>
+                                            <th scope="row">{value.escola}</th>
+                                            <th scope="row">{value.quantidade}</th>
                                         </tr>
                                     })}
                                 </tbody>

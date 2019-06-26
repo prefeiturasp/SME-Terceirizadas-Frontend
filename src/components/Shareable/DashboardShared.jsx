@@ -1,4 +1,5 @@
 import React from "react";
+import {NavLink} from 'react-router-dom'
 import PropTypes from "prop-types";
 import "./custom.css";
 
@@ -20,9 +21,9 @@ export const SolicitationStatusCard = props => {
         );
       })}
       {solicitations.length > 2 && (
-        <a href={`${href}`} className="see-more">
+        <NavLink to={`${href}`} className="see-more">
           Ver Mais
-        </a>
+        </NavLink>
       )}
     </div>
   );

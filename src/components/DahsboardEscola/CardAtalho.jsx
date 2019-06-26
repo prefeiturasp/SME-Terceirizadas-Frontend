@@ -1,4 +1,6 @@
 import React from 'react'
+import {NavLink} from 'react-router-dom'
+
 const styleHeader = {
     padding: '0.75rem 1.25rem',
     marginBottom: 0,
@@ -41,7 +43,7 @@ export default props => (
                 <p class="card-text" style={styleFont}>{props.texto}</p>
             </div>
             <div align="center" className="card-footer" style={styleFooter}>
-                <a href={props.href} style={styleLink} class="card-link">{props.textoLink}</a>
+                <NavLink to={props.href} style={styleLink} class="card-link">{props.textoLink}</NavLink>
             </div>
         </div>
     </div>
