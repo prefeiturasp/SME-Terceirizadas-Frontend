@@ -194,7 +194,8 @@ export const StatusFlow = props => {
             <li 
               className={status.status === "aprovado" ? 
                 "active" : status.status === "reprovado" ? 
-                "disapproved": ""} 
+                "disapproved": status.status === "cancelado" ?
+                "cancelled" : ""} 
               style={{width: 100 / listaDeStatus.length + "%" }}>
               {status.timestamp}
             </li>

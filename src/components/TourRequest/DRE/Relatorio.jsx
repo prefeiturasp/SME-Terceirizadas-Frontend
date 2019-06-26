@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
+import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import { formValueSelector, reduxForm } from "redux-form";
 import "../../Shareable/custom.css";
 import { StatusFlow } from "../../Shareable/DashboardShared";
-import { getUnifiedSolicitations } from "../../../services/unifiedSolicitation.service";
+import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess, toastError } from "../../Shareable/dialogs";
 
 class Relatorio extends Component {
@@ -11,6 +12,7 @@ class Relatorio extends Component {
     super(props);
     this.state = {
       unifiedSolicitationList: [],
+      showModal: false,
       solicitacao: {
         id: "12083",
         lote: "7A IP I",
@@ -27,7 +29,8 @@ class Relatorio extends Component {
           noturno: "300"
         },
         kits: ["1", "3"],
-        kits_total: "150",
+        tempo_passeio: "5 a 7 horas (2 kits)",
+        estudantes_total: 75,
         obs:
           "A observação é uma das etapas do método científico. Consiste em perceber," +
           "ver e não interpretar. A observação é relatada como foi visualizada, sem que," +
@@ -35,31 +38,45 @@ class Relatorio extends Component {
       },
       listaDeStatus: [
         {
-          nome: 'Solicitação Realizada',
-          status: 'aprovado',
-          timestamp: '25/04/2019 às 9:20'
+          nome: "Solicitação Realizada",
+          status: "aprovado",
+          timestamp: "25/04/2019 às 9:20"
         },
         {
-          nome: 'Aprovado da DRE',
-          status: 'aprovado',
-          timestamp: '25/04/2019 às 9:20'
+          nome: "Reprovado da DRE",
+          status: "reprovado",
+          timestamp: "25/04/2019 às 9:20"
         },
         {
-          nome: 'Aprovado pela CODAE',
-          status: null,
-          timestamp: null
+          nome: "Cancelado pela CODAE",
+          status: "cancelado",
+          timestamp: "25/04/2019 às 9:20"
         },
         {
-          nome: 'Visualizado pela Terceirizada',
+          nome: "Visualizado pela Terceirizada",
           status: null,
           timestamp: null
         }
       ]
     };
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
     this.preencherFormulario(this.state.solicitacao);
+  }
+
+  showModal() {
+    this.setState({ showModal: true });
+  }
+
+  closeModal(e) {
+    this.setState({ showModal: false });
+    toastSuccess('Kit Lanche recusado com sucesso!');
+  }
+
+  handleSubmit() {
+    toastSuccess('Kit Lanche validado com sucesso!');
   }
 
   preencherFormulario(solicitacao) {
@@ -80,12 +97,17 @@ class Relatorio extends Component {
       local,
       escola,
       kits,
-      kits_total,
+      estudantes_total,
+      tempo_passeio,
       obs
     } = this.state.solicitacao;
-    const { listaDeStatus } = this.state;
+    const { listaDeStatus, showModal } = this.state;
     return (
       <div>
+        <ModalRecusarSolicitacao
+          closeModal={this.closeModal}
+          showModal={showModal}
+        />
         {id && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">Kit Lanche Pedido nº {id}</span>
@@ -131,13 +153,36 @@ class Relatorio extends Component {
                 </div>
                 <hr />
                 <div className="row">
-                  <div className="col-7 report-label-value">
-                    <p>Motivo</p>
-                    <p className="value">{razao}</p>
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos matriculados total</span>
+                    <span>{escola.alunos_total}</span>
                   </div>
-                  <div className="col-5 report-label-value">
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos matutino</span>
+                    <span>{escola.matutino}</span>
+                  </div>
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos vespertino</span>
+                    <span>{escola.vespertino}</span>
+                  </div>
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos nortuno</span>
+                    <span>{escola.noturno}</span>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 report-label-value">
+                    <p className="value">Descrição da Solicitação</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-4 report-label-value">
                     <p>Data do evento</p>
                     <p className="value">{data}</p>
+                  </div>
+                  <div className="col-8 report-label-value">
+                    <p>Motivo</p>
+                    <p className="value">{razao}</p>
                   </div>
                 </div>
                 <div className="row">
@@ -147,13 +192,29 @@ class Relatorio extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-10 report-label-value">
-                    <p>Total de Unidades Escolares Beneficiadas</p>
-                    <p className="value">{escola.length} unidades escolares</p>
+                  <div className="col-4 report-label-value">
+                    <p>Nº de alunos participantes</p>
+                    <p className="value">{estudantes_total} alunos</p>
                   </div>
-                  <div className="col-2 float-right report-label-value">
-                    <p>Total de Kits</p>
-                    <p className="value">{kits_total} kits</p>
+                  <div className="col-8 report-label-value">
+                    <p>Tempo previsto do passeio</p>
+                    <p className="value">{tempo_passeio}</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 float-right report-label-value">
+                    <p>Opção desejada</p>
+                    {kits.map((kit, key) => {
+                      return <p className="value">Modelo de kit nº {kit}</p>;
+                    })}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 float-right report-label-value">
+                    <p>Nº total de kits</p>
+                    <p className="value">
+                      {kits.length * estudantes_total} kits
+                    </p>
                   </div>
                 </div>
                 <div className="row">
@@ -164,6 +225,22 @@ class Relatorio extends Component {
                       dangerouslySetInnerHTML={{ __html: obs }}
                     />
                   </div>
+                </div>
+                <div className="form-group row float-right mt-4">
+                  <BaseButton
+                    label={"Recusar Solicitação"}
+                    className="ml-3"
+                    onClick={() => this.showModal()}
+                    type={ButtonType.BUTTON}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label="Aprovar Solicitação"
+                    type={ButtonType.SUBMIT}
+                    onClick={() => this.handleSubmit()}
+                    style={ButtonStyle.Primary}
+                    className="ml-3"
+                  />
                 </div>
               </div>
             </div>
