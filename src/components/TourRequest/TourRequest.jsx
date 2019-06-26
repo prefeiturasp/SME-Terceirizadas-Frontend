@@ -14,6 +14,7 @@ import { convertToFormat, adapterEnumKits, convertStringToDate } from './Convert
 import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
+import CardHeader from "../Shareable/CardHeader";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -40,7 +41,7 @@ export class TourRequest extends Component {
       showModal: false,
       segundoDiaUtil: '',
       modalConfirmation: false,
-      modalMessage : ''
+      modalMessage: ''
     };
 
 
@@ -167,8 +168,8 @@ export class TourRequest extends Component {
           // toastError(resp.error)
           this.setState({
             ...this.state,
-            modalMessage : resp.error,
-            modalConfirmation : true
+            modalMessage: resp.error,
+            modalConfirmation: true
           })
         }
       }).catch(error => {
@@ -197,8 +198,8 @@ export class TourRequest extends Component {
     this.setState({ ...this.state, showModal: false })
   }
 
-  handleConfirmation(){
-    this.setState({...this.state,modalConfirmation: false})
+  handleConfirmation() {
+    this.setState({ ...this.state, modalConfirmation: false })
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -218,7 +219,7 @@ export class TourRequest extends Component {
 
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
-    const { enumKits, tourRequestList, showModal,modalMessage, modalConfirmation, segundoDiaUtil } = this.state;
+    const { enumKits, tourRequestList, showModal, modalMessage, modalConfirmation, segundoDiaUtil } = this.state;
     return (
 
       <div className="d-flex flex-column p-4 mt-5">
@@ -244,167 +245,157 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <form>
-          <div>
-            <label className="header-form-label mb-5">Nº de matriculados</label>
-          </div>
-          <Grid
-            cols="1 1 1 1"
-            className="border rounded p-2"
-            style={{
-              background: "#E8E8E8"
-            }}
-          >
-            <span className="bold d-flex justify-content-center">
-              {this.state.nro_matriculados}
-            </span>
-          </Grid>
-          <TourRequestItemList
-            tourRequestList={tourRequestList}
-            OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
-            resetForm={event => this.resetForm(event)}
-            refreshComponent={this.refresh.bind(this)}
-            OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-          />
-          <div className="form-row mt-3 ml-1">
-            <h3 className="bold" style={{ color: "#353535" }}>
-              {this.state.title}
-            </h3>
-          </div>
-          <div className="border rounded p-3">
-            <div className="form-group row">
-              <Field
-                component={LabelAndDate}
-                cols="4 4 4 4"
-                hasIcon={true}
-                label="Data do evento"
-                name="evento_data"
-                onBlur={event => this.validaDiasUteis(event)}
-                minDate={segundoDiaUtil}
-              />
-              <Field
-                component={LabelAndInput}
-                cols="8 8 8 8"
-                label="Local do passeio"
-                name="local_passeio"
-              />
-            </div>
-            <div className="form-group row">
-              <Field
-                component={LabelAndInput}
-                cols="3 3 3 3"
-                name="nro_alunos"
-                type="number"
-                label="Número de alunos participantes"
-                validate={[required, maxValue(this.state.nro_matriculados)]}
-              />
-            </div>
-            <SelecionaTempoPasseio
-              className="mt-3"
-              onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
-              }
+        <div className="form-row mt-3 ml-1">
+          <h3 className="bold" style={{ color: "#353535" }}>
+            {this.state.title}
+          </h3>
+        </div>
+        <CardHeader numeroAlunos={this.state.nro_matriculados} />
+        <div className="card mt-3 p-5">
+          <form>
+            <TourRequestItemList
+              tourRequestList={tourRequestList}
+              OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
+              resetForm={event => this.resetForm(event)}
+              refreshComponent={this.refresh.bind(this)}
+              OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
             />
-            {enumKits && <SelecionaKitLancheBox
-              className="mt-3"
-              choicesNumberLimit={this.state.qtd_kit_lanche}
-              kits={enumKits}
-            />}
-            <div className="form-group">
-              <label className="bold">{"Número total kits:"}</label>
-              <br />
-              <Grid
-                cols="1 1 1 1"
-                className="border rounded p-2"
-                style={{
-                  background: "#E8E8E8"
-                }}
-              >
-                <span className="bold d-flex justify-content-center">
-                  {this.props.qtd_total || 0}
-                </span>
-              </Grid>
-            </div>
-            <div className="form-group">
-              <Field
-                component={LabelAndTextArea}
-                label="Observações"
-                name="obs"
-                placeholder="Campo opcional"
+              <div className="form-group row">
+                <Field
+                  component={LabelAndDate}
+                  cols="4 4 4 4"
+                  hasIcon={true}
+                  label="Data do evento"
+                  name="evento_data"
+                  onBlur={event => this.validaDiasUteis(event)}
+                  minDate={segundoDiaUtil}
+                />
+                <Field
+                  component={LabelAndInput}
+                  cols="8 8 8 8"
+                  label="Local do passeio"
+                  name="local_passeio"
+                />
+              </div>
+              <div className="form-group row">
+                <Field
+                  component={LabelAndInput}
+                  cols="3 3 3 3"
+                  name="nro_alunos"
+                  type="number"
+                  label="Número de alunos participantes"
+                  validate={[required, maxValue(this.state.nro_matriculados)]}
+                />
+              </div>
+              <hr></hr>
+              <SelecionaTempoPasseio
+                className="mt-3"
+                onChange={(event, newValue, previousValue, name) =>
+                  this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+                }
               />
-            </div>
-          </div>
-          <div className="form-group row float-right mt-3">
-            <Button
-              label="Cancelar"
-              onClick={e => this.resetForm(e)}
-              disabled={pristine || submitting}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <Button
-              label={this.state.salvarAtualizarLbl}
-              disabled={pristine || submitting}
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values,
-                  status: "SALVO",
-                  salvo_em: new Date(),
-                  id: this.state.id
-                })
-              )}
-              className="ml-3"
-              type={ButtonType.SUBMIT}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <Button
-              label="Enviar Solicitação"
-              disabled={pristine || submitting}
-              type={ButtonType.SUBMIT}
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values,
-                  Acao: "Enviar solicitação",
-                  id: this.state.id
-                })
-              )}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
-          </div>
+              <hr className="mt-4 mb-4 w-100"></hr>
+              {enumKits && <SelecionaKitLancheBox
+                className="mt-3"
+                choicesNumberLimit={this.state.qtd_kit_lanche}
+                kits={enumKits}
+              />}
+              <div className="form-group pt-3">
+                <label className="bold">{"Número total kits:"}</label>
+                <br />
+                <Grid
+                  cols="1 1 1 1"
+                  className="border rounded p-2"
+                  style={{
+                    background: "#E8E8E8"
+                  }}
+                >
+                  <span className="bold d-flex justify-content-center">
+                    {this.props.qtd_total || 0}
+                  </span>
+                </Grid>
+              </div>
+              <hr className="mt-3 mb-3 w-100"></hr>
+              <div className="form-group">
+                <Field
+                  component={LabelAndTextArea}
+                  label="Observações"
+                  name="obs"
+                  placeholder="Campo opcional"
+                />
+              </div>
+              <div align="right" className="form-group mt-4 mr-2">
+                <Button
+                  label="Cancelar"
+                  onClick={e => this.resetForm(e)}
+                  disabled={pristine || submitting}
+                  style={ButtonStyle.OutlinePrimary}
+                />
+                <Button
+                  label={this.state.salvarAtualizarLbl}
+                  disabled={pristine || submitting}
+                  onClick={handleSubmit(values =>
+                    this.onSubmit({
+                      ...values,
+                      status: "SALVO",
+                      salvo_em: new Date(),
+                      id: this.state.id
+                    })
+                  )}
+                  className="ml-3"
+                  type={ButtonType.SUBMIT}
+                  style={ButtonStyle.OutlinePrimary}
+                />
+                <Button
+                  label="Enviar Solicitação"
+                  disabled={pristine || submitting}
+                  type={ButtonType.SUBMIT}
+                  onClick={handleSubmit(values =>
+                    this.onSubmit({
+                      ...values,
+                      Acao: "Enviar solicitação",
+                      id: this.state.id
+                    })
+                  )}
+                  style={ButtonStyle.Primary}
+                  className="ml-3"
+                />
+              </div>
 
-          <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
-          <Modal.Header closeButton>
-            <Modal.Title>Atenção</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <strong>{modalMessage}</strong>
-          </Modal.Body>
-          <Modal.Footer>
-            <BaseButton
-              label="CONFIRMAR MESMO ASSIM"
-              type={ButtonType.BUTTON}
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values,
-                  status: "Enviar solicitação",
-                  salvo_em: new Date(),
-                  id: this.state.id, 
-                  confirmar : true
-                })
-              )}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
-            <BaseButton
-              label="CANCELAR"
-              type={ButtonType.BUTTON}
-              onClick={this.handleConfirmation}
-              style={ButtonStyle.Warning}
-              className="ml-3"
-            />
-          </Modal.Footer>
-        </Modal>
-        </form>
+            <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
+              <Modal.Header closeButton>
+                <Modal.Title>Atenção</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <strong>{modalMessage}</strong>
+              </Modal.Body>
+              <Modal.Footer>
+                <BaseButton
+                  label="CONFIRMAR MESMO ASSIM"
+                  type={ButtonType.BUTTON}
+                  onClick={handleSubmit(values =>
+                    this.onSubmit({
+                      ...values,
+                      status: "Enviar solicitação",
+                      salvo_em: new Date(),
+                      id: this.state.id,
+                      confirmar: true
+                    })
+                  )}
+                  style={ButtonStyle.Primary}
+                  className="ml-3"
+                />
+                <BaseButton
+                  label="CANCELAR"
+                  type={ButtonType.BUTTON}
+                  onClick={this.handleConfirmation}
+                  style={ButtonStyle.Warning}
+                  className="ml-3"
+                />
+              </Modal.Footer>
+            </Modal>
+          </form>
+        </div>
       </div>
     );
   }
