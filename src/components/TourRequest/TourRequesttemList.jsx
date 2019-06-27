@@ -13,6 +13,15 @@ export class TourRequestItemList extends Component {
     this.onCheckChange = this.onCheckChange.bind(this);
   }
 
+  styleTitle = {
+    color: '#353535',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: '18px',
+    lineLeight: '21px'
+  }
+
   static propTypes = {
     tourRequestList: PropTypes.arrayOf(
       PropTypes.shape({
@@ -58,12 +67,12 @@ export class TourRequestItemList extends Component {
       listIds.push(obj.id)
     });
 
-    if(listIds.length > 0){
+    if (listIds.length > 0) {
       solicitarKitsLanche(listIds).then(resp => {
         this.props.refreshComponent()
-        if(resp.success){
+        if (resp.success) {
           toastSuccess(resp.success)
-        }else{
+        } else {
           toastError(resp.error)
         }
       })
@@ -85,9 +94,9 @@ export class TourRequestItemList extends Component {
       } = tourRequest;
       let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="border rounded mt-3" key={id}>
+        <div className="card border rounded mt-3 p-2" key={id}>
           <div className="mt-2">
-            <label className="bold ml-3">
+            <label style={this.styleTitle} className="bold ml-3">
               Solicitação de Kit Lanche/Passeio{" "}
               {`${tempo_passeio.replace("_", " a ")} # ${id}`}
             </label>
