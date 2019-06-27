@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import {
@@ -17,7 +17,14 @@ class DashboardDRE extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
+    const {
+      enrolled,
+      handleSubmit,
+      solicitations,
+      vision_by,
+      trs,
+      theadList
+    } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -56,15 +63,16 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold title-color">
-                Pedido Genérico
+                Faça uma Solicitação Unificada
               </div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <BaseButton
-                label="Solicitação Unificada"
-                onClick={handleSubmit(values => this.handleSubmit(values))}
-                type={ButtonType.BUTTON}
-                style={ButtonStyle.OutlinePrimary}
-              />
+              <Link to="/unified-solicitation">
+                <BaseButton
+                  label="Solicitação Unificada"
+                  type={ButtonType.BUTTON}
+                  style={ButtonStyle.OutlinePrimary}
+                />
+              </Link>
             </div>
           </div>
           <div className="card mt-3">
@@ -92,6 +100,7 @@ class DashboardDRE extends Component {
                     cardType={"card-authorized"}
                     solicitations={solicitations}
                     icon={"fa-check"}
+                    href={"/dre/solicitacoes"}
                   />
                 </div>
                 <div className="col-6">
@@ -100,6 +109,7 @@ class DashboardDRE extends Component {
                     cardType={"card-pending"}
                     solicitations={solicitations}
                     icon={"fa-exclamation-triangle"}
+                    href={"/dre/solicitacoes"}
                   />
                 </div>
               </div>
@@ -110,6 +120,7 @@ class DashboardDRE extends Component {
                     cardType={"card-denied"}
                     solicitations={solicitations}
                     icon={"fa-ban"}
+                    href={"/dre/solicitacoes"}
                   />
                 </div>
                 <div className="col-6">
@@ -118,6 +129,7 @@ class DashboardDRE extends Component {
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
                     icon={"fa-times-circle"}
+                    href={"/dre/solicitacoes"}
                   />
                 </div>
               </div>
@@ -155,7 +167,7 @@ class DashboardDRE extends Component {
                   />
                 </span>
               </div>
-              <div className="pt-3"></div>
+              <div className="pt-3" />
               <div className="row">
                 <div className="col-6">
                   <PendencyCard
@@ -187,13 +199,15 @@ class DashboardDRE extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Kit Lanche"}
-                    totalOfOrders={120}
-                    priorityOrders={20}
-                    onLimitOrders={40}
-                    regularOrders={60}
-                  />
+                  <Link to="/dre/kits-lanche">
+                    <PendencyCard
+                      cardTitle={"Kit Lanche"}
+                      totalOfOrders={120}
+                      priorityOrders={20}
+                      onLimitOrders={40}
+                      regularOrders={60}
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="row pt-3">
