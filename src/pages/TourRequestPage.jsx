@@ -8,7 +8,7 @@ export default props => (
     <Header />
     <Sidebar />
     <div id="content-wrapper" className="pt-5">
-    <div className="d-flex flex-column p-4 mt-5">
+    <div className="d-flex flex-column p-4 mt-3">
       <TourRequest />
     </div>
     </div>

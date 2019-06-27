@@ -94,7 +94,7 @@ export class TourRequestItemList extends Component {
       } = tourRequest;
       let backgroundColor = status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="card border rounded mt-3 p-2" key={id}>
+        <div className="card border rounded mt-3 p-3" key={id}>
           <div className="mt-2">
             <label style={this.styleTitle} className="bold ml-3">
               Solicitação de Kit Lanche/Passeio{" "}

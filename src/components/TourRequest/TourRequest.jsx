@@ -222,7 +222,7 @@ export class TourRequest extends Component {
     const { enumKits, tourRequestList, showModal, modalMessage, modalConfirmation, segundoDiaUtil } = this.state;
     return (
 
-      <div className="d-flex flex-column p-4 mt-5">
+      <div className="d-flex flex-column p-4">
 
       <h3 className="page-title">Solicitação de Kit Lanche/Passeio</h3>
 
@@ -261,11 +261,9 @@ export class TourRequest extends Component {
           <div className="mt-5"></div>
           <br></br>
 
-          <div className="form-row mt-3 ml-1">
-            <h3 className="bold" style={{ color: "#353535" }}>
-              {this.state.title}
-            </h3>
-          </div>
+          <h3 className="page-title">
+            {this.state.title}
+          </h3>
 
           <div className="card mt-3 p-5">
             <div className="form-group row">
@@ -288,7 +286,7 @@ export class TourRequest extends Component {
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
-                cols="3 3 3 3"
+                cols="4 4 4 4 "
                 name="nro_alunos"
                 type="number"
                 label="Número de alunos participantes"
