@@ -1,7 +1,7 @@
 import React from "react";
-import DashboardDREContainer from "../components/DashboardDRE/DashboardDREContainer";
-import { Header } from "../components/Main/Header";
-import { Sidebar } from "../components/Main/Sidebar";
+import DashboardDREContainer from "../../components/DashboardDRE/DashboardDREContainer";
+import { Header } from "../../components/Main/Header";
+import { Sidebar } from "../../components/Main/Sidebar";
 
 export default props => (
   <div id="wrapper">
