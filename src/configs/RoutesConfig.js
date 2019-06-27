@@ -11,6 +11,7 @@ import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
+import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
 import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/KitLancheRelatorioPage";
 import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
@@ -75,6 +76,11 @@ const routesConfig = [
   {
     path: "/dashboard-dre",
     component: DashboardDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/solicitacoes",
+    component: StatusSolicitacoesDREPage,
     exact: false
   },
   {

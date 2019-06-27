@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import "./custom.css";
@@ -22,9 +23,9 @@ export const SolicitationStatusCard = props => {
         );
       })}
       {solicitations.length > 2 && (
-        <a href={`${href}`} className="see-more">
+        <NavLink to={`${href}`} className="see-more">
           Ver Mais
-        </a>
+        </NavLink>
       )}
     </div>
   );
@@ -53,17 +54,23 @@ export const PendencyCard = props => {
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{priorityOrders} </span>Próximo ao prazo de vencimento</span>
+              <span className="value">{priorityOrders} </span>Próximo ao prazo
+              de vencimento
+            </span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{onLimitOrders} </span>Pedidos no prazo limite</span>
+              <span className="value">{onLimitOrders} </span>Pedidos no prazo
+              limite
+            </span>
           </div>
           <div className="order-lines">
             <div className="label" />
             <span className="text">
-              <span className="value">{regularOrders} </span>Pedidos no prazo regular</span>
+              <span className="value">{regularOrders} </span>Pedidos no prazo
+              regular
+            </span>
           </div>
         </div>
       </div>
@@ -128,9 +135,10 @@ export class CardPendenciaAprovacao extends Component {
             <Stand
               onClick={() => this.setState({ collapsed: !collapsed })}
               color={"#C8C8C8"}
-              width={30}
+              width={18}
               padding={0}
-              lineSpacing={5}
+              lineHeight={3}
+              lineSpacing={3}
               className="float-right"
               active={!collapsed}
             />
@@ -138,12 +146,15 @@ export class CardPendenciaAprovacao extends Component {
         </div>
         <Collapse isOpened={!collapsed}>
           <div className="row ml-1 mr-1">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Pesquisar"
-              onChange={this.filtrarPedidos}
-            />
+            <div style={{display: 'inline-flex'}} className="w-100 col-12">
+              <input
+                type="text"
+                className="form-control "
+                placeholder="Pesquisar"
+                onChange={this.filtrarPedidos}
+              />
+              <i className="fas fa-search" />
+            </div>
             <table className="orders-table mt-4">
               <thead>
                 <tr>
@@ -185,12 +196,18 @@ export const StatusFlow = props => {
       <ul className="progressbar">
         {listaDeStatus.map((status, key) => {
           return (
-            <li 
-              className={status.status === "aprovado" ? 
-                "active" : status.status === "reprovado" ? 
-                "disapproved": status.status === "cancelado" ?
-                "cancelled" : ""} 
-              style={{width: 100 / listaDeStatus.length + "%" }}>
+            <li
+              className={
+                status.status === "aprovado"
+                  ? "active"
+                  : status.status === "reprovado"
+                  ? "disapproved"
+                  : status.status === "cancelado"
+                  ? "cancelled"
+                  : ""
+              }
+              style={{ width: 100 / listaDeStatus.length + "%" }}
+            >
               {status.timestamp}
             </li>
           );

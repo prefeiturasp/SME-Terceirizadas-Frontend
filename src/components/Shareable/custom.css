@@ -4,6 +4,12 @@ label {
   margin-bottom: 0 !important;
 }
 
+.BurgerBox {
+  width: 18px !important;
+  line-height: 3px;
+
+}
+
 .subtitle {
   font-style: normal;
   font-weight: bold;
@@ -501,7 +507,7 @@ input.input-search {
   border-right: none;
   border-bottom: 0.5px solid #a4a4a4;
   color: #a4a4a4;
-  text-align: right;
+  text-align: right !important;
   font-style: italic;
 }
 
@@ -795,12 +801,12 @@ div.caption-choices span:nth-child(4) i {
   padding: 10px 0;
 }
 
-thead,
-tbody {
+.orders-table thead,
+.orders-table tbody {
   display: block;
 }
 
-tbody {
+.orders-table tbody {
   height: 200px;
   overflow-y: scroll;
   overflow-x: hidden;
