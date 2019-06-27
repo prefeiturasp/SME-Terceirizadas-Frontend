@@ -18,8 +18,8 @@ export const field = ({ input, meta, options }) => {
     };
     const checked = inputValue.includes(value);
     const style = {
-      width: "2em",
-      height: "2em"
+      width: "1.4em",
+      height: "1.4em"
     };
     return (
       <div className="form-check  form-check-inline" key={index}>

@@ -20,7 +20,7 @@ class SelecionaTempoPasseio extends Component {
     ];
     return (
       <div className={this.props.className}>
-        <h5 className="bold">Tempo previsto do passeio</h5>
+        <h6 className="bold">Tempo previsto do passeio</h6>
         <RadioboxGroup
           name="tempo_passeio"
           label="Tempo previsto do passeio"
