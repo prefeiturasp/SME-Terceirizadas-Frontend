@@ -8,7 +8,7 @@ import { DayChangeItemList } from "./DayChangeItemList";
 import { carregarInversoes, salvarInversao, deletaInversao, solicitarInversao } from '../../services/dayChange.service'
 import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
 import CardHeader from "../Shareable/CardHeader";
-import './style.css'
+import './custom.css'
 
 export class DayChangeEditor extends Component {
   constructor(props) {
