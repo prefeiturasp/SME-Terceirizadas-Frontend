@@ -129,7 +129,7 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/tour-request"
+                  to="/kit-lanche"
                   component={TourRequestPage}
                 >
                   Kit Lanche
@@ -137,10 +137,10 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/day-change"
+                  to="/inverter-dia-cardapio"
                   component={DayChangePage}
                 >
-                  Alterar dia Cardápio
+                  Inverter dia Cardápio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
