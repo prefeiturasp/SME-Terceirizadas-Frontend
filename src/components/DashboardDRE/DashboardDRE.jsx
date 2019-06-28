@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Stand } from "react-burgers";
+import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
@@ -13,16 +15,14 @@ import { LabelAndCombo } from "../Shareable/labelAndInput";
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      collapsed: true
+    };
   }
 
   render() {
-    const {
-      enrolled,
-      handleSubmit,
-      solicitations,
-      vision_by
-    } = this.props;
+    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
+    const { collapsed } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -37,24 +37,36 @@ class DashboardDRE extends Component {
               <span className="blockquote-sme pl-2 text-color-sme-silver">
                 Informação automática disponibilizada no Cadastro da Unidade
                 Escolar
+                <Stand
+                  onClick={() => this.setState({ collapsed: !collapsed })}
+                  color={"#C8C8C8"}
+                  width={18}
+                  padding={0}
+                  lineHeight={3}
+                  lineSpacing={3}
+                  className="float-right"
+                  active={!collapsed}
+                />
               </span>
-              <p className="pt-3 blockquote-sme">Lotes pertencentes à DRE</p>
-              <div>
-                <table className="table-lote">
-                  <tr>
-                    <th>Lote</th>
-                    <th>Tipo de Gestão</th>
-                  </tr>
-                  <tr>
-                    <td>7A IP I IPIRANGA</td>
-                    <td>TERC TOTAL</td>
-                  </tr>
-                  <tr>
-                    <td>7A IP II IPIRANGA</td>
-                    <td>TERC TOTAL</td>
-                  </tr>
-                </table>
-              </div>
+              <Collapse isOpened={!collapsed}>
+                <p className="pt-3 blockquote-sme">Lotes pertencentes à DRE</p>
+                <div>
+                  <table className="table-lote">
+                    <tr>
+                      <th>Lote</th>
+                      <th>Tipo de Gestão</th>
+                    </tr>
+                    <tr>
+                      <td>7A IP I IPIRANGA</td>
+                      <td>TERC TOTAL</td>
+                    </tr>
+                    <tr>
+                      <td>7A IP II IPIRANGA</td>
+                      <td>TERC TOTAL</td>
+                    </tr>
+                  </table>
+                </div>
+              </Collapse>
             </div>
           </div>
           <div className="card mt-3">
