@@ -104,7 +104,29 @@ class OrdersDashboardContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidos: pedidos
+      pedidos: pedidos,
+      vision_by: [
+        {
+          label: "Visão por dia",
+          value: ""
+        },
+        {
+          label: "Dia",
+          value: "day"
+        },
+        {
+          label: "Semana",
+          value: "week"
+        },
+        {
+          label: "Mês",
+          value: "month"
+        },
+        {
+          label: "Lote",
+          value: "lote"
+        }
+      ]
     };
   }
   render() {

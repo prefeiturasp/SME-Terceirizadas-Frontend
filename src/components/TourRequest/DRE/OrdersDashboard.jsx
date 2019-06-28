@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../../Shareable/DashboardShared";
+import { LabelAndCombo } from "../../Shareable/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico";
 
 class OrdersDashboard extends Component {
@@ -48,9 +49,26 @@ class OrdersDashboard extends Component {
 
   render() {
     const { trs, theadList } = this.state;
-    const { pedidos } = this.props;
+    const { pedidos, vision_by } = this.props;
     return (
       <div>
+        <div className="row">
+          <div className="col-7">
+            <div className="page-title">Kits Lanche - Pendente Aprovação</div>
+          </div>
+          <div className="col-5">
+            <div className="row">
+              <div className="col-6">
+                <LabelAndCombo
+                  onChange={value => this.handleField("reason", value)}
+                  placeholder={"Visão por dia"}
+                  options={vision_by}
+                />
+              </div>
+              <div className="text-dark col-6">Visão dia 01/07/2019</div>
+            </div>
+          </div>
+        </div>
         <div className="row pt-3">
           <div className="col-12">
             <CardPendenciaAprovacao

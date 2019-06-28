@@ -5,7 +5,7 @@ import { formValueSelector, reduxForm } from "redux-form";
 import "../../Shareable/custom.css";
 import { StatusFlow } from "../../Shareable/DashboardShared";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
-import { toastSuccess, toastError } from "../../Shareable/dialogs";
+import { toastSuccess } from "../../Shareable/dialogs";
 
 class Relatorio extends Component {
   constructor(props) {
