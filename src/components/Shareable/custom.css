@@ -4,10 +4,20 @@ label {
   margin-bottom: 0 !important;
 }
 
+input::placeholder {
+  text-align: left;
+}
+
+.breadcrumb-title {
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #C8C8C8;
+}
+
 .BurgerBox {
   width: 18px !important;
   line-height: 3px;
-
 }
 
 .subtitle {
@@ -376,6 +386,14 @@ textarea {
   position: relative;
 }
 
+.fa-search.inside-input {
+  z-index: 1;
+  padding-top: 12px;
+  color: #2881BB;
+  font-size: 20px;
+  position: relative;
+}
+
 .card-body {
   padding: 2rem !important;
 }
@@ -512,8 +530,18 @@ input.input-search {
 }
 
 input.input-search::placeholder {
+  text-align: right;
   color: #a4a4a4;
   padding-right: 5px;
+}
+
+.input-search-full-width {
+  display: inline-flex;
+  width: 100%;
+}
+
+.input-search-full-width input {
+  margin-right: -30px;
 }
 
 .current-date {
@@ -790,7 +818,16 @@ div.caption-choices span:nth-child(4) i {
 
 .orders-table tr th:nth-child(3),
 .orders-table tr td:nth-child(3) {
-  width: 80%;
+  width: 59%;
+}
+
+.orders-table tr td:nth-child(4) {
+  padding-left: 180px;
+  padding-right: 60px;
+}
+
+.orders-table tr th:nth-child(4){
+  padding-left: 107px;
 }
 
 .orders-table td {

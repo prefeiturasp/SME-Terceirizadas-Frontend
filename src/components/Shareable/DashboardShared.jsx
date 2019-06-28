@@ -14,7 +14,7 @@ export const SolicitationStatusCard = props => {
         {cardTitle}
       </div>
       <hr />
-      {solicitations.map((solicitation, key) => {
+      {solicitations.slice(0, 3).map((solicitation, key) => {
         return (
           <p className="data">
             {solicitation.text}
@@ -22,7 +22,7 @@ export const SolicitationStatusCard = props => {
           </p>
         );
       })}
-      {solicitations.length > 2 && (
+      {solicitations.length > 3 && (
         <NavLink to={`${href}`} className="see-more">
           Ver Mais
         </NavLink>
@@ -145,17 +145,17 @@ export class CardPendenciaAprovacao extends Component {
           </div>
         </div>
         <Collapse isOpened={!collapsed}>
-          <div className="row ml-1 mr-1">
-            <div style={{display: 'inline-flex'}} className="w-100 col-12">
+          <div className="row">
+            <div className="input-search-full-width col-12">
               <input
                 type="text"
-                className="form-control "
+                className="form-control"
                 placeholder="Pesquisar"
                 onChange={this.filtrarPedidos}
               />
-              <i className="fas fa-search" />
+              <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table mt-4">
+            <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
                 <tr>
                   <th>Nº Pedido</th>

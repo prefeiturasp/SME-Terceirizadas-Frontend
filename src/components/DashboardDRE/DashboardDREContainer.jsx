@@ -18,6 +18,14 @@ class DashboardDREContainer extends Component {
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
           date: "Qua 10:07"
+        },
+        {
+          text: "12083 - 7A IP I - Solicitação Unificada",
+          date: "Qua 10:07"
+        },
+        {
+          text: "12083 - 7A IP I - Solicitação Unificada",
+          date: "Qua 10:07"
         }
       ],
       vision_by: [
