@@ -5,8 +5,10 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
-import {carregarInversoes, salvarInversao, deletaInversao, solicitarInversao} from '../../services/dayChange.service'
+import { carregarInversoes, salvarInversao, deletaInversao, solicitarInversao } from '../../services/dayChange.service'
 import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
+import CardHeader from "../Shareable/CardHeader";
+import './style.css'
 
 export class DayChangeEditor extends Component {
   constructor(props) {
@@ -16,7 +18,8 @@ export class DayChangeEditor extends Component {
       status: "SEM STATUS",
       title: "Nova solicitação",
       uuid: "",
-      salvarAtualizarLbl: "Salvar"
+      salvarAtualizarLbl: "Salvar",
+      quatidadeAluno: 250
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
@@ -24,7 +27,7 @@ export class DayChangeEditor extends Component {
   }
 
   OnDeleteButtonClicked(uuid) {
-    if(window.confirm('Deseja realmente remover esta solicitação?')){
+    if (window.confirm('Deseja realmente remover esta solicitação?')) {
       deletaInversao(uuid).then(response => {
         toastSuccess(response.details)
         this.refresh()
@@ -73,23 +76,23 @@ export class DayChangeEditor extends Component {
   }
 
   onSubmit(values) {
-    if (values.status === 'SALVAR'){
+    if (values.status === 'SALVAR') {
       salvarInversao(values).then(response => {
-        if(response.success){
+        if (response.success) {
           this.resetForm()
           this.refresh()
           toastSuccess(response.success)
-        }else{
+        } else {
           toastError(response.error)
         }
       })
-    }else if(values.status === 'COMPLETO'){
+    } else if (values.status === 'COMPLETO') {
       solicitarInversao(values).then(response => {
-        if(response.success){
+        if (response.success) {
           this.resetForm()
           this.refresh()
           toastSuccess(response.success)
-        }else{
+        } else {
           toastError(response.error)
         }
       })
@@ -97,62 +100,51 @@ export class DayChangeEditor extends Component {
   }
 
   render() {
+    const { quatidadeAluno } = this.state
     const { handleSubmit, pristine, reset, submitting } = this.props;
     return (
-      <div className="container">
-        <div>
-          <label className="subtitle">Solicitações</label>
-        </div>
-        <div>
-          <label className="category">Alteração de Dias do Cardápio</label>
-        </div>
+      <div>
+
         <form>
-          <div className="form-group row">
-            <div className="col-12">
-              <label htmlFor="rf-responsible">Nº de Matriculados</label>
-              <p className="number-registered">
-                <span className="gray-rectangle">150</span>
-                Informação automática disponibilizada no
-                <br />
-                <span className="text-primary">
-                  Cadastro da Unidade Escolar
-                </span>
-              </p>
-            </div>
-          </div>
+          <CardHeader numeroAlunos={quatidadeAluno} />
+
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}
             resetForm={event => this.resetForm(event)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-          <div className="form-row mt-3 ml-1">
-            <h3 className="bold" style={{ color: "#353535" }}>
-              {this.state.title}
-            </h3>
-          </div>
-          <div className="border rounded mt-2 p-3">
-            <div>
-              <label className="bold">Substituição de dia de cardápio</label>
+          <div className="mt-5"></div>
+          <br></br>
+          <span className="page-title">{this.state.title}</span>
+          <div className="mt-3"></div>
+          <div className="card border rounded mt-2 p-4">
+            <label className="bold ml-2">Descrição da Alteração</label>
+
+            <div className="row ml-2 mt-4 pb-3">
+              <span>Substituição</span>
+              <div className="w-100 m-2"></div>
+                <Field
+                  component={LabelAndDate}
+                  cols="5 5 5 5"
+                  placeholder="Cardápio dia"
+                  name="data_de"
+                  label=""
+                  validate={required}
+                />
+              <div className="col-sm-2 justify-content-center pt-4">
+                <span className="font-weight-bold">Para</span> &nbsp;&nbsp;&nbsp; <i class="fas fa-arrow-right"></i>
+              </div>
+                <Field
+                  component={LabelAndDate}
+                  cols="5 5 5 5"
+                  placeholder="Cardápio dia"
+                  name="data_para"
+                  label=""
+                  validate={required}
+                />
             </div>
-            <div className="form-row">
-              <Field
-                component={LabelAndDate}
-                cols="4 4 4 4"
-                placeholder="Dia a ser substituído"
-                name="data_de"
-                label="De:"
-                validate={required}
-              />
-              <Field
-                component={LabelAndDate}
-                cols="4 4 4 4"
-                placeholder="Novo dia do cardápio"
-                name="data_para"
-                label="Para:"
-                validate={required}
-              />
-            </div>
+
             <div className="form-group">
               <Field
                 component={LabelAndTextArea}
@@ -169,7 +161,7 @@ export class DayChangeEditor extends Component {
                 name="observacao"
               />
             </div>
-            <div className="form-group row float-right mt-4">
+            <div className="form-group row float-right mt-4 ml-2">
               <BaseButton
                 label="Cancelar"
                 onClick={event => this.resetForm(event)}
@@ -200,7 +192,7 @@ export class DayChangeEditor extends Component {
                     ...values,
                     status: "COMPLETO",
                     salvo_em: new Date(),
-                    uuid : this.state.uuid
+                    uuid: this.state.uuid
                   })
                 )}
                 style={ButtonStyle.Primary}
