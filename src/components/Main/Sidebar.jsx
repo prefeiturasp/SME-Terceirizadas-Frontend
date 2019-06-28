@@ -121,7 +121,7 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/menu-change"
+                  to="/alterar-cardapio"
                   component={MenuChangePage}
                 >
                   Alterar Cardápio

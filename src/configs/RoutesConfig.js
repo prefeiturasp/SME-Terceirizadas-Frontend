@@ -29,7 +29,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/menu-change",
+    path: "/alterar-cardapio",
     component: MenuChangePage,
     exact: false
   },
