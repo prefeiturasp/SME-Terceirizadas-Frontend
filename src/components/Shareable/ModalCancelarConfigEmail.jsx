@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { Link } from "react-router-dom";
 
 export class ModalCancelarConfigEmail extends Component {
   render() {
-    const { showModal, closeModal, closeOnly } = this.props;
+    const { showModal, closeModal } = this.props;
     return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeOnly}>
+      <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Deseja cancelar o procedimento?</Modal.Title>
         </Modal.Header>
@@ -16,6 +17,7 @@ export class ModalCancelarConfigEmail extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
+        <Link to="/">
           <BaseButton
             label="Confirmar"
             type={ButtonType.BUTTON}
@@ -23,6 +25,7 @@ export class ModalCancelarConfigEmail extends Component {
             style={ButtonStyle.Primary}
             className="ml-3"
           />
+        </Link>
         </Modal.Footer>
       </Modal>
     );

@@ -26,7 +26,6 @@ class EmailConfiguration extends Component {
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.closeOnly = this.closeOnly.bind(this);
   }
 
   showModal() {
@@ -35,11 +34,8 @@ class EmailConfiguration extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Operação cancelada com sucesso!");
   }
-  closeOnly(e) {
-    this.setState({ showModal: false });
-  }
+
 
   onSubmit(values) {
     switch (values.security) {
