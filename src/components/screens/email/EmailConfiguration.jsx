@@ -11,9 +11,36 @@ import { toastError, toastSuccess } from "../../Shareable/dialogs";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
+import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
 
 class EmailConfiguration extends Component {
-  state = { showTest: false, response: { error: "", detail: "" } };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTest: false,
+      response: {
+        error: "",
+        default: ""
+      },
+      showModal: false
+    };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.closeOnly = this.closeOnly.bind(this);
+  }
+
+  showModal() {
+    this.setState({ showModal: true });
+  }
+
+  closeModal(e) {
+    this.setState({ showModal: false });
+    toastSuccess("Operação cancelada com sucesso!");
+  }
+  closeOnly(e) {
+    this.setState({ showModal: false });
+  }
+
   onSubmit(values) {
     switch (values.security) {
       case SECURITY_OPTIONS.TLS:
@@ -82,9 +109,15 @@ class EmailConfiguration extends Component {
   }
 
   render() {
+    const { showModal } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div className="container">
+        <ModalCancelarConfigEmail
+          showModal={showModal}
+          closeModal={this.closeModal}
+          closeOnly={this.closeOnly}
+        />
         <div>
           <label className="category">Configurações de Emails</label>
         </div>
@@ -163,6 +196,13 @@ class EmailConfiguration extends Component {
             </IsVisible>
 
             <div className="form-group button-botton-card">
+              <BaseButton
+                label="Cancelar"
+                type={ButtonType.BUTTON}
+                className="mr-2"
+                style={ButtonStyle.OutlinePrimary}
+                onClick={this.showModal}
+              />
               <BaseButton
                 label="Testar"
                 type={ButtonType.SUBMIT}
