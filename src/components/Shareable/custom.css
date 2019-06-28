@@ -138,6 +138,13 @@ input::placeholder {
   font-size: 12px;
 }
 
+.progressbar-main-title {
+  font-size: 10px;
+  color: #353535;
+  margin-right: -15%;
+  margin-left: 2%;
+}
+
 .progressbar-titles {
   list-style-type: none;
   text-align: center;
