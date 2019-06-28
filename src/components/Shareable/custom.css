@@ -382,6 +382,14 @@ textarea {
   position: relative;
 }
 
+.fa-search.inside-input {
+  z-index: 1;
+  padding-top: 12px;
+  color: #2881BB;
+  font-size: 20px;
+  position: relative;
+}
+
 .card-body {
   padding: 2rem !important;
 }
@@ -520,6 +528,19 @@ input.input-search {
 input.input-search::placeholder {
   color: #a4a4a4;
   padding-right: 5px;
+}
+
+.input-search-full-width {
+  display: inline-flex;
+  width: 100%;
+}
+
+.input-search-full-width input {
+  margin-right: -30px;
+}
+
+.input-search-full-width input::placeholder {
+  text-align: left;
 }
 
 .current-date {
