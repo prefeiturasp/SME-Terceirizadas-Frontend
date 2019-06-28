@@ -15,7 +15,7 @@ export const CardDashboard = props => {
           return (
             <p className="data">
               {value.text}
-              <span className="float-right">{value.date}</span>
+              <span className="mr-3 float-right">{value.date}</span>
             </p>
           );
         })}
