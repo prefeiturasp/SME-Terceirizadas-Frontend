@@ -51,7 +51,6 @@ class OrdersDashboard extends Component {
     const { pedidos } = this.props;
     return (
       <div>
-        <span className="page-title">Kits Lanche - Pendentes Aprovação</span>
         <div className="row pt-3">
           <div className="col-12">
             <CardPendenciaAprovacao

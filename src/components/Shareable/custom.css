@@ -4,10 +4,16 @@ label {
   margin-bottom: 0 !important;
 }
 
+.breadcrumb-title {
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #C8C8C8;
+}
+
 .BurgerBox {
   width: 18px !important;
   line-height: 3px;
-
 }
 
 .subtitle {

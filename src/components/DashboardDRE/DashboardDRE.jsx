@@ -21,15 +21,12 @@ class DashboardDRE extends Component {
       enrolled,
       handleSubmit,
       solicitations,
-      vision_by,
-      trs,
-      theadList
+      vision_by
     } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <span className="page-title">Solicitação Unificada</span>
           <div className="card mt-3">
             <div className="card-body">
               <span className="blockquote-sme">
