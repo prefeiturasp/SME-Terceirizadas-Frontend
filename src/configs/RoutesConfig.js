@@ -17,6 +17,9 @@ import KitsLancheRelatorioPage from "../pages/DRE/KitLancheRelatorioPage";
 import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
 import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
 
+import ConfigEmailPage from "../pages/ConfigEmailPage";
+
+
 const routesConfig = [
   {
     path: "/",
@@ -95,7 +98,7 @@ const routesConfig = [
   },
   {
     path: "/settings",
-    component: EmailConfiguration,
+    component: ConfigEmailPage,
     exact: false
   },
   {

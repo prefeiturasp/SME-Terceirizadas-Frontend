@@ -1,15 +1,42 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
-import { getEmailConfiguration, setEmailConfiguration, testEmailConfiguration } from "../../../services/email";
+import {
+  getEmailConfiguration,
+  setEmailConfiguration,
+  testEmailConfiguration
+} from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/dialogs";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
+import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
 
 class EmailConfiguration extends Component {
-  state = { showTest: false, response: { error: "", detail: "" } };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTest: false,
+      response: {
+        error: "",
+        default: ""
+      },
+      showModal: false
+    };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+  }
+
+  showModal() {
+    this.setState({ showModal: true });
+  }
+
+  closeModal(e) {
+    this.setState({ showModal: false });
+  }
+
+
   onSubmit(values) {
     switch (values.security) {
       case SECURITY_OPTIONS.TLS:
@@ -72,20 +99,26 @@ class EmailConfiguration extends Component {
         this.setState({ showTest: true });
       })
       .catch(resp => {
-        console.log('error', resp)
+        console.log("error", resp);
         this.setState({ showTest: false });
       });
   }
 
   render() {
+    const { showModal } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div className="container">
+        <ModalCancelarConfigEmail
+          showModal={showModal}
+          closeModal={this.closeModal}
+          closeOnly={this.closeOnly}
+        />
         <div>
           <label className="category">Configurações de Emails</label>
         </div>
         <form>
-          <div className="border rounded p-2">
+          <div className="border rounded p-3 card">
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
@@ -106,7 +139,7 @@ class EmailConfiguration extends Component {
               />
             </div>
           </div>
-          <div className="border rounded p-2 mt-3">
+          <div className="border rounded p-3 mt-3 card">
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
@@ -157,28 +190,36 @@ class EmailConfiguration extends Component {
                 />
               </div>
             </IsVisible>
-          </div>
-          <div className="form-group row float-right">
-            <BaseButton
-              label="Testar"
-              type={ButtonType.SUBMIT}
-              disabled={pristine || submitting}
-              style={ButtonStyle.OutlinePrimary}
-              onClick={handleSubmit(values =>
-                this.onTestConfiguration(values.testEmail)
-              )}
-            />
-            <BaseButton
-              label="Salvar"
-              type={ButtonType.SUBMIT}
-              className="ml-2"
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values
-                })
-              )}
-              style={ButtonStyle.Primary}
-            />
+
+            <div className="form-group button-botton-card">
+              <BaseButton
+                label="Cancelar"
+                type={ButtonType.BUTTON}
+                className="mr-2"
+                style={ButtonStyle.OutlinePrimary}
+                onClick={this.showModal}
+              />
+              <BaseButton
+                label="Testar"
+                type={ButtonType.SUBMIT}
+                disabled={pristine || submitting}
+                style={ButtonStyle.OutlinePrimary}
+                onClick={handleSubmit(values =>
+                  this.onTestConfiguration(values.testEmail)
+                )}
+              />
+              <BaseButton
+                label="Salvar"
+                type={ButtonType.SUBMIT}
+                className="ml-2"
+                onClick={handleSubmit(values =>
+                  this.onSubmit({
+                    ...values
+                  })
+                )}
+                style={ButtonStyle.Primary}
+              />
+            </div>
           </div>
         </form>
       </div>
