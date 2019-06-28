@@ -36,77 +36,74 @@ export class CardHistorico extends Component {
     const { titulo, thead, trs, handleSubmit } = this.props;
     const { collapsed } = this.state;
     return (
-      <div id="accordion">
-        <div className="card mt-3">
-          <div className="card-header" id="headingOne" style={styleHeader}>
-            <div className="row">
-              <div className="col-11">
-                <i class="fas fa-history mr-2" />
-                {titulo}
-              </div>
-              <div className="col-1">
-                <Stand
-                  onClick={() => this.setState({ collapsed: !collapsed })}
-                  color={"#C8C8C8"}
-                  width={30}
-                  padding={0}
-                  lineSpacing={5}
-                  className="float-right"
-                  active={!collapsed}
-                />
-              </div>
+      <div className="card mt-3">
+        <div className="card-header" style={styleHeader}>
+          <div className="row my-auto">
+            <div className="col-11">
+              <i class="fas fa-history mr-2" />
+              {titulo}
+            </div>
+            <div style={{ paddingLeft: "38px" }} className="col-1">
+              <Stand
+                onClick={() => this.setState({ collapsed: !collapsed })}
+                color={"#C8C8C8"}
+                width={30}
+                padding={0}
+                lineSpacing={5}
+                active={!collapsed}
+              />
             </div>
           </div>
-          <Collapse isOpened={!collapsed}>
-            <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <label>Selecionar Todos</label>&nbsp;&nbsp;&nbsp;
-                <Field
-                  component={"input"}
-                  onChange={event => this.handleSelecionarTodos(event)}
-                  type={"checkbox"}
-                />
-                <div className="float-right">
-                  <button
-                    onClick={this.handleClickSubmit}
-                    title="Imprimir solicitações selecionadas"
-                    className="btn btn-link"
-                  >
-                    <i class="fas fa-print" />
-                  </button>
-                </div>
-                <div className="pb-3" />
-                <table className="table">
-                  <thead>
-                    <td />
-                    {thead.map(value => {
-                      return <td>{value}</td>;
-                    })}
-                  </thead>
-                  <tbody>
-                    {trs.map((value, key) => {
-                      return (
-                        <tr>
-                          <th>
-                            <Field
-                              component={"input"}
-                              type="checkbox"
-                              name={`name_${value._id}`}
-                              value={value._id}
-                            />
-                          </th>
-                          <th>{value._id}</th>
-                          <th>{value.escola}</th>
-                          <th>{value.quantidade}</th>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </form>
-            </div>
-          </Collapse>
         </div>
+        <Collapse isOpened={!collapsed}>
+          <div className="card-body">
+            <form onSubmit={handleSubmit}>
+              <label>Selecionar Todos</label>&nbsp;&nbsp;&nbsp;
+              <Field
+                component={"input"}
+                onChange={event => this.handleSelecionarTodos(event)}
+                type={"checkbox"}
+              />
+              <div className="float-right">
+                <button
+                  onClick={this.handleClickSubmit}
+                  title="Imprimir solicitações selecionadas"
+                  className="btn btn-link"
+                >
+                  <i class="fas fa-print" />
+                </button>
+              </div>
+              <div className="pb-3" />
+              <table className="table">
+                <thead>
+                  <td />
+                  {thead.map(value => {
+                    return <td>{value}</td>;
+                  })}
+                </thead>
+                <tbody>
+                  {trs.map((value, key) => {
+                    return (
+                      <tr>
+                        <th>
+                          <Field
+                            component={"input"}
+                            type="checkbox"
+                            name={`name_${value._id}`}
+                            value={value._id}
+                          />
+                        </th>
+                        <th>{value._id}</th>
+                        <th>{value.escola}</th>
+                        <th>{value.quantidade}</th>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </Collapse>
       </div>
     );
   }

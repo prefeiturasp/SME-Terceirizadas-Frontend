@@ -65,7 +65,7 @@ class OrdersDashboard extends Component {
                   options={vision_by}
                 />
               </div>
-              <div className="text-dark col-6">Visão dia 01/07/2019</div>
+              <div className="text-dark col-6 my-auto">Visão dia 01/07/2019</div>
             </div>
           </div>
         </div>

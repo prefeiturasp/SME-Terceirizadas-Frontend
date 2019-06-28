@@ -32,7 +32,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/menu-change",
+    path: "/alterar-cardapio",
     component: MenuChangePage,
     exact: false
   },
@@ -52,12 +52,12 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/tour-request",
+    path: "/kit-lanche",
     component: TourRequestPage,
     exact: false
   },
   {
-    path: "/day-change",
+    path: "/inverter-dia-cardapio",
     component: DayChangePage,
     exact: false
   },

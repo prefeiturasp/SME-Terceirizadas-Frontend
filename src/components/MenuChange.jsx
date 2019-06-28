@@ -8,6 +8,7 @@ import {
 } from "./Shareable/labelAndInput";
 import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
+import CardHeader from "./Shareable/CardHeader";
 
 const myDataHandler = event => {
   console.log("handle submit chamado!", event);
@@ -15,19 +16,12 @@ const myDataHandler = event => {
 
 export class MenuChange extends Component {
   render() {
-    console.log("redux forms props:_>", this.props);
+    // console.log("redux forms props:_>", this.props);
     return (
-      <div className="d-flex flex-column p-4 mt-5">
+      <div>
+        <CardHeader numeroAlunos={200} />
+        <div className="card mt-3 p-4">
         <form onSubmit={this.props.handleSubmit(myDataHandler)}>
-          <div>
-            <label className="header-form-label mb-5">Nº de matriculados</label>
-          </div>
-          <div>
-            <button className="btn btn-primary mr-3">150</button>
-            <label>
-              Informação automática disponibilizada no cadastro da UE
-            </label>
-          </div>
           <div className="form-group row">
             <Field
               component={LabelAndInput}
@@ -144,6 +138,7 @@ export class MenuChange extends Component {
             />
           </div>
         </form>
+      </div>
       </div>
     );
   }

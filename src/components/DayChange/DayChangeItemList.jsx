@@ -64,70 +64,73 @@ export class DayChangeItemList extends Component {
       } = dayChange;
       let backgroundColor = status === "ESCOLA_SALVOU" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="border rounded mt-3">
-          <div className="mt-2">
-            <label className="bold ml-3">
-              Alteração de Dia de cardápio {`# ${uuid}`}
-            </label>
-            <span
-              className="ml-3 p-1 border rounded"
-              style={{ background: backgroundColor }}
-            >
-              {'SALVO'}
-            </span>
-            <div className="float-right">
-              <input
-                className="float-right mt-2 mr-3"
-                type="checkbox"
-                name={uuid}
-                uuid={uuid}
-                onClick={event =>
-                  this.onCheckChange(event, {
-                    status,
-                    uuid,
-                    registro,
-                    data_de,
-                    data_para,
-                    descricao,
-                    observacao,
-                  })
-                }
-              />
+        <div className="card border rounded mt-3 p-2">
+          <div className="mt-2 row">
+            <div className="col-sm">
+              <label className="bold ml-3">Alteração de Dia de cardápio {`# ${uuid}`}</label>
+              <span className="ml-3 p-1 border rounded" style={{ background: backgroundColor }}>
+                {'SALVO'}
+              </span>
             </div>
-          </div>
-          <div>
-            <div className="float-right">
-              Salvo em: {registro}
-              <Button
-                icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(uuid)}
-              />
-              <Button
-                icon={ButtonIcon.EDIT}
-                onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    status,
-                    uuid,
-                    registro,
-                    data_de,
-                    data_para,
-                    descricao,
-                    observacao,
-                  })
-                }
-              />
+            <div className="col-sm-3">
+              <div className="float-right">
+                <input
+                  className="float-right mt-2 mr-3"
+                  type="checkbox"
+                  name={uuid}
+                  uuid={uuid}
+                  onClick={event =>
+                    this.onCheckChange(event, {
+                      status,
+                      uuid,
+                      registro,
+                      data_de,
+                      data_para,
+                      descricao,
+                      observacao,
+                    })
+                  }
+                />
+              </div>
             </div>
+
           </div>
-          <div className="ml-3">
-            <p>
-              Substituição do dia: <b>{data_de}</b>{" "}
-              <i
-                className={"fa fa-arrow-right ml-2 mr-2"}
-                style={{ color: "#2881BB" }}
-              />{" "}
-              para o dia:
-              <b>{data_para}</b>
-            </p>
+          <div className="row">
+            <div className="col-sm">
+              <div className="ml-3">
+                <p>Substituição do dia: <b>{data_de}</b>{" "}
+                  <i
+                    className={"fa fa-arrow-right ml-2 mr-2"}
+                    style={{ color: "#2881BB" }}
+                  />{" "}
+                  para o dia:
+                <b>{data_para}</b>
+                </p>
+              </div>
+            </div>
+            <div className="col-sm-4">
+              <div className="float-right">
+                Salvo em: {registro}
+                <Button
+                  icon={ButtonIcon.TRASH}
+                  onClick={p => this.OnDeleteButtonClicked(uuid)}
+                />
+                <Button
+                  icon={ButtonIcon.EDIT}
+                  onClick={p =>
+                    this.props.OnEditButtonClicked({
+                      status,
+                      uuid,
+                      registro,
+                      data_de,
+                      data_para,
+                      descricao,
+                      observacao,
+                    })
+                  }
+                />
+              </div>
+            </div>
           </div>
         </div>
       );

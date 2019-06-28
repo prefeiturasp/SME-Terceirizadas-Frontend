@@ -4,6 +4,10 @@ label {
   margin-bottom: 0 !important;
 }
 
+input::placeholder {
+  text-align: left;
+}
+
 .breadcrumb-title {
   font-weight: bold;
   font-size: 12px;
@@ -132,6 +136,13 @@ label {
 .report-students-div {
   display: grid;
   font-size: 12px;
+}
+
+.progressbar-main-title {
+  font-size: 10px;
+  color: #353535;
+  margin-right: -15%;
+  margin-left: 2%;
 }
 
 .progressbar-titles {
@@ -526,6 +537,7 @@ input.input-search {
 }
 
 input.input-search::placeholder {
+  text-align: right;
   color: #a4a4a4;
   padding-right: 5px;
 }
@@ -537,10 +549,6 @@ input.input-search::placeholder {
 
 .input-search-full-width input {
   margin-right: -30px;
-}
-
-.input-search-full-width input::placeholder {
-  text-align: left;
 }
 
 .current-date {
@@ -817,7 +825,16 @@ div.caption-choices span:nth-child(4) i {
 
 .orders-table tr th:nth-child(3),
 .orders-table tr td:nth-child(3) {
-  width: 80%;
+  width: 59%;
+}
+
+.orders-table tr td:nth-child(4) {
+  padding-left: 180px;
+  padding-right: 60px;
+}
+
+.orders-table tr th:nth-child(4){
+  padding-left: 107px;
 }
 
 .orders-table td {

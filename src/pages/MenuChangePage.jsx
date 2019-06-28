@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {Header} from '../components/Main/Header'
-import {Sidebar} from '../components/Main/Sidebar'
 import {MenuChange} from '../components/MenuChange'
+import Page from '../components/Shareable/Page';
 
 
 
@@ -9,13 +8,9 @@ export class MenuChangePage extends Component {
   state = {  }
   render() {
     return (
-      <div id="wrapper">
-        <Header />
-        <Sidebar />
-        <div id="content-wrapper" className="pt-5">
-          <MenuChange />
-        </div>
-      </div>
+     <Page titulo="Alteração de Cardápio" tituloRastro="Solicitações">
+       <MenuChange />
+     </Page>
     );
   }
 }
