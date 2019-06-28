@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { email, required } from "../../../helpers/fieldValidators";
-import { getEmailConfiguration, setEmailConfiguration, testEmailConfiguration } from "../../../services/email";
+import {
+  getEmailConfiguration,
+  setEmailConfiguration,
+  testEmailConfiguration
+} from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/dialogs";
 import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
@@ -72,7 +76,7 @@ class EmailConfiguration extends Component {
         this.setState({ showTest: true });
       })
       .catch(resp => {
-        console.log('error', resp)
+        console.log("error", resp);
         this.setState({ showTest: false });
       });
   }
@@ -85,7 +89,7 @@ class EmailConfiguration extends Component {
           <label className="category">Configurações de Emails</label>
         </div>
         <form>
-          <div className="border rounded p-2">
+          <div className="border rounded p-3 card">
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
@@ -106,7 +110,7 @@ class EmailConfiguration extends Component {
               />
             </div>
           </div>
-          <div className="border rounded p-2 mt-3">
+          <div className="border rounded p-3 mt-3 card">
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
@@ -157,28 +161,29 @@ class EmailConfiguration extends Component {
                 />
               </div>
             </IsVisible>
-          </div>
-          <div className="form-group row float-right">
-            <BaseButton
-              label="Testar"
-              type={ButtonType.SUBMIT}
-              disabled={pristine || submitting}
-              style={ButtonStyle.OutlinePrimary}
-              onClick={handleSubmit(values =>
-                this.onTestConfiguration(values.testEmail)
-              )}
-            />
-            <BaseButton
-              label="Salvar"
-              type={ButtonType.SUBMIT}
-              className="ml-2"
-              onClick={handleSubmit(values =>
-                this.onSubmit({
-                  ...values
-                })
-              )}
-              style={ButtonStyle.Primary}
-            />
+
+            <div className="form-group button-botton-card">
+              <BaseButton
+                label="Testar"
+                type={ButtonType.SUBMIT}
+                disabled={pristine || submitting}
+                style={ButtonStyle.OutlinePrimary}
+                onClick={handleSubmit(values =>
+                  this.onTestConfiguration(values.testEmail)
+                )}
+              />
+              <BaseButton
+                label="Salvar"
+                type={ButtonType.SUBMIT}
+                className="ml-2"
+                onClick={handleSubmit(values =>
+                  this.onSubmit({
+                    ...values
+                  })
+                )}
+                style={ButtonStyle.Primary}
+              />
+            </div>
           </div>
         </form>
       </div>
