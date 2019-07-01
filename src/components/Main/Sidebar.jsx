@@ -13,8 +13,11 @@ import FoodSuspensionPage from "../../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../../pages/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHistoricPage";
 import DashboardDREPage from "../../pages/DRE/DashboardDREPage";
-import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage"
-import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage"
+import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage";
+import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage";
+import DashboardTerceirizadaPage from "../../pages/Terceirizada/DashboardTerceirizadaPage";
+import KitLancheOrdersTerceirizadaPage from "../../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
+import KitLancheRelatorioTerceirizadaPage from "../../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import DashboardEscolaPage from "../../pages/ESCOLA/DashboardEscolaPage";
 
 window.jQuery = $;
@@ -259,13 +262,30 @@ export class Sidebar extends Component {
               data-parent="#accordionSidebar"
             >
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Cad 1</h6>
-                <Link className="collapse-item" href="#test">
-                  Cad 2
-                </Link>
-                <Link className="collapse-item" href="#test">
-                  Cad 3
-                </Link>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/painel-de-controle"
+                  component={DashboardTerceirizadaPage}
+                >
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/kits-lanche"
+                  component={KitLancheOrdersTerceirizadaPage}
+                >
+                  Kit Lanche
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/kits-lanche/relatorio"
+                  component={KitLancheRelatorioTerceirizadaPage}
+                >
+                  Relatório Kit Lanche
+                </NavLink>
               </div>
             </div>
           </li>
