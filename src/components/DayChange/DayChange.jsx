@@ -29,10 +29,16 @@ export class DayChangeEditor extends Component {
   OnDeleteButtonClicked(uuid) {
     if (window.confirm('Deseja realmente remover esta solicitação?')) {
       deletaInversao(uuid).then(response => {
-        toastSuccess(response.details)
-        this.refresh()
+        if(response.success){
+          toastSuccess(response.success)
+          this.refresh()
+
+        }else if(response.error){
+          toastError(response.error)
+
+        }
       }).catch(resp => {
-        toastError(resp.details)
+        console.error('ERROR REMOVER INVERSÃO: ', resp)
       })
     }
   }
@@ -72,6 +78,8 @@ export class DayChangeEditor extends Component {
     carregarInversoes().then(res => {
       const dayChangeList = res
       this.setState({ dayChangeList });
+    }).catch(error => {
+      console.log('ERROR AO TENTAR CARREGAR INVERSÕES SALVAS: ', error)
     });
   }
 
@@ -85,6 +93,8 @@ export class DayChangeEditor extends Component {
         } else {
           toastError(response.error)
         }
+      }).catch(error =>{
+        console.log('ERRO AO TENTAR SALVAR: ', error)
       })
     } else if (values.status === 'COMPLETO') {
       solicitarInversao(values).then(response => {
@@ -95,6 +105,8 @@ export class DayChangeEditor extends Component {
         } else {
           toastError(response.error)
         }
+      }).catch(error => {
+        console.log('ERROR AO TENTAR SOLICITAR: ', error)
       })
     }
   }

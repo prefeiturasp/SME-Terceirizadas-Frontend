@@ -231,7 +231,7 @@ export class TourRequest extends Component {
             <Modal.Title>Atenção</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Atenção, a solicitação está fora do prazo contratual (entre{" "}
+            Atenção, a solicitação está fora do prazo contratual (entre
             <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
             disponibilidade dos alimentos adequados para o cumprimento do
             cardápio.
