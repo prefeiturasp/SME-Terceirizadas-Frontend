@@ -2,19 +2,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-
-const styleHeader = {
-  padding: "0.75rem 1.25rem",
-  marginBottom: 0,
-  backgroundColor: "#fff",
-  borderBottom: "1px solid #e3e6f0",
-  color: "#035D96",
-  fontWeight: "bold",
-  letterSpacing: "0.01em",
-  fontStyle: "normal",
-  fonFamily: "Roboto",
-  height: "4em"
-};
+import "./style.scss";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -37,13 +25,13 @@ export class CardHistorico extends Component {
     const { collapsed } = this.state;
     return (
       <div className="card mt-3">
-        <div className="card-header" style={styleHeader}>
+        <div className="card-header">
           <div className="row my-auto">
             <div className="col-11">
               <i class="fas fa-history mr-2" />
               {titulo}
             </div>
-            <div style={{ paddingLeft: "38px" }} className="col-1">
+            <div className="pl-5 col-1">
               <Stand
                 onClick={() => this.setState({ collapsed: !collapsed })}
                 color={"#C8C8C8"}

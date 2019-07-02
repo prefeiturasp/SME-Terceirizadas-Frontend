@@ -37,7 +37,7 @@
         color: #fff;
         border-color: green;
       }
-      > li:after {
+      + li:after {
         background-color: green;
       }
     }
@@ -89,4 +89,3 @@
     }
   }
 }
-

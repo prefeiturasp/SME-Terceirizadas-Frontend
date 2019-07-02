@@ -5,7 +5,7 @@ import CardBody from "../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "./CardAtalho";
 import CardLegendas from "./CardLegendas";
-import CardHistorico from "../Shareable/CardHistorico";
+import CardHistorico from "../Shareable/CardHistorico/CardHistorico";
 
 export default class DashboardEscola extends Component {
   render() {

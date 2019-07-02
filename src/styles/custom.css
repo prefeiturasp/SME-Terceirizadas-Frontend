@@ -10074,18 +10074,6 @@ a.text-dark:hover, a.text-dark:focus {
   color: #686868;
 }
 
-.badge-sme {
-    display: inline-block;
-    padding: 14px 32px;
-    font-size: 75%;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
 .badge-secondary-sme {
   background-color: #E8E8E8;
   color:  #686868;

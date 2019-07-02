@@ -61,3 +61,76 @@ div.caption-choices {
     }
   }
 }
+
+.badge-sme {
+  display: inline-block;
+  padding: 14px 32px;
+  font-size: 75%;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  .id-of-solicitation {
+    font-weight: bold;
+    font-size: 34px;
+    line-height: 40px;
+    text-align: center;
+    color: #353535;
+  }
+  .id-of-solicitation-dre {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    color: #353535;
+  }
+  .number-of-order-label {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    color: #353535;
+  }
+}
+
+.requester {
+  font-size: 14px;
+  color: #686868;
+}
+
+.dre-name {
+  font-weight: bold;
+  font-size: 15px;
+  color: #353535;
+}
+
+.report-label-value {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #686868;
+  .value {
+    font-weight: bold;
+  }
+  .value-important {
+    font-weight: bold;
+    font-size: 15px;
+    color: #353535;
+  }
+}
+
+.report-students-div {
+  display: grid;
+  font-size: 12px;
+}
+
+// react-tostify
+.Toastify__toast-container--top-center {
+  font-weight: 500;
+  font-size: 22px;
+  left: 15%;
+  min-width: 90%;
+  text-align: center;
+}
+

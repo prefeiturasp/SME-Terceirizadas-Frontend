@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput";
-import CardHistorico from "../../Shareable/CardHistorico";
+import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 
 class OrdersDashboard extends Component {
   constructor(props) {
