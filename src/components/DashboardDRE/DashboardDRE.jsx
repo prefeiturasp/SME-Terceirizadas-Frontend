@@ -5,10 +5,8 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import {
-  SolicitationStatusCard,
-  PendencyCard
-} from "../Shareable/DashboardShared";
+import CardPendencia from "../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao from "../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../Shareable/custom.css";
 import { LabelAndCombo } from "../Shareable/labelAndInput";
 
@@ -104,7 +102,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row">
                 <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={"card-authorized"}
                     solicitations={solicitations}
@@ -113,7 +111,7 @@ class DashboardDRE extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
                     solicitations={solicitations}
@@ -124,7 +122,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
                     solicitations={solicitations}
@@ -133,7 +131,7 @@ class DashboardDRE extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
@@ -179,7 +177,7 @@ class DashboardDRE extends Component {
               <div className="pt-3" />
               <div className="row">
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Inclusão de Refeição"}
                     totalOfOrders={16}
                     priorityOrders={8}
@@ -188,7 +186,7 @@ class DashboardDRE extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Alteração de Dias de Cardápio"}
                     totalOfOrders={50}
                     priorityOrders={2}
@@ -199,7 +197,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Alteração de Cardápio"}
                     totalOfOrders={20}
                     priorityOrders={5}
@@ -209,7 +207,7 @@ class DashboardDRE extends Component {
                 </div>
                 <div className="col-6">
                   <Link to="/dre/kits-lanche">
-                    <PendencyCard
+                    <CardPendencia
                       cardTitle={"Kit Lanche"}
                       totalOfOrders={120}
                       priorityOrders={20}
@@ -221,7 +219,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Pedido Unificado"}
                     totalOfOrders={2}
                     priorityOrders={1}
@@ -230,7 +228,7 @@ class DashboardDRE extends Component {
                   />
                 </div>
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Suspensão de Refeição"}
                     totalOfOrders={47}
                     priorityOrders={10}
@@ -241,7 +239,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <PendencyCard
+                  <CardPendencia
                     cardTitle={"Lotes"}
                     totalOfOrders={47}
                     priorityOrders={10}

@@ -4,11 +4,8 @@ import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import {
-  SolicitationStatusCard,
-  PendencyCard
-} from "../../Shareable/DashboardShared";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/custom.css";
 import { LabelAndCombo } from "../../Shareable/labelAndInput";
 
@@ -16,13 +13,14 @@ class DashboardTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      gestaoDeAlimentacao: false
     };
   }
 
   render() {
     const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
-    const { collapsed } = this.state;
+    const { collapsed, gestaoDeAlimentacao } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -49,7 +47,9 @@ class DashboardTerceirizada extends Component {
                 />
               </span>
               <Collapse isOpened={!collapsed}>
-                <p className="pt-3 blockquote-sme">Lotes pertencentes à Terceirizada</p>
+                <p className="pt-3 blockquote-sme">
+                  Lotes pertencentes à Terceirizada
+                </p>
                 <div>
                   <table className="table-lote">
                     <tr>
@@ -71,21 +71,6 @@ class DashboardTerceirizada extends Component {
           </div>
           <div className="card mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold title-color">
-                Faça uma Solicitação Unificada
-              </div>
-              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <Link to="/unified-solicitation">
-                <BaseButton
-                  label="Solicitação Unificada"
-                  type={ButtonType.BUTTON}
-                  style={ButtonStyle.OutlinePrimary}
-                />
-              </Link>
-            </div>
-          </div>
-          <div className="card mt-3">
-            <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
                 <span>
                   <i className="fas fa-thumbtack" />
@@ -102,18 +87,9 @@ class DashboardTerceirizada extends Component {
                   Data: <span>28 de março de 2019</span>
                 </p>
               </div>
-              <div className="row">
+              <div className="row pt-3">
                 <div className="col-6">
-                  <SolicitationStatusCard
-                    cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
-                    solicitations={solicitations}
-                    icon={"fa-check"}
-                    href={"/Terceirizada/solicitacoes"}
-                  />
-                </div>
-                <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
                     solicitations={solicitations}
@@ -121,19 +97,8 @@ class DashboardTerceirizada extends Component {
                     href={"/Terceirizada/solicitacoes"}
                   />
                 </div>
-              </div>
-              <div className="row pt-3">
                 <div className="col-6">
-                  <SolicitationStatusCard
-                    cardTitle={"Recusadas"}
-                    cardType={"card-denied"}
-                    solicitations={solicitations}
-                    icon={"fa-ban"}
-                    href={"/Terceirizada/solicitacoes"}
-                  />
-                </div>
-                <div className="col-6">
-                  <SolicitationStatusCard
+                  <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
@@ -163,95 +128,121 @@ class DashboardTerceirizada extends Component {
               </div>
             </div>
           </div>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                <i className="fas fa-lock" />
-                Pendências
-                <span className="float-right">
-                  <LabelAndCombo
-                    onChange={value => this.handleField("reason", value)}
-                    placeholder={"Visão por"}
-                    options={vision_by}
-                  />
-                </span>
-              </div>
-              <div className="pt-3" />
-              <div className="row">
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Inclusão de Refeição"}
-                    totalOfOrders={16}
-                    priorityOrders={8}
-                    onLimitOrders={2}
-                    regularOrders={6}
-                  />
-                </div>
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Alteração de Dias de Cardápio"}
-                    totalOfOrders={50}
-                    priorityOrders={2}
-                    onLimitOrders={18}
-                    regularOrders={30}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Alteração de Cardápio"}
-                    totalOfOrders={20}
-                    priorityOrders={5}
-                    onLimitOrders={10}
-                    regularOrders={10}
-                  />
-                </div>
-                <div className="col-6">
-                  <Link to="/Terceirizada/kits-lanche">
-                    <PendencyCard
-                      cardTitle={"Kit Lanche"}
-                      totalOfOrders={120}
-                      priorityOrders={20}
-                      onLimitOrders={40}
-                      regularOrders={60}
-                    />
-                  </Link>
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Pedido Unificado"}
-                    totalOfOrders={2}
-                    priorityOrders={1}
-                    onLimitOrders={0}
-                    regularOrders={1}
-                  />
-                </div>
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Suspensão de Refeição"}
-                    totalOfOrders={47}
-                    priorityOrders={10}
-                    onLimitOrders={7}
-                    regularOrders={30}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <PendencyCard
-                    cardTitle={"Lotes"}
-                    totalOfOrders={47}
-                    priorityOrders={10}
-                    onLimitOrders={7}
-                    regularOrders={30}
-                  />
+          {!gestaoDeAlimentacao ? (
+            <div
+              onClick={() =>
+                this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
+              }
+              className="row"
+            >
+              <div className="col-4">
+                <div className="card mt-3">
+                  <div className="card-body">Gestão de Alimentação</div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="row">
+              <div className="card mt-3">
+                <div className="card-body">
+                  <div className="card-title font-weight-bold dashboard-card-title">
+                    <i className="fas fa-lock" />
+                    Pendências
+                    <span className="float-right">
+                      <LabelAndCombo
+                        onChange={value => this.handleField("reason", value)}
+                        placeholder={"Visão por"}
+                        options={vision_by}
+                      />
+                    </span>
+                  </div>
+                  <div className="pt-3" />
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Escolas"}
+                        totalOfOrders={16}
+                        priorityOrders={8}
+                        onLimitOrders={2}
+                        regularOrders={6}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Lotes"}
+                        totalOfOrders={47}
+                        priorityOrders={10}
+                        onLimitOrders={7}
+                        regularOrders={30}
+                      />
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Inclusão de Refeição"}
+                        totalOfOrders={16}
+                        priorityOrders={8}
+                        onLimitOrders={2}
+                        regularOrders={6}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Alteração de Dias de Cardápio"}
+                        totalOfOrders={50}
+                        priorityOrders={2}
+                        onLimitOrders={18}
+                        regularOrders={30}
+                      />
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Alteração de Cardápio"}
+                        totalOfOrders={20}
+                        priorityOrders={5}
+                        onLimitOrders={10}
+                        regularOrders={10}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <Link to="/terceirizada/kits-lanche">
+                        <CardPendencia
+                          cardTitle={"Kit Lanche"}
+                          totalOfOrders={120}
+                          priorityOrders={20}
+                          onLimitOrders={40}
+                          regularOrders={60}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Pedido Unificado"}
+                        totalOfOrders={2}
+                        priorityOrders={1}
+                        onLimitOrders={0}
+                        regularOrders={1}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <CardPendencia
+                        cardTitle={"Suspensão de Refeição"}
+                        totalOfOrders={47}
+                        priorityOrders={10}
+                        onLimitOrders={7}
+                        regularOrders={30}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     );

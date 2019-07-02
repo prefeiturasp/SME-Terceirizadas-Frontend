@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../Shareable/DashboardShared";
+import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico";
 
@@ -109,16 +109,7 @@ class OrdersDashboard extends Component {
             <CardHistorico
               thead={theadList}
               trs={trs}
-              titulo={"Histórico de Alimentações Aprovadas"}
-            />
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardHistorico
-              thead={theadList}
-              trs={trs}
-              titulo={"Histórico de Alimentações Canceladas"}
+              titulo={"Histórico de Alimentações"}
             />
           </div>
         </div>

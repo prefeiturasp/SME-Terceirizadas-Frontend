@@ -1,0 +1,57 @@
+.card-title-status {
+  font-weight: 600;
+  font-size: 13px;
+  color: #323c47;
+  letter-spacing: 0.01em;
+  padding-top: 5px;
+}
+
+.card-panel {
+  border-left: 10px solid !important;
+  i {
+    padding: 0 10px;
+  }
+  hr {
+    margin-top: 5px;
+  }
+  p.data {
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #707683;
+    span {
+      font-weight: normal;
+    }
+  }
+  a.see-more {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    color: #035d96;
+    padding-bottom: 10px;
+  }
+  &.card-authorized {
+    border-left-color: #5ec430 !important;
+    i {
+      color: #5ec430;
+    }
+  }
+  &.card-pending {
+    border-left-color: #eb8002 !important;
+    i {
+      color: #eb8002;
+    }
+  }
+  &.card-denied {
+    border-left-color: #c9251b !important;
+    i {
+      color: #c9251b;
+    }
+  }
+  &.card-cancelled {
+    border-left-color: #000000 !important;
+    i {
+      color: #000000;
+    }
+  }
+}

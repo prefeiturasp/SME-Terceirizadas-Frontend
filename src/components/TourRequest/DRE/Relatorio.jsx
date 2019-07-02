@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { formValueSelector, reduxForm } from "redux-form";
 import "../../Shareable/custom.css";
-import { StatusFlow } from "../../Shareable/DashboardShared";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess } from "../../Shareable/dialogs";
 
@@ -149,7 +149,7 @@ class Relatorio extends Component {
                 </div>
                 <hr />
                 <div className="row">
-                  <StatusFlow listaDeStatus={listaDeStatus} />
+                  <FluxoDeStatus listaDeStatus={listaDeStatus} />
                 </div>
                 <hr />
                 <div className="row">
