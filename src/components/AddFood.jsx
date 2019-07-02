@@ -7,7 +7,7 @@ import { required } from "../helpers/fieldValidators";
 import { showResults } from "../helpers/utilities";
 import BaseButton, { ButtonIcon, ButtonStyle, ButtonType } from "./Shareable/button";
 import "./Shareable/custom.css";
-import { LabelAndCombo, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput";
+import { LabelAndCombo, LabelAndInput, LabelAndTextArea } from "./Shareable/labelAndInput/labelAndInput";
 
 const renderPeriodos = ({ fields, meta: { error, submitFailed } }) => (
   <ul>

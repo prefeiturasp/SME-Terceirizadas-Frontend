@@ -14,7 +14,7 @@ import {
   LabelAndTextArea,
   LabelAndCombo,
   LabelAndInput
-} from "../Shareable/labelAndInput";
+} from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
 import "../Shareable/custom.css";

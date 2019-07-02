@@ -51,3 +51,42 @@
     }
   }
 }
+
+.orders-table {
+  width: 100%;
+  th {
+    font-weight: normal;
+    font-size: 14px;
+    color: #686868;
+  }
+  td {
+    font-weight: bold;
+    font-size: 15px;
+    color: #353535;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 0;
+  }
+  tr {
+    th:nth-child(1), td:nth-child(1), th:nth-child(2), td:nth-child(2){
+      width: 10%;
+    }
+    th:nth-child(3), td:nth-child(3){
+      width: 59%;
+    }
+    th:nth-child(4){
+      padding-left: 107px;
+    }
+    td:nth-child(4) {
+      padding-left: 180px;
+      padding-right: 60px;
+    }
+  }
+  thead, tbody {
+    display: block;
+  }
+  tbody {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}

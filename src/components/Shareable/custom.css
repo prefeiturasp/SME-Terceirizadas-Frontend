@@ -75,33 +75,12 @@ input::placeholder {
   color: #a8a8a8;
 }
 
-table.report-table {
-  width: 100%;
-}
-
-table.report-table th {
-  background: #333333;
-  color: #ffffff;
-  padding: 10px;
-}
-
-table.report-table td {
-  text-align: center;
-  color: #353535;
-  border-bottom: 1px solid #353535;
-}
-
 textarea {
   min-height: 121px;
 }
 
 .title-color {
   color: #353535;
-}
-
-.number-registered {
-  margin-top: 15px;
-  color: #a8a8a8;
 }
 
 .purple {
@@ -138,68 +117,6 @@ textarea {
   padding: 10px;
 }
 
-.checkbox-label input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.checkbox-label .checkbox-custom {
-  position: absolute;
-  top: 10px;
-  left: 0px;
-  height: 20px;
-  width: 20px;
-  background-color: #fff;
-  border-radius: 3px;
-  border: 1px solid #686868;
-  cursor: pointer;
-}
-
-.checkbox-label .checkbox-custom::after {
-  position: absolute;
-  content: "";
-  left: 12px;
-  top: 12px;
-  height: 0px;
-  width: 0px;
-  border-radius: 5px;
-  border: solid #009bff;
-  border-width: 0 3px 3px 0;
-  transform: rotate(0deg) scale(0);
-  opacity: 1;
-}
-
-.modal-90w { max-width: 90% !important; }
-
-.checkbox-label input:checked ~ .checkbox-custom {
-  background-color: #fff;
-  border-radius: 5px;
-  transform: rotate(0deg) scale(1);
-  opacity: 1;
-  border: 1px solid #686868;
-}
-
-.checkbox-label input:checked ~ .checkbox-custom::after {
-  transform: rotate(45deg) scale(1);
-  opacity: 1;
-  left: 7px;
-  top: 2px;
-  width: 6px;
-  height: 12px;
-  border: solid #686868;
-  border-width: 0 2px 2px 0;
-  background-color: transparent;
-  border-radius: 0;
-}
-
-.fa-calendar {
-  z-index: 1;
-  padding-top: 12px;
-  color: #a8a8a8;
-  position: relative;
-}
-
 .fa-search.inside-input {
   z-index: 1;
   padding-top: 12px;
@@ -210,51 +127,6 @@ textarea {
 
 .card-body {
   padding: 2rem !important;
-}
-
-.DraftEditor-root {
-  z-index: 0;
-}
-
-div.react-datepicker-wrapper {
-  margin-right: -30px;
-}
-
-.active-calendar > .input-group-prepend > .input-group-text,
-.active-calendar > .react-datepicker-wrapper {
-  background: #e4f1ff;
-  border: 1px solid #2881bb;
-  color: #2881bb;
-}
-
-.active-calendar > .react-datepicker-wrapper .form-control {
-  color: #2881bb;
-}
-
-.active-calendar > i {
-  color: #2881bb;
-}
-
-.schools-group {
-  height: 520px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  max-height: 1000px;
-}
-
-.school-container {
-  padding-left: 1rem !important;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
-  box-sizing: border-box;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-.v-align {
-  padding-top: 9px;
 }
 
 .bold {
@@ -271,16 +143,9 @@ div.react-datepicker-wrapper {
   color: #a8a8a8;
 }
 
-textarea {
-  min-height: 121px;
-}
-
 .number-registered {
   margin-top: 15px;
   color: #a8a8a8;
-}
-.label-n-alunos span {
-  padding-right: 10px;
 }
 
 .purple {
@@ -338,59 +203,6 @@ input.input-search::placeholder {
 
 .input-search-full-width input {
   margin-right: -30px;
-}
-
-.orders-table {
-  width: 100%;
-}
-
-.orders-table th {
-  font-weight: normal;
-  font-size: 14px;
-  color: #686868;
-}
-
-.orders-table tr th:nth-child(1),
-.orders-table tr td:nth-child(1) {
-  width: 10%;
-}
-
-.orders-table tr th:nth-child(2),
-.orders-table tr td:nth-child(2) {
-  width: 10%;
-}
-
-.orders-table tr th:nth-child(3),
-.orders-table tr td:nth-child(3) {
-  width: 59%;
-}
-
-.orders-table tr td:nth-child(4) {
-  padding-left: 180px;
-  padding-right: 60px;
-}
-
-.orders-table tr th:nth-child(4){
-  padding-left: 107px;
-}
-
-.orders-table td {
-  font-weight: bold;
-  font-size: 15px;
-  color: #353535;
-  border-bottom: 1px solid #c0c0c0;
-  padding: 10px 0;
-}
-
-.orders-table thead,
-.orders-table tbody {
-  display: block;
-}
-
-.orders-table tbody {
-  height: 200px;
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
 .multiselect-wrapper-disabled .dropdown-heading {

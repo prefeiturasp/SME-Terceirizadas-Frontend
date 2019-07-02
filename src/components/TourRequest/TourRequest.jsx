@@ -4,7 +4,7 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { maxValue, required, diasAntecedencia } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
 import SelecionaKitLancheBox from './SelecionaKitLancheBox'

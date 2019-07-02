@@ -7,7 +7,7 @@ import { Field, reduxForm, formValueSelector } from "redux-form";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/custom.css";
-import { LabelAndCombo } from "../../Shareable/labelAndInput";
+import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {

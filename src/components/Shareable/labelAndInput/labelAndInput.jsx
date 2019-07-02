@@ -9,11 +9,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { dateDelta } from "../../helpers/utilities";
-import { ErrorAlert } from "./Alert";
-import "./custom.css";
-import If from "./layout";
-import { Grid } from "./responsiveBs4";
+import { dateDelta } from "../../../helpers/utilities";
+import { ErrorAlert } from "../Alert";
+import "../../Shareable/custom.css";
+import If from "../layout";
+import { Grid } from "../responsiveBs4";
+import "./style.scss";
 
 export const LabelAndInput = props => {
   const {

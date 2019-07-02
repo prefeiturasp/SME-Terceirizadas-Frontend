@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
-import { LabelAndCombo } from "../../Shareable/labelAndInput";
+import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 
 class OrdersDashboard extends Component {

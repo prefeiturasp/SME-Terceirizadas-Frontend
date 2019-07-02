@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import "../Shareable/custom.css";
-import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput";
+import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
 import { carregarInversoes, salvarInversao, deletaInversao, solicitarInversao } from '../../services/dayChange.service'
 import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
