@@ -1,7 +1,7 @@
 import React from "react";
-import "./custom.css";
+import "./style.scss";
 
-export const CardDashboard = props => {
+export const CardStatusDeSolicitacaoLargo = props => {
   const { titulo, tipo, solicitacoes, icone } = props;
   return (
     <div className={`card card-panel ${tipo} mb-4`}>

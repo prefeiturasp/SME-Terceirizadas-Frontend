@@ -1,5 +1,5 @@
 import React from 'react'
-import StatusSolicitacoes from '../../components/DahsboardEscola/StatusSolicitacoes';
+import StatusSolicitacoes from '../../components/DashboardEscola/StatusSolicitacoes';
 import Page from '../../components/Shareable/Page';
 
 export default props => (

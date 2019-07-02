@@ -1,0 +1,63 @@
+.dashboard-card-title {
+  color: #035d96;
+  i {
+    color: #334d6e;
+    padding-right: 15px;
+    &:nth-child(2) {
+      padding-left: 15px;
+      color: #c2cfe0;
+    }
+  }
+  span {
+    &:nth-child(2) {
+      i {
+        color: #686868;
+      }
+    }
+  }
+}
+
+.current-date {
+  font-size: 13px;
+  span {
+    color: #4c5862;
+  }
+}
+
+p.caption {
+  font-size: 10px;
+  color: #353535;
+  padding-top: 15px;
+}
+
+div.caption-choices {
+  font-size: 10px;
+  color: #4c5862;
+  display: inline-flex;
+  i {
+    padding: 0 5px;
+  }
+  span {
+    padding-right: 30px;
+    &:nth-child(1) {
+      i {
+        color: #5ec430;
+      }
+    }
+    &:nth-child(2) {
+      i {
+        color: #eb8002;
+      }
+    }
+    &:nth-child(3) {
+      i {
+        color: #c9251b;
+      }
+    }
+    &:nth-child(4) {
+      i {
+        color: #000000;
+      }
+    }
+  }
+}

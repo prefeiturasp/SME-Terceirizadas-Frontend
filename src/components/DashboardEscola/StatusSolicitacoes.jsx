@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { CardDashboard } from '../Shareable/CardDashboard';
+import { CardStatusDeSolicitacaoLargo } from '../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo';
 import { InputSearch } from './InputSearch';
 const solicitacoes = [
     {
@@ -39,25 +39,25 @@ export default class StatusSolicitacoes extends Component {
                 <div className='card-body'>
                     <InputSearch />
                     <div className="pb-3"></div>
-                    <CardDashboard
+                    <CardStatusDeSolicitacaoLargo
                         titulo={'Aprovadas'}
                         solicitacoes={solicitacoes}
                         tipo={'card-authorized'}
                         icone={'fa-check'}
                     />
-                    <CardDashboard
+                    <CardStatusDeSolicitacaoLargo
                         titulo={'Pendente Aprovação'}
                         solicitacoes={solicitacoes}
                         tipo={'card-pending'}
                         icone={'fa-exclamation-triangle'}
                     />
-                    <CardDashboard
+                    <CardStatusDeSolicitacaoLargo
                         titulo={'Recusadas'}
                         solicitacoes={solicitacoes}
                         tipo={'card-denied'}
                         icone={'fa-check'}
                     />
-                    <CardDashboard
+                    <CardStatusDeSolicitacaoLargo
                         titulo={'Canceladas'}
                         solicitacoes={solicitacoes}
                         tipo={'card-cancelled'}

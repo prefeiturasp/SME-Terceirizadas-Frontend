@@ -18,7 +18,7 @@ import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage";
 import DashboardTerceirizadaPage from "../../pages/Terceirizada/DashboardTerceirizadaPage";
 import KitLancheOrdersTerceirizadaPage from "../../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
 import KitLancheRelatorioTerceirizadaPage from "../../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
-import DashboardEscolaPage from "../../pages/ESCOLA/DashboardEscolaPage";
+import DashboardEscolaPage from "../../pages/Escola/DashboardEscolaPage";
 
 window.jQuery = $;
 

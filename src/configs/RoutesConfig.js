@@ -18,8 +18,8 @@ import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceiriza
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
-import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
-import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
+import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
+import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 
 import ConfigEmailPage from "../pages/ConfigEmailPage";
 
