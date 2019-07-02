@@ -4,11 +4,11 @@ import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import CardPendencia from "../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao from "../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../Shareable/custom.css";
-import { LabelAndCombo } from "../Shareable/labelAndInput";
+import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import "../../Shareable/custom.css";
+import { LabelAndCombo } from "../../Shareable/labelAndInput";
 
 class DashboardDRE extends Component {
   constructor(props) {

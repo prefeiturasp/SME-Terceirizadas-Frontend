@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { CardDashboard } from '../Shareable/CardDashboard';
-import { InputSearch } from '../DahsboardEscola/InputSearch';
+import { CardDashboard } from '../../Shareable/CardDashboard';
+import { InputSearch } from '../../DahsboardEscola/InputSearch';
 const solicitacoes = [
     {
         text: "12083 - 7A IP I - Solicitação Unificada",
