@@ -4,7 +4,6 @@ import Home from "../pages/Home";
 import FoodInclusionPage from "../pages/FoodInclusionPage";
 import PermissionsPage from "../pages/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
-import EmailConfiguration from "../components/screens/email/EmailConfiguration";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
@@ -20,7 +19,6 @@ import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrd
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-
 import ConfigEmailPage from "../pages/ConfigEmailPage";
 
 
