@@ -6,7 +6,6 @@ import {
   LabelAndTextArea,
   LabelAndDate
 } from "./Shareable/labelAndInput/labelAndInput";
-import "./Shareable/custom.css";
 import { Field, reduxForm } from "redux-form";
 import CardHeader from "./Shareable/CardHeader";
 

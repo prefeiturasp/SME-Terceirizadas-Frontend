@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { formValueSelector, reduxForm } from "redux-form";
-import "../../Shareable/custom.css";
 import "../../Shareable/style.scss";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";

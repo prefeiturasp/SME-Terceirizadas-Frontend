@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import { Grid } from "./responsiveBs4";
-import './custom.css'
+import { Grid } from "../responsiveBs4";
+import './style.scss'
 
 export default class Weekly extends Component {
   constructor(props) {

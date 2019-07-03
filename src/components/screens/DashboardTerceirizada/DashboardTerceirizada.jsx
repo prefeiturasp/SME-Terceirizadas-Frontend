@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../../Shareable/custom.css";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 
 class DashboardTerceirizada extends Component {

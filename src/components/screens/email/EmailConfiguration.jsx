@@ -12,6 +12,7 @@ import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput/labe
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
 import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
+import "./style.scss";
 
 class EmailConfiguration extends Component {
   constructor(props) {

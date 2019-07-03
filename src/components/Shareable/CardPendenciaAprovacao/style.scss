@@ -90,3 +90,13 @@
     overflow-x: hidden;
   }
 }
+
+.fa-search {
+  &.inside-input {
+    z-index: 1;
+    padding-top: 12px;
+    color: #2881BB;
+    font-size: 20px;
+    position: relative;
+  }
+}

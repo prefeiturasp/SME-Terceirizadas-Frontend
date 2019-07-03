@@ -10,6 +10,34 @@ textarea {
   min-height: 121px;
 }
 
+.card-body {
+  padding: 2rem !important;
+}
+
+
+input.input-search {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 0.5px solid #a4a4a4;
+  color: #a4a4a4;
+  text-align: right !important;
+  font-style: italic;
+  &:placeholder {
+    text-align: right;
+    color: #a4a4a4;
+    padding-right: 5px;
+  }
+}
+
+.input-search-full-width {
+  display: inline-flex;
+  width: 100%;
+  input {
+    margin-right: -30px;
+  }
+}
+
 .dashboard-card-title {
   color: #035d96;
   i {
@@ -105,6 +133,15 @@ div.caption-choices {
     text-align: center;
     color: #353535;
   }
+}
+
+.category {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: normal;
+  color: #353535;
+  padding: 20px;
 }
 
 .requester {
@@ -216,6 +253,20 @@ table.table-lote {
 }
 
 // ----------- Libraries ---------------
+
+// @khanacademy/react-multi-select
+.multiselect-wrapper-disabled .dropdown-heading {
+  pointer-events: none;
+  background-color: #e9ecef !important;
+}
+
+.multiselect-wrapper-disabled
+  .dropdown
+  .dropdown-heading
+  .dropdown-heading-value
+  span {
+  color: #5d515b !important;
+}
 
 // react-tostify
 .Toastify__toast-container--top-center {

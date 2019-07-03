@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Button, { ButtonIcon } from "../Shareable/button";
-import "../Shareable/custom.css";
 
 export class UnifiedSolicitationItemList extends Component {
   constructor(props) {

@@ -18,7 +18,6 @@ import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
 import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
 import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
 import { getRefeicoesApi } from "../../services/tourRequest.service";
-import "../Shareable/custom.css";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {

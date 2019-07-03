@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
-import "../Shareable/custom.css";
 import If from "../Shareable/layout";
 import { solicitarKitsLanche } from '../../services/tourRequest.service'
 import { toastSuccess, toastError } from "../Shareable/dialogs";

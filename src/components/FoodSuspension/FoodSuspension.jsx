@@ -17,8 +17,7 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
-import "../Shareable/custom.css";
-import Weekly from "../Shareable/Weekly";
+import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
 import { FoodSuspensionItemList } from "./FoodSuspensionItemList";
 import { toastSuccess, toastError } from "../Shareable/dialogs";

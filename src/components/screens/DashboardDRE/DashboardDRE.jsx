@@ -8,8 +8,8 @@ import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import "../../Shareable/custom.css";
 import "../../Shareable/style.scss";
+import "./style.scss";
 
 class DashboardDRE extends Component {
   constructor(props) {

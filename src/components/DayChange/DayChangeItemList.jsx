@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
-import "../Shareable/custom.css";
 import If from "../Shareable/layout";
 
 export class DayChangeItemList extends Component {
@@ -53,7 +52,7 @@ export class DayChangeItemList extends Component {
   render() {
     const { dayChangeList } = this.props;
     const allDaysInfo = dayChangeList.map(dayChange => {
-      
+
       const {
         status,
         uuid,
