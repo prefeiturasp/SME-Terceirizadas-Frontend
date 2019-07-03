@@ -68,6 +68,7 @@ export class LabelAndCombo extends Component {
 
   handleChange(event) {
     const value = event.target.value;
+    console.log(this.props);
     this.props.input.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }

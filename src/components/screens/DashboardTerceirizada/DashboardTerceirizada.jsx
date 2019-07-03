@@ -1,12 +1,18 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
-import { Field, reduxForm, formValueSelector } from "redux-form";
+import { Field, reduxForm } from "redux-form";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
+import IconePD from "../../Shareable/Icones/IconePD";
+import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
+import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
+import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -128,15 +134,49 @@ class DashboardTerceirizada extends Component {
             </div>
           </div>
           {!gestaoDeAlimentacao ? (
-            <div
-              onClick={() =>
-                this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
-              }
-              className="row"
-            >
-              <div className="col-4">
-                <div className="card mt-3">
-                  <div className="card-body">Gestão de Alimentação</div>
+            <div>
+              <div className="row mt-3">
+                <div
+                  className="col-4"
+                  onClick={() =>
+                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
+                  }
+                >
+                  <CardLogo titulo={"Gestão de Alimentação"}>
+                    <IconeGestaoDeAlimentacao />
+                  </CardLogo>
+                </div>
+                <div className="col-4">
+                  <CardLogo titulo={"Dieta Especial"} disabled>
+                    <IconeDietaEspecial />
+                  </CardLogo>
+                </div>
+                <div className="col-4">
+                  <CardLogo titulo={"Finanças"} disabled>
+                    <IconeFinancas />
+                  </CardLogo>
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div
+                  className="col-4"
+                  onClick={() =>
+                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
+                  }
+                >
+                  <CardLogo titulo={"Pesquisa e Desenvolvimento P&D"} disabled>
+                    <IconePD />
+                  </CardLogo>
+                </div>
+                <div className="col-4">
+                  <CardLogo titulo={"Supervisão"} disabled>
+                    <IconeSupervisao />
+                  </CardLogo>
+                </div>
+                <div className="col-4">
+                  <CardLogo titulo={"Planejamento de Cardápio"} disabled>
+                    <IconePlanejamentoCardapio />
+                  </CardLogo>
                 </div>
               </div>
             </div>
@@ -252,27 +292,5 @@ const DashboardTerceirizadaForm = reduxForm({
   form: "dashboardTerceirizada",
   enableReinitialize: true
 })(DashboardTerceirizada);
-const selector = formValueSelector("foodInclusion");
-const mapStateToProps = state => {
-  return {
-    initialValues: state.foodInclusion.data,
-    description_first_period: selector(state, "description_first_period"),
-    description_second_period: selector(state, "description_second_period"),
-    description_third_period: selector(state, "description_third_period"),
-    description_fourth_period: selector(state, "description_fourth_period"),
-    description_integrate: selector(state, "description_integrate")
-  };
-};
 
-/*const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      loadFoodInclusion
-    },
-    dispatch
-  );*/
-
-export default connect(
-  mapStateToProps
-  //mapDispatchToProps
-)(DashboardTerceirizadaForm);
+export default DashboardTerceirizadaForm;
