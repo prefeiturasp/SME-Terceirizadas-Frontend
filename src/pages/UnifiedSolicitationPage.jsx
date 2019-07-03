@@ -1,5 +1,5 @@
 import React from "react";
-import Page from "../components/Shareable/Page";
+import Page from "../components/Shareable/Page/Page";
 import UnifiedSolicitationContainer from "../components/UnifiedSolicitation/UnifiedSolicitationContainer";
 
 export default props => (

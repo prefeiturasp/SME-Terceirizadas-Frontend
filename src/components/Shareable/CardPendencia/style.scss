@@ -1,0 +1,61 @@
+.card-pendency {
+  border: 1px solid #dadada;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  .card-title {
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #353535;
+  }
+  hr {
+    margin-top: -10px;
+  }
+  .order-box {
+    display: grid;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    background: #036aa8;
+    border: 0.5px solid #e8e8e8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    span {
+      font-weight: bold;
+      font-size: 34px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .order {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+  .order-lines {
+    padding-top: 5px;
+    display: inline-flex;
+    .label {
+      width: 25.61px;
+      height: 16px;
+      border-radius: 2px;
+    }
+    &:nth-child(1) .label {
+      background: #c9251b;
+    }
+    &:nth-child(2) .label {
+      background: #e1a303;
+    }
+    &:nth-child(3) .label {
+      background: #5ec430;
+    }
+    .text {
+      font-size: 14px;
+      color: #686868;
+      .value {
+        padding-left: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+}

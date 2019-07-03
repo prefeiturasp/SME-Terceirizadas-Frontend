@@ -8,10 +8,11 @@ import {
 } from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/dialogs";
-import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput";
+import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
 import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
+import "./style.scss";
 
 class EmailConfiguration extends Component {
   constructor(props) {

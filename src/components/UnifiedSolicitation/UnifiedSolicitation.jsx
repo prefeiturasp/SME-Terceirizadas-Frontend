@@ -7,7 +7,7 @@ import {
   LabelAndTextArea,
   LabelAndCombo,
   LabelAndInput
-} from "../Shareable/labelAndInput";
+} from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { Grid } from "../Shareable/responsiveBs4";
 import { Modal } from "react-bootstrap";
@@ -18,7 +18,8 @@ import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
 import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
 import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
 import { getRefeicoesApi } from "../../services/tourRequest.service";
-import "../Shareable/custom.css";
+import "../Shareable/style.scss";
+import "./style.scss";
 import {
   createOrUpdateUnifiedSolicitationForm,
   getUnifiedSolicitationsForm,
@@ -586,15 +587,17 @@ class UnifiedSolicitation extends Component {
               )}
             </div>
           </div>
-          <div style={{ paddingTop: "15px", paddingBottom: "30px" }}>
-            <Field
-              component={LabelAndInput}
-              label="Local do evento"
-              placeholder="Insira o local do evento"
-              name="local_passeio"
-              className="form-control"
-              validate={required}
-            />
+          <div className="form-row">
+            <div className="form-group col-12 pb-5">
+              <Field
+                component={LabelAndInput}
+                label="Local do evento"
+                placeholder="Insira o local do evento"
+                name="local_passeio"
+                className="form-control"
+                validate={required}
+              />
+            </div>
           </div>
           <div
             ref={this.pedidoMultiploRef}

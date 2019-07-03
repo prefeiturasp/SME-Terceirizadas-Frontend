@@ -1,0 +1,38 @@
+.schools-group {
+  height: 520px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 1000px;
+}
+
+.school-container {
+  padding-left: 1rem !important;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+
+table.report-table {
+  width: 100%;
+  text-align: center;
+  th {
+    background: #333333;
+    color: #ffffff;
+    padding: 10px;
+  }
+  td {
+    color: #353535;
+    border-bottom: 1px solid #353535;
+  }
+}
+
+.label-n-alunos {
+  span {
+    padding-right: 10px;
+  }
+}

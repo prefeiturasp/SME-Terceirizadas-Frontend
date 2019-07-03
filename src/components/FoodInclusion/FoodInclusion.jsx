@@ -14,11 +14,10 @@ import {
   LabelAndTextArea,
   LabelAndCombo,
   LabelAndInput
-} from "../Shareable/labelAndInput";
+} from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
-import "../Shareable/custom.css";
-import Weekly from "../Shareable/Weekly";
+import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
 import { FoodInclusionItemList } from "./FoodInclusionItemList";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
@@ -368,7 +367,7 @@ class FoodInclusionEditor extends Component {
             </div>
           )}
           <div ref={this.titleRef} className="form-row mt-3 ml-1">
-            <h3 className="bold" style={{ color: "#353535" }}>
+            <h3 className="font-weight-bold" style={{ color: "#353535" }}>
               {title}
             </h3>
           </div>

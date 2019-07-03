@@ -1,0 +1,44 @@
+div.react-datepicker-wrapper {
+  margin-right: -30px;
+}
+
+.active-calendar {
+  > i {
+    color: #2881bb;
+  }
+  > .input-group-prepend {
+    > .input-group-text {
+      background: #e4f1ff;
+      border: 1px solid #2881bb;
+      color: #2881bb;
+    }
+  }
+  > .react-datepicker-wrapper {
+    background: #e4f1ff;
+    border: 1px solid #2881bb;
+    color: #2881bb;
+    .form-control {
+      color: #2881bb;
+    }
+  }
+}
+
+.fa-calendar {
+  z-index: 1;
+  padding-top: 12px;
+  color: #a8a8a8;
+  position: relative;
+}
+
+.DraftEditor-root {
+  z-index: 0;
+}
+
+.session-header {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: normal;
+  color: #686868;
+}

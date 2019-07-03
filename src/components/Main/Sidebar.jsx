@@ -3,19 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import "./sidebar.css";
 import $ from "jquery/dist/jquery.slim";
 import { closeToggle } from "./jQClick";
-import Home from "../../pages/Home";
-import AddFood from "../AddFood";
-import { MenuChangePage } from "../../pages/MenuChangePage";
-import PermissionsPage from "../../pages/PermissionsPage";
-import TourRequestPage from "../../pages/TourRequestPage";
-import DayChangePage from "../../pages/DayChangePage";
-import FoodSuspensionPage from "../../pages/FoodSuspensionPage";
-import UnifiedSolicitationPage from "../../pages/UnifiedSolicitationPage";
-import UnifiedSolicitationHistoricPage from "../../pages/UnifiedSolicitationHistoricPage";
-import DashboardDREPage from "../../pages/DRE/DashboardDREPage";
-import KitLancheOrdersPage from "../../pages/DRE/KitLancheOrdersPage"
-import KitLancheRelatorioPage from "../../pages/DRE/KitLancheRelatorioPage"
-import DashboardEscolaPage from "../../pages/ESCOLA/DashboardEscolaPage";
 
 window.jQuery = $;
 
@@ -46,7 +33,6 @@ export class Sidebar extends Component {
 
           <Link
             className="sidebar-brand d-flex align-items-center justify-content-center"
-            component={Home}
             to="/"
           >
             <div className="sidebar-brand-icon rotate-n-15">
@@ -77,7 +63,7 @@ export class Sidebar extends Component {
           <hr className="sidebar-divider my-0" />
 
           <li className="nav-item">
-            <NavLink className="nav-link" to="/" exact component={Home}>
+            <NavLink className="nav-link" to="/" exact>
               <i className="fas fa-home" />
               <span>Home</span>
             </NavLink>
@@ -106,7 +92,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/painel-escola"
-                  component={DashboardEscolaPage}
                 >
                   Painel de Controle
                 </NavLink>
@@ -114,7 +99,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/add-food"
-                  component={AddFood}
                 >
                   Adicionar Cardápio
                 </NavLink>
@@ -122,7 +106,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/alterar-cardapio"
-                  component={MenuChangePage}
                 >
                   Alterar Cardápio
                 </NavLink>
@@ -130,7 +113,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/kit-lanche"
-                  component={TourRequestPage}
                 >
                   Kit Lanche
                 </NavLink>
@@ -138,7 +120,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/inverter-dia-cardapio"
-                  component={DayChangePage}
                 >
                   Inverter dia Cardápio
                 </NavLink>
@@ -146,7 +127,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/food-suspension"
-                  component={FoodSuspensionPage}
                 >
                   Suspender Alimentação
                 </NavLink>
@@ -177,7 +157,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/dashboard-dre"
-                  component={DashboardDREPage}
                 >
                   Dashboard
                 </NavLink>
@@ -185,7 +164,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/dre/kits-lanche"
-                  component={KitLancheOrdersPage}
                 >
                   Kit Lanche
                 </NavLink>
@@ -193,7 +171,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/dre/kits-lanche/relatorio"
-                  component={KitLancheRelatorioPage}
                 >
                   Relatório Kit Lanche
                 </NavLink>
@@ -201,7 +178,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/unified-solicitation"
-                  component={UnifiedSolicitationPage}
                 >
                   Solicitação Unificada
                 </NavLink>
@@ -232,7 +208,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/unified-solicitation/historic"
-                  component={UnifiedSolicitationHistoricPage}
                 >
                   Solicitação Unificada
                 </NavLink>
@@ -259,13 +234,27 @@ export class Sidebar extends Component {
               data-parent="#accordionSidebar"
             >
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Cad 1</h6>
-                <Link className="collapse-item" href="#test">
-                  Cad 2
-                </Link>
-                <Link className="collapse-item" href="#test">
-                  Cad 3
-                </Link>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/painel-de-controle"
+                >
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/kits-lanche"
+                >
+                  Kit Lanche
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/terceirizada/kits-lanche/relatorio"
+                >
+                  Relatório Kit Lanche
+                </NavLink>
               </div>
             </div>
           </li>
@@ -294,7 +283,6 @@ export class Sidebar extends Component {
                   activeClassName="active"
                   className="collapse-item"
                   to="/permissions"
-                  component={PermissionsPage}
                 >
                   Permissões
                 </NavLink>

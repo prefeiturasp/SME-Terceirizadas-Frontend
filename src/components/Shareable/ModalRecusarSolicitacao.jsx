@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { LabelAndTextArea, LabelAndCombo } from "../Shareable/labelAndInput";
+import { LabelAndTextArea, LabelAndCombo } from "./labelAndInput/labelAndInput";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";

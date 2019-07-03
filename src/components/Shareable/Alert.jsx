@@ -1,6 +1,5 @@
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import "./custom.css";
 import If from "./layout";
 
 // TODO: colocar fonte roboto

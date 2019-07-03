@@ -4,7 +4,6 @@ import Home from "../pages/Home";
 import FoodInclusionPage from "../pages/FoodInclusionPage";
 import PermissionsPage from "../pages/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
-import EmailConfiguration from "../components/screens/email/EmailConfiguration";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
 import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
@@ -14,9 +13,12 @@ import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
 import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/KitLancheRelatorioPage";
-import DashboardEscolaPage from "../pages/ESCOLA/DashboardEscolaPage";
-import StatusSolicitacoesPage from "../pages/ESCOLA/StatusSolicitacoesPage";
-
+import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
+import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
+import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
+import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
+import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
+import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import ConfigEmailPage from "../pages/ConfigEmailPage";
 
 
@@ -94,6 +96,26 @@ const routesConfig = [
   {
     path: "/dre/kits-lanche",
     component: KitsLancheOrdersPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/painel-de-controle",
+    component: DashboardTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/solicitacoes",
+    component: StatusSolicitacoesTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/kits-lanche/relatorio",
+    component: KitsLancheRelatorioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/kits-lanche",
+    component: KitsLancheOrdersTerceirizadaPage,
     exact: false
   },
   {

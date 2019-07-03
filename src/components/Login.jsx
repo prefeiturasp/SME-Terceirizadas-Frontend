@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import { required } from "../helpers/fieldValidators";
 import authService from "../services/auth";
 import BaseButton, { ButtonStyle, ButtonType } from "./Shareable/button";
-import { LabelAndInput } from "./Shareable/labelAndInput";
+import { LabelAndInput } from "./Shareable/labelAndInput/labelAndInput";
 
 export class Login extends Component {
   handleSubmit = values => {

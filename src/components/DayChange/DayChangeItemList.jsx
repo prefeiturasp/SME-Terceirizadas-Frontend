@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
-import "../Shareable/custom.css";
 import If from "../Shareable/layout";
 
 export class DayChangeItemList extends Component {
@@ -44,18 +43,17 @@ export class DayChangeItemList extends Component {
     this.props.resetForm();
   }
 
-  onEnviarSolicitacoesBtClicked = (event) => {
+  onEnviarSolicitacoesBtClicked = event => {
     this.state.checkedObjects.map(obj => {
       console.log(obj.uuid);
     });
-  }
+  };
 
   render() {
     const { dayChangeList } = this.props;
 
     if (dayChangeList.length) {
       const allDaysInfo = dayChangeList.map(dayChange => {
-
         const {
           status,
           uuid,
@@ -63,16 +61,22 @@ export class DayChangeItemList extends Component {
           data_de,
           data_para,
           descricao,
-          observacao,
+          observacao
         } = dayChange;
-        let backgroundColor = status === "ESCOLA_SALVOU" ? "#82B7E8" : "#DADADA";
+        let backgroundColor =
+          status === "ESCOLA_SALVOU" ? "#82B7E8" : "#DADADA";
         return (
           <div className="card border rounded mt-3 p-2">
             <div className="mt-2 row">
               <div className="col-sm">
-                <label className="bold ml-3">Alteração de Dia de cardápio {`# ${uuid}`}</label>
-                <span className="ml-3 p-1 border rounded" style={{ background: backgroundColor }}>
-                  {'SALVO'}
+                <label className="bold ml-3">
+                  Alteração de Dia de cardápio {`# ${uuid}`}
+                </label>
+                <span
+                  className="ml-3 p-1 border rounded"
+                  style={{ background: backgroundColor }}
+                >
+                  {"SALVO"}
                 </span>
               </div>
               <div className="col-sm-3">
@@ -90,24 +94,24 @@ export class DayChangeItemList extends Component {
                         data_de,
                         data_para,
                         descricao,
-                        observacao,
+                        observacao
                       })
                     }
                   />
                 </div>
               </div>
-
             </div>
             <div className="row">
               <div className="col-sm">
                 <div className="ml-3">
-                  <p>Substituição do dia: <b>{data_de}</b>{" "}
+                  <p>
+                    Substituição do dia: <b>{data_de}</b>{" "}
                     <i
                       className={"fa fa-arrow-right ml-2 mr-2"}
                       style={{ color: "#2881BB" }}
                     />{" "}
                     para o dia:
-                  <b>{data_para}</b>
+                    <b>{data_para}</b>
                   </p>
                 </div>
               </div>
@@ -128,7 +132,7 @@ export class DayChangeItemList extends Component {
                         data_de,
                         data_para,
                         descricao,
-                        observacao,
+                        observacao
                       })
                     }
                   />
@@ -153,9 +157,7 @@ export class DayChangeItemList extends Component {
         </div>
       );
     } else {
-      return (
-        <div></div>
-      )
+      return <div />;
     }
   }
 }
