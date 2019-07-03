@@ -1,3 +1,11 @@
+label {
+  margin-bottom: 0 !important;
+}
+
+input::placeholder {
+  text-align: left;
+}
+
 textarea {
   min-height: 121px;
 }
@@ -129,15 +137,6 @@ div.caption-choices {
   font-size: 12px;
 }
 
-// react-tostify
-.Toastify__toast-container--top-center {
-  font-weight: 500;
-  font-size: 22px;
-  left: 15%;
-  min-width: 90%;
-  text-align: center;
-}
-
 table.table-lote {
   th {
     font-weight: normal;
@@ -214,4 +213,21 @@ table.table-lote {
       opacity: 1;
     }
   }
+}
+
+// ----------- Libraries ---------------
+
+// react-tostify
+.Toastify__toast-container--top-center {
+  font-weight: 500;
+  font-size: 22px;
+  left: 15%;
+  min-width: 90%;
+  text-align: center;
+}
+
+// react-burgers
+.BurgerBox {
+  width: 18px !important;
+  line-height: 3px;
 }

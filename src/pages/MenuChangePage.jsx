@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {MenuChange} from '../components/MenuChange'
-import Page from '../components/Shareable/Page';
+import Page from '../components/Shareable/Page/Page';
 
 
 
