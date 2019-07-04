@@ -21,7 +21,7 @@ import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import ConfigEmailPage from "../pages/ConfigEmailPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
-
+import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 
 const routesConfig = [
   {
@@ -132,6 +132,11 @@ const routesConfig = [
   {
     path: "/status-solicitacoes-escola",
     component: StatusSolicitacoesPage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/lote",
+    component: CadastroLotePage,
     exact: false
   },
   {

@@ -43,7 +43,7 @@ class Cadastros extends Component {
         </div>
         <div className="row mt-3">
           <div className="linked-card col-4">
-            <Link to="/">
+            <Link to="/configuracoes/cadastros/lote">
               <CardLogo titulo={"Cadastro de Empresas"}>
                 <IconeEmpresa />
               </CardLogo>

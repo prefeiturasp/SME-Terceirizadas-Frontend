@@ -3,3 +3,24 @@
     color: #A8A8A8;
   }
 }
+
+.cadastro {
+  .col-sm-12, .col-xs-12, .col-md-12, .col-lg-12 {
+    padding: 0;
+  }
+  label {
+    &.label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #686868;
+      span {
+        color: #C9251B;
+      }
+    }
+    &.link {
+      cursor: pointer;
+      font-weight: bold;
+      color: #035D96;
+    }
+  }
+}
