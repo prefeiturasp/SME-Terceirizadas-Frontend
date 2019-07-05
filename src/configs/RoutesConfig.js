@@ -22,6 +22,7 @@ import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import ConfigEmailPage from "../pages/ConfigEmailPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
+import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 
 const routesConfig = [
   {
@@ -132,6 +133,11 @@ const routesConfig = [
   {
     path: "/status-solicitacoes-escola",
     component: StatusSolicitacoesPage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/lotes-cadastrados",
+    component: LotesCadastradosPage,
     exact: false
   },
   {

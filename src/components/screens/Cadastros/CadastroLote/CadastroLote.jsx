@@ -86,7 +86,7 @@ class CadastroLote extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <Link to="#">
+                  <Link to="/configuracoes/cadastros/lotes-cadastrados">
                     <label className="link">
                       Consulta de lotes cadastrados
                     </label>
