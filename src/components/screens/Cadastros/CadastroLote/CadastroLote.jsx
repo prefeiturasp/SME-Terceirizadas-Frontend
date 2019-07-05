@@ -1,8 +1,14 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Field, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
+import { ModalCadastroLote } from "./ModalCadastroLote";
+import {
+  LabelAndCombo,
+  LabelAndInput
+} from "../../../Shareable/labelAndInput/labelAndInput";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { required } from "../../../../helpers/fieldValidators";
 import { getSchools } from "../../../../services/school.service";
 import "../style.scss";
@@ -14,14 +20,15 @@ class CadastroLote extends Component {
       escolas: [],
       escolasSelecionadas: []
     };
+    this.fecharModal = this.fecharModal.bind(this);
   }
 
   componentDidMount() {
     getSchools().then(res => {
       let escolas = res.slice(0, 50);
       escolas.forEach(function(escola) {
-        escola["label"] = escola["_id"].toString() + " - " + escola["nome"];
-        escola["value"] = escola["_id"].toString();
+        escola["label"] = escola["value"] =
+          escola["_id"].toString() + " - " + escola["nome"];
       });
       this.setState({ escolas });
     });
@@ -31,7 +38,6 @@ class CadastroLote extends Component {
     if (selected.length === 0) {
       return "Selecione algumas escolas...";
     }
-
     if (selected.length === options.length) {
       return "Todas as escolas foram selecionadas";
     }
@@ -41,10 +47,35 @@ class CadastroLote extends Component {
     return `${selected.length} escolas selecionadas`;
   }
 
+  exibirModal() {
+    this.setState({ exibirModal: true });
+  }
+
+  fecharModal(e) {
+    this.setState({ exibirModal: false });
+  }
+
+  lidarComCampo() {}
+
+  lidarComSelecionados(value) {
+    this.setState({ escolasSelecionadas: value });
+  }
+
+  onSubmit(values) {
+    this.exibirModal();
+  }
+
   render() {
-    const { escolas, escolasSelecionadas } = this.state;
+    const { handleSubmit, resumo } = this.props;
+    const { escolas, escolasSelecionadas, exibirModal } = this.state;
     return (
       <div className="cadastro pt-3">
+        <ModalCadastroLote
+          closeModal={this.fecharModal}
+          showModal={exibirModal}
+          resumo={resumo}
+          escolasSelecionadas={escolasSelecionadas}
+        />
         <form onSubmit={this.props.handleSubmit}>
           <div className="card">
             <div className="card-body">
@@ -70,8 +101,12 @@ class CadastroLote extends Component {
                   <Field
                     component={LabelAndCombo}
                     name="dre"
-                    onChange={value => this.handleField()}
+                    onChange={value => this.lidarComCampo()}
                     options={[
+                      {
+                        value: null,
+                        label: "Selecione"
+                      },
                       {
                         value: "DRE Ipiranga",
                         label: "Ipiranga"
@@ -87,14 +122,17 @@ class CadastroLote extends Component {
                   <Field
                     component={LabelAndCombo}
                     name="subprefeitura"
-                    onChange={value => this.handleField()}
+                    onChange={value => this.lidarComCampo()}
                     options={[
+                      {
+                        value: null,
+                        label: "Selecione"
+                      },
                       {
                         value: "DRE Ipiranga",
                         label: "Ipiranga"
                       }
                     ]}
-                    validate={required}
                   />
                 </div>
               </div>
@@ -104,10 +142,10 @@ class CadastroLote extends Component {
                     <span>* </span>Nome do Lote
                   </label>
                   <Field
-                    component={"input"}
+                    component={LabelAndInput}
                     className="form-control"
                     name="nome"
-                    onChange={value => this.handleField()}
+                    onChange={value => this.lidarComCampo()}
                     validate={required}
                   />
                 </div>
@@ -116,17 +154,17 @@ class CadastroLote extends Component {
                     <span>* </span>Nº do Lote
                   </label>
                   <Field
-                    component={"input"}
+                    component={LabelAndInput}
                     className="form-control"
                     name="numero"
-                    onChange={value => this.handleField()}
+                    onChange={value => this.lidarComCampo()}
                     validate={required}
                   />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <label>Unidades Específicas do Lote</label>
+                  <label className="label">Unidades Específicas do Lote</label>
                   {escolas.length ? (
                     <Field
                       component={StatefulMultiSelect}
@@ -135,10 +173,10 @@ class CadastroLote extends Component {
                       options={escolas}
                       valueRenderer={this.renderizarLabelEscola}
                       onSelectedChanged={value =>
-                        this.setState({ escolasSelecionadas: value })
+                        this.lidarComSelecionados(value)
                       }
-                      disableSearch={true}
                       overrideStrings={{
+                        search: "Busca",
                         selectSomeItems: "Selecione",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
@@ -150,6 +188,42 @@ class CadastroLote extends Component {
                   )}
                 </div>
               </div>
+              {escolasSelecionadas.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <label className="label-selected-unities">
+                      Unidades Específicas do Lote Selecionadas
+                    </label>
+                    {escolasSelecionadas.map((escola, indice) => {
+                      return (
+                        <div className="value-selected-unities" key={indice}>
+                          {escola}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              <div className="row float-right mt-4">
+                <div className="col-12">
+                  <BaseButton
+                    label="Cancelar"
+                    onClick={event => this.resetForm(event)}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label={"Salvar"}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values
+                      })
+                    )}
+                    className="ml-3"
+                    type={ButtonType.SUBMIT}
+                    style={ButtonStyle.Primary}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </form>
@@ -159,8 +233,19 @@ class CadastroLote extends Component {
 }
 
 const CadastroLoteForm = reduxForm({
-  form: "foodInclusion",
+  form: "cadastroLoteForm",
   enableReinitialize: true
 })(CadastroLote);
+const selector = formValueSelector("cadastroLoteForm");
+const mapStateToProps = state => {
+  return {
+    resumo: {
+      dre: selector(state, "dre"),
+      subprefeitura: selector(state, "subprefeitura"),
+      nome: selector(state, "nome"),
+      numero: selector(state, "numero")
+    }
+  };
+};
 
-export default CadastroLoteForm;
+export default connect(mapStateToProps)(CadastroLoteForm);
