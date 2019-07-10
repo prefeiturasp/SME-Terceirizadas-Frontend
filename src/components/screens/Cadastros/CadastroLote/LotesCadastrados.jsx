@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { EmpresasDoLote } from "./EmpresasDoLote/EmpresasDoLote";
+import { Stand } from "react-burgers";
+import { Collapse } from "react-collapse";
 import "../style.scss";
 
 class LotesCadastrados extends Component {
@@ -11,31 +13,36 @@ class LotesCadastrados extends Component {
           nome: "1 BT",
           dre: "BUTANTÃ",
           tipo_de_gestao: "MISTA",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "2 CLI",
           dre: "CAMPO LIMPO",
           tipo_de_gestao: "MISTA",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "3 CLIII",
           dre: "CAMPO LIMPO",
           tipo_de_gestao: "MISTA",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "4 CS",
           dre: "CAPELA DO SOCORRO",
           tipo_de_gestao: "TERC TOTAL",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "5 FO",
           dre: "FREGUESIA DO Ó",
           tipo_de_gestao: "TERC TOTAL",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "7A IP I",
@@ -57,50 +64,106 @@ class LotesCadastrados extends Component {
               cnpj: "61.980.272/0001-90",
               tel: "(12) 3023-5000"
             }
-          ]
+          ],
+          ativo: false
         },
         {
           nome: "7A IP II",
           dre: "FREGUESIA DO Ó",
           tipo_de_gestao: "TERC TOTAL",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "7A IP II",
           dre: "FREGUESIA DO Ó",
           tipo_de_gestao: "TERC TOTAL",
-          empresas: []
+          empresas: [],
+          ativo: false
         },
         {
           nome: "7A IP II",
           dre: "FREGUESIA DO Ó",
           tipo_de_gestao: "TERC TOTAL",
-          empresas: []
+          empresas: [
+            {
+              nome: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
+              cnpj: "61.980.272/0001-90",
+              tel: "(12) 3023-5000"
+            },
+            {
+              nome: "P.R.M SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI",
+              cnpj: "61.980.272/0001-90",
+              tel: "(12) 3023-5000"
+            },
+            {
+              nome: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
+              cnpj: "61.980.272/0001-90",
+              tel: "(12) 3023-5000"
+            }
+          ],
+          ativo: false
         }
       ]
     };
+  }
+
+  lidarComBurger(lote) {
+    lote.ativo = !lote.ativo;
+    this.forceUpdate();
   }
 
   render() {
     const { lotes } = this.state;
     return (
       <div className="card pt-3">
-        <div className="card-body">
-          <table>
+        <div className="card-body card-table-cadastro">
+          <table className="cadastro">
             <tr>
               <th>Nome/Nº Lote</th>
               <th>DRE</th>
               <th>Tipo de Gestão</th>
               <th>Pesquisar</th>
             </tr>
-            {lotes.map((lote, indice) => {
+            {lotes.map(lote => {
               return [
-                <tr>
+                <tr
+                  className={
+                    lote.ativo && lote.empresas.length > 0
+                      ? "relationed-companies"
+                      : ""
+                  }
+                >
                   <td>{lote.nome}</td>
                   <td>{lote.dre}</td>
                   <td>{lote.tipo_de_gestao}</td>
+                  <td>
+                    <Stand
+                      onClick={() => this.lidarComBurger(lote)}
+                      color={"#C8C8C8"}
+                      width={30}
+                      padding={0}
+                      lineSpacing={5}
+                      active={lote.ativo}
+                    />
+                  </td>
                 </tr>,
-                <EmpresasDoLote empresas={lote.empresas} />
+                lote.empresas.length > 0 && lote.ativo && (
+                  <tr className="relationed-company-title">
+                    <td colSpan="4">Empresas relacionadas:</td>
+                  </tr>
+                ),
+                lote.empresas.map((empresa, indice) => {
+                  return (
+                    <tr className="relationed-companies">
+                      <EmpresasDoLote
+                        ultimo={lote.empresas.length === indice + 1}
+                        empresa={empresa}
+                        ativo={lote.ativo}
+                      />
+                    </tr>
+                  );
+                })
               ];
             })}
           </table>
