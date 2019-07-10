@@ -63,6 +63,15 @@
 
 table.cadastro {
   width: 100%;
+  .input-search {
+    width: 50%;
+    padding-right: 10px;
+    &::placeholder {
+      padding-right: 10px;
+      text-align: right;
+    }
+  }
+
   th {
     font-weight: 600;
     font-size: 14px;
