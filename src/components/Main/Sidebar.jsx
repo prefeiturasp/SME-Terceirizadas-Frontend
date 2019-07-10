@@ -278,13 +278,19 @@ export class Sidebar extends Component {
               data-parent="#accordionSidebar"
             >
               <div className="bg-white py-2 collapse-inner rounded">
-                <h6 className="collapse-header">Dados</h6>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="/permissions"
                 >
                   Permissões
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/configuracoes/cadastros"
+                >
+                  Cadastros
                 </NavLink>
               </div>
             </div>

@@ -20,7 +20,9 @@ import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLanche
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import ConfigEmailPage from "../pages/ConfigEmailPage";
-
+import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
+import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 
 const routesConfig = [
   {
@@ -133,6 +135,21 @@ const routesConfig = [
     component: StatusSolicitacoesPage,
     exact: false
   },
+  {
+    path: "/configuracoes/cadastros/lotes-cadastrados",
+    component: LotesCadastradosPage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/lote",
+    component: CadastroLotePage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros",
+    component: CadastrosPage,
+    exact: false
+  }
 ];
 
 export default routesConfig;
