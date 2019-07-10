@@ -288,6 +288,13 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
+                  to="/configuracoes/mensagem"
+                >
+                  Mensagem
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
                   to="/configuracoes/cadastros"
                 >
                   Cadastros
