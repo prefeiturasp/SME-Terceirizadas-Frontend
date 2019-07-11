@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Field, formValueSelector, reduxForm, reset } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
@@ -12,8 +12,8 @@ import {
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep, fieldTel } from "./helper";
-
+import { transformaObjetos, fieldCnpj, fieldCep, fieldTel, resetForm } from "./helper";
+import { toastSuccess } from '../../../Shareable/dialogs';
 
 
 class CadastroEmpresa extends Component {
@@ -33,10 +33,6 @@ class CadastroEmpresa extends Component {
     });
   }
 
-  resetForm(formValues, dispatch){
-    dispatch(reset('cadastroEmpresaForm'))
-  }
-
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
       return "Selecione um ou mais lotes...";
@@ -54,8 +50,29 @@ class CadastroEmpresa extends Component {
     this.setState({ lotesSelecionados: value });
   }
 
-  redirecionarParaCadastros(){
-    
+  resetForm(){
+    this.props.reset();
+    this.props.change("razão_social", "");
+    this.props.change("cnpj", "");
+    this.props.change("nome_fantasia", "");
+    this.props.change("endereco", "");
+    this.props.change("cep", "");
+    this.props.change("telefone_empresa", "");
+    this.props.change("email_empresa", "");
+    this.props.change("representante_legal", "");
+    this.props.change("contato", "");
+    this.props.change("nutricionista", "");
+    this.props.change("crn", "");
+    this.props.change("telefone_nutricionista", "");
+    this.props.change("email_nutricionista", "");
+    this.props.change("edital", "");
+    this.props.change("contrato", "");
+  }
+
+  salvaFormulario(){
+    this.resetForm();
+    this.setState({ lotesSelecionados: []});
+    toastSuccess('Empresa adicionada com sucesso!')
   }
 
   render() {
@@ -300,13 +317,13 @@ class CadastroEmpresa extends Component {
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
-                    onClick={() => {}}
+                    onClick={event => this.resetForm(event)}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => 
-                      console.log(values)
+                    onClick={handleSubmit(values =>
+                      this.salvaFormulario()
                     )}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
