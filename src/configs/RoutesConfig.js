@@ -23,6 +23,8 @@ import ConfigEmailPage from "../pages/ConfigEmailPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
+import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+
 
 const routesConfig = [
   {
@@ -143,6 +145,11 @@ const routesConfig = [
   {
     path: "/configuracoes/cadastros/lote",
     component: CadastroLotePage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/empresa",
+    component: CadastroEmpresaPage,
     exact: false
   },
   {

@@ -136,3 +136,30 @@ table.cadastro {
 
   }
 }
+
+.button-container{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-action {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.lotes_container{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 0 15px 10px 15px;
+
+  .drop-down-lotes{
+    width: 50%;
+    padding-right: 15px;
+  }
+  .select-lotes{
+    width: 50%;
+    padding-left: 15px;
+  }
+}
