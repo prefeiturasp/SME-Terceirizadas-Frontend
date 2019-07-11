@@ -1,5 +1,5 @@
 import ptBR from "date-fns/locale/pt-BR";
-import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
@@ -13,6 +13,7 @@ import { dateDelta } from "../../../helpers/utilities";
 import { ErrorAlert } from "../Alert";
 import If from "../layout";
 import { Grid } from "../responsiveBs4";
+import { OpcoesCustomizadas } from "./OpcoesCustomizadas";
 import "./style.scss";
 
 export const LabelAndInput = props => {
@@ -68,7 +69,6 @@ export class LabelAndCombo extends Component {
 
   handleChange(event) {
     const value = event.target.value;
-    console.log(this.props);
     this.props.input.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
@@ -217,44 +217,6 @@ export class LabelAndDate extends Component {
   }
 }
 
-export class CustomOption extends Component {
-  static propTypes = {
-    onChange: PropTypes.func,
-    editorState: PropTypes.object
-  };
-
-  constructor(props) {
-    super(props);
-    this.adicionarVariavel = this.adicionarVariavel.bind(this);
-  }
-
-  adicionarVariavel(variavel) {
-    const { editorState, onChange } = this.props;
-    const contentState = Modifier.replaceText(
-      editorState.getCurrentContent(),
-      editorState.getSelection(),
-      variavel,
-      editorState.getCurrentInlineStyle()
-    );
-    onChange(EditorState.push(editorState, contentState, "insert-characters"));
-  }
-
-  render() {
-    return (
-      <div className="variables my-auto">
-        <div onClick={() => this.adicionarVariavel("{{identificador}}")}>
-          Identificador
-        </div>
-        <div onClick={() => this.adicionarVariavel("{{nome}}")}>Nome</div>
-        <div onClick={() => this.adicionarVariavel("{{data}}")}>Data</div>
-        <div onClick={() => this.adicionarVariavel("{{tipo_de_alimentacao}}")}>
-          Tipo de alimentação
-        </div>
-      </div>
-    );
-  }
-}
-
 // Thanks community: https://github.com/jpuri/react-draft-wysiwyg/issues/556
 export class LabelAndTextArea extends Component {
   constructor(props) {
@@ -333,7 +295,7 @@ export class LabelAndTextArea extends Component {
 
   render() {
     const { editorState } = this.state;
-    const { cols, name, label, placeholder, meta } = this.props;
+    const { cols, name, label, placeholder, meta, temOpcoesCustomizadas } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
         {label && (
@@ -344,8 +306,8 @@ export class LabelAndTextArea extends Component {
         <Editor
           editorState={editorState}
           name={name}
-          wrapperClassName="demo-wrapper border rounded"
-          editorClassName="demo-editor ml-2"
+          wrapperClassName="border rounded"
+          editorClassName="ml-2"
           className="form-control"
           placeholder={placeholder}
           onBlur={event => this.onBlur(event)}
@@ -360,12 +322,14 @@ export class LabelAndTextArea extends Component {
             },
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
-          toolbarCustomButtons={[
-            <CustomOption
-              editorState={editorState}
-              onChange={this.handleChange}
-            />
-          ]}
+          toolbarCustomButtons={
+            temOpcoesCustomizadas && [
+              <OpcoesCustomizadas
+                editorState={editorState}
+                onChange={this.handleChange}
+              />
+            ]
+          }
         />
         <If isVisible={meta}>
           <ErrorAlert meta={meta} />

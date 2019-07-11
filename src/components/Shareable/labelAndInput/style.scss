@@ -55,5 +55,10 @@ div.react-datepicker-wrapper {
     border-radius: 20px;
     padding: 3px 10px;
     cursor: pointer;
+    &.used {
+      background: #f8f5f5;
+      color: #A8A8A8;
+      border: 1px solid #dadada;
+    }
   }
 }

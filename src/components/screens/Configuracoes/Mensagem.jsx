@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   LabelAndCombo,
   LabelAndInput,
@@ -7,6 +8,7 @@ import {
 } from "../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { required } from "../../../helpers/fieldValidators";
+import { toastSuccess } from "../../Shareable/dialogs";
 import "./style.scss";
 
 class Mensagem extends Component {
@@ -22,8 +24,12 @@ class Mensagem extends Component {
     }
   }
 
+  onSubmit(values) {
+    toastSuccess("Configurações de E-mail salvas com sucesso!");
+  }
+
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, cancelar_notificacao } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit}>
@@ -84,11 +90,36 @@ class Mensagem extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <label className="label">Mensagem</label>
-                  <Field component={LabelAndTextArea} name="mensagem" />
+                  <Field
+                    component={LabelAndTextArea}
+                    name="mensagem"
+                    temOpcoesCustomizadas
+                  />
                 </div>
               </div>
-              <div className="row float-right mt-4">
-                <div className="col-12">
+              <div className="row mt-4">
+                <div className="col-4">
+                  <div className="cancel-notification">
+                    <label htmlFor="check" className="checkbox-label">
+                      <Field
+                        component={"input"}
+                        type="checkbox"
+                        name="cancelar_notificacao"
+                      />
+                      <span
+                        onClick={() =>
+                          this.props.change(
+                            "cancelar_notificacao",
+                            !cancelar_notificacao
+                          )
+                        }
+                        className="checkbox-custom"
+                      />
+                      Cancelar notificação
+                    </label>
+                  </div>
+                </div>
+                <div className="offset-4 col-4 text-right">
                   <BaseButton
                     label="Cancelar"
                     onClick={event => this.resetForm(event)}
@@ -119,5 +150,11 @@ const MensagemForm = reduxForm({
   form: "mensagemForm",
   enableReinitialize: true
 })(Mensagem);
+const selector = formValueSelector("mensagemForm");
+const mapStateToProps = state => {
+  return {
+    cancelar_notificacao: selector(state, "cancelar_notificacao")
+  };
+};
 
-export default MensagemForm;
+export default connect(mapStateToProps)(MensagemForm);
