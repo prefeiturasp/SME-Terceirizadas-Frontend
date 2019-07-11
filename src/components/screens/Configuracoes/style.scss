@@ -1,0 +1,18 @@
+.card {
+  &.configuracao-mensagem {
+    .col-sm-12,
+    .col-xs-12,
+    .col-md-12,
+    .col-lg-12 {
+      padding: 0;
+    }
+    label.label {
+      font-weight: bold;
+      font-size: 14px;
+      color: #686868;
+    }
+    input {
+      background-color: #e8e8e8;
+    }
+  }
+}

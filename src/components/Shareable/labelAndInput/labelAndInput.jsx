@@ -1,5 +1,5 @@
 import ptBR from "date-fns/locale/pt-BR";
-import { ContentState, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertToRaw, EditorState, Modifier } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import moment from "moment";
@@ -217,6 +217,44 @@ export class LabelAndDate extends Component {
   }
 }
 
+export class CustomOption extends Component {
+  static propTypes = {
+    onChange: PropTypes.func,
+    editorState: PropTypes.object
+  };
+
+  constructor(props) {
+    super(props);
+    this.adicionarVariavel = this.adicionarVariavel.bind(this);
+  }
+
+  adicionarVariavel(variavel) {
+    const { editorState, onChange } = this.props;
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      variavel,
+      editorState.getCurrentInlineStyle()
+    );
+    onChange(EditorState.push(editorState, contentState, "insert-characters"));
+  }
+
+  render() {
+    return (
+      <div className="variables my-auto">
+        <div onClick={() => this.adicionarVariavel("{{identificador}}")}>
+          Identificador
+        </div>
+        <div onClick={() => this.adicionarVariavel("{{nome}}")}>Nome</div>
+        <div onClick={() => this.adicionarVariavel("{{data}}")}>Data</div>
+        <div onClick={() => this.adicionarVariavel("{{tipo_de_alimentacao}}")}>
+          Tipo de alimentação
+        </div>
+      </div>
+    );
+  }
+}
+
 // Thanks community: https://github.com/jpuri/react-draft-wysiwyg/issues/556
 export class LabelAndTextArea extends Component {
   constructor(props) {
@@ -298,14 +336,16 @@ export class LabelAndTextArea extends Component {
     const { cols, name, label, placeholder, meta } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
-        <label htmlFor={name} className={"session-header col-form-label"}>
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={name} className={"session-header col-form-label"}>
+            {label}
+          </label>
+        )}
         <Editor
           editorState={editorState}
           name={name}
-          wrapperClassName="border rounded"
-          editorClassName="ml-2"
+          wrapperClassName="demo-wrapper border rounded"
+          editorClassName="demo-editor ml-2"
           className="form-control"
           placeholder={placeholder}
           onBlur={event => this.onBlur(event)}
@@ -320,6 +360,12 @@ export class LabelAndTextArea extends Component {
             },
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
+          toolbarCustomButtons={[
+            <CustomOption
+              editorState={editorState}
+              onChange={this.handleChange}
+            />
+          ]}
         />
         <If isVisible={meta}>
           <ErrorAlert meta={meta} />
