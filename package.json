@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@khanacademy/react-multi-select": "^0.3.2",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-jest": "^24.7.1",
     "bootstrap": "^4.3.1",
     "date-fns": "^2.0.0-alpha.27",
@@ -35,7 +35,7 @@
     "redux-multi": "^0.1.12",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
-    "startbootstrap-sb-admin-2": "^4.0.3"
+    "startbootstrap-sb-admin-2": "^4.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

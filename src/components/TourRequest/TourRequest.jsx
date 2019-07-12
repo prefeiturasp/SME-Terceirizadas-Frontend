@@ -126,6 +126,8 @@ export class TourRequest extends Component {
       this.setState({
         segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
       });
+    }).catch(error => {
+      console.log('ERROR AO CARREGAR DIAS ULTEIS', error)
     });
   }
 
