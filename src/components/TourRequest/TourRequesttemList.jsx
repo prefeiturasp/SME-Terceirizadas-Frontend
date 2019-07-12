@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import Button, { ButtonIcon, ButtonStyle } from "../Shareable/button";
+import Button, { ButtonStyle } from "../Shareable/button";
 import If from "../Shareable/layout";
-import { solicitarKitsLanche } from '../../services/tourRequest.service'
+import { solicitarKitsLanche } from "../../services/tourRequest.service";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 
 export class TourRequestItemList extends Component {
@@ -13,13 +13,13 @@ export class TourRequestItemList extends Component {
   }
 
   styleTitle = {
-    color: '#353535',
-    fontFamily: 'Roboto',
-    fontStyle: 'normal',
+    color: "#353535",
+    fontFamily: "Roboto",
+    fontStyle: "normal",
     fontWeight: 500,
-    fontSize: '18px',
-    lineLeight: '21px'
-  }
+    fontSize: "18px",
+    lineLeight: "21px"
+  };
 
   static propTypes = {
     tourRequestList: PropTypes.arrayOf(
@@ -61,20 +61,20 @@ export class TourRequestItemList extends Component {
   }
 
   onEnviarSolicitacoesBtClicked(event) {
-    const listIds = []
+    const listIds = [];
     this.state.checkedObjects.forEach(obj => {
-      listIds.push(obj.id)
+      listIds.push(obj.id);
     });
 
     if (listIds.length > 0) {
       solicitarKitsLanche(listIds).then(resp => {
-        this.props.refreshComponent()
+        this.props.refreshComponent();
         if (resp.success) {
-          toastSuccess(resp.success)
+          toastSuccess(resp.success);
         } else {
-          toastError(resp.error)
+          toastError(resp.error);
         }
-      })
+      });
     }
   }
 
@@ -102,7 +102,7 @@ export class TourRequestItemList extends Component {
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {status.replace('SAVED', 'SALVO')}
+              {status.replace("SAVED", "SALVO")}
             </span>
             <div className="float-right">
               <input
@@ -119,18 +119,16 @@ export class TourRequestItemList extends Component {
                   Data do evento: <b>{evento_data}</b> Local do passeio:{" "}
                   <b>{local_passeio}</b>
                 </label>
-                <div className="float-right">
+                <div className="icon-draft-card float-right">
                   Salvo em: {salvo_em}
-                  <Button
-                    icon={ButtonIcon.TRASH}
-                    onClick={p => this.OnDeleteButtonClicked(id)}
-                  />
-                  <Button
-                    icon={ButtonIcon.EDIT}
-                    onClick={p =>
-                      this.props.OnEditButtonClicked(tourRequest)
-                    }
-                  />
+                  <span onClick={p => this.OnDeleteButtonClicked(id)}>
+                    <i className="fas fa-trash" />
+                  </span>
+                  <span
+                    onClick={p => this.props.OnEditButtonClicked(tourRequest)}
+                  >
+                    <i className="fas fa-edit" />
+                  </span>
                 </div>
               </div>
               <label>

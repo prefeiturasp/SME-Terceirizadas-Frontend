@@ -119,7 +119,7 @@ class Mensagem extends Component {
                     </label>
                   </div>
                 </div>
-                <div className="offset-4 col-4 text-right">
+                <div className="col-8 text-right">
                   <BaseButton
                     label="Cancelar"
                     onClick={event => this.resetForm(event)}

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Button, { ButtonIcon } from "../Shareable/button";
 
 export class UnifiedSolicitationItemList extends Component {
   constructor(props) {
@@ -50,23 +49,21 @@ export class UnifiedSolicitationItemList extends Component {
               SALVO
             </span>
           </div>
-          <div>
-            <div className="float-right">
-              Criado em: {dayChange.criado_em}
-              <Button
-                icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
-              />
-              <Button
-                icon={ButtonIcon.EDIT}
-                disabled={!this.props.schoolsLoaded}
-                onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    dayChange
-                  })
-                }
-              />
-            </div>
+          <div className="icon-draft-card float-right">
+            Salvo em: {dayChange.created_at}
+            <span onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}>
+              <i className="fas fa-trash" />
+            </span>
+            <span
+              disabled={!this.props.schoolsLoaded}
+              onClick={p =>
+                this.props.OnEditButtonClicked({
+                  dayChange
+                })
+              }
+            >
+              <i className="fas fa-edit" />
+            </span>
           </div>
           <div className="ml-3">
             <p>

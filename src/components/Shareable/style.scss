@@ -252,8 +252,8 @@ table.table-lote {
 }
 
 .btn-styled {
-  height: 40px;
-  width: 160px;
+  min-height: 40px;
+  min-width: 160px;
   &.btn-primary {
     background-color: #035d96;
     &:hover {
@@ -265,6 +265,16 @@ table.table-lote {
     &:hover {
       background-color: white;
       color: #035d96;
+    }
+  }
+}
+
+.icon-draft-card {
+  span {
+    i {
+      color: #035d96;
+      cursor: pointer;
+      padding: 0 10px;
     }
   }
 }
