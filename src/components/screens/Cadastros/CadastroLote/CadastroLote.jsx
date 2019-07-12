@@ -61,6 +61,10 @@ class CadastroLote extends Component {
     this.setState({ escolasSelecionadas: value });
   }
 
+  resetForm(event) {
+    this.props.reset("cadastroLoteForm");
+  }
+
   onSubmit(values) {
     this.exibirModal();
   }

@@ -306,7 +306,7 @@ export class LabelAndTextArea extends Component {
         <Editor
           editorState={editorState}
           name={name}
-          wrapperClassName="border rounded"
+          wrapperClassName="wrapper-class border rounded"
           editorClassName="ml-2"
           className="form-control"
           placeholder={placeholder}

@@ -88,6 +88,11 @@ table.cadastro {
     color: #707683;
     padding: 15px 0;
     border-bottom: 1px solid #ebeff2;
+    i {
+      position: absolute;
+      padding-left: 10%;
+      color: #C8C8C8;
+    }
     &:first-child {
       padding-left: 20px;
       width: 50%;
