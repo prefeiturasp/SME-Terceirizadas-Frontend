@@ -137,6 +137,90 @@ table.cadastro {
   }
 }
 
+table.cadastro-empresa {
+  width: 100%;
+  .input-search {
+    width: 50%;
+    padding-right: 10px;
+    &::placeholder {
+      padding-right: 10px;
+      text-align: right;
+    }
+  }
+
+  th {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    color: #686868;
+    border-bottom: 2px solid #a8a8a8;
+    padding-bottom: 10px;
+    &:first-child {
+      padding-left: 20px;
+    }
+  }
+  td {
+    font-size: 14px;
+    color: #707683;
+    padding: 15px 0;
+    border-bottom: 1px solid #ebeff2;
+    &:first-child {
+      padding-left: 20px;
+      width: 10%;
+      font-weight: bold;
+    }
+    &:nth-child(2){
+      width: 40%;
+    }
+    &:nth-child(3){
+      width: 20%;
+    }
+
+    &:nth-child(4) {
+      width: 20%;
+    }
+
+    &:nth-child(5){
+      display: flex;
+      justify-content: center;
+    }
+  }
+  tr.relationed-company-title {
+    background: #f2fbfe;
+    td {
+      font-weight: 600;
+      font-size: 14px;
+      color: #686868;
+      padding: 10px 0 0 0;
+      border: none;
+      &:first-child {
+        padding-left: 20px;
+      }
+    }
+  }
+  tr.relationed-companies {
+    background: #f2fbfe;
+    td {
+      font-weight: bold;
+      font-size: 14px;
+      color: #353535;
+      border: none;
+      padding: 10px 0;
+      span {
+        font-weight: 600;
+        color: #707683;
+      }
+      &:first-child {
+        padding-left: 20px;
+      }
+      &.last-item {
+        padding-bottom: 30px;
+      }
+    }
+
+  }
+}
+
 .button-container{
   display: flex;
   justify-content: flex-end;
