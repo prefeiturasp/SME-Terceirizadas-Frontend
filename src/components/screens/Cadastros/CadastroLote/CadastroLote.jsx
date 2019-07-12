@@ -61,6 +61,10 @@ class CadastroLote extends Component {
     this.setState({ escolasSelecionadas: value });
   }
 
+  resetForm(event) {
+    this.props.reset("cadastroLoteForm");
+  }
+
   onSubmit(values) {
     this.exibirModal();
   }
@@ -76,7 +80,7 @@ class CadastroLote extends Component {
           resumo={resumo}
           escolasSelecionadas={escolasSelecionadas}
         />
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-body">
               <div className="row">

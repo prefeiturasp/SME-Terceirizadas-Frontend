@@ -13,6 +13,7 @@ import { dateDelta } from "../../../helpers/utilities";
 import { ErrorAlert } from "../Alert";
 import If from "../layout";
 import { Grid } from "../responsiveBs4";
+import { OpcoesCustomizadas } from "./OpcoesCustomizadas";
 import "./style.scss";
 
 export const LabelAndInput = props => {
@@ -68,7 +69,6 @@ export class LabelAndCombo extends Component {
 
   handleChange(event) {
     const value = event.target.value;
-    console.log(this.props);
     this.props.input.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
@@ -295,16 +295,18 @@ export class LabelAndTextArea extends Component {
 
   render() {
     const { editorState } = this.state;
-    const { cols, name, label, placeholder, meta } = this.props;
+    const { cols, name, label, placeholder, meta, temOpcoesCustomizadas } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
-        <label htmlFor={name} className={"session-header col-form-label"}>
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={name} className={"session-header col-form-label"}>
+            {label}
+          </label>
+        )}
         <Editor
           editorState={editorState}
           name={name}
-          wrapperClassName="border rounded"
+          wrapperClassName="wrapper-class border rounded"
           editorClassName="ml-2"
           className="form-control"
           placeholder={placeholder}
@@ -320,6 +322,14 @@ export class LabelAndTextArea extends Component {
             },
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
+          toolbarCustomButtons={
+            temOpcoesCustomizadas && [
+              <OpcoesCustomizadas
+                editorState={editorState}
+                onChange={this.handleChange}
+              />
+            ]
+          }
         />
         <If isVisible={meta}>
           <ErrorAlert meta={meta} />

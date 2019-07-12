@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import { formValueSelector, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import "../../Shareable/style.scss";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
@@ -255,11 +254,4 @@ const RelatorioForm = reduxForm({
   form: "unifiedSolicitationFilledForm",
   enableReinitialize: true
 })(Relatorio);
-
-const selector = formValueSelector("RelatorioForm");
-const mapStateToProps = state => {
-  return {
-    id: null
-  };
-};
-export default connect(mapStateToProps)(RelatorioForm);
+export default RelatorioForm;

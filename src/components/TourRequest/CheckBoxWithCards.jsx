@@ -19,7 +19,7 @@ export class Cards extends Component {
   static getDerivedStateFromProps(nextProps, state) {
     const {
       checkAll,
-      input: { onBlur, onChange, value }
+      input: { onBlur, onChange }
     } = nextProps;
     // marca tudo e atualiza o estado interno
     if (checkAll) {

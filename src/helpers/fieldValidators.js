@@ -14,12 +14,14 @@ export const requiredCheck = value =>
     ? undefined
     : "Campo obrigatório: selecione ao menos uma opção";
 
+// eslint-disable-next-line
 const maxLength = max => value =>
   value && value.length > max ? `Must be ${max} characters or less` : undefined;
 
 export const minLength = min => value =>
   value && value.length < min ? `Deve ter ao menos ${min} letra(s)` : undefined;
 
+// eslint-disable-next-line
 const number = value =>
   value && isNaN(Number(value)) ? "Deve ser um número" : undefined;
 

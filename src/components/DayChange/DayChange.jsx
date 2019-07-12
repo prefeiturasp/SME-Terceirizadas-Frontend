@@ -5,7 +5,7 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { DayChangeItemList } from "./DayChangeItemList";
 import { carregarInversoes, salvarInversao, deletaInversao, solicitarInversao } from '../../services/dayChange.service'
-import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
+import { toastSuccess, toastError } from "../Shareable/dialogs";
 import CardHeader from "../Shareable/CardHeader";
 import './style.scss'
 
@@ -112,7 +112,7 @@ export class DayChangeEditor extends Component {
 
   render() {
     const { quatidadeAluno } = this.state
-    const { handleSubmit, pristine, reset, submitting } = this.props;
+    const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div>
 

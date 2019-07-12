@@ -1,5 +1,4 @@
 import { GET_PERMS } from '../constants/permission.constants'
-import { getPermissionsByApi } from '../services/permission.service'
 
 const permissoes = [
     {

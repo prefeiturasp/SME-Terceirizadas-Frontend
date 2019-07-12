@@ -67,7 +67,7 @@ export default class Button extends Component {
     return (
       <button
         type={type}
-        className={`btn btn-${style} ${className}`}
+        className={`btn btn-styled btn-${style} ${className}`}
         onClick={onClick}
         disabled={disabled}
       >

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import Collapse from "react-bootstrap/Collapse";
 import "react-datepicker/dist/react-datepicker.css";
 import {

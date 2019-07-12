@@ -91,6 +91,7 @@ class UnifiedSolicitation extends Component {
     let studentsTotal = 0;
     let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
+       // eslint-disable-next-line
       var foundIndex = schoolsFiltered.findIndex(x => x.id == escola.id);
       schoolsFiltered[foundIndex].checked = escola.check;
       schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
@@ -685,136 +686,125 @@ class UnifiedSolicitation extends Component {
             {schoolsFiltered.length > 0 &&
               schoolsFiltered.map((school, key) => {
                 return (
-                    <FormSection name={`school_${school.id}`}>
-                      <div>
+                  <FormSection name={`school_${school.id}`}>
+                    <div>
+                      <div
+                        className="school-container col-md-12 mr-4"
+                        style={
+                          school.burger_active ? { background: "#F2FBFE" } : {}
+                        }
+                      >
                         <div
-                          className="school-container col-md-12 mr-4"
-                          style={
-                            school.burger_active
-                              ? { background: "#F2FBFE" }
-                              : {}
-                          }
+                          className="col-md-12 pt-2 pb-2"
+                          style={{ paddingLeft: "2rem" }}
                         >
-                          <div
-                            className="col-md-12 pt-2 pb-2"
-                            style={{ paddingLeft: "2rem" }}
-                          >
-                            <label htmlFor="check" className="checkbox-label">
+                          <label htmlFor="check" className="checkbox-label">
+                            <Field
+                              component={"input"}
+                              type="checkbox"
+                              name="check"
+                            />
+                            <span
+                              onClick={() => this.handleCheck(school)}
+                              className="checkbox-custom"
+                            />{" "}
+                            {school._id + " - " + school.nome}
+                          </label>
+                          {!multipleOrder && (
+                            <Stand
+                              onClick={() => this.changeBurger(school, key)}
+                              color={"#C8C8C8"}
+                              width={30}
+                              padding={0}
+                              lineSpacing={5}
+                              className="float-right"
+                              active={school.burger_active}
+                            />
+                          )}
+                          {multipleOrder && school.checked && (
+                            <div className="label-n-alunos float-right">
+                              <span>Nº de Alunos</span>
                               <Field
                                 component={"input"}
-                                type="checkbox"
-                                name="check"
+                                type={"number"}
+                                onChange={event =>
+                                  this.handleNumberOfStudentsPerSchool(
+                                    school,
+                                    event
+                                  )
+                                }
+                                min={0}
+                                max={studentsTotal}
+                                style={{ width: "70px", textAlign: "center" }}
+                                name="numero_alunos"
                               />
-                              <span
-                                onClick={() => this.handleCheck(school)}
-                                className="checkbox-custom"
-                              />{" "}
-                              {school._id + " - " + school.nome}
-                            </label>
-                            {!multipleOrder && (
-                              <Stand
-                                onClick={() => this.changeBurger(school, key)}
-                                color={"#C8C8C8"}
-                                width={30}
-                                padding={0}
-                                lineSpacing={5}
-                                className="float-right"
-                                active={school.burger_active}
-                              />
-                            )}
-                            {multipleOrder && school.checked && (
-                              <div className="label-n-alunos float-right">
-                                <span>Nº de Alunos</span>
-                                <Field
-                                  component={"input"}
-                                  type={"number"}
-                                  onChange={event =>
-                                    this.handleNumberOfStudentsPerSchool(
-                                      school,
-                                      event
-                                    )
-                                  }
-                                  min={0}
-                                  max={studentsTotal}
-                                  style={{ width: "70px", textAlign: "center" }}
-                                  name="numero_alunos"
-                                />
-                              </div>
-                            )}
-                          </div>
-                          <Collapse isOpened={school.burger_active}>
-                            <div className="col-md-12">
-                              <div className="form-group row">
-                                <Field
-                                  component={LabelAndInput}
-                                  cols="3 3 3 3"
-                                  name="nro_alunos"
-                                  type="number"
-                                  onChange={event =>
-                                    this.handleNumberOfStudents(school, event)
-                                  }
-                                  label="Número de alunos participantes"
-                                  validate={
-                                    school.checked &&
-                                    !multipleOrder && [required]
-                                  }
-                                />
-                              </div>
                             </div>
-                            <SelecionaTempoPasseio
-                              className="mt-3"
-                              validate={school.checked && !multipleOrder}
-                              onChange={(
+                          )}
+                        </div>
+                        <Collapse isOpened={school.burger_active}>
+                          <div className="col-md-12">
+                            <div className="form-group row">
+                              <Field
+                                component={LabelAndInput}
+                                cols="3 3 3 3"
+                                name="nro_alunos"
+                                type="number"
+                                onChange={event =>
+                                  this.handleNumberOfStudents(school, event)
+                                }
+                                label="Número de alunos participantes"
+                                validate={
+                                  school.checked && !multipleOrder && [required]
+                                }
+                              />
+                            </div>
+                          </div>
+                          <SelecionaTempoPasseio
+                            className="mt-3"
+                            validate={school.checked && !multipleOrder}
+                            onChange={(event, newValue, previousValue, name) =>
+                              this.setNumeroDeKitLanches(
                                 event,
                                 newValue,
                                 previousValue,
-                                name
-                              ) =>
-                                this.setNumeroDeKitLanches(
-                                  event,
-                                  newValue,
-                                  previousValue,
-                                  name,
-                                  school
-                                )
+                                name,
+                                school
+                              )
+                            }
+                          />
+                          {enumKits && (
+                            <SelecionaKitLancheBox
+                              kits={enumKits}
+                              showOptions={false}
+                              validate={school.checked && !multipleOrder}
+                              className="mt-3"
+                              onChange={value =>
+                                this.handleSelecionaKitLancheBox(school, value)
                               }
+                              choicesNumberLimit={school.limit_of_meal_kits}
                             />
-                            {enumKits && (
-                              <SelecionaKitLancheBox
-                                kits={enumKits}
-                                showOptions={false}
-                                validate={school.checked && !multipleOrder}
-                                className="mt-3"
-                                onChange={value =>
-                                  this.handleSelecionaKitLancheBox(
-                                    school,
-                                    value
-                                  )
-                                }
-                                choicesNumberLimit={school.limit_of_meal_kits}
-                              />
-                            )}
-                            <div className="form-group">
-                              <label className="bold">
-                                {"Número total de kits dessa escola:"}
-                              </label>
-                              <br />
-                              <Grid
-                                cols="1 1 1 1"
-                                className="border rounded p-2"
-                                style={{
-                                  background: "#E8E8E8"
-                                }}
-                              >
-                                <span className="bold d-flex justify-content-center">
-                                  {school.number_of_meal_kits || 0}
-                                </span>
-                              </Grid>
-                            </div>
-                          </Collapse>
-                        </div>
+                          )}
+                          <div className="form-group">
+                            <label className="bold">
+                              {"Número total de kits dessa escola:"}
+                            </label>
+                            <br />
+                            <Grid
+                              cols="1 1 1 1"
+                              className="border rounded p-2"
+                              style={{
+                                background: "#E8E8E8"
+                              }}
+                            >
+                              <span className="bold d-flex justify-content-center">
+                                {school.number_of_meal_kits || 0}
+                              </span>
+                            </Grid>
+                          </div>
+                        </Collapse>
                       </div>
-                    </FormSection>
+                    </div>
+                  </FormSection>
                 );
               })}
           </div>
