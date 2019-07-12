@@ -256,9 +256,7 @@ export class TourRequest extends Component {
       segundoDiaUtil
     } = this.state;
     return (
-      <div className="d-flex flex-column p-4">
-        <h3 className="page-title">Solicitação de Kit Lanche/Passeio</h3>
-
+      <div>
         <Modal show={showModal} onHide={this.handleShowModal}>
           <Modal.Header closeButton>
             <Modal.Title>Atenção</Modal.Title>
@@ -279,9 +277,7 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-
         <CardHeader numeroAlunos={this.state.nro_matriculados} />
-
         <form>
           <TourRequestItemList
             tourRequestList={tourRequestList}
@@ -290,12 +286,9 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-
           <div className="mt-5" />
           <br />
-
           <h3 className="page-title">{this.state.title}</h3>
-
           <div className="card mt-3 p-5">
             <div className="form-group row">
               <Field
@@ -400,7 +393,6 @@ export class TourRequest extends Component {
                 className="ml-3"
               />
             </div>
-
             <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
               <Modal.Header closeButton>
                 <Modal.Title>Atenção</Modal.Title>

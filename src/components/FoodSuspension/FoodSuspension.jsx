@@ -339,7 +339,6 @@ class FoodSuspensionEditor extends Component {
       <div>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <span className="page-title">Suspensão de Alimentação</span>
           <div className="card mt-3">
             <div className="card-body">
               <span className="blockquote-sme">Nº de Matriculados</span>

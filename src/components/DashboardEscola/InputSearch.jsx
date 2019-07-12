@@ -2,10 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./style.css";
 
-export const InputSearch = props => (
+export const InputSearch = props =>
+(
   <div className="row">
     <div className="col-md-12">
-      <NavLink to="/painel-escola" className="btn btn-outline-secondary">
+      <NavLink to={props.voltarLink || "/"} className="btn btn-outline-secondary">
         <i class="fas fa-arrow-left" /> Voltar
       </NavLink>
       <span class="float-right">

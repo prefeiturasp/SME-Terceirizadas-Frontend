@@ -99,7 +99,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-pending"}
                     solicitations={solicitations}
                     icon={"fa-exclamation-triangle"}
-                    href={"/Terceirizada/solicitacoes"}
+                    href={"/terceirizada/solicitacoes"}
                   />
                 </div>
                 <div className="col-6">
@@ -108,7 +108,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
                     icon={"fa-times-circle"}
-                    href={"/Terceirizada/solicitacoes"}
+                    href={"/terceirizada/solicitacoes"}
                   />
                 </div>
               </div>
