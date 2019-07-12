@@ -77,7 +77,7 @@ class Mensagem extends Component {
                 </div>
               </div>
               <div className="row pt-3">
-                <div className="col-8">
+                <div className="col-12">
                   <label className="label">Assunto</label>
                   <Field
                     component={LabelAndInput}

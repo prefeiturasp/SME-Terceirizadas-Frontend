@@ -1,17 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { maxValue, required, diasAntecedencia } from "../../helpers/fieldValidators";
+import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
+import {
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "./TourRequestCheck";
-import SelecionaKitLancheBox from './SelecionaKitLancheBox'
+import SelecionaKitLancheBox from "./SelecionaKitLancheBox";
 import { TourRequestItemList } from "./TourRequesttemList";
-import { removeKitLanche, getQuatidadeAlunoApi, solicitarKitLanche, registroSalvarKitLanche, getDiasUteis, getSolicitacoesKitLancheApi, getRefeicoesApi } from '../../services/tourRequest.service'
-import { convertToFormat, adapterEnumKits, convertStringToDate } from './ConvertToFormat'
-import { toastSuccess, toastError, toastWarn } from "../Shareable/dialogs";
+import {
+  removeKitLanche,
+  getQuatidadeAlunoApi,
+  solicitarKitLanche,
+  registroSalvarKitLanche,
+  getDiasUteis,
+  getSolicitacoesKitLancheApi,
+  getRefeicoesApi
+} from "../../services/tourRequest.service";
+import {
+  convertToFormat,
+  adapterEnumKits,
+  convertStringToDate
+} from "./ConvertToFormat";
+import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardHeader from "../Shareable/CardHeader";
@@ -21,7 +37,7 @@ export const HORAS_ENUM = {
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
-export let segundoDia = ''
+export let segundoDia = "";
 
 export class TourRequest extends Component {
   constructor(props) {
@@ -39,29 +55,28 @@ export class TourRequest extends Component {
       nro_matriculados: 0,
       enumKits: null,
       showModal: false,
-      segundoDiaUtil: '',
+      segundoDiaUtil: "",
       modalConfirmation: false,
-      modalMessage: ''
+      modalMessage: ""
     };
 
-
     this.onSubmit = this.onSubmit.bind(this);
-    this.refresh = this.refresh.bind(this)
-    this.validaDiasUteis = this.validaDiasUteis.bind(this)
-    this.handleShowModal = this.handleShowModal.bind(this)
-    this.handleConfirmation = this.handleConfirmation.bind(this)
+    this.refresh = this.refresh.bind(this);
+    this.validaDiasUteis = this.validaDiasUteis.bind(this);
+    this.handleShowModal = this.handleShowModal.bind(this);
+    this.handleConfirmation = this.handleConfirmation.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
-    if (window.confirm('Deseja remover esta solicitação salva?')) {
+    if (window.confirm("Deseja remover esta solicitação salva?")) {
       removeKitLanche(id).then(resp => {
-        this.refresh()
+        this.refresh();
         if (resp.success) {
-          toastSuccess(resp.success)
+          toastSuccess(resp.success);
         } else {
-          toastError(resp.error)
+          toastError(resp.error);
         }
-      })
+      });
     }
   }
 
@@ -94,112 +109,126 @@ export class TourRequest extends Component {
     });
   }
 
-
   pegaSegundoDiaUtil() {
-    getDiasUteis().then(resp => {
-      return convertStringToDate(resp[0].date_two_working_days)
-    }).catch(erro => {
-      return null
-    })
+    getDiasUteis()
+      .then(resp => {
+        return convertStringToDate(resp[0].date_two_working_days);
+      })
+      .catch(erro => {
+        return null;
+      });
   }
-
 
   componentDidMount() {
     this.refresh();
-    this.getQuatidadeAlunos()
+    this.getQuatidadeAlunos();
     getDiasUteis().then(resp => {
       this.setState({
         segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
-      })
-    })
+      });
+    });
   }
 
-  validaDiasUteis = (event) => {
+  validaDiasUteis = event => {
     if (event.target.value) {
-      const diaSelecionado = convertStringToDate(event.target.value)
+      const diaSelecionado = convertStringToDate(event.target.value);
       getDiasUteis().then(resp => {
-        const segundoDiaUtil = convertStringToDate(resp[0].date_two_working_days)
-        const quintoDiaUtil = convertStringToDate(resp[0].date_five_working_days)
-        if (diaSelecionado <= segundoDiaUtil || diaSelecionado < quintoDiaUtil) {
+        const segundoDiaUtil = convertStringToDate(
+          resp[0].date_two_working_days
+        );
+        const quintoDiaUtil = convertStringToDate(
+          resp[0].date_five_working_days
+        );
+        if (
+          diaSelecionado <= segundoDiaUtil ||
+          diaSelecionado < quintoDiaUtil
+        ) {
           this.setState({
             showModal: true
-          })
+          });
         }
-      })
+      });
     }
-  }
+  };
 
   getQuatidadeAlunos() {
     getQuatidadeAlunoApi().then(resp => {
       this.setState({
         ...this.state,
-        nro_alunos: this.state.nro_matriculados = resp.students
-      })
-    })
+        nro_alunos: resp.students
+      });
+    });
   }
 
   onSubmit(values) {
-
     validateTourRequestForm(values);
-    this.salvarOuEnviar(values)
-    this.handleConfirmation()
+    this.salvarOuEnviar(values);
+    this.handleConfirmation();
   }
 
   salvarOuEnviar(values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(values).then(resp => {
-        if (resp.success) {
-          toastSuccess(resp.success)
-          this.resetForm()
-          this.refresh()
-        } else {
-          toastError(resp.error)
-        }
-      }).catch(erro => {
-        toastError(erro.details)
-      })
+      registroSalvarKitLanche(values)
+        .then(resp => {
+          if (resp.success) {
+            toastSuccess(resp.success);
+            this.resetForm();
+            this.refresh();
+          } else {
+            toastError(resp.error);
+          }
+        })
+        .catch(erro => {
+          toastError(erro.details);
+        });
     } else {
-      solicitarKitLanche(values).then(resp => {
-        if (resp.success) {
-          toastSuccess(resp.success)
-          this.resetForm()
-          this.refresh()
-        } else {
-          // toastError(resp.error)
-          this.setState({
-            ...this.state,
-            modalMessage: resp.error,
-            modalConfirmation: true
-          })
-        }
-      }).catch(error => {
-        toastError(error.details)
-      })
+      solicitarKitLanche(values)
+        .then(resp => {
+          if (resp.success) {
+            toastSuccess(resp.success);
+            this.resetForm();
+            this.refresh();
+          } else {
+            // toastError(resp.error)
+            this.setState({
+              ...this.state,
+              modalMessage: resp.error,
+              modalConfirmation: true
+            });
+          }
+        })
+        .catch(error => {
+          toastError(error.details);
+        });
     }
   }
 
   refresh() {
-    getSolicitacoesKitLancheApi().then(resp => {
-      this.setState({ tourRequestList: convertToFormat(resp) });
-    }).catch(error => {
-      console.log(error)
-    })
-
-    getRefeicoesApi().then(response => {
-      this.setState({
-        enumKits: adapterEnumKits(response)
+    getSolicitacoesKitLancheApi()
+      .then(resp => {
+        this.setState({ tourRequestList: convertToFormat(resp) });
       })
-    }).catch(error => {
-      console.log(error)
-    })
+      .catch(error => {
+        console.log(error);
+      });
+
+    getRefeicoesApi()
+      .then(response => {
+        this.setState({
+          enumKits: adapterEnumKits(response)
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   handleShowModal() {
-    this.setState({ ...this.state, showModal: false })
+    this.setState({ ...this.state, showModal: false });
   }
 
   handleConfirmation() {
-    this.setState({ ...this.state, modalConfirmation: false })
+    this.setState({ ...this.state, modalConfirmation: false });
   }
 
   setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
@@ -216,15 +245,19 @@ export class TourRequest extends Component {
     });
   };
 
-
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
-    const { enumKits, tourRequestList, showModal, modalMessage, modalConfirmation, segundoDiaUtil } = this.state;
+    const {
+      enumKits,
+      tourRequestList,
+      showModal,
+      modalMessage,
+      modalConfirmation,
+      segundoDiaUtil
+    } = this.state;
     return (
-
       <div className="d-flex flex-column p-4">
-
-      <h3 className="page-title">Solicitação de Kit Lanche/Passeio</h3>
+        <h3 className="page-title">Solicitação de Kit Lanche/Passeio</h3>
 
         <Modal show={showModal} onHide={this.handleShowModal}>
           <Modal.Header closeButton>
@@ -235,7 +268,7 @@ export class TourRequest extends Component {
             <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
             disponibilidade dos alimentos adequados para o cumprimento do
             cardápio.
-            </Modal.Body>
+          </Modal.Body>
           <Modal.Footer>
             <BaseButton
               label="OK"
@@ -258,12 +291,10 @@ export class TourRequest extends Component {
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
 
-          <div className="mt-5"></div>
-          <br></br>
+          <div className="mt-5" />
+          <br />
 
-          <h3 className="page-title">
-            {this.state.title}
-          </h3>
+          <h3 className="page-title">{this.state.title}</h3>
 
           <div className="card mt-3 p-5">
             <div className="form-group row">
@@ -293,19 +324,21 @@ export class TourRequest extends Component {
                 validate={[required, maxValue(this.state.nro_matriculados)]}
               />
             </div>
-            <hr></hr>
+            <hr />
             <SelecionaTempoPasseio
               className="mt-3"
               onChange={(event, newValue, previousValue, name) =>
                 this.setNumeroDeKitLanches(event, newValue, previousValue, name)
               }
             />
-            <hr className="mt-4 mb-4 w-100"></hr>
-            {enumKits && <SelecionaKitLancheBox
-              className="mt-3"
-              choicesNumberLimit={this.state.qtd_kit_lanche}
-              kits={enumKits}
-            />}
+            <hr className="mt-4 mb-4 w-100" />
+            {enumKits && (
+              <SelecionaKitLancheBox
+                className="mt-3"
+                choicesNumberLimit={this.state.qtd_kit_lanche}
+                kits={enumKits}
+              />
+            )}
             <div className="form-group pt-3">
               <label className="bold">{"Número total kits:"}</label>
               <br />
@@ -321,7 +354,7 @@ export class TourRequest extends Component {
                 </span>
               </Grid>
             </div>
-            <hr className="mt-3 mb-3 w-100"></hr>
+            <hr className="mt-3 mb-3 w-100" />
             <div className="form-group">
               <Field
                 component={LabelAndTextArea}

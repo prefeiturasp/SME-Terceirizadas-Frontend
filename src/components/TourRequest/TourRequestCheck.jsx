@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Field } from "redux-form";
 import { requiredCheck } from "../../helpers/fieldValidators";
-import CheckboxWithCards from "./CheckBoxWithCards";
 import RadioboxGroup from "./RadioboxGroup";
 
 export const HORAS_ENUM = {

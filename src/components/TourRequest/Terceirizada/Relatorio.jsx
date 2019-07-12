@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import { formValueSelector, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess } from "../../Shareable/dialogs";
@@ -71,11 +70,11 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess('Kit Lanche recusado com sucesso!');
+    toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
   handleSubmit() {
-    toastSuccess('Ciência de Kit Lanche enviada com sucesso!');
+    toastSuccess("Ciência de Kit Lanche enviada com sucesso!");
   }
 
   preencherFormulario(solicitacao) {
@@ -254,11 +253,4 @@ const RelatorioForm = reduxForm({
   form: "unifiedSolicitationFilledForm",
   enableReinitialize: true
 })(Relatorio);
-
-const selector = formValueSelector("RelatorioForm");
-const mapStateToProps = state => {
-  return {
-    id: null
-  };
-};
-export default connect(mapStateToProps)(RelatorioForm);
+export default RelatorioForm;

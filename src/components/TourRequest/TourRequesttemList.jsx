@@ -62,7 +62,7 @@ export class TourRequestItemList extends Component {
 
   onEnviarSolicitacoesBtClicked(event) {
     const listIds = []
-    this.state.checkedObjects.map(obj => {
+    this.state.checkedObjects.forEach(obj => {
       listIds.push(obj.id)
     });
 
@@ -86,7 +86,6 @@ export class TourRequestItemList extends Component {
         salvo_em,
         id,
         tempo_passeio,
-        kit_lanche,
         nro_alunos,
         local_passeio,
         evento_data
