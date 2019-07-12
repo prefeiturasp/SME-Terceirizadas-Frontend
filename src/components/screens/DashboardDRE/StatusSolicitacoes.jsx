@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../../DashboardEscola/InputSearch";
+import { InputSearch } from "../DashboardEscola/InputSearch";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",

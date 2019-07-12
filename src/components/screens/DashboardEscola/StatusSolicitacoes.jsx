@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardStatusDeSolicitacaoLargo } from "../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
+import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "./InputSearch";
 const solicitacoes = [
   {
