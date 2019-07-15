@@ -13,6 +13,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -30,6 +31,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -47,6 +49,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -64,6 +67,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -81,6 +85,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefonefax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -103,6 +108,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -120,6 +126,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -137,6 +144,7 @@ export const EMPRESAS = [
     cep: "25510-430",
     telefone_fax: "(21) 3752-9943",
     email: "singulargestao.servicos@gmail.com",
+    representante: "Paulo Cesar Ribeiro Alves",
     nutricionista: "Luciani Dantas",
     crn: "8773",
     edital: "78/2016",
@@ -153,6 +161,7 @@ class EmpresasCadastradas extends Component {
       empresas: EMPRESAS,
       empresasFiltradas: EMPRESAS
     };
+    this.filtrarEmpresas = this.filtrarEmpresas.bind(this);
   }
 
   filtrarEmpresas(event){
@@ -160,10 +169,8 @@ class EmpresasCadastradas extends Component {
     empresasFiltradas = empresasFiltradas.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
-        item.codigo_empresa.search(palavraAFiltrar) !== -1 ||
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.cnpj.search(palavraAFiltrar) !== -1,
-        item.telefone.search(palavraAFiltrar) !== -1
+        item.cnpj.search(palavraAFiltrar) !== -1
       )
     })
   }
@@ -186,7 +193,7 @@ class EmpresasCadastradas extends Component {
               <th className="text-center">
                 <input
                   className="input-search"
-                  onChange={() => {}}
+                  onChange={this.filtrarEmpresas}
                   placeholder="Pesquisar"
                 />
                 <i className="fas fa-search" />
@@ -197,15 +204,15 @@ class EmpresasCadastradas extends Component {
                 <tr
                 className={
                   empresa.ativo
-                    ? "relationed-lotes"
+                    ? "detalhe-empresa"
                     : ""
                 } 
                 >
                   <td>{empresa.codigo_empresa}</td>
-                  <td>{empresa.nome}</td>
+                  <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
                   <td>{empresa.telefone}</td>
-                  <td>
+                  <td className="btn-action">
                     <Stand
                       onClick={() => this.lidarComBurger(empresa)}
                       color={"#C8C8C8"}
@@ -218,17 +225,94 @@ class EmpresasCadastradas extends Component {
                 </tr>,
                 empresa.ativo && (
                   <tr>
-                    <td></td>
-                    <td>
-                      Endereço:
-                      {empresa.endereco}
+                    <td className="detalhe-empresa"></td>
+                    <td className="container-detalhe" colSpan="4">
+                      <div className="container-info">
+                        <div>
+                          <div>
+                            <span className="descricao">
+                              Endereço:
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.endereco}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Telefone/FAX:
+                            </span>
+                            <span className="valor-desc">{empresa.telefone}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Representante Legal:
+                            </span>
+                            <span className="valor-desc">{empresa.representante}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Nutricionista Responsável Técnico:
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.nutricionista}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Edital de Pregão n°:
+                            </span>
+                            <span className="valor-desc">{empresa.edital}</span>
+                          </div>
+
+                          {empresa.lotes.length > 0 && (
+                            <div className="pt-4">
+                              <span className="descricao">
+                                Lotes de atendimento:
+                              </span>
+                            </div>
+                          )}
+                          {empresa.lotes.length > 0 && (
+                            <ul>
+                              {empresa.lotes.map((lote, item) => 
+                                <li>{lote.nome}</li>
+                              )}
+                            </ul>             
+                          )}
+                        </div>
+                        <div>
+                          <div>
+                            <span className="descricao">
+                              CEP:
+                            </span>
+                            <span className="valor-desc">{empresa.cep}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              E-mail:
+                            </span>
+                            <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Contato:
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              CRN:
+                            </span>
+                            <span className="valor-desc">{empresa.crn}</span> 
+                            <span className="pl-3 descricao">
+                              E-mail:
+                            </span>
+                            <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Contrato n°:
+                            </span>
+                            <span className="valor-desc">{empresa.contrato}</span>
+                          </div>
+                        </div>                        
+                      </div>
                     </td>
-                    <td>
-                      CEP:
-                      {empresa.cep}
-                    </td>
-                    <td></td>
-                    <td></td>
                   </tr>
                 )
               ]

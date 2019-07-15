@@ -89,7 +89,7 @@ class CadastroEmpresa extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <Link>
+                  <Link to="/configuracoes/cadastros/empresas-cadastradas">
                     <label className="link">
                       Consulta de empresas cadastradas
                     </label>
