@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import Button, { ButtonIcon } from "../Shareable/button";
+import "../Shareable/style.scss";
 
 export class FoodInclusionItemList extends Component {
   constructor(props) {
@@ -57,22 +57,22 @@ export class FoodInclusionItemList extends Component {
               {dayChange.status}
             </span>
           </div>
-          <div>
-            <div className="float-right">
-              Salvo em: {dayChange.created_at}
-              <Button
-                icon={ButtonIcon.TRASH}
-                onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
-              />
-              <Button
-                icon={ButtonIcon.EDIT}
-                onClick={p =>
-                  this.props.OnEditButtonClicked({
-                    dayChange
-                  })
-                }
-              />
-            </div>
+          <div className="icon-draft-card float-right">
+            Salvo em: {dayChange.created_at}
+            <span
+              onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
+            >
+              <i className="fas fa-trash" />
+            </span>
+            <span
+              onClick={p =>
+                this.props.OnEditButtonClicked({
+                  dayChange
+                })
+              }
+            >
+              <i className="fas fa-edit" />
+            </span>
           </div>
           <div className="ml-3">
             <p>

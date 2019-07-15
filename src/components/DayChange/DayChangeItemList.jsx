@@ -43,11 +43,7 @@ export class DayChangeItemList extends Component {
     this.props.resetForm();
   }
 
-  onEnviarSolicitacoesBtClicked = event => {
-    this.state.checkedObjects.map(obj => {
-      console.log(obj.uuid);
-    });
-  };
+  onEnviarSolicitacoesBtClicked = event => {};
 
   render() {
     const { dayChangeList } = this.props;

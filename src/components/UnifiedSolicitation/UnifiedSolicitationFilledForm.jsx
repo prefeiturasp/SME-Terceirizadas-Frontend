@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { formValueSelector, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import { getUnifiedSolicitations } from "../../services/unifiedSolicitation.service";
 import { toastError } from "../Shareable/dialogs";
 
@@ -45,13 +44,7 @@ class UnifiedSolicitationFilled extends Component {
   }
 
   render() {
-    const {
-      id,
-      lote,
-      formulario,
-      dre,
-      kits_total
-    } = this.state.solicitation;
+    const { id, lote, formulario, dre, kits_total } = this.state.solicitation;
     const { solicitation, unifiedSolicitationList } = this.state;
     return (
       <div>
@@ -59,7 +52,10 @@ class UnifiedSolicitationFilled extends Component {
         {unifiedSolicitationList.map((unifiedSolicitation, key) => {
           return (
             <div>
-              <p style={{cursor: 'pointer'}} onClick={() => this.preencherFormulario(unifiedSolicitation)}>
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={() => this.preencherFormulario(unifiedSolicitation)}
+              >
                 {unifiedSolicitation.dre} - {unifiedSolicitation.lote} -{" "}
                 {unifiedSolicitation.formulario.dia}
               </p>
@@ -148,7 +144,9 @@ class UnifiedSolicitationFilled extends Component {
                 <div className="row">
                   <div className="col-10 report-label-value">
                     <p>Total de Unidades Escolares Beneficiadas</p>
-                    <p className="value">{formulario.escolas.length} unidades escolares</p>
+                    <p className="value">
+                      {formulario.escolas.length} unidades escolares
+                    </p>
                   </div>
                   <div className="col-2 float-right report-label-value">
                     <p>Total de Kits</p>
@@ -158,7 +156,10 @@ class UnifiedSolicitationFilled extends Component {
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
-                    <p className="value" dangerouslySetInnerHTML={{__html:formulario.obs}} />
+                    <p
+                      className="value"
+                      dangerouslySetInnerHTML={{ __html: formulario.obs }}
+                    />
                   </div>
                 </div>
               </div>
@@ -174,11 +175,4 @@ const UnifiedSolicitationFilledForm = reduxForm({
   form: "unifiedSolicitationFilledForm",
   enableReinitialize: true
 })(UnifiedSolicitationFilled);
-
-const selector = formValueSelector("unifiedSolicitationFilledForm");
-const mapStateToProps = state => {
-  return {
-    id: null
-  };
-};
-export default connect(mapStateToProps)(UnifiedSolicitationFilledForm);
+export default UnifiedSolicitationFilledForm;

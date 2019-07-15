@@ -5,6 +5,7 @@ export const validateSubmit = values => {
     if (escola.checked) {
       peloMenosUmaEscola = true;
       if (values.pedido_multiplo) {
+         // eslint-disable-next-line
         if (escola.numero_alunos === "0" || escola.numero_alunos == false) {
           error = "Número de alunos de uma escola não pode ser 0 ou nulo";
         }

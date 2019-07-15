@@ -14,7 +14,6 @@ textarea {
   padding: 2rem !important;
 }
 
-
 input.input-search {
   border-top: none;
   border-left: none;
@@ -248,6 +247,34 @@ table.table-lote {
       border-width: 0 3px 3px 0;
       transform: rotate(0deg) scale(0);
       opacity: 1;
+    }
+  }
+}
+
+.btn-styled {
+  min-height: 40px;
+  min-width: 160px;
+  &.btn-primary {
+    background-color: #035d96;
+    &:hover {
+      background-color: #035d96;
+    }
+  }
+  &.btn-outline-primary {
+    color: #035d96;
+    &:hover {
+      background-color: white;
+      color: #035d96;
+    }
+  }
+}
+
+.icon-draft-card {
+  span {
+    i {
+      color: #035d96;
+      cursor: pointer;
+      padding: 0 10px;
     }
   }
 }

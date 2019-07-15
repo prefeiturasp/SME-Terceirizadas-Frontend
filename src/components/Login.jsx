@@ -56,7 +56,6 @@ export class Login extends Component {
                   style={ButtonStyle.Primary}
                   label="Acessar"
                   disabled={pristine || submitting}
-                  disabled={submitting}
                   className="btn-block"
                 />
 

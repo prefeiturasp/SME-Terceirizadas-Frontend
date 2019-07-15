@@ -159,7 +159,12 @@ class LotesCadastrados extends Component {
                 >
                   <td>{lote.nome}</td>
                   <td>{lote.dre}</td>
-                  <td>{lote.tipo_de_gestao}</td>
+                  <td>
+                    {lote.tipo_de_gestao}{" "}
+                    {lote.ativo && lote.empresas.length > 0 && (
+                      <i className="fas fa-pen" />
+                    )}{" "}
+                  </td>
                   <td>
                     <Stand
                       onClick={() => this.lidarComBurger(lote)}

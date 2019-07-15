@@ -2,7 +2,7 @@ import { Login } from "../components/Login";
 import { MenuChangePage } from "../pages/MenuChangePage";
 import Home from "../pages/Home";
 import FoodInclusionPage from "../pages/FoodInclusionPage";
-import PermissionsPage from "../pages/PermissionsPage";
+import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import TourRequestPage from "../pages/TourRequestPage";
 import DayChangePage from "../pages/DayChangePage";
 import FoodSuspensionPage from "../pages/FoodSuspensionPage";
@@ -25,7 +25,7 @@ import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
-
+import MensagemPage from "../pages/Configuracoes/MensagemPage";
 
 const routesConfig = [
   {
@@ -161,6 +161,11 @@ const routesConfig = [
   {
     path: "/configuracoes/cadastros",
     component: CadastrosPage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/mensagem",
+    component: MensagemPage,
     exact: false
   }
 ];

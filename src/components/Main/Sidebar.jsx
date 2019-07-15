@@ -269,7 +269,7 @@ export class Sidebar extends Component {
               aria-controls="collapseTwo"
             >
               <i className="fas fa-cog" />
-              <span>Configrações</span>
+              <span>Configurações</span>
             </Link>
             <div
               id="collapseConfig"
@@ -284,6 +284,13 @@ export class Sidebar extends Component {
                   to="/permissions"
                 >
                   Permissões
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/configuracoes/mensagem"
+                >
+                  Mensagem
                 </NavLink>
                 <NavLink
                   activeClassName="active"

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Collapse, Modal } from 'react-bootstrap'
+import { Collapse } from 'react-bootstrap'
 import CollapsePermission from './CollapsePermission';
 import ModalProfile from "./ModalProfile";
 
@@ -51,12 +51,12 @@ class CollapseProfile extends Component {
 
     return (
       <div>
-        <ModalProfile 
-                    show={this.state.show} 
-                    close={this.handleClose.bind(this)}  
+        <ModalProfile
+                    show={this.state.show}
+                    close={this.handleClose.bind(this)}
                     role={labelLink}
                     _id={_id} />
-      
+
       <div className="card mb-2">
         <div className="card-header" id={idHeading}>
           <h5 className="mt-2 float-left">{labelLink}</h5>

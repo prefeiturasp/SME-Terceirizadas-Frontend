@@ -42,3 +42,28 @@ div.react-datepicker-wrapper {
   line-height: normal;
   color: #686868;
 }
+
+.variables {
+  display: inline-flex;
+  padding-left: 10px;
+  div {
+    margin: 0 5px;
+    color: #686868;
+    font-size: 11px;
+    border: 1px solid #27ae60;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    &.used {
+      background: #f8f5f5;
+      color: #a8a8a8;
+      border: 1px solid #dadada;
+    }
+  }
+}
+
+.wrapper-class {
+  display: flex;
+  flex-direction: column-reverse;
+}

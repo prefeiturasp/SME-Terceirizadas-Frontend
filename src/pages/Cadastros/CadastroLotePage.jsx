@@ -3,7 +3,7 @@ import CadastroLote from '../../components/screens/Cadastros/CadastroLote/Cadast
 import Page from '../../components/Shareable/Page/Page';
 
 export default props => (
-  <Page titulo="Cadastro de Lote" tituloRastro="Terceirizadas">
+  <Page titulo="Cadastro de Lote" tituloRastro="Configurações">
     <CadastroLote />
   </Page>
 )
