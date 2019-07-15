@@ -14,7 +14,7 @@ import {
   solicitarInversao
 } from "../../services/dayChange.service";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
-import CardHeader from "../Shareable/CardHeader";
+import CardMatriculados from "../Shareable/CardMatriculados";
 import "./style.scss";
 
 export class DayChangeEditor extends Component {
@@ -130,7 +130,7 @@ export class DayChangeEditor extends Component {
     return (
       <div>
         <form>
-          <CardHeader numeroAlunos={quatidadeAluno} />
+          <CardMatriculados numeroAlunos={quatidadeAluno} />
           <DayChangeItemList
             dayChangeList={this.state.dayChangeList}
             OnDeleteButtonClicked={this.OnDeleteButtonClicked}

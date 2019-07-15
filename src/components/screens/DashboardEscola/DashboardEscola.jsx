@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import CardHeader from "../../Shareable/CardHeader";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import { Collapse } from "react-collapse";
 import { dataAtual } from "./utils";
 import CardBody from "../../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
@@ -12,7 +13,9 @@ export default class DashboardEscola extends Component {
     const { numeroAlunos, autorizadas, theadList, trs } = this.props;
     return (
       <div>
-        <CardHeader numeroAlunos={numeroAlunos} />
+        <CardMatriculados
+          numeroAlunos={numeroAlunos}
+        />
         <CardBody
           titulo={"Painel de Status de Solicitações"}
           dataAtual={dataAtual()}

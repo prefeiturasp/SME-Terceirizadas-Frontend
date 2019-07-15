@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
 import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
@@ -19,61 +20,40 @@ class DashboardTerceirizada extends Component {
     super(props);
     this.state = {
       collapsed: true,
+      lotes: [{
+        nome: '7A IP I IPIRANGA',
+        tipo_de_gestao: 'TERC TOTAL'
+      },
+      {
+        nome: '7A IP II IPIRANGA',
+        tipo_de_gestao: 'TERC TOTAL'
+      }],
       gestaoDeAlimentacao: false
     };
+    this.alterarCollapse = this.alterarCollapse.bind(this);
   }
+
+  alterarCollapse() {
+    this.setState({ collapsed: !this.state.collapsed });
+  }
+
 
   render() {
     const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
-    const { collapsed, gestaoDeAlimentacao } = this.state;
+    const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <div className="card mt-3">
-            <div className="card-body">
-              <span className="blockquote-sme">
-                Nº de Matriculados Terceirizada Ipiranga
-              </span>
-              <div />
-              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">
-                Informação automática disponibilizada no Cadastro da Unidade
-                Escolar
-                <Stand
-                  onClick={() => this.setState({ collapsed: !collapsed })}
-                  color={"#C8C8C8"}
-                  width={18}
-                  padding={0}
-                  lineHeight={3}
-                  lineSpacing={3}
-                  className="float-right"
-                  active={!collapsed}
-                />
-              </span>
-              <Collapse isOpened={!collapsed}>
-                <p className="pt-3 blockquote-sme">
-                  Lotes pertencentes à Terceirizada
-                </p>
-                <div>
-                  <table className="table-lote">
-                    <tr>
-                      <th>Lote</th>
-                      <th>Tipo de Gestão</th>
-                    </tr>
-                    <tr>
-                      <td>7A IP I IPIRANGA</td>
-                      <td>TERC TOTAL</td>
-                    </tr>
-                    <tr>
-                      <td>7A IP II IPIRANGA</td>
-                      <td>TERC TOTAL</td>
-                    </tr>
-                  </table>
-                </div>
-              </Collapse>
-            </div>
-          </div>
+          <CardMatriculados
+            collapsed={collapsed}
+            alterarCollapse={this.alterarCollapse}
+            numeroAlunos={enrolled}
+          >
+            <Collapse isOpened={!collapsed}>
+              <TabelaHistoricoLotes lotes={lotes} />
+            </Collapse>
+          </CardMatriculados>
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">

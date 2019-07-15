@@ -30,7 +30,7 @@ import {
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
-import CardHeader from "../Shareable/CardHeader";
+import CardMatriculados from "../Shareable/CardMatriculados";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -277,7 +277,7 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <CardHeader numeroAlunos={this.state.nro_matriculados} />
+        <CardMatriculados numeroAlunos={this.state.nro_matriculados} />
         <form>
           <TourRequestItemList
             tourRequestList={tourRequestList}
