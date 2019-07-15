@@ -5,7 +5,7 @@ import IconePerfil from "../../Shareable/Icones/Cadastros/IconePerfil";
 import IconeUnidadeEscolar from "../../Shareable/Icones/Cadastros/IconeUnidadeEscolar";
 import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
-import "./style.scss"
+import "./style.scss";
 
 class Cadastros extends Component {
   constructor(props) {
@@ -35,15 +35,17 @@ class Cadastros extends Component {
               <IconeUnidadeEscolar />
             </CardLogo>
           </div>
-          <div className="col-4">
-            <CardLogo titulo={"Cadastro de Lotes"} disabled>
-              <IconeLote />
-            </CardLogo>
+          <div className="linked-card col-4">
+            <Link to="/configuracoes/cadastros/lote">
+              <CardLogo titulo={"Cadastro de Lotes"} disabled>
+                <IconeLote />
+              </CardLogo>
+            </Link>
           </div>
         </div>
         <div className="row mt-3">
           <div className="linked-card col-4">
-            <Link to="/configuracoes/cadastros/lote">
+            <Link to="/configuracoes/cadastros/empresa">
               <CardLogo titulo={"Cadastro de Empresas"}>
                 <IconeEmpresa />
               </CardLogo>

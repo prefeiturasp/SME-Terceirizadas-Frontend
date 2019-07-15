@@ -328,5 +328,115 @@
       ],
       "id": 4
     }
+  ],
+  "dres": [
+    {
+      "id": 1,
+      "uuid": "76208e2e-7486-449d-a992-de47e80fb3db",
+      "inicial": "DRE BUTANTÃ",
+      "nome": "1 BT - DRE BUTANTÃ"
+    },
+    {
+      "id": 2,
+      "uuid": "76208e2e-7486-449d-a992-de47e80fb3jd",
+      "inicial": "DRE CAMPO LIMPO",
+      "nome": "2 CLI - DRE CAMPO LIMPO"
+    },
+    {
+      "id": 3,
+      "uuid": "76208e2e-5432-449d-a992-de47e80fb3jd",
+      "inicial": "DRE CAMPO LIMPO",
+      "nome": "3 CLII - DRE CAMPO LIMPO"
+    },
+    {
+      "id": 4,
+      "uuid": "76208x8e-5432-449d-a992-de47e80fb3jd",
+      "inicial": "DRE CAPELA DO SOCORRO",
+      "nome": "4 CS - DRE CAPELA DO SOCORRO"
+    },
+    {
+      "id": 5,
+      "uuid": "76974e2e-5432-449d-a992-de47e80fb3jd",
+      "inicial": "DRE FREGUESIA DO Ó",
+      "nome": "5 FO - DRE FREGUESIA DO Ó"
+    },
+    {
+      "id": 6,
+      "uuid": "76974e2e-5432-449d-a992-de72g14fb3jd",
+      "inicial": "DRE GUAIANASES",
+      "nome": "6 G - DRE GUAIANASES"
+    },
+    {
+      "id": 7,
+      "uuid": "76974e2e-5432-449d-a992-de72g14fb3jd",
+      "inicial": "DRE IPIRANGA",
+      "nome": "7A IPI I - DRE IPIRANGA"
+    },
+    {
+      "id": 8,
+      "uuid": "76974e2e-5432-449d-a992-de72g14fb388",
+      "inicial": "DRE IPIRANGA",
+      "nome": "7B IPI II - DRE IPIRANGA"
+    },
+    {
+      "id": 9,
+      "uuid": "76974e2e-5432-449d-a992-de72g14fb399",
+      "inicial": "DRE ITAQUERA",
+      "nome": "8 IQ - DRE ITAQUERA"
+    },
+    {
+      "id": 10,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1010",
+      "inicial": "DRE JAÇANÃ/TREMEMBÉ",
+      "nome": "9 TJ - DRE JAÇANÃ/TREMEMBÉ"
+    },
+    {
+      "id": 11,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1111",
+      "inicial": "DRE SÃO MIGUEL PAULISTA",
+      "nome": "10A MP I - DRE SÃO MIGUEL PAULISTA"
+    },
+    {
+      "id": 12,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1212",
+      "inicial": "DRE SÃO MIGUEL PAULISTA",
+      "nome": "10B MP II - DRE SÃO MIGUEL PAULISTA"
+    },
+    {
+      "id": 13,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1313",
+      "inicial": "DRE PENHA",
+      "nome": "11A PE I - DRE PENHA"
+    },
+    {
+      "id": 14,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1414",
+      "inicial": "DRE PENHA",
+      "nome": "11B PE II - DRE PENHA"
+    },
+    {
+      "id": 15,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1515",
+      "inicial": "DRE PIRITUBA",
+      "nome": "12 PJ - DRE PIRITUBA"
+    },
+    {
+      "id": 16,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1616",
+      "inicial": "DRE SANTO AMARO",
+      "nome": "13 SA - DRE SANTO AMARO"
+    },
+    {
+      "id": 17,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1717",
+      "inicial": "DRE SÃO MATEUS",
+      "nome": "14A SM I - DRE SÃO MATEUS"
+    },
+    {
+      "id": 18,
+      "uuid": "76974e2e-5432-449d-a992-de72g14f1818",
+      "inicial": "DRE SÃO MATEUS",
+      "nome": "14B SM II - DRE SÃO MATEUS"
+    }
   ]
 }

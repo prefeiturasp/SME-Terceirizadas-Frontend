@@ -23,6 +23,8 @@ import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
+import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 
 const routesConfig = [
@@ -129,6 +131,16 @@ const routesConfig = [
   {
     path: "/configuracoes/cadastros/lote",
     component: CadastroLotePage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/empresas-cadastradas",
+    component: EmpresasCadastradas,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/empresa",
+    component: CadastroEmpresaPage,
     exact: false
   },
   {
