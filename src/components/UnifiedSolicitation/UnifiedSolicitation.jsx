@@ -16,6 +16,8 @@ import { Stand } from "react-burgers";
 import { required, maxValue } from "../../helpers/fieldValidators";
 import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
 import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
+import CardMatriculados from "../Shareable/CardMatriculados";
+import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
 import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
 import { getRefeicoesApi } from "../../services/tourRequest.service";
 import "../Shareable/style.scss";
@@ -54,6 +56,17 @@ class UnifiedSolicitation extends Component {
       radioChanged: false,
       enumKits: null,
       kitsTotal: 0,
+      collapsed: true,
+      lotes: [
+        {
+          nome: "7A IP I IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        },
+        {
+          nome: "7A IP II IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        }
+      ],
       choicesTotal: 0,
       studentsTotal: 0,
       unifiedSolicitationList: [],
@@ -76,6 +89,7 @@ class UnifiedSolicitation extends Component {
     this.titleRef = React.createRef();
     this.pedidoMultiploRef = React.createRef();
     this.escolasRef = React.createRef();
+    this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
   OnEditButtonClicked(param) {
@@ -91,7 +105,7 @@ class UnifiedSolicitation extends Component {
     let studentsTotal = 0;
     let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
-       // eslint-disable-next-line
+      // eslint-disable-next-line
       var foundIndex = schoolsFiltered.findIndex(x => x.id == escola.id);
       schoolsFiltered[foundIndex].checked = escola.check;
       schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
@@ -448,6 +462,10 @@ class UnifiedSolicitation extends Component {
     this.setState({ schoolsFiltered });
   }
 
+  alterarCollapse() {
+    this.setState({ collapsed: !this.state.collapsed });
+  }
+
   render() {
     const {
       handleSubmit,
@@ -469,11 +487,13 @@ class UnifiedSolicitation extends Component {
       showModal,
       schoolsFiltered,
       enumKits,
+      lotes,
       kitsTotal,
       choicesTotal,
       studentsTotal,
       schoolsTotal,
-      unifiedSolicitationList
+      unifiedSolicitationList,
+      collapsed
     } = this.state;
     return (
       <div>
@@ -499,50 +519,25 @@ class UnifiedSolicitation extends Component {
         </Modal>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <div className="card mt-3">
-            <div className="card-body">
-              <span className="blockquote-sme">
-                Nº de Matriculados DRE Ipiranga
-              </span>
-              <div />
-              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">
-                Informação automática disponibilizada no Cadastro da Unidade
-                Escolar
-              </span>
-              <p className="pt-3 blockquote-sme">Lotes pertencentes à DRE</p>
-              <div>
-                <table className="table-lote">
-                  <tr>
-                    <th>Lote</th>
-                    <th>Tipo de Gestão</th>
-                  </tr>
-                  <tr>
-                    <td>7A IP I IPIRANGA</td>
-                    <td>TERC TOTAL</td>
-                  </tr>
-                  <tr>
-                    <td>7A IP II IPIRANGA</td>
-                    <td>TERC TOTAL</td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </div>
+          <CardMatriculados
+            collapsed={collapsed}
+            alterarCollapse={this.alterarCollapse}
+            numeroAlunos={enrolled}
+          >
+            <Collapse isOpened={!collapsed}>
+              <TabelaHistoricoLotes lotes={lotes} />
+            </Collapse>
+          </CardMatriculados>
           {unifiedSolicitationList.length > 0 && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <span className="page-title">Rascunhos</span>
-                <UnifiedSolicitationItemList
-                  schoolsLoaded={schoolsFiltered.length > 0}
-                  unifiedSolicitationList={unifiedSolicitationList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
-                />
-              </div>
+            <div className="mt-3">
+              <span className="page-title">Rascunhos</span>
+              <UnifiedSolicitationItemList
+                schoolsLoaded={schoolsFiltered.length > 0}
+                unifiedSolicitationList={unifiedSolicitationList}
+                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                resetForm={event => this.resetForm(event)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
             </div>
           )}
           <div ref={this.titleRef} className="form-row mt-3 ml-1">

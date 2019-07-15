@@ -340,18 +340,14 @@ class FoodInclusionEditor extends Component {
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados numeroAlunos={enrolled} />
           {foodInclusionList.length > 0 && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <span className="page-title">Rascunhos</span>
-                <FoodInclusionItemList
-                  foodInclusionList={foodInclusionList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
-                />
-              </div>
+            <div className="mt-3">
+              <span className="page-title">Rascunhos</span>
+              <FoodInclusionItemList
+                foodInclusionList={foodInclusionList}
+                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                resetForm={event => this.resetForm(event)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
             </div>
           )}
           <div ref={this.titleRef} className="form-row mt-3 ml-1">

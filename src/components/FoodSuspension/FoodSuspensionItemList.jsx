@@ -44,7 +44,7 @@ export class FoodSuspensionItemList extends Component {
       let backgroundColor =
         dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="border rounded mt-3">
+        <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
               Inclusão de Alimentação {`# ${dayChange.id}`}

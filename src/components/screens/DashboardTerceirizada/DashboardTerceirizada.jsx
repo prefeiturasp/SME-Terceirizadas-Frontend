@@ -43,7 +43,7 @@ class DashboardTerceirizada extends Component {
     const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>
-        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
+        <form onSubmit={handleSubmit(handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados
             collapsed={collapsed}

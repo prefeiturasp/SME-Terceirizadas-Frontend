@@ -55,7 +55,7 @@ class DashboardDRE extends Component {
                 Faça uma Solicitação Unificada
               </div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <Link to="/unified-solicitation">
+              <Link to="/dre/solicitacao-unificada">
                 <BaseButton
                   label="Solicitação Unificada"
                   type={ButtonType.BUTTON}
