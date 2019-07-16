@@ -5,7 +5,7 @@ import "./style.css";
 export const InputSearch = props =>
 (
   <div className="row">
-    <div className="col-md-12">
+    <div className="col-12">
       <NavLink to={props.voltarLink || "/"} className="btn btn-outline-secondary">
         <i class="fas fa-arrow-left" /> Voltar
       </NavLink>

@@ -17,14 +17,16 @@ class DashboardDRE extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      lotes: [{
-        nome: '7A IP I IPIRANGA',
-        tipo_de_gestao: 'TERC TOTAL'
-      },
-      {
-        nome: '7A IP II IPIRANGA',
-        tipo_de_gestao: 'TERC TOTAL'
-      }]
+      lotes: [
+        {
+          nome: "7A IP I IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        },
+        {
+          nome: "7A IP II IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        }
+      ]
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
@@ -146,15 +148,19 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <i className="fas fa-lock" />
-                Pendências
-                <span className="float-right">
-                  <LabelAndCombo
-                    onChange={value => this.handleField("reason", value)}
-                    placeholder={"Visão por"}
-                    options={vision_by}
-                  />
-                </span>
+                <div className="row">
+                  <div className="col-3 mt-3">
+                    <i className="fas fa-lock" />
+                    Pendências
+                  </div>
+                  <div className="offset-6 col-3 text-right my-auto">
+                    <LabelAndCombo
+                      onChange={value => this.handleField("reason", value)}
+                      placeholder={"Visão por"}
+                      options={vision_by}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="pt-3" />
               <div className="row">
