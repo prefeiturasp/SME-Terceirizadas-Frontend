@@ -239,8 +239,10 @@ div.caption-choices {
 }
 
 .btn-styled {
-  min-height: 40px;
-  min-width: 160px;
+  &.set-size-properties {
+    min-height: 40px;
+    min-width: 160px;
+  }
   &.btn-primary {
     background-color: #035d96;
     &:hover {

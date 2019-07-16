@@ -13,8 +13,7 @@ import {
 import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
 import { transformaObjetos, fieldCnpj, fieldCep, fieldTel } from "./helper";
-import { toastSuccess } from '../../../Shareable/dialogs';
-
+import { toastSuccess } from "../../../Shareable/dialogs";
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -50,7 +49,7 @@ class CadastroEmpresa extends Component {
     this.setState({ lotesSelecionados: value });
   }
 
-  resetForm(){
+  resetForm() {
     this.props.reset();
     this.props.change("razão_social", "");
     this.props.change("cnpj", "");
@@ -69,10 +68,10 @@ class CadastroEmpresa extends Component {
     this.props.change("contrato", "");
   }
 
-  salvaFormulario(){
+  salvaFormulario() {
     this.resetForm();
-    this.setState({ lotesSelecionados: []});
-    toastSuccess('Empresa adicionada com sucesso!')
+    this.setState({ lotesSelecionados: [] });
+    toastSuccess("Empresa adicionada com sucesso!");
   }
 
   render() {
@@ -173,7 +172,7 @@ class CadastroEmpresa extends Component {
                   />
                 </div>
                 <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
+                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
                 </div>
               </div>
 
@@ -234,7 +233,7 @@ class CadastroEmpresa extends Component {
                   />
                 </div>
                 <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
+                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
                 </div>
               </div>
 
@@ -260,7 +259,7 @@ class CadastroEmpresa extends Component {
                   />
                 </div>
                 <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
+                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
                 </div>
               </div>
 
@@ -313,7 +312,7 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="button-container pt-3">
+              <div className="float-right button-container pt-3">
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
@@ -322,9 +321,7 @@ class CadastroEmpresa extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values =>
-                      this.salvaFormulario()
-                    )}
+                    onClick={handleSubmit(values => this.salvaFormulario())}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
