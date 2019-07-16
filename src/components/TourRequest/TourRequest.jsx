@@ -333,7 +333,7 @@ export class TourRequest extends Component {
               />
             )}
             <div className="form-group pt-3">
-              <label className="bold">{"Número total kits:"}</label>
+              <label className="font-weight-bold">{"Número total kits:"}</label>
               <br />
               <Grid
                 cols="1 1 1 1"
@@ -342,7 +342,7 @@ export class TourRequest extends Component {
                   background: "#E8E8E8"
                 }}
               >
-                <span className="bold d-flex justify-content-center">
+                <span className="font-weight-bold d-flex justify-content-center">
                   {this.props.qtd_total || 0}
                 </span>
               </Grid>
