@@ -19,10 +19,10 @@ export default class CardMatriculados extends Component {
               <Stand
                 onClick={this.props.alterarCollapse}
                 color={"#C8C8C8"}
-                width={18}
-                padding={0}
+                width={15}
                 lineHeight={3}
-                lineSpacing={3}
+                lineSpacing={1}
+                padding={0}
                 active={!collapsed}
               />
             </div>}
