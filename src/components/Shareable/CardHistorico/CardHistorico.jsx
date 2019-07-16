@@ -12,24 +12,22 @@ export class CardHistorico extends Component {
     this.state = {
       collapsed: true
     };
+    this.selecionarTodos = this.selecionarTodos.bind(this);
   }
-  handleSelecionarTodos = e => {
-    if (e.target.checked) {
-      alert("its work");
-    }
-  };
+
 
   handleClickSubmit = e => {
     alert("it will be submited");
   };
+
+  selecionarTodos() {
+    this.props.trs.forEach((tr) => {
+      this.props.change(`check_${tr._id}`, !this.props.selecionar_todos);
+    })
+    this.props.change("selecionar_todos", !this.props.selecionar_todos)
+  }
   render() {
-    const {
-      titulo,
-      thead,
-      trs,
-      selecionar_todos,
-      handleSubmit,
-    } = this.props;
+    const { titulo, thead, trs, handleSubmit } = this.props;
     const { collapsed } = this.state;
     return (
       <div className="card mt-3">
@@ -63,8 +61,8 @@ export class CardHistorico extends Component {
                       name="selecionar_todos"
                     />
                     <span
-                      onClick={() =>
-                        this.props.change("selecionar_todos", !selecionar_todos)
+                      onClick={(value) =>
+                        this.selecionarTodos()
                       }
                       className="checkbox-custom"
                     />
@@ -94,13 +92,26 @@ export class CardHistorico extends Component {
                   {trs.map((value, key) => {
                     return (
                       <tr>
-                        <td>
-                          <Field
-                            component={"input"}
-                            type="checkbox"
-                            name={`name_${value._id}`}
-                            value={value._id}
-                          />
+                        <td className="td-check">
+                          <label
+                            htmlFor={`check_${value._id}`}
+                            className="checkbox-label"
+                          >
+                            <Field
+                              component={"input"}
+                              type="checkbox"
+                              name={`check_${value._id}`}
+                            />
+                            <span
+                              onClick={() =>
+                                this.props.change(
+                                  `check_${value._id}`,
+                                  true
+                                )
+                              }
+                              className="checkbox-custom"
+                            />
+                          </label>
                         </td>
                         <td>{value._id}</td>
                         <td>{value.escola}</td>

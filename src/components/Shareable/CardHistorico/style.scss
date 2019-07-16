@@ -18,3 +18,12 @@
     margin-left: 20px;
   }
 }
+
+.td-check {
+  .checkbox-label, .checkbox-custom {
+    top: unset;
+    position: relative;
+    padding-right: 20px;
+    margin-right: -20px;
+  }
+}
