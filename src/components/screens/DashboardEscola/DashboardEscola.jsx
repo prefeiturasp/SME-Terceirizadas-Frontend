@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { Collapse } from "react-collapse";
 import { dataAtual } from "./utils";
 import CardBody from "../../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";

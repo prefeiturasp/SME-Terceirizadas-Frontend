@@ -37,7 +37,9 @@ export default class StatusSolicitacoes extends Component {
     return (
       <div className="card mt-3">
         <div className="card-body">
-          <InputSearch voltarLink="/escola/painel-de-controle" />
+          <div className="pr-3">
+            <InputSearch voltarLink="/escola/painel-de-controle" />
+          </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
             titulo={"Aprovadas"}

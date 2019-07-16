@@ -36,22 +36,28 @@ class Relatorio extends Component {
       },
       listaDeStatus: [
         {
-          nome: "Solicitação Realizada",
+          titulo: "Solicitação Realizada",
           status: "aprovado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Reprovado da DRE",
+          titulo: "Reprovado da DRE",
           status: "reprovado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Cancelado pela CODAE",
+          titulo: "Cancelado pela CODAE",
           status: "cancelado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Visualizado pela Terceirizada",
+          titulo: "Visualizado pela Terceirizada",
           status: null,
           timestamp: null
         }

@@ -48,7 +48,7 @@ describe("Test <Button>", () => {
   });
 
   it("correct div>icon", () => {
-    expect(wrapper.find("i").props().className).toBe("fa fa-folder");
+    expect(wrapper.find("i").props().className).toBe("pr-3 fas fa-folder");
   });
 
   it("clicked 2 times", () => {

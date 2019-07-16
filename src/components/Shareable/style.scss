@@ -126,6 +126,7 @@ div.caption-choices {
     color: #353535;
   }
   .number-of-order-label {
+    position: relative;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
@@ -141,6 +142,12 @@ div.caption-choices {
   line-height: normal;
   color: #353535;
   padding: 20px;
+}
+
+.report-div-beside-order {
+  position: absolute !important;
+  left: 230px;
+  top: 82px;
 }
 
 .requester {

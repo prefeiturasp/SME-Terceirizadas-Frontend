@@ -37,7 +37,9 @@ export default class StatusSolicitacoesTerceirizada extends Component {
     return (
       <div className="card mt-3">
         <div className="card-body">
-          <InputSearch voltarLink="/terceirizada/painel-de-controle"/>
+          <div className="pr-3">
+            <InputSearch voltarLink="/terceirizada/painel-de-controle" />
+          </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
             titulo={"Aprovadas"}

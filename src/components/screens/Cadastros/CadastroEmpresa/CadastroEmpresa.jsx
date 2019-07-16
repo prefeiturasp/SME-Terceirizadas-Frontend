@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
-import { Field, formValueSelector, reduxForm, reset } from "redux-form";
+import { Link } from "react-router-dom";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
@@ -12,7 +12,7 @@ import {
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep, fieldTel, resetForm } from "./helper";
+import { transformaObjetos, fieldCnpj, fieldCep, fieldTel } from "./helper";
 import { toastSuccess } from '../../../Shareable/dialogs';
 
 

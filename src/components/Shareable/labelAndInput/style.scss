@@ -3,11 +3,11 @@ div.react-datepicker-wrapper {
 }
 
 .input-group {
-  input {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
   &.calendar {
+    input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
     display: -webkit-inline-box;
     .input-group-prepend {
       margin-top: 2px;
@@ -24,6 +24,8 @@ div.react-datepicker-wrapper {
       color: #2881bb;
     }
     input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
       border: none;
     }
     .input-group-prepend {

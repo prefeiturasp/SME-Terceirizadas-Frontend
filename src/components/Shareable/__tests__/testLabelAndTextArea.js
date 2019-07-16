@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 import React from "react";
-import { LabelAndTextArea } from "../labelAndInput";
+import { LabelAndTextArea } from "../labelAndInput/labelAndInput";
 
 describe("<LabelAndTextArea/>", () => {
   let wrapper;

@@ -245,7 +245,12 @@ class UnifiedSolicitation extends Component {
 
   handleMultipleOrder() {
     this.props.change("pedido_multiplo", !this.props.multipleOrder);
-    window.scrollTo(0, this.pedidoMultiploRef.current.offsetTop - 75);
+    window.scrollTo(
+      0,
+      this.pedidoMultiploRef.current.offsetTop +
+        295 +
+        120 * this.state.unifiedSolicitationList.length
+    );
   }
 
   handleSelecionaKitLancheBox(school, value) {
@@ -397,7 +402,7 @@ class UnifiedSolicitation extends Component {
     school.burger_active = !school.burger_active;
     this.refs.escolas.scrollTop = 47 * key;
     this.forceUpdate();
-    window.scrollTo(0, this.escolasRef.current.offsetTop - 75);
+    window.scrollTo(0, this.escolasRef.current.offsetTop + 295);
   }
 
   closeModal(e) {
@@ -517,6 +522,7 @@ class UnifiedSolicitation extends Component {
             />
           </Modal.Footer>
         </Modal>
+
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados
@@ -545,332 +551,359 @@ class UnifiedSolicitation extends Component {
               {title}
             </h3>
           </div>
-          <div className="form-row">
-            <div className="form-group col-sm-3">
-              <Field
-                component={LabelAndDate}
-                name="dia"
-                onBlur={event => this.handleDate(event)}
-                minDate={two_working_days}
-                label="Dia"
-                validate={required}
-              />
-            </div>
-            <div className="form-group col-sm-8">
-              <Field
-                component={LabelAndCombo}
-                name="razao"
-                label="Motivo"
-                onChange={value => this.props.change("razao", value)}
-                options={selectDefault
-                  .concat(reasons_simple)
-                  .concat(reasons_continuous_program)}
-                validate={required}
-              />
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group col-sm-8 offset-sm-3">
-              {razao === "Outro" && (
-                <Field
-                  component={LabelAndInput}
-                  label="Qual o motivo?"
-                  onChange={value => this.props.change("qual_razao", value)}
-                  name="qual_razao"
-                  className="form-control"
-                  validate={required}
-                />
-              )}
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="form-group col-12 pb-5">
-              <Field
-                component={LabelAndInput}
-                label="Local do evento"
-                placeholder="Insira o local do evento"
-                name="local_passeio"
-                className="form-control"
-                validate={required}
-              />
-            </div>
-          </div>
-          <div
-            ref={this.pedidoMultiploRef}
-            className="col-md-12 pt-2 pb-2"
-            style={{ paddingLeft: "2rem" }}
-          >
-            <label htmlFor="check" className="checkbox-label">
-              <Field
-                component={"input"}
-                type="checkbox"
-                name="pedido_multiplo"
-              />
-              <span
-                onClick={() => this.handleMultipleOrder()}
-                className="checkbox-custom"
-                style={{ borderRadius: "15px" }}
-              />{" "}
-              Realizar pedido múltiplo
-            </label>
-          </div>
-          <Collapse isOpened={multipleOrder}>
-            <div className="col-md-12">
-              <div className="form-group row">
-                <Field
-                  component={LabelAndInput}
-                  cols="6"
-                  name="max_numero_alunos_por_escola"
-                  onChange={event =>
-                    this.props.change(
-                      "max_numero_alunos_por_escola",
-                      event.target.value
+          <div className="card">
+            <div className="card-body">
+              <div className="row">
+                <div className="form-group col-3">
+                  <Field
+                    component={LabelAndDate}
+                    name="dia"
+                    onBlur={event => this.handleDate(event)}
+                    minDate={two_working_days}
+                    label="Dia"
+                    validate={required}
+                  />
+                </div>
+                <div className="form-group col-8">
+                  <Field
+                    component={LabelAndCombo}
+                    name="razao"
+                    label="Motivo"
+                    onChange={value => this.props.change("razao", value)}
+                    options={selectDefault
+                      .concat(reasons_simple)
+                      .concat(reasons_continuous_program)}
+                    validate={required}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="form-group col-8 offset-3">
+                  {razao === "Outro" && (
+                    <Field
+                      component={LabelAndInput}
+                      label="Qual o motivo?"
+                      onChange={value => this.props.change("qual_razao", value)}
+                      name="qual_razao"
+                      className="form-control"
+                      validate={required}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 pl-0 pr-0 pb-3">
+                  <Field
+                    component={LabelAndInput}
+                    label="Local do evento"
+                    placeholder="Insira o local do evento"
+                    name="local_passeio"
+                    className="form-control"
+                    validate={required}
+                  />
+                </div>
+              </div>
+              <div
+                ref={this.pedidoMultiploRef}
+                className="col-md-12 pt-2 pb-2"
+                style={{ paddingLeft: "2rem" }}
+              >
+                <label htmlFor="check" className="checkbox-label">
+                  <Field
+                    component={"input"}
+                    type="checkbox"
+                    name="pedido_multiplo"
+                  />
+                  <span
+                    onClick={() => this.handleMultipleOrder()}
+                    className="checkbox-custom"
+                    style={{ borderRadius: "15px" }}
+                  />{" "}
+                  Realizar pedido múltiplo
+                </label>
+              </div>
+              <Collapse isOpened={multipleOrder}>
+                <div className="col-md-12">
+                  <div className="form-group row">
+                    <Field
+                      component={LabelAndInput}
+                      cols="6"
+                      name="max_numero_alunos_por_escola"
+                      onChange={event =>
+                        this.props.change(
+                          "max_numero_alunos_por_escola",
+                          event.target.value
+                        )
+                      }
+                      type="number"
+                      label="Número MÁXIMO de alunos participantes por escola"
+                      validate={
+                        multipleOrder !== undefined && [
+                          required,
+                          maxValue(max_alunos)
+                        ]
+                      }
+                    />
+                  </div>
+                </div>
+                <SelecionaTempoPasseio
+                  className="mt-3"
+                  validate={multipleOrder !== undefined}
+                  onChange={(event, newValue, previousValue, name) =>
+                    this.setNumeroDeKitLanches(
+                      event,
+                      newValue,
+                      previousValue,
+                      name,
+                      null
                     )
                   }
-                  type="number"
-                  label="Número MÁXIMO de alunos participantes por escola"
-                  validate={
-                    multipleOrder !== undefined && [
-                      required,
-                      maxValue(max_alunos)
-                    ]
-                  }
+                />
+                {enumKits && (
+                  <SelecionaKitLancheBox
+                    className="mt-3"
+                    validate={multipleOrder !== undefined}
+                    choicesNumberLimit={qtd_kit_lanche}
+                    onChange={value =>
+                      this.setState({ choicesTotal: value.length })
+                    }
+                    showOptions={false}
+                    kits={enumKits}
+                  />
+                )}
+              </Collapse>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Pesquisar"
+                onChange={this.filterList}
+              />
+              <span ref={this.escolasRef} />
+              <div scrollTop={100} ref="escolas" className="schools-group">
+                {schoolsFiltered.length === 0 && (
+                  <p>
+                    Carregando escolas...{" "}
+                    <img
+                      src="/assets/image/ajax-loader.gif"
+                      alt="ajax-loader"
+                    />
+                  </p>
+                )}
+                {schoolsFiltered.length > 0 &&
+                  schoolsFiltered.map((school, key) => {
+                    return (
+                      <FormSection name={`school_${school.id}`}>
+                        <div>
+                          <div
+                            className="school-container col-md-12 mr-4"
+                            style={
+                              school.burger_active
+                                ? { background: "#F2FBFE" }
+                                : {}
+                            }
+                          >
+                            <div
+                              className="col-md-12 pt-2 pb-2"
+                              style={{ paddingLeft: "2rem" }}
+                            >
+                              <label htmlFor="check" className="checkbox-label">
+                                <Field
+                                  component={"input"}
+                                  type="checkbox"
+                                  name="check"
+                                />
+                                <span
+                                  onClick={() => this.handleCheck(school)}
+                                  className="checkbox-custom"
+                                />{" "}
+                                {school._id + " - " + school.nome}
+                              </label>
+                              {!multipleOrder && (
+                                <Stand
+                                  onClick={() => this.changeBurger(school, key)}
+                                  color={"#C8C8C8"}
+                                  width={30}
+                                  padding={0}
+                                  lineSpacing={5}
+                                  className="float-right"
+                                  active={school.burger_active}
+                                />
+                              )}
+                              {multipleOrder && school.checked && (
+                                <div className="label-n-alunos float-right">
+                                  <span>Nº de Alunos</span>
+                                  <Field
+                                    component={"input"}
+                                    type={"number"}
+                                    onChange={event =>
+                                      this.handleNumberOfStudentsPerSchool(
+                                        school,
+                                        event
+                                      )
+                                    }
+                                    min={0}
+                                    max={studentsTotal}
+                                    style={{
+                                      width: "70px",
+                                      textAlign: "center"
+                                    }}
+                                    name="numero_alunos"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            <Collapse isOpened={school.burger_active}>
+                              <div className="col-md-12">
+                                <div className="form-group row">
+                                  <Field
+                                    component={LabelAndInput}
+                                    cols="3 3 3 3"
+                                    name="nro_alunos"
+                                    type="number"
+                                    onChange={event =>
+                                      this.handleNumberOfStudents(school, event)
+                                    }
+                                    label="Número de alunos participantes"
+                                    validate={
+                                      school.checked &&
+                                      !multipleOrder && [required]
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <SelecionaTempoPasseio
+                                className="mt-3"
+                                validate={school.checked && !multipleOrder}
+                                onChange={(
+                                  event,
+                                  newValue,
+                                  previousValue,
+                                  name
+                                ) =>
+                                  this.setNumeroDeKitLanches(
+                                    event,
+                                    newValue,
+                                    previousValue,
+                                    name,
+                                    school
+                                  )
+                                }
+                              />
+                              {enumKits && (
+                                <SelecionaKitLancheBox
+                                  kits={enumKits}
+                                  showOptions={false}
+                                  validate={school.checked && !multipleOrder}
+                                  className="mt-3"
+                                  onChange={value =>
+                                    this.handleSelecionaKitLancheBox(
+                                      school,
+                                      value
+                                    )
+                                  }
+                                  choicesNumberLimit={school.limit_of_meal_kits}
+                                />
+                              )}
+                              <div className="form-group">
+                                <label className="bold">
+                                  {"Número total de kits dessa escola:"}
+                                </label>
+                                <br />
+                                <Grid
+                                  cols="1 1 1 1"
+                                  className="border rounded p-2"
+                                  style={{
+                                    background: "#E8E8E8"
+                                  }}
+                                >
+                                  <span className="bold d-flex justify-content-center">
+                                    {school.number_of_meal_kits || 0}
+                                  </span>
+                                </Grid>
+                              </div>
+                            </Collapse>
+                          </div>
+                        </div>
+                      </FormSection>
+                    );
+                  })}
+              </div>
+              <div
+                className="form-group"
+                style={{ paddingTop: "30px", paddingBottom: "50px" }}
+              >
+                <div style={{ display: "grid" }} className="float-left">
+                  <label className="bold">Total de Unidades Escolares</label>
+                  <label>{schoolsTotal || 0}</label>
+                </div>
+                <div style={{ display: "grid" }} className="float-right">
+                  <label className="bold">Total de Kits</label>
+                  <label>
+                    {multipleOrder ? choicesTotal * studentsTotal : kitsTotal}
+                  </label>
+                </div>
+              </div>
+              <hr className="w-100" />
+              <div className="form-group">
+                <Field
+                  component={LabelAndTextArea}
+                  placeholder="Campo opcional"
+                  label="Observações"
+                  name="obs"
+                />
+              </div>
+              {schoolExists && (
+                <div
+                  className="col-md-12 pt-2 pb-2"
+                  style={{ paddingLeft: "2rem" }}
+                >
+                  <label htmlFor="check" className="checkbox-label">
+                    <Field
+                      component={"input"}
+                      type="checkbox"
+                      name="prosseguir"
+                    />
+                    <span
+                      onClick={() =>
+                        this.props.change("prosseguir", !prosseguir)
+                      }
+                      className="checkbox-custom"
+                      style={{ borderRadius: "15px" }}
+                    />{" "}
+                    Reconheço que já existe um evento para as escolas abaixo e
+                    desejo continuar mesmo assim
+                  </label>
+                  <ul>
+                    {schoolsExistArray.map((school, key) => {
+                      return <li>{school}</li>;
+                    })}
+                  </ul>
+                </div>
+              )}
+              <div className="form-group row float-right mt-4">
+                <BaseButton
+                  label="Cancelar"
+                  onClick={event => this.cancelForm(event)}
+                  style={ButtonStyle.OutlinePrimary}
+                />
+                <BaseButton
+                  label={"Salvar Rascunho"}
+                  onClick={handleSubmit(values => this.handleSubmit(values))}
+                  className="ml-3"
+                  type={ButtonType.BUTTON}
+                  style={ButtonStyle.OutlinePrimary}
+                />
+                <BaseButton
+                  label="Enviar Solicitação"
+                  type={ButtonType.SUBMIT}
+                  onClick={handleSubmit(values =>
+                    this.handleSubmit({ ...values, status: "A APROVAR" })
+                  )}
+                  style={ButtonStyle.Primary}
+                  className="ml-3"
                 />
               </div>
             </div>
-            <SelecionaTempoPasseio
-              className="mt-3"
-              validate={multipleOrder !== undefined}
-              onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(
-                  event,
-                  newValue,
-                  previousValue,
-                  name,
-                  null
-                )
-              }
-            />
-            {enumKits && (
-              <SelecionaKitLancheBox
-                className="mt-3"
-                validate={multipleOrder !== undefined}
-                choicesNumberLimit={qtd_kit_lanche}
-                onChange={value =>
-                  this.setState({ choicesTotal: value.length })
-                }
-                showOptions={false}
-                kits={enumKits}
-              />
-            )}
-          </Collapse>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Pesquisar"
-            onChange={this.filterList}
-          />
-          <span ref={this.escolasRef} />
-          <div scrollTop={100} ref="escolas" className="schools-group">
-            {schoolsFiltered.length === 0 && (
-              <p>
-                Carregando escolas...{" "}
-                <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
-              </p>
-            )}
-            {schoolsFiltered.length > 0 &&
-              schoolsFiltered.map((school, key) => {
-                return (
-                  <FormSection name={`school_${school.id}`}>
-                    <div>
-                      <div
-                        className="school-container col-md-12 mr-4"
-                        style={
-                          school.burger_active ? { background: "#F2FBFE" } : {}
-                        }
-                      >
-                        <div
-                          className="col-md-12 pt-2 pb-2"
-                          style={{ paddingLeft: "2rem" }}
-                        >
-                          <label htmlFor="check" className="checkbox-label">
-                            <Field
-                              component={"input"}
-                              type="checkbox"
-                              name="check"
-                            />
-                            <span
-                              onClick={() => this.handleCheck(school)}
-                              className="checkbox-custom"
-                            />{" "}
-                            {school._id + " - " + school.nome}
-                          </label>
-                          {!multipleOrder && (
-                            <Stand
-                              onClick={() => this.changeBurger(school, key)}
-                              color={"#C8C8C8"}
-                              width={30}
-                              padding={0}
-                              lineSpacing={5}
-                              className="float-right"
-                              active={school.burger_active}
-                            />
-                          )}
-                          {multipleOrder && school.checked && (
-                            <div className="label-n-alunos float-right">
-                              <span>Nº de Alunos</span>
-                              <Field
-                                component={"input"}
-                                type={"number"}
-                                onChange={event =>
-                                  this.handleNumberOfStudentsPerSchool(
-                                    school,
-                                    event
-                                  )
-                                }
-                                min={0}
-                                max={studentsTotal}
-                                style={{ width: "70px", textAlign: "center" }}
-                                name="numero_alunos"
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <Collapse isOpened={school.burger_active}>
-                          <div className="col-md-12">
-                            <div className="form-group row">
-                              <Field
-                                component={LabelAndInput}
-                                cols="3 3 3 3"
-                                name="nro_alunos"
-                                type="number"
-                                onChange={event =>
-                                  this.handleNumberOfStudents(school, event)
-                                }
-                                label="Número de alunos participantes"
-                                validate={
-                                  school.checked && !multipleOrder && [required]
-                                }
-                              />
-                            </div>
-                          </div>
-                          <SelecionaTempoPasseio
-                            className="mt-3"
-                            validate={school.checked && !multipleOrder}
-                            onChange={(event, newValue, previousValue, name) =>
-                              this.setNumeroDeKitLanches(
-                                event,
-                                newValue,
-                                previousValue,
-                                name,
-                                school
-                              )
-                            }
-                          />
-                          {enumKits && (
-                            <SelecionaKitLancheBox
-                              kits={enumKits}
-                              showOptions={false}
-                              validate={school.checked && !multipleOrder}
-                              className="mt-3"
-                              onChange={value =>
-                                this.handleSelecionaKitLancheBox(school, value)
-                              }
-                              choicesNumberLimit={school.limit_of_meal_kits}
-                            />
-                          )}
-                          <div className="form-group">
-                            <label className="bold">
-                              {"Número total de kits dessa escola:"}
-                            </label>
-                            <br />
-                            <Grid
-                              cols="1 1 1 1"
-                              className="border rounded p-2"
-                              style={{
-                                background: "#E8E8E8"
-                              }}
-                            >
-                              <span className="bold d-flex justify-content-center">
-                                {school.number_of_meal_kits || 0}
-                              </span>
-                            </Grid>
-                          </div>
-                        </Collapse>
-                      </div>
-                    </div>
-                  </FormSection>
-                );
-              })}
-          </div>
-          <div
-            className="form-group"
-            style={{ paddingTop: "30px", paddingBottom: "50px" }}
-          >
-            <div style={{ display: "grid" }} className="float-left">
-              <label className="bold">Total de Unidades Escolares</label>
-              <label>{schoolsTotal || 0}</label>
-            </div>
-            <div style={{ display: "grid" }} className="float-right">
-              <label className="bold">Total de Kits</label>
-              <label>
-                {multipleOrder ? choicesTotal * studentsTotal : kitsTotal}
-              </label>
-            </div>
-          </div>
-          <hr className="w-100" />
-          <div className="form-group">
-            <Field
-              component={LabelAndTextArea}
-              placeholder="Campo opcional"
-              label="Observações"
-              name="obs"
-            />
-          </div>
-          {schoolExists && (
-            <div
-              className="col-md-12 pt-2 pb-2"
-              style={{ paddingLeft: "2rem" }}
-            >
-              <label htmlFor="check" className="checkbox-label">
-                <Field component={"input"} type="checkbox" name="prosseguir" />
-                <span
-                  onClick={() => this.props.change("prosseguir", !prosseguir)}
-                  className="checkbox-custom"
-                  style={{ borderRadius: "15px" }}
-                />{" "}
-                Reconheço que já existe um evento para as escolas abaixo e
-                desejo continuar mesmo assim
-              </label>
-              <ul>
-                {schoolsExistArray.map((school, key) => {
-                  return <li>{school}</li>;
-                })}
-              </ul>
-            </div>
-          )}
-          <div className="form-group row float-right mt-4">
-            <BaseButton
-              label="Cancelar"
-              onClick={event => this.cancelForm(event)}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <BaseButton
-              label={"Salvar Rascunho"}
-              onClick={handleSubmit(values => this.handleSubmit(values))}
-              className="ml-3"
-              type={ButtonType.BUTTON}
-              style={ButtonStyle.OutlinePrimary}
-            />
-            <BaseButton
-              label="Enviar Solicitação"
-              type={ButtonType.SUBMIT}
-              onClick={handleSubmit(values =>
-                this.handleSubmit({ ...values, status: "A APROVAR" })
-              )}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
           </div>
         </form>
       </div>
