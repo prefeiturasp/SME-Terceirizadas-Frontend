@@ -169,6 +169,8 @@ export class LabelAndDate extends Component {
     );
   }
 
+  openDatepicker = () => this._calendar.setOpen(true);
+
   render() {
     const {
       input,
@@ -183,6 +185,7 @@ export class LabelAndDate extends Component {
       fullScreen,
       inline,
       hasIcon,
+      textoLabel,
       activeCalendar
     } = this.props;
     return (
@@ -191,32 +194,39 @@ export class LabelAndDate extends Component {
           {label}
         </label>
         <div>
-          <div className={activeCalendar ? "input-group active-calendar" : "input-group calendar"}>
-            {this.props.textoLabel && <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon1">
-                {this.props.textoLabel}
-              </span>
-            </div>}
-            <label style={{ width: "-webkit-fill-available" }}>
-              <DatePicker
-                {...input}
-                placeholderText={placeholder}
-                dateFormat={dateFormat}
-                isClearable={true}
-                withPortal={fullScreen}
-                inline={inline}
-                minDate={minDate}
-                maxDate={maxDate}
-                className="form-control"
-                onChange={this.handleChange}
-                locale={ptBR}
-                id={name}
-                name={name}
-              />
-              <If isVisible={hasIcon}>
-                <i className="fa fa-calendar" />
-              </If>
-            </label>
+          <div
+            className={
+              activeCalendar
+                ? "input-group active-calendar" :
+                textoLabel ? "input-group calendar" : "input-group"
+            }
+          >
+            {textoLabel && (
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="basic-addon1">
+                  {textoLabel}
+                </span>
+              </div>
+            )}
+            <DatePicker
+              {...input}
+              placeholderText={placeholder}
+              dateFormat={dateFormat}
+              isClearable={true}
+              withPortal={fullScreen}
+              inline={inline}
+              minDate={minDate}
+              maxDate={maxDate}
+              className="form-control"
+              ref={(c) => this._calendar = c}
+              onChange={this.handleChange}
+              locale={ptBR}
+              id={name}
+              name={name}
+            />
+            <If isVisible={hasIcon}>
+              <i onClick={this.openDatepicker} className="fa fa-calendar" />
+            </If>
           </div>
         </div>
         <If isVisible={meta}>
