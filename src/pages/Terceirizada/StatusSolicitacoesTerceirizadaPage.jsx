@@ -3,7 +3,7 @@ import StatusSolicitacoesTerceirizada from "../../components/screens/DashboardTe
 import Page from "../../components/Shareable/Page/Page";
 
 export default props => (
-  <Page titulo={"Painel de Status de Solicitações"} tituloRastro="solicitações">
+  <Page titulo="Painel de Status de Solicitações" tituloRastro="solicitações">
     <StatusSolicitacoesTerceirizada />
   </Page>
 );

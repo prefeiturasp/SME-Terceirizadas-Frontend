@@ -37,7 +37,7 @@ class Cadastros extends Component {
           </div>
           <div className="linked-card col-4">
             <Link to="/configuracoes/cadastros/lote">
-              <CardLogo titulo={"Cadastro de Lotes"} disabled>
+              <CardLogo titulo={"Cadastro de Lotes"}>
                 <IconeLote />
               </CardLogo>
             </Link>

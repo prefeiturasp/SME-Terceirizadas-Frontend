@@ -17,6 +17,7 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
+import CardMatriculados from "../Shareable/CardMatriculados";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
 import { FoodInclusionItemList } from "./FoodInclusionItemList";
@@ -44,11 +45,11 @@ class FoodInclusionEditor extends Component {
         }
       ],
       options: {
-        'first_period': [],
-        'second_period': [],
-        'third_period': [],
-        'fourth_period': [],
-        'integrate': []
+        first_period: [],
+        second_period: [],
+        third_period: [],
+        fourth_period: [],
+        integrate: []
       },
       selectDefault: [
         {
@@ -114,7 +115,7 @@ class FoodInclusionEditor extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions
+    options[period.value] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
@@ -130,9 +131,7 @@ class FoodInclusionEditor extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodInclusion(
-      JSON.stringify({ uuid: uuid })
-    ).then(
+    deleteFoodInclusion(JSON.stringify({ uuid: uuid })).then(
       res => {
         if (res.code === 200) {
           toastSuccess(`Rascunho # ${id} excluído com sucesso`);
@@ -167,11 +166,11 @@ class FoodInclusionEditor extends Component {
         }
       ],
       options: {
-        'first_period': [],
-        'second_period': [],
-        'third_period': [],
-        'fourth_period': [],
-        'integrate': []
+        first_period: [],
+        second_period: [],
+        third_period: [],
+        fourth_period: [],
+        integrate: []
       },
       selectDefault: [
         {
@@ -193,23 +192,23 @@ class FoodInclusionEditor extends Component {
       id: param.dayChange.id,
       day_reasons: param.dayChange.day_reasons,
       options: {
-        'first_period':
+        first_period:
           param.dayChange.description_first_period !== null
             ? param.dayChange.description_first_period.select
             : [],
-        'second_period':
+        second_period:
           param.dayChange.description_second_period !== null
             ? param.dayChange.description_second_period.select
             : [],
-        'third_period':
+        third_period:
           param.dayChange.description_third_period !== null
             ? param.dayChange.description_third_period.select
             : [],
-        'fourth_period':
+        fourth_period:
           param.dayChange.description_fourth_period !== null
             ? param.dayChange.description_fourth_period.select
             : [],
-        'integrate':
+        integrate:
           param.dayChange.description_integrate !== null
             ? param.dayChange.description_integrate.select
             : []
@@ -230,24 +229,26 @@ class FoodInclusionEditor extends Component {
       "description_fourth_period",
       "description_integrate"
     ];
-    fields.forEach(function(field) {
-      if (
-        prevProps[field] &&
-        prevProps[field].check &&
-        this.props[field] &&
-        !this.props[field].check
-      ) {
-        let options = this.state.options;
-        const value = field.split("description_")[1];
-        options[value] = []
-        this.setState({
-          ...this.state,
-          options: options
-        })
-        this.props.change(field + ".select", []);
-        this.props.change(field + ".number", "");
-      }
-    }.bind(this));
+    fields.forEach(
+      function(field) {
+        if (
+          prevProps[field] &&
+          prevProps[field].check &&
+          this.props[field] &&
+          !this.props[field].check
+        ) {
+          let options = this.state.options;
+          const value = field.split("description_")[1];
+          options[value] = [];
+          this.setState({
+            ...this.state,
+            options: options
+          });
+          this.props.change(field + ".select", []);
+          this.props.change(field + ".number", "");
+        }
+      }.bind(this)
+    );
   }
 
   refresh() {
@@ -269,9 +270,7 @@ class FoodInclusionEditor extends Component {
     values.day_reasons = this.state.day_reasons;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateFoodInclusion(
-        JSON.stringify(values)
-      ).then(
+      createOrUpdateFoodInclusion(JSON.stringify(values)).then(
         res => {
           if (res.code === 200) {
             toastSuccess(
@@ -339,31 +338,16 @@ class FoodInclusionEditor extends Component {
       <div>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <span className="page-title">Inclusão de Alimentação</span>
-          <div className="card mt-3">
-            <div className="card-body">
-              <span className="blockquote-sme">Nº de Matriculados</span>
-              <div />
-              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">
-                Informação automática disponibilizada no Cadastro da Unidade
-                Escolar
-              </span>
-            </div>
-          </div>
+          <CardMatriculados numeroAlunos={enrolled} />
           {foodInclusionList.length > 0 && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <span className="page-title">Rascunhos</span>
-                <FoodInclusionItemList
-                  foodInclusionList={foodInclusionList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
-                />
-              </div>
+            <div className="mt-3">
+              <span className="page-title">Rascunhos</span>
+              <FoodInclusionItemList
+                foodInclusionList={foodInclusionList}
+                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                resetForm={event => this.resetForm(event)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
             </div>
           )}
           <div ref={this.titleRef} className="form-row mt-3 ml-1">
@@ -567,7 +551,9 @@ class FoodInclusionEditor extends Component {
                                 ? typeFoodContinuousProgram
                                 : period.meal_types
                             }
-                            onSelectedChanged={(values) => this.handleSelectedChanged(values, period)}
+                            onSelectedChanged={values =>
+                              this.handleSelectedChanged(values, period)
+                            }
                             disableSearch={true}
                             overrideStrings={{
                               selectSomeItems: "Selecione",
@@ -582,7 +568,8 @@ class FoodInclusionEditor extends Component {
                         <Field
                           component={LabelAndInput}
                           disabled={
-                            options[period.value].length === 0 || !checkMap[period.value]
+                            options[period.value].length === 0 ||
+                            !checkMap[period.value]
                           }
                           type="number"
                           name="number"

@@ -47,8 +47,7 @@ export class DayChangeItemList extends Component {
 
   render() {
     const { dayChangeList } = this.props;
-
-    if (dayChangeList.length) {
+    if (dayChangeList && dayChangeList.length) {
       const allDaysInfo = dayChangeList.map(dayChange => {
         const {
           status,

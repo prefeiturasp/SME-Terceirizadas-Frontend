@@ -86,7 +86,7 @@ export class Cards extends Component {
       }
 
       return (
-        <Grid cols="4 4 4 4" key={index}>
+        <Grid cols="12 4 12 12" key={index}>
           <div
             className={`card ${borderSucess}`}
             style={{

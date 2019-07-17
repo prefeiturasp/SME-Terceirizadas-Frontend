@@ -48,7 +48,6 @@ class UnifiedSolicitationFilled extends Component {
     const { solicitation, unifiedSolicitationList } = this.state;
     return (
       <div>
-        <span className="page-title">Pedidos</span>
         {unifiedSolicitationList.map((unifiedSolicitation, key) => {
           return (
             <div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../DashboardEscola/InputSearch";
+import { InputSearch } from "./InputSearch";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",
@@ -32,13 +32,13 @@ const solicitacoes = [
   }
 ];
 
-export default class StatusSolicitacoesTerceirizada extends Component {
+export default class StatusSolicitacoes extends Component {
   render() {
     return (
       <div className="card mt-3">
         <div className="card-body">
           <div className="pr-3">
-            <InputSearch voltarLink="/terceirizada/painel-de-controle" />
+            <InputSearch voltarLink="/escola/painel-de-controle" />
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo

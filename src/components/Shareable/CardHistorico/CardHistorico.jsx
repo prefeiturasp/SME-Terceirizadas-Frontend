@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
+import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import "./style.scss";
 
 export class CardHistorico extends Component {
@@ -10,23 +12,27 @@ export class CardHistorico extends Component {
     this.state = {
       collapsed: true
     };
+    this.selecionarTodos = this.selecionarTodos.bind(this);
   }
-  handleSelecionarTodos = e => {
-    if (e.target.checked) {
-      alert("its work");
-    }
-  };
+
 
   handleClickSubmit = e => {
     alert("it will be submited");
   };
+
+  selecionarTodos() {
+    this.props.trs.forEach((tr) => {
+      this.props.change(`check_${tr._id}`, !this.props.selecionar_todos);
+    })
+    this.props.change("selecionar_todos", !this.props.selecionar_todos)
+  }
   render() {
     const { titulo, thead, trs, handleSubmit } = this.props;
     const { collapsed } = this.state;
     return (
       <div className="card mt-3">
         <div className="card-header">
-          <div className="row my-auto">
+          <div className="row">
             <div className="col-11">
               <i class="fas fa-history mr-2" />
               {titulo}
@@ -46,44 +52,70 @@ export class CardHistorico extends Component {
         <Collapse isOpened={!collapsed}>
           <div className="card-body">
             <form onSubmit={handleSubmit}>
-              <label>Selecionar Todos</label>&nbsp;&nbsp;&nbsp;
-              <Field
-                component={"input"}
-                onChange={event => this.handleSelecionarTodos(event)}
-                type={"checkbox"}
-              />
-              <div className="float-right">
-                <button
-                  onClick={this.handleClickSubmit}
-                  title="Imprimir solicitações selecionadas"
-                  className="btn btn-link"
-                >
-                  <i class="fas fa-print" />
-                </button>
+              <div className="row">
+                <div className="col-12 select-all">
+                  <label htmlFor="selecionar_todos" className="checkbox-label">
+                    <Field
+                      component={"input"}
+                      type="checkbox"
+                      name="selecionar_todos"
+                    />
+                    <span
+                      onClick={(value) =>
+                        this.selecionarTodos()
+                      }
+                      className="checkbox-custom"
+                    />
+                    Selecionar todos
+                  </label>
+                  <div className="float-right">
+                    <BaseButton
+                      label="Imprimir"
+                      icon="print"
+                      type={ButtonType.BUTTON}
+                      title="Imprimir solicitações selecionadas"
+                      onClick={this.handleClickSubmit}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="pb-3" />
               <table className="table">
                 <thead>
                   <td />
                   {thead.map(value => {
-                    return <td>{value}</td>;
+                    return <th>{value}</th>;
                   })}
                 </thead>
                 <tbody>
                   {trs.map((value, key) => {
                     return (
                       <tr>
-                        <th>
-                          <Field
-                            component={"input"}
-                            type="checkbox"
-                            name={`name_${value._id}`}
-                            value={value._id}
-                          />
-                        </th>
-                        <th>{value._id}</th>
-                        <th>{value.escola}</th>
-                        <th>{value.quantidade}</th>
+                        <td className="td-check">
+                          <label
+                            htmlFor={`check_${value._id}`}
+                            className="checkbox-label"
+                          >
+                            <Field
+                              component={"input"}
+                              type="checkbox"
+                              name={`check_${value._id}`}
+                            />
+                            <span
+                              onClick={() =>
+                                this.props.change(
+                                  `check_${value._id}`,
+                                  true
+                                )
+                              }
+                              className="checkbox-custom"
+                            />
+                          </label>
+                        </td>
+                        <td>{value._id}</td>
+                        <td>{value.escola}</td>
+                        <td>{value.quantidade}</td>
                       </tr>
                     );
                   })}
@@ -97,6 +129,16 @@ export class CardHistorico extends Component {
   }
 }
 
-export default reduxForm({
-  form: "cardHistorico"
+const CardHistoricoForm = reduxForm({
+  form: "cardHistoricoForm",
+  enableReinitialize: true
 })(CardHistorico);
+
+const selector = formValueSelector("cardHistoricoForm");
+const mapStateToProps = state => {
+  return {
+    selecionar_todos: selector(state, "selecionar_todos")
+  };
+};
+
+export default connect(mapStateToProps)(CardHistoricoForm);

@@ -5,6 +5,7 @@ import "../../Shareable/style.scss";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess } from "../../Shareable/dialogs";
+import "./style.scss";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -37,22 +38,28 @@ class Relatorio extends Component {
       },
       listaDeStatus: [
         {
-          nome: "Solicitação Realizada",
+          titulo: "Solicitação Realizada",
           status: "aprovado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Reprovado da DRE",
+          titulo: "Reprovado da DRE",
           status: "reprovado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Cancelado pela CODAE",
+          titulo: "Cancelado pela CODAE",
           status: "cancelado",
-          timestamp: "25/04/2019 às 9:20"
+          timestamp: "25/04/2019 às 9:20",
+          rf: "7972324",
+          nome: "João da Silva"
         },
         {
-          nome: "Visualizado pela Terceirizada",
+          titulo: "Visualizado pela Terceirizada",
           status: null,
           timestamp: null
         }
@@ -71,11 +78,11 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess('Kit Lanche recusado com sucesso!');
+    toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
   handleSubmit() {
-    toastSuccess('Kit Lanche validado com sucesso!');
+    toastSuccess("Kit Lanche validado com sucesso!");
   }
 
   preencherFormulario(solicitacao) {
@@ -126,7 +133,7 @@ class Relatorio extends Component {
                       <span className="number-of-order-label">Nº PEDIDO</span>
                     </span>
                   </div>
-                  <div className="my-auto col-8 ml-4">
+                  <div className="report-div-beside-order my-auto col-8">
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">{escola.nome}</span>

@@ -8,7 +8,10 @@ import {
 } from "../../../services/email";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/dialogs";
-import { LabelAndCombo, LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
+import {
+  LabelAndCombo,
+  LabelAndInput
+} from "../../Shareable/labelAndInput/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
 import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
@@ -36,7 +39,6 @@ class EmailConfiguration extends Component {
   closeModal(e) {
     this.setState({ showModal: false });
   }
-
 
   onSubmit(values) {
     switch (values.security) {
@@ -109,15 +111,12 @@ class EmailConfiguration extends Component {
     const { showModal } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
-      <div className="container">
+      <div className="mt-3">
         <ModalCancelarConfigEmail
           showModal={showModal}
           closeModal={this.closeModal}
           closeOnly={this.closeOnly}
         />
-        <div>
-          <label className="category">Configurações de Emails</label>
-        </div>
         <form>
           <div className="border rounded p-3 card">
             <div className="form-group row">

@@ -30,7 +30,7 @@ import {
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
-import CardHeader from "../Shareable/CardHeader";
+import CardMatriculados from "../Shareable/CardMatriculados";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -256,9 +256,7 @@ export class TourRequest extends Component {
       segundoDiaUtil
     } = this.state;
     return (
-      <div className="d-flex flex-column p-4">
-        <h3 className="page-title">Solicitação de Kit Lanche/Passeio</h3>
-
+      <div>
         <Modal show={showModal} onHide={this.handleShowModal}>
           <Modal.Header closeButton>
             <Modal.Title>Atenção</Modal.Title>
@@ -279,9 +277,7 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-
-        <CardHeader numeroAlunos={this.state.nro_matriculados} />
-
+        <CardMatriculados numeroAlunos={this.state.nro_matriculados} />
         <form>
           <TourRequestItemList
             tourRequestList={tourRequestList}
@@ -290,12 +286,9 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-
           <div className="mt-5" />
           <br />
-
           <h3 className="page-title">{this.state.title}</h3>
-
           <div className="card mt-3 p-5">
             <div className="form-group row">
               <Field
@@ -340,7 +333,7 @@ export class TourRequest extends Component {
               />
             )}
             <div className="form-group pt-3">
-              <label className="bold">{"Número total kits:"}</label>
+              <label className="font-weight-bold">{"Número total kits:"}</label>
               <br />
               <Grid
                 cols="1 1 1 1"
@@ -349,7 +342,7 @@ export class TourRequest extends Component {
                   background: "#E8E8E8"
                 }}
               >
-                <span className="bold d-flex justify-content-center">
+                <span className="font-weight-bold d-flex justify-content-center">
                   {this.props.qtd_total || 0}
                 </span>
               </Grid>
@@ -400,7 +393,6 @@ export class TourRequest extends Component {
                 className="ml-3"
               />
             </div>
-
             <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
               <Modal.Header closeButton>
                 <Modal.Title>Atenção</Modal.Title>

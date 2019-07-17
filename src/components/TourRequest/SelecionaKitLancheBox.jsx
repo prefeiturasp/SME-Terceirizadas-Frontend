@@ -39,7 +39,7 @@ class  SelecionaKitLancheBox extends Component {
 
     return (
       <div className={this.props.className}>
-        <h5 className="bold">Selecione a opção desejada</h5>
+        <h5 className="font-weight-bold">Selecione a opção desejada</h5>
         <Field
           name="kit_lanche"
           label="Kit Lanche"

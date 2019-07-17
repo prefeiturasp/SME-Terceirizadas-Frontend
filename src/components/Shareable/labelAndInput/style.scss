@@ -2,23 +2,52 @@ div.react-datepicker-wrapper {
   margin-right: -30px;
 }
 
-.active-calendar {
-  > i {
-    color: #2881bb;
+.input-group {
+  &.calendar {
+    input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    display: -webkit-inline-box;
+    .input-group-prepend {
+      margin-top: 2px;
+      .input-group-text {
+        display: block;
+        text-align: center;
+        min-width: 140px;
+      }
+    }
   }
-  > .input-group-prepend {
-    > .input-group-text {
+  &.active-calendar {
+    display: -webkit-inline-box;
+    i {
+      color: #2881bb;
+    }
+    input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border: none;
+    }
+    .input-group-prepend {
+      margin-top: 1px;
+      .input-group-text {
+        display: block;
+        min-width: 140px;
+        text-align: center;
+        background: #e4f1ff;
+        border: 1px solid #2881bb;
+        color: #2881bb;
+      }
+    }
+    .react-datepicker__input-container {
       background: #e4f1ff;
       border: 1px solid #2881bb;
       color: #2881bb;
-    }
-  }
-  > .react-datepicker-wrapper {
-    background: #e4f1ff;
-    border: 1px solid #2881bb;
-    color: #2881bb;
-    .form-control {
-      color: #2881bb;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+      .form-control {
+        color: #2881bb;
+      }
     }
   }
 }
