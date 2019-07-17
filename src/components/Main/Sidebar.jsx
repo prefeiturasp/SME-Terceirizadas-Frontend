@@ -199,6 +199,13 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
+                  to="/codae/painel-de-controle"
+                >
+                  Dashboard
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
                   to="/codae/solicitacao-unificada/historico"
                 >
                   Solicitação Unificada

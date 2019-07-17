@@ -4,12 +4,12 @@ import "./style.scss";
 import { Link } from "react-router-dom";
 
 export const CardPendenciaDRE = props => {
-  const { totalPedidos, nomeDre, dre } = props;
+  const { totalPedidos, nomeDre } = props;
   return (
     <div className="card card-pendency">
       <Link
         to={{
-          pathname: "/detalhe-dashboard-dre",
+          pathname: "/codae/detalhe-dashboard-dre",
           state: { dre: true }
         }}>
         <div className="row">

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { PendencyCard } from "../Shareable/DashboardShared";
+import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 import { Field, reduxForm } from "redux-form";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 
@@ -65,7 +65,7 @@ class DetalhePendenciaPorDRE extends Component {
 
             <div className="row">
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Alteração de Dias de Cardápio"}
                   totalOfOrders={10}
                   priorityOrders={2}
@@ -74,7 +74,7 @@ class DetalhePendenciaPorDRE extends Component {
                 />
               </div>
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Kit Lanche"}
                   totalOfOrders={18}
                   priorityOrders={3}
@@ -85,7 +85,7 @@ class DetalhePendenciaPorDRE extends Component {
             </div>
             <div className="row pt-3">
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Inclusão de Refeição"}
                   totalOfOrders={8}
                   priorityOrders={7}
@@ -94,7 +94,7 @@ class DetalhePendenciaPorDRE extends Component {
                 />
               </div>
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Suspensão de Refeição"}
                   totalOfOrders={5}
                   priorityOrders={2}
@@ -105,7 +105,7 @@ class DetalhePendenciaPorDRE extends Component {
             </div>
             <div className="row pt-3">
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Alteração de Cardápio"}
                   totalOfOrders={13}
                   priorityOrders={2}
@@ -114,7 +114,7 @@ class DetalhePendenciaPorDRE extends Component {
                 />
               </div>
               <div className="col-6">
-                <PendencyCard
+                <CardPendencia
                   cardTitle={"Pedido Unificado"}
                   totalOfOrders={2}
                   priorityOrders={1}

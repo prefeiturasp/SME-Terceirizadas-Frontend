@@ -3,7 +3,7 @@ import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../Shareable/custom.css";
+import "../../Shareable/style.scss";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
