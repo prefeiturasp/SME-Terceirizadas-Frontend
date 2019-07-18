@@ -65,15 +65,17 @@ export default class Button extends Component {
       label,
       title,
       doNotSetSizeProperties,
+      noBorder,
       icon
     } = this.props;
     return (
       <button
         type={type}
         title={title}
-        className={doNotSetSizeProperties
-          ? `btn btn-styled btn-${style} ${className}`
-          : `btn btn-styled btn-${style} ${className} set-size-properties`
+        className={
+          `btn btn-styled btn-${style} ${className} ` +
+          (doNotSetSizeProperties ? "" : "set-size-properties ") +
+          (noBorder ? "no-border " : "")
         }
         onClick={onClick}
         disabled={disabled}
