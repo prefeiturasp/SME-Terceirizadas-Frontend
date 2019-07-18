@@ -126,6 +126,7 @@ div.caption-choices {
     color: #353535;
   }
   .number-of-order-label {
+    position: relative;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
@@ -141,6 +142,12 @@ div.caption-choices {
   line-height: normal;
   color: #353535;
   padding: 20px;
+}
+
+.report-div-beside-order {
+  position: absolute !important;
+  left: 230px;
+  top: 82px;
 }
 
 .requester {
@@ -171,26 +178,6 @@ div.caption-choices {
 .report-students-div {
   display: grid;
   font-size: 12px;
-}
-
-table.table-lote {
-  th {
-    font-weight: normal;
-    font-size: 12px;
-    color: #a8a8a8;
-    &:nth-child(2) {
-      padding-left: 120px;
-    }
-  }
-  td {
-    text-transform: uppercase;
-    font-weight: normal;
-    font-size: 12px;
-    color: #853cb6;
-    &:nth-child(2) {
-      padding-left: 120px;
-    }
-  }
 }
 
 //modal
@@ -252,8 +239,10 @@ table.table-lote {
 }
 
 .btn-styled {
-  min-height: 40px;
-  min-width: 160px;
+  &.set-size-properties {
+    min-height: 40px;
+    min-width: 160px;
+  }
   &.btn-primary {
     background-color: #035d96;
     &:hover {
@@ -308,4 +297,15 @@ table.table-lote {
 .BurgerBox {
   width: 18px !important;
   line-height: 3px;
+  .BurgerInner {
+    height: 3px;
+    &:before {
+      top: -7px;
+      height: 3px;
+    }
+    &:after {
+      bottom: -7px;
+      height: 3px;
+    }
+  }
 }

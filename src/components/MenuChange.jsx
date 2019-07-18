@@ -7,7 +7,7 @@ import {
   LabelAndDate
 } from "./Shareable/labelAndInput/labelAndInput";
 import { Field, reduxForm } from "redux-form";
-import CardHeader from "./Shareable/CardHeader";
+import CardMatriculados from "./Shareable/CardMatriculados";
 
 const myDataHandler = event => {
   console.log("handle submit chamado!", event);
@@ -18,7 +18,7 @@ export class MenuChange extends Component {
     // console.log("redux forms props:_>", this.props);
     return (
       <div>
-        <CardHeader numeroAlunos={200} />
+        <CardMatriculados numeroAlunos={200} />
         <div className="card mt-3 p-4">
         <form onSubmit={this.props.handleSubmit(myDataHandler)}>
           <div className="form-group row">

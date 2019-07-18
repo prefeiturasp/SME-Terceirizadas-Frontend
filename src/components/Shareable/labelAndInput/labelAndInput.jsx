@@ -169,6 +169,8 @@ export class LabelAndDate extends Component {
     );
   }
 
+  openDatepicker = () => this._calendar.setOpen(true);
+
   render() {
     const {
       input,
@@ -182,7 +184,9 @@ export class LabelAndDate extends Component {
       maxDate,
       fullScreen,
       inline,
-      hasIcon
+      hasIcon,
+      textoLabel,
+      activeCalendar
     } = this.props;
     return (
       <Grid cols={cols}>
@@ -190,24 +194,40 @@ export class LabelAndDate extends Component {
           {label}
         </label>
         <div>
-          <DatePicker
-            {...input}
-            placeholderText={placeholder}
-            dateFormat={dateFormat}
-            isClearable={true}
-            withPortal={fullScreen}
-            inline={inline}
-            minDate={minDate}
-            maxDate={maxDate}
-            className="form-control"
-            onChange={this.handleChange}
-            locale={ptBR}
-            id={name}
-            name={name}
-          />
-          <If isVisible={hasIcon}>
-            <i className="fa fa-calendar" />
-          </If>
+          <div
+            className={
+              activeCalendar
+                ? "input-group active-calendar" :
+                textoLabel ? "input-group calendar" : "input-group"
+            }
+          >
+            {textoLabel && (
+              <div className="input-group-prepend">
+                <span className="input-group-text" id="basic-addon1">
+                  {textoLabel}
+                </span>
+              </div>
+            )}
+            <DatePicker
+              {...input}
+              placeholderText={placeholder}
+              dateFormat={dateFormat}
+              isClearable={true}
+              withPortal={fullScreen}
+              inline={inline}
+              minDate={minDate}
+              maxDate={maxDate}
+              className="form-control"
+              ref={(c) => this._calendar = c}
+              onChange={this.handleChange}
+              locale={ptBR}
+              id={name}
+              name={name}
+            />
+            <If isVisible={hasIcon}>
+              <i onClick={this.openDatepicker} className="fa fa-calendar" />
+            </If>
+          </div>
         </div>
         <If isVisible={meta}>
           <ErrorAlert meta={meta} />
@@ -295,7 +315,14 @@ export class LabelAndTextArea extends Component {
 
   render() {
     const { editorState } = this.state;
-    const { cols, name, label, placeholder, meta, temOpcoesCustomizadas } = this.props;
+    const {
+      cols,
+      name,
+      label,
+      placeholder,
+      meta,
+      temOpcoesCustomizadas
+    } = this.props;
     return (
       <Grid id="react-wysiwyg" cols={cols}>
         {label && (

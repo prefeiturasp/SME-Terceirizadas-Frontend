@@ -17,6 +17,7 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
+import CardMatriculados from "../Shareable/CardMatriculados";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
 import { FoodSuspensionItemList } from "./FoodSuspensionItemList";
@@ -44,11 +45,11 @@ class FoodSuspensionEditor extends Component {
         }
       ],
       options: {
-        'first_period': [],
-        'second_period': [],
-        'third_period': [],
-        'fourth_period': [],
-        'integrate': []
+        first_period: [],
+        second_period: [],
+        third_period: [],
+        fourth_period: [],
+        integrate: []
       },
       selectDefault: [
         {
@@ -114,12 +115,15 @@ class FoodSuspensionEditor extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions
+    options[period.value] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
     });
-    this.props.change(`descricoes_${period.value}.tipo_de_refeicao`, selectedOptions);
+    this.props.change(
+      `descricoes_${period.value}.tipo_de_refeicao`,
+      selectedOptions
+    );
   };
 
   fontHeader = {
@@ -130,9 +134,7 @@ class FoodSuspensionEditor extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(
-      JSON.stringify({ uuid: uuid })
-    ).then(
+    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
       res => {
         if (res.code === 200) {
           toastSuccess(`Rascunho # ${id} excluído com sucesso`);
@@ -167,11 +169,11 @@ class FoodSuspensionEditor extends Component {
         }
       ],
       options: {
-        'first_period': [],
-        'second_period': [],
-        'third_period': [],
-        'fourth_period': [],
-        'integrate': []
+        first_period: [],
+        second_period: [],
+        third_period: [],
+        fourth_period: [],
+        integrate: []
       },
       selectDefault: [
         {
@@ -193,23 +195,23 @@ class FoodSuspensionEditor extends Component {
       id: param.dayChange.id,
       dias_razoes: param.dayChange.dias_razoes,
       options: {
-        'first_period':
+        first_period:
           param.dayChange.descricoes_first_period !== undefined
             ? param.dayChange.descricoes_first_period.tipo_de_refeicao
             : [],
-        'second_period':
+        second_period:
           param.dayChange.descricoes_second_period !== undefined
             ? param.dayChange.descricoes_second_period.tipo_de_refeicao
             : [],
-        'third_period':
+        third_period:
           param.dayChange.descricoes_third_period !== undefined
             ? param.dayChange.descricoes_third_period.tipo_de_refeicao
             : [],
-        'fourth_period':
+        fourth_period:
           param.dayChange.descricoes_fourth_period !== undefined
             ? param.dayChange.descricoes_fourth_period.tipo_de_refeicao
             : [],
-        'integrate':
+        integrate:
           param.dayChange.descricoes_integrate !== undefined
             ? param.dayChange.descricoes_integrate.tipo_de_refeicao
             : []
@@ -230,24 +232,26 @@ class FoodSuspensionEditor extends Component {
       "descricoes_fourth_period",
       "descricoes_integrate"
     ];
-    fields.forEach(function(field) {
-      if (
-        prevProps[field] &&
-        prevProps[field].check &&
-        this.props[field] &&
-        !this.props[field].check
-      ) {
-        let options = this.state.options;
-        const value = field.split("descricoes_")[1];
-        options[value] = []
-        this.setState({
-          ...this.state,
-          options: options
-        })
-        this.props.change(field + ".tipo_de_refeicao", []);
-        this.props.change(field + ".numero_de_alunos", "");
-      }
-    }.bind(this));
+    fields.forEach(
+      function(field) {
+        if (
+          prevProps[field] &&
+          prevProps[field].check &&
+          this.props[field] &&
+          !this.props[field].check
+        ) {
+          let options = this.state.options;
+          const value = field.split("descricoes_")[1];
+          options[value] = [];
+          this.setState({
+            ...this.state,
+            options: options
+          });
+          this.props.change(field + ".tipo_de_refeicao", []);
+          this.props.change(field + ".numero_de_alunos", "");
+        }
+      }.bind(this)
+    );
   }
 
   refresh() {
@@ -269,9 +273,7 @@ class FoodSuspensionEditor extends Component {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateFoodSuspension(
-        JSON.stringify(values)
-      ).then(
+      createOrUpdateFoodSuspension(JSON.stringify(values)).then(
         res => {
           if (res.status === 200) {
             toastSuccess(
@@ -321,11 +323,9 @@ class FoodSuspensionEditor extends Component {
     } = this.state;
     let checkMap = {
       first_period: descricoes_first_period && descricoes_first_period.check,
-      second_period:
-        descricoes_second_period && descricoes_second_period.check,
+      second_period: descricoes_second_period && descricoes_second_period.check,
       third_period: descricoes_third_period && descricoes_third_period.check,
-      fourth_period:
-        descricoes_fourth_period && descricoes_fourth_period.check,
+      fourth_period: descricoes_fourth_period && descricoes_fourth_period.check,
       integrate: descricoes_integrate && descricoes_integrate.check
     };
     const colors = {
@@ -339,31 +339,16 @@ class FoodSuspensionEditor extends Component {
       <div>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <span className="page-title">Suspensão de Alimentação</span>
-          <div className="card mt-3">
-            <div className="card-body">
-              <span className="blockquote-sme">Nº de Matriculados</span>
-              <div />
-              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">
-                Informação automática disponibilizada no Cadastro da Unidade
-                Escolar
-              </span>
-            </div>
-          </div>
+          <CardMatriculados numeroAlunos={enrolled} />
           {foodSuspensionList.length > 0 && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <span className="page-title">Rascunhos</span>
-                <FoodSuspensionItemList
-                  foodSuspensionList={foodSuspensionList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
-                />
-              </div>
+            <div className="mt-3">
+              <span className="page-title">Rascunhos</span>
+              <FoodSuspensionItemList
+                foodSuspensionList={foodSuspensionList}
+                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                resetForm={event => this.resetForm(event)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
             </div>
           )}
           <div ref={this.titleRef} className="form-row mt-3 ml-1">
@@ -453,11 +438,7 @@ class FoodSuspensionEditor extends Component {
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
-                                this.handleField(
-                                  "data_de",
-                                  value,
-                                  dia_razao.id
-                                )
+                                this.handleField("data_de", value, dia_razao.id)
                               }
                               name="data_de"
                               label="De"
@@ -483,7 +464,11 @@ class FoodSuspensionEditor extends Component {
                             component={Weekly}
                             name="dias_de_semana"
                             onChange={value =>
-                              this.handleField("dias_de_semana", value, dia_razao.id)
+                              this.handleField(
+                                "dias_de_semana",
+                                value,
+                                dia_razao.id
+                              )
                             }
                             classNameArgs="form-group col-sm-4"
                             label="Repetir"
@@ -561,13 +546,13 @@ class FoodSuspensionEditor extends Component {
                             selected={options[period.value] || []}
                             options={
                               dias_razoes[0].razao &&
-                              dias_razoes[0].razao.includes(
-                                "Programa Contínuo"
-                              )
+                              dias_razoes[0].razao.includes("Programa Contínuo")
                                 ? typeFoodContinuousProgram
                                 : period.meal_types
                             }
-                            onSelectedChanged={(values) => this.handleSelectedChanged(values, period)}
+                            onSelectedChanged={values =>
+                              this.handleSelectedChanged(values, period)
+                            }
                             disableSearch={true}
                             overrideStrings={{
                               selectSomeItems: "Selecione",
@@ -582,7 +567,8 @@ class FoodSuspensionEditor extends Component {
                         <Field
                           component={LabelAndInput}
                           disabled={
-                            options[period.value].length === 0 || !checkMap[period.value]
+                            options[period.value].length === 0 ||
+                            !checkMap[period.value]
                           }
                           type="number"
                           name="numero_de_alunos"

@@ -7,13 +7,11 @@ import { closeToggle } from "./jQClick";
 window.jQuery = $;
 
 export class Sidebar extends Component {
-  state = {
-    isVisible: true
-  };
-
   constructor(props) {
     super(props);
-
+    this.state = {
+      isVisible: true
+    };
     this.handleToggle = this.handleToggle.bind(this);
   }
 
@@ -30,7 +28,6 @@ export class Sidebar extends Component {
           id="accordionSidebar"
         >
           <div className="sidebar-divider my-0" />
-
           <Link
             className="sidebar-brand d-flex align-items-center justify-content-center"
             to="/"
@@ -59,16 +56,13 @@ export class Sidebar extends Component {
               </Link>
             </div>
           </div>
-
           <hr className="sidebar-divider my-0" />
-
           <li className="nav-item">
             <NavLink className="nav-link" to="/" exact>
               <i className="fas fa-home" />
               <span>Home</span>
             </NavLink>
           </li>
-
           <li className="nav-item">
             <NavLink
               className="nav-link collapsed"
@@ -91,49 +85,48 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/painel-escola"
+                  to="/escola/painel-de-controle"
                 >
                   Painel de Controle
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/add-food"
+                  to="/escola/inclusao-de-alimentacao"
                 >
-                  Adicionar Cardápio
+                  Inclusão de Alimentação
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/alterar-cardapio"
+                  to="/escola/alteracao-de-cardapio"
                 >
-                  Alterar Cardápio
+                  Alteração de Cardápio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/kit-lanche"
+                  to="/escola/solicitacao-de-kit-lanche"
                 >
-                  Kit Lanche
+                  Solicitação de Kit Lanche
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/inverter-dia-cardapio"
+                  to="/escola/inversao-de-dia-de-cardapio"
                 >
-                  Inverter dia Cardápio
+                  Inversão de Dia de Cardápio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/food-suspension"
+                  to="/escola/suspensao-de-alimentacao"
                 >
-                  Suspender Alimentação
+                  Suspensão de Alimentação
                 </NavLink>
               </div>
             </div>
           </li>
-
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
@@ -156,9 +149,9 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/dashboard-dre"
+                  to="/dre/painel-de-controle"
                 >
-                  Dashboard
+                  Painel de Controle
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -177,14 +170,13 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/unified-solicitation"
+                  to="/dre/solicitacao-unificada"
                 >
                   Solicitação Unificada
                 </NavLink>
               </div>
             </div>
           </li>
-
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
@@ -207,14 +199,13 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/unified-solicitation/historic"
+                  to="/codae/solicitacao-unificada/historico"
                 >
                   Solicitação Unificada
                 </NavLink>
               </div>
             </div>
           </li>
-
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
@@ -239,7 +230,7 @@ export class Sidebar extends Component {
                   className="collapse-item"
                   to="/terceirizada/painel-de-controle"
                 >
-                  Dashboard
+                  Painel de Controle
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -258,7 +249,6 @@ export class Sidebar extends Component {
               </div>
             </div>
           </li>
-
           <li className="nav-item">
             <Link
               className="nav-link collapsed"
@@ -281,7 +271,7 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/permissions"
+                  to="/configuracoes/permissoes"
                 >
                   Permissões
                 </NavLink>
@@ -299,12 +289,17 @@ export class Sidebar extends Component {
                 >
                   Cadastros
                 </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to="/configuracoes"
+                >
+                  Configurações
+                </NavLink>
               </div>
             </div>
           </li>
-
           <hr className="sidebar-divider" />
-
           <div className="text-center d-none d-md-inline collapse">
             <button
               title="Recolher o menu lateral"
@@ -313,7 +308,6 @@ export class Sidebar extends Component {
               id="sidebarToggle"
             />
           </div>
-
           <div
             style={{ display: !this.state.isVisible ? "none" : "block" }}
             className="page-footer mx-auto justify-content-center mt-5 pb-2"
@@ -329,5 +323,3 @@ export class Sidebar extends Component {
     );
   }
 }
-
-// export default connect()(Sidebar);

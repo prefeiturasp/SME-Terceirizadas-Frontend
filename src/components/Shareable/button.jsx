@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import If from "./layout";
+import "./style.scss";
 
 // https://getbootstrap.com/docs/4.0/components/buttons/
 export var ButtonStyle = {
@@ -62,19 +63,25 @@ export default class Button extends Component {
       onClick,
       disabled,
       label,
+      title,
+      doNotSetSizeProperties,
       icon
     } = this.props;
     return (
       <button
         type={type}
-        className={`btn btn-styled btn-${style} ${className}`}
+        title={title}
+        className={doNotSetSizeProperties
+          ? `btn btn-styled btn-${style} ${className}`
+          : `btn btn-styled btn-${style} ${className} set-size-properties`
+        }
         onClick={onClick}
         disabled={disabled}
       >
-        {label}
         <If isVisible={icon}>
-          <i className={`fa fa-${icon}`} />
+          <i className={`pr-3 fas fa-${icon}`} />
         </If>
+        {label}
       </button>
     );
   }

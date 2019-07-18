@@ -12,6 +12,6 @@ script:
 
 deploy:
   provider: script
-  script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && docker push marcelomaia/terceirizadas_frontend
+  script: bash ./deploy_dockerhub.sh
   on:
-    branch: development
+    all_branches: true

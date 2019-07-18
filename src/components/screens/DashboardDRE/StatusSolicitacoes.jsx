@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../../DashboardEscola/InputSearch";
+import { InputSearch } from "../DashboardEscola/InputSearch";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",
@@ -37,7 +37,9 @@ export default class StatusSolicitacoes extends Component {
     return (
       <div className="card mt-3">
         <div className="card-body">
-          <InputSearch />
+          <div className="mr-4">
+            <InputSearch voltarLink="/dre/painel-de-controle" />
+          </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
             titulo={"Aprovadas"}

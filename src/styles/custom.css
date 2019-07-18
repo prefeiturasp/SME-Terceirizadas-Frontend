@@ -10064,21 +10064,3 @@ a.text-dark:hover, a.text-dark:focus {
   line-height: normal;
   color: #353535;
 }
-
-.blockquote-sme {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: normal;
-  color: #686868;
-}
-
-.badge-secondary-sme {
-  background-color: #E8E8E8;
-  color:  #686868;
-}
-
-.text-color-sme-silver {
-  color : #A8A8A8;
-}

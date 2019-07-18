@@ -12,13 +12,14 @@ export const FluxoDeStatus = props => {
         <div className="col-10">
           <ul className="progressbar-titles">
             {listaDeStatus.map((status, key) => {
-              return <li>{status.nome}</li>;
+              return <li key={key}>{status.titulo}</li>;
             })}
           </ul>
           <ul className="progressbar">
             {listaDeStatus.map((status, key) => {
               return (
                 <li
+                  key={key}
                   className={
                     status.status === "aprovado"
                       ? "active"
@@ -31,6 +32,12 @@ export const FluxoDeStatus = props => {
                   style={{ width: 100 / listaDeStatus.length + "%" }}
                 >
                   {status.timestamp}
+                  <br />
+                  {status.status && (
+                    <span>
+                      RF: {status.rf} - {status.nome}
+                    </span>
+                  )}
                 </li>
               );
             })}

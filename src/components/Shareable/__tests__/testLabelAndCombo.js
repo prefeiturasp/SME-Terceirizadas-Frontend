@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 import React from "react";
-import { LabelAndCombo } from "../labelAndInput";
+import { LabelAndCombo } from "../labelAndInput/labelAndInput";
 
 let options = [
   { value: "v1", label: "op1", disable: false },

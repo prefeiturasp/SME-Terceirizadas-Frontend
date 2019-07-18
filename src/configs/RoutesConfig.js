@@ -1,14 +1,14 @@
 import { Login } from "../components/Login";
-import { MenuChangePage } from "../pages/MenuChangePage";
+import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
-import FoodInclusionPage from "../pages/FoodInclusionPage";
+import FoodInclusionPage from "../pages/Escola/FoodInclusionPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
-import TourRequestPage from "../pages/TourRequestPage";
-import DayChangePage from "../pages/DayChangePage";
-import FoodSuspensionPage from "../pages/FoodSuspensionPage";
-import UnifiedSolicitationPage from "../pages/UnifiedSolicitationPage";
+import TourRequestPage from "../pages/Escola/TourRequestPage";
+import DayChangePage from "../pages/Escola/DayChangePage";
+import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
+import UnifiedSolicitationPage from "../pages/DRE/UnifiedSolicitationPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
-import PermissionsCheckBoxesPage from "../pages/PermissionsCheckBoxesPage";
+import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
 import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
@@ -19,10 +19,12 @@ import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrd
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-import ConfigEmailPage from "../pages/ConfigEmailPage";
+import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
+import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 
 const routesConfig = [
@@ -37,52 +39,42 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/alterar-cardapio",
-    component: MenuChangePage,
+    path: "/escola/painel-de-controle",
+    component: DashboardEscolaPage,
     exact: false
   },
   {
-    path: "/add-food",
+    path: "/escola/status-solicitacoes",
+    component: StatusSolicitacoesPage,
+    exact: false
+  },
+  {
+    path: "/escola/inclusao-de-alimentacao",
     component: FoodInclusionPage,
     exact: false
   },
   {
-    path: "/permission-root/permissions/:type/:subtype",
-    component: PermissionsCheckBoxesPage,
-    exact: null
-  },
-  {
-    path: "/permissions",
-    component: PermissionsPage,
+    path: "/escola/alteracao-de-cardapio",
+    component: AlteracaoDeCardapioPage,
     exact: false
   },
   {
-    path: "/kit-lanche",
+    path: "/escola/solicitacao-de-kit-lanche",
     component: TourRequestPage,
     exact: false
   },
   {
-    path: "/inverter-dia-cardapio",
+    path: "/escola/inversao-de-dia-de-cardapio",
     component: DayChangePage,
     exact: false
   },
   {
-    path: "/food-suspension",
+    path: "/escola/suspensao-de-alimentacao",
     component: FoodSuspensionPage,
     exact: false
   },
   {
-    path: "/unified-solicitation/historic",
-    component: UnifiedSolicitationHistoricPage,
-    exact: false
-  },
-  {
-    path: "/unified-solicitation",
-    component: UnifiedSolicitationPage,
-    exact: false
-  },
-  {
-    path: "/dashboard-dre",
+    path: "/dre/painel-de-controle",
     component: DashboardDREPage,
     exact: false
   },
@@ -99,6 +91,16 @@ const routesConfig = [
   {
     path: "/dre/kits-lanche",
     component: KitsLancheOrdersPage,
+    exact: false
+  },
+  {
+    path: "/dre/solicitacao-unificada",
+    component: UnifiedSolicitationPage,
+    exact: false
+  },
+  {
+    path: "/codae/solicitacao-unificada/historico",
+    component: UnifiedSolicitationHistoricPage,
     exact: false
   },
   {
@@ -122,21 +124,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/settings",
-    component: ConfigEmailPage,
-    exact: false
-  },
-  {
-    path: "/painel-escola",
-    component: DashboardEscolaPage,
-    exact: false
-  },
-  {
-    path: "/status-solicitacoes-escola",
-    component: StatusSolicitacoesPage,
-    exact: false
-  },
-  {
     path: "/configuracoes/cadastros/lotes-cadastrados",
     component: LotesCadastradosPage,
     exact: false
@@ -147,6 +134,16 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/configuracoes/cadastros/empresas-cadastradas",
+    component: EmpresasCadastradas,
+    exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/empresa",
+    component: CadastroEmpresaPage,
+    exact: false
+  },
+  {
     path: "/configuracoes/cadastros",
     component: CadastrosPage,
     exact: false
@@ -154,6 +151,21 @@ const routesConfig = [
   {
     path: "/configuracoes/mensagem",
     component: MensagemPage,
+    exact: false
+  },
+  {
+    path: "/configuracoes/permissoes",
+    component: PermissionsPage,
+    exact: false
+  },
+  {
+    path: "/permission-root/permissions/:type/:subtype",
+    component: PermissionsCheckBoxesPage,
+    exact: null
+  },
+  {
+    path: "/configuracoes",
+    component: ConfigEmailPage,
     exact: false
   }
 ];

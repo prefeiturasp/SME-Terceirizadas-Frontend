@@ -1,18 +1,20 @@
 import React, { Component } from "react";
-import CardHeader from "../Shareable/CardHeader";
+import CardMatriculados from "../../Shareable/CardMatriculados";
 import { dataAtual } from "./utils";
-import CardBody from "../Shareable/CardBody";
-import { CardStatusDeSolicitacao } from "../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardBody from "../../Shareable/CardBody";
+import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "./CardAtalho";
 import CardLegendas from "./CardLegendas";
-import CardHistorico from "../Shareable/CardHistorico/CardHistorico";
+import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 
 export default class DashboardEscola extends Component {
   render() {
     const { numeroAlunos, autorizadas, theadList, trs } = this.props;
     return (
       <div>
-        <CardHeader numeroAlunos={numeroAlunos} />
+        <CardMatriculados
+          numeroAlunos={numeroAlunos}
+        />
         <CardBody
           titulo={"Painel de Status de Solicitações"}
           dataAtual={dataAtual()}
@@ -24,7 +26,7 @@ export default class DashboardEscola extends Component {
                 cardType={"card-authorized"}
                 solicitations={autorizadas}
                 icon={"fa-check"}
-                href={"/status-solicitacoes-escola"}
+                href={"/escola/status-solicitacoes"}
               />
             </div>
             <div className="col-6">
@@ -33,7 +35,7 @@ export default class DashboardEscola extends Component {
                 cardType={"card-pending"}
                 solicitations={autorizadas}
                 icon={"fa-exclamation-triangle"}
-                href={"/status-solicitacoes-escola"}
+                href={"/escola/status-solicitacoes"}
               />
             </div>
           </div>
@@ -44,7 +46,7 @@ export default class DashboardEscola extends Component {
                 cardType={"card-denied"}
                 solicitations={autorizadas}
                 icon={"fa-ban"}
-                href={"/status-solicitacoes-escola"}
+                href={"/escola/status-solicitacoes"}
               />
             </div>
             <div className="col-6">
@@ -53,7 +55,7 @@ export default class DashboardEscola extends Component {
                 cardType={"card-cancelled"}
                 solicitations={autorizadas}
                 icon={"fa-times-circle"}
-                href={"/status-solicitacoes-escola"}
+                href={"/escola/status-solicitacoes"}
               />
             </div>
           </div>
@@ -61,12 +63,12 @@ export default class DashboardEscola extends Component {
         </CardBody>
         <div className="row">
           <CardAtalho
-            titulo={"Alteracao de Dias de Cardapio"}
+            titulo={"Inversão de Dias de Cardapio"}
             texto={
               "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
             }
             textoLink={"Novo pedido"}
-            href={"#teste"}
+            href={"/escola/inversao-de-dia-de-cardapio"}
           />
           <CardAtalho
             titulo={"Alteração de Cardápio"}
@@ -74,7 +76,7 @@ export default class DashboardEscola extends Component {
               "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
             }
             textoLink={"Novo pedido"}
-            href={"#teste"}
+            href={"/escola/alteracao-de-cardapio"}
           />
           <CardAtalho
             titulo={"Inclusão de Alimentação"}
@@ -82,15 +84,15 @@ export default class DashboardEscola extends Component {
               "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
             }
             textoLink={"Novo pedido"}
-            href={"#teste"}
+            href={"/escola/inclusao-de-alimentacao"}
           />
           <CardAtalho
-            titulo={"Suspensão de Refeição"}
+            titulo={"Suspensão de Alimentação"}
             texto={
               "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
             }
             textoLink={"Novo pedido"}
-            href={"#teste"}
+            href={"/escola/suspensao-de-alimentacao"}
           />
           <CardAtalho
             titulo={"Kit Lanche"}
@@ -98,7 +100,7 @@ export default class DashboardEscola extends Component {
               "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
             }
             textoLink={"Novo pedido"}
-            href={"#teste"}
+            href="/escola/solicitacao-de-kit-lanche"
           />
         </div>
         <CardHistorico

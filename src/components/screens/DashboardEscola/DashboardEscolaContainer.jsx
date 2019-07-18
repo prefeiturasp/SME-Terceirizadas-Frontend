@@ -17,6 +17,10 @@ export default class DashboardEscolaContainer extends Component {
                 {
                   text: "12083 - 7A IP I - Solicitação Unificada",
                   date: "Qua 10:07"
+                },
+                {
+                  text: "12083 - 7A IP I - Solicitação Unificada",
+                  date: "Qua 10:07"
                 }
               ],
             theadList : [
@@ -64,7 +68,7 @@ export default class DashboardEscolaContainer extends Component {
         return (
             <div>
                 <DashboardEscola numeroAlunos={250}
-                                 autorizadas={autorizadas} 
+                                 autorizadas={autorizadas}
                                  theadList={theadList}
                                  trs={trs}
                 />

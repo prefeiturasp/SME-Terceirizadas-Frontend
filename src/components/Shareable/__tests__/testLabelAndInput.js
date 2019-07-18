@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 import React from "react";
-import { LabelAndInput } from "../labelAndInput";
+import { LabelAndInput } from "../labelAndInput/labelAndInput";
 
 // thanks to. https://medium.com/opendoor-labs/testing-react-components-with-jest-a7e8e4d312d8
 
