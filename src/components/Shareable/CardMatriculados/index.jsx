@@ -6,7 +6,7 @@ export default class CardMatriculados extends Component {
   render() {
     const { collapsed, numeroAlunos } = this.props;
     return (
-      <div className="card mt-3">
+      <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">Nº de Matriculados</div>
           <div className="row">
