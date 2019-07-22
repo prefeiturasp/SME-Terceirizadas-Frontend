@@ -155,7 +155,7 @@ class DashboardDRE extends Component {
                   </div>
                   <div className="offset-6 col-3 text-right my-auto">
                     <LabelAndCombo
-                      onChange={value => this.handleField("reason", value)}
+                      onChange={() => {}}
                       placeholder={"Visão por"}
                       options={vision_by}
                     />

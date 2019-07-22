@@ -44,11 +44,11 @@ class DetailUnifiedSolicitation extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Kit Lanche recusado com sucesso!");
+    toastSuccess("Solicitação Unificada recusada com sucesso!");
   }
 
   handleSubmit() {
-    toastSuccess("Kit Lanche validado com sucesso!");
+    toastSuccess("Solicitação Unificada validada com sucesso!");
   }
 
   render() {

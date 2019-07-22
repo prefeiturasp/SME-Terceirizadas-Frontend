@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
+import CardMatriculados from "../../Shareable/CardMatriculados";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/style.scss";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
+import "../../Shareable/style.scss";
+import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class DashboardCODAE extends Component {
       collapsed: true,
       dre: false
     };
+    this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
   handleField(value) {
@@ -23,6 +26,10 @@ class DashboardCODAE extends Component {
     } else {
       this.setState({ dre: false });
     }
+  }
+
+  alterarCollapse() {
+    this.setState({ collapsed: !this.state.collapsed });
   }
 
   render() {
@@ -38,48 +45,15 @@ class DashboardCODAE extends Component {
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
-          <div className="card">
-            <div className="card-body">
-              <span className="blockquote-sme">Nº de Matriculados</span>
-              <div />
-              <span className="badge-sme badge-secondary-sme">{enrolled}</span>
-              <span className="blockquote-sme pl-2 text-color-sme-silver">
-                Informação automática disponibilizada no Cadastro da Unidade
-                Escolar
-                <Stand
-                  onClick={() => this.setState({ collapsed: !collapsed })}
-                  color={"#C8C8C8"}
-                  width={18}
-                  padding={0}
-                  lineHeight={3}
-                  lineSpacing={3}
-                  className="float-right"
-                  active={!collapsed}
-                />
-              </span>
-              <Collapse isOpened={!collapsed}>
-                <p className="pt-3 blockquote-sme">Lotes</p>
-                <div>
-                  <table className="table-lote">
-                    <tr>
-                      <th>Lote</th>
-                      <th>DRE</th>
-                      <th className="pl-5">Tipo</th>
-                    </tr>
-                    {lotes.map(function(lote) {
-                      return (
-                        <tr>
-                          <td>{lote.lote}</td>
-                          <td>{lote.dre}</td>
-                          <td className="pl-5">{lote.tipo}</td>
-                        </tr>
-                      );
-                    })}
-                  </table>
-                </div>
-              </Collapse>
-            </div>
-          </div>
+          <CardMatriculados
+            collapsed={collapsed}
+            alterarCollapse={this.alterarCollapse}
+            numeroAlunos={enrolled}
+          >
+            <Collapse isOpened={!collapsed}>
+              <TabelaHistoricoLotesDREs lotes={lotes} />
+            </Collapse>
+          </CardMatriculados>
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
@@ -167,8 +141,11 @@ class DashboardCODAE extends Component {
               </div>
               <div className="pt-3" />
 
-              { this.state.dre ? <VisaoPorDRE { ...this.props }/> : <VisaoGeral /> }
-              
+              {this.state.dre ? (
+                <VisaoPorDRE {...this.props} />
+              ) : (
+                <VisaoGeral />
+              )}
             </div>
           </div>
         </form>
