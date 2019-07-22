@@ -31,6 +31,8 @@ class CadastroLote extends Component {
           escola["_id"].toString() + " - " + escola["nome"];
       });
       this.setState({ escolas });
+    }, error => {
+      console.log(error);
     });
   }
 
@@ -91,9 +93,10 @@ class CadastroLote extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <Link to="/configuracoes/cadastros/lotes-cadastrados">
-                    <label className="link">
-                      Consulta de lotes cadastrados
-                    </label>
+                    <BaseButton
+                      label="Consulta de lotes cadastrados"
+                      style={ButtonStyle.OutlinePrimary}
+                    />
                   </Link>
                 </div>
               </div>
@@ -208,10 +211,16 @@ class CadastroLote extends Component {
                   </div>
                 </div>
               )}
-              <div className="row float-right mt-4">
+              <div style={{marginTop: '100px'}} className="row float-right">
                 <div className="col-12">
                   <BaseButton
                     label="Cancelar"
+                    onClick={event => this.resetForm(event)}
+                    style={ButtonStyle.OutlinePrimary}
+                    noBorder
+                  />
+                  <BaseButton
+                    label="Excluir"
                     onClick={event => this.resetForm(event)}
                     style={ButtonStyle.OutlinePrimary}
                   />

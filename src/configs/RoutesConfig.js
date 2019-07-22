@@ -1,5 +1,5 @@
 import { Login } from "../components/Login";
-import MenuChangePage from "../pages/Escola/MenuChangePage";
+import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
 import FoodInclusionPage from "../pages/Escola/FoodInclusionPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
@@ -60,7 +60,7 @@ const routesConfig = [
   },
   {
     path: "/escola/alteracao-de-cardapio",
-    component: MenuChangePage,
+    component: AlteracaoDeCardapioPage,
     exact: false
   },
   {

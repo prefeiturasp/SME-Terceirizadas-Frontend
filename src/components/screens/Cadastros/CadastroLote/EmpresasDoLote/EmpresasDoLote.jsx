@@ -5,13 +5,17 @@ import "./style.scss";
 export const EmpresasDoLote = props => {
   const { empresa, ativo, ultimo } = props;
   if (empresa === undefined || !ativo) return <tr />;
-  return (
-    [
-      <td className={ultimo ? "last-item" : ""}>{empresa.nome}</td>,
-      <td className={ultimo ? "last-item" : ""}><span>CNPJ: </span>{empresa.cnpj}</td>,
-      <td className={ultimo ? "last-item" : ""} colSpan="2"><span>Tel: </span>{empresa.tel}</td>
-    ]
-  );
+  return [
+    <td className={"blueish " + (ultimo && "last-item")}>{empresa.nome}</td>,
+    <td className={"blueish " + (ultimo && "last-item")}>
+      <span>CNPJ: </span>
+      {empresa.cnpj}
+    </td>,
+    <td className={"blueish " + (ultimo && "last-item")} colSpan="2">
+      <span>Tel: </span>
+      {empresa.tel}
+    </td>
+  ];
 };
 
 EmpresasDoLote.propTypes = {
