@@ -19,7 +19,7 @@ import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
 import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
-import { getRefeicoesApi } from "../../services/tourRequest.service";
+import { kitLanches } from "../../services/tourRequest.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {
@@ -34,7 +34,7 @@ import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.redu
 import { validateSubmit } from "./UnifiedSolicitationValidation";
 
 export const HORAS_ENUM = {
-  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
+  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
@@ -168,8 +168,8 @@ class UnifiedSolicitation extends Component {
   resetForm(event) {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
-    let schools = this.props.schools;
-    schools.forEach(function(school) {
+    let escolas = this.props.escolas;
+    escolas.forEach(function(school) {
       school["id"] = school["_id"].toString();
       school["burger_active"] = false;
       school["limit_of_meal_kits"] = 0;
@@ -189,7 +189,7 @@ class UnifiedSolicitation extends Component {
       schoolExists: false,
       schoolsExistArray: [],
       salvarAtualizarLbl: "Salvar Rascunho",
-      schoolsFiltered: schools,
+      schoolsFiltered: escolas,
       schoolsTotal: 0,
       qtd_kit_lanche: 0,
       radioChanged: false,
@@ -204,7 +204,7 @@ class UnifiedSolicitation extends Component {
     this.props.change("schools_total", 0);
     this.props.change("kits_total", 0);
 
-    getRefeicoesApi()
+    kitLanches()
       .then(response => {
         this.setState({
           enumKits: adapterEnumKits(response)
@@ -323,10 +323,10 @@ class UnifiedSolicitation extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.schools.length !== prevProps.schools.length) {
+    if (this.props.escolas.length !== prevProps.escolas.length) {
       this.setState({
         ...this.state,
-        schoolsFiltered: this.props.schools
+        schoolsFiltered: this.props.escolas
       });
     }
   }
@@ -456,7 +456,7 @@ class UnifiedSolicitation extends Component {
 
   filterList(event) {
     if (event === undefined) event = { target: { value: "" } };
-    let schoolsFiltered = this.props.schools;
+    let schoolsFiltered = this.props.escolas;
     schoolsFiltered = schoolsFiltered.filter(function(item) {
       const wordToFilter = event.target.value.toLowerCase();
       return (
@@ -476,8 +476,7 @@ class UnifiedSolicitation extends Component {
       handleSubmit,
       enrolled,
       two_working_days,
-      reasons_continuous_program,
-      reasons_simple,
+      motivos,
       multipleOrder,
       razao,
       max_alunos,
@@ -570,9 +569,7 @@ class UnifiedSolicitation extends Component {
                     name="razao"
                     label="Motivo"
                     onChange={value => this.props.change("razao", value)}
-                    options={selectDefault
-                      .concat(reasons_simple)
-                      .concat(reasons_continuous_program)}
+                    options={selectDefault.concat(motivos)}
                     validate={required}
                   />
                 </div>
@@ -716,7 +713,7 @@ class UnifiedSolicitation extends Component {
                                   onClick={() => this.handleCheck(school)}
                                   className="checkbox-custom"
                                 />{" "}
-                                {school._id + " - " + school.nome}
+                                {school.codigo_eol + " - " + school.nome}
                               </label>
                               {!multipleOrder && (
                                 <Stand

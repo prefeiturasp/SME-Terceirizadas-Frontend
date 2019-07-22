@@ -167,3 +167,18 @@ export const getRefeicoesApi = async () => {
       return erro;
     });
 };
+
+export const kitLanches = async () => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+
+  return await fetch(API_URL + "/kit-lanches/", OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(erro => {
+      return erro;
+    });
+};

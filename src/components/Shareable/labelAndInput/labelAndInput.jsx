@@ -112,8 +112,8 @@ export class LabelAndCombo extends Component {
         >
           {options.map((e, key) => {
             return (
-              <option key={key} value={e.value} disabled={e.disabled}>
-                {e.label}
+              <option key={key} value={e.uuid} disabled={e.disabled}>
+                {e.nome}
               </option>
             );
           })}

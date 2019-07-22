@@ -1,4 +1,4 @@
-import { API_URL } from '../constants/config.constants'
+import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
 const authToken = {
@@ -6,27 +6,44 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getPeriods = (user_uuid) => {
+export const getPeriods = user_uuid => {
   const url = API_URL + `/school/get_periods/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
   return fetch(url, OBJ_REQUEST)
-      .then(result => {
-          return result.json()
-      }).catch(error => {
-          return error.json()
-      })
-}
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
 
 export const getSchools = () => {
-  var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-      targetUrl = 'https://pratoaberto.sme.prefeitura.sp.gov.br/api/escolas'
+  var proxyUrl = "https://cors-anywhere.herokuapp.com/",
+    targetUrl = "https://pratoaberto.sme.prefeitura.sp.gov.br/api/escolas";
   return fetch(proxyUrl + targetUrl)
-      .then(result => {
-          return result.json()
-      }).catch(error => {
-          return error.json()
-      })
-  }
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const escolas = () => {
+  const url = API_URL + `/escolas/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
