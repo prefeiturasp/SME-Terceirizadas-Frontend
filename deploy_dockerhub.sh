@@ -10,12 +10,9 @@ if [ "$TRAVIS_BRANCH" = "development" ]; then
     docker push marcelomaia/terceirizadas_frontend
 fi
 
-if [ "$TRAVIS_BRANCH" = "master" ]; then
-    tag="$TRAVIS_TAG"
-    if [ -n "$tag" ]; then
-        echo "Deploy da imagem de produção..."
-        docker tag marcelomaia/terceirizadas_frontend:latest marcelomaia/terceirizadas_frontend:$tag
-        docker push marcelomaia/terceirizadas_frontend:$tag
-    fi
+tag="$TRAVIS_TAG"
+if [ -n "$tag" ]; then
+    echo "Deploy da imagem de produção..."
+    docker tag marcelomaia/terceirizadas_frontend:latest marcelomaia/terceirizadas_frontend:$tag
+    docker push marcelomaia/terceirizadas_frontend:$tag
 fi
-
