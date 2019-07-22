@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { Field, formValueSelector, reduxForm, reset } from "redux-form";
+import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
@@ -14,7 +14,9 @@ import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
 import { transformaObjetos, fieldCnpj, fieldCep, fieldTel, resetForm } from "./helper";
 import { toastSuccess } from '../../../Shareable/dialogs';
-
+import { ContatosEmpresa } from './ContatosEmpresa';
+import { ContatosTerceirizada } from './ContatosTerceirizada';
+import { EditalInput } from './EditalInputForm';
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -150,32 +152,7 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_empresa"
-                    {...fieldTel}
-                    validate={[required, phoneNumber]}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_empresa"
-                    validate={[required, email]}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
-                </div>
-              </div>
+              <FieldArray name="contatos-empresa" component={ContatosEmpresa} />
 
               <div className="row pt-3">
                 <div className="col-7">
@@ -211,58 +188,9 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_nutricionista"
-                    {...fieldTel}
-                    validate={required}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_nutricionista"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
-                </div>
-              </div>
+              <FieldArray name="contatos-terceirizada" component={ContatosTerceirizada} />
 
-              <div className="row pt-3">
-                <div className="col-6">
-                  <label className="label">
-                    <span>* </span>Edital de Pregão n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="edital"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">
-                    <span>* </span>Contrato n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="contrato"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} />
-                </div>
-              </div>
+              <FieldArray name="edital" component={EditalInput} />
 
               <div className="row pt-3">
                 <div className="col-12">
@@ -341,7 +269,6 @@ class CadastroEmpresa extends Component {
 
 const CadastroEmpresaForm = reduxForm({
   form: "cadastroEmpresaForm",
-  enableReinitialize: true
 })(CadastroEmpresa);
 
 const selector = formValueSelector("cadastroEmpresaForm");

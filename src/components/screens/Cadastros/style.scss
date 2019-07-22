@@ -91,14 +91,14 @@ table.cadastro {
     i {
       position: absolute;
       padding-left: 10%;
-      color: #C8C8C8;
+      color: #c8c8c8;
     }
     &:first-child {
       padding-left: 20px;
       width: 50%;
       font-weight: bold;
     }
-    &:nth-child(2){
+    &:nth-child(2) {
       width: 19%;
     }
 
@@ -139,11 +139,8 @@ table.cadastro {
         padding-bottom: 30px;
       }
     }
-
   }
 }
-
-
 
 .button-action {
   display: flex;
@@ -151,17 +148,17 @@ table.cadastro {
   align-items: flex-end;
 }
 
-.lotes_container{
+.lotes_container {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
   padding: 0 15px 10px 15px;
 
-  .drop-down-lotes{
+  .drop-down-lotes {
     width: 50%;
     padding-right: 15px;
   }
-  .select-lotes{
+  .select-lotes {
     width: 50%;
     padding-left: 15px;
   }
@@ -246,17 +243,16 @@ table.cadastro-empresa {
       color: #000;
     }
   }
-  tr{
+  tr {
     td.container-detalhe {
       background: #f2fbfe;
       padding: 15px 20px 15px 0px;
       div.container-info {
         display: grid;
-        grid-template-columns:  46% 54%; 
-        grid-template-rows: 20% 20% 20% 20% 20%;  
+        grid-template-columns: 46% 54%;
+        grid-template-rows: 20% 20% 20% 20% 20%;
 
-             
-        div:not(:first-child):not(:nth-child(1)){
+        div:not(:first-child):not(:nth-child(1)) {
           padding: 10px 0 5px;
         }
 
@@ -265,18 +261,14 @@ table.cadastro-empresa {
           padding: 0;
         }
 
-        li{
+        li {
           font-weight: bold;
           color: #353535;
         }
       }
     }
   }
-
-  
 }
-
-
 
 .button-action {
   display: flex;
@@ -284,19 +276,53 @@ table.cadastro-empresa {
   align-items: flex-end;
 }
 
-.lotes_container{
+.lotes_container {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
   padding: 0 15px 10px 15px;
 
-  .drop-down-lotes{
+  .drop-down-lotes {
     width: 50%;
     padding-right: 15px;
   }
-  .select-lotes{
+  .select-lotes {
     width: 50%;
     padding-left: 15px;
   }
 }
 
+.container-fields {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: 95% 5%;
+
+  .fields-set {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 38% 58%;
+    grid-column-gap: 4%;
+  }
+
+  .fields-set-edital {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 52% 44%;
+    grid-column-gap: 4%;
+  }
+
+  .fields-set-edital-plus {
+    display: flex;
+    justify-content: flex-end;
+
+    div {
+      width: 44%;
+    }
+  }
+
+  .button-field {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
