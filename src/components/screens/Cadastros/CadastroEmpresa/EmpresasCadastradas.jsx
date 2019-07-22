@@ -164,16 +164,15 @@ class EmpresasCadastradas extends Component {
     this.filtrarEmpresas = this.filtrarEmpresas.bind(this);
   }
 
-  filtrarEmpresas(event) {
+  filtrarEmpresas(event){
     let empresasFiltradas = this.state.empresas;
     empresasFiltradas = empresasFiltradas.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.cnpj.search(palavraAFiltrar) !== -1
-      );
-    });
-    this.setState({ empresasFiltradas });
+      )
+    })
   }
 
   lidarComBurger(empresa) {
@@ -202,7 +201,13 @@ class EmpresasCadastradas extends Component {
             </tr>
             {this.state.empresasFiltradas.map(empresa => {
               return [
-                <tr className={empresa.ativo ? "detalhe-empresa" : ""}>
+                <tr
+                className={
+                  empresa.ativo
+                    ? "detalhe-empresa"
+                    : ""
+                } 
+                >
                   <td>{empresa.codigo_empresa}</td>
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
@@ -220,39 +225,33 @@ class EmpresasCadastradas extends Component {
                 </tr>,
                 empresa.ativo && (
                   <tr>
-                    <td className="detalhe-empresa" />
+                    <td className="detalhe-empresa"></td>
                     <td className="container-detalhe" colSpan="4">
                       <div className="container-info">
                         <div>
                           <div>
-                            <span className="descricao">Endereço:</span>
-                            <br />
-                            <span className="valor-desc">
-                              {empresa.endereco}
-                            </span>
+                            <span className="descricao">
+                              Endereço:
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.endereco}</span>
                           </div>
                           <div>
-                            <span className="descricao">Telefone/FAX:</span>
-                            <span className="valor-desc">
-                              {empresa.telefone}
+                            <span className="descricao">
+                              Telefone/FAX:
                             </span>
+                            <span className="valor-desc">{empresa.telefone}</span>
                           </div>
                           <div>
                             <span className="descricao">
                               Representante Legal:
                             </span>
-                            <span className="valor-desc">
-                              {empresa.representante}
-                            </span>
+                            <span className="valor-desc">{empresa.representante}</span>
                           </div>
                           <div>
                             <span className="descricao">
                               Nutricionista Responsável Técnico:
-                            </span>
-                            <br />
-                            <span className="valor-desc">
-                              {empresa.nutricionista}
-                            </span>
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.nutricionista}</span>
                           </div>
                           <div>
                             <span className="descricao">
@@ -270,44 +269,53 @@ class EmpresasCadastradas extends Component {
                           )}
                           {empresa.lotes.length > 0 && (
                             <ul>
-                              {empresa.lotes.map((lote, item) => (
+                              {empresa.lotes.map((lote, item) => 
                                 <li>{lote.nome}</li>
-                              ))}
-                            </ul>
+                              )}
+                            </ul>             
                           )}
                         </div>
                         <div>
                           <div>
-                            <span className="descricao">CEP:</span>
+                            <span className="descricao">
+                              CEP:
+                            </span>
                             <span className="valor-desc">{empresa.cep}</span>
                           </div>
                           <div>
-                            <span className="descricao">E-mail:</span>
-                            <span className="valor-desc">{empresa.email}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">Contato:</span>
-                            <br />
-                            <span className="valor-desc">{empresa.email}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">CRN:</span>
-                            <span className="valor-desc">{empresa.crn}</span>
-                            <span className="pl-3 descricao">E-mail:</span>
-                            <span className="valor-desc">{empresa.email}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">Contrato n°:</span>
-                            <span className="valor-desc">
-                              {empresa.contrato}
+                            <span className="descricao">
+                              E-mail:
                             </span>
+                            <span className="valor-desc">{empresa.email}</span>
                           </div>
-                        </div>
+                          <div>
+                            <span className="descricao">
+                              Contato:
+                            </span><br/> 
+                            <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              CRN:
+                            </span>
+                            <span className="valor-desc">{empresa.crn}</span> 
+                            <span className="pl-3 descricao">
+                              E-mail:
+                            </span>
+                            <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">
+                              Contrato n°:
+                            </span>
+                            <span className="valor-desc">{empresa.contrato}</span>
+                          </div>
+                        </div>                        
                       </div>
                     </td>
                   </tr>
                 )
-              ];
+              ]
             })}
           </table>
         </div>
@@ -315,5 +323,6 @@ class EmpresasCadastradas extends Component {
     );
   }
 }
+
 
 export default EmpresasCadastradas;

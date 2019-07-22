@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Link, Redirect } from "react-router-dom";
+import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
@@ -12,8 +12,11 @@ import {
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep, fieldTel } from "./helper";
-import { toastSuccess } from "../../../Shareable/dialogs";
+import { transformaObjetos, fieldCnpj, fieldCep, fieldTel, resetForm } from "./helper";
+import { toastSuccess } from '../../../Shareable/dialogs';
+import { ContatosEmpresa } from './ContatosEmpresa';
+import { ContatosTerceirizada } from './ContatosTerceirizada';
+import { EditalInput } from './EditalInputForm';
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -49,7 +52,7 @@ class CadastroEmpresa extends Component {
     this.setState({ lotesSelecionados: value });
   }
 
-  resetForm() {
+  resetForm(){
     this.props.reset();
     this.props.change("razão_social", "");
     this.props.change("cnpj", "");
@@ -68,10 +71,10 @@ class CadastroEmpresa extends Component {
     this.props.change("contrato", "");
   }
 
-  salvaFormulario() {
+  salvaFormulario(){
     this.resetForm();
-    this.setState({ lotesSelecionados: [] });
-    toastSuccess("Empresa adicionada com sucesso!");
+    this.setState({ lotesSelecionados: []});
+    toastSuccess('Empresa adicionada com sucesso!')
   }
 
   render() {
@@ -149,32 +152,7 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_empresa"
-                    {...fieldTel}
-                    validate={[required, phoneNumber]}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_empresa"
-                    validate={[required, email]}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
+              <FieldArray name="contatos-empresa" component={ContatosEmpresa} />
 
               <div className="row pt-3">
                 <div className="col-7">
@@ -210,58 +188,9 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_nutricionista"
-                    {...fieldTel}
-                    validate={required}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_nutricionista"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
+              <FieldArray name="contatos-terceirizada" component={ContatosTerceirizada} />
 
-              <div className="row pt-3">
-                <div className="col-6">
-                  <label className="label">
-                    <span>* </span>Edital de Pregão n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="edital"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">
-                    <span>* </span>Contrato n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="contrato"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
+              <FieldArray name="edital" component={EditalInput} />
 
               <div className="row pt-3">
                 <div className="col-12">
@@ -312,7 +241,7 @@ class CadastroEmpresa extends Component {
                 </div>
               </div>
 
-              <div className="float-right button-container pt-3">
+              <div className="button-container pt-3">
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
@@ -321,7 +250,9 @@ class CadastroEmpresa extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario())}
+                    onClick={handleSubmit(values =>
+                      this.salvaFormulario()
+                    )}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
@@ -338,7 +269,6 @@ class CadastroEmpresa extends Component {
 
 const CadastroEmpresaForm = reduxForm({
   form: "cadastroEmpresaForm",
-  enableReinitialize: true
 })(CadastroEmpresa);
 
 const selector = formValueSelector("cadastroEmpresaForm");
