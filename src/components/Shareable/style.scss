@@ -19,12 +19,12 @@ input.input-search {
   border-left: none;
   border-right: none;
   border-bottom: 0.5px solid #a4a4a4;
-  color: #a4a4a4;
+  color: #a8a8a8;
   text-align: right !important;
   font-style: italic;
-  &:placeholder {
+  &::placeholder {
     text-align: right;
-    color: #a4a4a4;
+    color: #a8a8a8;
     padding-right: 5px;
   }
 }
