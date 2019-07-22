@@ -20,14 +20,16 @@ class DashboardTerceirizada extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      lotes: [{
-        nome: '7A IP I IPIRANGA',
-        tipo_de_gestao: 'TERC TOTAL'
-      },
-      {
-        nome: '7A IP II IPIRANGA',
-        tipo_de_gestao: 'TERC TOTAL'
-      }],
+      lotes: [
+        {
+          nome: "7A IP I IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        },
+        {
+          nome: "7A IP II IPIRANGA",
+          tipo_de_gestao: "TERC TOTAL"
+        }
+      ],
       gestaoDeAlimentacao: false
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
@@ -36,7 +38,6 @@ class DashboardTerceirizada extends Component {
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
   }
-
 
   render() {
     const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
@@ -161,102 +162,100 @@ class DashboardTerceirizada extends Component {
               </div>
             </div>
           ) : (
-            <div className="row">
-              <div className="card mt-3">
-                <div className="card-body">
-                  <div className="card-title font-weight-bold dashboard-card-title">
-                    <i className="fas fa-lock" />
-                    Pendências
-                    <span className="float-right">
-                      <LabelAndCombo
-                        onChange={value => this.handleField("reason", value)}
-                        placeholder={"Visão por"}
-                        options={vision_by}
-                      />
-                    </span>
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="card-title font-weight-bold dashboard-card-title">
+                  <i className="fas fa-lock" />
+                  Pendências
+                  <span className="float-right">
+                    <LabelAndCombo
+                      onChange={value => this.handleField("reason", value)}
+                      placeholder={"Visão por"}
+                      options={vision_by}
+                    />
+                  </span>
+                </div>
+                <div className="pt-3" />
+                <div className="row pt-3">
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Escolas"}
+                      totalOfOrders={16}
+                      priorityOrders={8}
+                      onLimitOrders={2}
+                      regularOrders={6}
+                    />
                   </div>
-                  <div className="pt-3" />
-                  <div className="row pt-3">
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Escolas"}
-                        totalOfOrders={16}
-                        priorityOrders={8}
-                        onLimitOrders={2}
-                        regularOrders={6}
-                      />
-                    </div>
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Lotes"}
-                        totalOfOrders={47}
-                        priorityOrders={10}
-                        onLimitOrders={7}
-                        regularOrders={30}
-                      />
-                    </div>
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Lotes"}
+                      totalOfOrders={47}
+                      priorityOrders={10}
+                      onLimitOrders={7}
+                      regularOrders={30}
+                    />
                   </div>
-                  <div className="row pt-3">
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Inclusão de Refeição"}
-                        totalOfOrders={16}
-                        priorityOrders={8}
-                        onLimitOrders={2}
-                        regularOrders={6}
-                      />
-                    </div>
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Alteração de Dias de Cardápio"}
-                        totalOfOrders={50}
-                        priorityOrders={2}
-                        onLimitOrders={18}
-                        regularOrders={30}
-                      />
-                    </div>
+                </div>
+                <div className="row pt-3">
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Inclusão de Refeição"}
+                      totalOfOrders={16}
+                      priorityOrders={8}
+                      onLimitOrders={2}
+                      regularOrders={6}
+                    />
                   </div>
-                  <div className="row pt-3">
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Alteração de Cardápio"}
-                        totalOfOrders={20}
-                        priorityOrders={5}
-                        onLimitOrders={10}
-                        regularOrders={10}
-                      />
-                    </div>
-                    <div className="col-6">
-                      <Link to="/terceirizada/kits-lanche">
-                        <CardPendencia
-                          cardTitle={"Kit Lanche"}
-                          totalOfOrders={120}
-                          priorityOrders={20}
-                          onLimitOrders={40}
-                          regularOrders={60}
-                        />
-                      </Link>
-                    </div>
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Alteração de Dias de Cardápio"}
+                      totalOfOrders={50}
+                      priorityOrders={2}
+                      onLimitOrders={18}
+                      regularOrders={30}
+                    />
                   </div>
-                  <div className="row pt-3">
-                    <div className="col-6">
+                </div>
+                <div className="row pt-3">
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Alteração de Cardápio"}
+                      totalOfOrders={20}
+                      priorityOrders={5}
+                      onLimitOrders={10}
+                      regularOrders={10}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <Link to="/terceirizada/kits-lanche">
                       <CardPendencia
-                        cardTitle={"Pedido Unificado"}
-                        totalOfOrders={2}
-                        priorityOrders={1}
-                        onLimitOrders={0}
-                        regularOrders={1}
+                        cardTitle={"Kit Lanche"}
+                        totalOfOrders={120}
+                        priorityOrders={20}
+                        onLimitOrders={40}
+                        regularOrders={60}
                       />
-                    </div>
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Suspensão de Refeição"}
-                        totalOfOrders={47}
-                        priorityOrders={10}
-                        onLimitOrders={7}
-                        regularOrders={30}
-                      />
-                    </div>
+                    </Link>
+                  </div>
+                </div>
+                <div className="row pt-3">
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Pedido Unificado"}
+                      totalOfOrders={2}
+                      priorityOrders={1}
+                      onLimitOrders={0}
+                      regularOrders={1}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardPendencia
+                      cardTitle={"Suspensão de Refeição"}
+                      totalOfOrders={47}
+                      priorityOrders={10}
+                      onLimitOrders={7}
+                      regularOrders={30}
+                    />
                   </div>
                 </div>
               </div>

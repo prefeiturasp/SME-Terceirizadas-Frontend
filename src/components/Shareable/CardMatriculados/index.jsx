@@ -8,26 +8,30 @@ export default class CardMatriculados extends Component {
     return (
       <div className="card">
         <div className="card-body card-enrolled">
-          <div className="row title">Nº de Matriculados</div>
+          <div className="row title">
+            <div className="col-5">Nº de Matriculados</div>
+            {collapsed !== undefined && (
+              <div className="offset-6 col-1 my-auto text-right">
+                <Stand
+                  onClick={this.props.alterarCollapse}
+                  color={"#C8C8C8"}
+                  width={15}
+                  lineHeight={3}
+                  lineSpacing={1}
+                  padding={0}
+                  active={!collapsed}
+                />
+              </div>
+            )}
+          </div>
           <div className="row">
             <div className="rectangle">{numeroAlunos}</div>
             <div className="col-4 beside-text my-auto">
               Informação automática disponibilizada no <br />
               <span>Cadastro da Unidade Escolar</span>
             </div>
-            {collapsed !== undefined && <div className="offset-5 col-1 my-auto text-right">
-              <Stand
-                onClick={this.props.alterarCollapse}
-                color={"#C8C8C8"}
-                width={15}
-                lineHeight={3}
-                lineSpacing={1}
-                padding={0}
-                active={!collapsed}
-              />
-            </div>}
-            {this.props.children}
           </div>
+          <div className="row">{this.props.children}</div>
         </div>
       </div>
     );
