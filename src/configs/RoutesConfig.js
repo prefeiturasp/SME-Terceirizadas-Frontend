@@ -26,6 +26,11 @@ import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
+import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
+import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
+import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
+import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 
 const routesConfig = [
   {
@@ -166,6 +171,31 @@ const routesConfig = [
   {
     path: "/configuracoes",
     component: ConfigEmailPage,
+    exact: false
+  },
+  {
+    path: "/codae/solicitacoes",
+    component: StatusSolicitacoesCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/kits-lanche/relatorio",
+    component: KitsLancheRelatorioCodaePage,
+    exact: false
+  },
+  {
+    path: "/codae/kits-lanche",
+    component: KitLancheOrdersPageCodae,
+    exact: true
+  },
+  {
+    path: "/codae/painel-de-controle",
+    component: DashboardCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/detalhe-dashboard-dre",
+    component: DashboardCODAEDetailDRE,
     exact: false
   }
 ];

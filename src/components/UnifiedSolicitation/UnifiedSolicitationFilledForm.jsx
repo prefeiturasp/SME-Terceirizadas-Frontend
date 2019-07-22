@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { reduxForm } from "redux-form";
 import { getUnifiedSolicitations } from "../../services/unifiedSolicitation.service";
 import { toastError } from "../Shareable/dialogs";
+import DetailUnifiedSolicitation from "./DetailUnifiedSolicitation";
 
 class UnifiedSolicitationFilled extends Component {
   constructor(props) {
     super(props);
     this.state = {
       unifiedSolicitationList: [],
+      solicitationsList: [],
       solicitation: {
         id: null,
         dre: null,
@@ -37,15 +39,19 @@ class UnifiedSolicitationFilled extends Component {
   }
 
   preencherFormulario(solicitation) {
-    this.setState({
-      ...this.state,
-      solicitation
+    let listSolicitation = this.state.unifiedSolicitationList;
+    let list = [];
+    listSolicitation.forEach(objeto => {
+      if (objeto.formulario.id === solicitation.formulario.id) {
+        list.push(objeto);
+      }
     });
+    this.setState({ solicitationsList: list });
   }
 
   render() {
-    const { id, lote, formulario, dre, kits_total } = this.state.solicitation;
-    const { solicitation, unifiedSolicitationList } = this.state;
+    const { unifiedSolicitationList } = this.state;
+
     return (
       <div>
         {unifiedSolicitationList.map((unifiedSolicitation, key) => {
@@ -61,110 +67,10 @@ class UnifiedSolicitationFilled extends Component {
             </div>
           );
         })}
-        {solicitation.id && (
-          <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">Solicitação Unificada nº {id}</span>
-            <div className="card mt-3">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-2">
-                    <span className="badge-sme badge-secondary-sme">
-                      <span className="id-of-solicitation">{id}</span>
-                      <br />{" "}
-                      <span className="number-of-order-label">Nº PEDIDO</span>
-                    </span>
-                  </div>
-                  <div className="my-auto col-8">
-                    <span className="requester">Solicitante</span>
-                    <br />
-                    <span className="dre-name">
-                      {dre} - Lote {lote}
-                    </span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-7 report-label-value">
-                    <p>Motivo</p>
-                    <p className="value">{formulario.razao}</p>
-                  </div>
-                  <div className="col-5 report-label-value">
-                    <p>Data do evento</p>
-                    <p className="value">{formulario.dia}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Local do passeio</p>
-                    <p className="value">{formulario.local_passeio}</p>
-                  </div>
-                </div>
-                <table className="report-table">
-                  <tr>
-                    <th>Código</th>
-                    <th>Unidade Escolar</th>
-                    <th>Nº de alunos participantes</th>
-                    <th>Tempo de passeio</th>
-                    <th>Opção desejada</th>
-                    <th>Nº Total de Kits</th>
-                  </tr>
-                  {formulario.escolas.map((escola, key) => {
-                    return (
-                      <tr>
-                        <td>{escola.id}</td>
-                        <td>{escola.nome}</td>
-                        <td>
-                          {formulario.pedido_multiplo
-                            ? escola.numero_alunos
-                            : escola.nro_alunos}
-                          {" alunos"}
-                        </td>
-                        <td>
-                          {formulario.pedido_multiplo
-                            ? formulario.tempo_passeio_formulario
-                            : escola.tempo_passeio_formulario}
-                        </td>
-                        <td>
-                          {formulario.pedido_multiplo
-                            ? formulario.opcao_desejada
-                            : escola.opcao_desejada}
-                        </td>
-                        <td>
-                          {formulario.pedido_multiplo
-                            ? formulario.kit_lanche.length *
-                              parseInt(escola.numero_alunos)
-                            : escola.kit_lanche.length *
-                              parseInt(escola.nro_alunos)}
-                          {" kits"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </table>
-                <div className="row">
-                  <div className="col-10 report-label-value">
-                    <p>Total de Unidades Escolares Beneficiadas</p>
-                    <p className="value">
-                      {formulario.escolas.length} unidades escolares
-                    </p>
-                  </div>
-                  <div className="col-2 float-right report-label-value">
-                    <p>Total de Kits</p>
-                    <p className="value">{kits_total} kits</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Observações</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{ __html: formulario.obs }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        )}
+
+        {this.state.solicitationsList.map(solicitation => {
+          return <DetailUnifiedSolicitation solicitation={solicitation}/>;
+        })}
       </div>
     );
   }
