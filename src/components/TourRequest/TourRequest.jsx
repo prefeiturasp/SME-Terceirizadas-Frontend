@@ -52,12 +52,13 @@ export class TourRequest extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       id: "",
-      nro_matriculados: 0,
+      nro_matriculados: 330,
       enumKits: null,
       showModal: false,
       segundoDiaUtil: "",
       modalConfirmation: false,
-      modalMessage: ""
+      modalMessage: "",
+      botaoConfirma: true
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -195,7 +196,8 @@ export class TourRequest extends Component {
             this.setState({
               ...this.state,
               modalMessage: resp.error,
-              modalConfirmation: true
+              modalConfirmation: true,
+              botaoConfirma : resp.continua
             });
           }
         })
@@ -255,7 +257,8 @@ export class TourRequest extends Component {
       showModal,
       modalMessage,
       modalConfirmation,
-      segundoDiaUtil
+      segundoDiaUtil,
+      botaoConfirma
     } = this.state;
     return (
       <div>
@@ -403,7 +406,8 @@ export class TourRequest extends Component {
                 <strong>{modalMessage}</strong>
               </Modal.Body>
               <Modal.Footer>
-                <BaseButton
+                
+                {botaoConfirma && (<BaseButton
                   label="CONFIRMAR MESMO ASSIM"
                   type={ButtonType.BUTTON}
                   onClick={handleSubmit(values =>
@@ -417,7 +421,7 @@ export class TourRequest extends Component {
                   )}
                   style={ButtonStyle.Primary}
                   className="ml-3"
-                />
+                />)}
                 <BaseButton
                   label="CANCELAR"
                   type={ButtonType.BUTTON}
