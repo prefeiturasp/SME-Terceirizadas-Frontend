@@ -1,28 +1,28 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import React, { Component } from "react";
+import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { required } from "../../helpers/fieldValidators";
+import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   createOrUpdateFoodInclusion,
   deleteFoodInclusion,
-  getSavedFoodInclusions
+  getInclusoesContinuasSalvas
 } from "../../services/foodInclusion.service";
-import { validateSubmit } from "./FoodInclusionValidation";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndCombo,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { required } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import {
+  LabelAndCombo,
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
 import Weekly from "../Shareable/Weekly/Weekly";
-import { Modal } from "react-bootstrap";
 import { FoodInclusionItemList } from "./FoodInclusionItemList";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
+import { validateSubmit } from "./FoodInclusionValidation";
 
 class FoodInclusionEditor extends Component {
   constructor(props) {
@@ -252,17 +252,19 @@ class FoodInclusionEditor extends Component {
   }
 
   refresh() {
-    getSavedFoodInclusions().then(
-      res => {
-        this.setState({
-          ...this.state,
-          foodInclusionList: res.content.food_inclusions
-        });
-      },
-      function(error) {
-        toastError("Erro ao carregar as inclusões salvas");
-      }
-    );
+    // TODO: definir a escola atraves do login, aguardar os perfis implementados..
+    const escolaTemp = "88d9fd38-6d48-41d9-ae1e-133265260154";
+    // getInclusoesContinuasSalvas(escolaTemp).then(
+    //   // TODO: criar status das inclusoes
+    //   foodInclusionList => {
+    //     this.setState({
+    //       foodInclusionList
+    //     });
+    //   },
+    //   function(error) {
+    //     toastError("Erro ao carregar as inclusões salvas");
+    //   }
+    // );
     this.resetForm("foodInclusion");
   }
 
