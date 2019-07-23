@@ -1,9 +1,9 @@
 import React from "react";
+import Relatorio from "../../components/TourRequest/CODAE/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import DashboardDREContainer from "../../components/screens/DashboardDRE/DashboardDREContainer";
 
 export default props => (
   <Page tituloRastro="solicitações">
-    <DashboardDREContainer />
+    <Relatorio />
   </Page>
 );

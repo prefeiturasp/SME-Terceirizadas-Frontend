@@ -19,12 +19,12 @@ input.input-search {
   border-left: none;
   border-right: none;
   border-bottom: 0.5px solid #a4a4a4;
-  color: #a4a4a4;
+  color: #a8a8a8;
   text-align: right !important;
   font-style: italic;
-  &:placeholder {
+  &::placeholder {
     text-align: right;
-    color: #a4a4a4;
+    color: #a8a8a8;
     padding-right: 5px;
   }
 }
@@ -239,9 +239,14 @@ div.caption-choices {
 }
 
 .btn-styled {
+  font-weight: bold !important;
+  font-size: 14px !important;
   &.set-size-properties {
     min-height: 40px;
     min-width: 160px;
+  }
+  &.no-border {
+    border: none;
   }
   &.btn-primary {
     background-color: #035d96;

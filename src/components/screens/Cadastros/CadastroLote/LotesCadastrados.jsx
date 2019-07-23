@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { EmpresasDoLote } from "./EmpresasDoLote/EmpresasDoLote";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import { NavLink } from "react-router-dom";
 import { Stand } from "react-burgers";
 import "../style.scss";
 
@@ -47,17 +49,35 @@ export const LOTES = [
       {
         nome: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
         cnpj: "61.980.272/0001-90",
-        tel: "(12) 3023-5000"
+        tel: "(12) 3023-5000",
+        escolas: [
+          "558 - EMEI -  SENA MADUREIRA",
+          "17515 - EMEI - MARIA LUIZA MORETTI GENTILE, PROFA.",
+          "442 - EMEI - ANTONIO RUBBO MULLER, PROF.",
+          "558 - EMEI -  SENA MADUREIRA"
+        ]
       },
       {
         nome: "P.R.M SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI",
         cnpj: "61.980.272/0001-90",
-        tel: "(12) 3023-5000"
+        tel: "(12) 3023-5000",
+        escolas: [
+          "558 - EMEI -  SENA MADUREIRA",
+          "17515 - EMEI - MARIA LUIZA MORETTI GENTILE, PROFA.",
+          "442 - EMEI - ANTONIO RUBBO MULLER, PROF.",
+          "558 - EMEI -  SENA MADUREIRA",
+          "558 - EMEI -  SENA MADUREIRA",
+          "17515 - EMEI - MARIA LUIZA MORETTI GENTILE, PROFA.",
+          "442 - EMEI - ANTONIO RUBBO MULLER, PROF.",
+          "558 - EMEI -  SENA MADUREIRA",
+          "558 - EMEI -  SENA MADUREIRA"
+        ]
       },
       {
         nome: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
         cnpj: "61.980.272/0001-90",
-        tel: "(12) 3023-5000"
+        tel: "(12) 3023-5000",
+        escolas: []
       }
     ],
     ativo: false
@@ -153,7 +173,7 @@ class LotesCadastrados extends Component {
                 <tr
                   className={
                     lote.ativo && lote.empresas.length > 0
-                      ? "relationed-companies"
+                      ? "relationed-companies title"
                       : ""
                   }
                 >
@@ -178,23 +198,61 @@ class LotesCadastrados extends Component {
                 </tr>,
                 lote.empresas.length > 0 && lote.ativo && (
                   <tr className="relationed-company-title">
-                    <td colSpan="4">Empresas relacionadas:</td>
+                    <td colSpan="4">Empresas:</td>
                   </tr>
                 ),
-                lote.empresas.map((empresa, indice) => {
-                  return (
-                    <tr className="relationed-companies">
-                      <EmpresasDoLote
-                        ultimo={lote.empresas.length === indice + 1}
-                        empresa={empresa}
-                        ativo={lote.ativo}
-                      />
-                    </tr>
-                  );
-                })
+                lote.ativo &&
+                  lote.empresas.map((empresa, indice) => {
+                    return [
+                      indice > 0 && (
+                        <tr className="mt-4 relationed-company-title">
+                          <td colSpan="3">
+                            <hr />
+                          </td>
+                          <td />
+                        </tr>
+                      ),
+                      <tr className="relationed-companies">
+                        <EmpresasDoLote
+                          ultimo={lote.empresas.length === indice + 1}
+                          empresa={empresa}
+                          ativo={lote.ativo}
+                        />
+                      </tr>,
+                      empresa.escolas && empresa.escolas.length > 0 && (
+                        <tr className="mt-4 relationed-company-title">
+                          <td colSpan="4">Unidades especificas do Lote:</td>
+                        </tr>
+                      ),
+                      empresa.escolas &&
+                        empresa.escolas.length > 0 &&
+                        empresa.escolas.map((escola, indice) => {
+                          return (
+                            <tr className="relationed-companies">
+                              <td className="pt-0 pb-0 blueish" colSpan="4">
+                                {escola}
+                              </td>
+                            </tr>
+                          );
+                        })
+                    ];
+                  })
               ];
             })}
           </table>
+          <div className="row float-right pt-5 pb-5 pr-5">
+            <div className="col-4">
+              <NavLink to={"/"}>
+                <BaseButton
+                  label="Voltar"
+                  onClick={event => this.resetForm(event)}
+                  type={ButtonType.BUTTON}
+                  style={ButtonStyle.OutlinePrimary}
+                  icon={"arrow-left"}
+                />
+              </NavLink>
+            </div>
+          </div>
         </div>
       </div>
     );

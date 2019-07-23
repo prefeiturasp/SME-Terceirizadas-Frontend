@@ -1,8 +1,12 @@
 .card-body {
   &.card-enrolled {
+    padding: 15px 35px !important;
     .title {
       font-size: 14px;
       color: #686868;
+      .col-5 {
+        margin-left: inherit;
+      }
     }
     .rectangle {
       font-size: 14px;

@@ -3,7 +3,7 @@ import DashboardEscolaContainer from '../../components/screens/DashboardEscola/D
 import Page from '../../components/Shareable/Page/Page';
 
 export default props => (
-  <Page titulo="Painel de Controle">
+  <Page tituloRastro="solicitações">
     <DashboardEscolaContainer />
   </Page>
 )
