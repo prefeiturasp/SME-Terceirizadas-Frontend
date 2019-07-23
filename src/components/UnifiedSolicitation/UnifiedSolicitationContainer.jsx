@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { getSchools } from "../../services/school.service";
-import { getReasons } from "../../services/foodInclusion.service";
+import { getMotivosInclusaoContinua } from "../../services/foodInclusion.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import UnifiedSolicitation from "./UnifiedSolicitation";
 
@@ -19,7 +19,7 @@ class UnifiedSolicitationContainer extends Component {
 
   componentDidMount() {
     getSchools().then(res => {
-      getReasons().then(resReasons => {
+      getMotivosInclusaoContinua().then(resReasons => {
         getWorkingDays().then(resWD => {
           let schools = res.slice(0, 50);
           schools.forEach(function(school) {

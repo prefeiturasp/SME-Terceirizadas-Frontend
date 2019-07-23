@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { getPeriods } from "../../services/school.service";
-import { getReasons } from "../../services/foodInclusion.service";
-import { getWorkingDays } from "../../services/workingDays.service";
+import { getMotivosInclusaoContinua } from "../../services/foodInclusion.service";
+import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
@@ -33,32 +32,27 @@ class FoodInclusionContainer extends Component {
       day: new Date(),
       periods: [],
       typeFoodContinuousProgram: this.typeFoodContinuousProgram,
-      two_working_days: null,
-      five_working_days: null
+      proximos_dois_dias_uteis: null,
+      proximos_cinco_dias_uteis: null
     };
   }
 
   componentDidMount() {
-    let _two,
-      _five = null;
-    getPeriods().then(resPeriods => {
-      getReasons().then(resReasons => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.content.school_periods,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program:
-            resReasons.content.reasons_continuous_program
-        });
+    getMotivosInclusaoContinua().then(reasons_continuous_program => {
+      // debugger;
+      this.setState({
+        // periods: resPeriods.content.school_periods,
+        // reasons_simple: resReasons.content.reasons_simple,
+        reasons_continuous_program
       });
     });
-    getWorkingDays().then(res => {
-      _two = res[0].date_two_working_days.split("/");
-      _five = res[0].date_five_working_days.split("/");
+
+    getDiasUteis().then(res => {
+      const proximos_cinco_dias_uteis = new Date(res.proximos_cinco_dias_uteis);
+      const proximos_dois_dias_uteis = new Date(res.proximos_dois_dias_uteis);
       this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        proximos_dois_dias_uteis,
+        proximos_cinco_dias_uteis
       });
     });
   }
