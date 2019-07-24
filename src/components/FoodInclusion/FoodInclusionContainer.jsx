@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoContinua } from "../../services/foodInclusion.service";
+import { getMotivosInclusaoContinua, getMotivosInclusaoNormal } from "../../services/foodInclusion.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import FoodInclusion from "./FoodInclusion";
 
@@ -38,12 +38,18 @@ class FoodInclusionContainer extends Component {
   }
 
   componentDidMount() {
-    getMotivosInclusaoContinua().then(reasons_continuous_program => {
-      // debugger;
+    getMotivosInclusaoContinua().then(response => {
+      const reasons_continuous_program = response.results;
       this.setState({
         // periods: resPeriods.content.school_periods,
-        // reasons_simple: resReasons.content.reasons_simple,
         reasons_continuous_program
+      });
+    });
+
+    getMotivosInclusaoNormal().then(response => {
+      const reasons_simple = response.results;
+      this.setState({
+        reasons_simple
       });
     });
 
