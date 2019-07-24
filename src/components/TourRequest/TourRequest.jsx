@@ -25,7 +25,8 @@ import {
 import {
   convertToFormat,
   adapterEnumKits,
-  convertStringToDate
+  convertStringToDate,
+  converterStringParaDataResponse
 } from "./ConvertToFormat";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
@@ -136,16 +137,17 @@ export class TourRequest extends Component {
     if (event.target.value) {
       const diaSelecionado = convertStringToDate(event.target.value);
       getDiasUteis().then(resp => {
-        const segundoDiaUtil = convertStringToDate(
-          resp[0].date_two_working_days
+        const segundoDiaUtil = converterStringParaDataResponse(
+          resp.proximos_dois_dias_uteis
         );
-        const quintoDiaUtil = convertStringToDate(
-          resp[0].date_five_working_days
+        const quintoDiaUtil = converterStringParaDataResponse(
+          resp.proximos_cinco_dias_uteis
         );
         if (
           diaSelecionado <= segundoDiaUtil ||
           diaSelecionado < quintoDiaUtil
         ) {
+          
           this.setState({
             showModal: true
           });

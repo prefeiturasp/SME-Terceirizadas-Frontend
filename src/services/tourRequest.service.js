@@ -44,7 +44,7 @@ export const getQuatidadeAlunoApi = async () => {
 };
 
 export const getDiasUteis = async () => {
-  const url = API_URL + "/working_days/";
+  const url = API_URL + "/dias-uteis/";
   return await fetch(url)
     .then(response => {
       return response.json();
@@ -159,7 +159,7 @@ export const getRefeicoesApi = async () => {
     method: "GET"
   };
 
-  return await fetch(API_URL + "/kit-lanche/", OBJ_REQUEST)
+  return await fetch(API_URL + "/kit-lanches/", OBJ_REQUEST)
     .then(response => {
       return response.json();
     })

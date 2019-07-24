@@ -47,3 +47,14 @@ export const convertStringToDate = value => {
   }
   return value;
 };
+
+export const converterStringParaDataResponse = value => {
+  if (value) {
+    console.log(value)
+    const dia = parseInt(value.split("-")[2]);
+    const mes = parseInt(value.split("-")[1]) - 1;
+    const ano = parseInt(value.split("-")[0]);
+    return new Date(ano, mes, dia);
+  }
+  return value;
+};
