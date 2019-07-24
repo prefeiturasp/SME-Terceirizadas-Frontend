@@ -20,7 +20,8 @@ import {
   registroSalvarKitLanche,
   getDiasUteis,
   getSolicitacoesKitLancheApi,
-  getRefeicoesApi
+  getRefeicoesApi,
+  obtemDadosDaEscolaApi
 } from "../../services/tourRequest.service";
 import {
   convertToFormat,
@@ -53,13 +54,14 @@ export class TourRequest extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       id: "",
-      nro_matriculados: 330,
       enumKits: null,
       showModal: false,
       segundoDiaUtil: "",
       modalConfirmation: false,
       modalMessage: "",
-      botaoConfirma: true
+      botaoConfirma: true,
+      uuid: "7029aba9-ba03-4b6b-af89-7dddc5010471",
+      escola: {}
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -124,6 +126,9 @@ export class TourRequest extends Component {
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos();
+
+    this.obtemDadosDaEscola(this.state.uuid);
+
     getDiasUteis().then(resp => {
       this.setState({
         segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
@@ -154,6 +159,15 @@ export class TourRequest extends Component {
         }
       });
     }
+  }; 
+
+  obtemDadosDaEscola(uuid) {
+    obtemDadosDaEscolaApi(uuid).then(resp =>{
+      this.setState({
+        ...this.state,
+        escola: resp
+      });
+    });
   };
 
   getQuatidadeAlunos() {
@@ -284,7 +298,7 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <CardMatriculados numeroAlunos={this.state.nro_matriculados} />
+        <CardMatriculados numeroAlunos={this.state.escola.quantidade_alunos} />
         <form>
           <TourRequestItemList
             tourRequestList={tourRequestList}

@@ -26,6 +26,23 @@ export const getKitsByApi = async () => {
     });
 };
 
+export const obtemDadosDaEscolaApi = async (uuid) => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+
+  const url = API_URL + "/escolas/"+uuid+"/";
+  return await fetch(url, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(erro => {
+      console.log("Erro ao recuperar dados escolares");
+      return {};
+    })
+};
+
 export const getQuatidadeAlunoApi = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
