@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
-import { getUnifiedSolicitations } from "../../services/unifiedSolicitation.service";
+import { getUnifiedSolicitations } from "../../services/solicitacaoUnificada.service";
 import { toastError } from "../Shareable/dialogs";
 import DetailUnifiedSolicitation from "./DetailUnifiedSolicitation";
 

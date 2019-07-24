@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { escolas } from "../../services/school.service";
-import { motivosSolicitacaoUnificada } from "../../services/unifiedSolicitation.service";
+import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
 import { diasUteis } from "../../services/workingDays.service";
 import UnifiedSolicitation from "./UnifiedSolicitation";
 
@@ -36,23 +36,23 @@ class UnifiedSolicitationContainer extends Component {
           let proximos_dois_dias_uteis,
             proximos_cinco_dias_uteis = null;
           proximos_dois_dias_uteis = resultadoDiasUteis.proximos_dois_dias_uteis.split(
-            "/"
+            "-"
           );
           proximos_cinco_dias_uteis = resultadoDiasUteis.proximos_cinco_dias_uteis.split(
-            "/"
+            "-"
           );
           this.setState({
             ...this.state,
             motivos: resultadoMotivos.results,
             proximos_dois_dias_uteis: new Date(
-              proximos_dois_dias_uteis[2],
+              proximos_dois_dias_uteis[0],
               proximos_dois_dias_uteis[1] - 1,
-              proximos_dois_dias_uteis[0]
+              proximos_dois_dias_uteis[2]
             ),
             proximos_cinco_dias_uteis: new Date(
-              proximos_cinco_dias_uteis[2],
+              proximos_cinco_dias_uteis[0],
               proximos_cinco_dias_uteis[1] - 1,
-              proximos_cinco_dias_uteis[0]
+              proximos_cinco_dias_uteis[2]
             ),
             escolas: escolas
           });

@@ -6,8 +6,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const createOrUpdateUnifiedSolicitationForm = payload => {
-  const url = API_URL + `/solicitacao-unificada-formulario/salvar/`;
+export const criarSolicitacaoUnificada = payload => {
+  const url = API_URL + `/solicitacoes-kit-lanche-unificada/`;
   let status = 0;
   return fetch(url, {
     method: "POST",

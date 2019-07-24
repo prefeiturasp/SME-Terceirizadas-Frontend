@@ -23,15 +23,16 @@ import { kitLanches } from "../../services/tourRequest.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {
-  createOrUpdateUnifiedSolicitationForm,
+  criarSolicitacaoUnificada,
   getUnifiedSolicitationsForm,
   removeUnifiedSolicitationForm
-} from "../../services/unifiedSolicitation.service";
+} from "../../services/solicitacaoUnificada.service";
 import { UnifiedSolicitationItemList } from "./UnifiedSolicitationItemList";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./UnifiedSolicitationValidation";
+import { adicionarDefault } from "./helper";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
@@ -69,14 +70,7 @@ class UnifiedSolicitation extends Component {
       ],
       choicesTotal: 0,
       studentsTotal: 0,
-      unifiedSolicitationList: [],
-      selectDefault: [
-        {
-          key: 0,
-          label: "Selecione",
-          value: ""
-        }
-      ]
+      unifiedSolicitationList: []
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
@@ -106,7 +100,7 @@ class UnifiedSolicitation extends Component {
     let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
       // eslint-disable-next-line
-      var foundIndex = schoolsFiltered.findIndex(x => x.id == escola.id);
+      var foundIndex = schoolsFiltered.findIndex(x => x.codigo_eol == escola.codigo_eol);
       schoolsFiltered[foundIndex].checked = escola.check;
       schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
       schoolsFiltered[foundIndex].numero_alunos = escola.numero_alunos;
@@ -126,7 +120,7 @@ class UnifiedSolicitation extends Component {
         if (escola.numero_alunos) studentsTotal += escola.numero_alunos;
       }
     });
-    this.props.change("pedido_multiplo", param.dayChange.pedido_multiplo);
+    this.props.change("lista_kit_lanche_igual", param.dayChange.lista_kit_lanche_igual);
     this.setState({
       schoolsFiltered: schoolsFiltered,
       choicesTotal: param.dayChange.kit_lanche.length,
@@ -228,7 +222,7 @@ class UnifiedSolicitation extends Component {
     let schoolsFiltered = this.state.schoolsFiltered;
     if (school) {
       var foundIndex = this.state.schoolsFiltered.findIndex(
-        x => x.id === school.id
+        x => x.codigo_eol === school.codigo_eol
       );
       schoolsFiltered[foundIndex].limit_of_meal_kits = newQuantity;
       schoolsFiltered[foundIndex].tempo_passeio = newValue;
@@ -244,7 +238,7 @@ class UnifiedSolicitation extends Component {
   };
 
   handleMultipleOrder() {
-    this.props.change("pedido_multiplo", !this.props.multipleOrder);
+    this.props.change("lista_kit_lanche_igual", !this.props.multipleOrder);
     window.scrollTo(
       0,
       this.pedidoMultiploRef.current.offsetTop +
@@ -255,7 +249,7 @@ class UnifiedSolicitation extends Component {
 
   handleSelecionaKitLancheBox(school, value) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.id === school.id
+      x => x.codigo_eol === school.codigo_eol
     );
     var schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].number_of_choices = value.length;
@@ -270,7 +264,7 @@ class UnifiedSolicitation extends Component {
 
   handleNumberOfStudents(school, event) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.id === school.id
+      x => x.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].nro_alunos = event.target.value;
@@ -295,7 +289,7 @@ class UnifiedSolicitation extends Component {
 
   handleNumberOfStudentsPerSchool(school, event) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.id === school.id
+      x => x.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].numero_alunos = event.target.value || 0;
@@ -309,7 +303,7 @@ class UnifiedSolicitation extends Component {
 
   setNumberOfMealKits(school) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.id === school.id
+      x => x.codigo_eol === school.codigo_eol
     );
     var schoolsFiltered = this.state.schoolsFiltered;
     if (schoolsFiltered[foundIndex].checked) {
@@ -333,16 +327,16 @@ class UnifiedSolicitation extends Component {
 
   handleCheck(school) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.id === school.id
+      x => x.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     school.checked = !school.checked;
     schoolsFiltered[foundIndex].checked = school.checked;
-    this.props.change(`school_${school.id}.check`, school.checked);
+    this.props.change(`school_${school.codigo_eol}.check`, school.checked);
     if (this.props.multipleOrder) {
       schoolsFiltered[foundIndex].numero_alunos = this.props.max_alunos;
       this.props.change(
-        `school_${school.id}.numero_alunos`,
+        `school_${school.codigo_eol}.numero_alunos`,
         this.props.max_alunos
       );
     }
@@ -390,8 +384,8 @@ class UnifiedSolicitation extends Component {
     if (
       checaSeDataEstaEntre2e5DiasUteis(
         value,
-        this.props.two_working_days,
-        this.props.five_working_days
+        this.props.proximos_dois_dias_uteis,
+        this.props.proximos_cinco_dias_uteis
       )
     )
       this.showModal();
@@ -432,7 +426,7 @@ class UnifiedSolicitation extends Component {
     values.kits_total = this.state.kitsTotal;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateUnifiedSolicitationForm(JSON.stringify(values)).then(
+      criarSolicitacaoUnificada(JSON.stringify(values)).then(
         res => {
           if (res.status === 200) {
             toastSuccess(res.data.success);
@@ -461,7 +455,7 @@ class UnifiedSolicitation extends Component {
       const wordToFilter = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(wordToFilter) !== -1 ||
-        item.id.includes(wordToFilter)
+        item.codigo_eol.includes(wordToFilter)
       );
     });
     this.setState({ schoolsFiltered });
@@ -475,10 +469,10 @@ class UnifiedSolicitation extends Component {
     const {
       handleSubmit,
       enrolled,
-      two_working_days,
+      proximos_dois_dias_uteis,
       motivos,
       multipleOrder,
-      razao,
+      motivo,
       max_alunos,
       prosseguir
     } = this.props;
@@ -486,7 +480,6 @@ class UnifiedSolicitation extends Component {
       title,
       schoolExists,
       schoolsExistArray,
-      selectDefault,
       qtd_kit_lanche,
       showModal,
       schoolsFiltered,
@@ -558,7 +551,7 @@ class UnifiedSolicitation extends Component {
                     component={LabelAndDate}
                     name="dia"
                     onBlur={event => this.handleDate(event)}
-                    minDate={two_working_days}
+                    minDate={proximos_dois_dias_uteis}
                     label="Dia"
                     validate={required}
                   />
@@ -566,22 +559,22 @@ class UnifiedSolicitation extends Component {
                 <div className="form-group col-8">
                   <Field
                     component={LabelAndCombo}
-                    name="razao"
+                    name="motivo"
                     label="Motivo"
-                    onChange={value => this.props.change("razao", value)}
-                    options={selectDefault.concat(motivos)}
+                    onChange={value => this.props.change("motivo", value)}
+                    options={adicionarDefault(motivos)}
                     validate={required}
                   />
                 </div>
               </div>
               <div className="row">
                 <div className="form-group col-8 offset-3">
-                  {razao === "Outro" && (
+                  {motivo === "Outro" && (
                     <Field
                       component={LabelAndInput}
                       label="Qual o motivo?"
-                      onChange={value => this.props.change("qual_razao", value)}
-                      name="qual_razao"
+                      onChange={value => this.props.change("qual_motivo", value)}
+                      name="qual_motivo"
                       className="form-control"
                       validate={required}
                     />
@@ -594,7 +587,7 @@ class UnifiedSolicitation extends Component {
                     component={LabelAndInput}
                     label="Local do evento"
                     placeholder="Insira o local do evento"
-                    name="local_passeio"
+                    name="local"
                     className="form-control"
                     validate={required}
                   />
@@ -609,7 +602,7 @@ class UnifiedSolicitation extends Component {
                   <Field
                     component={"input"}
                     type="checkbox"
-                    name="pedido_multiplo"
+                    name="lista_kit_lanche_igual"
                   />
                   <span
                     onClick={() => this.handleMultipleOrder()}
@@ -689,7 +682,7 @@ class UnifiedSolicitation extends Component {
                 {schoolsFiltered.length > 0 &&
                   schoolsFiltered.map((school, key) => {
                     return (
-                      <FormSection name={`school_${school.id}`}>
+                      <FormSection name={`school_${school.codigo_eol}`}>
                         <div>
                           <div
                             className="school-container col-md-12 mr-4"
@@ -917,9 +910,9 @@ const selector = formValueSelector("unifiedSolicitation");
 const mapStateToProps = state => {
   return {
     initialValues: state.unifiedSolicitation.data,
-    multipleOrder: selector(state, "pedido_multiplo"),
+    multipleOrder: selector(state, "lista_kit_lanche_igual"),
     kitsTotal: selector(state, "kits_total"),
-    razao: selector(state, "razao"),
+    motivo: selector(state, "motivo"),
     max_alunos: selector(state, "max_numero_alunos_por_escola"),
     prosseguir: selector(state, "prosseguir")
   };
