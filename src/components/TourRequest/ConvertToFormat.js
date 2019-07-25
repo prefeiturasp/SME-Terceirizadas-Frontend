@@ -29,7 +29,6 @@ const extractKits = data => {
 export const adapterEnumKits = data => {
   const objRoot = {};
   data.results.forEach((value, key) => {
-    console.log(value)
     const objChild = {};
     objChild["value"] = value.uuid;
     objChild["label"] = value.nome;

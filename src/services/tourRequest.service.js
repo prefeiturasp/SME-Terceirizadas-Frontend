@@ -79,7 +79,7 @@ export const solicitarKitLanche = async values => {
     body: JSON.stringify(values)
   };
 
-  return await fetch(URL_SOLICITAR, OBJ_REQUEST)
+  return await fetch(API_URL + "/solicitacoes-kit-lanche-avulsa/", OBJ_REQUEST)
     .then(response => {
       return response.json();
     })

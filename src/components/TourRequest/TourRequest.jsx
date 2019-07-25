@@ -69,6 +69,8 @@ export class TourRequest extends Component {
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.handleShowModal = this.handleShowModal.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.montaObjetoRequisicao = this.montaObjetoRequisicao.bind(this);
+    this.retornaTempoPasseio = this.retornaTempoPasseio.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
@@ -179,15 +181,43 @@ export class TourRequest extends Component {
     });
   }
 
+  retornaTempoPasseio(tempo) {
+    if (tempo === "4h") {
+      return "0"
+    }
+    if (tempo === "5_7h") {
+      return "1"
+    } 
+    else {
+      return "2"
+    }
+  }
+
+  montaObjetoRequisicao(values) {
+    let objeto = {
+      solicitacao_kit_lanche: {
+        kits: values.kit_lanche,
+        observacao: values.obs,
+        data: values.evento_data,
+        tempo_passeio: this.retornaTempoPasseio(values.tempo_passeio)
+      },
+      escola: this.state.escola.uuid,
+      local: values.local,
+      quantidade_alunos: values.quantidade_alunos
+    }
+    return objeto
+  }
+
   onSubmit(values) {
+    let objeto = this.montaObjetoRequisicao(values);
     validateTourRequestForm(values);
-    this.salvarOuEnviar(values);
+    this.salvarOuEnviar(objeto, values);
     this.handleConfirmation();
   }
 
-  salvarOuEnviar(values) {
+  salvarOuEnviar(objeto, values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(values)
+      registroSalvarKitLanche(objeto)
         .then(resp => {
           if (resp.success) {
             toastSuccess(resp.success);
@@ -201,7 +231,7 @@ export class TourRequest extends Component {
           toastError(erro.details);
         });
     } else {
-      solicitarKitLanche(values)
+      solicitarKitLanche(objeto)
         .then(resp => {
           if (resp.success) {
             toastSuccess(resp.success);
@@ -476,8 +506,9 @@ TourRequest = reduxForm({
 const selector = formValueSelector("tourRequest");
 
 TourRequest = connect(state => {
-  const nro_alunos = selector(state, "nro_alunos");
+  const nro_alunos = selector(state, "quantidade_alunos");
   const kit_lanche = selector(state, "kit_lanche") || [];
+
   return { qtd_total: kit_lanche.length * nro_alunos };
 })(TourRequest);
 
