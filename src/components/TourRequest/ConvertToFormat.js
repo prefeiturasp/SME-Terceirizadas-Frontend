@@ -28,11 +28,14 @@ const extractKits = data => {
 
 export const adapterEnumKits = data => {
   const objRoot = {};
-  data.forEach((value, key) => {
+  data.results.forEach((value, key) => {
+    console.log(value)
     const objChild = {};
     objChild["value"] = value.uuid;
-    objChild["label"] = value.name;
-    objChild["foodList"] = value.meals[0].foods;
+    objChild["label"] = value.nome;
+    objChild["foodList"] = value.itens.map(objeto => {
+      return objeto.nome
+    });
     objRoot["KIT" + (key + 1)] = objChild;
   });
   return objRoot;

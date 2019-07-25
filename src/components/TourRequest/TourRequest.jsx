@@ -86,12 +86,12 @@ export class TourRequest extends Component {
 
   OnEditButtonClicked(param) {
     this.props.reset();
-    this.props.change("obs", param.obs);
-    this.props.change("evento_data", param.evento_data);
-    this.props.change("local_passeio", param.local_passeio);
-    this.props.change("nro_alunos", param.nro_alunos);
-    this.props.change("tempo_passeio", param.tempo_passeio);
-    this.props.change("kit_lanche", param.kit_lanche);
+    this.props.change("observacao", param.observacao); //ok
+    this.props.change("data", param.data); //ok
+    this.props.change("local", param.local); // ok
+    this.props.change("quantidade_alunos", param.quantidade_alunos); //ok
+    this.props.change("tempo_passeio", param.tempo_passeio); //ok
+    this.props.change("kits", param.kits); //ok
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
@@ -300,6 +300,7 @@ export class TourRequest extends Component {
         </Modal>
         <CardMatriculados numeroAlunos={this.state.escola.quantidade_alunos} />
         <form>
+          
           <TourRequestItemList
             tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
@@ -307,6 +308,8 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
+
+
           <div className="mt-5" />
           <br />
           <h3 className="page-title">{this.state.title}</h3>
@@ -325,27 +328,35 @@ export class TourRequest extends Component {
                 component={LabelAndInput}
                 cols="8 8 8 8"
                 label="Local do passeio"
-                name="local_passeio"
+                name="local"
               />
             </div>
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
                 cols="4 4 4 4 "
-                name="nro_alunos"
+                name="quantidade_alunos"
                 type="number"
                 label="Número de alunos participantes"
-                validate={[required, maxValue(this.state.nro_matriculados)]}
+                validate={[required, maxValue(this.state.escola.quantidade_alunos)]}
               />
             </div>
             <hr />
+
+
+
             <SelecionaTempoPasseio
               className="mt-3"
               onChange={(event, newValue, previousValue, name) =>
                 this.setNumeroDeKitLanches(event, newValue, previousValue, name)
               }
             />
+
+
+
             <hr className="mt-4 mb-4 w-100" />
+
+
             {enumKits && (
               <SelecionaKitLancheBox
                 className="mt-3"
@@ -353,6 +364,9 @@ export class TourRequest extends Component {
                 kits={enumKits}
               />
             )}
+
+
+            
             <div className="form-group pt-3">
               <label className="font-weight-bold">{"Número total kits:"}</label>
               <br />

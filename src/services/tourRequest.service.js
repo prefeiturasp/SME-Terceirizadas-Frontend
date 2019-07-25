@@ -1,7 +1,7 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
-export const URL_SOLICITAR = API_URL + "/solicitar-kit-lanche/";
+export const URL_SOLICITAR = API_URL + "/kit-lanches/";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -49,7 +49,7 @@ export const getQuatidadeAlunoApi = async () => {
     method: "GET"
   };
 
-  const url = API_URL + "/kit-lanche/students/";
+  const url = API_URL + "/kit-lanches/";
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
