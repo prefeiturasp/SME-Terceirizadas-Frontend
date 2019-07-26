@@ -1,6 +1,28 @@
 import React from "react";
 import "../style.scss";
 
+export const renderNutri = ({input, type}) => (
+  <div>
+    <label className="label">
+      <span>* </span>Nutricionista Responsavel Técnico
+    </label>
+    <div>
+      <input className="form-control" {...input} type={type} />
+    </div>
+  </div>
+);
+
+export const renderCRN = ({input, type}) => (
+  <div>
+    <label className="label">
+      CRN
+    </label>
+    <div>
+      <input className="form-control" {...input} type={type} />
+    </div>
+  </div>
+);
+
 export const renderTelefone = ({ input, type }) => (
   <div>
     <label className="label">

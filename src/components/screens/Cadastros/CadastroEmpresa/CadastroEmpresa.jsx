@@ -35,11 +35,15 @@ class CadastroEmpresa extends Component {
   }
 
   componentDidMount() {
-    getDiretoriaRegional().then(response => {
-      let lotes = transformaObjetos(response);
-      this.setState({ lotes });
-    });
-  }
+    getDiretoriaRegional()
+      .then(response => {
+        let lotes = transformaObjetos(response);
+        this.setState({ lotes });
+      })
+      .catch(error => {
+        console.log(error)
+      })    
+  };
 
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
@@ -85,6 +89,8 @@ class CadastroEmpresa extends Component {
 
   render() {
     const { handleSubmit } = this.props;
+    const { lotes } = this.state;
+    
     return (
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>
@@ -210,7 +216,6 @@ class CadastroEmpresa extends Component {
 
               <div>
                 <div className="card-body">
-
                   <FieldArray
                     name="contatos-terceirizada"
                     component={ContatosTerceirizada}
@@ -220,71 +225,81 @@ class CadastroEmpresa extends Component {
 
               <hr className="linha-form" />
 
-              <FieldArray name="edital" component={EditalInput} />
+              <div>
+                <div className="card-body">
 
-              <div className="row pt-3">
-                <div className="col-12">
-                  <label className="label">Lotes de atendimento</label>
 
-                  {this.state.lotes.length ? (
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="lotes"
-                      selected={this.state.lotesSelecionados}
-                      options={this.state.lotes}
-                      valueRenderer={this.renderizarLabelLote}
-                      onSelectedChanged={value =>
-                        this.lidarComSelecionados(value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                  ) : (
-                    <div className="col-6">Carregando lotes..</div>
-                  )}
-                </div>
-                <div className="col-12">
-                  {this.state.lotesSelecionados.length > 0 && (
-                    <div className="row pt-3">
-                      <div className="col-12">
-                        <label className="label-selected-unities">
-                          Lotes Selecionados
-                        </label>
-                        {this.state.lotesSelecionados.map((lote, indice) => {
-                          return (
-                            <div
-                              className="value-selected-unities"
-                              key={indice}
-                            >
-                              {lote}
-                            </div>
-                          );
-                        })}
-                      </div>
+                  <FieldArray name="edital" component={EditalInput} />
+
+
+
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <label className="label">Lotes de atendimento</label>
+
+                      {this.state.lotes.length ? (
+                        <Field
+                          component={StatefulMultiSelect}
+                          name="lotes"
+                          selected={this.state.lotesSelecionados}
+                          options={this.state.lotes}
+                          valueRenderer={this.renderizarLabelLote}
+                          onSelectedChanged={value =>
+                            this.lidarComSelecionados(value)
+                          }
+                          overrideStrings={{
+                            search: "Busca",
+                            selectSomeItems: "Selecione",
+                            allItemsAreSelected:
+                              "Todos os itens estão selecionados",
+                            selectAll: "Todos"
+                          }}
+                        />
+                      ) : (
+                        <div className="col-6">Carregando lotes..</div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+                    <div className="col-12">
+                      {this.state.lotesSelecionados.length > 0 && (
+                        <div className="row pt-3">
+                          <div className="col-12">
+                            <label className="label-selected-unities">
+                              Lotes Selecionados
+                            </label>
+                            {this.state.lotesSelecionados.map(
+                              (lote, indice) => {
+                                return (
+                                  <div
+                                    className="value-selected-unities"
+                                    key={indice}
+                                  >
+                                    {lote}
+                                  </div>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-              <div className="button-container pt-3">
-                <div className="button-submit">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario())}
-                    className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.Primary}
-                  />
+                  <div className="button-container pt-3">
+                    <div className="button-submit">
+                      <BaseButton
+                        label="Cancelar"
+                        onClick={event => this.resetForm(event)}
+                        style={ButtonStyle.OutlinePrimary}
+                      />
+                      <BaseButton
+                        label={"Salvar"}
+                        onClick={handleSubmit(values => this.salvaFormulario())}
+                        className="ml-3"
+                        type={ButtonType.SUBMIT}
+                        style={ButtonStyle.Primary}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
