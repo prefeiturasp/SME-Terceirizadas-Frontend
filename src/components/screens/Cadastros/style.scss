@@ -270,6 +270,12 @@ table.cadastro-empresa {
   }
 }
 
+.button-container{
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20%;
+}
+
 .button-action {
   display: flex;
   justify-content: center;

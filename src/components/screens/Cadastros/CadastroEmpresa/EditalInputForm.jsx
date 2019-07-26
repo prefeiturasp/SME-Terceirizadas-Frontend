@@ -23,10 +23,15 @@ export const EditalInput = ({ fields, meta: { error } }) => (
         />
       </div>
       {fields.map((field, index) => (
-        <div key={index} className="fields-set-edital-plus">
+        <div key={index} className="fields-set-edital">
+          <Field
+            name={`edital_${index + 1}`}
+            component={renderEdital}
+            validate={required}
+          />
           <Field
             name={`contrato_${index + 1}`}
-            component={renderContratoPlus}
+            component={renderContrato}
             validate={required}
           />
         </div>

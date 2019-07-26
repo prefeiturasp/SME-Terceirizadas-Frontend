@@ -284,7 +284,7 @@ class CadastroEmpresa extends Component {
                     </div>
                   </div>
 
-                  <div className="button-container pt-3">
+                  <div className="button-container">
                     <div className="button-submit">
                       <BaseButton
                         label="Cancelar"
