@@ -246,26 +246,46 @@ table.cadastro-empresa {
   tr {
     td.container-detalhe {
       background: #f2fbfe;
-      padding: 15px 20px 15px 0px;
-      div.container-info {
+      padding: 0px 20px 15px 0px;
+      
+      .secao-empresa{
         display: grid;
-        grid-template-columns: 46% 54%;
-        grid-template-rows: 20% 20% 20% 20% 20%;
 
-        div:not(:first-child):not(:nth-child(1)) {
-          padding: 10px 0 5px;
+        .endereco-empresa{
+          display: grid;
+          grid-template-columns: 60% 40%;
         }
-
-        div ul {
-          list-style: none;
-          padding: 0;
-        }
-
-        li {
-          font-weight: bold;
-          color: #353535;
+        .contato-empresa{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
         }
       }
+
+      .secao-representante{
+        display: grid;
+
+        .nome-representante{
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+        .contato-representante{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
+        }
+
+        .contato-nutri{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+      }
+
+    }
+    .linha-detalhe{
+      margin: 1.5em 2em 1em 0;
+      border: 1px #A8A8A8 solid;
     }
   }
 }
@@ -340,3 +360,14 @@ table.cadastro-empresa {
   position: relative !important;
 }
 
+.lista-lotes{
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    font-weight: bold;
+    color: #353535;
+  }
+}
