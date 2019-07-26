@@ -4,9 +4,213 @@ import "../style.scss";
 
 export const EMPRESAS = [
   {
-    codigo_empresa: "0005",
+    codigo_empresa: "0001",
 
     nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0002",
+
+    nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0003",
+
+    nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0004",
+
+    nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0005",
+
+    nome: "JSD",
     cnpj: "05.951.758/0001-29",
     status: "Ativa",
     ativo: false,
@@ -93,22 +297,20 @@ class EmpresasCadastradas extends Component {
               <th>CNPJ</th>
               <th>Situação</th>
               <th className="text-center">
-                <input
-                  className="input-search"
-                  onChange={this.filtrarEmpresas}
-                  placeholder="Pesquisar"
-                />
-                <i className="fas fa-search" />
+                <div className="pesquisar">
+                  <input
+                    className="input-search"
+                    onChange={this.filtrarEmpresas}
+                    placeholder="Pesquisar"
+                  />
+                  <i className="fas fa-search" />
+                </div>
               </th>
             </tr>
 
             {this.state.empresasFiltradas.map(empresa => {
               return [
-                <tr
-                  className={
-                    empresa.ativo ? "detalhe-empresa" : ""
-                  }
-                >
+                <tr className={empresa.ativo ? "detalhe-empresa" : ""}>
                   <td>{empresa.codigo_empresa}</td>
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
@@ -132,18 +334,14 @@ class EmpresasCadastradas extends Component {
                       <div className="secao-empresa">
                         <div className="endereco-empresa">
                           <div>
-                            <span className="descricao">
-                              Endereço:
-                            </span>
+                            <span className="descricao">Endereço:</span>
                             <br />
                             <span className="valor-desc">
                               {empresa.endereco}
                             </span>
                           </div>
                           <div>
-                            <span className="descricao">
-                              CEP:
-                            </span>
+                            <span className="descricao">CEP:</span>
                             <span className="valor-desc">
                               {empresa.cep}
                             </span>
@@ -152,17 +350,13 @@ class EmpresasCadastradas extends Component {
 
                         <div className="contato-empresa">
                           <div>
-                            <span className="descricao">
-                              Telefone/FAX:
-                            </span>
+                            <span className="descricao">Telefone/FAX:</span>
                             <span className="valor-desc">
                               {empresa.telefone}
                             </span>
                           </div>
                           <div>
-                            <span className="descricao">
-                              E-mail:
-                            </span>
+                            <span className="descricao">E-mail:</span>
                             <span className="valor-desc">
                               {empresa.email}
                             </span>
@@ -184,9 +378,7 @@ class EmpresasCadastradas extends Component {
                             </span>
                           </div>
                           <div>
-                            <span className="descricao">
-                              Telefone:
-                            </span>
+                            <span className="descricao">Telefone:</span>
                             <br />
                             <span className="valor-desc">
                               {empresa.telefonefax}
@@ -195,9 +387,7 @@ class EmpresasCadastradas extends Component {
                         </div>
                         <div className="contato-representante">
                           <div>
-                            <span className="descricao">
-                              E-mail:
-                            </span>
+                            <span className="descricao">E-mail:</span>
                             <br />
                             <span className="valor-desc">
                               {empresa.email}
@@ -215,8 +405,7 @@ class EmpresasCadastradas extends Component {
                               <div className="nome-representante">
                                 <div>
                                   <span className="descricao">
-                                    Nutricionista Responsável
-                                    Técnico:
+                                    Nutricionista Responsável Técnico:
                                   </span>
                                   <br />
                                   <span className="valor-desc">
@@ -224,9 +413,7 @@ class EmpresasCadastradas extends Component {
                                   </span>
                                 </div>
                                 <div>
-                                  <span className="descricao">
-                                    CRN
-                                  </span>
+                                  <span className="descricao">CRN</span>
                                   <span className="valor-desc">
                                     {nutri.crn}
                                   </span>
@@ -243,9 +430,7 @@ class EmpresasCadastradas extends Component {
                                   </span>
                                 </div>
                                 <div>
-                                  <span className="descricao">
-                                    E-mail:
-                                  </span>
+                                  <span className="descricao">E-mail:</span>
                                   <br />
                                   <span className="valor-desc">
                                     {nutri.email}

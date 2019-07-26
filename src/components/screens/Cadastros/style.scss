@@ -371,3 +371,17 @@ table.cadastro-empresa {
     color: #353535;
   }
 }
+
+.pesquisar{
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 2em;
+
+  i {
+    margin: 0.5em;
+  }
+}
+
+.btn-action{
+  padding-right: 2em !important;
+}
