@@ -12,11 +12,17 @@ import {
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep, fieldTel, resetForm } from "./helper";
-import { toastSuccess } from '../../../Shareable/dialogs';
-import { ContatosEmpresa } from './ContatosEmpresa';
-import { ContatosTerceirizada } from './ContatosTerceirizada';
-import { EditalInput } from './EditalInputForm';
+import {
+  transformaObjetos,
+  fieldCnpj,
+  fieldCep,
+  fieldTel,
+  resetForm
+} from "./helper";
+import { toastSuccess } from "../../../Shareable/dialogs";
+import { ContatosEmpresa } from "./ContatosEmpresa";
+import { ContatosTerceirizada } from "./ContatosTerceirizada";
+import { EditalInput } from "./EditalInputForm";
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -52,7 +58,7 @@ class CadastroEmpresa extends Component {
     this.setState({ lotesSelecionados: value });
   }
 
-  resetForm(){
+  resetForm() {
     this.props.reset();
     this.props.change("razão_social", "");
     this.props.change("cnpj", "");
@@ -71,10 +77,10 @@ class CadastroEmpresa extends Component {
     this.props.change("contrato", "");
   }
 
-  salvaFormulario(){
+  salvaFormulario() {
     this.resetForm();
-    this.setState({ lotesSelecionados: []});
-    toastSuccess('Empresa adicionada com sucesso!')
+    this.setState({ lotesSelecionados: [] });
+    toastSuccess("Empresa adicionada com sucesso!");
   }
 
   render() {
@@ -83,112 +89,136 @@ class CadastroEmpresa extends Component {
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>
           <div className="card">
-            <div className="card-body">
-              <div className="row">
-                <div className="col-12">
-                  <label className="font-weight-bold">Dados da Empresa</label>
+            <div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-12">
+                    <label className="font-weight-bold">Dados da Empresa</label>
+                  </div>
                 </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                    <label className="link">
-                      Consulta de empresas cadastradas
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                      <BaseButton
+                        label="Consulta de empresas cadastradas"
+                        style={ButtonStyle.OutlinePrimary}
+                      />
+                    </Link>
+                  </div>
+                </div>
+                <div className="row pt-3">
+                  <div className="col-9">
+                    <label className="label">
+                      <span>* </span>Razão social
                     </label>
-                  </Link>
+                    <Field
+                      component={LabelAndInput}
+                      name="razão_social"
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-3">
+                    <label className="label">
+                      <span>* </span>CNPJ
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="cnpj"
+                      {...fieldCnpj}
+                      validate={required}
+                    />
+                  </div>
                 </div>
+                <div className="row pt-3">
+                  <div className="col-9">
+                    <label className="label">Nome Fantasia</label>
+                    <Field component={LabelAndInput} name="nome_fantasia" />
+                  </div>
+                </div>
+
+                <div className="row pt-3">
+                  <div className="col-10">
+                    <label className="label">
+                      <span>* </span>Endereço
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="endereco"
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-2">
+                    <label className="label">
+                      <span>* </span>CEP
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="cep"
+                      {...fieldCep}
+                      validate={required}
+                    />
+                  </div>
+                </div>
+
+                <FieldArray
+                  name="contatos-empresa"
+                  component={ContatosEmpresa}
+                />
               </div>
-              <div className="row pt-3">
-                <div className="col-9">
-                  <label className="label">
-                    <span>* </span>Razão social
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="razão_social"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-3">
-                  <label className="label">
-                    <span>* </span>CNPJ
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="cnpj"
-                    {...fieldCnpj}
-                    validate={required}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-9">
-                  <label className="label">Nome Fantasia</label>
-                  <Field component={LabelAndInput} name="nome_fantasia" />
+
+              <hr className="linha-form" />
+
+              <div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-7">
+                      <label className="label">
+                        <span>* </span>Representante Legal
+                      </label>
+                      <Field
+                        component={LabelAndInput}
+                        name="representante_legal"
+                        validate={required}
+                      />
+                    </div>
+                    <div className="col-5">
+                      <label className="label">Telefone</label>
+                      <Field
+                        component={LabelAndInput}
+                        name="telefone_representante_legal"
+                        {...fieldTel}
+                        validate={required}
+                      />
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-7">
+                      <label className="label">
+                        <span>* </span>Email
+                      </label>
+                      <Field
+                        component={LabelAndInput}
+                        name="email_representante_legal"
+                        validate={required}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-10">
-                  <label className="label">
-                    <span>* </span>Endereço
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="endereco"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-2">
-                  <label className="label">
-                    <span>* </span>CEP
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="cep"
-                    {...fieldCep}
-                    validate={required}
+              <hr className="linha-form" />
+
+              <div>
+                <div className="card-body">
+
+                  <FieldArray
+                    name="contatos-terceirizada"
+                    component={ContatosTerceirizada}
                   />
                 </div>
               </div>
 
-              <FieldArray name="contatos-empresa" component={ContatosEmpresa} />
-
-              <div className="row pt-3">
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>Representante Legal
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="representante_legal"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">Contato</label>
-                  <Field component={LabelAndInput} name="contato" />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>Nutricionista Responsavel Técnico
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="nutricionista"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">CRN</label>
-                  <Field component={LabelAndInput} name="crn" />
-                </div>
-              </div>
-
-              <FieldArray name="contatos-terceirizada" component={ContatosTerceirizada} />
+              <hr className="linha-form" />
 
               <FieldArray name="edital" component={EditalInput} />
 
@@ -250,9 +280,7 @@ class CadastroEmpresa extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values =>
-                      this.salvaFormulario()
-                    )}
+                    onClick={handleSubmit(values => this.salvaFormulario())}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
@@ -268,7 +296,7 @@ class CadastroEmpresa extends Component {
 }
 
 const CadastroEmpresaForm = reduxForm({
-  form: "cadastroEmpresaForm",
+  form: "cadastroEmpresaForm"
 })(CadastroEmpresa);
 
 const selector = formValueSelector("cadastroEmpresaForm");

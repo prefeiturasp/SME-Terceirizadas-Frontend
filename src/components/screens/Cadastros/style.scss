@@ -293,14 +293,13 @@ table.cadastro-empresa {
 }
 
 .container-fields {
-  margin-top: 15px;
   display: grid;
   grid-template-columns: 95% 5%;
 
   .fields-set {
-    margin-top: 10px;
     display: grid;
     grid-template-columns: 38% 58%;
+    grid-template-rows: 50% 50%;
     grid-column-gap: 4%;
   }
 
@@ -325,4 +324,7 @@ table.cadastro-empresa {
     justify-content: flex-end;
     align-items: flex-end;
   }
+}
+.linha-form {
+  margin: 0 !important;
 }
