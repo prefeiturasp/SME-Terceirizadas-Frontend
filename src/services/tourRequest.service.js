@@ -3,6 +3,8 @@ import authService from "./auth";
 
 export const URL_SOLICITAR = API_URL + "/kit-lanches/";
 
+export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa/`
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
@@ -78,9 +80,9 @@ export const solicitarKitLanche = async values => {
     method: "POST",
     body: JSON.stringify(values)
   };
-
   return await fetch(API_URL + "/solicitacoes-kit-lanche-avulsa/", OBJ_REQUEST)
     .then(response => {
+
       return response.json();
     })
     .catch(error => {
@@ -145,7 +147,7 @@ export const removeKitLanche = async idKit => {
     body: JSON.stringify({ id: idKit })
   };
 
-  return await fetch(URL_SOLICITAR + idKit, OBJ_REQUEST)
+  return await fetch(URL_SOLICITACOES_AVULSAS + idKit, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -160,7 +162,7 @@ export const getSolicitacoesKitLancheApi = async () => {
     method: "GET"
   };
 
-  return await fetch(URL_SOLICITAR, OBJ_REQUEST)
+  return await fetch(URL_SOLICITACOES_AVULSAS, OBJ_REQUEST)
     .then(response => {
       const resp = response.json();
       return resp;

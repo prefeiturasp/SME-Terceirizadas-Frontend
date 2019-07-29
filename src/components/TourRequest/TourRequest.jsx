@@ -26,13 +26,13 @@ import {
 import {
   convertToFormat,
   adapterEnumKits,
-  convertStringToDate,
-  converterStringParaDataResponse
+  convertStringToDate
 } from "./ConvertToFormat";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
+import {retornaTempoPasseio} from './helper';
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -70,30 +70,25 @@ export class TourRequest extends Component {
     this.handleShowModal = this.handleShowModal.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
     this.montaObjetoRequisicao = this.montaObjetoRequisicao.bind(this);
-    this.retornaTempoPasseio = this.retornaTempoPasseio.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
     if (window.confirm("Deseja remover esta solicitação salva?")) {
       removeKitLanche(id).then(resp => {
         this.refresh();
-        if (resp.success) {
-          toastSuccess(resp.success);
-        } else {
-          toastError(resp.error);
-        }
+        toastSuccess('solicitação removida com sucesso!');
       });
     }
   }
 
   OnEditButtonClicked(param) {
     this.props.reset();
-    this.props.change("observacao", param.observacao); //ok
-    this.props.change("data", param.data); //ok
-    this.props.change("local", param.local); // ok
-    this.props.change("quantidade_alunos", param.quantidade_alunos); //ok
-    this.props.change("tempo_passeio", param.tempo_passeio); //ok
-    this.props.change("kits", param.kits); //ok
+    this.props.change("observacao", param.observacao); 
+    this.props.change("data", param.data); 
+    this.props.change("local", param.local); 
+    this.props.change("quantidade_alunos", param.quantidade_alunos);
+    this.props.change("tempo_passeio", param.tempo_passeio); 
+    this.props.change("kits", param.kits); 
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
@@ -118,9 +113,11 @@ export class TourRequest extends Component {
   pegaSegundoDiaUtil() {
     getDiasUteis()
       .then(resp => {
-        return convertStringToDate(resp[0].date_two_working_days);
+        return new Date(resp.proximos_dois_dias_uteis);
       })
       .catch(erro => {
+
+        console.log(erro);
         return null;
       });
   }
@@ -133,7 +130,7 @@ export class TourRequest extends Component {
 
     getDiasUteis().then(resp => {
       this.setState({
-        segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
+        segundoDiaUtil: new Date(resp.proximos_dois_dias_uteis)
       });
     }).catch(error => {
       console.log('ERROR AO CARREGAR DIAS ULTEIS', error)
@@ -144,17 +141,16 @@ export class TourRequest extends Component {
     if (event.target.value) {
       const diaSelecionado = convertStringToDate(event.target.value);
       getDiasUteis().then(resp => {
-        const segundoDiaUtil = converterStringParaDataResponse(
+        const segundoDiaUtil = new Date(
           resp.proximos_dois_dias_uteis
         );
-        const quintoDiaUtil = converterStringParaDataResponse(
+        const quintoDiaUtil = new Date(
           resp.proximos_cinco_dias_uteis
         );
         if (
           diaSelecionado <= segundoDiaUtil ||
           diaSelecionado < quintoDiaUtil
         ) {
-          
           this.setState({
             showModal: true
           });
@@ -181,17 +177,7 @@ export class TourRequest extends Component {
     });
   }
 
-  retornaTempoPasseio(tempo) {
-    if (tempo === "4h") {
-      return "0"
-    }
-    if (tempo === "5_7h") {
-      return "1"
-    } 
-    else {
-      return "2"
-    }
-  }
+
 
   montaObjetoRequisicao(values) {
     let objeto = {
@@ -199,7 +185,7 @@ export class TourRequest extends Component {
         kits: values.kit_lanche,
         observacao: values.obs,
         data: values.evento_data,
-        tempo_passeio: this.retornaTempoPasseio(values.tempo_passeio)
+        tempo_passeio: retornaTempoPasseio(values.tempo_passeio)
       },
       escola: this.state.escola.uuid,
       local: values.local,
@@ -212,12 +198,13 @@ export class TourRequest extends Component {
     let objeto = this.montaObjetoRequisicao(values);
     validateTourRequestForm(values);
     this.salvarOuEnviar(objeto, values);
-    this.handleConfirmation();
+    //this.handleConfirmation();
+    this.resetForm();
   }
 
-  salvarOuEnviar(objeto, values) {
+  salvarOuEnviar(request_form, values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(objeto)
+      registroSalvarKitLanche(request_form)
         .then(resp => {
           if (resp.success) {
             toastSuccess(resp.success);
@@ -231,14 +218,13 @@ export class TourRequest extends Component {
           toastError(erro.details);
         });
     } else {
-      solicitarKitLanche(objeto)
+      solicitarKitLanche(request_form)
         .then(resp => {
-          if (resp.success) {
-            toastSuccess(resp.success);
+          if (resp) {
+            toastSuccess('solicitação salva com sucesso!');
             this.resetForm();
             this.refresh();
           } else {
-            // toastError(resp.error)
             this.setState({
               ...this.state,
               modalMessage: resp.error,

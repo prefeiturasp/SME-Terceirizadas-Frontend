@@ -1,16 +1,16 @@
 export const convertToFormat = data => {
   const list = [];
-  data.forEach(value => {
+  data.results.forEach(value => {
     const obj = {};
-    obj["evento_data"] = value.order_date;
-    obj["id"] = value.id;
-    obj["kit_lanche"] = extractKits(value.meal_kits);
-    obj["local_passeio"] = value.location;
-    obj["nro_alunos"] = value.students_quantity;
-    obj["obs"] = value.observation;
-    obj["salvo_em"] = value.register;
+    obj["evento_data"] = value.solicitacao_kit_lanche.data;
+    obj["id"] = value.uuid;
+    obj["kit_lanche"] = extractKits(value.solicitacao_kit_lanche.kits);
+    obj["local_passeio"] = value.local;
+    obj["nro_alunos"] = value.quantidade_alunos;
+    obj["obs"] = value.solicitacao_kit_lanche.observacao;
+    obj["salvo_em"] = value.solicitacao_kit_lanche.criado_em;
     obj["status"] = value.status;
-    obj["tempo_passeio"] = value.scheduled_time;
+    obj["tempo_passeio"] = value.solicitacao_kit_lanche.tempo_passeio;
     list.push(obj);
   });
   return list;
@@ -50,13 +50,4 @@ export const convertStringToDate = value => {
   return value;
 };
 
-export const converterStringParaDataResponse = value => {
-  if (value) {
-    console.log(value)
-    const dia = parseInt(value.split("-")[2]);
-    const mes = parseInt(value.split("-")[1]) - 1;
-    const ano = parseInt(value.split("-")[0]);
-    return new Date(ano, mes, dia);
-  }
-  return value;
-};
+
