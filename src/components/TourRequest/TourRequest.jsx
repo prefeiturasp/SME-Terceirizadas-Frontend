@@ -20,12 +20,14 @@ import {
   registroSalvarKitLanche,
   getDiasUteis,
   getSolicitacoesKitLancheApi,
-  getRefeicoesApi
+  getRefeicoesApi,
+  obtemDadosDaEscolaApi
 } from "../../services/tourRequest.service";
 import {
   convertToFormat,
   adapterEnumKits,
-  convertStringToDate
+  convertStringToDate,
+  converterStringParaDataResponse
 } from "./ConvertToFormat";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
@@ -52,12 +54,14 @@ export class TourRequest extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       id: "",
-      nro_matriculados: 0,
       enumKits: null,
       showModal: false,
       segundoDiaUtil: "",
       modalConfirmation: false,
-      modalMessage: ""
+      modalMessage: "",
+      botaoConfirma: true,
+      uuid: "7029aba9-ba03-4b6b-af89-7dddc5010471",
+      escola: {}
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -65,6 +69,8 @@ export class TourRequest extends Component {
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.handleShowModal = this.handleShowModal.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.montaObjetoRequisicao = this.montaObjetoRequisicao.bind(this);
+    this.retornaTempoPasseio = this.retornaTempoPasseio.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
@@ -82,12 +88,12 @@ export class TourRequest extends Component {
 
   OnEditButtonClicked(param) {
     this.props.reset();
-    this.props.change("obs", param.obs);
-    this.props.change("evento_data", param.evento_data);
-    this.props.change("local_passeio", param.local_passeio);
-    this.props.change("nro_alunos", param.nro_alunos);
-    this.props.change("tempo_passeio", param.tempo_passeio);
-    this.props.change("kit_lanche", param.kit_lanche);
+    this.props.change("observacao", param.observacao); //ok
+    this.props.change("data", param.data); //ok
+    this.props.change("local", param.local); // ok
+    this.props.change("quantidade_alunos", param.quantidade_alunos); //ok
+    this.props.change("tempo_passeio", param.tempo_passeio); //ok
+    this.props.change("kits", param.kits); //ok
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
@@ -122,10 +128,15 @@ export class TourRequest extends Component {
   componentDidMount() {
     this.refresh();
     this.getQuatidadeAlunos();
+
+    this.obtemDadosDaEscola(this.state.uuid);
+
     getDiasUteis().then(resp => {
       this.setState({
         segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
       });
+    }).catch(error => {
+      console.log('ERROR AO CARREGAR DIAS ULTEIS', error)
     });
   }
 
@@ -133,22 +144,32 @@ export class TourRequest extends Component {
     if (event.target.value) {
       const diaSelecionado = convertStringToDate(event.target.value);
       getDiasUteis().then(resp => {
-        const segundoDiaUtil = convertStringToDate(
-          resp[0].date_two_working_days
+        const segundoDiaUtil = converterStringParaDataResponse(
+          resp.proximos_dois_dias_uteis
         );
-        const quintoDiaUtil = convertStringToDate(
-          resp[0].date_five_working_days
+        const quintoDiaUtil = converterStringParaDataResponse(
+          resp.proximos_cinco_dias_uteis
         );
         if (
           diaSelecionado <= segundoDiaUtil ||
           diaSelecionado < quintoDiaUtil
         ) {
+          
           this.setState({
             showModal: true
           });
         }
       });
     }
+  }; 
+
+  obtemDadosDaEscola(uuid) {
+    obtemDadosDaEscolaApi(uuid).then(resp =>{
+      this.setState({
+        ...this.state,
+        escola: resp
+      });
+    });
   };
 
   getQuatidadeAlunos() {
@@ -160,15 +181,43 @@ export class TourRequest extends Component {
     });
   }
 
+  retornaTempoPasseio(tempo) {
+    if (tempo === "4h") {
+      return "0"
+    }
+    if (tempo === "5_7h") {
+      return "1"
+    } 
+    else {
+      return "2"
+    }
+  }
+
+  montaObjetoRequisicao(values) {
+    let objeto = {
+      solicitacao_kit_lanche: {
+        kits: values.kit_lanche,
+        observacao: values.obs,
+        data: values.evento_data,
+        tempo_passeio: this.retornaTempoPasseio(values.tempo_passeio)
+      },
+      escola: this.state.escola.uuid,
+      local: values.local,
+      quantidade_alunos: values.quantidade_alunos
+    }
+    return objeto
+  }
+
   onSubmit(values) {
+    let objeto = this.montaObjetoRequisicao(values);
     validateTourRequestForm(values);
-    this.salvarOuEnviar(values);
+    this.salvarOuEnviar(objeto, values);
     this.handleConfirmation();
   }
 
-  salvarOuEnviar(values) {
+  salvarOuEnviar(objeto, values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(values)
+      registroSalvarKitLanche(objeto)
         .then(resp => {
           if (resp.success) {
             toastSuccess(resp.success);
@@ -182,7 +231,7 @@ export class TourRequest extends Component {
           toastError(erro.details);
         });
     } else {
-      solicitarKitLanche(values)
+      solicitarKitLanche(objeto)
         .then(resp => {
           if (resp.success) {
             toastSuccess(resp.success);
@@ -193,7 +242,8 @@ export class TourRequest extends Component {
             this.setState({
               ...this.state,
               modalMessage: resp.error,
-              modalConfirmation: true
+              modalConfirmation: true,
+              botaoConfirma : resp.continua
             });
           }
         })
@@ -253,7 +303,8 @@ export class TourRequest extends Component {
       showModal,
       modalMessage,
       modalConfirmation,
-      segundoDiaUtil
+      segundoDiaUtil,
+      botaoConfirma
     } = this.state;
     return (
       <div>
@@ -277,8 +328,9 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <CardMatriculados numeroAlunos={this.state.nro_matriculados} />
+        <CardMatriculados numeroAlunos={this.state.escola.quantidade_alunos} />
         <form>
+          
           <TourRequestItemList
             tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
@@ -286,6 +338,8 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
+
+
           <div className="mt-5" />
           <br />
           <h3 className="page-title">{this.state.title}</h3>
@@ -304,27 +358,35 @@ export class TourRequest extends Component {
                 component={LabelAndInput}
                 cols="8 8 8 8"
                 label="Local do passeio"
-                name="local_passeio"
+                name="local"
               />
             </div>
             <div className="form-group row">
               <Field
                 component={LabelAndInput}
                 cols="4 4 4 4 "
-                name="nro_alunos"
+                name="quantidade_alunos"
                 type="number"
                 label="Número de alunos participantes"
-                validate={[required, maxValue(this.state.nro_matriculados)]}
+                validate={[required, maxValue(this.state.escola.quantidade_alunos)]}
               />
             </div>
             <hr />
+
+
+
             <SelecionaTempoPasseio
               className="mt-3"
               onChange={(event, newValue, previousValue, name) =>
                 this.setNumeroDeKitLanches(event, newValue, previousValue, name)
               }
             />
+
+
+
             <hr className="mt-4 mb-4 w-100" />
+
+
             {enumKits && (
               <SelecionaKitLancheBox
                 className="mt-3"
@@ -332,6 +394,9 @@ export class TourRequest extends Component {
                 kits={enumKits}
               />
             )}
+
+
+            
             <div className="form-group pt-3">
               <label className="font-weight-bold">{"Número total kits:"}</label>
               <br />
@@ -401,7 +466,8 @@ export class TourRequest extends Component {
                 <strong>{modalMessage}</strong>
               </Modal.Body>
               <Modal.Footer>
-                <BaseButton
+                
+                {botaoConfirma && (<BaseButton
                   label="CONFIRMAR MESMO ASSIM"
                   type={ButtonType.BUTTON}
                   onClick={handleSubmit(values =>
@@ -415,7 +481,7 @@ export class TourRequest extends Component {
                   )}
                   style={ButtonStyle.Primary}
                   className="ml-3"
-                />
+                />)}
                 <BaseButton
                   label="CANCELAR"
                   type={ButtonType.BUTTON}
@@ -440,8 +506,9 @@ TourRequest = reduxForm({
 const selector = formValueSelector("tourRequest");
 
 TourRequest = connect(state => {
-  const nro_alunos = selector(state, "nro_alunos");
+  const nro_alunos = selector(state, "quantidade_alunos");
   const kit_lanche = selector(state, "kit_lanche") || [];
+
   return { qtd_total: kit_lanche.length * nro_alunos };
 })(TourRequest);
 

@@ -100,7 +100,9 @@ class UnifiedSolicitation extends Component {
     let schoolsTotal = 0;
     param.dayChange.escolas.forEach(function(escola) {
       // eslint-disable-next-line
-      var foundIndex = schoolsFiltered.findIndex(x => x.codigo_eol == escola.codigo_eol);
+      var foundIndex = schoolsFiltered.findIndex(
+        x => x.codigo_eol == escola.codigo_eol
+      );
       schoolsFiltered[foundIndex].checked = escola.check;
       schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
       schoolsFiltered[foundIndex].quantidade_alunos = escola.quantidade_alunos;
@@ -120,7 +122,10 @@ class UnifiedSolicitation extends Component {
         if (escola.quantidade_alunos) studentsTotal += escola.quantidade_alunos;
       }
     });
-    this.props.change("lista_kit_lanche_igual", param.dayChange.lista_kit_lanche_igual);
+    this.props.change(
+      "lista_kit_lanche_igual",
+      param.dayChange.lista_kit_lanche_igual
+    );
     this.setState({
       schoolsFiltered: schoolsFiltered,
       choicesTotal: param.dayChange.kit_lanche.length,
@@ -163,17 +168,16 @@ class UnifiedSolicitation extends Component {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
     let escolas = this.props.escolas;
-    escolas.forEach(function(school) {
-      school["id"] = school["_id"].toString();
-      school["burger_active"] = false;
-      school["limit_of_meal_kits"] = 0;
-      school["number_of_choices"] = 0;
-      school["number_of_meal_kits"] = 0;
-      school["nro_alunos"] = 0;
-      school["quantidade_alunos"] = 0;
-      school["tempo_passeio"] = null;
-      school["kit_lanche"] = null;
-      school["checked"] = false;
+    escolas.forEach(function(escola) {
+      escola["burger_active"] = false;
+      escola["limit_of_meal_kits"] = 0;
+      escola["number_of_choices"] = 0;
+      escola["number_of_meal_kits"] = 0;
+      escola["nro_alunos"] = 0;
+      escola["numero_alunos"] = 0;
+      escola["tempo_passeio"] = null;
+      escola["kit_lanche"] = null;
+      escola["checked"] = false;
     });
     this.setState({
       status: "SEM STATUS",
@@ -426,11 +430,10 @@ class UnifiedSolicitation extends Component {
     values.kits_total = this.state.kitsTotal;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      formatarSubmissao(values);
-      criarSolicitacaoUnificada(JSON.stringify(values)).then(
+      criarSolicitacaoUnificada(JSON.stringify(formatarSubmissao(values))).then(
         res => {
-          if (res.status === 200) {
-            toastSuccess(res.data.success);
+          if (res.status === 201) {
+            toastSuccess("Solicitação Unificada salva com sucesso!");
             this.resetForm();
           } else {
             this.setState({
@@ -574,7 +577,9 @@ class UnifiedSolicitation extends Component {
                     <Field
                       component={LabelAndInput}
                       label="Qual o motivo?"
-                      onChange={value => this.props.change("qual_motivo", value)}
+                      onChange={value =>
+                        this.props.change("qual_motivo", value)
+                      }
                       name="qual_motivo"
                       className="form-control"
                       validate={required}
@@ -619,10 +624,10 @@ class UnifiedSolicitation extends Component {
                     <Field
                       component={LabelAndInput}
                       cols="6"
-                      name="max_numero_alunos_por_escola"
+                      name="quantidade_max_alunos_por_escola"
                       onChange={event =>
                         this.props.change(
-                          "max_numero_alunos_por_escola",
+                          "quantidade_max_alunos_por_escola",
                           event.target.value
                         )
                       }
@@ -914,7 +919,7 @@ const mapStateToProps = state => {
     multipleOrder: selector(state, "lista_kit_lanche_igual"),
     kitsTotal: selector(state, "kits_total"),
     motivo: selector(state, "motivo"),
-    max_alunos: selector(state, "max_numero_alunos_por_escola"),
+    max_alunos: selector(state, "quantidade_max_alunos_por_escola"),
     prosseguir: selector(state, "prosseguir")
   };
 };

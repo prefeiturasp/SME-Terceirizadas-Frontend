@@ -16,6 +16,9 @@ import {
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import "./style.scss";
+import {convertStringToDate} from '../TourRequest/ConvertToFormat'
+import { getDiasUteis } from '../../services/tourRequest.service'
+import { Modal } from "react-bootstrap";
 
 export class DayChangeEditor extends Component {
   constructor(props) {
@@ -26,11 +29,16 @@ export class DayChangeEditor extends Component {
       title: "Nova solicitação",
       uuid: "",
       salvarAtualizarLbl: "Salvar",
-      quatidadeAluno: 250
+      quatidadeAluno: 250,
+      segundoDiaUtil : "",
+      showModal : false,
+      
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.handleShowModal = this.handleShowModal.bind(this)
+    this.pegaSegundoDiaUtil = this.pegaSegundoDiaUtil.bind(this)
   }
 
   OnDeleteButtonClicked(uuid) {
@@ -79,6 +87,13 @@ export class DayChangeEditor extends Component {
 
   componentDidMount() {
     this.refresh();
+    getDiasUteis().then(resp => {
+      this.setState({
+        segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
+      });
+    }).catch(error => {
+      console.log('ERROR AO CARREGAR DIAS ULTEIS', error)
+    });
   }
 
   refresh() {
@@ -90,6 +105,42 @@ export class DayChangeEditor extends Component {
       .catch(error => {
         console.log("ERROR AO TENTAR CARREGAR INVERSÕES SALVAS: ", error);
       });
+  }
+
+  pegaSegundoDiaUtil() {
+    getDiasUteis()
+      .then(resp => {
+        return convertStringToDate(resp[0].date_two_working_days);
+      })
+      .catch(erro => {
+        return null;
+      });
+  }
+
+  validaDiasUteis = event => {
+    if (event.target.value) {
+      const diaSelecionado = convertStringToDate(event.target.value);
+      getDiasUteis().then(resp => {
+        const segundoDiaUtil = convertStringToDate(
+          resp[0].date_two_working_days
+        );
+        const quintoDiaUtil = convertStringToDate(
+          resp[0].date_five_working_days
+        );
+        if (
+          diaSelecionado <= segundoDiaUtil ||
+          diaSelecionado < quintoDiaUtil
+        ) {
+          this.setState({
+            showModal: true
+          });
+        }
+      });
+    }
+  };
+
+  handleShowModal() {
+    this.setState({ ...this.state, showModal: false });
   }
 
   onSubmit(values) {
@@ -125,10 +176,30 @@ export class DayChangeEditor extends Component {
   }
 
   render() {
-    const { quatidadeAluno } = this.state;
+    const { quatidadeAluno, segundoDiaUtil, showModal } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div>
+        <Modal show={showModal} onHide={this.handleShowModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Atenção</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Atenção, a solicitação está fora do prazo contratual (entre
+            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
+            disponibilidade dos alimentos adequados para o cumprimento do
+            cardápio.
+          </Modal.Body>
+          <Modal.Footer>
+            <BaseButton
+              label="OK"
+              type={ButtonType.BUTTON}
+              onClick={this.handleShowModal}
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Modal>
         <form>
           <CardMatriculados numeroAlunos={quatidadeAluno} />
           <DayChangeItemList
@@ -149,6 +220,8 @@ export class DayChangeEditor extends Component {
                     label="Referência"
                     textoLabel="Cardápio dia"
                     validate={required}
+                    onBlur={event => this.validaDiasUteis(event)}
+                    minDate={segundoDiaUtil}
                   />
                 </div>
                 <div className="col-md-12 col-lg-2 for-span">
@@ -163,6 +236,7 @@ export class DayChangeEditor extends Component {
                     textoLabel="Cardápio dia"
                     validate={required}
                     activeCalendar
+                    minDate={segundoDiaUtil}
                   />
                 </div>
               </div>

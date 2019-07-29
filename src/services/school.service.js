@@ -7,7 +7,8 @@ const authToken = {
 };
 
 export const getPeriods = user_uuid => {
-  const url = API_URL + `/school/get_periods/`;
+  // TODO: pegar periodos escolares da escola ex: escolas/periodos
+  const url = `${API_URL}/periodos-escolares/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

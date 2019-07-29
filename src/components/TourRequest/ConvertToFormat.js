@@ -28,11 +28,13 @@ const extractKits = data => {
 
 export const adapterEnumKits = data => {
   const objRoot = {};
-  data.forEach((value, key) => {
+  data.results.forEach((value, key) => {
     const objChild = {};
     objChild["value"] = value.uuid;
-    objChild["label"] = value.name;
-    objChild["foodList"] = value.meals[0].foods;
+    objChild["label"] = value.nome;
+    objChild["foodList"] = value.itens.map(objeto => {
+      return objeto.nome
+    });
     objRoot["KIT" + (key + 1)] = objChild;
   });
   return objRoot;
@@ -43,6 +45,17 @@ export const convertStringToDate = value => {
     const dia = parseInt(value.split("/")[0]);
     const mes = parseInt(value.split("/")[1]) - 1;
     const ano = parseInt(value.split("/")[2]);
+    return new Date(ano, mes, dia);
+  }
+  return value;
+};
+
+export const converterStringParaDataResponse = value => {
+  if (value) {
+    console.log(value)
+    const dia = parseInt(value.split("-")[2]);
+    const mes = parseInt(value.split("-")[1]) - 1;
+    const ano = parseInt(value.split("-")[0]);
     return new Date(ano, mes, dia);
   }
   return value;
