@@ -32,7 +32,7 @@ import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./UnifiedSolicitationValidation";
-import { adicionarDefault } from "./helper";
+import { adicionarDefault, formatarSubmissao } from "./helper";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
@@ -103,7 +103,7 @@ class UnifiedSolicitation extends Component {
       var foundIndex = schoolsFiltered.findIndex(x => x.codigo_eol == escola.codigo_eol);
       schoolsFiltered[foundIndex].checked = escola.check;
       schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
-      schoolsFiltered[foundIndex].numero_alunos = escola.numero_alunos;
+      schoolsFiltered[foundIndex].quantidade_alunos = escola.quantidade_alunos;
       schoolsFiltered[foundIndex].nro_alunos = escola.nro_alunos;
       schoolsFiltered[foundIndex].kit_lanche = escola.kit_lanche;
       schoolsFiltered[foundIndex].number_of_choices =
@@ -117,7 +117,7 @@ class UnifiedSolicitation extends Component {
           kitsTotal += escola.kit_lanche.length * escola.nro_alunos;
         }
         schoolsTotal += 1;
-        if (escola.numero_alunos) studentsTotal += escola.numero_alunos;
+        if (escola.quantidade_alunos) studentsTotal += escola.quantidade_alunos;
       }
     });
     this.props.change("lista_kit_lanche_igual", param.dayChange.lista_kit_lanche_igual);
@@ -170,7 +170,7 @@ class UnifiedSolicitation extends Component {
       school["number_of_choices"] = 0;
       school["number_of_meal_kits"] = 0;
       school["nro_alunos"] = 0;
-      school["numero_alunos"] = 0;
+      school["quantidade_alunos"] = 0;
       school["tempo_passeio"] = null;
       school["kit_lanche"] = null;
       school["checked"] = false;
@@ -281,7 +281,7 @@ class UnifiedSolicitation extends Component {
     let studentsTotal = 0;
     schoolsFiltered.forEach(function(school) {
       if (school.checked) {
-        studentsTotal += parseInt(school.numero_alunos);
+        studentsTotal += parseInt(school.quantidade_alunos);
       }
     });
     return studentsTotal;
@@ -292,7 +292,7 @@ class UnifiedSolicitation extends Component {
       x => x.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[foundIndex].numero_alunos = event.target.value || 0;
+    schoolsFiltered[foundIndex].quantidade_alunos = event.target.value || 0;
     schoolsFiltered = this.setNumberOfMealKits(school);
     this.setState({
       ...this.state,
@@ -334,9 +334,9 @@ class UnifiedSolicitation extends Component {
     schoolsFiltered[foundIndex].checked = school.checked;
     this.props.change(`school_${school.codigo_eol}.check`, school.checked);
     if (this.props.multipleOrder) {
-      schoolsFiltered[foundIndex].numero_alunos = this.props.max_alunos;
+      schoolsFiltered[foundIndex].quantidade_alunos = this.props.max_alunos;
       this.props.change(
-        `school_${school.codigo_eol}.numero_alunos`,
+        `school_${school.codigo_eol}.quantidade_alunos`,
         this.props.max_alunos
       );
     }
@@ -346,8 +346,8 @@ class UnifiedSolicitation extends Component {
     let schoolsTotal = 0;
     schoolsFiltered.forEach(function(school) {
       if (school.checked) {
-        studentsTotal += school.numero_alunos
-          ? parseInt(school.numero_alunos)
+        studentsTotal += school.quantidade_alunos
+          ? parseInt(school.quantidade_alunos)
           : 0;
         kitsTotal += school.number_of_choices * school.nro_alunos;
         schoolsTotal += 1;
@@ -426,6 +426,7 @@ class UnifiedSolicitation extends Component {
     values.kits_total = this.state.kitsTotal;
     const error = validateSubmit(values, this.state);
     if (!error) {
+      formatarSubmissao(values);
       criarSolicitacaoUnificada(JSON.stringify(values)).then(
         res => {
           if (res.status === 200) {
@@ -549,7 +550,7 @@ class UnifiedSolicitation extends Component {
                 <div className="form-group col-3">
                   <Field
                     component={LabelAndDate}
-                    name="dia"
+                    name="data"
                     onBlur={event => this.handleDate(event)}
                     minDate={proximos_dois_dias_uteis}
                     label="Dia"
@@ -737,7 +738,7 @@ class UnifiedSolicitation extends Component {
                                       width: "70px",
                                       textAlign: "center"
                                     }}
-                                    name="numero_alunos"
+                                    name="quantidade_alunos"
                                   />
                                 </div>
                               )}
@@ -839,7 +840,7 @@ class UnifiedSolicitation extends Component {
                   component={LabelAndTextArea}
                   placeholder="Campo opcional"
                   label="Observações"
-                  name="obs"
+                  name="descricao"
                 />
               </div>
               {schoolExists && (
