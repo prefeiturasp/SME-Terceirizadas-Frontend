@@ -13,6 +13,25 @@ export const formatarTempoPasseio = value => {
   }
 };
 
+export const extrairKitsLanche = kits => {
+  let listaKits = [];
+  kits.forEach(element => {
+    listaKits.push(element.uuid);
+  });
+  return listaKits;
+}
+
+export const extrairTempoPasseio = tempoPasseio => {
+  switch(tempoPasseio) {
+    case 2:
+      return "8h";
+    case 1:
+      return "5_7h";
+    default:
+      return "4h";
+  }
+}
+
 export const formatarSubmissao = values => {
   let dataFormatada = {};
   dataFormatada.motivo = values.motivo;

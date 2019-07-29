@@ -24,7 +24,7 @@ import "../Shareable/style.scss";
 import "./style.scss";
 import {
   criarSolicitacaoUnificada,
-  getUnifiedSolicitationsForm,
+  solicitacoesUnificadasSalvas,
   removeUnifiedSolicitationForm
 } from "../../services/solicitacaoUnificada.service";
 import { UnifiedSolicitationItemList } from "./UnifiedSolicitationItemList";
@@ -32,7 +32,12 @@ import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./UnifiedSolicitationValidation";
-import { adicionarDefault, formatarSubmissao } from "./helper";
+import {
+  adicionarDefault,
+  formatarSubmissao,
+  extrairKitsLanche,
+  extrairTempoPasseio
+} from "./helper";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
@@ -88,7 +93,9 @@ class UnifiedSolicitation extends Component {
 
   OnEditButtonClicked(param) {
     this.resetForm();
-    this.props.loadUnifiedSolicitation(param.dayChange);
+    this.props.loadUnifiedSolicitation(param.solicitacaoUnificada);
+    const listaKitLancheIgual =
+      param.solicitacaoUnificada.lista_kit_lanche_igual;
     let schoolsFiltered = this.state.schoolsFiltered;
     const parser = {
       "4h": HORAS_ENUM._4.qtd_kits,
@@ -98,47 +105,57 @@ class UnifiedSolicitation extends Component {
     let kitsTotal = 0;
     let studentsTotal = 0;
     let schoolsTotal = 0;
-    param.dayChange.escolas.forEach(function(escola) {
-      // eslint-disable-next-line
+    param.solicitacaoUnificada.escolas_quantidades.forEach(function(
+      escola_quantidade
+    ) {
       var foundIndex = schoolsFiltered.findIndex(
-        x => x.codigo_eol == escola.codigo_eol
+        x => x.codigo_eol === escola_quantidade.escola.codigo_eol
       );
-      schoolsFiltered[foundIndex].checked = escola.check;
-      schoolsFiltered[foundIndex].tempo_passeio = escola.tempo_passeio;
-      schoolsFiltered[foundIndex].quantidade_alunos = escola.quantidade_alunos;
-      schoolsFiltered[foundIndex].nro_alunos = escola.nro_alunos;
-      schoolsFiltered[foundIndex].kit_lanche = escola.kit_lanche;
+      schoolsFiltered[foundIndex].checked = true;
+      schoolsFiltered[foundIndex].tempo_passeio = listaKitLancheIgual
+        ? param.solicitacaoUnificada.solicitacao_kit_lanche.tempo_passeio
+        : escola_quantidade.tempo_passeio;
+      schoolsFiltered[foundIndex].quantidade_alunos =
+        escola_quantidade.quantidade_alunos;
+      schoolsFiltered[foundIndex].nro_alunos =
+        escola_quantidade.quantidade_alunos;
+      schoolsFiltered[foundIndex].kit_lanche = extrairKitsLanche(
+        escola_quantidade.kits
+      );
       schoolsFiltered[foundIndex].number_of_choices =
-        parser[escola.tempo_passeio];
+        escola_quantidade.tempo_passeio;
       schoolsFiltered[foundIndex].limit_of_meal_kits =
-        parser[escola.tempo_passeio];
-      if (escola.check) {
-        if (escola.kit_lanche) {
-          schoolsFiltered[foundIndex].number_of_meal_kits =
-            escola.kit_lanche.length * escola.nro_alunos;
-          kitsTotal += escola.kit_lanche.length * escola.nro_alunos;
-        }
-        schoolsTotal += 1;
-        if (escola.quantidade_alunos) studentsTotal += escola.quantidade_alunos;
+        escola_quantidade.tempo_passeio;
+      if (schoolsFiltered[foundIndex].kit_lanche.length) {
+        schoolsFiltered[foundIndex].number_of_meal_kits =
+          schoolsFiltered[foundIndex].kit_lanche.length *
+          escola_quantidade.quantidade_alunos;
+        kitsTotal +=
+          escola_quantidade.kits.length * escola_quantidade.quantidade_alunos;
       }
+      schoolsTotal += 1;
+      if (escola_quantidade.quantidade_alunos)
+        studentsTotal += escola_quantidade.quantidade_alunos;
     });
+    //this.props.change(`school_${escola_quantidade.escola.codigo_eol}.check`, true);
     this.props.change(
       "lista_kit_lanche_igual",
-      param.dayChange.lista_kit_lanche_igual
+      param.solicitacaoUnificada.lista_kit_lanche_igual
     );
     this.setState({
       schoolsFiltered: schoolsFiltered,
-      choicesTotal: param.dayChange.kit_lanche.length,
-      qtd_kit_lanche: param.dayChange.tempo_passeio
-        ? parser[param.dayChange.tempo_passeio]
+      choicesTotal:
+        param.solicitacaoUnificada.solicitacao_kit_lanche.kits.length,
+      qtd_kit_lanche: param.solicitacaoUnificada.tempo_passeio
+        ? parser[param.solicitacaoUnificada.tempo_passeio]
         : 0,
       kitsTotal: kitsTotal,
       studentsTotal: studentsTotal,
       schoolsTotal: schoolsTotal,
       status: "SALVO",
-      title: `Solicitação Unificada # ${param.dayChange.id}`,
+      title: `Solicitação Unificada # ${param.solicitacaoUnificada.uuid}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.dayChange.id
+      id: param.solicitacaoUnificada.uuid
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -412,11 +429,11 @@ class UnifiedSolicitation extends Component {
   }
 
   refresh() {
-    getUnifiedSolicitationsForm().then(
+    solicitacoesUnificadasSalvas().then(
       res => {
         this.setState({
           ...this.state,
-          unifiedSolicitationList: res
+          unifiedSolicitationList: res.results
         });
       },
       function(error) {

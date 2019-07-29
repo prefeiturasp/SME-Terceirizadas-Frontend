@@ -26,12 +26,12 @@ export const criarSolicitacaoUnificada = payload => {
     });
 };
 
-export const getUnifiedSolicitationsForm = async () => {
+export const solicitacoesUnificadasSalvas = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  const url = API_URL + "/solicitacao-unificada-formulario/";
+  const url = API_URL + "/solicitacoes-kit-lanche-unificada/";
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
