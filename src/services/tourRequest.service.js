@@ -98,7 +98,7 @@ export const registroSalvarKitLanche = async values => {
     body: JSON.stringify(values)
   };
 
-  return await fetch(URL_SOLICITAR + "salvar/", OBJ_REQUEST)
+  return await fetch(URL_SOLICITAR + "/salvar/", OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -107,6 +107,22 @@ export const registroSalvarKitLanche = async values => {
       return {};
     });
 };
+
+export const registroAtualizaKitLanche = async (values, uuid) => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PUT",
+    body: JSON.stringify(values)
+  };
+
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}${uuid}/`, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      console.log("Atualizar Kit Lanche: ", error);
+    })
+}
 
 export const solicitarKitsLanche = async values => {
   const OBJ_REQUEST = {

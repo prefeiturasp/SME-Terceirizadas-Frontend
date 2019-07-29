@@ -21,7 +21,8 @@ import {
   getDiasUteis,
   getSolicitacoesKitLancheApi,
   getRefeicoesApi,
-  obtemDadosDaEscolaApi
+  obtemDadosDaEscolaApi,
+  registroAtualizaKitLanche
 } from "../../services/tourRequest.service";
 import {
   convertToFormat,
@@ -32,7 +33,7 @@ import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import {retornaTempoPasseio} from './helper';
+import {retornaTempoPasseio, statusSubmit} from './helper';
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -82,13 +83,14 @@ export class TourRequest extends Component {
   }
 
   OnEditButtonClicked(param) {
+    console.log(param)
     this.props.reset();
-    this.props.change("observacao", param.observacao); 
-    this.props.change("data", param.data); 
-    this.props.change("local", param.local); 
-    this.props.change("quantidade_alunos", param.quantidade_alunos);
+    this.props.change("observacao", param.obs); 
+    this.props.change("evento_data", param.evento_data); 
+    this.props.change("local", param.local_passeio); 
+    this.props.change("quantidade_alunos", param.nro_alunos);
     this.props.change("tempo_passeio", param.tempo_passeio); 
-    this.props.change("kits", param.kits); 
+    this.props.change("kit_lanche", param.kit_lanche); 
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
@@ -183,7 +185,7 @@ export class TourRequest extends Component {
     let objeto = {
       solicitacao_kit_lanche: {
         kits: values.kit_lanche,
-        observacao: values.obs,
+        observacao: values.observacao,
         data: values.evento_data,
         tempo_passeio: retornaTempoPasseio(values.tempo_passeio)
       },
@@ -198,7 +200,7 @@ export class TourRequest extends Component {
     let objeto = this.montaObjetoRequisicao(values);
     validateTourRequestForm(values);
     this.salvarOuEnviar(objeto, values);
-    //this.handleConfirmation();
+    this.handleConfirmation();
     this.resetForm();
   }
 
@@ -217,7 +219,18 @@ export class TourRequest extends Component {
         .catch(erro => {
           toastError(erro.details);
         });
-    } else {
+    }
+    if (values.status === "ATUALIZAR") {
+      registroAtualizaKitLanche(request_form, values.id)
+        .then(resp =>{
+          toastSuccess("solicitação atualizada com sucesso!");
+          this.resetForm();
+          this.refresh();
+        })
+        .catch(erro => {
+          toastError("erro ao atualizar a solicitação");
+        })
+    }else {
       solicitarKitLanche(request_form)
         .then(resp => {
           if (resp) {
@@ -403,7 +416,7 @@ export class TourRequest extends Component {
               <Field
                 component={LabelAndTextArea}
                 label="Observações"
-                name="obs"
+                name="observacao"
                 placeholder="Campo opcional"
               />
             </div>
@@ -420,7 +433,7 @@ export class TourRequest extends Component {
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    status: "SALVO",
+                    status: statusSubmit(this.state.salvarAtualizarLbl),
                     salvo_em: new Date(),
                     id: this.state.id
                   })

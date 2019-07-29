@@ -2,10 +2,12 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import { ErrorAlert } from "../Shareable/Alert";
+import { retornaInputPasseio } from "./helper";
 
 export const field = ({ input, meta, options }) => {
   const { name, onChange, onBlur, onFocus } = input;
-  const inputValue = input.value;
+  const inputValue = retornaInputPasseio(input.value);
+
 
   const radioes = options.map(({ label, value }, index) => {
     const handleChange = event => {
