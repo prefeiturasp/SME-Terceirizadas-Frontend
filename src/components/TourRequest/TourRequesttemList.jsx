@@ -5,6 +5,8 @@ import If from "../Shareable/layout";
 import { solicitarKitsLanche } from "../../services/tourRequest.service";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 
+import {convertTempoPasseio} from './helper';
+
 export class TourRequestItemList extends Component {
   constructor(props) {
     super(props);
@@ -96,13 +98,13 @@ export class TourRequestItemList extends Component {
           <div className="mt-2">
             <label style={this.styleTitle} className="bold ml-3">
               Solicitação de Kit Lanche/Passeio{" "}
-              {`${tempo_passeio.replace("_", " a ")} # ${id}`}
+              {`${convertTempoPasseio(tempo_passeio)}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {status.replace("SAVED", "SALVO")}
+              salvo
             </span>
             <div className="float-right">
               <input
