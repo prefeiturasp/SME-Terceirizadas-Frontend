@@ -247,50 +247,49 @@ table.cadastro-empresa {
     td.container-detalhe {
       background: #f2fbfe;
       padding: 0px 20px 15px 0px;
-      
-      .secao-empresa{
+
+      .secao-empresa {
         display: grid;
 
-        .endereco-empresa{
+        .endereco-empresa {
           display: grid;
           grid-template-columns: 60% 40%;
         }
-        .contato-empresa{
+        .contato-empresa {
           margin-top: 2%;
           display: grid;
           grid-template-columns: 40% 60%;
         }
       }
 
-      .secao-representante{
+      .secao-representante {
         display: grid;
 
-        .nome-representante{
+        .nome-representante {
           display: grid;
           grid-template-columns: 60% 40%;
         }
-        .contato-representante{
+        .contato-representante {
           margin-top: 2%;
           display: grid;
           grid-template-columns: 40% 60%;
         }
 
-        .contato-nutri{
+        .contato-nutri {
           margin-top: 2%;
           display: grid;
           grid-template-columns: 60% 40%;
         }
       }
-
     }
-    .linha-detalhe{
+    .linha-detalhe {
       margin: 1.5em 2em 1em 0;
-      border: 1px #A8A8A8 solid;
+      border: 1px #a8a8a8 solid;
     }
   }
 }
 
-.button-container{
+.button-container {
   display: flex;
   justify-content: flex-end;
   padding-top: 20%;
@@ -355,12 +354,11 @@ table.cadastro-empresa {
   margin: 0 !important;
 }
 
-
-.dropdown-content{
+.dropdown-content {
   position: relative !important;
 }
 
-.lista-lotes{
+.lista-lotes {
   ul {
     list-style: none;
     padding: 0;
@@ -372,7 +370,7 @@ table.cadastro-empresa {
   }
 }
 
-.pesquisar{
+.pesquisar {
   display: flex;
   justify-content: flex-end;
   margin: 0 2em;
@@ -382,6 +380,22 @@ table.cadastro-empresa {
   }
 }
 
-.btn-action{
+.btn-action {
   padding-right: 2em !important;
+}
+
+section {
+  display: flex;
+
+  h6 {
+    color: #686868;
+  }
+
+  .header-button {
+    margin-top: 0.5em;
+    width: 242px;
+    height: 40px;
+    border-radius: 4px;
+    border: solid 1px #035d96;
+  }
 }
