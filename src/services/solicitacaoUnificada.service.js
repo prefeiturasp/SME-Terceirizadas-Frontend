@@ -46,12 +46,31 @@ export const atualizarSolicitacaoUnificada = (uuid, payload) => {
     });
 };
 
+export const inicioPedido = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/inicio-pedido`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const solicitacoesUnificadasSalvas = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/minhas_solicitacoes/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();

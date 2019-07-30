@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
@@ -24,6 +25,7 @@ import "../Shareable/style.scss";
 import "./style.scss";
 import {
   criarSolicitacaoUnificada,
+  inicioPedido,
   atualizarSolicitacaoUnificada,
   solicitacoesUnificadasSalvas,
   removerSolicitacaoUnificada
@@ -49,7 +51,7 @@ class SolicitacaoUnificada extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: "SALVO",
+      status: "RASCUNHO",
       title: "Nova Solicitação Unificada",
       salvarAtualizarLbl: "Salvar Rascunho",
       id: "",
@@ -152,7 +154,7 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: kitsTotal,
       studentsTotal: studentsTotal,
       schoolsTotal: schoolsTotal,
-      status: "SALVO",
+      status: "RASCUNHO",
       title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.solicitacaoUnificada.id_externo
@@ -163,7 +165,7 @@ class SolicitacaoUnificada extends Component {
   OnDeleteButtonClicked(id_externo, uuid) {
     removerSolicitacaoUnificada(uuid).then(
       res => {
-        if (res.status === 204) {
+        if (res.status === HTTP_STATUS.NO_CONTENT) {
           toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
           this.refresh();
         } else {
@@ -442,6 +444,22 @@ class SolicitacaoUnificada extends Component {
     );
   }
 
+  iniciarPedido(uuid) {
+    inicioPedido(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação Unificada enviada com sucesso!");
+          this.resetForm();;
+        } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError("Houve um erro ao enviar a solicitação unificada");
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a solicitação unificada");
+      }
+    );
+  }
+
   handleSubmit(values) {
     values.escolas = this.state.schoolsFiltered;
     values.kits_total = this.state.kitsTotal;
@@ -452,9 +470,11 @@ class SolicitacaoUnificada extends Component {
           JSON.stringify(formatarSubmissao(values))
         ).then(
           res => {
-            if (res.status === 201) {
+            if (res.status === HTTP_STATUS.CREATED) {
               toastSuccess("Solicitação Unificada salva com sucesso!");
-              this.resetForm();
+              if (values.status === "DRE_A_VALIDAR") {
+                this.iniciarPedido(res.data.uuid);
+              } else this.resetForm();
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
@@ -469,9 +489,11 @@ class SolicitacaoUnificada extends Component {
           JSON.stringify(formatarSubmissao(values))
         ).then(
           res => {
-            if (res.status === 200) {
+            if (res.status === HTTP_STATUS.OK) {
               toastSuccess("Solicitação Unificada atualizada com sucesso!");
-              this.resetForm();
+              if (values.status === "DRE_A_VALIDAR") {
+                this.iniciarPedido(res.data.uuid);
+              } else this.resetForm();
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
@@ -668,7 +690,7 @@ class SolicitacaoUnificada extends Component {
                       type="number"
                       label="Número MÁXIMO de alunos participantes por escola"
                       validate={
-                        multipleOrder !== undefined && [
+                        multipleOrder === true && [
                           required,
                           maxValue(max_alunos)
                         ]
@@ -678,7 +700,7 @@ class SolicitacaoUnificada extends Component {
                 </div>
                 <SelecionaTempoPasseio
                   className="mt-3"
-                  validate={multipleOrder !== undefined}
+                  validate={multipleOrder === true}
                   onChange={(event, newValue, previousValue, name) =>
                     this.setNumeroDeKitLanches(
                       event,
@@ -692,7 +714,7 @@ class SolicitacaoUnificada extends Component {
                 {enumKits && (
                   <SelecionaKitLancheBox
                     className="mt-3"
-                    validate={multipleOrder !== undefined}
+                    validate={multipleOrder === true}
                     choicesNumberLimit={qtd_kit_lanche}
                     onChange={value =>
                       this.setState({ choicesTotal: value.length })
@@ -927,7 +949,7 @@ class SolicitacaoUnificada extends Component {
                   label="Enviar Solicitação"
                   type={ButtonType.SUBMIT}
                   onClick={handleSubmit(values =>
-                    this.handleSubmit({ ...values, status: "A APROVAR" })
+                    this.handleSubmit({ ...values, status: "DRE_A_VALIDAR" })
                   )}
                   style={ButtonStyle.Primary}
                   className="ml-3"
