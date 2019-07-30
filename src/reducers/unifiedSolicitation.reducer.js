@@ -1,4 +1,4 @@
-import { extrairKitsLanche, extrairTempoPasseio } from "../components/UnifiedSolicitation/helper";
+import { extrairKitsLanche, extrairTempoPasseio } from "../components/SolicitacaoUnificada/helper";
 
 const LOAD_UNIFIED_SOLICITATION = "LOAD_UNIFIED_SOLICITATION";
 

@@ -7,10 +7,30 @@ const authToken = {
 };
 
 export const criarSolicitacaoUnificada = payload => {
-  const url = API_URL + `/solicitacoes-kit-lanche-unificada/`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const atualizarSolicitacaoUnificada = (uuid, payload) => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PUT",
     body: payload,
     headers: authToken
   })
@@ -31,7 +51,7 @@ export const solicitacoesUnificadasSalvas = async () => {
     headers: authToken,
     method: "GET"
   };
-  const url = API_URL + "/solicitacoes-kit-lanche-unificada/";
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -42,14 +62,17 @@ export const solicitacoesUnificadasSalvas = async () => {
     });
 };
 
-export const removeUnifiedSolicitationForm = async uuid => {
+export const removerSolicitacaoUnificada = async uuid => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(API_URL + "/solicitacao-unificada-formulario/" + uuid, OBJ_REQUEST)
-  .then(res => {
+  return await fetch(
+    `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}`,
+    OBJ_REQUEST
+  )
+    .then(res => {
       status = res.status;
       return res.json();
     })
@@ -66,7 +89,7 @@ export const getUnifiedSolicitations = async () => {
     headers: authToken,
     method: "GET"
   };
-  const url = API_URL + "/solicitacao-unificada/";
+  const url = `${API_URL}/solicitacao-unificada/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -78,15 +101,16 @@ export const getUnifiedSolicitations = async () => {
 };
 
 export const motivosSolicitacaoUnificada = () => {
-  const url = API_URL + `/motivos-solicitacao-unificada/`
+  const url = `${API_URL}/motivos-solicitacao-unificada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
   return fetch(url, OBJ_REQUEST)
-      .then(result => {
-          return result.json()
-      }).catch(error => {
-          console.log(error);
-      })
-}
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

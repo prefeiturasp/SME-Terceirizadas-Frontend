@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { escolas } from "../../services/school.service";
 import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
 import { diasUteis } from "../../services/workingDays.service";
-import UnifiedSolicitation from "./UnifiedSolicitation";
+import SolicitacaoUnificada from "./SolicitacaoUnificada";
 
-class UnifiedSolicitationContainer extends Component {
+class SolicitacaoUnificadaContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -62,8 +62,8 @@ class UnifiedSolicitationContainer extends Component {
   }
 
   render() {
-    return <UnifiedSolicitation {...this.state} />;
+    return <SolicitacaoUnificada {...this.state} />;
   }
 }
 
-export default UnifiedSolicitationContainer;
+export default SolicitacaoUnificadaContainer;

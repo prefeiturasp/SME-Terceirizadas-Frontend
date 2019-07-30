@@ -24,10 +24,11 @@ import "../Shareable/style.scss";
 import "./style.scss";
 import {
   criarSolicitacaoUnificada,
+  atualizarSolicitacaoUnificada,
   solicitacoesUnificadasSalvas,
-  removeUnifiedSolicitationForm
+  removerSolicitacaoUnificada
 } from "../../services/solicitacaoUnificada.service";
-import { UnifiedSolicitationItemList } from "./UnifiedSolicitationItemList";
+import { Rascunhos } from "./Rascunhos";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
@@ -35,8 +36,7 @@ import { validateSubmit } from "./UnifiedSolicitationValidation";
 import {
   adicionarDefault,
   formatarSubmissao,
-  extrairKitsLanche,
-  extrairTempoPasseio
+  extrairKitsLanche
 } from "./helper";
 
 export const HORAS_ENUM = {
@@ -45,7 +45,7 @@ export const HORAS_ENUM = {
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
 
-class UnifiedSolicitation extends Component {
+class SolicitacaoUnificada extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -153,21 +153,21 @@ class UnifiedSolicitation extends Component {
       studentsTotal: studentsTotal,
       schoolsTotal: schoolsTotal,
       status: "SALVO",
-      title: `Solicitação Unificada # ${param.solicitacaoUnificada.uuid}`,
+      title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.solicitacaoUnificada.uuid
+      id: param.solicitacaoUnificada.id_externo
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
-  OnDeleteButtonClicked(id, uuid) {
-    removeUnifiedSolicitationForm(uuid).then(
+  OnDeleteButtonClicked(id_externo, uuid) {
+    removerSolicitacaoUnificada(uuid).then(
       res => {
-        if (res.status === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
+        if (res.status === 204) {
+          toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
           this.refresh();
         } else {
-          toastError(res.log_content[0]);
+          toastError("Houve um erro ao excluir o rascunho");
         }
       },
       function(error) {
@@ -447,23 +447,40 @@ class UnifiedSolicitation extends Component {
     values.kits_total = this.state.kitsTotal;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      criarSolicitacaoUnificada(JSON.stringify(formatarSubmissao(values))).then(
-        res => {
-          if (res.status === 201) {
-            toastSuccess("Solicitação Unificada salva com sucesso!");
-            this.resetForm();
-          } else {
-            this.setState({
-              schoolExists: true,
-              schoolsExistArray: res.data.escolas
-            });
-            toastError(res.data.error);
+      if (!values.uuid) {
+        criarSolicitacaoUnificada(
+          JSON.stringify(formatarSubmissao(values))
+        ).then(
+          res => {
+            if (res.status === 201) {
+              toastSuccess("Solicitação Unificada salva com sucesso!");
+              this.resetForm();
+            } else {
+              toastError("Houve um erro ao salvar a solicitação unificada");
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a solicitação unificada");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
-        }
-      );
+        );
+      } else {
+        atualizarSolicitacaoUnificada(
+          values.uuid,
+          JSON.stringify(formatarSubmissao(values))
+        ).then(
+          res => {
+            if (res.status === 200) {
+              toastSuccess("Solicitação Unificada atualizada com sucesso!");
+              this.resetForm();
+            } else {
+              toastError("Houve um erro ao salvar a solicitação unificada");
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao atualizar a solicitação unificada");
+          }
+        );
+      }
     } else {
       toastError(error);
     }
@@ -550,7 +567,7 @@ class UnifiedSolicitation extends Component {
           {unifiedSolicitationList.length > 0 && (
             <div className="mt-3">
               <span className="page-title">Rascunhos</span>
-              <UnifiedSolicitationItemList
+              <Rascunhos
                 schoolsLoaded={schoolsFiltered.length > 0}
                 unifiedSolicitationList={unifiedSolicitationList}
                 OnDeleteButtonClicked={this.OnDeleteButtonClicked}
@@ -927,7 +944,7 @@ class UnifiedSolicitation extends Component {
 const UnifiedSolicitationForm = reduxForm({
   form: "unifiedSolicitation",
   enableReinitialize: true
-})(UnifiedSolicitation);
+})(SolicitacaoUnificada);
 
 const selector = formValueSelector("unifiedSolicitation");
 const mapStateToProps = state => {
