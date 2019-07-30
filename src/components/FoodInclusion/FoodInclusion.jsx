@@ -71,7 +71,7 @@ class FoodInclusionEditor extends Component {
   }
 
   handleField(field, value, id) {
-    var indiceDiaMotivo = this.state.dias_motivos.findIndex(x => x.id === id);
+    var indiceDiaMotivo = this.state.dias_motivos.findIndex(dia_motivo => dia_motivo.id === id);
     var dias_motivos = this.state.dias_motivos;
     if (field === "motivo") {
       const indiceMotivo = this.props.reasons_continuous_program.findIndex(
