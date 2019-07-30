@@ -1,28 +1,14 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoContinua, getMotivosInclusaoNormal } from "../../services/foodInclusion.service";
+import {
+  getMotivosInclusaoContinua,
+  getMotivosInclusaoNormal
+} from "../../services/foodInclusion.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
+import { getPeriods } from "../../services/school.service";
+import { formatarPeriodos } from "./helper";
 import FoodInclusion from "./FoodInclusion";
 
 class FoodInclusionContainer extends Component {
-  typeFoodContinuousProgram = [
-    {
-      label: "Lanche 4 Horas",
-      value: "Lanche 4 Horas"
-    },
-    {
-      label: "Refeição/Sobremesa",
-      value: "Refeição/Sobremesa"
-    },
-    {
-      label: "Lanche 5/6 Horas",
-      value: "Lanche 5/6 Horas"
-    },
-    {
-      label: "Sobremesa",
-      value: "Sobremesa"
-    }
-  ];
-
   constructor(props) {
     super(props);
     this.state = {
@@ -30,8 +16,7 @@ class FoodInclusionContainer extends Component {
       reasons_simple: [],
       reasons_continuous_program: [],
       day: new Date(),
-      periods: [],
-      typeFoodContinuousProgram: this.typeFoodContinuousProgram,
+      periodos: [],
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null
     };
@@ -50,6 +35,13 @@ class FoodInclusionContainer extends Component {
       const reasons_simple = response.results;
       this.setState({
         reasons_simple
+      });
+    });
+
+    getPeriods().then(response => {
+      const periodos = response.results;
+      this.setState({
+        periodos: formatarPeriodos(periodos)
       });
     });
 
