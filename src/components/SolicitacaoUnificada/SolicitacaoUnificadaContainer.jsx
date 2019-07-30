@@ -18,7 +18,6 @@ class SolicitacaoUnificadaContainer extends Component {
 
   componentDidMount() {
     escolas().then(resultadoEscolas => {
-      console.log(resultadoEscolas);
       motivosSolicitacaoUnificada().then(resultadoMotivos => {
         diasUteis().then(resultadoDiasUteis => {
           let escolas = resultadoEscolas.results;
@@ -33,26 +32,14 @@ class SolicitacaoUnificadaContainer extends Component {
             escola["kit_lanche"] = null;
             escola["checked"] = false;
           });
-          let proximos_dois_dias_uteis,
-            proximos_cinco_dias_uteis = null;
-          proximos_dois_dias_uteis = resultadoDiasUteis.proximos_dois_dias_uteis.split(
-            "-"
-          );
-          proximos_cinco_dias_uteis = resultadoDiasUteis.proximos_cinco_dias_uteis.split(
-            "-"
-          );
           this.setState({
             ...this.state,
             motivos: resultadoMotivos.results,
             proximos_dois_dias_uteis: new Date(
-              proximos_dois_dias_uteis[0],
-              proximos_dois_dias_uteis[1] - 1,
-              proximos_dois_dias_uteis[2]
+              resultadoDiasUteis.proximos_dois_dias_uteis
             ),
             proximos_cinco_dias_uteis: new Date(
-              proximos_cinco_dias_uteis[0],
-              proximos_cinco_dias_uteis[1] - 1,
-              proximos_cinco_dias_uteis[2]
+              resultadoDiasUteis.proximos_cinco_dias_uteis
             ),
             escolas: escolas
           });

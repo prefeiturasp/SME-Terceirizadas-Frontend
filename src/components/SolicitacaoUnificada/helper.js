@@ -19,10 +19,10 @@ export const extrairKitsLanche = kits => {
     listaKits.push(element.uuid);
   });
   return listaKits;
-}
+};
 
 export const extrairTempoPasseio = tempoPasseio => {
-  switch(tempoPasseio) {
+  switch (tempoPasseio) {
     case 2:
       return "8h";
     case 1:
@@ -30,7 +30,7 @@ export const extrairTempoPasseio = tempoPasseio => {
     default:
       return "4h";
   }
-}
+};
 
 export const formatarSubmissao = values => {
   let dataFormatada = {};
@@ -39,10 +39,11 @@ export const formatarSubmissao = values => {
   dataFormatada.diretoria_regional =
     values.escolas[0]["diretoria_regional"]["uuid"];
   dataFormatada.lista_kit_lanche_igual = values.lista_kit_lanche_igual || false;
-  dataFormatada.quantidade_max_alunos_por_escola =
-    values.quantidade_max_alunos_por_escola;
+  dataFormatada.quantidade_max_alunos_por_escola = dataFormatada.lista_kit_lanche_igual
+    ? values.quantidade_max_alunos_por_escola
+    : null;
   dataFormatada.solicitacao_kit_lanche = {
-    kits: values.kit_lanche || [],
+    kits: dataFormatada.lista_kit_lanche_igual ? values.kit_lanche : [],
     data: values.data,
     descricao: values.descricao,
     tempo_passeio: dataFormatada.lista_kit_lanche_igual

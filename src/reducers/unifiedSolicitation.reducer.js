@@ -5,6 +5,8 @@ const LOAD_UNIFIED_SOLICITATION = "LOAD_UNIFIED_SOLICITATION";
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_UNIFIED_SOLICITATION:
+      //Aplica o que vem do Backend no formulário do Frontend de Solicitação Unificada
+      //TODO: ver um jeito de não precisar converter tantos dados
       if (action.data != null) {
         action.data.data = action.data.solicitacao_kit_lanche.data;
         action.data.motivo = action.data.motivo.uuid;

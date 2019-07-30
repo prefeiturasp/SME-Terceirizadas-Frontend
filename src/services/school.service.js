@@ -35,7 +35,7 @@ export const getSchools = () => {
 };
 
 export const escolas = () => {
-  const url = API_URL + `/escolas/`;
+  const url = `${API_URL}/escolas/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

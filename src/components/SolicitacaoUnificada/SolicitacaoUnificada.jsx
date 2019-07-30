@@ -111,7 +111,7 @@ class SolicitacaoUnificada extends Component {
       escola_quantidade
     ) {
       var foundIndex = schoolsFiltered.findIndex(
-        x => x.codigo_eol === escola_quantidade.escola.codigo_eol
+        escola => escola.codigo_eol === escola_quantidade.escola.codigo_eol
       );
       schoolsFiltered[foundIndex].checked = true;
       schoolsFiltered[foundIndex].tempo_passeio = listaKitLancheIgual
@@ -245,7 +245,7 @@ class SolicitacaoUnificada extends Component {
     let schoolsFiltered = this.state.schoolsFiltered;
     if (school) {
       var foundIndex = this.state.schoolsFiltered.findIndex(
-        x => x.codigo_eol === school.codigo_eol
+        escola => escola.codigo_eol === school.codigo_eol
       );
       schoolsFiltered[foundIndex].limit_of_meal_kits = newQuantity;
       schoolsFiltered[foundIndex].tempo_passeio = newValue;
@@ -272,7 +272,7 @@ class SolicitacaoUnificada extends Component {
 
   handleSelecionaKitLancheBox(school, value) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.codigo_eol === school.codigo_eol
+      escola => escola.codigo_eol === school.codigo_eol
     );
     var schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].number_of_choices = value.length;
@@ -287,7 +287,7 @@ class SolicitacaoUnificada extends Component {
 
   handleNumberOfStudents(school, event) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.codigo_eol === school.codigo_eol
+      escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].nro_alunos = event.target.value;
@@ -312,7 +312,7 @@ class SolicitacaoUnificada extends Component {
 
   handleNumberOfStudentsPerSchool(school, event) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.codigo_eol === school.codigo_eol
+      escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     schoolsFiltered[foundIndex].quantidade_alunos = event.target.value || 0;
@@ -326,7 +326,7 @@ class SolicitacaoUnificada extends Component {
 
   setNumberOfMealKits(school) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.codigo_eol === school.codigo_eol
+      escola => escola.codigo_eol === school.codigo_eol
     );
     var schoolsFiltered = this.state.schoolsFiltered;
     if (schoolsFiltered[foundIndex].checked) {
@@ -350,7 +350,7 @@ class SolicitacaoUnificada extends Component {
 
   handleCheck(school) {
     var foundIndex = this.state.schoolsFiltered.findIndex(
-      x => x.codigo_eol === school.codigo_eol
+      escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
     school.checked = !school.checked;
