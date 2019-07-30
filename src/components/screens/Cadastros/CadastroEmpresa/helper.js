@@ -2,7 +2,7 @@ import { createTextMask } from 'redux-form-input-masks';
 
 export function transformaObjetos(objetos, lista = [], obj = {}){
     try{
-        objetos.map(objeto => {
+        objetos.results.map(objeto => {
             obj.uuid = objeto['uuid'];
             obj.label = objeto['nome'] 
             obj.value = objeto['nome']

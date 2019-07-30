@@ -65,3 +65,19 @@ export const getMotivosInclusaoContinua = () => {
       console.log(error);
     });
 };
+
+
+export const getMotivosInclusaoNormal = () => {
+  const url = `${API_URL}/motivos-inclusao-normal/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

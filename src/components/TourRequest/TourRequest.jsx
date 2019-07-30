@@ -21,18 +21,19 @@ import {
   getDiasUteis,
   getSolicitacoesKitLancheApi,
   getRefeicoesApi,
-  obtemDadosDaEscolaApi
+  obtemDadosDaEscolaApi,
+  registroAtualizaKitLanche
 } from "../../services/tourRequest.service";
 import {
   convertToFormat,
   adapterEnumKits,
-  convertStringToDate,
-  converterStringParaDataResponse
+  convertStringToDate
 } from "./ConvertToFormat";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
+import {montaObjetoRequisicao, statusSubmit} from './helper';
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -69,31 +70,25 @@ export class TourRequest extends Component {
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.handleShowModal = this.handleShowModal.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
-    this.montaObjetoRequisicao = this.montaObjetoRequisicao.bind(this);
-    this.retornaTempoPasseio = this.retornaTempoPasseio.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
     if (window.confirm("Deseja remover esta solicitação salva?")) {
       removeKitLanche(id).then(resp => {
         this.refresh();
-        if (resp.success) {
-          toastSuccess(resp.success);
-        } else {
-          toastError(resp.error);
-        }
+        toastSuccess('solicitação removida com sucesso!');
       });
     }
   }
 
   OnEditButtonClicked(param) {
     this.props.reset();
-    this.props.change("observacao", param.observacao); //ok
-    this.props.change("data", param.data); //ok
-    this.props.change("local", param.local); // ok
-    this.props.change("quantidade_alunos", param.quantidade_alunos); //ok
-    this.props.change("tempo_passeio", param.tempo_passeio); //ok
-    this.props.change("kits", param.kits); //ok
+    this.props.change("observacao", param.obs); 
+    this.props.change("evento_data", param.evento_data); 
+    this.props.change("local", param.local_passeio); 
+    this.props.change("quantidade_alunos", param.nro_alunos);
+    this.props.change("tempo_passeio", param.tempo_passeio); 
+    this.props.change("kit_lanche", param.kit_lanche); 
     this.setState({
       status: param.status,
       title: `Solicitação # ${param.id}`,
@@ -118,9 +113,11 @@ export class TourRequest extends Component {
   pegaSegundoDiaUtil() {
     getDiasUteis()
       .then(resp => {
-        return convertStringToDate(resp[0].date_two_working_days);
+        return new Date(resp.proximos_dois_dias_uteis);
       })
       .catch(erro => {
+
+        console.log(erro);
         return null;
       });
   }
@@ -133,7 +130,7 @@ export class TourRequest extends Component {
 
     getDiasUteis().then(resp => {
       this.setState({
-        segundoDiaUtil: convertStringToDate(resp[0].date_two_working_days)
+        segundoDiaUtil: new Date(resp.proximos_dois_dias_uteis)
       });
     }).catch(error => {
       console.log('ERROR AO CARREGAR DIAS ULTEIS', error)
@@ -144,17 +141,16 @@ export class TourRequest extends Component {
     if (event.target.value) {
       const diaSelecionado = convertStringToDate(event.target.value);
       getDiasUteis().then(resp => {
-        const segundoDiaUtil = converterStringParaDataResponse(
+        const segundoDiaUtil = new Date(
           resp.proximos_dois_dias_uteis
         );
-        const quintoDiaUtil = converterStringParaDataResponse(
+        const quintoDiaUtil = new Date(
           resp.proximos_cinco_dias_uteis
         );
         if (
           diaSelecionado <= segundoDiaUtil ||
           diaSelecionado < quintoDiaUtil
         ) {
-          
           this.setState({
             showModal: true
           });
@@ -181,45 +177,20 @@ export class TourRequest extends Component {
     });
   }
 
-  retornaTempoPasseio(tempo) {
-    if (tempo === "4h") {
-      return "0"
-    }
-    if (tempo === "5_7h") {
-      return "1"
-    } 
-    else {
-      return "2"
-    }
-  }
-
-  montaObjetoRequisicao(values) {
-    let objeto = {
-      solicitacao_kit_lanche: {
-        kits: values.kit_lanche,
-        observacao: values.obs,
-        data: values.evento_data,
-        tempo_passeio: this.retornaTempoPasseio(values.tempo_passeio)
-      },
-      escola: this.state.escola.uuid,
-      local: values.local,
-      quantidade_alunos: values.quantidade_alunos
-    }
-    return objeto
-  }
 
   onSubmit(values) {
-    let objeto = this.montaObjetoRequisicao(values);
+    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     validateTourRequestForm(values);
-    this.salvarOuEnviar(objeto, values);
+    this.salvarOuEnviar(solicitacao_kit_lanche, values);
     this.handleConfirmation();
+    this.resetForm();
   }
 
-  salvarOuEnviar(objeto, values) {
+  salvarOuEnviar(solicitacao_kit_lanche, values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(objeto)
+      registroSalvarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
-          if (resp.success) {
+          if (resp.status === 201) {
             toastSuccess(resp.success);
             this.resetForm();
             this.refresh();
@@ -230,15 +201,30 @@ export class TourRequest extends Component {
         .catch(erro => {
           toastError(erro.details);
         });
-    } else {
-      solicitarKitLanche(objeto)
+    }
+    if (values.status === "ATUALIZAR") {
+      registroAtualizaKitLanche(solicitacao_kit_lanche, values.id)
+        .then(resp =>{
+          if (resp.status === 200 || resp.status === 201) {
+            toastSuccess("solicitação atualizada com sucesso!");
+            this.resetForm();
+            this.refresh();
+          } 
+          if (resp.status === 400 || resp.status === 401){
+            toastError("erro ao atualizar a solicitação");
+          }         
+        })
+        .catch(erro => {
+          toastError("erro ao atualizar a solicitação");
+        })
+    }else {
+      solicitarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
-          if (resp.success) {
-            toastSuccess(resp.success);
+          if (resp) {
+            toastSuccess('solicitação salva com sucesso!');
             this.resetForm();
             this.refresh();
           } else {
-            // toastError(resp.error)
             this.setState({
               ...this.state,
               modalMessage: resp.error,
@@ -287,6 +273,7 @@ export class TourRequest extends Component {
       "5_7h": HORAS_ENUM._5a7.qtd_kits,
       "8h": HORAS_ENUM._8.qtd_kits
     };
+    
     let newQuantity = parser[event];
     this.setState({
       ...this.state,
@@ -297,6 +284,7 @@ export class TourRequest extends Component {
 
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
+    const { quantidade_alunos } = this.state.escola
     const {
       enumKits,
       tourRequestList,
@@ -314,8 +302,8 @@ export class TourRequest extends Component {
           </Modal.Header>
           <Modal.Body>
             Atenção, a solicitação está fora do prazo contratual (entre
-            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-            disponibilidade dos alimentos adequados para o cumprimento do
+            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá
+            da disponibilidade dos alimentos adequados para o cumprimento do
             cardápio.
           </Modal.Body>
           <Modal.Footer>
@@ -328,9 +316,10 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <CardMatriculados numeroAlunos={this.state.escola.quantidade_alunos} />
+        <CardMatriculados
+          numeroAlunos={quantidade_alunos}
+        />
         <form>
-          
           <TourRequestItemList
             tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
@@ -338,7 +327,6 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-
 
           <div className="mt-5" />
           <br />
@@ -368,24 +356,27 @@ export class TourRequest extends Component {
                 name="quantidade_alunos"
                 type="number"
                 label="Número de alunos participantes"
-                validate={[required, maxValue(this.state.escola.quantidade_alunos)]}
+                validate={[
+                  required,
+                  maxValue(this.state.escola.quantidade_alunos)
+                ]}
               />
             </div>
             <hr />
 
-
-
             <SelecionaTempoPasseio
               className="mt-3"
               onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+                this.setNumeroDeKitLanches(
+                  event,
+                  newValue,
+                  previousValue,
+                  name
+                )
               }
             />
 
-
-
             <hr className="mt-4 mb-4 w-100" />
-
 
             {enumKits && (
               <SelecionaKitLancheBox
@@ -395,10 +386,10 @@ export class TourRequest extends Component {
               />
             )}
 
-
-            
             <div className="form-group pt-3">
-              <label className="font-weight-bold">{"Número total kits:"}</label>
+              <label className="font-weight-bold">
+                {"Número total kits:"}
+              </label>
               <br />
               <Grid
                 cols="1 1 1 1"
@@ -417,7 +408,7 @@ export class TourRequest extends Component {
               <Field
                 component={LabelAndTextArea}
                 label="Observações"
-                name="obs"
+                name="observacao"
                 placeholder="Campo opcional"
               />
             </div>
@@ -434,7 +425,7 @@ export class TourRequest extends Component {
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values,
-                    status: "SALVO",
+                    status: statusSubmit(this.state.salvarAtualizarLbl),
                     salvo_em: new Date(),
                     id: this.state.id
                   })
@@ -458,7 +449,10 @@ export class TourRequest extends Component {
                 className="ml-3"
               />
             </div>
-            <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
+            <Modal
+              show={modalConfirmation}
+              onHide={this.handleConfirmation}
+            >
               <Modal.Header closeButton>
                 <Modal.Title>Atenção</Modal.Title>
               </Modal.Header>
@@ -466,22 +460,23 @@ export class TourRequest extends Component {
                 <strong>{modalMessage}</strong>
               </Modal.Body>
               <Modal.Footer>
-                
-                {botaoConfirma && (<BaseButton
-                  label="CONFIRMAR MESMO ASSIM"
-                  type={ButtonType.BUTTON}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: "Enviar solicitação",
-                      salvo_em: new Date(),
-                      id: this.state.id,
-                      confirmar: true
-                    })
-                  )}
-                  style={ButtonStyle.Primary}
-                  className="ml-3"
-                />)}
+                {botaoConfirma && (
+                  <BaseButton
+                    label="CONFIRMAR MESMO ASSIM"
+                    type={ButtonType.BUTTON}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values,
+                        status: "Enviar solicitação",
+                        salvo_em: new Date(),
+                        id: this.state.id,
+                        confirmar: true
+                      })
+                    )}
+                    style={ButtonStyle.Primary}
+                    className="ml-3"
+                  />
+                )}
                 <BaseButton
                   label="CANCELAR"
                   type={ButtonType.BUTTON}

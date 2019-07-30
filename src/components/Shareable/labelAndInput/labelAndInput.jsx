@@ -89,8 +89,8 @@ export class LabelAndCombo extends Component {
   };
   static defaultProps = {
     options: [
-      { value: "...", label: "op1", disable: false },
-      { value: "***", label: "op2", selected: true }
+      { uuid: "...", nome: "op1", disable: false },
+      { uuid: "***", nome: "op2", selected: true }
     ],
     disabled: false
   };

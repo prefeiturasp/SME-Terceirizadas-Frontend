@@ -1,156 +1,262 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Stand } from "react-burgers";
 import "../style.scss";
 
 export const EMPRESAS = [
   {
     codigo_empresa: "0001",
+
     nome: "SINGULAR GESTÃO DE SERVIÇOS",
     cnpj: "05.951.758/0001-29",
-    telefone: "(21) 3752-9943",
+    status: "Ativa",
+    ativo: false,
 
     endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
     cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0002",
-    nome: "APETECE SISTEMAS DE ALIMENTAÇÃO",
-    cnpj: "60.166.832/0001-04",
-    telefone: "(11) 4239-9300",
 
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
+    telefone: "21 37529943",
     email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0003",
-    nome: "S.H.A COMÉRCIO DE ALIMENTOS LTDA.",
-    cnpj: "61.980.272/0001-90",
-    telefone: "(12) 3023-5000",
 
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
     representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0004",
-    nome: "P.R.M SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI",
-    cnpj: "03.706.826/0001-69",
-    telefone: "(21) 3023-5000",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
 
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0005",
-    nome: "SINGULAR GESTÃO DE SERVIÇOS",
-    cnpj: "05.951.758/0001-29",
-    telefone: "(21) 37529943",
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
 
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefonefax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
     lotes: [
       { nome: "7A IPI I - DRE IPIRANGA" },
       { nome: "7A IPI II - DRE IPIRANGA" },
       { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
       { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
-    ],
-    ativo: false
+    ]
   },
   {
-    codigo_empresa: "0006",
-    nome: "S.H.A COMÉRCIO DE ALIMENTOS LTDA.",
-    cnpj: "61.980.272/0001-90",
-    telefone: "(12) 3023-5000",
+    codigo_empresa: "0002",
 
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0007",
-    nome: "P.R.M SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI",
-    cnpj: "03.706.826/0001-69",
-    telefone: "(21) 3023-5000",
-
-    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
-    cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
-    email: "singulargestao.servicos@gmail.com",
-    representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
-  },
-  {
-    codigo_empresa: "0008",
     nome: "SINGULAR GESTÃO DE SERVIÇOS",
     cnpj: "05.951.758/0001-29",
-    telefone: "(21) 3752-9943",
+    status: "Ativa",
+    ativo: false,
 
     endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
     cep: "25510-430",
-    telefone_fax: "(21) 3752-9943",
+
+    telefone: "21 37529943",
     email: "singulargestao.servicos@gmail.com",
+
     representante: "Paulo Cesar Ribeiro Alves",
-    nutricionista: "Luciani Dantas",
-    crn: "8773",
-    edital: "78/2016",
-    contrato: "36/SME/CODAE/2017",
-    lotes: [],
-    ativo: false
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0003",
+
+    nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0004",
+
+    nome: "SINGULAR GESTÃO DE SERVIÇOS",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
+  },
+  {
+    codigo_empresa: "0005",
+
+    nome: "JSD",
+    cnpj: "05.951.758/0001-29",
+    status: "Ativa",
+    ativo: false,
+
+    endereco: "Rua Pernambucana, n°1260 - Vila Rosali - São João de Meriti/RJ",
+    cep: "25510-430",
+
+    telefone: "21 37529943",
+    email: "singulargestao.servicos@gmail.com",
+
+    representante: "Paulo Cesar Ribeiro Alves",
+    telefonefax: "21 3858-4858",
+    email: "singulargestao.servicos@gmail.com",
+
+    nutricionistas: [
+      {
+        nome: "Luciani Dantas",
+        crn: "8773",
+        telefone: "21 98999-9999",
+        email: "luciani.dantas@gmail.com"
+      },
+      {
+        nome: "Sandra Santos",
+        crn: "0975",
+        telefone: "21 98999-9999",
+        email: "sandra.santos@gmail.com"
+      }
+    ],
+
+    editais: [
+      {
+        edital: "78/2016",
+        contrato: "36/SME/CODAE/2017"
+      },
+      {
+        edital: "78/2017",
+        contrato: "36/SME/CODAE/2018"
+      }
+    ],
+
+    lotes: [
+      { nome: "7A IPI I - DRE IPIRANGA" },
+      { nome: "7A IPI II - DRE IPIRANGA" },
+      { nome: "10A MP I - DRE SÃO MIGUEL PAULISTA" },
+      { nome: "10B MP II - DRE SÃO MIGUEL PAULISTA" }
+    ]
   }
 ];
 
@@ -164,15 +270,15 @@ class EmpresasCadastradas extends Component {
     this.filtrarEmpresas = this.filtrarEmpresas.bind(this);
   }
 
-  filtrarEmpresas(event){
+  filtrarEmpresas(event) {
     let empresasFiltradas = this.state.empresas;
     empresasFiltradas = empresasFiltradas.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.cnpj.search(palavraAFiltrar) !== -1
-      )
-    })
+      );
+    });
   }
 
   lidarComBurger(empresa) {
@@ -189,29 +295,26 @@ class EmpresasCadastradas extends Component {
               <th>ID</th>
               <th>Empresas Cadastradas</th>
               <th>CNPJ</th>
-              <th>Telefone</th>
+              <th>Situação</th>
               <th className="text-center">
-                <input
-                  className="input-search"
-                  onChange={this.filtrarEmpresas}
-                  placeholder="Pesquisar"
-                />
-                <i className="fas fa-search" />
+                <div className="pesquisar">
+                  <input
+                    className="input-search"
+                    onChange={this.filtrarEmpresas}
+                    placeholder="Pesquisar"
+                  />
+                  <i className="fas fa-search" />
+                </div>
               </th>
             </tr>
+
             {this.state.empresasFiltradas.map(empresa => {
               return [
-                <tr
-                className={
-                  empresa.ativo
-                    ? "detalhe-empresa"
-                    : ""
-                } 
-                >
+                <tr className={empresa.ativo ? "detalhe-empresa" : ""}>
                   <td>{empresa.codigo_empresa}</td>
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
-                  <td>{empresa.telefone}</td>
+                  <td>{empresa.status}</td>
                   <td className="btn-action">
                     <Stand
                       onClick={() => this.lidarComBurger(empresa)}
@@ -223,99 +326,175 @@ class EmpresasCadastradas extends Component {
                     />
                   </td>
                 </tr>,
+
                 empresa.ativo && (
                   <tr>
-                    <td className="detalhe-empresa"></td>
+                    <td className="detalhe-empresa" />
                     <td className="container-detalhe" colSpan="4">
-                      <div className="container-info">
-                        <div>
+                      <div className="secao-empresa">
+                        <div className="endereco-empresa">
                           <div>
-                            <span className="descricao">
-                              Endereço:
-                            </span><br/> 
-                            <span className="valor-desc">{empresa.endereco}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">
-                              Telefone/FAX:
+                            <span className="descricao">Endereço:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.endereco}
                             </span>
-                            <span className="valor-desc">{empresa.telefone}</span>
                           </div>
+                          <div>
+                            <span className="descricao">CEP:</span>
+                            <span className="valor-desc">
+                              {empresa.cep}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="contato-empresa">
+                          <div>
+                            <span className="descricao">Telefone/FAX:</span>
+                            <span className="valor-desc">
+                              {empresa.telefone}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="descricao">E-mail:</span>
+                            <span className="valor-desc">
+                              {empresa.email}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <hr className="linha-detalhe" />
+
+                      <div className="secao-representante">
+                        <div className="nome-representante">
                           <div>
                             <span className="descricao">
                               Representante Legal:
                             </span>
-                            <span className="valor-desc">{empresa.representante}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">
-                              Nutricionista Responsável Técnico:
-                            </span><br/> 
-                            <span className="valor-desc">{empresa.nutricionista}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">
-                              Edital de Pregão n°:
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.representante}
                             </span>
-                            <span className="valor-desc">{empresa.edital}</span>
                           </div>
-
-                          {empresa.lotes.length > 0 && (
-                            <div className="pt-4">
-                              <span className="descricao">
-                                Lotes de atendimento:
-                              </span>
-                            </div>
-                          )}
-                          {empresa.lotes.length > 0 && (
-                            <ul>
-                              {empresa.lotes.map((lote, item) => 
-                                <li>{lote.nome}</li>
-                              )}
-                            </ul>             
-                          )}
+                          <div>
+                            <span className="descricao">Telefone:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.telefonefax}
+                            </span>
+                          </div>
                         </div>
-                        <div>
+                        <div className="contato-representante">
                           <div>
-                            <span className="descricao">
-                              CEP:
+                            <span className="descricao">E-mail:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.email}
                             </span>
-                            <span className="valor-desc">{empresa.cep}</span>
                           </div>
-                          <div>
+                        </div>
+                      </div>
+
+                      <hr className="linha-detalhe" />
+
+                      {empresa.nutricionistas.map(nutri => {
+                        return [
+                          <Fragment>
+                            <div className="secao-representante pt-3">
+                              <div className="nome-representante">
+                                <div>
+                                  <span className="descricao">
+                                    Nutricionista Responsável Técnico:
+                                  </span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {nutri.nome}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">CRN</span>
+                                  <span className="valor-desc">
+                                    {nutri.crn}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="contato-nutri">
+                                <div>
+                                  <span className="descricao">
+                                    Telefone/Celular:
+                                  </span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {nutri.telefone}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">E-mail:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {nutri.email}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </Fragment>
+                        ];
+                      })}
+
+                      {empresa.nutricionistas.length > 0 && (
+                        <hr className="linha-detalhe" />
+                      )}
+
+                      {empresa.editais.map(edital => {
+                        return [
+                          <Fragment>
+                            <div className="secao-representante pt-3">
+                              <div className="nome-representante">
+                                <div>
+                                  <span className="descricao">
+                                    Edital de Pregão n°:
+                                  </span>
+                                  <span className="valor-desc">
+                                    {edital.edital}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">
+                                    Contrato n°:
+                                  </span>
+                                  <span className="valor-desc">
+                                    {edital.contrato}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </Fragment>
+                        ];
+                      })}
+                      {empresa.editais.length > 0 && (
+                        <hr className="linha-detalhe" />
+                      )}
+                      <div className="lista-lotes">
+                        {empresa.lotes.length > 0 && (
+                          <div className="pt-2">
                             <span className="descricao">
-                              E-mail:
+                              Lotes de atendimento:
                             </span>
-                            <span className="valor-desc">{empresa.email}</span>
                           </div>
-                          <div>
-                            <span className="descricao">
-                              Contato:
-                            </span><br/> 
-                            <span className="valor-desc">{empresa.email}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">
-                              CRN:
-                            </span>
-                            <span className="valor-desc">{empresa.crn}</span> 
-                            <span className="pl-3 descricao">
-                              E-mail:
-                            </span>
-                            <span className="valor-desc">{empresa.email}</span>
-                          </div>
-                          <div>
-                            <span className="descricao">
-                              Contrato n°:
-                            </span>
-                            <span className="valor-desc">{empresa.contrato}</span>
-                          </div>
-                        </div>                        
+                        )}
+                        {empresa.lotes.length > 0 && (
+                          <ul>
+                            {empresa.lotes.map((lote, item) => (
+                              <li>{lote.nome}</li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </td>
                   </tr>
                 )
-              ]
+              ];
             })}
           </table>
         </div>
@@ -323,6 +502,5 @@ class EmpresasCadastradas extends Component {
     );
   }
 }
-
 
 export default EmpresasCadastradas;

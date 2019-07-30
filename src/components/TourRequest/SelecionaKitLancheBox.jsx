@@ -35,8 +35,6 @@ class  SelecionaKitLancheBox extends Component {
 
     let checkAll = kitOptions.length === this.props.choicesNumberLimit;
 
-
-
     return (
       
       <div className={this.props.className}>
