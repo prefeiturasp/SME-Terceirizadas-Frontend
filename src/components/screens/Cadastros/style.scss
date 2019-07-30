@@ -246,28 +246,54 @@ table.cadastro-empresa {
   tr {
     td.container-detalhe {
       background: #f2fbfe;
-      padding: 15px 20px 15px 0px;
-      div.container-info {
+      padding: 0px 20px 15px 0px;
+      
+      .secao-empresa{
         display: grid;
-        grid-template-columns: 46% 54%;
-        grid-template-rows: 20% 20% 20% 20% 20%;
 
-        div:not(:first-child):not(:nth-child(1)) {
-          padding: 10px 0 5px;
+        .endereco-empresa{
+          display: grid;
+          grid-template-columns: 60% 40%;
         }
-
-        div ul {
-          list-style: none;
-          padding: 0;
-        }
-
-        li {
-          font-weight: bold;
-          color: #353535;
+        .contato-empresa{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
         }
       }
+
+      .secao-representante{
+        display: grid;
+
+        .nome-representante{
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+        .contato-representante{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
+        }
+
+        .contato-nutri{
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+      }
+
+    }
+    .linha-detalhe{
+      margin: 1.5em 2em 1em 0;
+      border: 1px #A8A8A8 solid;
     }
   }
+}
+
+.button-container{
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20%;
 }
 
 .button-action {
@@ -293,14 +319,13 @@ table.cadastro-empresa {
 }
 
 .container-fields {
-  margin-top: 15px;
   display: grid;
   grid-template-columns: 95% 5%;
 
   .fields-set {
-    margin-top: 10px;
     display: grid;
     grid-template-columns: 38% 58%;
+    grid-template-rows: 50% 50%;
     grid-column-gap: 4%;
   }
 
@@ -325,4 +350,38 @@ table.cadastro-empresa {
     justify-content: flex-end;
     align-items: flex-end;
   }
+}
+.linha-form {
+  margin: 0 !important;
+}
+
+
+.dropdown-content{
+  position: relative !important;
+}
+
+.lista-lotes{
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    font-weight: bold;
+    color: #353535;
+  }
+}
+
+.pesquisar{
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 2em;
+
+  i {
+    margin: 0.5em;
+  }
+}
+
+.btn-action{
+  padding-right: 2em !important;
 }

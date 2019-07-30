@@ -11,7 +11,7 @@ import {
 } from "./RenderField";
 
 export const ContatosEmpresa = ({ fields, meta: { error } }) => (
-  <div className="container-fields">
+  <div className="container-fields pt-3">
     <div className="fields">
       <div className="fields-set">
         <Field
@@ -28,16 +28,16 @@ export const ContatosEmpresa = ({ fields, meta: { error } }) => (
         />
       </div>
       {fields.map((field, index) => (
-        <div key={index} className="fields-set">
+        <div key={index} className="fields-set pt-2">
           <Field
             name={`telefone_empresa_${index}`}
-            component={renderTelefonePlus}
+            component={renderTelefone}
             {...fieldTel}
             validate={required}
           />
           <Field
             name={`email_empresa_${index}`}
-            component={renderEmailPlus}
+            component={renderEmail}
             label={`E-mail`}
             validate={required}
           />
