@@ -1,9 +1,9 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
-export const URL_SOLICITAR = API_URL + "/kit-lanches/";
+export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
 
-export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa/`
+export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa`;
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -16,7 +16,7 @@ export const getKitsByApi = async () => {
     method: "GET"
   };
 
-  const url = API_URL + "/solicitar-kit-lanche/";
+  const url = `${API_URL}/solicitar-kit-lanche/`;
   OBJ_REQUEST["method"] = "GET";
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
@@ -28,13 +28,13 @@ export const getKitsByApi = async () => {
     });
 };
 
-export const obtemDadosDaEscolaApi = async (uuid) => {
+export const obtemDadosDaEscolaApi = async uuid => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
 
-  const url = API_URL + "/escolas/"+uuid+"/";
+  const url = `${API_URL}/escolas/${uuid}/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -42,7 +42,7 @@ export const obtemDadosDaEscolaApi = async (uuid) => {
     .catch(erro => {
       console.log("Erro ao recuperar dados escolares");
       return {};
-    })
+    });
 };
 
 export const getQuatidadeAlunoApi = async () => {
@@ -51,7 +51,7 @@ export const getQuatidadeAlunoApi = async () => {
     method: "GET"
   };
 
-  const url = API_URL + "/kit-lanches/";
+  const url = `${API_URL}/kit-lanches/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -63,7 +63,7 @@ export const getQuatidadeAlunoApi = async () => {
 };
 
 export const getDiasUteis = async () => {
-  const url = API_URL + "/dias-uteis/";
+  const url = `${API_URL}/dias-uteis/`;
   return await fetch(url)
     .then(response => {
       return response.json();
@@ -80,9 +80,8 @@ export const solicitarKitLanche = async values => {
     method: "POST",
     body: JSON.stringify(values)
   };
-  return await fetch(API_URL + "/solicitacoes-kit-lanche-avulsa/", OBJ_REQUEST)
+  return await fetch(`${API_URL}/solicitacoes-kit-lanche-avulsa/`, OBJ_REQUEST)
     .then(response => {
-
       return response.json();
     })
     .catch(error => {
@@ -97,8 +96,7 @@ export const registroSalvarKitLanche = async values => {
     method: "POST",
     body: JSON.stringify(values)
   };
-
-  return await fetch(URL_SOLICITAR + "/salvar/", OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITAR}/salvar/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -108,21 +106,25 @@ export const registroSalvarKitLanche = async values => {
     });
 };
 
-export const registroAtualizaKitLanche = async (values, uuid) => {
-  const OBJ_REQUEST = {
-    headers: authToken,
+export const registroAtualizaKitLanche = (payload, uuid) => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
     method: "PUT",
-    body: JSON.stringify(values)
-  };
-
-  return await fetch(`${URL_SOLICITACOES_AVULSAS}${uuid}/`, OBJ_REQUEST)
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
     .then(response => {
+      status = response.status;
       return response.json();
     })
-    .catch(error => {
-      console.log("Atualizar Kit Lanche: ", error);
+    .then(data => {
+      return { data: data, status: status };
     })
-}
+    .catch(error => {
+      return error.json();
+    });
+};
 
 export const solicitarKitsLanche = async values => {
   const OBJ_REQUEST = {
@@ -130,8 +132,7 @@ export const solicitarKitsLanche = async values => {
     method: "POST",
     body: JSON.stringify({ ids: values })
   };
-
-  return await fetch(URL_SOLICITAR + "solicitacoes/", OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITAR}/solicitacoes/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -146,8 +147,8 @@ export const atualizarKitLanche = async values => {
     method: "PUT",
     body: JSON.stringify(values)
   };
-
-  return await fetch(URL_SOLICITAR + values.id + "/", OBJ_REQUEST)
+  
+  return await fetch(`${URL_SOLICITAR}/${values.id}/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -162,8 +163,8 @@ export const removeKitLanche = async idKit => {
     method: "DELETE",
     body: JSON.stringify({ id: idKit })
   };
-
-  return await fetch(URL_SOLICITACOES_AVULSAS + idKit, OBJ_REQUEST)
+  
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${idKit}`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -193,8 +194,8 @@ export const getRefeicoesApi = async () => {
     headers: authToken,
     method: "GET"
   };
-
-  return await fetch(API_URL + "/kit-lanches/", OBJ_REQUEST)
+  
+  return await fetch(`${API_URL}/kit-lanches/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })

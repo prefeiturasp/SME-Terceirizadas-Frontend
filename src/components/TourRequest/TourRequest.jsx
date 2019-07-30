@@ -33,7 +33,7 @@ import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import {retornaTempoPasseio, statusSubmit} from './helper';
+import {montaObjetoRequisicao, statusSubmit} from './helper';
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -70,7 +70,6 @@ export class TourRequest extends Component {
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.handleShowModal = this.handleShowModal.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
-    this.montaObjetoRequisicao = this.montaObjetoRequisicao.bind(this);
   }
 
   OnDeleteButtonClicked(id) {
@@ -83,7 +82,6 @@ export class TourRequest extends Component {
   }
 
   OnEditButtonClicked(param) {
-    console.log(param)
     this.props.reset();
     this.props.change("observacao", param.obs); 
     this.props.change("evento_data", param.evento_data); 
@@ -180,35 +178,19 @@ export class TourRequest extends Component {
   }
 
 
-
-  montaObjetoRequisicao(values) {
-    let objeto = {
-      solicitacao_kit_lanche: {
-        kits: values.kit_lanche,
-        observacao: values.observacao,
-        data: values.evento_data,
-        tempo_passeio: retornaTempoPasseio(values.tempo_passeio)
-      },
-      escola: this.state.escola.uuid,
-      local: values.local,
-      quantidade_alunos: values.quantidade_alunos
-    }
-    return objeto
-  }
-
   onSubmit(values) {
-    let objeto = this.montaObjetoRequisicao(values);
+    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     validateTourRequestForm(values);
-    this.salvarOuEnviar(objeto, values);
+    this.salvarOuEnviar(solicitacao_kit_lanche, values);
     this.handleConfirmation();
     this.resetForm();
   }
 
-  salvarOuEnviar(request_form, values) {
+  salvarOuEnviar(solicitacao_kit_lanche, values) {
     if (values.status === "SALVO") {
-      registroSalvarKitLanche(request_form)
+      registroSalvarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
-          if (resp.success) {
+          if (resp.status === 201) {
             toastSuccess(resp.success);
             this.resetForm();
             this.refresh();
@@ -221,17 +203,22 @@ export class TourRequest extends Component {
         });
     }
     if (values.status === "ATUALIZAR") {
-      registroAtualizaKitLanche(request_form, values.id)
+      registroAtualizaKitLanche(solicitacao_kit_lanche, values.id)
         .then(resp =>{
-          toastSuccess("solicitação atualizada com sucesso!");
-          this.resetForm();
-          this.refresh();
+          if (resp.status === 200 || resp.status === 201) {
+            toastSuccess("solicitação atualizada com sucesso!");
+            this.resetForm();
+            this.refresh();
+          } 
+          if (resp.status === 400 || resp.status === 401){
+            toastError("erro ao atualizar a solicitação");
+          }         
         })
         .catch(erro => {
           toastError("erro ao atualizar a solicitação");
         })
     }else {
-      solicitarKitLanche(request_form)
+      solicitarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
           if (resp) {
             toastSuccess('solicitação salva com sucesso!');
@@ -286,6 +273,7 @@ export class TourRequest extends Component {
       "5_7h": HORAS_ENUM._5a7.qtd_kits,
       "8h": HORAS_ENUM._8.qtd_kits
     };
+    
     let newQuantity = parser[event];
     this.setState({
       ...this.state,
@@ -296,6 +284,7 @@ export class TourRequest extends Component {
 
   render() {
     const { handleSubmit, pristine, submitting } = this.props;
+    const { quantidade_alunos } = this.state.escola
     const {
       enumKits,
       tourRequestList,
@@ -313,8 +302,8 @@ export class TourRequest extends Component {
           </Modal.Header>
           <Modal.Body>
             Atenção, a solicitação está fora do prazo contratual (entre
-            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-            disponibilidade dos alimentos adequados para o cumprimento do
+            <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá
+            da disponibilidade dos alimentos adequados para o cumprimento do
             cardápio.
           </Modal.Body>
           <Modal.Footer>
@@ -327,9 +316,10 @@ export class TourRequest extends Component {
             />
           </Modal.Footer>
         </Modal>
-        <CardMatriculados numeroAlunos={this.state.escola.quantidade_alunos} />
+        <CardMatriculados
+          numeroAlunos={quantidade_alunos}
+        />
         <form>
-          
           <TourRequestItemList
             tourRequestList={tourRequestList}
             OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
@@ -337,7 +327,6 @@ export class TourRequest extends Component {
             refreshComponent={this.refresh.bind(this)}
             OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
           />
-
 
           <div className="mt-5" />
           <br />
@@ -367,24 +356,27 @@ export class TourRequest extends Component {
                 name="quantidade_alunos"
                 type="number"
                 label="Número de alunos participantes"
-                validate={[required, maxValue(this.state.escola.quantidade_alunos)]}
+                validate={[
+                  required,
+                  maxValue(this.state.escola.quantidade_alunos)
+                ]}
               />
             </div>
             <hr />
 
-
-
             <SelecionaTempoPasseio
               className="mt-3"
               onChange={(event, newValue, previousValue, name) =>
-                this.setNumeroDeKitLanches(event, newValue, previousValue, name)
+                this.setNumeroDeKitLanches(
+                  event,
+                  newValue,
+                  previousValue,
+                  name
+                )
               }
             />
 
-
-
             <hr className="mt-4 mb-4 w-100" />
-
 
             {enumKits && (
               <SelecionaKitLancheBox
@@ -394,10 +386,10 @@ export class TourRequest extends Component {
               />
             )}
 
-
-            
             <div className="form-group pt-3">
-              <label className="font-weight-bold">{"Número total kits:"}</label>
+              <label className="font-weight-bold">
+                {"Número total kits:"}
+              </label>
               <br />
               <Grid
                 cols="1 1 1 1"
@@ -457,7 +449,10 @@ export class TourRequest extends Component {
                 className="ml-3"
               />
             </div>
-            <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
+            <Modal
+              show={modalConfirmation}
+              onHide={this.handleConfirmation}
+            >
               <Modal.Header closeButton>
                 <Modal.Title>Atenção</Modal.Title>
               </Modal.Header>
@@ -465,22 +460,23 @@ export class TourRequest extends Component {
                 <strong>{modalMessage}</strong>
               </Modal.Body>
               <Modal.Footer>
-                
-                {botaoConfirma && (<BaseButton
-                  label="CONFIRMAR MESMO ASSIM"
-                  type={ButtonType.BUTTON}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: "Enviar solicitação",
-                      salvo_em: new Date(),
-                      id: this.state.id,
-                      confirmar: true
-                    })
-                  )}
-                  style={ButtonStyle.Primary}
-                  className="ml-3"
-                />)}
+                {botaoConfirma && (
+                  <BaseButton
+                    label="CONFIRMAR MESMO ASSIM"
+                    type={ButtonType.BUTTON}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values,
+                        status: "Enviar solicitação",
+                        salvo_em: new Date(),
+                        id: this.state.id,
+                        confirmar: true
+                      })
+                    )}
+                    style={ButtonStyle.Primary}
+                    className="ml-3"
+                  />
+                )}
                 <BaseButton
                   label="CANCELAR"
                   type={ButtonType.BUTTON}
