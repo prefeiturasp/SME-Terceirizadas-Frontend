@@ -6,7 +6,7 @@ import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import TourRequestPage from "../pages/Escola/TourRequestPage";
 import DayChangePage from "../pages/Escola/DayChangePage";
 import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
-import UnifiedSolicitationPage from "../pages/DRE/UnifiedSolicitationPage";
+import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
@@ -100,7 +100,7 @@ const routesConfig = [
   },
   {
     path: "/dre/solicitacao-unificada",
-    component: UnifiedSolicitationPage,
+    component: SolicitacaoUnificadaPage,
     exact: false
   },
   {

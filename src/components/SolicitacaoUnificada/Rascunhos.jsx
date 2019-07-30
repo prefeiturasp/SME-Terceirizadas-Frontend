@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export class UnifiedSolicitationItemList extends Component {
+export class Rascunhos extends Component {
   constructor(props) {
     super(props);
     this.state = { checkedObjects: [] };
@@ -32,15 +32,15 @@ export class UnifiedSolicitationItemList extends Component {
 
   render() {
     const { unifiedSolicitationList } = this.props;
-    const allDaysInfo = unifiedSolicitationList.map(dayChange => {
-      const { id } = dayChange;
+    const allDaysInfo = unifiedSolicitationList.map(solicitacaoUnificada => {
+      const { id_externo, uuid } = solicitacaoUnificada;
       let backgroundColor =
-        dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
+        solicitacaoUnificada.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Solicitação Unificada {`# ${dayChange.id}`}
+              Solicitação Unificada {`# ${id_externo}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -50,15 +50,15 @@ export class UnifiedSolicitationItemList extends Component {
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.created_at}
-            <span onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}>
+            Criado em: {solicitacaoUnificada.solicitacao_kit_lanche.criado_em}
+            <span onClick={p => this.OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />
             </span>
             <span
               disabled={!this.props.schoolsLoaded}
               onClick={p =>
                 this.props.OnEditButtonClicked({
-                  dayChange
+                  solicitacaoUnificada
                 })
               }
             >
@@ -67,12 +67,15 @@ export class UnifiedSolicitationItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.pedido_multiplo
+              {solicitacaoUnificada.lista_kit_lanche_igual
                 ? "Pedido Múltiplo - "
-                : dayChange.escolas.length > 1
-                ? dayChange.escolas.length + " escolas - "
-                : dayChange.escolas.length + " escola - "}
-              {dayChange.dia} - {dayChange.razao}
+                : solicitacaoUnificada.escolas_quantidades.length > 1
+                ? solicitacaoUnificada.escolas_quantidades.length +
+                  " escolas - "
+                : solicitacaoUnificada.escolas_quantidades.length +
+                  " escola - "}
+              {solicitacaoUnificada.solicitacao_kit_lanche.data} -{" "}
+              {solicitacaoUnificada.motivo.nome}
             </p>
           </div>
         </div>

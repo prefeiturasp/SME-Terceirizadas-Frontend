@@ -147,7 +147,7 @@ export const atualizarKitLanche = async values => {
     method: "PUT",
     body: JSON.stringify(values)
   };
-  
+
   return await fetch(`${URL_SOLICITAR}/${values.id}/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -163,7 +163,7 @@ export const removeKitLanche = async idKit => {
     method: "DELETE",
     body: JSON.stringify({ id: idKit })
   };
-  
+
   return await fetch(`${URL_SOLICITACOES_AVULSAS}/${idKit}`, OBJ_REQUEST)
     .then(response => {
       return response.json();
@@ -194,7 +194,22 @@ export const getRefeicoesApi = async () => {
     headers: authToken,
     method: "GET"
   };
-  
+
+  return await fetch(`${API_URL}/kit-lanches/`, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(erro => {
+      return erro;
+    });
+};
+
+export const kitLanches = async () => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+
   return await fetch(`${API_URL}/kit-lanches/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
