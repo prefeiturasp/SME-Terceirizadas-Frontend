@@ -1,39 +1,70 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
-import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
+import { formValueSelector, FieldArray, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import BaseButton, { ButtonStyle } from "../../../Shareable/button";
 
+import { SectionFormEdital } from "./SectionFormEdital";
+import  SectionFormContratos from "./SectionFormContratos";
 import "../style.scss";
 
 class EditaisContratos extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
   }
+
+
 
   render() {
     const { handleSubmit } = this.props;
     return (
       <section className="cadastro pt-3">
-        <form onSubmit={handleSubmit}>
-          <div className="card">
-            <div className="card-body direction">
-              <h6>Dados do Edital e contratos</h6>
-              <Link to="/configuracoes/cadastros/lotes-cadastrados">
+        <div className="card">
+          <form onSubmit={handleSubmit}>
+            <header className="header-form">
+              <nav>Dados do Edital e contrato</nav>
+              <Link to="#">
                 <BaseButton
-                    className="header-button"
-                  label="Contratos cadastrados"
+                  className="header-button"
+                  label="Consulta de lotes cadastrados"
                   style={ButtonStyle.OutlinePrimary}
                 />
               </Link>
-            </div>
-          </div>
-        </form>
+            </header>
+            <SectionFormEdital />
+            <hr/>
+            <FieldArray name={`teste`} component={SectionFormContratos} />
+          </form>
+        </div>
       </section>
     );
   }
 }
 
-export default EditaisContratos;
+const CadastroEditaisForm = reduxForm({
+  form: "cadastroEditaisForm",
+  enableReinitialize: true
+})(EditaisContratos);
+const selector = formValueSelector("cadastroEditaisForm");
+const mapStateToProps = state => {
+  return {
+    resumo: {
+      nome: selector(state, "nome")
+    }
+  };
+};
+
+export default connect(mapStateToProps)(CadastroEditaisForm);
+
+/*
+
+
+<Field
+  component={LabelAndInput}
+  className="form-control"
+  name="nome"
+/> 
+
+*/

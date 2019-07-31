@@ -27,7 +27,8 @@ export const LabelAndInput = props => {
     readOnly,
     type,
     meta,
-    disabled
+    disabled,
+    classNameInput
   } = props;
   return (
     <Grid cols={cols}>
@@ -38,7 +39,7 @@ export const LabelAndInput = props => {
       )}
       <input
         {...input}
-        className="form-control"
+        className={`form-control ${classNameInput}`}
         disabled={disabled}
         name={name}
         id={name}
@@ -59,7 +60,8 @@ LabelAndInput.propTypes = {
   readOnly: PropTypes.bool
 };
 LabelAndInput.defaultProps = {
-  readOnly: false
+  readOnly: false,
+  classNameInput: ""
 };
 export class LabelAndCombo extends Component {
   constructor(props) {
@@ -197,8 +199,10 @@ export class LabelAndDate extends Component {
           <div
             className={
               activeCalendar
-                ? "input-group active-calendar" :
-                textoLabel ? "input-group calendar" : "input-group"
+                ? "input-group active-calendar"
+                : textoLabel
+                ? "input-group calendar"
+                : "input-group"
             }
           >
             {textoLabel && (
@@ -218,7 +222,7 @@ export class LabelAndDate extends Component {
               minDate={minDate}
               maxDate={maxDate}
               className="form-control"
-              ref={(c) => this._calendar = c}
+              ref={c => (this._calendar = c)}
               onChange={this.handleChange}
               locale={ptBR}
               id={name}
@@ -364,4 +368,53 @@ export class LabelAndTextArea extends Component {
       </Grid>
     );
   }
-}
+};
+
+
+export const LabelAndTextAreaCustom = props => {
+  const {
+    cols,
+    name,
+    label,
+    input,
+    min,
+    placeholder,
+    readOnly,
+    type,
+    meta,
+    disabled,
+    classNameInput,
+  } = props;
+  return (
+    <Grid cols={cols}>
+      {label && (
+        <label htmlFor={name} className={"col-form-label"}>
+          {label}
+        </label>
+      )}
+      <textarea
+        {...input}
+        className={`form-control ${classNameInput}`}
+        disabled={disabled}
+        name={name}
+        id={name}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        type={type}
+        min={min}
+      />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
+    </Grid>
+  );
+};
+LabelAndInput.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool
+};
+LabelAndInput.defaultProps = {
+  readOnly: false,
+  classNameInput: ""
+};

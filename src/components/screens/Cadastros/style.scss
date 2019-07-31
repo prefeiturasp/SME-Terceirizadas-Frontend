@@ -387,15 +387,63 @@ table.cadastro-empresa {
 section {
   display: flex;
 
-  h6 {
-    color: #686868;
+  .header-form {
+    padding: 1.5em 32px 0 32px;
+
+    nav {
+      color: #686868;
+    }
+
+    .header-button {
+      margin-top: 0.5em;
+      width: 242px;
+      height: 40px;
+      border-radius: 4px;
+      border: solid 1px #035d96;
+    }
   }
 
-  .header-button {
-    margin-top: 0.5em;
-    width: 242px;
-    height: 40px;
-    border-radius: 4px;
-    border: solid 1px #035d96;
+  .dados-editais {
+    display: grid;
+    grid-template-rows: auto;
+    grid-row-gap: 1em;
+  }
+
+  .input-duplo {
+    display: grid;
+    grid-template-columns: 48% 48%;
+    grid-template-rows: 15px 60px;
+    grid-column-gap: 4%;
+  }
+
+  .input-unico {
+    display: grid;
+  }
+
+  .article-contratos {
+    .titulo {
+      color: #686868;
+      padding: 0 32px;
+    }
+
+    .container-input{
+      display: grid;
+      grid-template-columns: 95% 5%;
+
+      .botao-add {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        margin-bottom: 1em;
+      }
+    }
+
+    .input-triplo {
+      display: grid;
+      grid-template-columns: 36% 30% 30%;
+      grid-template-rows: 15px 60px;
+      grid-column-gap: 2%;
+    }
   }
 }
+
