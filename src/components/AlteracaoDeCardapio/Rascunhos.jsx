@@ -48,7 +48,7 @@ export class Rascunhos extends Component {
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Cardápio {`# ${dayChange.id}`}
+              Alteração de Cardápio por {`# ${dayChange.motivo.nome}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -58,7 +58,7 @@ export class Rascunhos extends Component {
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.created_at}
+            Salvo em: {dayChange.criado_em}
             <span
               onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
             >
@@ -76,18 +76,7 @@ export class Rascunhos extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {/* {dayChange.dias_razoes.length > 1
-                ? dayChange.dias_razoes.length + " dias"
-                : dayChange.dias_razoes[0].razao.includes("Programa Contínuo")
-                ? dayChange.dias_razoes[0].razao +
-                  " (" +
-                  dayChange.dias_razoes[0].data_de +
-                  " - " +
-                  dayChange.dias_razoes[0].data_ate +
-                  ")"
-                : dayChange.dias_razoes[0].razao +
-                  " - " +
-                  dayChange.dias_razoes[0].data} */}
+              De {dayChange.data_inicial} a {dayChange.data_final}
             </p>
           </div>
         </div>

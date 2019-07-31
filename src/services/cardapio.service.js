@@ -61,7 +61,7 @@ export const deleteFoodSuspension = payload => {
     });
 };
 
-export const getSavedFoodSuspensions = () => {
+export const getAlteracoesCardapioList = () => {
   const url =
     API_URL + `/alteracoes-cardapio/`;
   const OBJ_REQUEST = {

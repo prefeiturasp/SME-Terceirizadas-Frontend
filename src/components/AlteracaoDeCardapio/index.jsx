@@ -4,9 +4,8 @@ import { bindActionCreators } from "redux";
 
 import {
   createAlteracaoCardapio,
-  createOrUpdateAlteracaoCardapio,
   deleteFoodSuspension,
-  getSavedFoodSuspensions
+  getAlteracoesCardapioList
 } from "../../services/cardapio.service";
 import { getPeriods } from "../../services/school.service";
 import { getMotivosAlteracaoCardapio } from "../../services/cardapio.service";
@@ -289,7 +288,7 @@ class AlteracaoDeCardapio extends Component {
   }
 
   refresh() {
-    getSavedFoodSuspensions().then(
+    getAlteracoesCardapioList().then(
       res => {
         this.setState({
           ...this.state,
