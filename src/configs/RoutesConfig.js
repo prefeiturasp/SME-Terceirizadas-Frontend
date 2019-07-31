@@ -1,7 +1,7 @@
 import { Login } from "../components/Login";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
-import FoodInclusionPage from "../pages/Escola/FoodInclusionPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import TourRequestPage from "../pages/Escola/TourRequestPage";
 import DayChangePage from "../pages/Escola/DayChangePage";
@@ -55,7 +55,7 @@ const routesConfig = [
   },
   {
     path: "/escola/inclusao-de-alimentacao",
-    component: FoodInclusionPage,
+    component: InclusaoDeAlimentacaoPage,
     exact: false
   },
   {

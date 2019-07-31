@@ -6,38 +6,69 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const createOrUpdateFoodInclusion = payload => {
-  const url = API_URL + `/food_inclusion/create_or_update/`;
+export const criarInclusaoDeAlimentacaoContinua = payload => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/`;
+  let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
     headers: authToken
   })
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
       return error.json();
     });
 };
 
-export const deleteFoodInclusion = payload => {
-  const url = API_URL + `/food_inclusion/delete/`;
+export const atualizarInclusaoDeAlimentacaoContinua = (uuid, payload) => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/`;
+  let status = 0;
   return fetch(url, {
-    method: "DELETE",
+    method: "PUT",
     body: payload,
     headers: authToken
   })
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
       return error.json();
     });
 };
 
+export const removerInclusaoDeAlimentacaoContinua = async uuid => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "DELETE"
+  };
+  let status = 0;
+  return await fetch(
+    `${API_URL}/inclusoes-alimentacao-continua/${uuid}`,
+    OBJ_REQUEST
+  )
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
+    });
+};
 export const getInclusoesContinuasSalvas = uuid => {
-  const url = `${API_URL}/escolas/${uuid}/minhas_inclusoes_alimentacao_continua/`;
+  const url = `${API_URL}/inclusoes-alimentacao-continua/minhas-solicitacoes/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -48,6 +79,25 @@ export const getInclusoesContinuasSalvas = uuid => {
     })
     .catch(error => {
       console.log(error);
+    });
+};
+
+export const inicioPedido = uuid => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/inicio_de_pedido`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
     });
 };
 
@@ -65,7 +115,6 @@ export const getMotivosInclusaoContinua = () => {
       console.log(error);
     });
 };
-
 
 export const getMotivosInclusaoNormal = () => {
   const url = `${API_URL}/motivos-inclusao-normal/`;

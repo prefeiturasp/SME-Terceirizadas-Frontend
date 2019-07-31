@@ -1,9 +1,9 @@
 import React from "react";
 import Page from "../../components/Shareable/Page/Page";
-import FoodInclusionContainer from "../../components/FoodInclusion/FoodInclusionContainer";
+import Container from "../../components/InclusaoDeAlimentacao/Container";
 
 export default props => (
   <Page titulo="Inclusão de Alimentação" tituloRastro="Solicitações">
-    <FoodInclusionContainer />
+    <Container />
   </Page>
 );
