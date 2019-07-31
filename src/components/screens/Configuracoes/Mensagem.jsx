@@ -1,23 +1,26 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+import { required } from "../../../helpers/fieldValidators";
+import { getTemplatesMensagem } from "../../../services/configuracoesMensagens";
+import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import { toastSuccess } from "../../Shareable/dialogs";
 import {
   LabelAndCombo,
   LabelAndInput,
   LabelAndTextArea
 } from "../../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import { required } from "../../../helpers/fieldValidators";
-import { toastSuccess } from "../../Shareable/dialogs";
+import { getOptions } from "./helper";
 import "./style.scss";
 
 class Mensagem extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { templates: [] };
   }
 
   lidarComCampo(tipoCampo, value) {
+    debugger;
     if (tipoCampo === "tipo_email") {
       const newValue = value === "Selecione" ? null : value;
       this.props.change("assunto", newValue);
@@ -26,6 +29,13 @@ class Mensagem extends Component {
 
   onSubmit(values) {
     toastSuccess("Configurações de E-mail salvas com sucesso!");
+  }
+
+  componentDidMount() {
+    getTemplatesMensagem().then(resp => {
+      const templates = resp.results;
+      this.setState({ templates });
+    });
   }
 
   render() {
@@ -42,36 +52,7 @@ class Mensagem extends Component {
                     component={LabelAndCombo}
                     name="tipo_email"
                     onChange={value => this.lidarComCampo("tipo_email", value)}
-                    options={[
-                      {
-                        value: null,
-                        label: "Selecione"
-                      },
-                      {
-                        value: "Alteração de Cardápio",
-                        label: "Alteração de Cardápio"
-                      },
-                      {
-                        value: "Inclusão de Alimentação",
-                        label: "Inclusão de Alimentação"
-                      },
-                      {
-                        value: "Suspensão de Alimentação",
-                        label: "Suspensão de Alimentação"
-                      },
-                      {
-                        value: "Alteração de Dias de Cardápio",
-                        label: "Alteração de Dias de Cardápio"
-                      },
-                      {
-                        value: "Solicitação de Kit Lanche",
-                        label: "Solicitação de Kit Lanche"
-                      },
-                      {
-                        value: "Aprovação de Kit Lanche",
-                        label: "Aprovação de Kit Lanche"
-                      }
-                    ]}
+                    options={getOptions(this.state.templates)}
                     validate={required}
                   />
                 </div>
