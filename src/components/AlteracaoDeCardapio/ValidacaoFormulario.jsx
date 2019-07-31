@@ -1,34 +1,44 @@
 export const validateSubmit = (values, state) => {
-  values["descricoes"] = [];
-  if (values.descricoes_first_period && values.descricoes_first_period.check) {
-    values["descricoes"].push(values.descricoes_first_period);
+  values["substituicoes"] = [];
+  if (values.substituicoes_MANHA && values.substituicoes_MANHA.check) {
+    values["substituicoes"].push({
+      "periodo_escolar": values.substituicoes_MANHA.periodo,
+      "tipos_alimentacao": values.substituicoes_MANHA.tipo_de_refeicao,
+      "qtd_alunos": values.substituicoes_MANHA.numero_de_alunos
+    });
   }
-  delete values["descricoes_first_period"];
+  delete values["substituicoes_MANHA"];
+
+  if (values.substituicoes_TARDE && values.substituicoes_TARDE.check) {
+    values["substituicoes"].push({
+      "periodo_escolar": values.substituicoes_TARDE.periodo,
+      "tipos_alimentacao": values.substituicoes_TARDE.tipo_de_refeicao,
+      "qtd_alunos": values.substituicoes_TARDE.numero_de_alunos
+    });
+  }
+  delete values["substituicoes_TARDE"];
+
   if (
-    values.descricoes_second_period &&
-    values.descricoes_second_period.check
+    values.substituicoes_NOITE &&
+    values.substituicoes_NOITE.check
   ) {
-    values["descricoes"].push(values.descricoes_second_period);
+    values["substituicoes"].push({
+      "periodo_escolar": values.substituicoes_NOITE.periodo,
+      "tipos_alimentacao": values.substituicoes_NOITE.tipo_de_refeicao,
+      "qtd_alunos": values.substituicoes_NOITE.numero_de_alunos
+    });
   }
-  delete values["descricoes_second_period"];
-  if (values.descricoes_third_period && values.descricoes_third_period.check) {
-    values["descricoes"].push(values.descricoes_third_period);
+  delete values["substituicoes_NOITE"];
+
+  if (values.substituicoes_INTEGRAL && values.substituicoes_INTEGRAL.check) {
+    values["substituicoes"].push({
+      "periodo_escolar": values.substituicoes_INTEGRAL.periodo,
+      "tipos_alimentacao": values.substituicoes_INTEGRAL.tipo_de_refeicao,
+      "qtd_alunos": values.substituicoes_INTEGRAL.qtd_alunos
+    });
   }
-  delete values["descricoes_third_period"];
-  if (
-    values.descricoes_fourth_period &&
-    values.descricoes_fourth_period.check
-  ) {
-    values["descricoes"].push(values.descricoes_fourth_period);
-  }
-  delete values["descricoes_fourth_period"];
-  if (values.descricoes_integrate && values.descricoes_integrate.check) {
-    values["descricoes"].push(values.descricoes_integrate);
-  }
-  delete values["descricoes_integrate"];
-  if (values.dias_razoes[0].razao.includes("Programa Contínuo")) {
-    delete values.dias_razoes[0]["date"];
-  }
-  if (values['descricoes'].length === 0) return "Obrigatório ao menos um período"
+  delete values["substituicoes_INTEGRAL"];
+
+  if (values['substituicoes'].length === 0) return "Obrigatório ao menos um período"
   return false;
 };

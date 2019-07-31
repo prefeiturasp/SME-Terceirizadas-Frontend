@@ -38,8 +38,9 @@ export class Rascunhos extends Component {
   }
 
   render() {
-    const { foodSuspensionList } = this.props;
-    const allDaysInfo = foodSuspensionList.map(dayChange => {
+    const { alteracaoCardapioList } = this.props;
+
+    const allDaysInfo = alteracaoCardapioList.map(dayChange => {
       const { id } = dayChange;
       let backgroundColor =
         dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
@@ -75,7 +76,7 @@ export class Rascunhos extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.dias_razoes.length > 1
+              {/* {dayChange.dias_razoes.length > 1
                 ? dayChange.dias_razoes.length + " dias"
                 : dayChange.dias_razoes[0].razao.includes("Programa Contínuo")
                 ? dayChange.dias_razoes[0].razao +
@@ -86,7 +87,7 @@ export class Rascunhos extends Component {
                   ")"
                 : dayChange.dias_razoes[0].razao +
                   " - " +
-                  dayChange.dias_razoes[0].data}
+                  dayChange.dias_razoes[0].data} */}
             </p>
           </div>
         </div>
