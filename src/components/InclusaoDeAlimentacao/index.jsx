@@ -459,9 +459,11 @@ class InclusaoDeAlimentacao extends Component {
   onSubmit(values) {
     values.inclusoes = this.state.inclusoes;
     values.quantidades_periodo = this.state.periodos;
+    const ehInclusaoContinua =
+      values.inclusoes[0].data_inicial && values.inclusoes[0].data_final;
     const error = validarSubmissao(values, this.state);
     if (!error) {
-      if (values.inclusoes[0].data_inicial && values.inclusoes[0].data_final) {
+      if (ehInclusaoContinua) {
         this.fluxoSolicitacaoContinua(values);
       } else {
         this.fluxoSolicitacaoNormal(values);
@@ -488,7 +490,7 @@ class InclusaoDeAlimentacao extends Component {
       showModal,
       loading
     } = this.state;
-
+    const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     return (
       <div>
         {loading ? (
@@ -528,7 +530,7 @@ class InclusaoDeAlimentacao extends Component {
                   return (
                     <FormSection name={`inclusoes_${dia_motivo.id}`}>
                       <div className="form-row">
-                        {(!dia_motivo.motivo || !dia_motivo.motivoContinuo) && (
+                        {!ehMotivoContinuo && (
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
@@ -587,7 +589,7 @@ class InclusaoDeAlimentacao extends Component {
                           </div>
                         </div>
                       )}
-                      {dia_motivo.motivo && dia_motivo.motivoContinuo && (
+                      {ehMotivoContinuo && (
                         <div className="form-row">
                           <div className="form-group col-sm-3">
                             <Field
@@ -637,7 +639,7 @@ class InclusaoDeAlimentacao extends Component {
                     </FormSection>
                   );
                 })}
-                {(!inclusoes[0].motivo || !inclusoes[0].motivoContinuo) && (
+                {!ehMotivoContinuo && (
                   <BaseButton
                     label="Adicionar dia"
                     className="col-sm-3"

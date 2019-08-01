@@ -9,37 +9,18 @@ import "../Shareable/style.scss";
 export class Rascunhos extends Component {
   constructor(props) {
     super(props);
-    this.state = { checkedObjects: [] };
-    this.onCheckChange = this.onCheckChange.bind(this);
+    this.state = {};
   }
 
   static propTypes = {
     salvo_em: PropTypes.string.isRequired
   };
 
-  onCheckChange(event, object) {
-    let { checkedObjects } = this.state;
-    if (event.target.checked) {
-      checkedObjects.push(object);
-      this.setState({ checkedObjects });
-    } else {
-      checkedObjects = checkedObjects.filter(obj => {
-        return obj.id !== object.id;
-      });
-      this.setState({ checkedObjects });
-    }
-  }
-
   removerRascunho(id, uuid, ehInclusaoContinua) {
     const removerRascunhoEndpointCorreto = ehInclusaoContinua
       ? removerInclusaoDeAlimentacaoContinua
       : removerInclusaoDeAlimentacaoNormal;
     this.props.removerRascunho(id, uuid, removerRascunhoEndpointCorreto);
-    let { checkedObjects } = this.state;
-    checkedObjects = checkedObjects.filter(obj => {
-      return obj.id !== id;
-    });
-    this.setState({ checkedObjects });
     this.props.resetForm();
   }
 
@@ -74,7 +55,7 @@ export class Rascunhos extends Component {
                 <i className="fas fa-trash" />
               </span>
               <span
-                onClick={p =>
+                onClick={() =>
                   this.props.carregarRascunho({
                     inclusaoDeAlimentacao
                   })
