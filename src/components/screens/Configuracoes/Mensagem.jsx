@@ -54,7 +54,7 @@ class Mensagem extends Component {
   }
 
   render() {
-    const { handleSubmit, cancelar_notificacao, tipo_email } = this.props;
+    const { handleSubmit, tipo_email } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit}>
@@ -89,27 +89,7 @@ class Mensagem extends Component {
                 </div>
               </div>
               <div className="row mt-4">
-                <div className="col-4">
-                  <div className="cancel-notification">
-                    <label htmlFor="check" className="checkbox-label">
-                      <Field
-                        component={"input"}
-                        type="checkbox"
-                        name="cancelar_notificacao"
-                      />
-                      <span
-                        onClick={() =>
-                          this.props.change(
-                            "cancelar_notificacao",
-                            !cancelar_notificacao
-                          )
-                        }
-                        className="checkbox-custom"
-                      />
-                      Cancelar notificação
-                    </label>
-                  </div>
-                </div>
+                <div className="col-4" />
                 <div className="col-8 text-right">
                   <BaseButton
                     label="Cancelar"
@@ -143,7 +123,6 @@ const MensagemForm = reduxForm({
 const selector = formValueSelector("mensagemForm");
 const mapStateToProps = state => {
   return {
-    cancelar_notificacao: selector(state, "cancelar_notificacao"),
     tipo_email: selector(state, "tipo_email")
   };
 };
