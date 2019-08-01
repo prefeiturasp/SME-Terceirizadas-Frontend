@@ -25,10 +25,10 @@ import CardMatriculados from "../Shareable/CardMatriculados";
 import { Modal } from "react-bootstrap";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/foodSuspensionReducer";
+import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import "./style.scss";
 
-class AlteracaoDeCardapio extends Component {
+class AlteracaoCardapio extends Component {
 
   constructor(props) {
     super(props);
@@ -43,9 +43,10 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
+          motivo: null,
+          observacao: null,
+          data_inicial: null,
+          data_final: null,
           weekdays: []
         }
       ],
@@ -64,7 +65,7 @@ class AlteracaoDeCardapio extends Component {
         }
       ],
       enrolled: 300,
-      reasonsList: [],
+      motivosList: [],
       day: new Date(),
       periods: [],
       two_working_days: null,
@@ -82,7 +83,6 @@ class AlteracaoDeCardapio extends Component {
   handleField(field, value) {
     if (field === "which_reason") value = value.target.value;
     if (field === "alterar_dia") {
-      console.log("VRUM");
       const _date = value.split("/");
       if (
         this.props.two_working_days <=
@@ -105,9 +105,10 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
+          motivo: null,
+          observacao: null,
+          date_inicial: null,
+          date_final: null,
           weekdays: []
         }
       ])
@@ -167,8 +168,8 @@ class AlteracaoDeCardapio extends Component {
   }
 
   resetForm(event) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(null);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(null);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
@@ -179,9 +180,10 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          razao: null,
-          data_de: null,
-          data_ate: null,
+          motivo: null,
+          observacao: null,
+          data_inicial: null,
+          data_final: null,
           weekdays: []
         }
       ],
@@ -203,8 +205,9 @@ class AlteracaoDeCardapio extends Component {
   }
 
   OnEditButtonClicked(param) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(param.dayChange);
+    console.log(param);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(param.dayChange);
     this.setState({
       status: param.dayChange.status,
       title: `Alteração de Cardápio # ${param.dayChange.id}`,
@@ -238,11 +241,11 @@ class AlteracaoDeCardapio extends Component {
     let _two,
       _five = null;
     getPeriods().then(resPeriods => {
-      getMotivosAlteracaoCardapio().then(resReasons => {
+      getMotivosAlteracaoCardapio().then(resMotivos => {
         this.setState({
           ...this.state,
           periods: resPeriods.results,
-          reasonsList: resReasons.results,
+          motivosList: resMotivos.results,
         });
       });
     });
@@ -301,7 +304,7 @@ class AlteracaoDeCardapio extends Component {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
-    this.resetForm("foodSuspension");
+    this.resetForm("alteracaoCardapio");
   }
 
   onSubmit(values) {
@@ -338,10 +341,10 @@ class AlteracaoDeCardapio extends Component {
 
       const payload = {
         "escola": "c0cc9d5e-563a-48e4-bf53-22d47b6347b4",
-        "motivo": values.reason,
-        "data_inicial": values.data_de,
-        "data_final": values.data_ate,
-        "observacao": values.obs,
+        "motivo": values.motivo,
+        "data_inicial": values.data_inicial,
+        "data_final": values.data_final,
+        "observacao": values.observacao,
         "substituicoes": values.substituicoes
       }
 
@@ -380,7 +383,7 @@ class AlteracaoDeCardapio extends Component {
     } = this.props;
     const {
       periods,
-      reasonsList,
+      motivosList,
       enrolled,
       title,
       options,
@@ -445,8 +448,8 @@ class AlteracaoDeCardapio extends Component {
                 <div className="form-group col-sm-3">
                   <Field
                     component={LabelAndDate}
-                    onChange={value => this.handleField("data_de", value)}
-                    name="data_de"
+                    onChange={value => this.handleField("data_inicial", value)}
+                    name="data_inicial"
                     label="De"
                     validate={required}
                   />
@@ -454,8 +457,8 @@ class AlteracaoDeCardapio extends Component {
                 <div className="form-group col-sm-3">
                   <Field
                     component={LabelAndDate}
-                    onChange={value => this.handleField("data_ate", value)}
-                    name="data_ate"
+                    onChange={value => this.handleField("data_final", value)}
+                    name="data_final"
                     label="Até"
                     validate={required}
                   />
@@ -465,9 +468,9 @@ class AlteracaoDeCardapio extends Component {
               <div className="form-row">
                   <Field
                     component={LabelAndCombo}
-                    name="reason"
+                    name="motivo"
                     label="Motivo"
-                    options={reasonsList}
+                    options={motivosList}
                     // onChange={value =>
                     //   this.handleField("reason", value, day_reason.id)
                     // }
@@ -575,7 +578,7 @@ class AlteracaoDeCardapio extends Component {
                   component={LabelAndTextArea}
                   placeholder="Campo opcional"
                   label="Observações"
-                  name="obs"
+                  name="observacao"
                 />
               </div>
               <div className="form-group row float-right mt-4">
@@ -642,14 +645,14 @@ class AlteracaoDeCardapio extends Component {
   }
 }
 
-const AlteracaoDeCardapioForm = reduxForm({
-  form: "alteracaoDeCardapio",
+const AlteracaoCardapioForm = reduxForm({
+  form: "alteracaoCardapio",
   enableReinitialize: true
-})(AlteracaoDeCardapio);
-const selector = formValueSelector("alteracaoDeCardapio");
+})(AlteracaoCardapio);
+const selector = formValueSelector("alteracaoCardapio");
 const mapStateToProps = state => {
   return {
-    initialValues: state.foodSuspension.data,
+    initialValues: state.alteracaoCardapio.data,
     // TODO: Desacoplar do nome dos períodos escolares
     substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
     substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
@@ -661,7 +664,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadFoodSuspension
+      loadAlteracaoCardapio
     },
     dispatch
   );
@@ -669,4 +672,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AlteracaoDeCardapioForm);
+)(AlteracaoCardapioForm);
