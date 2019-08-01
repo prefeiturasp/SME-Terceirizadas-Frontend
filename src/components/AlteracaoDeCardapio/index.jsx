@@ -491,6 +491,7 @@ class AlteracaoCardapio extends Component {
                 </tr>
               </table>
               {periods.map((period, key) => {
+                console.log("Period: ", period);
                 this.props.change(
                   `substituicoes_${period.nome}.periodo`,
                   period.uuid
@@ -536,6 +537,7 @@ class AlteracaoCardapio extends Component {
                               : "multiselect-wrapper-disabled"
                           }
                         >
+                          {/* !!!! */}
                           <Field
                             component={StatefulMultiSelect}
                             name=".tipo_de_refeicao"
@@ -558,9 +560,9 @@ class AlteracaoCardapio extends Component {
                         <Field
                           component={
                             LabelAndInput}
-                          disabled={
-                            options[period.nome].length === 0 || !checkMap[period.nome]
-                          }
+                          // disabled={
+                          //   options[period.nome].length === 0 || !checkMap[period.nome]
+                          // }
                           type="number"
                           name="numero_de_alunos"
                           min="0"
@@ -650,6 +652,7 @@ const AlteracaoCardapioForm = reduxForm({
   enableReinitialize: true
 })(AlteracaoCardapio);
 const selector = formValueSelector("alteracaoCardapio");
+
 const mapStateToProps = state => {
   return {
     initialValues: state.alteracaoCardapio.data,
@@ -657,7 +660,8 @@ const mapStateToProps = state => {
     substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
     substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
     substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
-    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL")
+    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL"),
+    options: selector(state, "options"),
   };
 };
 

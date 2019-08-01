@@ -48,7 +48,8 @@ export class Rascunhos extends Component {
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Alteração de Cardápio por {`# ${dayChange.motivo.nome}`}
+              {/* Alteração de Cardápio por {`# ${dayChange.motivo.nome}`} */}
+              Alteração de Cardápio
             </label>
             <span
               className="ml-3 p-1 border rounded"
