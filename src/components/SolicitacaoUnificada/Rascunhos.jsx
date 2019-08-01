@@ -1,17 +1,11 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
-import "../Shareable/style.scss";
 
-export class FoodInclusionItemList extends Component {
+export class Rascunhos extends Component {
   constructor(props) {
     super(props);
     this.state = { checkedObjects: [] };
     this.onCheckChange = this.onCheckChange.bind(this);
   }
-
-  static propTypes = {
-    salvo_em: PropTypes.string.isRequired
-  };
 
   onCheckChange(event, object) {
     let { checkedObjects } = this.state;
@@ -27,8 +21,6 @@ export class FoodInclusionItemList extends Component {
   }
 
   OnDeleteButtonClicked(id, uuid) {
-    // faz o pai apagar o elemento
-    // atualiza o estado do componente e limpa o form do pai
     this.props.OnDeleteButtonClicked(id, uuid);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
@@ -39,35 +31,34 @@ export class FoodInclusionItemList extends Component {
   }
 
   render() {
-    const { foodInclusionList } = this.props;
-    const allDaysInfo = foodInclusionList.map(dayChange => {
-      const { id } = dayChange;
+    const { unifiedSolicitationList } = this.props;
+    const allDaysInfo = unifiedSolicitationList.map(solicitacaoUnificada => {
+      const { id_externo, uuid } = solicitacaoUnificada;
       let backgroundColor =
-        dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
+        solicitacaoUnificada.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
-        <div className="bg-white border rounded mt-1">
+        <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Inclusão de Alimentação {`# ${dayChange.id}`}
+              Solicitação Unificada {`# ${id_externo}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {dayChange.status}
+              SALVO
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.created_at}
-            <span
-              onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
-            >
+            Criado em: {solicitacaoUnificada.solicitacao_kit_lanche.criado_em}
+            <span onClick={p => this.OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />
             </span>
             <span
+              disabled={!this.props.schoolsLoaded}
               onClick={p =>
                 this.props.OnEditButtonClicked({
-                  dayChange
+                  solicitacaoUnificada
                 })
               }
             >
@@ -76,18 +67,15 @@ export class FoodInclusionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.day_reasons.length > 1
-                ? dayChange.day_reasons.length + " dias"
-                : dayChange.day_reasons[0].reason.includes("Programa Contínuo")
-                ? dayChange.day_reasons[0].reason +
-                  " (" +
-                  dayChange.day_reasons[0].date_from +
-                  " - " +
-                  dayChange.day_reasons[0].date_to +
-                  ")"
-                : dayChange.day_reasons[0].reason +
-                  " - " +
-                  dayChange.day_reasons[0].date}
+              {solicitacaoUnificada.lista_kit_lanche_igual
+                ? "Pedido Múltiplo - "
+                : solicitacaoUnificada.escolas_quantidades.length > 1
+                ? solicitacaoUnificada.escolas_quantidades.length +
+                  " escolas - "
+                : solicitacaoUnificada.escolas_quantidades.length +
+                  " escola - "}
+              {solicitacaoUnificada.solicitacao_kit_lanche.data} -{" "}
+              {solicitacaoUnificada.motivo.nome}
             </p>
           </div>
         </div>

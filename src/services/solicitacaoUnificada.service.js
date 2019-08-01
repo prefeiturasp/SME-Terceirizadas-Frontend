@@ -6,8 +6,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const criarInclusaoDeAlimentacaoContinua = payload => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/`;
+export const criarSolicitacaoUnificada = payload => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
@@ -26,8 +26,8 @@ export const criarInclusaoDeAlimentacaoContinua = payload => {
     });
 };
 
-export const atualizarInclusaoDeAlimentacaoContinua = (uuid, payload) => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/`;
+export const atualizarSolicitacaoUnificada = (uuid, payload) => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "PUT",
@@ -46,44 +46,8 @@ export const atualizarInclusaoDeAlimentacaoContinua = (uuid, payload) => {
     });
 };
 
-export const removerInclusaoDeAlimentacaoContinua = async uuid => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "DELETE"
-  };
-  let status = 0;
-  return await fetch(
-    `${API_URL}/inclusoes-alimentacao-continua/${uuid}`,
-    OBJ_REQUEST
-  )
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return { data: error, status: status };
-    });
-};
-export const getInclusoesContinuasSalvas = uuid => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/minhas-solicitacoes/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const inicioPedido = uuid => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/inicio_de_pedido`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/inicio-pedido`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -101,23 +65,62 @@ export const inicioPedido = uuid => {
     });
 };
 
-export const getMotivosInclusaoContinua = () => {
-  const url = `${API_URL}/motivos-inclusao-continua/`;
+export const solicitacoesUnificadasSalvas = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/minhas_solicitacoes/`;
+  return await fetch(url, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
     })
     .catch(error => {
-      console.log(error);
+      console.log("Error Kit Lanche: ", error);
+      return {};
     });
 };
 
-export const getMotivosInclusaoNormal = () => {
-  const url = `${API_URL}/motivos-inclusao-normal/`;
+export const removerSolicitacaoUnificada = async uuid => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "DELETE"
+  };
+  let status = 0;
+  return await fetch(
+    `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}`,
+    OBJ_REQUEST
+  )
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
+    });
+};
+
+export const getUnifiedSolicitations = async () => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  const url = `${API_URL}/solicitacao-unificada/`;
+  return await fetch(url, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      console.log("Error Kit Lanche: ", error);
+      return {};
+    });
+};
+
+export const motivosSolicitacaoUnificada = () => {
+  const url = `${API_URL}/motivos-solicitacao-unificada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

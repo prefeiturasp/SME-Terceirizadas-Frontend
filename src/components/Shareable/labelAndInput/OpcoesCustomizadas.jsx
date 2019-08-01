@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { convertToRaw, EditorState, Modifier } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 
 export class OpcoesCustomizadas extends Component {
   static propTypes = {
@@ -36,10 +36,10 @@ export class OpcoesCustomizadas extends Component {
     return (
       <div className="variables my-auto">
         <div
-          className={this.variavelUtilizada("@identificador") ? "used" : ""}
-          onClick={() => this.adicionarVariavel("@identificador")}
+          className={this.variavelUtilizada("@id") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@id")}
         >
-          Identificador
+          Id
         </div>
         <div
           className={this.variavelUtilizada("@nome") ? "used" : ""}
@@ -48,18 +48,34 @@ export class OpcoesCustomizadas extends Component {
           Nome
         </div>
         <div
-          className={this.variavelUtilizada("@data") ? "used" : ""}
-          onClick={() => this.adicionarVariavel("@data")}
+          className={this.variavelUtilizada("@criado_em") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@criado_em")}
         >
-          Data
+          Criado em
         </div>
         <div
-          className={
-            this.variavelUtilizada("@tipo_de_alimentacao") ? "used" : ""
-          }
-          onClick={() => this.adicionarVariavel("@tipo_de_alimentacao")}
+          className={this.variavelUtilizada("@criado_por") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@criado_por")}
         >
-          Tipo de alimentação
+          Criado por
+        </div>
+        <div
+          className={this.variavelUtilizada("@status") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@status")}
+        >
+          Status
+        </div>
+        <div
+          className={this.variavelUtilizada("@data_inicial") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@data_inicial")}
+        >
+          Data inicial
+        </div>
+        <div
+          className={this.variavelUtilizada("@link") ? "used" : ""}
+          onClick={() => this.adicionarVariavel("@link")}
+        >
+          Link
         </div>
       </div>
     );

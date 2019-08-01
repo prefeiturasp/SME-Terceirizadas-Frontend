@@ -1,16 +1,16 @@
 export const convertToFormat = data => {
   const list = [];
-  data.forEach(value => {
+  data.results.forEach(value => {
     const obj = {};
-    obj["evento_data"] = value.order_date;
-    obj["id"] = value.id;
-    obj["kit_lanche"] = extractKits(value.meal_kits);
-    obj["local_passeio"] = value.location;
-    obj["nro_alunos"] = value.students_quantity;
-    obj["obs"] = value.observation;
-    obj["salvo_em"] = value.register;
+    obj["evento_data"] = value.solicitacao_kit_lanche.data;
+    obj["id"] = value.uuid;
+    obj["kit_lanche"] = extractKits(value.solicitacao_kit_lanche.kits);
+    obj["local_passeio"] = value.local;
+    obj["nro_alunos"] = value.quantidade_alunos;
+    obj["obs"] = value.solicitacao_kit_lanche.observacao;
+    obj["salvo_em"] = value.solicitacao_kit_lanche.criado_em;
     obj["status"] = value.status;
-    obj["tempo_passeio"] = value.scheduled_time;
+    obj["tempo_passeio"] = value.solicitacao_kit_lanche.tempo_passeio;
     list.push(obj);
   });
   return list;
@@ -28,11 +28,13 @@ const extractKits = data => {
 
 export const adapterEnumKits = data => {
   const objRoot = {};
-  data.forEach((value, key) => {
+  data.results.forEach((value, key) => {
     const objChild = {};
     objChild["value"] = value.uuid;
-    objChild["label"] = value.name;
-    objChild["foodList"] = value.meals[0].foods;
+    objChild["label"] = value.nome;
+    objChild["foodList"] = value.itens.map(objeto => {
+      return objeto.nome
+    });
     objRoot["KIT" + (key + 1)] = objChild;
   });
   return objRoot;
@@ -47,3 +49,5 @@ export const convertStringToDate = value => {
   }
   return value;
 };
+
+
