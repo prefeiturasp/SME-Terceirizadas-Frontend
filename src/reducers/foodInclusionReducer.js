@@ -1,4 +1,7 @@
-import { extrairTiposALimentacao, formatarDiasSemana } from "../components/InclusaoDeAlimentacao/helper";
+import {
+  extrairTiposALimentacao,
+  formatarDiasSemana
+} from "../components/InclusaoDeAlimentacao/helper";
 const LOAD_FOOD_INCLUSION = "LOAD_FOOD_INCLUSION";
 
 export default function reducer(state = {}, action) {
@@ -16,13 +19,23 @@ export default function reducer(state = {}, action) {
             numero_alunos: quantidade_periodo.numero_alunos
           };
         });
-        action.data[`dias_motivos_1`] = {
-          id: 1,
-          data_inicial: action.data.data_inicial,
-          data_final: action.data.data_final,
-          motivo: action.data.motivo.uuid,
-          outro_motivo: action.data.outro_motivo,
-          dias_semana: formatarDiasSemana(action.data.dias_semana)
+        if (action.data.data_inicial !== undefined) {
+          action.data[`inclusoes_0`] = {
+            id: 0,
+            data_inicial: action.data.data_inicial,
+            data_final: action.data.data_final,
+            motivo: action.data.motivo.uuid,
+            outro_motivo: action.data.outro_motivo,
+            dias_semana: formatarDiasSemana(action.data.dias_semana)
+          };
+        } else {
+          action.data.inclusoes.forEach((inclusao, indice) => {
+            action.data[`inclusoes_${indice}`] = {
+              data: inclusao.data,
+              motivo: inclusao.motivo.uuid,
+              outro_motivo: inclusao.outro_motivo
+            };
+          });
         }
       }
 
