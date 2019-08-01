@@ -1,6 +1,6 @@
 import { formatarSubmissao } from "../helper";
 
-describe("Teste formatarSubmissão", () => {
+describe("Teste formatarSubmissão Solicitação Unificada", () => {
   const solicitacaoKitLanche = {
     data: "02/08/2019",
     motivo: "a84e782a-2851-4e67-8d84-502529079f0a",
