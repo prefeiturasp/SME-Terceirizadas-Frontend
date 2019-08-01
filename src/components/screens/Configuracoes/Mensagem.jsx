@@ -1,10 +1,15 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { required } from "../../../helpers/fieldValidators";
-import { getTemplatesMensagem } from "../../../services/configuracoesMensagens";
+import {
+  atualizarTemplateMensagem,
+  getTemplateMensagemDetalhe,
+  getTemplatesMensagem
+} from "../../../services/configuracoesMensagens";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import { toastSuccess } from "../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../Shareable/dialogs";
 import {
   LabelAndCombo,
   LabelAndInput,
@@ -19,16 +24,26 @@ class Mensagem extends Component {
     this.state = { templates: [] };
   }
 
-  lidarComCampo(tipoCampo, value) {
-    debugger;
-    if (tipoCampo === "tipo_email") {
-      const newValue = value === "Selecione" ? null : value;
-      this.props.change("assunto", newValue);
+  onTipoEmailComboChanged(uuid) {
+    if (uuid !== "Selecione") {
+      getTemplateMensagemDetalhe(uuid).then(resp => {
+        this.props.change("assunto", resp.assunto);
+        this.props.change("template_html", resp.template_html);
+      });
+    } else {
+      this.props.reset();
     }
   }
 
   onSubmit(values) {
-    toastSuccess("Configurações de E-mail salvas com sucesso!");
+    const uuid = values.tipo_email;
+    atualizarTemplateMensagem(uuid, values).then(resp => {
+      if (resp.status === HTTP_STATUS.OK) {
+        toastSuccess("Configurações de E-mail salvas com sucesso!");
+      } else {
+        toastError("Falhou em atualizar o template");
+      }
+    });
   }
 
   componentDidMount() {
@@ -39,7 +54,7 @@ class Mensagem extends Component {
   }
 
   render() {
-    const { handleSubmit, cancelar_notificacao } = this.props;
+    const { handleSubmit, tipo_email } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit}>
@@ -51,7 +66,7 @@ class Mensagem extends Component {
                   <Field
                     component={LabelAndCombo}
                     name="tipo_email"
-                    onChange={value => this.lidarComCampo("tipo_email", value)}
+                    onChange={value => this.onTipoEmailComboChanged(value)}
                     options={getOptions(this.state.templates)}
                     validate={required}
                   />
@@ -60,60 +75,34 @@ class Mensagem extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <label className="label">Assunto</label>
-                  <Field
-                    component={LabelAndInput}
-                    name="assunto"
-                    onChange={value => this.lidarComCampo()}
-                    disabled
-                  />
+                  <Field component={LabelAndInput} name="assunto" disabled />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <label className="label">Mensagem</label>
+                  <label className="label">Template</label>
                   <Field
                     component={LabelAndTextArea}
-                    name="mensagem"
+                    name="template_html"
                     temOpcoesCustomizadas
                   />
                 </div>
               </div>
               <div className="row mt-4">
-                <div className="col-4">
-                  <div className="cancel-notification">
-                    <label htmlFor="check" className="checkbox-label">
-                      <Field
-                        component={"input"}
-                        type="checkbox"
-                        name="cancelar_notificacao"
-                      />
-                      <span
-                        onClick={() =>
-                          this.props.change(
-                            "cancelar_notificacao",
-                            !cancelar_notificacao
-                          )
-                        }
-                        className="checkbox-custom"
-                      />
-                      Cancelar notificação
-                    </label>
-                  </div>
-                </div>
+                <div className="col-4" />
                 <div className="col-8 text-right">
                   <BaseButton
                     label="Cancelar"
-                    onClick={event => this.resetForm(event)}
+                    onClick={() => this.props.reset()}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values
-                      })
-                    )}
+                    onClick={handleSubmit(values => {
+                      this.onSubmit(values);
+                    })}
                     className="ml-3"
+                    disabled={!tipo_email || tipo_email === "Selecione"}
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
                   />
@@ -134,7 +123,7 @@ const MensagemForm = reduxForm({
 const selector = formValueSelector("mensagemForm");
 const mapStateToProps = state => {
   return {
-    cancelar_notificacao: selector(state, "cancelar_notificacao")
+    tipo_email: selector(state, "tipo_email")
   };
 };
 
