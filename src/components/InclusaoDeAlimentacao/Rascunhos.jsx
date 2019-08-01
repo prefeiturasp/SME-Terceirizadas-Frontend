@@ -1,5 +1,9 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import {
+  removerInclusaoDeAlimentacaoContinua,
+  removerInclusaoDeAlimentacaoNormal
+} from "../../services/foodInclusion.service";
 import "../Shareable/style.scss";
 
 export class Rascunhos extends Component {
@@ -26,8 +30,11 @@ export class Rascunhos extends Component {
     }
   }
 
-  removerRascunho(id, uuid) {
-    this.props.removerRascunho(id, uuid);
+  removerRascunho(id, uuid, ehInclusaoContinua) {
+    const removerRascunhoEndpointCorreto = ehInclusaoContinua
+      ? removerInclusaoDeAlimentacaoContinua
+      : removerInclusaoDeAlimentacaoNormal;
+    this.props.removerRascunho(id, uuid, removerRascunhoEndpointCorreto);
     let { checkedObjects } = this.state;
     checkedObjects = checkedObjects.filter(obj => {
       return obj.id !== id;
@@ -41,6 +48,7 @@ export class Rascunhos extends Component {
     const allDaysInfo = rascunhosInclusaoDeAlimentacao.map(
       inclusaoDeAlimentacao => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
+        const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
         let backgroundColor =
           inclusaoDeAlimentacao.status === "SALVO" ? "#82B7E8" : "#DADADA";
         return (
@@ -60,10 +68,7 @@ export class Rascunhos extends Component {
               Salvo em: {inclusaoDeAlimentacao.created_at}
               <span
                 onClick={p =>
-                  this.removerRascunho(
-                    id_externo,
-                    uuid
-                  )
+                  this.removerRascunho(id_externo, uuid, ehInclusaoContinua)
                 }
               >
                 <i className="fas fa-trash" />
@@ -80,20 +85,14 @@ export class Rascunhos extends Component {
             </div>
             <div className="ml-3">
               <p>
-                {inclusaoDeAlimentacao.quantidades_periodo.length > 1
-                  ? inclusaoDeAlimentacao.quantidades_periodo.length + " dias"
-                  : inclusaoDeAlimentacao.motivo.nome.includes(
-                      "Programa Contínuo"
-                    )
-                  ? inclusaoDeAlimentacao.motivo.nome +
-                    " (" +
-                    inclusaoDeAlimentacao.data_inicial +
-                    " - " +
-                    inclusaoDeAlimentacao.data_final +
-                    ")"
-                  : inclusaoDeAlimentacao.motivo.nome +
-                    " - " +
-                    inclusaoDeAlimentacao.data}
+                {ehInclusaoContinua
+                  ? `${inclusaoDeAlimentacao.motivo.nome} -
+                    (${inclusaoDeAlimentacao.data_inicial} - ${
+                      inclusaoDeAlimentacao.data_final
+                    })`
+                  : `Inclusão de Alimentação - ${
+                      inclusaoDeAlimentacao.inclusoes.length
+                    } dia(s)`}
               </p>
             </div>
           </div>
