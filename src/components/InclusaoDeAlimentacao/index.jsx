@@ -34,6 +34,7 @@ import {
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
 import { validarSubmissao } from "./validacao";
+import "./style.scss";
 
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
@@ -175,13 +176,6 @@ class InclusaoDeAlimentacao extends Component {
       `quantidades_periodo_${periodo.nome}.tipos_alimentacao`,
       opcoesSelecionadas
     );
-  };
-
-  fontHeader = {
-    color: "#686868"
-  };
-  bgMorning = {
-    background: "#FFF7CB"
   };
 
   removerRascunho(id_externo, uuid) {
@@ -409,13 +403,7 @@ class InclusaoDeAlimentacao extends Component {
       showModal,
       loading
     } = this.state;
-    const colors = {
-      MANHA: "#FFF7CB",
-      TARDE: "#EAFFE3",
-      NOITE: "#FFEED6",
-      INTEGRAL: "#E4F1FF",
-      integrate: "#EBEDFF"
-    };
+
     return (
       <div>
         {loading ? (
@@ -444,16 +432,11 @@ class InclusaoDeAlimentacao extends Component {
               </div>
             )}
             <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <h3 className="font-weight-bold" style={{ color: "#353535" }}>
-                {title}
-              </h3>
+              <h3 className="font-weight-bold">{title}</h3>
             </div>
             <div className="card mt-3">
               <div className="card-body">
-                <div
-                  className="card-title font-weight-bold"
-                  style={this.fontHeader}
-                >
+                <div className="card-title font-weight-bold">
                   Descrição da Inclusão
                 </div>
                 {dias_motivos.map((dia_motivo, key) => {
@@ -474,7 +457,7 @@ class InclusaoDeAlimentacao extends Component {
                             />
                           </div>
                         )}
-                        <div className="form-group col-sm-8">
+                        <div className="form-group col-sm-8 p-0">
                           <Field
                             component={LabelAndCombo}
                             name="motivo"
@@ -499,7 +482,7 @@ class InclusaoDeAlimentacao extends Component {
                             className={
                               !dia_motivo.motivoContinuo
                                 ? "form-group col-sm-8 offset-sm-3"
-                                : "form-group col-sm-8"
+                                : "form-group col-sm-8 p-0"
                             }
                           >
                             <Field
@@ -578,13 +561,11 @@ class InclusaoDeAlimentacao extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                 )}
-                <table className="table table-borderless">
-                  <tr>
-                    <td>Período</td>
-                    <td style={{ paddingLeft: "9rem" }}>Tipo de Alimentação</td>
-                    <td>Nº de Alunos</td>
-                  </tr>
-                </table>
+                <div className="row table-titles">
+                  <div className="col-3">Período</div>
+                  <div className="col-6">Tipo de Alimentação</div>
+                  <div className="col-3">Nº de Alunos</div>
+                </div>
                 {periodos.map((periodo, key) => {
                   return (
                     <FormSection name={`quantidades_periodo_${periodo.nome}`}>
@@ -592,12 +573,7 @@ class InclusaoDeAlimentacao extends Component {
                         <Field component={"input"} type="hidden" name="value" />
                         <div className="form-check col-md-3 mr-4 ml-4">
                           <div
-                            className="pl-5 pt-2 pb-2"
-                            style={{
-                              marginLeft: "-1.4rem",
-                              background: colors[periodo.nome],
-                              borderRadius: "7px"
-                            }}
+                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field

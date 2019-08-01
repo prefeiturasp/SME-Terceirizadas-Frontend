@@ -68,6 +68,10 @@ export const GeradorUUID = () => {
 export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
   let dataFormatada = {};
   dataFormatada.motivo = values.dias_motivos[0].motivo;
+  dataFormatada.data_inicial = values.dias_motivos[0].data_inicial;
+  dataFormatada.data_final = values.dias_motivos[0].data_final;
+  dataFormatada.dias_semana = values.dias_motivos[0].dias_semana;
+  dataFormatada.outro_motivo = values.dias_motivos[0].outro_motivo;
   dataFormatada.escola = meusDados.escolas[0].uuid;
   let quantidades_periodo = [];
   values.quantidades_periodo.forEach(quantidade_periodo => {
@@ -83,9 +87,5 @@ export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
   });
   dataFormatada.quantidades_periodo = quantidades_periodo;
   dataFormatada.descricao = values.descricao;
-  dataFormatada.data_inicial = values.dias_motivos[0].data_inicial;
-  dataFormatada.data_final = values.dias_motivos[0].data_final;
-  dataFormatada.dias_semana = values.dias_motivos[0].dias_semana;
-  dataFormatada.outro_motivo = values.dias_motivos[0].outro_motivo;
   return dataFormatada;
 };
