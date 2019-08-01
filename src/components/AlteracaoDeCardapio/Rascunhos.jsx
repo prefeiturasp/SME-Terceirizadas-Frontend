@@ -78,6 +78,7 @@ export class Rascunhos extends Component {
             <p>
               De {dayChange.data_inicial} a {dayChange.data_final}
             </p>
+            <small>{dayChange.uuid}</small>
           </div>
         </div>
       );

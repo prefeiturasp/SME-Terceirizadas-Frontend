@@ -46,15 +46,14 @@ export const createOrUpdateAlteracaoCardapio = payload => {
     });
 };
 
-export const deleteFoodSuspension = payload => {
-  const url = API_URL + `/suspensao-de-alimentacao/remover/`;
+export const deleteAlteracaoCardapio = uuid => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`
   return fetch(url, {
     method: "DELETE",
-    body: payload,
     headers: authToken
   })
     .then(result => {
-      return result.json();
+      return result.status;
     })
     .catch(error => {
       return error.json();

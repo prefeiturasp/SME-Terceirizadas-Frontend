@@ -4,7 +4,7 @@ import { bindActionCreators } from "redux";
 
 import {
   createAlteracaoCardapio,
-  deleteFoodSuspension,
+  deleteAlteracaoCardapio,
   getAlteracoesCardapioList
 } from "../../services/cardapio.service";
 import { getPeriods } from "../../services/school.service";
@@ -149,19 +149,21 @@ class AlteracaoDeCardapio extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
-      res => {
-        if (res.code === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
-          this.refresh();
-        } else {
-          toastError(res.log_content[0]);
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteAlteracaoCardapio(uuid).then(
+        statusCode => {
+          if (statusCode === 204) {
+            toastSuccess(`Rascunho excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      )
+    }
   }
 
   resetForm(event) {
@@ -345,7 +347,7 @@ class AlteracaoDeCardapio extends Component {
 
       createAlteracaoCardapio(JSON.stringify(payload)).then(
         res => {
-          if (res.status === 200) {
+          if (res.status === 201) {
             toastSuccess(
               (values.status === "SALVO"
                 ? "Rascunho salvo"
