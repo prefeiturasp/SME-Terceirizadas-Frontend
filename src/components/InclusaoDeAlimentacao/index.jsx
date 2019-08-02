@@ -25,7 +25,7 @@ import {
   getInclusoesNormaisSalvas,
   inicioPedidoContinua,
   inicioPedidoNormal
-} from "../../services/foodInclusion.service";
+} from "../../services/inclusaoDeAlimentacao.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";

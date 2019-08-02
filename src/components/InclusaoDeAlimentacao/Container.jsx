@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import {
   getMotivosInclusaoContinua,
   getMotivosInclusaoNormal
-} from "../../services/foodInclusion.service";
+} from "../../services/inclusaoDeAlimentacao.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import { getPeriods } from "../../services/school.service";
 import { formatarPeriodos } from "./helper";
 import InclusaoDeAlimentacao from ".";
 
-class FoodInclusionContainer extends Component {
+class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,8 +52,12 @@ class FoodInclusionContainer extends Component {
     });
 
     getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = new Date(response.proximos_cinco_dias_uteis);
-      const proximos_dois_dias_uteis = new Date(response.proximos_dois_dias_uteis);
+      const proximos_cinco_dias_uteis = new Date(
+        response.proximos_cinco_dias_uteis
+      );
+      const proximos_dois_dias_uteis = new Date(
+        response.proximos_dois_dias_uteis
+      );
       this.setState({
         proximos_dois_dias_uteis,
         proximos_cinco_dias_uteis
@@ -66,4 +70,4 @@ class FoodInclusionContainer extends Component {
   }
 }
 
-export default FoodInclusionContainer;
+export default Container;
