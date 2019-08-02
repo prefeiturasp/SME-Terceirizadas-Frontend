@@ -82,6 +82,7 @@ class AlteracaoCardapio extends Component {
   }
 
   handleField(field, value) {
+
     if (field === "which_reason") value = value.target.value;
     if (field === "alterar_dia") {
       const _date = value.split("/");
@@ -255,12 +256,9 @@ class AlteracaoCardapio extends Component {
     })});
 
     getWorkingDays().then(res => {
-      _two = res.proximos_dois_dias_uteis.split("/");
-      _five = res.proximos_cinco_dias_uteis.split("/");
       this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        two_working_days: new Date(res.proximos_dois_dias_uteis),
+        five_working_days: new Date(res.proximos_cinco_dias_uteis)
       });
     });
     this.refresh();
