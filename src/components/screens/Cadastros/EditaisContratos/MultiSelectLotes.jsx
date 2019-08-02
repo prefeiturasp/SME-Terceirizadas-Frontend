@@ -1,26 +1,18 @@
 import React, { Component, Fragment } from "react";
 import { Field } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { buscaDadosLote } from "./helper";
-import { getLotes } from "../../../../services/diretoriaRegional.service";
 
 class MultiSelectLotes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lotes: [],
-      lotesSelecionados: []
     };
   }
 
-  componentDidMount() {
-    getLotes().then(response => {
-      this.setState({ lotes: buscaDadosLote(response.results) });
-    });
-  }
+
 
   lidarComLotesSelecionados(value) {
-    this.setState({ lotesSelecionados: value });
+    this.setState({ lotesSelecionados: "value" });
   }
 
   renderizarLabelLote(selected, options) {
@@ -37,8 +29,7 @@ class MultiSelectLotes extends Component {
   }
 
   render() {
-    const { lotesSelecionados, lotes } = this.state;
-    const { contratoRelacionado } = this.props;
+    const { contratoRelacionado, lotesSelecionados, lotes } = this.props;
     return (
       <Fragment>
         {lotes.length ? (

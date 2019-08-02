@@ -1,67 +1,53 @@
 import React, { Component, Fragment } from "react";
-import { reduxForm, Field, FieldArray } from "redux-form";
+import { Field } from "redux-form";
 import {
   LabelAndInput,
   LabelAndDate
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle } from "../../../Shareable/button";
-import {
-  getDiretoriaregional
-} from "../../../../services/diretoriaRegional.service";
-import { buscaDadosDRE } from "./helper";
-import MultiSelectLotes from './MultiSelectLotes';
-
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dres: [],
-      dresSelecionados: [],
-      empresas: [
-        {
-          uuid: "6d8fd0c9-a2ad-4ead-b748-a3d588d9872a",
-          nome: "SINGULAR GESTÃO DE SERVIÇOS LTDA"
-        },
-        {
-          uuid: "2cfdb273-4ef2-44a7-9278-26a0a2373896",
-          nome: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A. "
-        },
-        {
-          uuid: "4d5ae3ac-f487-4680-b56a-fedb9a69c6a4",
-          nome: "S.H.A COMÉRCIO DE ALIMENTOS LTDA"
-        },
-        {
-          uuid: "91e5d95b-42a2-46fa-bae1-418dbf37f510",
-          nome: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI "
-        },
-        {
-          uuid: "398eb388-5e8b-4805-8ab6-afbaac743f31",
-          nome: "COMERCIAL MILANO BRASIL"
-        }
-      ],
-      empresasSelecionadas: []
+      quantidadeForm: 0,
+      nomeDoFormAtual: ""
     };
+    this.obtemNomeForm = this.obtemNomeForm.bind(this);
+  }
+
+  obtemNomeForm(form, quantidadeForm) {
+    let nome = `${form}${quantidadeForm + 1}`;
+    this.setState({ nomeDoFormAtual: nome})
+    this.setState({ quantidadeForm: quantidadeForm +1 })
   }
 
   componentDidMount() {
-    getDiretoriaregional().then(response => {
-      this.setState({ dres: buscaDadosDRE(response.data) });
-    });
+    this.obtemNomeForm(
+      this.props.fields.name,
+      this.state.quantidadeForm
+    );
 
   }
 
-  render() {
-    const {
-      lotes,
-      dres,
-      empresas,
-      lotesSelecionados,
-      dresSelecionados,
-      empresasSelecionadas
-    } = this.state;
-    const { fields } = this.props;
+  renderizarLabelLote(selected, options) {
+    if (selected.length === 0) {
+      return "Selecione um ou mais lotes...";
+    }
+    if (selected.length === options.length) {
+      return "Todos os lotes foram selecionados";
+    }
+    if (selected.length === 1) {
+      return `${selected.length} lote selecionado`;
+    }
+    return `${selected.length} lotes selecionados`;
+  }
 
+  render() {
+    const { nomeDoFormAtual, quantidadeForm } = this.state;
+    const { fields, lotes, lotesSelecionados, lidarComLotesSelecionados } = this.props;
+   
     return (
       <Fragment>
         <nav className="titulo">Contratos relacionados</nav>
@@ -94,7 +80,28 @@ class ContratosRelacionados extends Component {
                   </div>
                   <div className="container-lote-dre">
                     <div className="inputs-select-lote-dre">
-                     <MultiSelectLotes contratoRelacionado={contratoRelacionado} />
+                      {lotes.length ? (
+                        
+                        <Field
+                          component={StatefulMultiSelect}
+                          name={`${nomeDoFormAtual}lotes`}
+                          selected={!lotesSelecionados[Object.keys(lotesSelecionados)] ? ([]) : ([1,2])}
+                          options={lotes}
+                          valueRenderer={this.renderizarLabelLote}
+                          onSelectedChanged={value =>
+                            lidarComLotesSelecionados(value, nomeDoFormAtual)
+                          }
+                          overrideStrings={{
+                            search: "Busca",
+                            selectSomeItems: "Selecione",
+                            allItemsAreSelected:
+                              "Todos os itens estão selecionados",
+                            selectAll: "Todos"
+                          }}
+                        />
+                      ) : (
+                        <div>Carregando lotes..</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -109,7 +116,10 @@ class ContratosRelacionados extends Component {
             className="header-button"
             label="+ Adicionar outro contrato relacionado"
             style={ButtonStyle.OutlinePrimary}
-            onClick={() => fields.push()}
+            onClick={() => {
+              fields.push()
+              this.obtemNomeForm(fields.name, quantidadeForm)
+            }}
           />
         </article>
       </Fragment>

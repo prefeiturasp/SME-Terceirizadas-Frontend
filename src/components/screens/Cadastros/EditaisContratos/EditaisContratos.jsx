@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { formValueSelector, FieldArray, reduxForm } from "redux-form";
+import { FieldArray, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
 import BaseButton, { ButtonStyle } from "../../../Shareable/button";
-
+import { getLotes } from "../../../../services/diretoriaRegional.service";
+import { buscaDadosLote } from "./helper";
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
@@ -11,11 +11,36 @@ import "../style.scss";
 class EditaisContratos extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      lotes: [],
+      lotesSelecionados: [
+
+      ]
+    };
+    this.lidarComLotesSelecionados = this.lidarComLotesSelecionados.bind(this);
   }
+
+  componentDidMount() {
+    getLotes().then(response => {
+      this.setState({ lotes: buscaDadosLote(response.results) });
+    });
+  }
+
+  lidarComLotesSelecionados(value, nomeDoFormAtual) {
+    let valor = value[0]
+    Object.keys(this.state.lotesSelecionados) == nomeDoFormAtual ? (
+      this.state.lotesSelecionados[[nomeDoFormAtual]].push(valor)
+    ): (
+     this.setState({ lotesSelecionados: {[nomeDoFormAtual]: value} })
+    )
+    console.log(this.state.lotesSelecionados)
+  }
+
+
 
   render() {
     const { handleSubmit } = this.props;
+    const { lotes, lotesSelecionados } = this.state;
     return (
       <section className="cadastro pt-3">
         <div className="card">
@@ -35,6 +60,9 @@ class EditaisContratos extends Component {
             <FieldArray
               name="contratosRelacionados"
               component={ContratosRelacionados}
+              lotes={lotes}
+              lotesSelecionados={lotesSelecionados}
+              lidarComLotesSelecionados={this.lidarComLotesSelecionados}
             />
 
             <footer>

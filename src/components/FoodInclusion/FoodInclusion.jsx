@@ -8,8 +8,7 @@ import { required } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   createOrUpdateFoodInclusion,
-  deleteFoodInclusion,
-  getInclusoesContinuasSalvas
+  deleteFoodInclusion
 } from "../../services/foodInclusion.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -253,7 +252,7 @@ class FoodInclusionEditor extends Component {
 
   refresh() {
     // TODO: definir a escola atraves do login, aguardar os perfis implementados..
-    const escolaTemp = "88d9fd38-6d48-41d9-ae1e-133265260154";
+    //const escolaTemp = "88d9fd38-6d48-41d9-ae1e-133265260154";
     // getInclusoesContinuasSalvas(escolaTemp).then(
     //   // TODO: criar status das inclusoes
     //   foodInclusionList => {
