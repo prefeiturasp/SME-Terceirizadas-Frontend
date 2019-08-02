@@ -1,55 +1,39 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import React, { Component } from "react";
+import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {
-  createOrUpdateFoodSuspension,
-  deleteFoodSuspension,
-  getSavedFoodSuspensions
-} from "../../services/foodSuspension.service";
-import { getPeriods } from "../../services/school.service";
-import { getReasons } from "../../services/foodSuspension.service";
-import { getWorkingDays } from "../../services/workingDays.service";
-import { validateSubmit } from "./ValidacaoFormulario";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
+import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
+import {
+  createAlteracaoCardapio,
+  deleteAlteracaoCardapio,
+  enviarAlteracaoCardapio,
+  getAlteracoesCardapioList,
+  getMotivosAlteracaoCardapio,
+  updateAlteracaoCardapio
+} from "../../services/cardapio.service";
+import { escolas, getPeriods } from "../../services/school.service";
+import { getWorkingDays } from "../../services/workingDays.service";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Modal } from "react-bootstrap";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import {
+  LabelAndCombo,
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/foodSuspensionReducer";
 import "./style.scss";
+import { validateSubmit } from "./ValidacaoFormulario";
 
-class AlteracaoDeCardapio extends Component {
-  typeFoodContinuousProgram = [
-    {
-      label: "Lanche 4 Horas",
-      value: "Lanche 4 Horas"
-    },
-    {
-      label: "Refeição/Sobremesa",
-      value: "Refeição/Sobremesa"
-    },
-    {
-      label: "Lanche 5/6 Horas",
-      value: "Lanche 5/6 Horas"
-    },
-    {
-      label: "Sobremesa",
-      value: "Sobremesa"
-    }
-  ];
-
+class AlteracaoCardapio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      foodSuspensionList: [],
+      alteracaoCardapioList: [],
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: "",
@@ -59,18 +43,19 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
+          motivo: null,
+          observacao: null,
+          data_inicial: null,
+          data_final: null,
           weekdays: []
         }
       ],
+      // TODO: Desacoplar options do nome dos períodos escolares
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
       },
       selectDefault: [
         {
@@ -80,11 +65,9 @@ class AlteracaoDeCardapio extends Component {
         }
       ],
       enrolled: 300,
-      reasons_simple: [],
-      reasons_continuous_program: [],
+      motivosList: [],
       day: new Date(),
       periods: [],
-      typeFoodContinuousProgram: this.typeFoodContinuousProgram,
       two_working_days: null,
       five_working_days: null
     };
@@ -100,7 +83,6 @@ class AlteracaoDeCardapio extends Component {
   handleField(field, value) {
     if (field === "which_reason") value = value.target.value;
     if (field === "alterar_dia") {
-      console.log("VRUM");
       const _date = value.split("/");
       if (
         this.props.two_working_days <=
@@ -123,14 +105,26 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
+          motivo: null,
+          observacao: null,
+          date_inicial: null,
+          date_final: null,
           weekdays: []
         }
       ])
     });
   }
+
+  getOptionsFromTiposAlimentacao = tiposAlimentacao => {
+    let options = [];
+    tiposAlimentacao.forEach(function(tipoAlimentacao) {
+      options.push({
+        label: tipoAlimentacao.nome,
+        value: tipoAlimentacao.uuid
+      });
+    });
+    return options;
+  };
 
   showModal() {
     this.setState({ ...this.state, showModal: true });
@@ -138,13 +132,13 @@ class AlteracaoDeCardapio extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions;
+    options[period.nome] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
     });
     this.props.change(
-      `descricoes_${period.value}.tipo_de_refeicao`,
+      `substituicoes_${period.nome}.tipo_de_refeicao`,
       selectedOptions
     );
   };
@@ -157,24 +151,26 @@ class AlteracaoDeCardapio extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
-      res => {
-        if (res.code === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
-          this.refresh();
-        } else {
-          toastError(res.log_content[0]);
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteAlteracaoCardapio(uuid).then(
+        statusCode => {
+          if (statusCode === 204) {
+            toastSuccess(`Rascunho excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      );
+    }
   }
 
   resetForm(event) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(null);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(null);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
@@ -185,18 +181,19 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          razao: null,
-          data_de: null,
-          data_ate: null,
+          motivo: null,
+          observacao: null,
+          data_inicial: null,
+          data_final: null,
           weekdays: []
         }
       ],
+      // TODO: Desacoplar options dos nomes dos períodos escolares
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
       },
       selectDefault: [
         {
@@ -209,34 +206,31 @@ class AlteracaoDeCardapio extends Component {
   }
 
   OnEditButtonClicked(param) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(param.dayChange);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(param.dayChange);
     this.setState({
       status: param.dayChange.status,
       title: `Alteração de Cardápio # ${param.dayChange.id}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
       dias_razoes: param.dayChange.dias_razoes,
+      // TODO: Desacoplar options dos nomes dos períodos escolares
       options: {
-        first_period:
-          param.dayChange.descricoes_first_period !== undefined
-            ? param.dayChange.descricoes_first_period.tipo_de_refeicao
+        MANHA:
+          param.dayChange.substituicoes_MANHA !== undefined
+            ? param.dayChange.substituicoes_MANHA.tipo_de_refeicao
             : [],
-        second_period:
-          param.dayChange.descricoes_second_period !== undefined
-            ? param.dayChange.descricoes_second_period.tipo_de_refeicao
+        TARDE:
+          param.dayChange.substituicoes_TARDE !== undefined
+            ? param.dayChange.substituicoes_TARDE.tipo_de_refeicao
             : [],
-        third_period:
-          param.dayChange.descricoes_third_period !== undefined
-            ? param.dayChange.descricoes_third_period.tipo_de_refeicao
+        NOITE:
+          param.dayChange.substituicoes_NOITE !== undefined
+            ? param.dayChange.substituicoes_NOITE.tipo_de_refeicao
             : [],
-        fourth_period:
-          param.dayChange.descricoes_fourth_period !== undefined
-            ? param.dayChange.descricoes_fourth_period.tipo_de_refeicao
-            : [],
-        integrate:
-          param.dayChange.descricoes_integrate !== undefined
-            ? param.dayChange.descricoes_integrate.tipo_de_refeicao
+        INTEGRAL:
+          param.dayChange.substituicoes_INTEGRAL !== undefined
+            ? param.dayChange.substituicoes_INTEGRAL.tipo_de_refeicao
             : []
       }
     });
@@ -246,36 +240,35 @@ class AlteracaoDeCardapio extends Component {
   componentDidMount() {
     let _two,
       _five = null;
-    getPeriods().then(resPeriods => {
-      getReasons().then(resReasons => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.content.school_periods,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program:
-            resReasons.content.reasons_continuous_program
+    escolas().then(resEscolas => {
+      getPeriods().then(resPeriods => {
+        getMotivosAlteracaoCardapio().then(resMotivos => {
+          this.setState({
+            ...this.state,
+            periods: resPeriods.results,
+            motivosList: resMotivos.results,
+            escola: resEscolas.results[0]
+          });
         });
       });
     });
+
     getWorkingDays().then(res => {
-      _two = res[0].date_two_working_days.split("/");
-      _five = res[0].date_five_working_days.split("/");
       this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        two_working_days: new Date(res.proximos_dois_dias_uteis),
+        five_working_days: new Date(res.proximos_cinco_dias_uteis)
       });
     });
     this.refresh();
   }
 
   componentDidUpdate(prevProps) {
+    // TODO: Desacoplar dos nomes dos períodos escolares
     const fields = [
-      "descricoes_first_period",
-      "descricoes_second_period",
-      "descricoes_third_period",
-      "descricoes_fourth_period",
-      "descricoes_integrate"
+      "substituicoes_MANHA",
+      "substituicoes_TARDE",
+      "substituicoes_NOITE",
+      "substituicoes_INTEGRAL"
     ];
     fields.forEach(
       function(field) {
@@ -286,7 +279,7 @@ class AlteracaoDeCardapio extends Component {
           !this.props[field].check
         ) {
           let options = this.state.options;
-          const value = field.split("descricoes_")[1];
+          const value = field.split("substituicoes_")[1];
           options[value] = [];
           this.setState({
             ...this.state,
@@ -300,41 +293,88 @@ class AlteracaoDeCardapio extends Component {
   }
 
   refresh() {
-    getSavedFoodSuspensions().then(
+    getAlteracoesCardapioList().then(
       res => {
         this.setState({
           ...this.state,
-          foodSuspensionList: res.content.suspensoes_de_alimentacao
+          alteracaoCardapioList: res.results
         });
       },
       function(error) {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
-    this.resetForm("foodSuspension");
+    this.resetForm("alteracaoCardapio");
+  }
+
+  enviaAlteracaoCardapio(uuid) {
+    enviarAlteracaoCardapio(uuid).then(
+      res => {
+        if (res.status === 200) {
+          this.refresh();
+          toastSuccess("Alteração de Cardápio enviada com sucesso");
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+      }
+    );
   }
 
   onSubmit(values) {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
+
     if (!error) {
-      createOrUpdateFoodSuspension(JSON.stringify(values)).then(
-        res => {
-          if (res.status === 200) {
-            toastSuccess(
-              (values.status === "SALVO"
-                ? "Rascunho salvo"
-                : "Alteração de Cardápio enviada") + " com sucesso"
-            );
-            this.refresh();
-          } else {
-            toastError(res.error);
+      const payload = {
+        escola: this.state.escola.uuid,
+        motivo: values.motivo,
+        data_inicial: values.data_inicial,
+        data_final: values.data_final,
+        observacao: values.observacao,
+        substituicoes: values.substituicoes
+      };
+
+      if (!values.uuid) {
+        createAlteracaoCardapio(JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 201) {
+              toastSuccess("Alteração de Cardápio salva com sucesso");
+              this.refresh();
+
+              if (values.status === "A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a Alteração de alimentação");
-        }
-      );
+        );
+      } else {
+        updateAlteracaoCardapio(values.uuid, JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 200) {
+              toastSuccess("Alteração de Cardápio salva com sucesso");
+              this.refresh();
+              if (values.status === "A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          }
+        );
+      }
       this.closeModal();
     } else {
       toastError(error);
@@ -346,46 +386,45 @@ class AlteracaoDeCardapio extends Component {
       handleSubmit,
       pristine,
       submitting,
-      descricoes_first_period,
-      descricoes_second_period,
-      descricoes_third_period,
-      descricoes_fourth_period,
-      descricoes_integrate
+      substituicoes_MANHA, // TODO: Desacoplar variáveis dos nomes de períodos escolares.
+      substituicoes_TARDE,
+      substituicoes_NOITE,
+      substituicoes_INTEGRAL
     } = this.props;
     const {
-      typeFoodContinuousProgram,
       periods,
+      motivosList,
       enrolled,
       title,
       options,
-      foodSuspensionList,
+      alteracaoCardapioList,
       dias_razoes,
       showModal
     } = this.state;
+    // TODO: Desacoplar checkMap dos nomes de períodos escolares.
     let checkMap = {
-      first_period: descricoes_first_period && descricoes_first_period.check,
-      second_period: descricoes_second_period && descricoes_second_period.check,
-      third_period: descricoes_third_period && descricoes_third_period.check,
-      fourth_period: descricoes_fourth_period && descricoes_fourth_period.check,
-      integrate: descricoes_integrate && descricoes_integrate.check
+      MANHA: substituicoes_MANHA && substituicoes_MANHA.check,
+      TARDE: substituicoes_TARDE && substituicoes_TARDE.check,
+      NOITE: substituicoes_NOITE && substituicoes_NOITE.check,
+      INTEGRAL: substituicoes_INTEGRAL && substituicoes_INTEGRAL.check
     };
+    // TODO: Desacoplar colors dos nomes de períodos escolares
     const colors = {
-      first_period: "#FFF7CB",
-      second_period: "#EAFFE3",
-      third_period: "#FFEED6",
-      fourth_period: "#E4F1FF",
-      integrate: "#EBEDFF"
+      manha: "#FFF7CB",
+      tarde: "#FFEED6",
+      noite: "#E4F1FF",
+      integral: "#EBEDFF"
     };
     return (
       <div>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados numeroAlunos={enrolled} />
-          {foodSuspensionList.length > 0 && (
+          {alteracaoCardapioList.length > 0 && (
             <div className="mt-3">
               <span className="page-title">Rascunhos</span>
               <Rascunhos
-                foodSuspensionList={foodSuspensionList}
+                alteracaoCardapioList={alteracaoCardapioList}
                 OnDeleteButtonClicked={this.OnDeleteButtonClicked}
                 resetForm={event => this.resetForm(event)}
                 OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
@@ -412,28 +451,38 @@ class AlteracaoDeCardapio extends Component {
                     onChange={value => this.handleField("alterar_dia", value)}
                     name="alterar_dia"
                     label="Alterar dia"
-                    validate={required}
+                    disabled={this.props.data_inicial || this.props.data_final}
                   />
                 </div>
                 <div className="or-div form-group col-sm-1">Ou</div>
                 <div className="form-group col-sm-3">
                   <Field
                     component={LabelAndDate}
-                    onChange={value => this.handleField("data_de", value)}
-                    name="data_de"
+                    onChange={value => this.handleField("data_inicial", value)}
+                    name="data_inicial"
                     label="De"
-                    validate={required}
+                    disabled={this.props.alterar_dia}
                   />
                 </div>
                 <div className="form-group col-sm-3">
                   <Field
                     component={LabelAndDate}
-                    onChange={value => this.handleField("data_ate", value)}
-                    name="data_ate"
+                    onChange={value => this.handleField("data_final", value)}
+                    name="data_final"
                     label="Até"
-                    validate={required}
+                    disabled={this.props.alterar_dia}
                   />
                 </div>
+              </div>
+
+              <div className="form-row">
+                <Field
+                  component={LabelAndCombo}
+                  name="motivo"
+                  label="Motivo"
+                  options={motivosList}
+                  validate={required}
+                />
               </div>
               <table className="table table-borderless">
                 <tr>
@@ -444,11 +493,12 @@ class AlteracaoDeCardapio extends Component {
               </table>
               {periods.map((period, key) => {
                 this.props.change(
-                  `descricoes_${period.value}.periodo`,
-                  period.value
+                  `substituicoes_${period.nome}.periodo`,
+                  period.uuid
                 );
+
                 return (
-                  <FormSection name={`descricoes_${period.value}`}>
+                  <FormSection name={`substituicoes_${period.nome}`}>
                     <div className="form-row">
                       <Field component={"input"} type="hidden" name="value" />
                       <div className="form-check col-md-3 mr-4 ml-4">
@@ -456,7 +506,7 @@ class AlteracaoDeCardapio extends Component {
                           className="pl-5 pt-2 pb-2"
                           style={{
                             marginLeft: "-1.4rem",
-                            background: colors[period.value],
+                            background: colors[period.nome.toLowerCase()],
                             borderRadius: "7px"
                           }}
                         >
@@ -469,34 +519,32 @@ class AlteracaoDeCardapio extends Component {
                             <span
                               onClick={() =>
                                 this.props.change(
-                                  `descricoes_${period.value}.check`,
-                                  !checkMap[period.value]
+                                  `substituicoes_${period.nome}.check`,
+                                  !checkMap[period.nome]
                                 )
                               }
                               className="checkbox-custom"
                             />{" "}
-                            {period.label}
+                            {period.nome}
                           </label>
                         </div>
                       </div>
                       <div className="form-group col-md-5 mr-5">
                         <div
                           className={
-                            checkMap[period.value]
+                            checkMap[period.nome]
                               ? "multiselect-wrapper-enabled"
                               : "multiselect-wrapper-disabled"
                           }
                         >
+                          {/* !!!! */}
                           <Field
                             component={StatefulMultiSelect}
                             name=".tipo_de_refeicao"
-                            selected={options[period.value] || []}
-                            options={
-                              dias_razoes[0].razao &&
-                              dias_razoes[0].razao.includes("Programa Contínuo")
-                                ? typeFoodContinuousProgram
-                                : period.meal_types
-                            }
+                            selected={options[period.nome] || []}
+                            options={this.getOptionsFromTiposAlimentacao(
+                              period.tipos_alimentacao
+                            )}
                             onSelectedChanged={values =>
                               this.handleSelectedChanged(values, period)
                             }
@@ -513,15 +561,11 @@ class AlteracaoDeCardapio extends Component {
                       <div className="form-group col-md-2">
                         <Field
                           component={LabelAndInput}
-                          disabled={
-                            options[period.value].length === 0 ||
-                            !checkMap[period.value]
-                          }
                           type="number"
                           name="numero_de_alunos"
                           min="0"
                           className="form-control"
-                          validate={checkMap[period.value] ? required : null}
+                          validate={checkMap[period.nome] ? required : null}
                         />
                       </div>
                     </div>
@@ -534,7 +578,7 @@ class AlteracaoDeCardapio extends Component {
                   component={LabelAndTextArea}
                   placeholder="Campo opcional"
                   label="Observações"
-                  name="obs"
+                  name="observacao"
                 />
               </div>
               <div className="form-group row float-right mt-4">
@@ -601,26 +645,30 @@ class AlteracaoDeCardapio extends Component {
   }
 }
 
-const AlteracaoDeCardapioForm = reduxForm({
-  form: "alteracaoDeCardapio",
+const AlteracaoCardapioForm = reduxForm({
+  form: "alteracaoCardapio",
   enableReinitialize: true
-})(AlteracaoDeCardapio);
-const selector = formValueSelector("alteracaoDeCardapio");
+})(AlteracaoCardapio);
+const selector = formValueSelector("alteracaoCardapio");
+
 const mapStateToProps = state => {
   return {
-    initialValues: state.foodSuspension.data,
-    descricoes_first_period: selector(state, "descricoes_first_period"),
-    descricoes_second_period: selector(state, "descricoes_second_period"),
-    descricoes_third_period: selector(state, "descricoes_third_period"),
-    descricoes_fourth_period: selector(state, "descricoes_fourth_period"),
-    descricoes_integrate: selector(state, "descricoes_integrate")
+    initialValues: state.alteracaoCardapio.data,
+    // TODO: Desacoplar do nome dos períodos escolares
+    substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
+    substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
+    substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
+    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL"),
+    data_inicial: selector(state, "data_inicial"),
+    data_final: selector(state, "data_final"),
+    alterar_dia: selector(state, "alterar_dia")
   };
 };
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadFoodSuspension
+      loadAlteracaoCardapio
     },
     dispatch
   );
@@ -628,4 +676,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AlteracaoDeCardapioForm);
+)(AlteracaoCardapioForm);
