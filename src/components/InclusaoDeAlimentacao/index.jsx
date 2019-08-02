@@ -5,6 +5,7 @@ import {
   agregarDefault,
   dataPrioritaria,
   GeradorUUID,
+  formatarSubmissaoSolicitacaoNormal,
   formatarSubmissaoSolicitacaoContinua,
   extrairTiposALimentacao
 } from "./helper";
@@ -17,10 +18,13 @@ import { required } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   criarInclusaoDeAlimentacaoContinua,
+  criarInclusaoDeAlimentacaoNormal,
   atualizarInclusaoDeAlimentacaoContinua,
-  removerInclusaoDeAlimentacaoContinua,
+  atualizarInclusaoDeAlimentacaoNormal,
   getInclusoesContinuasSalvas,
-  inicioPedido
+  getInclusoesNormaisSalvas,
+  inicioPedidoContinua,
+  inicioPedidoNormal
 } from "../../services/foodInclusion.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -48,7 +52,7 @@ class InclusaoDeAlimentacao extends Component {
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-      dias_motivos: [
+      inclusoes: [
         {
           id: GeradorUUID(),
           data: null,
@@ -71,17 +75,17 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   handleField(field, value, id) {
-    const indiceDiaMotivo = this.state.dias_motivos.findIndex(
+    const indiceDiaMotivo = this.state.inclusoes.findIndex(
       dia_motivo => dia_motivo.id === id
     );
-    let dias_motivos = this.state.dias_motivos;
+    let inclusoes = this.state.inclusoes;
     if (field === "motivo") {
       const indiceMotivoContinuo = this.props.motivos_continuos.findIndex(
         motivo => motivo.uuid === value
       );
-      dias_motivos[indiceDiaMotivo]["motivoContinuo"] =
+      inclusoes[indiceDiaMotivo]["motivoContinuo"] =
         indiceMotivoContinuo !== -1;
-      dias_motivos[indiceDiaMotivo]["outroMotivo"] =
+      inclusoes[indiceDiaMotivo]["outroMotivo"] =
         indiceMotivoContinuo !== -1 &&
         this.props.motivos_continuos[indiceMotivoContinuo].nome.includes(
           "Outro"
@@ -90,15 +94,15 @@ class InclusaoDeAlimentacao extends Component {
         const indiceMotivoSimples = this.props.motivos_simples.findIndex(
           motivo => motivo.uuid === value
         );
-        dias_motivos[indiceDiaMotivo]["outroMotivo"] =
+        inclusoes[indiceDiaMotivo]["outroMotivo"] =
           indiceMotivoSimples !== -1 &&
           this.props.motivos_simples[indiceMotivoSimples].nome === "Outro";
       }
     }
     if (field === "outro_motivo") value = value.target.value;
-    dias_motivos[indiceDiaMotivo][field] = value;
+    inclusoes[indiceDiaMotivo][field] = value;
     this.setState({
-      dias_motivos
+      inclusoes
     });
     if (field === "data") {
       if (
@@ -144,7 +148,7 @@ class InclusaoDeAlimentacao extends Component {
 
   adicionarDia() {
     this.setState({
-      dias_motivos: this.state.dias_motivos.concat([
+      inclusoes: this.state.inclusoes.concat([
         {
           id: GeradorUUID(),
           data: null,
@@ -178,8 +182,8 @@ class InclusaoDeAlimentacao extends Component {
     );
   };
 
-  removerRascunho(id_externo, uuid) {
-    removerInclusaoDeAlimentacaoContinua(uuid).then(
+  removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
+    removerInclusaoDeAlimentacao(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.NO_CONTENT) {
           toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -209,7 +213,7 @@ class InclusaoDeAlimentacao extends Component {
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-      dias_motivos: [
+      inclusoes: [
         {
           id: GeradorUUID(),
           data: null,
@@ -232,6 +236,11 @@ class InclusaoDeAlimentacao extends Component {
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(inclusaoDeAlimentacao);
     let { periodos } = this.state;
+    periodos.forEach(periodo => {
+      periodo.checked = false;
+      periodo.tipos_alimentacao_selecionados = [];
+      periodo.numero_alunos = null;
+    });
     inclusaoDeAlimentacao.quantidades_periodo.forEach(quantidade_periodo => {
       const indicePeriodo = periodos.findIndex(
         periodoState =>
@@ -245,27 +254,36 @@ class InclusaoDeAlimentacao extends Component {
         quantidade_periodo.tipos_alimentacao
       );
     });
-    let dias_motivos = [
-      {
-        id: 1,
-        data: inclusaoDeAlimentacao.data,
-        motivo: inclusaoDeAlimentacao.motivo.uuid,
-        outroMotivo: inclusaoDeAlimentacao.outro_motivo !== null,
-        motivoContinuo:
-          inclusaoDeAlimentacao.data_inicial &&
-          inclusaoDeAlimentacao.data_final,
-        data_inicial: inclusaoDeAlimentacao.data_inicial,
-        data_final: inclusaoDeAlimentacao.data_final,
-        dias_semana: inclusaoDeAlimentacao.dias_semana
-      }
-    ];
+    let inclusoes = inclusaoDeAlimentacao.data_inicial
+      ? [
+          {
+            id: 0,
+            motivo: inclusaoDeAlimentacao.motivo.uuid,
+            outroMotivo: inclusaoDeAlimentacao.outro_motivo !== null,
+            motivoContinuo:
+              inclusaoDeAlimentacao.data_inicial &&
+              inclusaoDeAlimentacao.data_final,
+            data_inicial: inclusaoDeAlimentacao.data_inicial,
+            data_final: inclusaoDeAlimentacao.data_final,
+            dias_semana: inclusaoDeAlimentacao.dias_semana
+          }
+        ]
+      : inclusaoDeAlimentacao.inclusoes.map((inclusao, indice) => {
+          let inclusao_formatada = {};
+          inclusao_formatada["id"] = indice;
+          inclusao_formatada["data"] = inclusao.data;
+          inclusao_formatada["motivo"] = inclusao.motivo.uuid;
+          inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
+          inclusao_formatada["outroMotivo"] = inclusao.outro_motivo !== null;
+          return inclusao_formatada;
+        });
     this.setState({
       periodos,
       status: inclusaoDeAlimentacao.status,
       title: `Inclusão de Cardápio # ${inclusaoDeAlimentacao.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: inclusaoDeAlimentacao.id_externo,
-      dias_motivos
+      inclusoes
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -302,11 +320,25 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   refresh() {
+    let rascunhosInclusaoDeAlimentacao = [];
     getInclusoesContinuasSalvas().then(
       response => {
-        this.setState({
-          rascunhosInclusaoDeAlimentacao: response.results
-        });
+        rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
+          response.results
+        );
+        getInclusoesNormaisSalvas().then(
+          responseNormais => {
+            rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
+              responseNormais.results
+            );
+            this.setState({
+              rascunhosInclusaoDeAlimentacao
+            });
+          },
+          function(error) {
+            toastError("Erro ao carregar as inclusões salvas");
+          }
+        );
       },
       function(error) {
         toastError("Erro ao carregar as inclusões salvas");
@@ -314,8 +346,8 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  iniciarPedido(uuid) {
-    inicioPedido(uuid).then(
+  iniciarPedido(uuid, inicioPedidoEndpointCorreto) {
+    inicioPedidoEndpointCorreto(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
@@ -330,56 +362,111 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  onSubmit(values) {
-    values.dias_motivos = this.state.dias_motivos;
-    values.quantidades_periodo = this.state.periodos;
-    const error = validarSubmissao(values, this.state);
-    if (!error) {
-      if (!values.uuid) {
-        criarInclusaoDeAlimentacaoContinua(
-          JSON.stringify(
-            formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
-          )
-        ).then(
-          res => {
-            if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Rascunho salvo com sucesso");
-              if (values.status === "DRE_A_VALIDAR") {
-                this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
-              this.refresh();
-            } else {
-              toastError("Houve um erro ao salvar a inclusão de alimentação");
-            }
-          },
-          function(error) {
+  fluxoSolicitacaoContinua(values) {
+    if (!values.uuid) {
+      criarInclusaoDeAlimentacaoContinua(
+        JSON.stringify(
+          formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
+        )
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Rascunho salvo com sucesso");
+            if (values.status === "DRE_A_VALIDAR") {
+              this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
+            } else this.resetForm();
+            this.refresh();
+          } else {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
-        );
-      } else {
-        atualizarInclusaoDeAlimentacaoContinua(
-          values.uuid,
-          JSON.stringify(
-            formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
-          )
-        ).then(
-          res => {
-            if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Rascunho atualizado com sucesso");
-              if (values.status === "DRE_A_VALIDAR") {
-                this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
-              this.refresh();
-            } else {
-              toastError(
-                "Houve um erro ao atualizar a inclusão de alimentação"
-              );
-            }
-          },
-          function(error) {
+        },
+        function(error) {
+          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        }
+      );
+    } else {
+      atualizarInclusaoDeAlimentacaoContinua(
+        values.uuid,
+        JSON.stringify(
+          formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
+        )
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.OK) {
+            toastSuccess("Rascunho atualizado com sucesso");
+            if (values.status === "DRE_A_VALIDAR") {
+              this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
+            } else this.resetForm();
+            this.refresh();
+          } else {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
-        );
+        },
+        function(error) {
+          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        }
+      );
+    }
+  }
+
+  fluxoSolicitacaoNormal(values) {
+    if (!values.uuid) {
+      criarInclusaoDeAlimentacaoNormal(
+        JSON.stringify(
+          formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
+        )
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Rascunho salvo com sucesso");
+            if (values.status === "DRE_A_VALIDAR") {
+              this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
+            } else this.resetForm();
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao salvar a inclusão de alimentação");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        }
+      );
+    } else {
+      atualizarInclusaoDeAlimentacaoNormal(
+        values.uuid,
+        JSON.stringify(
+          formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
+        )
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.OK) {
+            toastSuccess("Rascunho atualizado com sucesso");
+            if (values.status === "DRE_A_VALIDAR") {
+              this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
+            } else this.resetForm();
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao atualizar a inclusão de alimentação");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        }
+      );
+    }
+  }
+
+  onSubmit(values) {
+    values.inclusoes = this.state.inclusoes;
+    values.quantidades_periodo = this.state.periodos;
+    const ehInclusaoContinua =
+      values.inclusoes[0].data_inicial && values.inclusoes[0].data_final;
+    const error = validarSubmissao(values, this.state);
+    if (!error) {
+      if (ehInclusaoContinua) {
+        this.fluxoSolicitacaoContinua(values);
+      } else {
+        this.fluxoSolicitacaoNormal(values);
       }
       this.closeModal();
     } else {
@@ -398,12 +485,12 @@ class InclusaoDeAlimentacao extends Component {
     const {
       title,
       rascunhosInclusaoDeAlimentacao,
-      dias_motivos,
+      inclusoes,
       periodos,
       showModal,
       loading
     } = this.state;
-
+    const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     return (
       <div>
         {loading ? (
@@ -439,11 +526,11 @@ class InclusaoDeAlimentacao extends Component {
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão
                 </div>
-                {dias_motivos.map((dia_motivo, key) => {
+                {inclusoes.map((dia_motivo, key) => {
                   return (
-                    <FormSection name={`dias_motivos_${dia_motivo.id}`}>
+                    <FormSection name={`inclusoes_${dia_motivo.id}`}>
                       <div className="form-row">
-                        {(!dia_motivo.motivo || !dia_motivo.motivoContinuo) && (
+                        {!ehMotivoContinuo && (
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
@@ -466,7 +553,7 @@ class InclusaoDeAlimentacao extends Component {
                               this.handleField("motivo", value, dia_motivo.id)
                             }
                             options={
-                              dias_motivos.length > 1
+                              inclusoes.length > 1
                                 ? agregarDefault(motivos_simples)
                                 : agregarDefault(motivos_simples).concat(
                                     motivos_continuos
@@ -502,7 +589,7 @@ class InclusaoDeAlimentacao extends Component {
                           </div>
                         </div>
                       )}
-                      {dia_motivo.motivo && dia_motivo.motivoContinuo && (
+                      {ehMotivoContinuo && (
                         <div className="form-row">
                           <div className="form-group col-sm-3">
                             <Field
@@ -552,8 +639,7 @@ class InclusaoDeAlimentacao extends Component {
                     </FormSection>
                   );
                 })}
-                {(!dias_motivos[0].motivo ||
-                  !dias_motivos[0].motivoContinuo) && (
+                {!ehMotivoContinuo && (
                   <BaseButton
                     label="Adicionar dia"
                     className="col-sm-3"

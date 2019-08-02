@@ -1,14 +1,15 @@
-import { formatarSubmissaoSolicitacaoContinua } from "../helper";
+import { formatarSubmissaoSolicitacaoNormal } from "../helper";
 
-describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => {
-  const solicitacaoInclusaoAlimentacaoContinua = {
+describe("Teste formatarSubmissão Inclusão de Alimentação Normal", () => {
+  const solicitacaoInclusaoAlimentacaoNormal = {
     inclusoes: [
       {
-        motivo: "a84e782a-2851-4e67-8d84-502529079f0a",
-        data_inicial: "01/08/2019",
-        data_final: "31/08/2019",
-        dias_semana: [1, 2, 3],
-        outro_motivo: null
+        motivo: "6d39bbbb-574a-47b2-9c04-850d78618988",
+        data: "01/08/2019"
+      },
+      {
+        motivo: "6d39bbbb-574a-47b2-9c04-850d78618988",
+        data: "02/08/2019"
       }
     ],
     quantidades_periodo: [
@@ -30,15 +31,22 @@ describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => 
     ]
   };
 
-  it("formata submissao inclusao de alimentacao continua", () => {
+  it("formata submissao inclusao de alimentacao normal", () => {
     const resposta = {
-      motivo: "a84e782a-2851-4e67-8d84-502529079f0a",
-      data_inicial: "01/08/2019",
-      data_final: "31/08/2019",
-      dias_semana: [1, 2, 3],
+      inclusoes: [
+        {
+          data: "01/08/2019",
+          motivo: "6d39bbbb-574a-47b2-9c04-850d78618988",
+          outro_motivo: undefined
+        },
+        {
+          data: "02/08/2019",
+          motivo: "6d39bbbb-574a-47b2-9c04-850d78618988",
+          outro_motivo: undefined
+        }
+      ],
       descricao: "<p>Descrição</p>",
       escola: "9f86ecb8-bdba-4d70-9fb7-13844f563636",
-      outro_motivo: null,
       quantidades_periodo: [
         {
           numero_alunos: "123",
@@ -48,8 +56,8 @@ describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => 
       ]
     };
     expect(
-      formatarSubmissaoSolicitacaoContinua(
-        solicitacaoInclusaoAlimentacaoContinua,
+      formatarSubmissaoSolicitacaoNormal(
+        solicitacaoInclusaoAlimentacaoNormal,
         meusDados
       )
     ).toEqual(resposta);
