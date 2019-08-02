@@ -5,7 +5,9 @@ import { bindActionCreators } from "redux";
 import {
   createAlteracaoCardapio,
   deleteAlteracaoCardapio,
-  getAlteracoesCardapioList
+  getAlteracoesCardapioList,
+  updateAlteracaoCardapio,
+  enviarAlteracaoCardapio
 } from "../../services/cardapio.service";
 import { getPeriods } from "../../services/school.service";
 import { getMotivosAlteracaoCardapio } from "../../services/cardapio.service";
@@ -205,7 +207,6 @@ class AlteracaoCardapio extends Component {
   }
 
   OnEditButtonClicked(param) {
-    console.log(param);
     this.props.reset("alteracaoCardapio");
     this.props.loadAlteracaoCardapio(param.dayChange);
     this.setState({
@@ -307,35 +308,26 @@ class AlteracaoCardapio extends Component {
     this.resetForm("alteracaoCardapio");
   }
 
-  onSubmit(values) {
+  enviaAlteracaoCardapio(uuid) {
+    enviarAlteracaoCardapio(uuid).then(
+      res => {
+        if (res.status === 200) {
+          this.refresh()
+          toastSuccess("Alteração de Cardápio enviada com sucesso")
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+      }
+    )
+  }
+
+   onSubmit(values) {
 
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
-
-    // Exemplo de um payload de criação de Alteração de Cardápio
-    // {
-    //   "escola": "c0cc9d5e-563a-48e4-bf53-22d47b6347b4",
-
-    //   "motivo": "3f1684f9-0dd9-4cce-9c56-f07164f857b9",
-
-    //   "data_inicial": "01/01/2018",
-    //   "data_final": "26/07/2019",
-    //   "observacao": "Teste",
-
-    //   "substituicoes": [
-    //     {
-    //       "periodo_escolar": "811ab9bd-a25a-4304-9ae4-a48a3eaae24b",
-    //       "tipos_alimentacao": ["5aca23f2-055d-4f73-9bf5-6ed39dbd8407"],
-    //       "qtd_alunos": 100
-    //     },
-    //     {
-    //       "periodo_escolar": "30782fd8-4db6-4947-995a-0e9f85e1d9bf",
-    //       "tipos_alimentacao": ["5aca23f2-055d-4f73-9bf5-6ed39dbd8407", "7c0af352-5439-47a5-a945-7f882e89a4b3"],
-    //       "qtd_alunos": 100
-    //     }
-    //   ]
-
-    // }
 
     if (!error) {
 
@@ -347,24 +339,44 @@ class AlteracaoCardapio extends Component {
         "observacao": values.observacao,
         "substituicoes": values.substituicoes
       }
+      if (!values.uuid) {
+        createAlteracaoCardapio(JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 201) {
+              toastSuccess("Alteração de Cardápio salva com sucesso")
+              this.refresh()
 
-      createAlteracaoCardapio(JSON.stringify(payload)).then(
-        res => {
-          if (res.status === 201) {
-            toastSuccess(
-              (values.status === "SALVO"
-                ? "Rascunho salvo"
-                : "Alteração de Cardápio enviada") + " com sucesso"
-            );
-            this.refresh();
-          } else {
-            toastError(res.error);
+              if (values.status === "A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid)
+                this.refresh()
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a Alteração de alimentação");
-        }
-      );
+        )
+      } else {
+        updateAlteracaoCardapio(values.uuid, JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 200) {
+              toastSuccess("Alteração de Cardápio salva com sucesso")
+              this.refresh();
+              if (values.status === "A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid)
+                this.refresh()
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          }
+        )
+      }
       this.closeModal();
     } else {
       toastError(error);
@@ -491,7 +503,7 @@ class AlteracaoCardapio extends Component {
                 </tr>
               </table>
               {periods.map((period, key) => {
-                console.log("Period: ", period);
+
                 this.props.change(
                   `substituicoes_${period.nome}.periodo`,
                   period.uuid

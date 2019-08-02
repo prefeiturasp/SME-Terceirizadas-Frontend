@@ -6,9 +6,6 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALTERACAO_CARDAPIO:
       if (action.data != null) {
-        console.log("action.data: ", action.data)
-
-        action.data.selecionados = ["5aca23f2-055d-4f73-9bf5-6ed39dbd8407"]
 
         if (action.data.data_inicial === action.data.data_final) {
           action.data.alterar_dia = action.data.data_inicial

@@ -26,25 +26,25 @@ export const createAlteracaoCardapio = payload => {
     });
 };
 
-export const createOrUpdateAlteracaoCardapio = payload => {
-  const url = API_URL + `/alteracoes-cardapio/`;
+export const updateAlteracaoCardapio = (uuid, payload) => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`
   let status = 0;
   return fetch(url, {
-    method: "POST",
+    method: "PUT",
     body: payload,
     headers: authToken
   })
     .then(res => {
-      status = res.status;
-      return res.json();
+      status = res.status
+      return res.json()
     })
     .then(data => {
-      return { data: data, status: status };
+      return { data: data, status: status }
     })
     .catch(error => {
-      return error.json();
-    });
-};
+      return error.json()
+    })
+}
 
 export const deleteAlteracaoCardapio = uuid => {
   const url = `${API_URL}/alteracoes-cardapio/${uuid}/`
@@ -62,7 +62,7 @@ export const deleteAlteracaoCardapio = uuid => {
 
 export const getAlteracoesCardapioList = () => {
   const url =
-    API_URL + `/alteracoes-cardapio/`;
+    API_URL + `/alteracoes-cardapio-rascunho/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -89,4 +89,24 @@ export const getMotivosAlteracaoCardapio = () => {
     .catch(error => {
       console.log(error);
     });
-};
+}
+
+export const enviarAlteracaoCardapio = (uuid, payload) => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio_de_pedido/`
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status
+      return res.json()
+    })
+    .then(data => {
+      return { data: data, status: status }
+    })
+    .catch(error => {
+      return error.json()
+    })
+}
