@@ -31,7 +31,6 @@ import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import "./style.scss";
 
 class AlteracaoCardapio extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -117,15 +116,17 @@ class AlteracaoCardapio extends Component {
     });
   }
 
-  getOptionsFromTiposAlimentacao = (tiposAlimentacao) => {
+  getOptionsFromTiposAlimentacao = tiposAlimentacao => {
     // Formato esperado para options = [{label: "Onex", value: 1}, {label: "Twox", value: 2},{label: "Threex", value: 3}]
-    let options = []
-    tiposAlimentacao.forEach(function (tipoAlimentacao) {
-      options.push(
-        {label: tipoAlimentacao.nome, value: tipoAlimentacao.uuid}
-      )})
-    return options
-  }
+    let options = [];
+    tiposAlimentacao.forEach(function(tipoAlimentacao) {
+      options.push({
+        label: tipoAlimentacao.nome,
+        value: tipoAlimentacao.uuid
+      });
+    });
+    return options;
+  };
 
   showModal() {
     this.setState({ ...this.state, showModal: true });
@@ -165,7 +166,7 @@ class AlteracaoCardapio extends Component {
         function(error) {
           toastError("Houve um erro ao excluir o rascunho");
         }
-      )
+      );
     }
   }
 
@@ -246,7 +247,7 @@ class AlteracaoCardapio extends Component {
         this.setState({
           ...this.state,
           periods: resPeriods.results,
-          motivosList: resMotivos.results,
+          motivosList: resMotivos.results
         });
       });
     });
@@ -312,8 +313,8 @@ class AlteracaoCardapio extends Component {
     enviarAlteracaoCardapio(uuid).then(
       res => {
         if (res.status === 200) {
-          this.refresh()
-          toastSuccess("Alteração de Cardápio enviada com sucesso")
+          this.refresh();
+          toastSuccess("Alteração de Cardápio enviada com sucesso");
         } else {
           toastError(res.error);
         }
@@ -321,34 +322,32 @@ class AlteracaoCardapio extends Component {
       function(error) {
         toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
-    )
+    );
   }
 
-   onSubmit(values) {
-
+  onSubmit(values) {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
 
     if (!error) {
-
       const payload = {
-        "escola": "c0cc9d5e-563a-48e4-bf53-22d47b6347b4",
-        "motivo": values.motivo,
-        "data_inicial": values.data_inicial,
-        "data_final": values.data_final,
-        "observacao": values.observacao,
-        "substituicoes": values.substituicoes
-      }
+        escola: "c0cc9d5e-563a-48e4-bf53-22d47b6347b4",
+        motivo: values.motivo,
+        data_inicial: values.data_inicial,
+        data_final: values.data_final,
+        observacao: values.observacao,
+        substituicoes: values.substituicoes
+      };
       if (!values.uuid) {
         createAlteracaoCardapio(JSON.stringify(payload)).then(
           async res => {
             if (res.status === 201) {
-              toastSuccess("Alteração de Cardápio salva com sucesso")
-              this.refresh()
+              toastSuccess("Alteração de Cardápio salva com sucesso");
+              this.refresh();
 
               if (values.status === "A_VALIDAR") {
-                await this.enviaAlteracaoCardapio(res.data.uuid)
-                this.refresh()
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
               }
             } else {
               toastError(res.error);
@@ -357,16 +356,16 @@ class AlteracaoCardapio extends Component {
           function(error) {
             toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
-        )
+        );
       } else {
         updateAlteracaoCardapio(values.uuid, JSON.stringify(payload)).then(
           async res => {
             if (res.status === 200) {
-              toastSuccess("Alteração de Cardápio salva com sucesso")
+              toastSuccess("Alteração de Cardápio salva com sucesso");
               this.refresh();
               if (values.status === "A_VALIDAR") {
-                await this.enviaAlteracaoCardapio(res.data.uuid)
-                this.refresh()
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
               }
             } else {
               toastError(res.error);
@@ -375,7 +374,7 @@ class AlteracaoCardapio extends Component {
           function(error) {
             toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
-        )
+        );
       }
       this.closeModal();
     } else {
@@ -388,7 +387,7 @@ class AlteracaoCardapio extends Component {
       handleSubmit,
       pristine,
       submitting,
-      substituicoes_MANHA,        // TODO: Desacoplar variáveis dos nomes de períodos escolares.
+      substituicoes_MANHA, // TODO: Desacoplar variáveis dos nomes de períodos escolares.
       substituicoes_TARDE,
       substituicoes_NOITE,
       substituicoes_INTEGRAL
@@ -408,7 +407,7 @@ class AlteracaoCardapio extends Component {
       MANHA: substituicoes_MANHA && substituicoes_MANHA.check,
       TARDE: substituicoes_TARDE && substituicoes_TARDE.check,
       NOITE: substituicoes_NOITE && substituicoes_NOITE.check,
-      INTEGRAL: substituicoes_INTEGRAL  && substituicoes_INTEGRAL.check
+      INTEGRAL: substituicoes_INTEGRAL && substituicoes_INTEGRAL.check
     };
     // TODO: Desacoplar colors dos nomes de períodos escolares
     const colors = {
@@ -453,7 +452,8 @@ class AlteracaoCardapio extends Component {
                     onChange={value => this.handleField("alterar_dia", value)}
                     name="alterar_dia"
                     label="Alterar dia"
-                    validate={required}
+                    disabled={this.props.data_inicial || this.props.data_final}
+                    // validate={[required]}
                   />
                 </div>
                 <div className="or-div form-group col-sm-1">Ou</div>
@@ -463,7 +463,8 @@ class AlteracaoCardapio extends Component {
                     onChange={value => this.handleField("data_inicial", value)}
                     name="data_inicial"
                     label="De"
-                    validate={required}
+                    disabled={this.props.alterar_dia}
+                    // validate={required}
                   />
                 </div>
                 <div className="form-group col-sm-3">
@@ -472,29 +473,31 @@ class AlteracaoCardapio extends Component {
                     onChange={value => this.handleField("data_final", value)}
                     name="data_final"
                     label="Até"
-                    validate={required}
+                    disabled={this.props.alterar_dia}
+                    // validate={required}
                   />
                 </div>
+
               </div>
 
               <div className="form-row">
-                  <Field
-                    component={LabelAndCombo}
-                    name="motivo"
-                    label="Motivo"
-                    options={motivosList}
-                    // onChange={value =>
-                    //   this.handleField("reason", value, day_reason.id)
-                    // }
-                    // options={
-                    //   day_reasons.length > 1
-                    //     ? selectDefault.concat(reasonsList)
-                    //     : selectDefault
-                    //         .concat(reasonsList)
-                    // }
-                    validate={required}
-                  />
-                </div>
+                <Field
+                  component={LabelAndCombo}
+                  name="motivo"
+                  label="Motivo"
+                  options={motivosList}
+                  // onChange={value =>
+                  //   this.handleField("reason", value, day_reason.id)
+                  // }
+                  // options={
+                  //   day_reasons.length > 1
+                  //     ? selectDefault.concat(reasonsList)
+                  //     : selectDefault
+                  //         .concat(reasonsList)
+                  // }
+                  validate={required}
+                />
+              </div>
               <table className="table table-borderless">
                 <tr>
                   <td>Período</td>
@@ -503,7 +506,6 @@ class AlteracaoCardapio extends Component {
                 </tr>
               </table>
               {periods.map((period, key) => {
-
                 this.props.change(
                   `substituicoes_${period.nome}.periodo`,
                   period.uuid
@@ -554,7 +556,9 @@ class AlteracaoCardapio extends Component {
                             component={StatefulMultiSelect}
                             name=".tipo_de_refeicao"
                             selected={options[period.nome] || []}
-                            options={this.getOptionsFromTiposAlimentacao(period.tipos_alimentacao)}
+                            options={this.getOptionsFromTiposAlimentacao(
+                              period.tipos_alimentacao
+                            )}
                             onSelectedChanged={values =>
                               this.handleSelectedChanged(values, period)
                             }
@@ -570,8 +574,7 @@ class AlteracaoCardapio extends Component {
                       </div>
                       <div className="form-group col-md-2">
                         <Field
-                          component={
-                            LabelAndInput}
+                          component={LabelAndInput}
                           // disabled={
                           //   options[period.nome].length === 0 || !checkMap[period.nome]
                           // }
@@ -673,7 +676,9 @@ const mapStateToProps = state => {
     substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
     substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
     substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL"),
-    options: selector(state, "options"),
+    data_inicial: selector(state, "data_inicial"),
+    data_final: selector(state, "data_final"),
+    alterar_dia: selector(state, "alterar_dia")
   };
 };
 

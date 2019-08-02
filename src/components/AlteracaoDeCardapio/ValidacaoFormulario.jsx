@@ -39,6 +39,20 @@ export const validateSubmit = (values, state) => {
   }
   delete values["substituicoes_INTEGRAL"];
 
+  if (values['alterar_dia']) {
+    values['data_inicial'] = values["alterar_dia"]
+    values['data_final'] = values["alterar_dia"]
+  }
+
+  if (!(values['alterar_dia'] || values['data_inicial'] || values['data_final'])) return "Obrigatório informar uma data ou período."
+
+  if (values['data_inicial'] > values['data_final']) return "Data inicial deve ser anterior à data final."
+
+  if ((values['data_inicial'] && !values['data_final']) || (values['data_final'] && !values['data_inicial'])) return "Informe um período completo."
+
   if (values['substituicoes'].length === 0) return "Obrigatório ao menos um período"
   return false;
+
+
+
 };

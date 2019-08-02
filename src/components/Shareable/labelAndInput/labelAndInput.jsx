@@ -153,6 +153,7 @@ export class LabelAndDate extends Component {
     minDate: dateDelta(0),
     maxDate: dateDelta(360),
     cols: "",
+    disabled: false,
     fullScreen: false,
     inline: false,
     hasIcon: true
@@ -179,6 +180,7 @@ export class LabelAndDate extends Component {
       cols,
       name,
       label,
+      disabled,
       dateFormat,
       minDate,
       maxDate,
@@ -197,8 +199,10 @@ export class LabelAndDate extends Component {
           <div
             className={
               activeCalendar
-                ? "input-group active-calendar" :
-                textoLabel ? "input-group calendar" : "input-group"
+                ? "input-group active-calendar"
+                : textoLabel
+                ? "input-group calendar"
+                : "input-group"
             }
           >
             {textoLabel && (
@@ -217,8 +221,9 @@ export class LabelAndDate extends Component {
               inline={inline}
               minDate={minDate}
               maxDate={maxDate}
+              disabled={disabled}
               className="form-control"
-              ref={(c) => this._calendar = c}
+              ref={c => (this._calendar = c)}
               onChange={this.handleChange}
               locale={ptBR}
               id={name}
@@ -247,6 +252,7 @@ export class LabelAndTextArea extends Component {
     };
     this.changeValue(editorState);
   }
+  required;
 
   static defaultProps = {
     placeholder: "Seu texto aqui.",
