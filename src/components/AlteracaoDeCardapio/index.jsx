@@ -9,7 +9,7 @@ import {
   updateAlteracaoCardapio,
   enviarAlteracaoCardapio
 } from "../../services/cardapio.service";
-import { getPeriods } from "../../services/school.service";
+import { getPeriods, escolas } from "../../services/school.service";
 import { getMotivosAlteracaoCardapio } from "../../services/cardapio.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import { validateSubmit } from "./ValidacaoFormulario";
@@ -242,15 +242,17 @@ class AlteracaoCardapio extends Component {
   componentDidMount() {
     let _two,
       _five = null;
+    escolas().then(resEscolas => {
     getPeriods().then(resPeriods => {
       getMotivosAlteracaoCardapio().then(resMotivos => {
         this.setState({
           ...this.state,
           periods: resPeriods.results,
-          motivosList: resMotivos.results
+          motivosList: resMotivos.results,
+          escola:  resEscolas.results[0]
         });
       });
-    });
+    })});
 
     getWorkingDays().then(res => {
       _two = res.proximos_dois_dias_uteis.split("/");
@@ -331,13 +333,15 @@ class AlteracaoCardapio extends Component {
 
     if (!error) {
       const payload = {
-        escola: "c0cc9d5e-563a-48e4-bf53-22d47b6347b4",
+
+        escola: this.state.escola.uuid,
         motivo: values.motivo,
         data_inicial: values.data_inicial,
         data_final: values.data_final,
         observacao: values.observacao,
         substituicoes: values.substituicoes
       };
+
 
       if (!values.uuid) {
         createAlteracaoCardapio(JSON.stringify(payload)).then(
