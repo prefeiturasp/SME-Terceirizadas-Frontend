@@ -338,6 +338,7 @@ class AlteracaoCardapio extends Component {
         observacao: values.observacao,
         substituicoes: values.substituicoes
       };
+
       if (!values.uuid) {
         createAlteracaoCardapio(JSON.stringify(payload)).then(
           async res => {
@@ -486,15 +487,7 @@ class AlteracaoCardapio extends Component {
                   name="motivo"
                   label="Motivo"
                   options={motivosList}
-                  // onChange={value =>
-                  //   this.handleField("reason", value, day_reason.id)
-                  // }
-                  // options={
-                  //   day_reasons.length > 1
-                  //     ? selectDefault.concat(reasonsList)
-                  //     : selectDefault
-                  //         .concat(reasonsList)
-                  // }
+
                   validate={required}
                 />
               </div>

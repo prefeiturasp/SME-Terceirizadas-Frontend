@@ -1,5 +1,8 @@
 export const validateSubmit = (values, state) => {
+
   values["substituicoes"] = [];
+
+
   if (values.substituicoes_MANHA && values.substituicoes_MANHA.check) {
     values["substituicoes"].push({
       "periodo_escolar": values.substituicoes_MANHA.periodo,
@@ -30,14 +33,19 @@ export const validateSubmit = (values, state) => {
   }
   delete values["substituicoes_NOITE"];
 
-  if (values.substituicoes_INTEGRAL && values.substituicoes_INTEGRAL.check) {
+  if (
+    values.substituicoes_INTEGRAL &&
+    values.substituicoes_INTEGRAL.check
+  ) {
     values["substituicoes"].push({
       "periodo_escolar": values.substituicoes_INTEGRAL.periodo,
       "tipos_alimentacao": values.substituicoes_INTEGRAL.tipo_de_refeicao,
-      "qtd_alunos": values.substituicoes_INTEGRAL.qtd_alunos
+      "qtd_alunos": values.substituicoes_INTEGRAL.numero_de_alunos
     });
   }
   delete values["substituicoes_INTEGRAL"];
+
+  if (values['substituicoes'].length === 0) return "Obrigatório ao menos um período"
 
   if (values['alterar_dia']) {
     values['data_inicial'] = values["alterar_dia"]
@@ -50,7 +58,6 @@ export const validateSubmit = (values, state) => {
 
   if ((values['data_inicial'] && !values['data_final']) || (values['data_final'] && !values['data_inicial'])) return "Informe um período completo."
 
-  if (values['substituicoes'].length === 0) return "Obrigatório ao menos um período"
   return false;
 
 

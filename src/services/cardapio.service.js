@@ -8,6 +8,7 @@ const authToken = {
 
 export const createAlteracaoCardapio = payload => {
   const url = API_URL + `/alteracoes-cardapio/`;
+
   let status = 0;
   return fetch(url, {
     method: "POST",
