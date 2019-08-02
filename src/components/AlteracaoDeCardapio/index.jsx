@@ -1,34 +1,33 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import React, { Component } from "react";
+import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { required } from "../../helpers/fieldValidators";
+import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
   createAlteracaoCardapio,
   deleteAlteracaoCardapio,
+  enviarAlteracaoCardapio,
   getAlteracoesCardapioList,
-  updateAlteracaoCardapio,
-  enviarAlteracaoCardapio
+  getMotivosAlteracaoCardapio,
+  updateAlteracaoCardapio
 } from "../../services/cardapio.service";
-import { getPeriods, escolas } from "../../services/school.service";
-import { getMotivosAlteracaoCardapio } from "../../services/cardapio.service";
+import { escolas, getPeriods } from "../../services/school.service";
 import { getWorkingDays } from "../../services/workingDays.service";
-import { validateSubmit } from "./ValidacaoFormulario";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
 import {
   LabelAndCombo,
   LabelAndDate,
-  LabelAndTextArea,
-  LabelAndInput
+  LabelAndInput,
+  LabelAndTextArea
 } from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { required } from "../../helpers/fieldValidators";
-import CardMatriculados from "../Shareable/CardMatriculados";
-import { Modal } from "react-bootstrap";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import "./style.scss";
+import { validateSubmit } from "./ValidacaoFormulario";
 
 class AlteracaoCardapio extends Component {
   constructor(props) {
@@ -82,7 +81,6 @@ class AlteracaoCardapio extends Component {
   }
 
   handleField(field, value) {
-
     if (field === "which_reason") value = value.target.value;
     if (field === "alterar_dia") {
       const _date = value.split("/");
@@ -118,7 +116,6 @@ class AlteracaoCardapio extends Component {
   }
 
   getOptionsFromTiposAlimentacao = tiposAlimentacao => {
-    // Formato esperado para options = [{label: "Onex", value: 1}, {label: "Twox", value: 2},{label: "Threex", value: 3}]
     let options = [];
     tiposAlimentacao.forEach(function(tipoAlimentacao) {
       options.push({
@@ -244,16 +241,17 @@ class AlteracaoCardapio extends Component {
     let _two,
       _five = null;
     escolas().then(resEscolas => {
-    getPeriods().then(resPeriods => {
-      getMotivosAlteracaoCardapio().then(resMotivos => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.results,
-          motivosList: resMotivos.results,
-          escola:  resEscolas.results[0]
+      getPeriods().then(resPeriods => {
+        getMotivosAlteracaoCardapio().then(resMotivos => {
+          this.setState({
+            ...this.state,
+            periods: resPeriods.results,
+            motivosList: resMotivos.results,
+            escola: resEscolas.results[0]
+          });
         });
       });
-    })});
+    });
 
     getWorkingDays().then(res => {
       this.setState({
@@ -331,7 +329,6 @@ class AlteracaoCardapio extends Component {
 
     if (!error) {
       const payload = {
-
         escola: this.state.escola.uuid,
         motivo: values.motivo,
         data_inicial: values.data_inicial,
@@ -339,7 +336,6 @@ class AlteracaoCardapio extends Component {
         observacao: values.observacao,
         substituicoes: values.substituicoes
       };
-
 
       if (!values.uuid) {
         createAlteracaoCardapio(JSON.stringify(payload)).then(
@@ -456,7 +452,6 @@ class AlteracaoCardapio extends Component {
                     name="alterar_dia"
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
-                    // validate={[required]}
                   />
                 </div>
                 <div className="or-div form-group col-sm-1">Ou</div>
@@ -467,7 +462,6 @@ class AlteracaoCardapio extends Component {
                     name="data_inicial"
                     label="De"
                     disabled={this.props.alterar_dia}
-                    // validate={required}
                   />
                 </div>
                 <div className="form-group col-sm-3">
@@ -477,10 +471,8 @@ class AlteracaoCardapio extends Component {
                     name="data_final"
                     label="Até"
                     disabled={this.props.alterar_dia}
-                    // validate={required}
                   />
                 </div>
-
               </div>
 
               <div className="form-row">
@@ -489,7 +481,6 @@ class AlteracaoCardapio extends Component {
                   name="motivo"
                   label="Motivo"
                   options={motivosList}
-
                   validate={required}
                 />
               </div>
@@ -570,9 +561,6 @@ class AlteracaoCardapio extends Component {
                       <div className="form-group col-md-2">
                         <Field
                           component={LabelAndInput}
-                          // disabled={
-                          //   options[period.nome].length === 0 || !checkMap[period.nome]
-                          // }
                           type="number"
                           name="numero_de_alunos"
                           min="0"

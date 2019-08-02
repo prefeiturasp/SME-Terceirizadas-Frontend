@@ -252,7 +252,6 @@ export class LabelAndTextArea extends Component {
     };
     this.changeValue(editorState);
   }
-  required;
 
   static defaultProps = {
     placeholder: "Seu texto aqui.",
