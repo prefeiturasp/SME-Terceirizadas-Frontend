@@ -3,12 +3,12 @@ import HTTP_STATUS from "http-status-codes";
 import {
   formatarTiposDeAlimentacao,
   agregarDefault,
-  dataPrioritaria,
   GeradorUUID,
   formatarSubmissaoSolicitacaoNormal,
   formatarSubmissaoSolicitacaoContinua,
   extrairTiposALimentacao
 } from "./helper";
+import { dataPrioritaria } from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -227,7 +227,6 @@ class InclusaoDeAlimentacao extends Component {
       ],
       periodos
     });
-
     this.refresh();
   }
 
