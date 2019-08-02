@@ -13,7 +13,6 @@ export const SectionFormEdital = props => {
           </label>
           <Field
             component={LabelAndInput}
-            className="form-control"
             name="tipo_contratacao"
             validate={required}
           />

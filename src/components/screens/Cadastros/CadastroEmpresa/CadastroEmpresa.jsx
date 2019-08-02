@@ -11,7 +11,7 @@ import {
   phoneNumber
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
-import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
+import { getLotes } from "../../../../services/diretoriaRegional.service";
 import {
   transformaObjetos,
   fieldCnpj,
@@ -35,7 +35,7 @@ class CadastroEmpresa extends Component {
   }
 
   componentDidMount() {
-    getDiretoriaRegional()
+    getLotes()
       .then(response => {
         let lotes = transformaObjetos(response);
         this.setState({ lotes });
@@ -90,7 +90,6 @@ class CadastroEmpresa extends Component {
   render() {
     const { handleSubmit } = this.props;
     const { lotes } = this.state;
-    
     return (
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>

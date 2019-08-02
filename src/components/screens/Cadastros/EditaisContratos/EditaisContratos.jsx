@@ -5,17 +5,14 @@ import { Link } from "react-router-dom";
 import BaseButton, { ButtonStyle } from "../../../Shareable/button";
 
 import { SectionFormEdital } from "./SectionFormEdital";
-import  SectionFormContratos from "./SectionFormContratos";
+import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 
 class EditaisContratos extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
-
-
 
   render() {
     const { handleSubmit } = this.props;
@@ -34,8 +31,15 @@ class EditaisContratos extends Component {
               </Link>
             </header>
             <SectionFormEdital />
-            <hr/>
-            <FieldArray name={`teste`} component={SectionFormContratos} />
+            <hr />
+            <FieldArray
+              name="contratosRelacionados"
+              component={ContratosRelacionados}
+            />
+
+            <footer>
+              <button type="submit">Submit</button>
+            </footer>
           </form>
         </div>
       </section>
@@ -43,28 +47,12 @@ class EditaisContratos extends Component {
   }
 }
 
-const CadastroEditaisForm = reduxForm({
+export default reduxForm({
   form: "cadastroEditaisForm",
-  enableReinitialize: true
+  initialValues: {
+    contratosRelacionados: [""]
+  },
+  onSubmit: values => {
+    window.alert("Submited: \n" + JSON.stringify(values, null, 2));
+  }
 })(EditaisContratos);
-const selector = formValueSelector("cadastroEditaisForm");
-const mapStateToProps = state => {
-  return {
-    resumo: {
-      nome: selector(state, "nome")
-    }
-  };
-};
-
-export default connect(mapStateToProps)(CadastroEditaisForm);
-
-/*
-
-
-<Field
-  component={LabelAndInput}
-  className="form-control"
-  name="nome"
-/> 
-
-*/

@@ -420,30 +420,31 @@ section {
     display: grid;
   }
 
-  .article-contratos {
-    .titulo {
-      color: #686868;
-      padding: 0 32px;
-    }
-
-    .container-input{
-      display: grid;
-      grid-template-columns: 95% 5%;
-
-      .botao-add {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        margin-bottom: 1em;
-      }
-    }
-
-    .input-triplo {
-      display: grid;
-      grid-template-columns: 36% 30% 30%;
-      grid-template-rows: 15px 60px;
-      grid-column-gap: 2%;
-    }
+  .titulo {
+    padding: 0 32px;
   }
+
+
+}
+.data-processo-adm{
+  display: grid;
+  grid-template-columns: 90% 10%;
+
+  .inputs-processo {
+    display: grid;
+    grid-template-columns: 68% 28%;
+    grid-column-gap: 4%;
+  }
+
+}
+
+.inputs-select-lote-dre {
+  display: grid;
+  grid-template-columns: 48% 48%;
+  grid-column-gap: 4%;
+}
+
+.container-lote-dre{
+  margin: 1.5em 0;
 }
 
