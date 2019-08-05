@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  createOrUpdateFoodSuspension,
+  createSuspensaoDeAlimentacao,
   deleteFoodSuspension,
   getSuspensoesDeAlimentacaoSalvas
 } from "../../services/suspensaoDeAlimentacao.service";
@@ -37,11 +37,8 @@ class FoodSuspensionEditor extends Component {
       dias_razoes: [
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
+          data: null,
+          motivo: null
         }
       ],
       options: {
@@ -98,11 +95,8 @@ class FoodSuspensionEditor extends Component {
       dias_razoes: this.state.dias_razoes.concat([
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
+          data: null,
+          motivo: null
         }
       ])
     });
@@ -114,13 +108,13 @@ class FoodSuspensionEditor extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions;
+    options[period.nome] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
     });
     this.props.change(
-      `suspensoes_${period.value}.tipo_de_refeicao`,
+      `suspensoes_${period.nome}.tipo_de_refeicao`,
       selectedOptions
     );
   };
@@ -161,10 +155,8 @@ class FoodSuspensionEditor extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          razao: null,
-          data_de: null,
-          data_ate: null,
-          weekdays: []
+          motivo: null,
+
         }
       ],
       options: {
@@ -250,7 +242,6 @@ class FoodSuspensionEditor extends Component {
   refresh() {
     getSuspensoesDeAlimentacaoSalvas().then(
       res => {
-        console.log("List ===========================>", res);
 
         this.setState({
           suspensoesDeAlimentacaoList: res.results
@@ -267,15 +258,20 @@ class FoodSuspensionEditor extends Component {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateFoodSuspension(JSON.stringify(values)).then(
+
+      const payload = {
+        escola: "2cbe024d-d22d-43ed-acd0-9c785e561819",//this.state.escola.uuid,
+        motivo: values.motivo,
+        observacao: values.observacao,
+        quantidades_por_periodo: values.suspensoes,
+        suspensoes_alimentacao: values.dias_razoes
+      };
+
+      createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
         res => {
-          if (res.status === 200) {
-            toastSuccess(
-              (values.status === "SALVO"
-                ? "Rascunho salvo"
-                : "Suspensão de Alimentação enviada") + " com sucesso"
-            );
-            this.refresh();
+          if (res.status === 201) {
+            toastSuccess("Suspensão de Alimentação salva com sucesso");
+              this.refresh();
           } else {
             toastError(res.error);
           }
@@ -307,9 +303,8 @@ class FoodSuspensionEditor extends Component {
       pristine,
       submitting,
       enrolled,
-      reasons_simple,
-      reasons_continuous_program,
       periods,
+      escola,
       motivosList,
       suspensoes_MANHA,
       suspensoes_TARDE,
@@ -367,18 +362,18 @@ class FoodSuspensionEditor extends Component {
               >
                 Descrição da Suspensão
               </div>
-              {dias_razoes.map((dia_razao, key) => {
+              {dias_razoes.map((dia_motivo, key) => {
                 return (
-                  <FormSection name={`dias_razoes_${dia_razao.id}`}>
+                  <FormSection name={`dias_razoes_${dia_motivo.id}`}>
                     <div className="form-row">
-                      {(!dia_razao.razao ||
-                        !dia_razao.razao.includes("Programa Contínuo")) && (
+                      {(!dia_motivo.motivo ||
+                        !dia_motivo.motivo.includes("Programa Contínuo")) && (
                         <div className="form-group col-sm-3">
                           <Field
                             component={LabelAndDate}
                             name="data"
                             onChange={value =>
-                              this.handleField("data", value, dia_razao.id)
+                              this.handleField("data", value, dia_motivo.id)
                             }
                             minDate={two_working_days}
                             label="Dia"
@@ -389,22 +384,22 @@ class FoodSuspensionEditor extends Component {
                       <div className="form-group col-sm-8">
                         <Field
                           component={LabelAndCombo}
-                          name="razao"
+                          name="motivo"
                           label="Motivo"
                           onChange={value =>
-                            this.handleField("razao", value, dia_razao.id)
+                            this.handleField("motivo", value, dia_motivo.id)
                           }
                           options={motivosList}
                           validate={required}
                         />
                       </div>
                     </div>
-                    {dia_razao.razao && dia_razao.razao.includes("Outro") && (
+                    {dia_motivo.motivo && dia_motivo.motivo.includes("Outro") && (
                       <div className="form-row">
                         <div
                           className={
-                            !dia_razao.razao ||
-                            !dia_razao.razao.includes(
+                            !dia_motivo.motivo ||
+                            !dia_motivo.motivo.includes(
                               "Programa Contínuo - Outro"
                             )
                               ? "form-group col-sm-8 offset-sm-3"
@@ -416,26 +411,26 @@ class FoodSuspensionEditor extends Component {
                             label="Qual o motivo?"
                             onChange={event =>
                               this.handleField(
-                                "qual_razao",
+                                "qual_motivo",
                                 event,
-                                dia_razao.id
+                                dia_motivo.id
                               )
                             }
-                            name="qual_razao"
+                            name="qual_motivo"
                             className="form-control"
                             validate={required}
                           />
                         </div>
                       </div>
                     )}
-                    {dia_razao.razao &&
-                      dia_razao.razao.includes("Programa Contínuo") && (
+                    {dia_motivo.motivo &&
+                      dia_motivo.motivo.includes("Programa Contínuo") && (
                         <div className="form-row">
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
-                                this.handleField("data_de", value, dia_razao.id)
+                                this.handleField("data_de", value, dia_motivo.id)
                               }
                               name="data_de"
                               label="De"
@@ -449,7 +444,7 @@ class FoodSuspensionEditor extends Component {
                                 this.handleField(
                                   "data_ate",
                                   value,
-                                  dia_razao.id
+                                  dia_motivo.id
                                 )
                               }
                               name="data_ate"
@@ -464,7 +459,7 @@ class FoodSuspensionEditor extends Component {
                               this.handleField(
                                 "dias_de_semana",
                                 value,
-                                dia_razao.id
+                                dia_motivo.id
                               )
                             }
                             classNameArgs="form-group col-sm-4"
@@ -480,8 +475,8 @@ class FoodSuspensionEditor extends Component {
                 className="col-sm-3"
                 onClick={() => this.addDay()}
                 disabled={
-                  dias_razoes[0].razao &&
-                  dias_razoes[0].razao.includes("Programa Contínuo")
+                  dias_razoes[0].motivo &&
+                  dias_razoes[0].motivo.includes("Programa Contínuo")
                 }
                 style={ButtonStyle.OutlinePrimary}
               />
@@ -493,8 +488,9 @@ class FoodSuspensionEditor extends Component {
                 </tr>
               </table>
               {periods.map((period, key) => {
+
                 this.props.change(
-                  `suspensoes_${period.value}.periodo`,
+                  `suspensoes_${period.nome}.periodo`,
                   period.uuid
                 );
                 return (

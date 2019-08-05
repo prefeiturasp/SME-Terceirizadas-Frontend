@@ -32,6 +32,7 @@ class FoodSuspensionContainer extends Component {
       reasons_continuous_program: [],
       day: new Date(),
       periods: [],
+      escola: null,
       typeFoodContinuousProgram: this.typeFoodContinuousProgram,
       two_working_days: null,
       five_working_days: null
@@ -42,6 +43,7 @@ class FoodSuspensionContainer extends Component {
     escolas().then(resEscolas => {
       getPeriods().then(resPeriods => {
         getMotivosSuspensaoCardapio().then(resMotivos => {
+
           this.setState({
             periods: resPeriods.results,
             motivosList: resMotivos.results,

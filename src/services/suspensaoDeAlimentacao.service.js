@@ -6,6 +6,28 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
+export const createSuspensaoDeAlimentacao = payload => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/`;
+
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+
 export const createOrUpdateFoodSuspension = payload => {
   const url = API_URL + `/suspensao-de-alimentacao/salvar/`;
   let status = 0;

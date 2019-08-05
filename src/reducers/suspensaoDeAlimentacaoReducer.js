@@ -4,12 +4,12 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_SUSPENSION:
       if (action.data != null) {
-        action.data.dias_razoes.forEach(function(dia_razao) {
-          action.data[`dias_razoes_${dia_razao.id}`] = dia_razao;
+        action.data.dias_razoes.forEach(function(dia_motivo) {
+          action.data[`dias_razoes_${dia_motivo.id}`] = dia_motivo;
         });
-        action.data.descricoes.forEach(function(descricao) {
-          action.data[`descricoes_${descricao.periodo}`] = descricao;
-          action.data[`descricoes_${descricao.periodo}`]['check'] = true;
+        action.data.suspensoes.forEach(function(descricao) {
+          action.data[`suspensoes_${descricao.periodo}`] = descricao;
+          action.data[`suspensoes_${descricao.periodo}`]['check'] = true;
         });
       }
       return {
