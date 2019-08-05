@@ -41,14 +41,15 @@ export const deleteFoodSuspension = payload => {
     });
 };
 
-export const getSavedFoodSuspensions = () => {
-  const url = `${API_URL}/suspensoes-alimentacao/`
+export const getSuspensoesDeAlimentacaoSalvas = () => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/meus_rascunhos/`
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
   return fetch(url, OBJ_REQUEST)
     .then(result => {
+
       return result.json();
     })
     .catch(error => {
@@ -56,8 +57,8 @@ export const getSavedFoodSuspensions = () => {
     });
 };
 
-export const getReasons = () => {
-  const url = API_URL + `/suspensao-de-alimentacao/razoes/`;
+export const getMotivosSuspensaoCardapio = () => {
+  const url = `${API_URL}/motivos-suspensao-cardapio/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { getPeriods } from "../../services/school.service";
-import { getReasons } from "../../services/suspensaoDeAlimentacao.service";
+import { escolas, getPeriods } from "../../services/school.service";
+import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import FoodSuspension from "./SuspensaoDeAlimentacao";
 
@@ -39,19 +39,18 @@ class FoodSuspensionContainer extends Component {
   }
 
   componentDidMount() {
-    let _two,
-      _five = null;
-    getPeriods().then(resPeriods => {
-      getReasons().then(resReasons => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.content.school_periods,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program:
-            resReasons.content.reasons_continuous_program
+    escolas().then(resEscolas => {
+      getPeriods().then(resPeriods => {
+        getMotivosSuspensaoCardapio().then(resMotivos => {
+          this.setState({
+            periods: resPeriods.results,
+            motivosList: resMotivos.results,
+            escola: resEscolas.results[0]
+          });
         });
       });
     });
+
     getWorkingDays().then(res => {
       this.setState({
         two_working_days: new Date(res.proximos_dois_dias_uteis),
