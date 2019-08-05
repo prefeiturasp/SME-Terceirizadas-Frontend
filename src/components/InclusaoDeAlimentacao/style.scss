@@ -1,0 +1,38 @@
+h3 {
+  color: #353535;
+}
+
+.table-titles {
+  div {
+    padding: 15px 0;
+    &:nth-child(1) {
+      padding-left: 1rem;
+    }
+    &:nth-child(2) {
+      padding-left: 3.5rem;
+    }
+    &:nth-child(3) {
+      padding-left: 1.5rem;
+    }
+  }
+}
+
+.period-quantity {
+  margin-left: -1.4rem;
+  border-radius: 7px;
+  &.number-0 {
+    background-color: #fff7cb;
+  }
+  &.number-1 {
+    background-color: #ebedff;
+  }
+  &.number-2 {
+    background-color: #ffeed6;
+  }
+  &.number-3 {
+    background-color: #eaffe3;
+  }
+  &.number-4 {
+    background-color: #e4f1ff;
+  }
+}

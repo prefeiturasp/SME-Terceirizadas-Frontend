@@ -1,10 +1,10 @@
 import { Login } from "../components/Login";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
-import FoodInclusionPage from "../pages/Escola/FoodInclusionPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import TourRequestPage from "../pages/Escola/TourRequestPage";
-import DayChangePage from "../pages/Escola/DayChangePage";
+import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
 import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
@@ -56,7 +56,7 @@ const routesConfig = [
   },
   {
     path: "/escola/inclusao-de-alimentacao",
-    component: FoodInclusionPage,
+    component: InclusaoDeAlimentacaoPage,
     exact: false
   },
   {
@@ -71,7 +71,7 @@ const routesConfig = [
   },
   {
     path: "/escola/inversao-de-dia-de-cardapio",
-    component: DayChangePage,
+    component: InversaoDeDiaDeCardapioPage,
     exact: false
   },
   {

@@ -155,6 +155,7 @@ export class LabelAndDate extends Component {
     minDate: dateDelta(0),
     maxDate: dateDelta(360),
     cols: "",
+    disabled: false,
     fullScreen: false,
     inline: false,
     hasIcon: true
@@ -181,6 +182,7 @@ export class LabelAndDate extends Component {
       cols,
       name,
       label,
+      disabled,
       dateFormat,
       minDate,
       maxDate,
@@ -221,6 +223,7 @@ export class LabelAndDate extends Component {
               inline={inline}
               minDate={minDate}
               maxDate={maxDate}
+              disabled={disabled}
               className="form-control"
               ref={c => (this._calendar = c)}
               onChange={this.handleChange}
