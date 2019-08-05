@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { getPeriods } from "../../services/school.service";
-import { getReasons } from "../../services/foodSuspension.service";
+import { getReasons } from "../../services/suspensaoDeAlimentacao.service";
 import { getWorkingDays } from "../../services/workingDays.service";
-import FoodSuspension from "./FoodSuspension";
+import FoodSuspension from "./SuspensaoDeAlimentacao";
 
 class FoodSuspensionContainer extends Component {
   typeFoodContinuousProgram = [
@@ -53,12 +53,9 @@ class FoodSuspensionContainer extends Component {
       });
     });
     getWorkingDays().then(res => {
-      _two = res[0].date_two_working_days.split("/");
-      _five = res[0].date_five_working_days.split("/");
       this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        two_working_days: new Date(res.proximos_dois_dias_uteis),
+        five_working_days: new Date(res.proximos_cinco_dias_uteis)
       });
     });
   }

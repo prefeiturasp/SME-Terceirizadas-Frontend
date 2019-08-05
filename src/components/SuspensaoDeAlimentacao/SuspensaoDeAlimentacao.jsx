@@ -5,8 +5,8 @@ import {
   createOrUpdateFoodSuspension,
   deleteFoodSuspension,
   getSavedFoodSuspensions
-} from "../../services/foodSuspension.service";
-import { validateSubmit } from "./FoodSuspensionValidation";
+} from "../../services/suspensaoDeAlimentacao.service";
+import { validateSubmit } from "./SuspensaoDeAlimentacaoValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
@@ -20,9 +20,9 @@ import { required } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
-import { FoodSuspensionItemList } from "./FoodSuspensionItemList";
+import { FoodSuspensionItemList } from "./SuspensaoDeAlimentacaoItemList";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/foodSuspensionReducer";
+import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 
 class FoodSuspensionEditor extends Component {
   constructor(props) {

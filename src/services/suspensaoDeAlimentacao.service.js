@@ -42,8 +42,7 @@ export const deleteFoodSuspension = payload => {
 };
 
 export const getSavedFoodSuspensions = () => {
-  const url =
-    API_URL + `/suspensao-de-alimentacao/suspensoes_de_alimentacao_salvas/`;
+  const url = `${API_URL}/suspensoes-alimentacao/`
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
