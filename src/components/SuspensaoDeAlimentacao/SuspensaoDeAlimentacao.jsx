@@ -310,6 +310,7 @@ class FoodSuspensionEditor extends Component {
       reasons_simple,
       reasons_continuous_program,
       periods,
+      motivosList,
       suspensoes_MANHA,
       suspensoes_TARDE,
       suspensoes_NOITE,
@@ -393,13 +394,7 @@ class FoodSuspensionEditor extends Component {
                           onChange={value =>
                             this.handleField("razao", value, dia_razao.id)
                           }
-                          options={
-                            dias_razoes.length > 1
-                              ? selectDefault.concat(reasons_simple)
-                              : selectDefault
-                                  .concat(reasons_simple)
-                                  .concat(reasons_continuous_program)
-                          }
+                          options={motivosList}
                           validate={required}
                         />
                       </div>
