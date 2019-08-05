@@ -1,5 +1,3 @@
-import moment from "moment";
-
 export const formatarTiposDeAlimentacao = tiposAlimentacao => {
   return tiposAlimentacao.map(element => {
     return { value: element.uuid, label: element.nome };
@@ -33,18 +31,6 @@ export const formatarDiasSemana = diasSemana => {
     paraStringDiasSemana.push(diaSemana.toString());
   });
   return paraStringDiasSemana;
-};
-
-export const dataPrioritaria = (
-  data,
-  proximos_dois_dias_uteis,
-  proximos_cinco_dias_uteis
-) => {
-  const data_objeto = new Date(moment(data).format("DD/MM/YYYY"));
-  return (
-    proximos_dois_dias_uteis <= data_objeto &&
-    data_objeto < proximos_cinco_dias_uteis
-  );
 };
 
 export const GeradorUUID = () => {

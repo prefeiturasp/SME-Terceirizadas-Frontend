@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const showResults = values =>
   new Promise(resolve => {
     setTimeout(() => {
@@ -13,24 +15,6 @@ export const dateDelta = daysDelta => {
   return today;
 };
 
-export const string_to_slug = str => {
-  str = str.replace(/^\s+|\s+$/g, ''); // trim
-  str = str.toLowerCase();
-
-  // remove accents, swap ñ for n, etc
-  var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
-  var to   = "aaaaeeeeiiiioooouuuunc------";
-  for (var i=0, l=from.length ; i<l ; i++) {
-      str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-  }
-
-  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-      .replace(/\s+/g, '-') // collapse whitespace and replace by -
-      .replace(/-+/g, '-'); // collapse dashes
-
-  return str;
-}
-
 export const checaSeDataEstaEntre2e5DiasUteis = (value, two_working_days, five_working_days)=> {
   const _date = value.split("/");
   if (two_working_days <=
@@ -41,3 +25,15 @@ export const checaSeDataEstaEntre2e5DiasUteis = (value, two_working_days, five_w
   }
   return false;
 }
+
+export const dataPrioritaria = (
+  data,
+  proximos_dois_dias_uteis,
+  proximos_cinco_dias_uteis
+) => {
+  const data_objeto = new Date(moment(data).format("DD/MM/YYYY"));
+  return (
+    proximos_dois_dias_uteis <= data_objeto &&
+    data_objeto < proximos_cinco_dias_uteis
+  );
+};
