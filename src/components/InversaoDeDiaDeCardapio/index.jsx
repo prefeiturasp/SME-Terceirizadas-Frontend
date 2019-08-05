@@ -88,7 +88,9 @@ export class InversaoDeDiaDeCardapio extends Component {
   componentDidUpdate(prevProps) {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
-    if (meusDados !== null && proximos_dois_dias_uteis !== null && loading) {
+    const dadosDaAPItotalmenteCarregados =
+      meusDados !== null && proximos_dois_dias_uteis !== null && loading;
+    if (dadosDaAPItotalmenteCarregados) {
       this.setState({
         loading: false
       });
@@ -270,11 +272,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <BaseButton
                       label={this.state.salvarAtualizarLbl}
                       disabled={pristine || submitting}
-                      onClick={handleSubmit(values =>
-                        this.onSubmit({
-                          ...values
-                        })
-                      )}
+                      onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
                       type={ButtonType.SUBMIT}
                       style={ButtonStyle.OutlinePrimary}
