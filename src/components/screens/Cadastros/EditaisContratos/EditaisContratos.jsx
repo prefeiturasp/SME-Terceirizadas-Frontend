@@ -14,7 +14,7 @@ class EditaisContratos extends Component {
     this.state = {
       lotes: [],
       lotesSelecionados: [
-
+        
       ]
     };
     this.lidarComLotesSelecionados = this.lidarComLotesSelecionados.bind(this);
@@ -27,6 +27,21 @@ class EditaisContratos extends Component {
   }
 
   lidarComLotesSelecionados(value, nomeDoFormAtual) {
+    if(this.state.lotesSelecionados.length === 0){
+      this.setState({ lotesSelecionados: [{[nomeDoFormAtual]: Array(value[0]) }]})
+    }if(this.state.lotesSelecionados.length > 0){
+      this.state.lotesSelecionados.forEach(lote => {
+        Object.keys(lote)[0] == [nomeDoFormAtual] ? (
+          lote[[nomeDoFormAtual]].push(value[0])
+        ) : (
+          console.log('nao tem')
+        )
+      })
+    }
+
+
+
+    /*
     let valor = value[0]
     Object.keys(this.state.lotesSelecionados) == nomeDoFormAtual ? (
       this.state.lotesSelecionados[[nomeDoFormAtual]].push(valor)
@@ -34,6 +49,7 @@ class EditaisContratos extends Component {
      this.setState({ lotesSelecionados: {[nomeDoFormAtual]: value} })
     )
     console.log(this.state.lotesSelecionados)
+    */
   }
 
 

@@ -12,15 +12,36 @@ class ContratosRelacionados extends Component {
     super(props);
     this.state = {
       quantidadeForm: 0,
-      nomeDoFormAtual: ""
+      nomeDoFormAtual: "",
+      lista_lotes: null
     };
+    
     this.obtemNomeForm = this.obtemNomeForm.bind(this);
+    
   }
 
   obtemNomeForm(form, quantidadeForm) {
     let nome = `${form}${quantidadeForm + 1}`;
     this.setState({ nomeDoFormAtual: nome})
     this.setState({ quantidadeForm: quantidadeForm +1 })
+  }
+
+  listaDeLotes(nomeDoFormAtual, lotesSelecionados){
+    if(lotesSelecionados.length <= 0){
+      return []
+    }
+    if(lotesSelecionados.length > 0){
+      lotesSelecionados.forEach(lote => {
+        if (Object.keys(lote) == nomeDoFormAtual){
+          this.setState({lista_lotes: lote[[nomeDoFormAtual]]})
+          
+        }else {
+          
+        }
+      })
+      return []
+      
+    }
   }
 
   componentDidMount() {
@@ -30,6 +51,8 @@ class ContratosRelacionados extends Component {
     );
 
   }
+
+  
 
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
@@ -45,7 +68,7 @@ class ContratosRelacionados extends Component {
   }
 
   render() {
-    const { nomeDoFormAtual, quantidadeForm } = this.state;
+    const { nomeDoFormAtual, quantidadeForm,lista_lotes } = this.state;
     const { fields, lotes, lotesSelecionados, lidarComLotesSelecionados } = this.props;
    
     return (
@@ -85,12 +108,13 @@ class ContratosRelacionados extends Component {
                         <Field
                           component={StatefulMultiSelect}
                           name={`${nomeDoFormAtual}lotes`}
-                          selected={!lotesSelecionados[Object.keys(lotesSelecionados)] ? ([]) : ([1,2])}
+                          selected={!lista_lotes ? [] : lista_lotes}
                           options={lotes}
                           valueRenderer={this.renderizarLabelLote}
-                          onSelectedChanged={value =>
+                          onSelectedChanged={value => {
                             lidarComLotesSelecionados(value, nomeDoFormAtual)
-                          }
+                            this.listaDeLotes(nomeDoFormAtual, lotesSelecionados)
+                          }}
                           overrideStrings={{
                             search: "Busca",
                             selectSomeItems: "Selecione",
