@@ -15,12 +15,12 @@ import { Modal } from "react-bootstrap";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
 import { required, maxValue } from "../../helpers/fieldValidators";
-import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
-import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
+import SelecionaTempoPasseio from "../SolicitacaoDeKitLanche/TourRequestCheck";
+import SelecionaKitLancheBox from "../SolicitacaoDeKitLanche/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
-import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
-import { kitLanches } from "../../services/tourRequest.service";
+import { adapterEnumKits } from "../SolicitacaoDeKitLanche/helper";
+import { kitLanches } from "../../services/solicitacaoDeKitLanche.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {

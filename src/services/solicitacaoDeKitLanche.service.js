@@ -28,81 +28,23 @@ export const getKitsByApi = async () => {
     });
 };
 
-export const obtemDadosDaEscolaApi = async uuid => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-
-  const url = `${API_URL}/escolas/${uuid}/`;
-  return await fetch(url, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
-    .catch(erro => {
-      console.log("Erro ao recuperar dados escolares");
-      return {};
-    });
-};
-
-export const getQuatidadeAlunoApi = async () => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-
-  const url = `${API_URL}/kit-lanches/`;
-  return await fetch(url, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
-    .catch(erro => {
-      console.log("Error quantidade de aluno: ", erro);
-      return {};
-    });
-};
-
-export const getDiasUteis = async () => {
-  const url = `${API_URL}/dias-uteis/`;
-  return await fetch(url)
-    .then(response => {
-      return response.json();
-    })
-    .catch(erro => {
-      console.log("Error dias uteis: ", erro);
-      return {};
-    });
-};
-
 export const solicitarKitLanche = async values => {
+  let status = 0;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "POST",
     body: JSON.stringify(values)
   };
   return await fetch(`${API_URL}/solicitacoes-kit-lanche-avulsa/`, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
-      console.log("Salvar Kit Lanche: ", error);
-      return {};
-    });
-};
-
-export const registroSalvarKitLanche = async values => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "POST",
-    body: JSON.stringify(values)
-  };
-  return await fetch(`${URL_SOLICITAR}/salvar/`, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => {
-      console.log("Salvar Kit Lanche: ", error);
-      return {};
+      return error.json();
     });
 };
 
@@ -173,13 +115,32 @@ export const removeKitLanche = async idKit => {
     });
 };
 
+export const inicioPedido = uuid => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getSolicitacoesKitLancheApi = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
 
-  return await fetch(URL_SOLICITACOES_AVULSAS, OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes`, OBJ_REQUEST)
     .then(response => {
       const resp = response.json();
       return resp;
