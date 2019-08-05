@@ -1,119 +1,83 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment as div } from "react";
 import { Field } from "redux-form";
 import {
   LabelAndInput,
   LabelAndDate
 } from "../../../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle } from "../../../Shareable/button";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+
+import { renderizarLabelLote, renderizarLabelDiretoria, renderizarLabelEmpresa } from "./helper";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantidadeForm: 0,
-      nomeDoFormAtual: "",
-      lista_lotes: null
+      lotesSelecionados: [],
+      diretoriasSelecionadas: [],
+      empresasSelecionadas: []
     };
-    
-    this.obtemNomeForm = this.obtemNomeForm.bind(this);
-    
   }
 
-  obtemNomeForm(form, quantidadeForm) {
-    let nome = `${form}${quantidadeForm + 1}`;
-    this.setState({ nomeDoFormAtual: nome})
-    this.setState({ quantidadeForm: quantidadeForm +1 })
+  lidarComDiretoriasSelecionadas(values) {
+    this.setState({ diretoriasSelecionadas: values });
   }
 
-  listaDeLotes(nomeDoFormAtual, lotesSelecionados){
-    if(lotesSelecionados.length <= 0){
-      return []
-    }
-    if(lotesSelecionados.length > 0){
-      lotesSelecionados.forEach(lote => {
-        if (Object.keys(lote) == nomeDoFormAtual){
-          this.setState({lista_lotes: lote[[nomeDoFormAtual]]})
-          
-        }else {
-          
-        }
-      })
-      return []
-      
-    }
+  lidarComLotesSelecionados(values) {
+    this.setState({ lotesSelecionados: values });
+  }
+
+  lidarComEmpresasSelecionadas(values) {
+    this.setState({empresasSelecionadas: values })
   }
 
   componentDidMount() {
-    this.obtemNomeForm(
-      this.props.fields.name,
-      this.state.quantidadeForm
-    );
-
-  }
-
-  
-
-  renderizarLabelLote(selected, options) {
-    if (selected.length === 0) {
-      return "Selecione um ou mais lotes...";
-    }
-    if (selected.length === options.length) {
-      return "Todos os lotes foram selecionados";
-    }
-    if (selected.length === 1) {
-      return `${selected.length} lote selecionado`;
-    }
-    return `${selected.length} lotes selecionados`;
+    this.setState({ nomeDoFormAtual: this.props.nomeForm });
   }
 
   render() {
-    const { nomeDoFormAtual, quantidadeForm,lista_lotes } = this.state;
-    const { fields, lotes, lotesSelecionados, lidarComLotesSelecionados } = this.props;
-   
+    const { lotesSelecionados, diretoriasSelecionadas, empresasSelecionadas } = this.state;
+    const { lotes, diretoriasRegionais, empresas } = this.props;
     return (
-      <Fragment>
-        <nav className="titulo">Contratos relacionados</nav>
-        {fields.map((contratoRelacionado, index) => (
-          <Fragment>
-            <article className="card-body contratos-relacionados">
-              <section className="section-inputs">
-                <div className="section-contrato-vigencia" />
-                <div className="container-processo-adm">
-                  <div className="data-processo-adm">
-                    <div className="inputs-processo">
-                      <div>
-                        <Field
-                          name={`${contratoRelacionado}processo_administrativo`}
-                          label="* Processo administrativo do contrato"
-                          key={index}
-                          component={LabelAndInput}
-                        />
-                      </div>
-                      <div>
-                        <Field
-                          name={`${contratoRelacionado}data_proposta`}
-                          label="* Data do proposta"
-                          key={index}
-                          component={LabelAndDate}
-                        />
-                      </div>
+      <div>
+        <div>
+          <article className="card-body contratos-relacionados">
+            <section className="section-inputs">
+              <div className="section-contrato-vigencia" />
+              <div className="container-processo-adm">
+                <div className="data-processo-adm">
+                  <div className="inputs-processo">
+                    <div>
+                      <Field
+                        name={`processo_administrativo`}
+                        label="* Processo administrativo do contrato"
+                        component={LabelAndInput}
+                      />
                     </div>
-                    <div />
+                    <div>
+                      <Field
+                        name={`data_proposta`}
+                        label="* Data do proposta"
+                        component={LabelAndDate}
+                      />
+                    </div>
                   </div>
-                  <div className="container-lote-dre">
-                    <div className="inputs-select-lote-dre">
-                      {lotes.length ? (
-                        
+                  <div />
+                </div>
+                <div className="container-lote-dre">
+                  <div className="inputs-select-lote-dre">
+                    {lotes.length ? (
+                      <div>
+                        <label className="label">
+                          <span>* </span>Lote
+                        </label>
                         <Field
                           component={StatefulMultiSelect}
-                          name={`${nomeDoFormAtual}lotes`}
-                          selected={!lista_lotes ? [] : lista_lotes}
+                          name={".lotes"}
+                          selected={lotesSelecionados}
                           options={lotes}
-                          valueRenderer={this.renderizarLabelLote}
-                          onSelectedChanged={value => {
-                            lidarComLotesSelecionados(value, nomeDoFormAtual)
-                            this.listaDeLotes(nomeDoFormAtual, lotesSelecionados)
+                          valueRenderer={renderizarLabelLote}
+                          onSelectedChanged={values => {
+                            this.lidarComLotesSelecionados(values);
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -123,30 +87,73 @@ class ContratosRelacionados extends Component {
                             selectAll: "Todos"
                           }}
                         />
-                      ) : (
-                        <div>Carregando lotes..</div>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div>Carregando lotes..</div>
+                    )}
+
+                    {diretoriasRegionais.length ? (
+                      <div>
+                        <label className="label">
+                          <span>* </span>DRE
+                        </label>
+                        <Field
+                          component={StatefulMultiSelect}
+                          name={".lotes"}
+                          selected={diretoriasSelecionadas}
+                          options={diretoriasRegionais}
+                          valueRenderer={renderizarLabelDiretoria}
+                          onSelectedChanged={values => {
+                            this.lidarComDiretoriasSelecionadas(values);
+                          }}
+                          overrideStrings={{
+                            search: "Busca",
+                            selectSomeItems: "Selecione",
+                            allItemsAreSelected:
+                              "Todos os itens estão selecionados",
+                            selectAll: "Todos"
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div>Carregando diretorias regionais..</div>
+                    )}
                   </div>
                 </div>
-              </section>
-            </article>
-            <hr />
-          </Fragment>
-        ))}
-
-        <article className="card-body dados-editais">
-          <BaseButton
-            className="header-button"
-            label="+ Adicionar outro contrato relacionado"
-            style={ButtonStyle.OutlinePrimary}
-            onClick={() => {
-              fields.push()
-              this.obtemNomeForm(fields.name, quantidadeForm)
-            }}
-          />
-        </article>
-      </Fragment>
+                <div>
+                  {empresas.length ? (
+                    <div>
+                      <label className="label">
+                        <span>* </span>Empresa
+                      </label>
+                      <Field
+                        component={StatefulMultiSelect}
+                        name={".lotes"}
+                        selected={empresasSelecionadas}
+                        options={empresas}
+                        valueRenderer={renderizarLabelEmpresa}
+                        onSelectedChanged={values => {
+                          this.lidarComEmpresasSelecionadas(values);
+                        }}
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div>Carregando lotes..</div>
+                  )}
+                </div>
+              </div>
+            </section>
+          </article>
+          <hr />
+        </div>
+      </div>
     );
   }
 }
