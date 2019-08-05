@@ -20,7 +20,6 @@ import {
   removeKitLanche,
   solicitarKitLanche,
   getSolicitacoesKitLancheApi,
-  getRefeicoesApi,
   registroAtualizaKitLanche,
   inicioPedido
 } from "../../services/solicitacaoDeKitLanche.service";
@@ -28,7 +27,7 @@ import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { montaObjetoRequisicao, adapterEnumKits } from "./helper";
+import { montaObjetoRequisicao } from "./helper";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -41,24 +40,23 @@ export class SolicitacaoDeKitLanche extends Component {
     this.state = {
       loading: true,
       qtd_kit_lanche: 0,
+      initialValues: false,
       radioChanged: false,
       rascunhosSolicitacoesKitLanche: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
-      enumKits: null,
       showModal: false,
       modalConfirmation: false,
       modalMessage: "",
-      botaoConfirma: true,
-      uuid: "7029aba9-ba03-4b6b-af89-7dddc5010471",
-      escola: {}
+      botaoConfirma: true
     };
     this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.setInitialValues = this.setInitialValues.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
   }
 
@@ -109,9 +107,14 @@ export class SolicitacaoDeKitLanche extends Component {
       status: "SEM STATUS",
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
-      qtd_kit_lanche: 0
+      qtd_kit_lanche: 0,
+      initialValues: true
     });
     this.refresh();
+  }
+
+  setInitialValues() {
+    this.setState({ initialValues: false });
   }
 
   componentDidMount() {
@@ -208,16 +211,6 @@ export class SolicitacaoDeKitLanche extends Component {
       .catch(error => {
         console.log(error);
       });
-
-    getRefeicoesApi()
-      .then(response => {
-        this.setState({
-          enumKits: adapterEnumKits(response)
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
   }
 
   closeModal() {
@@ -253,16 +246,18 @@ export class SolicitacaoDeKitLanche extends Component {
       pristine,
       submitting,
       meusDados,
+      enumKits,
       proximos_dois_dias_uteis
     } = this.props;
-    const { loading } = this.state;
     const {
-      enumKits,
       rascunhosSolicitacoesKitLanche,
       showModal,
       modalMessage,
       modalConfirmation,
-      botaoConfirma
+      botaoConfirma,
+      loading,
+      qtd_kit_lanche,
+      initialValues
     } = this.state;
     return (
       <div>
@@ -333,7 +328,9 @@ export class SolicitacaoDeKitLanche extends Component {
               {enumKits && (
                 <SelecionaKitLancheBox
                   className="mt-3"
-                  choicesNumberLimit={this.state.qtd_kit_lanche}
+                  choicesNumberLimit={qtd_kit_lanche}
+                  initialValues={initialValues}
+                  setInitialValues={this.setInitialValues}
                   kits={enumKits}
                 />
               )}

@@ -11,7 +11,7 @@ export const HORAS_ENUM = {
 };
 
 class  SelecionaKitLancheBox extends Component {
-  
+
   render() {
     const KIT_ENUM = this.props.kits;
 
@@ -36,7 +36,7 @@ class  SelecionaKitLancheBox extends Component {
     let checkAll = kitOptions.length === this.props.choicesNumberLimit;
 
     return (
-      
+
       <div className={this.props.className}>
         <h5 className="font-weight-bold">Selecione a opção desejada</h5>
         <Field
@@ -46,6 +46,8 @@ class  SelecionaKitLancheBox extends Component {
           options={kitOptions}
           showOptions={this.props.showOptions !== undefined ? this.props.showOptions : true}
           choicesNumberLimit={this.props.choicesNumberLimit}
+          initialValues={this.props.initialValues}
+          setInitialValues={this.props.setInitialValues}
           checkAll={checkAll}
           clearAll={false}
           onChange={this.props.onChange}

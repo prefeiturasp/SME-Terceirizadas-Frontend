@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
+import { getRefeicoesApi } from "../../services/solicitacaoDeKitLanche.service";
+import { adapterEnumKits } from "./helper";
 import SolicitacaoDeKitLanche from ".";
 
 class Container extends Component {
@@ -9,7 +11,8 @@ class Container extends Component {
     this.state = {
       meusDados: null,
       proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
+      proximos_cinco_dias_uteis: null,
+      enumKits: null
     };
   }
 
@@ -18,6 +21,12 @@ class Container extends Component {
       const meusDados = response;
       this.setState({
         meusDados
+      });
+    });
+
+    getRefeicoesApi().then(response => {
+      this.setState({
+        enumKits: adapterEnumKits(response)
       });
     });
 
