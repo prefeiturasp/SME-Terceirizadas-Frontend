@@ -5,11 +5,13 @@ import {
   LabelAndDate
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { required } from "../../../../helpers/fieldValidators";
 
 import {
   renderizarLabelLote,
   renderizarLabelDiretoria,
-  renderizarLabelEmpresa
+  renderizarLabelEmpresa,
+  formataObjetoDaRequisição
 } from "./helper";
 
 class ContratosRelacionados extends Component {
@@ -20,13 +22,16 @@ class ContratosRelacionados extends Component {
       diretoriasSelecionadas: [],
       empresasSelecionadas: [],
 
+      contratosEVigencias: [],
+
       formVigenciaContratos: ["vigenciaContrato0"]
     };
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `vigenciaContrato${this.state
-      .formVigenciaContratos.length - 1}`;
+    const indiceDoFormAtual = `vigenciaContrato${
+      this.state.formVigenciaContratos.length
+    }`;
     let forms = this.state.formVigenciaContratos;
     forms.push(indiceDoFormAtual);
     this.setState({ forms });
@@ -53,7 +58,8 @@ class ContratosRelacionados extends Component {
       lotesSelecionados,
       diretoriasSelecionadas,
       empresasSelecionadas,
-      formVigenciaContratos
+      formVigenciaContratos,
+      contratosEVigencias
     } = this.state;
     const { lotes, diretoriasRegionais, empresas } = this.props;
     return (
@@ -74,6 +80,8 @@ class ContratosRelacionados extends Component {
                             <Field
                               name={`numero_contrato${formContrato}`}
                               component={LabelAndInput}
+                              validate={required}
+                              onChange={event => formataObjetoDaRequisição(event, formContrato, indice, contratosEVigencias)}
                             />
                           </div>
                           <div className="coluna">
@@ -83,6 +91,7 @@ class ContratosRelacionados extends Component {
                             <Field
                               name={`data_vigencia_inicio${formContrato}`}
                               component={LabelAndDate}
+                              validate={required}
                             />
                           </div>
                           <div className="coluna">
@@ -90,6 +99,7 @@ class ContratosRelacionados extends Component {
                               name={`data_vigencia_fim${formContrato}`}
                               component={LabelAndDate}
                               label=" "
+                              validate={required}
                             />
                           </div>
                         </div>
@@ -113,17 +123,23 @@ class ContratosRelacionados extends Component {
                 <div className="data-processo-adm">
                   <div className="inputs-processo">
                     <div>
+                      <label className="label">
+                        <span>* </span>Processo administrativo do contrato
+                      </label>
                       <Field
                         name={`processo_administrativo`}
-                        label="* Processo administrativo do contrato"
                         component={LabelAndInput}
+                        validate={required}
                       />
                     </div>
                     <div>
+                      <label className="label">
+                        <span>* </span>Data do proposta
+                      </label>
                       <Field
                         name={`data_proposta`}
-                        label="* Data do proposta"
                         component={LabelAndDate}
+                        validate={required}
                       />
                     </div>
                   </div>
@@ -153,6 +169,7 @@ class ContratosRelacionados extends Component {
                               "Todos os itens estão selecionados",
                             selectAll: "Todos"
                           }}
+                          validate={required}
                         />
                       </div>
                     ) : (
@@ -180,6 +197,7 @@ class ContratosRelacionados extends Component {
                               "Todos os itens estão selecionados",
                             selectAll: "Todos"
                           }}
+                          validate={required}
                         />
                       </div>
                     ) : (
@@ -211,7 +229,7 @@ class ContratosRelacionados extends Component {
                     <div>
                       {diretoriasSelecionadas.length > 0 && (
                         <div className="pt-3">
-                          <div >
+                          <div>
                             <label className="label-selected-unities">
                               DRE's selecionadas
                             </label>
@@ -253,6 +271,7 @@ class ContratosRelacionados extends Component {
                             "Todos os itens estão selecionados",
                           selectAll: "Todos"
                         }}
+                        validate={required}
                       />
                     </div>
                   ) : (
