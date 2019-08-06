@@ -2,7 +2,7 @@ export const normalizaLabelValueDRE = response => {
   let dres = response.results.map(elemento => {
     return {
       label: elemento.nome,
-      value: elemento.uuid,
+      value: elemento.nome,
       uuid: elemento.uuid
     };
   });
@@ -13,7 +13,7 @@ export const normalizaLabelValueLote = response => {
   let lotes = response.map(elemento => {
     return {
       label: elemento.nome,
-      value: elemento.uuid,
+      value: elemento.nome,
       uuid: elemento.uuid
     };
   });

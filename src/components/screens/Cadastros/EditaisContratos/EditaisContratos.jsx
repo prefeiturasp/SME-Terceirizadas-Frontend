@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { reduxForm, FormSection } from "redux-form";
 import { Link } from "react-router-dom";
-import BaseButton, { ButtonStyle } from "../../../Shareable/button";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLotes,
   getDiretoriaregional
@@ -19,24 +19,29 @@ class EditaisContratos extends Component {
       diretoriasRegionais: [],
       empresas: [
         {
-          label: 'SINGULAR GESTÃO DE SERVIÇOS LTDA',
-          value: '24B20725-17B1-4E83-8EE9-1B0CAD5C4F51'
+          label: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
+          value: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
+          uuid: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
         },
         {
-          label: 'APETECE SISTEMAS DE ALIMENTAÇÃO S/A.',
-          value: '366270C1-3156-4792-920C-399B1973C58D'
+          label: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
+          value: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
+          uuid: "366270C1-3156-4792-920C-399B1973C58D"
         },
         {
-          label: 'S.H.A COMÉRCIO DE ALIMENTOS LTDA',
-          value: 'F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269'
+          label: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
+          value: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
+          uuid: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
         },
         {
-          label: 'P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ',
-          value: '3FA6EB36-7456-4274-824E-A4809494412A'
+          label: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
+          value: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
+          uuid: "3FA6EB36-7456-4274-824E-A4809494412A"
         },
         {
-          label: 'COMERCIAL MILANO BRASIL',
-          value: '097783FB-FEC6-4DD2-98EC-832138F294F9'
+          label: "COMERCIAL MILANO BRASIL",
+          value: "COMERCIAL MILANO BRASIL",
+          uuid: "097783FB-FEC6-4DD2-98EC-832138F294F9"
         }
       ],
       forms: ["secaoEdital0"]
@@ -56,7 +61,9 @@ class EditaisContratos extends Component {
     });
 
     getDiretoriaregional().then(response => {
-      this.setState({ diretoriasRegionais: normalizaLabelValueDRE(response.data) });
+      this.setState({
+        diretoriasRegionais: normalizaLabelValueDRE(response.data)
+      });
     });
   }
 
@@ -104,8 +111,23 @@ class EditaisContratos extends Component {
               />
             </article>
 
-            <footer>
-              <button type="submit">Submit</button>
+            <footer className="card-body">
+              <div className="button-container">
+                <div className="button-submit">
+                  <BaseButton
+                    label="Cancelar"
+                    onClick={event => this.resetForm(event)}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label={"Salvar"}
+                    onClick={handleSubmit(values => this.salvaFormulario())}
+                    className="ml-3"
+                    type={ButtonType.SUBMIT}
+                    style={ButtonStyle.Primary}
+                  />
+                </div>
+              </div>
             </footer>
           </form>
         </div>
@@ -115,5 +137,5 @@ class EditaisContratos extends Component {
 }
 
 export default reduxForm({
-  form: "cadastroEditaisForm",
+  form: "cadastroEditaisForm"
 })(EditaisContratos);
