@@ -92,3 +92,25 @@ export const enviarSuspensaoDeAlimentacao = (uuid, payload) => {
       return error.json();
     });
 };
+
+export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
+  let status = 0;
+  console.log("Update Payload: ", payload);
+
+  return fetch(url, {
+    method: "PUT",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

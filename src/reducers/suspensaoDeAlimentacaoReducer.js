@@ -6,12 +6,15 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_SUSPENSION:
       if (action.data != null) {
+        console.log("suspensoes_alimentacao: ", action.data.suspensoes_alimentacao);
 
         action.data.suspensoes_alimentacao.forEach(function(dia_motivo) {
           let diaMotivo = {}
           diaMotivo["data"] = dia_motivo.data
           diaMotivo["motivo"] = dia_motivo.motivo.uuid
           action.data[`dias_razoes_${dia_motivo.data}`] = diaMotivo;
+          console.log("dia_motivo: ", dia_motivo);
+
         });
 
         action.data.quantidades_por_periodo.forEach(function(quantidade_por_periodo) {

@@ -4,7 +4,9 @@ import { bindActionCreators } from "redux";
 import {
   createSuspensaoDeAlimentacao,
   deleteSuspensaoDeAlimentacao,
-  getSuspensoesDeAlimentacaoSalvas
+  getSuspensoesDeAlimentacaoSalvas,
+  updateSuspensaoDeAlimentacao,
+  enviarSuspensaoDeAlimentacao
 } from "../../services/suspensaoDeAlimentacao.service";
 import { validateSubmit } from "./SuspensaoDeAlimentacaoValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
@@ -181,6 +183,7 @@ class FoodSuspensionEditor extends Component {
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = []
     suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
+
       novoDiasRazoes.push(
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
@@ -189,12 +192,10 @@ class FoodSuspensionEditor extends Component {
         }
       )
     })
-    console.log("NovoDiasRazoes", novoDiasRazoes);
     return novoDiasRazoes
   }
 
   OnEditButtonClicked(param) {
-    console.log("Param:", param);
 
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(param.dayChange);
@@ -275,32 +276,75 @@ class FoodSuspensionEditor extends Component {
     this.resetForm("foodSuspension");
   }
 
+  enviaSuspensaoDeAlimentacao(uuid) {
+    enviarSuspensaoDeAlimentacao(uuid).then(
+      res => {
+        if (res.status === 200) {
+          this.refresh();
+          toastSuccess("Suspensão de Alimentação enviada com sucesso");
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Suspensão de Alimentação");
+      }
+    );
+  }
+
   onSubmit(values) {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
     if (!error) {
       // TODO Retirar escola hard coded
+
       const payload = {
         escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8",//this.state.escola.uuid,
-        motivo: values.motivo,
         observacao: values.observacao,
         quantidades_por_periodo: values.suspensoes,
         suspensoes_alimentacao: values.dias_razoes
       };
 
-      createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
-        res => {
-          if (res.status === 201) {
-            toastSuccess("Suspensão de Alimentação salva com sucesso");
+
+      if (!values.uuid) {
+        createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 201) {
+              toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
-          } else {
-            toastError(res.error);
+
+              if (values.status === "A_VALIDAR") {
+                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a Suspensão de alimentação");
-        }
-      );
+        );
+      } else {
+        updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === 200) {
+              toastSuccess("Suspensão de Alimentação salva com sucesso");
+              this.refresh();
+              if (values.status === "A_VALIDAR") {
+                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
+          }
+        );
+      }
+
       this.closeModal();
     } else {
       toastError(error);
@@ -408,6 +452,9 @@ class FoodSuspensionEditor extends Component {
                           name="motivo"
                           label="Motivo"
                           options={motivosList}
+                          onChange={value =>
+                            this.handleField("motivo", value, dia_motivo.id)
+                          }
                           validate={required}
                         />
                       </div>
