@@ -17,7 +17,7 @@ export const retornaTempoPasseio = tempo_passeio => {
   }
   if (tempo_passeio === 1 || tempo_passeio === "5_7h") {
     return "1";
-  } 
+  }
   if (tempo_passeio === 2 || tempo_passeio === "8h") {
     return "2"
   }
@@ -26,43 +26,31 @@ export const retornaTempoPasseio = tempo_passeio => {
   }
 };
 
-
 export const retornaInputPasseio = tempo_passeio => {
   if (tempo_passeio === 0 || tempo_passeio === "4h") {
       return "4h";
   }
   if (tempo_passeio === 1 || tempo_passeio === "5_7h") {
       return "5_7h";
-  } 
+  }
   if (tempo_passeio === 2 || tempo_passeio === "8h") {
     return "8h";
   }
   else {
     return "";
   }
-}; 
+};
 
-
-export const statusSubmit = status => {
-  if (status === "Salvar") {
-    return "SALVAR";
-  } else {
-    return "ATUALIZAR";
-  }
-}
-
-
-export const montaObjetoRequisicao = values => {
-  let kit_lanche_avulso = {
-    solicitacao_kit_lanche: {
-      kits: values.kit_lanche,
-      observacao: values.observacao,
-      data: values.evento_data,
-      tempo_passeio: retornaTempoPasseio(values.tempo_passeio)
-    },
-    escola: this.state.escola.uuid,
-    local: values.local,
-    quantidade_alunos: values.quantidade_alunos
-  }
-  return kit_lanche_avulso
-}
+export const extrairKitsLanchesParaCards = data => {
+  const objRoot = {};
+  data.results.forEach((value, key) => {
+    const objChild = {};
+    objChild["value"] = value.uuid;
+    objChild["label"] = value.nome;
+    objChild["foodList"] = value.itens.map(objeto => {
+      return objeto.nome
+    });
+    objRoot[`KIT${key + 1}`] = objChild;
+  });
+  return objRoot;
+};

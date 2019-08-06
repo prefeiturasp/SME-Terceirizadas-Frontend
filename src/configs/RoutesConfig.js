@@ -3,7 +3,7 @@ import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
-import TourRequestPage from "../pages/Escola/TourRequestPage";
+import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
 import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
 import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
@@ -66,7 +66,7 @@ const routesConfig = [
   },
   {
     path: "/escola/solicitacao-de-kit-lanche",
-    component: TourRequestPage,
+    component: SolicitacaoDeKitLanchePage,
     exact: false
   },
   {

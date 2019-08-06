@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { ErrorAlert } from "../Shareable/Alert";
-import { retornaInputPasseio } from "./helper";
+import { ErrorAlert } from "../../Alert";
+import { retornaInputPasseio } from "../helper";
 
 export const field = ({ input, meta, options }) => {
   const { name, onChange, onBlur, onFocus } = input;

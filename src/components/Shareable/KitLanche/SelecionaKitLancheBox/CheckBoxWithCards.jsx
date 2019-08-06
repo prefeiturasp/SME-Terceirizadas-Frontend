@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { ErrorAlert } from "../Shareable/Alert";
-import { Grid } from "../Shareable/responsiveBs4";
+import { ErrorAlert } from "../../Alert";
+import { Grid } from "../../responsiveBs4";
 
 export class Cards extends Component {
   constructor(props) {
@@ -26,12 +26,13 @@ export class Cards extends Component {
       onBlur(state.all);
       onChange(state.all);
       return { checkedList: state.all, unCheckedList: [] };
-    }  else {
+    } else {
       // atualiza o state pra vazio e limpa o estado interno...
       // se todos estão marcados então limpa.
-      if (state.checkedList.length === state.all.length) {
+      if ((state.checkedList.length === state.all.length) || nextProps.initialValues) {
         onBlur([]);
         onChange([]);
+        nextProps.setInitialValues();
         return { checkedList: [], unCheckedList: [] };
       }
     }
@@ -39,7 +40,13 @@ export class Cards extends Component {
   }
 
   render() {
-    const { input, meta, options, choicesNumberLimit, showOptions } = this.props;
+    const {
+      input,
+      meta,
+      options,
+      choicesNumberLimit,
+      showOptions
+    } = this.props;
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
@@ -72,14 +79,27 @@ export class Cards extends Component {
       };
 
       let borderSucess = "";
-      if (this.state.checkedList.includes(value) || (this.state.checkedList.length === 0 && inputValue.includes(value))) {
+      if (
+        this.state.checkedList.includes(value) ||
+        (this.state.checkedList.length === 0 && inputValue.includes(value))
+      ) {
         borderSucess = " border-success";
       }
 
       let disabled = false;
       let opacity = 1;
-      if (this.state.checkedList.length >= choicesNumberLimit || (inputValue.length && this.state.checkedList.length === 0 && !inputValue.includes(value))) {
-        if (this.state.unCheckedList.includes(value) || (inputValue.length && this.state.checkedList.length === 0 && !inputValue.includes(value))) {
+      if (
+        this.state.checkedList.length >= choicesNumberLimit ||
+        (inputValue.length &&
+          this.state.checkedList.length === 0 &&
+          !inputValue.includes(value))
+      ) {
+        if (
+          this.state.unCheckedList.includes(value) ||
+          (inputValue.length &&
+            this.state.checkedList.length === 0 &&
+            !inputValue.includes(value))
+        ) {
           disabled = true;
           opacity = 0.3;
         }
@@ -114,19 +134,21 @@ export class Cards extends Component {
                 />
               </div>
             </div>
-            {showOptions && <ul className="list-group list-group-flush">
-              {foodList.map((e, key) => {
-                return (
-                  <li
-                    key={key}
-                    className="list-group-item"
-                    style={{fontSize:'13px'}}
-                  >
-                    {e}
-                  </li>
-                );
-              })}
-            </ul>}
+            {showOptions && (
+              <ul className="list-group list-group-flush">
+                {foodList.map((e, key) => {
+                  return (
+                    <li
+                      key={key}
+                      className="list-group-item"
+                      style={{ fontSize: "13px" }}
+                    >
+                      {e}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </Grid>
       );
