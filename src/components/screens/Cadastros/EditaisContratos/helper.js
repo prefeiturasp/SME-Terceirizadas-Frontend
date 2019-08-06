@@ -1,4 +1,4 @@
-export const buscaDadosDRE = response => {
+export const normalizaLabelValueDRE = response => {
   let dres = response.results.map(elemento => {
     return {
       label: elemento.nome,
@@ -9,7 +9,7 @@ export const buscaDadosDRE = response => {
   return dres;
 };
 
-export const buscaDadosLote = response => {
+export const normalizaLabelValueLote = response => {
   let lotes = response.map(elemento => {
     return {
       label: elemento.nome,

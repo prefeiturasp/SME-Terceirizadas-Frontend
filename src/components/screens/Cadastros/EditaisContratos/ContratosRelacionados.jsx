@@ -1,4 +1,4 @@
-import React, { Component, Fragment as div } from "react";
+import React, { Component } from "react";
 import { Field } from "redux-form";
 import {
   LabelAndInput,
@@ -6,7 +6,11 @@ import {
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
-import { renderizarLabelLote, renderizarLabelDiretoria, renderizarLabelEmpresa } from "./helper";
+import {
+  renderizarLabelLote,
+  renderizarLabelDiretoria,
+  renderizarLabelEmpresa
+} from "./helper";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
@@ -18,16 +22,16 @@ class ContratosRelacionados extends Component {
     };
   }
 
-  lidarComDiretoriasSelecionadas(values) {
-    this.setState({ diretoriasSelecionadas: values });
+  atualizarDiretoriasSelecionadas(diretoriasSelecionadas) {
+    this.setState({ diretoriasSelecionadas });
   }
 
-  lidarComLotesSelecionados(values) {
-    this.setState({ lotesSelecionados: values });
+  atualizarLotesSelecionados(lotesSelecionados) {
+    this.setState({ lotesSelecionados });
   }
 
-  lidarComEmpresasSelecionadas(values) {
-    this.setState({empresasSelecionadas: values })
+  atualizarEmpresasSelecionadas(empresasSelecionadas) {
+    this.setState({ empresasSelecionadas });
   }
 
   componentDidMount() {
@@ -35,7 +39,11 @@ class ContratosRelacionados extends Component {
   }
 
   render() {
-    const { lotesSelecionados, diretoriasSelecionadas, empresasSelecionadas } = this.state;
+    const {
+      lotesSelecionados,
+      diretoriasSelecionadas,
+      empresasSelecionadas
+    } = this.state;
     const { lotes, diretoriasRegionais, empresas } = this.props;
     return (
       <div>
@@ -77,7 +85,7 @@ class ContratosRelacionados extends Component {
                           options={lotes}
                           valueRenderer={renderizarLabelLote}
                           onSelectedChanged={values => {
-                            this.lidarComLotesSelecionados(values);
+                            this.atualizarLotesSelecionados(values);
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -104,7 +112,7 @@ class ContratosRelacionados extends Component {
                           options={diretoriasRegionais}
                           valueRenderer={renderizarLabelDiretoria}
                           onSelectedChanged={values => {
-                            this.lidarComDiretoriasSelecionadas(values);
+                            this.atualizarDiretoriasSelecionadas(values);
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -133,7 +141,7 @@ class ContratosRelacionados extends Component {
                         options={empresas}
                         valueRenderer={renderizarLabelEmpresa}
                         onSelectedChanged={values => {
-                          this.lidarComEmpresasSelecionadas(values);
+                          this.atualizarEmpresasSelecionadas(values);
                         }}
                         overrideStrings={{
                           search: "Busca",
@@ -145,7 +153,7 @@ class ContratosRelacionados extends Component {
                       />
                     </div>
                   ) : (
-                    <div>Carregando lotes..</div>
+                    <div>Carregando empresas..</div>
                   )}
                 </div>
               </div>

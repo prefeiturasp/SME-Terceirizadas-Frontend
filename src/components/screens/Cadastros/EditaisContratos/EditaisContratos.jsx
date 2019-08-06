@@ -6,7 +6,7 @@ import {
   getLotes,
   getDiretoriaregional
 } from "../../../../services/diretoriaRegional.service";
-import { buscaDadosLote, buscaDadosDRE } from "./helper";
+import { normalizaLabelValueLote, normalizaLabelValueDRE } from "./helper";
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
@@ -44,19 +44,19 @@ class EditaisContratos extends Component {
   }
 
   nomeFormAtual() {
-    const nome = `secaoEdital${this.state.forms.length - 1}`;
+    const indiceDoFormAtual = `secaoEdital${this.state.forms.length - 1}`;
     let forms = this.state.forms;
-    forms.push(nome);
+    forms.push(indiceDoFormAtual);
     this.setState({ forms });
   }
 
   componentDidMount() {
     getLotes().then(response => {
-      this.setState({ lotes: buscaDadosLote(response.results) });
+      this.setState({ lotes: normalizaLabelValueLote(response.results) });
     });
 
     getDiretoriaregional().then(response => {
-      this.setState({ diretoriasRegionais: buscaDadosDRE(response.data) });
+      this.setState({ diretoriasRegionais: normalizaLabelValueDRE(response.data) });
     });
   }
 
@@ -116,7 +116,4 @@ class EditaisContratos extends Component {
 
 export default reduxForm({
   form: "cadastroEditaisForm",
-  onSubmit: values => {
-    window.alert("Submited: \n" + JSON.stringify(values, null, 2));
-  }
 })(EditaisContratos);
