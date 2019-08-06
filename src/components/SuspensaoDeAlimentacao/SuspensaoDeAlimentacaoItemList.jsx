@@ -75,7 +75,9 @@ export class FoodSuspensionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.observacao}
+              Escrever algo aqui.
+              .
+              .
             </p>
           </div>
         </div>

@@ -258,11 +258,11 @@ class FoodSuspensionEditor extends Component {
     values.dias_razoes = this.state.dias_razoes;
     const error = validateSubmit(values, this.state);
     if (!error) {
-
+      // TODO Retirar escola hard coded
       const payload = {
-        escola: "2cbe024d-d22d-43ed-acd0-9c785e561819",//this.state.escola.uuid,
+        escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8",//this.state.escola.uuid,
         motivo: values.motivo,
-        observacao: values.observacao,
+        observacao: values.obs,
         quantidades_por_periodo: values.suspensoes,
         suspensoes_alimentacao: values.dias_razoes
       };
