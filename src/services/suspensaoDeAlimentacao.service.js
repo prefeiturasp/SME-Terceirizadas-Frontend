@@ -72,3 +72,23 @@ export const getMotivosSuspensaoCardapio = () => {
       console.log(error);
     });
 };
+
+export const enviarSuspensaoDeAlimentacao = (uuid, payload) => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/inicio_de_pedido/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

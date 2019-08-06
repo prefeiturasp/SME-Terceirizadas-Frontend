@@ -178,7 +178,24 @@ class FoodSuspensionEditor extends Component {
     });
   }
 
+  diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
+    let novoDiasRazoes = []
+    suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
+      novoDiasRazoes.push(
+        {
+          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
+          data: suspensaoAlimentacao.data,
+          motivo: suspensaoAlimentacao.motivo.uuid
+        }
+      )
+    })
+    console.log("NovoDiasRazoes", novoDiasRazoes);
+    return novoDiasRazoes
+  }
+
   OnEditButtonClicked(param) {
+    console.log("Param:", param);
+
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(param.dayChange);
     this.setState({
@@ -186,7 +203,8 @@ class FoodSuspensionEditor extends Component {
       title: `Suspensão de Cardápio # ${param.dayChange.id}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
-      dias_razoes: param.dayChange.dias_razoes,
+      // dias_razoes: param.dayChange.dias_razoes,
+      dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(param.dayChange.suspensoes_alimentacao),
       options: {
         MANHA:
           param.dayChange.suspensoes_MANHA !== undefined
@@ -265,7 +283,7 @@ class FoodSuspensionEditor extends Component {
       const payload = {
         escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8",//this.state.escola.uuid,
         motivo: values.motivo,
-        observacao: values.obs,
+        observacao: values.observacao,
         quantidades_por_periodo: values.suspensoes,
         suspensoes_alimentacao: values.dias_razoes
       };
@@ -367,7 +385,7 @@ class FoodSuspensionEditor extends Component {
               </div>
               {dias_razoes.map((dia_motivo, key) => {
                 return (
-                  <FormSection name={`dias_razoes_${dia_motivo.id}`}>
+                  <FormSection name={`dias_razoes_${dia_motivo.data}`}>
                     <div className="form-row">
                       {(!dia_motivo.motivo ||
                         !dia_motivo.motivo.includes("Programa Contínuo")) && (
@@ -389,9 +407,6 @@ class FoodSuspensionEditor extends Component {
                           component={LabelAndCombo}
                           name="motivo"
                           label="Motivo"
-                          onChange={value =>
-                            this.handleField("motivo", value, dia_motivo.id)
-                          }
                           options={motivosList}
                           validate={required}
                         />
@@ -576,7 +591,7 @@ class FoodSuspensionEditor extends Component {
                   component={LabelAndTextArea}
                   placeholder="Campo opcional"
                   label="Observações"
-                  name="obs"
+                  name="observacao"
                 />
               </div>
               <div className="form-group row float-right mt-4">
@@ -650,7 +665,7 @@ const FoodSuspensionEditorForm = reduxForm({
 const selector = formValueSelector("foodSuspension");
 const mapStateToProps = state => {
   return {
-    // initialValues: state.foodSuspension.data,
+    initialValues: state.suspensaoDeAlimentacao.data,
     suspensoes_MANHA: selector(state, "suspensoes_MANHA"),
     suspensoes_TARDE: selector(state, "suspensoes_TARDE"),
     suspensoes_NOITE: selector(state, "suspensoes_NOITE"),
