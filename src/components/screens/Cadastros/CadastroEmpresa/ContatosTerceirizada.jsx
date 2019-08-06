@@ -6,8 +6,6 @@ import { fieldTel } from "./helper";
 import {
   renderTelefone,
   renderEmail,
-  renderTelefonePlus,
-  renderEmailPlus,
   renderNutri,
   renderCRN
 } from "./RenderField";

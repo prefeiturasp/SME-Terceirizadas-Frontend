@@ -1,23 +1,20 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
-  required,
-  email,
-  phoneNumber
+  required
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
-import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
+import { getLotes } from "../../../../services/diretoriaRegional.service";
 import {
   transformaObjetos,
   fieldCnpj,
   fieldCep,
-  fieldTel,
-  resetForm
+  fieldTel
 } from "./helper";
 import { toastSuccess } from "../../../Shareable/dialogs";
 import { ContatosEmpresa } from "./ContatosEmpresa";
@@ -35,7 +32,7 @@ class CadastroEmpresa extends Component {
   }
 
   componentDidMount() {
-    getDiretoriaRegional()
+    getLotes()
       .then(response => {
         let lotes = transformaObjetos(response);
         this.setState({ lotes });
@@ -89,8 +86,6 @@ class CadastroEmpresa extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-    const { lotes } = this.state;
-    
     return (
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>

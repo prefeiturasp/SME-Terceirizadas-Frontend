@@ -19,7 +19,7 @@ export const EMPRESAS = [
 
     representante: "Paulo Cesar Ribeiro Alves",
     telefonefax: "21 3858-4858",
-    email: "singulargestao.servicos@gmail.com",
+    email_representante: "singulargestao.servicos@gmail.com",
 
     nutricionistas: [
       {
@@ -70,7 +70,7 @@ export const EMPRESAS = [
 
     representante: "Paulo Cesar Ribeiro Alves",
     telefonefax: "21 3858-4858",
-    email: "singulargestao.servicos@gmail.com",
+    email_representante: "singulargestao.servicos@gmail.com",
 
     nutricionistas: [
       {
@@ -121,7 +121,7 @@ export const EMPRESAS = [
 
     representante: "Paulo Cesar Ribeiro Alves",
     telefonefax: "21 3858-4858",
-    email: "singulargestao.servicos@gmail.com",
+    email_representante: "singulargestao.servicos@gmail.com",
 
     nutricionistas: [
       {
@@ -172,7 +172,7 @@ export const EMPRESAS = [
 
     representante: "Paulo Cesar Ribeiro Alves",
     telefonefax: "21 3858-4858",
-    email: "singulargestao.servicos@gmail.com",
+    email_representante: "singulargestao.servicos@gmail.com",
 
     nutricionistas: [
       {
@@ -223,7 +223,7 @@ export const EMPRESAS = [
 
     representante: "Paulo Cesar Ribeiro Alves",
     telefonefax: "21 3858-4858",
-    email: "singulargestao.servicos@gmail.com",
+    email_representante: "singulargestao.servicos@gmail.com",
 
     nutricionistas: [
       {
@@ -270,16 +270,6 @@ class EmpresasCadastradas extends Component {
     this.filtrarEmpresas = this.filtrarEmpresas.bind(this);
   }
 
-  filtrarEmpresas(event) {
-    let empresasFiltradas = this.state.empresas;
-    empresasFiltradas = empresasFiltradas.filter(function(item) {
-      const palavraAFiltrar = event.target.value.toLowerCase();
-      return (
-        item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.cnpj.search(palavraAFiltrar) !== -1
-      );
-    });
-  }
 
   lidarComBurger(empresa) {
     empresa.ativo = !empresa.ativo;

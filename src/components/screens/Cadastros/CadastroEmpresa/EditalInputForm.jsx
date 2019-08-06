@@ -4,7 +4,7 @@ import {
   required
 } from "../../../../helpers/fieldValidators";
 
-import { renderEdital, renderContrato, renderContratoPlus } from './RenderField';
+import { renderEdital, renderContrato } from './RenderField';
 
 
 export const EditalInput = ({ fields, meta: { error } }) => (

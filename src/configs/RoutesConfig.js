@@ -31,6 +31,7 @@ import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
+import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 
 const routesConfig = [
   {
@@ -147,6 +148,11 @@ const routesConfig = [
     path: "/configuracoes/cadastros/empresa",
     component: CadastroEmpresaPage,
     exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/editais-contratos",
+    component: EditaisContratosPage,
+    exact: true
   },
   {
     path: "/configuracoes/cadastros",
