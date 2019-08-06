@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import { getRefeicoesApi } from "../../services/solicitacaoDeKitLanche.service";
-import { adapterEnumKits } from "./helper";
+import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
 import SolicitacaoDeKitLanche from ".";
 
 class Container extends Component {
@@ -18,15 +18,14 @@ class Container extends Component {
 
   componentDidMount() {
     meusDados().then(response => {
-      const meusDados = response;
       this.setState({
-        meusDados
+        meusDados: response
       });
     });
 
     getRefeicoesApi().then(response => {
       this.setState({
-        enumKits: adapterEnumKits(response)
+        enumKits: extrairKitsLanchesParaCards(response)
       });
     });
 

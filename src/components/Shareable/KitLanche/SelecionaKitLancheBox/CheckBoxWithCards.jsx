@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { ErrorAlert } from "../Shareable/Alert";
-import { Grid } from "../Shareable/responsiveBs4";
+import { ErrorAlert } from "../../Alert";
+import { Grid } from "../../responsiveBs4";
 
 export class Cards extends Component {
   constructor(props) {

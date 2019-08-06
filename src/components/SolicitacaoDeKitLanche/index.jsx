@@ -12,8 +12,8 @@ import {
   LabelAndTextArea
 } from "../Shareable/labelAndInput/labelAndInput";
 import { Grid } from "../Shareable/responsiveBs4";
-import SelecionaTempoPasseio from "./TourRequestCheck";
-import SelecionaKitLancheBox from "./SelecionaKitLancheBox";
+import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
+import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import { dataPrioritaria } from "../../helpers/utilities";
 import { Rascunhos } from "./Rascunhos";
 import {
@@ -122,10 +122,13 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { meusDados, proximos_dois_dias_uteis } = this.props;
+    const { meusDados, proximos_dois_dias_uteis, enumKits } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
-      meusDados !== null && proximos_dois_dias_uteis !== null && loading;
+      meusDados !== null &&
+      proximos_dois_dias_uteis !== null &&
+      enumKits !== null &&
+      loading;
     if (dadosDaAPItotalmenteCarregados) {
       this.setState({
         loading: false

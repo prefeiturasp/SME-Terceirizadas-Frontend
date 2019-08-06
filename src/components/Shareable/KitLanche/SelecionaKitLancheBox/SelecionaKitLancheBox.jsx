@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { requiredCheck } from "../../helpers/fieldValidators";
+import { requiredCheck } from "../../../../helpers/fieldValidators";
 import CheckboxWithCards from "./CheckBoxWithCards";
 
 
