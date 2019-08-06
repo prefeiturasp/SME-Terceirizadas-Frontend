@@ -37,6 +37,14 @@ export class FoodSuspensionItemList extends Component {
     this.props.resetForm();
   }
 
+  datasAlteracao(suspensoes_alimentacao) {
+    let datas = ""
+    suspensoes_alimentacao.forEach(function(suspensaoAlimentacao) {
+      datas = `${datas}${suspensaoAlimentacao.data} `
+    })
+    return datas
+  }
+
   render() {
     const { suspensoesDeAlimentacaoList } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(dayChange => {
@@ -75,10 +83,9 @@ export class FoodSuspensionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              Escrever algo aqui.
-              .
-              .
+              Datas:{this.datasAlteracao(dayChange.suspensoes_alimentacao)}
             </p>
+            <small>{dayChange.uuid}</small>
           </div>
         </div>
       );
