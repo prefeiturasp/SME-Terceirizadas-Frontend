@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   createSuspensaoDeAlimentacao,
-  deleteFoodSuspension,
+  deleteSuspensaoDeAlimentacao,
   getSuspensoesDeAlimentacaoSalvas
 } from "../../services/suspensaoDeAlimentacao.service";
 import { validateSubmit } from "./SuspensaoDeAlimentacaoValidation";
@@ -127,20 +127,23 @@ class FoodSuspensionEditor extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
-      res => {
-        if (res.code === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
-          this.refresh();
-        } else {
-          toastError(res.log_content[0]);
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteSuspensaoDeAlimentacao(uuid).then(
+        statusCode => {
+          if (statusCode === 204) {
+            toastSuccess(`Rascunho excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      );
+    }
   }
+
 
   resetForm(event) {
     this.props.reset("foodSuspension");
