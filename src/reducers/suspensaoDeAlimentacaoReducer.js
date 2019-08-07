@@ -6,14 +6,14 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_SUSPENSION:
       if (action.data != null) {
-        console.log("suspensoes_alimentacao: ", action.data.suspensoes_alimentacao);
-
         action.data.suspensoes_alimentacao.forEach(function(dia_motivo) {
+          const idx = action.data.suspensoes_alimentacao.findIndex(value2 => value2.data === dia_motivo.data)
           let diaMotivo = {}
           diaMotivo["data"] = dia_motivo.data
           diaMotivo["motivo"] = dia_motivo.motivo.uuid
+          diaMotivo[`data${idx}`] = dia_motivo.data
+          diaMotivo[`motivo${idx}`] = dia_motivo.motivo.uuid
           action.data[`dias_razoes_${dia_motivo.data}`] = diaMotivo;
-          console.log("dia_motivo: ", dia_motivo);
 
         });
 

@@ -48,6 +48,14 @@ export class FoodSuspensionItemList extends Component {
   render() {
     const { suspensoesDeAlimentacaoList } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(dayChange => {
+
+
+      dayChange.suspensoes_alimentacao.forEach(value => {
+        const idx = dayChange.suspensoes_alimentacao.findIndex(value2 => value2.data === value.data)
+        dayChange.suspensoes_alimentacao[idx][`data${idx}`] = dayChange.suspensoes_alimentacao[idx][`data`]
+        dayChange.suspensoes_alimentacao[idx][`motivo${idx}`] = dayChange.suspensoes_alimentacao[idx][`motivo`]
+      })
+
       const { id } = dayChange;
       let backgroundColor =
         dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";

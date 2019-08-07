@@ -66,26 +66,14 @@ class FoodSuspensionEditor extends Component {
     this.titleRef = React.createRef();
   }
 
-  handleField(field, value, id) {
-    var foundIndex = this.state.dias_razoes.findIndex(x => x.id === id);
-    var dias_razoes = this.state.dias_razoes;
-    if (field === "which_reason") value = value.target.value;
-    dias_razoes[foundIndex][field] = value;
-    this.setState({
-      ...this.state,
-      dias_razoes: dias_razoes
-    });
-    if (field === "date") {
-      const _date = value.split("/");
-      if (
-        this.props.two_working_days <=
-          new Date(_date[2], _date[1] - 1, _date[0]) &&
-        new Date(_date[2], _date[1] - 1, _date[0]) <
-          this.props.five_working_days
-      ) {
-        this.showModal();
-      }
-    }
+  handleField(field, value, key) {
+
+    let dias_razoes = this.state.dias_razoes;
+
+    dias_razoes[key][field] = value
+
+    this.setState({ dias_razoes });
+
   }
 
   closeModal(e) {
@@ -146,7 +134,6 @@ class FoodSuspensionEditor extends Component {
     }
   }
 
-
   resetForm(event) {
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(null);
@@ -160,8 +147,7 @@ class FoodSuspensionEditor extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          motivo: null,
-
+          motivo: null
         }
       ],
       options: {
@@ -181,22 +167,22 @@ class FoodSuspensionEditor extends Component {
   }
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
-    let novoDiasRazoes = []
+    let novoDiasRazoes = [];
     suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
-
-      novoDiasRazoes.push(
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          data: suspensaoAlimentacao.data,
-          motivo: suspensaoAlimentacao.motivo.uuid
-        }
-      )
-    })
-    return novoDiasRazoes
+      const idx = suspensoesAlimentacao.findIndex(value2 => value2.data === suspensaoAlimentacao.data)
+      let novoDia = {
+        id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
+        data: suspensaoAlimentacao.data,
+        motivo: suspensaoAlimentacao.motivo.uuid
+      }
+      novoDia[`data${idx}`] = suspensaoAlimentacao.data
+      novoDia[`motivo${idx}`] = suspensaoAlimentacao.motivo.uuid
+      novoDiasRazoes.push(novoDia);
+    });
+    return novoDiasRazoes;
   }
 
   OnEditButtonClicked(param) {
-
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(param.dayChange);
     this.setState({
@@ -205,7 +191,9 @@ class FoodSuspensionEditor extends Component {
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
       // dias_razoes: param.dayChange.dias_razoes,
-      dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(param.dayChange.suspensoes_alimentacao),
+      dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(
+        param.dayChange.suspensoes_alimentacao
+      ),
       options: {
         MANHA:
           param.dayChange.suspensoes_MANHA !== undefined
@@ -264,7 +252,6 @@ class FoodSuspensionEditor extends Component {
   refresh() {
     getSuspensoesDeAlimentacaoSalvas().then(
       res => {
-
         this.setState({
           suspensoesDeAlimentacaoList: res.results
         });
@@ -294,17 +281,23 @@ class FoodSuspensionEditor extends Component {
 
   onSubmit(values) {
     values.dias_razoes = this.state.dias_razoes;
+
+    values.dias_razoes.forEach(value => {
+      const idx = values.dias_razoes.findIndex(value2 => value2.id === value.id)
+      values.dias_razoes[idx]["data"] = values.dias_razoes[idx][`data${idx}`]
+      values.dias_razoes[idx]["motivo"] = values.dias_razoes[idx][`motivo${idx}`]
+    })
+
     const error = validateSubmit(values, this.state);
     if (!error) {
       // TODO Retirar escola hard coded
 
       const payload = {
-        escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8",//this.state.escola.uuid,
+        escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8", //this.state.escola.uuid,
         observacao: values.observacao,
         quantidades_por_periodo: values.suspensoes,
         suspensoes_alimentacao: values.dias_razoes
       };
-
 
       if (!values.uuid) {
         createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
@@ -436,11 +429,10 @@ class FoodSuspensionEditor extends Component {
                         <div className="form-group col-sm-3">
                           <Field
                             component={LabelAndDate}
-                            name="data"
+                            name={`data${key}`}
                             onChange={value =>
-                              this.handleField("data", value, dia_motivo.id)
+                              this.handleField(`data${key}`, value, key)
                             }
-                            minDate={two_working_days}
                             label="Dia"
                             validate={required}
                           />
@@ -449,11 +441,11 @@ class FoodSuspensionEditor extends Component {
                       <div className="form-group col-sm-8">
                         <Field
                           component={LabelAndCombo}
-                          name="motivo"
+                          name={`motivo${key}`}
                           label="Motivo"
                           options={motivosList}
                           onChange={value =>
-                            this.handleField("motivo", value, dia_motivo.id)
+                            this.handleField(`motivo${key}`, value, key)
                           }
                           validate={required}
                         />
@@ -495,7 +487,11 @@ class FoodSuspensionEditor extends Component {
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
-                                this.handleField("data_de", value, dia_motivo.id)
+                                this.handleField(
+                                  "data_de",
+                                  value,
+                                  dia_motivo.id
+                                )
                               }
                               name="data_de"
                               label="De"
@@ -553,7 +549,6 @@ class FoodSuspensionEditor extends Component {
                 </tr>
               </table>
               {periods.map((period, key) => {
-
                 this.props.change(
                   `suspensoes_${period.nome}.periodo`,
                   period.uuid
