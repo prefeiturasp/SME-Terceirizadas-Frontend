@@ -73,12 +73,11 @@ export const getMotivosSuspensaoCardapio = () => {
     });
 };
 
-export const enviarSuspensaoDeAlimentacao = (uuid, payload) => {
+export const enviarSuspensaoDeAlimentacao = (uuid) => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "PATCH",
-    body: payload,
+    method: "GET",
     headers: authToken
   })
     .then(res => {
@@ -89,6 +88,7 @@ export const enviarSuspensaoDeAlimentacao = (uuid, payload) => {
       return { data: data, status: status };
     })
     .catch(error => {
+      console.log("******* DEU RUIM *********", error);
       return error.json();
     });
 };
