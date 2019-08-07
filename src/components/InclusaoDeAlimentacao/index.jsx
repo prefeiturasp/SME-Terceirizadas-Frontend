@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
-  formatarTiposDeAlimentacao,
-  agregarDefault,
   GeradorUUID,
   formatarSubmissaoSolicitacaoNormal,
   formatarSubmissaoSolicitacaoContinua,
   extrairTiposALimentacao
 } from "./helper";
-import { dataPrioritaria } from "../../helpers/utilities";
+import {
+  agregarDefault,
+  dataPrioritaria,
+  formatarParaMultiselect
+} from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -686,7 +688,7 @@ class InclusaoDeAlimentacao extends Component {
                               component={StatefulMultiSelect}
                               name=".tipos_alimentacao"
                               selected={periodo.tipos_alimentacao_selecionados}
-                              options={formatarTiposDeAlimentacao(
+                              options={formatarParaMultiselect(
                                 periodo.tipos_alimentacao
                               )}
                               onSelectedChanged={values =>

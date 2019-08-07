@@ -5,7 +5,7 @@ import {
 } from "../../services/inclusaoDeAlimentacao.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
-import { getPeriods } from "../../services/school.service";
+import { getPeriods } from "../../services/escola.service";
 import { formatarPeriodos } from "./helper";
 import InclusaoDeAlimentacao from ".";
 

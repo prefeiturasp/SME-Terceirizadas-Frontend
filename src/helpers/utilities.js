@@ -15,16 +15,20 @@ export const dateDelta = daysDelta => {
   return today;
 };
 
-export const checaSeDataEstaEntre2e5DiasUteis = (value, two_working_days, five_working_days)=> {
+export const checaSeDataEstaEntre2e5DiasUteis = (
+  value,
+  two_working_days,
+  five_working_days
+) => {
   const _date = value.split("/");
-  if (two_working_days <=
-    new Date(_date[2], _date[1] - 1, _date[0]) &&
-    new Date(_date[2], _date[1] - 1, _date[0]) <
-    five_working_days) {
+  if (
+    two_working_days <= new Date(_date[2], _date[1] - 1, _date[0]) &&
+    new Date(_date[2], _date[1] - 1, _date[0]) < five_working_days
+  ) {
     return true;
   }
   return false;
-}
+};
 
 export const dataPrioritaria = (
   data,
@@ -36,4 +40,22 @@ export const dataPrioritaria = (
     proximos_dois_dias_uteis <= data_objeto &&
     data_objeto < proximos_cinco_dias_uteis
   );
+};
+
+export const agregarDefault = lista => {
+  return [{ nome: "Selecione", uuid: null }].concat(lista);
+};
+
+export const formatarParaMultiselect = lista => {
+  return lista.map(element => {
+    return { value: element.uuid, label: element.nome };
+  });
+};
+
+export const extrairUUIDs = lista => {
+  let uuids = [];
+  lista.forEach(element => {
+    uuids.push(element.uuid);
+  });
+  return uuids;
 };

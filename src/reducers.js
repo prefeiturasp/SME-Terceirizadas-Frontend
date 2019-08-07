@@ -5,6 +5,7 @@ import foodInclusionReducer from "./reducers/foodInclusionReducer";
 import foodSuspensionReducer from "./reducers/foodSuspensionReducer";
 import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.reducer";
 import alteracaoCardapioReducer from "./reducers/alteracaoCardapioReducer";
+import loteReducer from "./reducers/lote.reducer";
 import { tourRequestReducer } from "./reducers/tourRequest.reducer";
 import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
 
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   alteracaoCardapio: alteracaoCardapioReducer,
   unifiedSolicitation: loadUnifiedReducer,
   foodInclusion: foodInclusionReducer,
-  foodSuspension: foodSuspensionReducer
+  foodSuspension: foodSuspensionReducer,
+  loteForm: loteReducer
 });
 
 export default rootReducer;

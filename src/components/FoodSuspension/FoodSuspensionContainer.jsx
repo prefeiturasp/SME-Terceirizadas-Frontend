@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getPeriods } from "../../services/school.service";
+import { getPeriods } from "../../services/escola.service";
 import { getReasons } from "../../services/foodSuspension.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import FoodSuspension from "./FoodSuspension";
