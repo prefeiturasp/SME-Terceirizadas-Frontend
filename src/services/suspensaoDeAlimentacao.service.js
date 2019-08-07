@@ -88,7 +88,6 @@ export const enviarSuspensaoDeAlimentacao = (uuid) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      console.log("******* DEU RUIM *********", error);
       return error.json();
     });
 };

@@ -39,6 +39,10 @@ class FoodSuspensionContainer extends Component {
     };
   }
 
+  agregarDefault = lista => {
+    return [{ nome: "Selecione", uuid: null }].concat(lista);
+  };
+
   componentDidMount() {
     escolas().then(resEscolas => {
       getPeriods().then(resPeriods => {
@@ -46,7 +50,7 @@ class FoodSuspensionContainer extends Component {
 
           this.setState({
             periods: resPeriods.results,
-            motivosList: resMotivos.results,
+            motivosList: this.agregarDefault(resMotivos.results),
             escola: resEscolas.results[0]
           });
         });
