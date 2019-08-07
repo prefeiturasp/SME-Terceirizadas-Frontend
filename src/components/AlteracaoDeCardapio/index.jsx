@@ -237,6 +237,10 @@ class AlteracaoCardapio extends Component {
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
+  agregarDefault = lista => {
+    return [{ nome: "Selecione", uuid: null }].concat(lista);
+  };
+
   componentDidMount() {
     let _two,
       _five = null;
@@ -246,7 +250,7 @@ class AlteracaoCardapio extends Component {
           this.setState({
             ...this.state,
             periods: resPeriods.results,
-            motivosList: resMotivos.results,
+            motivosList: this.agregarDefault(resMotivos.results),
             escola: resEscolas.results[0]
           });
         });
