@@ -20,32 +20,82 @@ class EditaisContratos extends Component {
       empresas: [
         {
           label: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
-          value: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
-          uuid: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
+          value: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
         },
         {
           label: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
-          value: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
-          uuid: "366270C1-3156-4792-920C-399B1973C58D"
+          value: "366270C1-3156-4792-920C-399B1973C58D"
         },
         {
           label: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
-          value: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
-          uuid: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
+          value: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
         },
         {
           label: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
-          value: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
-          uuid: "3FA6EB36-7456-4274-824E-A4809494412A"
+          value: "3FA6EB36-7456-4274-824E-A4809494412A"
         },
         {
           label: "COMERCIAL MILANO BRASIL",
-          value: "COMERCIAL MILANO BRASIL",
-          uuid: "097783FB-FEC6-4DD2-98EC-832138F294F9"
+          value: "097783FB-FEC6-4DD2-98EC-832138F294F9"
         }
       ],
-      forms: ["secaoEdital0"]
+      forms: ["secaoEdital0"],
+
+      contratos_ralacionados: [
+        {
+          key: null,
+          contratos_datas: [
+            {
+              numero_contrato: null,
+              data_inicio: null,
+              data_fim: null
+            }
+          ],
+          processo_administrativo: null,
+          data_proposta: null,
+          lotes: null,
+          dres: null,
+          empresas: null
+        }
+      ]
     };
+    this.obtemDadosParaSubmit = this.obtemDadosParaSubmit.bind(this);
+    this.adicionaContrato = this.adicionaContrato.bind(this);
+    this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
+  }
+
+  obtemDadosParaSubmit(field, value, key) {
+    let contratos_ralacionados = this.state.contratos_ralacionados;
+    contratos_ralacionados[key][field] = value;
+    this.setState({
+      ...this.state,
+      contratos_ralacionados: contratos_ralacionados
+    });
+  }
+
+  adicionaContrato(indice) {
+    const contratos_ralacionados = this.state.contratos_ralacionados;
+    contratos_ralacionados[indice].contratos_datas.concat([
+      {
+        numero_contrato: null,
+        data_inicio: null,
+        data_fim: null
+      }
+    ]);
+    
+    this.setState({
+      contratos_ralacionados
+    });
+
+    
+  }
+
+  adicionaVigenciaContrato(indice, contratos_datas) {
+    const contratos_ralacionados = this.state.contratos_ralacionados;
+    contratos_ralacionados[indice].contratos_datas = contratos_datas;
+    this.setState({
+      contratos_ralacionados
+    });
   }
 
   nomeFormAtual() {
@@ -69,7 +119,13 @@ class EditaisContratos extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-    const { lotes, forms, diretoriasRegionais, empresas } = this.state;
+    const {
+      lotes,
+      forms,
+      diretoriasRegionais,
+      empresas
+    } = this.state;
+    console.log(this.state.contratos_ralacionados)
     return (
       <section className="cadastro pt-3">
         <div className="card">
@@ -87,15 +143,20 @@ class EditaisContratos extends Component {
             <SectionFormEdital />
             <hr />
             <nav className="titulo">Contratos relacionados</nav>
-            {forms.map((formEdital, indice) => {
+            {forms.map((formEdital, key) => {
               return (
                 <FormSection
                   component={ContratosRelacionados}
                   lotes={lotes}
-                  name={`secaoEdital${indice}`}
+                  name={`secaoEdital${key}`}
                   nomeForm={formEdital}
                   diretoriasRegionais={diretoriasRegionais}
                   empresas={empresas}
+                  obtemDadosParaSubmit={this.obtemDadosParaSubmit}
+                  obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
+                  indice={key}
+                  adicionaContrato={this.adicionaContrato}
+                  adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                 />
               );
             })}

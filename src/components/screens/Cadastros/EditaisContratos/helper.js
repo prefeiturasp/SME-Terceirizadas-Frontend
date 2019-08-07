@@ -2,7 +2,7 @@ export const normalizaLabelValueDRE = response => {
   let dres = response.results.map(elemento => {
     return {
       label: elemento.nome,
-      value: elemento.nome,
+      value: elemento.uuid,
       uuid: elemento.uuid
     };
   });
@@ -13,7 +13,7 @@ export const normalizaLabelValueLote = response => {
   let lotes = response.map(elemento => {
     return {
       label: elemento.nome,
-      value: elemento.nome,
+      value: elemento.uuid,
       uuid: elemento.uuid
     };
   });
@@ -59,12 +59,6 @@ export const renderizarLabelEmpresa = (selected, options) => {
   return `${selected.length} empresas selecionadas`;
 };
 
-export const formataObjetoDaRequisição = (
-  event,
-  nomeDoForm,
-  index,
-  ArrayDeObjetos
-) => {
-  //console.log(event.target.value);
-  console.log(index)
-};
+
+
+
