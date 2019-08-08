@@ -4,7 +4,7 @@ import { toastError, toastSuccess } from "../../../Shareable/dialogs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadLote } from "../../../../reducers/lote.reducer";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { ModalCadastroLote } from "./components/ModalCadastroLote";
@@ -14,8 +14,9 @@ import {
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
-  criarLote,
   getLote,
+  criarLote,
+  atualizarLote,
   excluirLote
 } from "../../../../services/lote.service";
 import { renderizarLabelEscola, renderizarLabelSubprefeitura } from "./helper";
@@ -34,7 +35,8 @@ class CadastroLote extends Component {
       escolasSelecionadasNomes: [],
       escolasSelecionadas: [],
       loading: true,
-      uuid: null
+      uuid: null,
+      redirect: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -71,15 +73,29 @@ class CadastroLote extends Component {
       getLote(uuid).then(response => {
         if (response.status !== HTTP_STATUS.NOT_FOUND) {
           this.props.reset("loteForm");
-          this.props.loadLote(response.data);
+          let subprefeiturasSelecionadasNomes = [];
+          response.data.subprefeituras.forEach(subprefeitura => {
+            subprefeiturasSelecionadasNomes.push(subprefeitura.nome);
+          });
+          let escolasSelecionadasNomes = [];
+          response.data.escolas.forEach(escola => {
+            escolasSelecionadasNomes.push(
+              `${escola.codigo_eol} - ${escola.nome}`
+            );
+          });
           this.setState({
+            diretoria_regional: response.data.diretoria_regional.nome,
+            tipo_gestao: response.data.tipo_gestao.nome,
             subprefeiturasSelecionadas: extrairUUIDs(
               response.data.subprefeituras
             ),
+            subprefeiturasSelecionadasNomes,
+            escolasSelecionadasNomes,
             escolasSelecionadas: extrairUUIDs(response.data.escolas),
             loteCarregado: true,
             uuid
           });
+          this.props.loadLote(response.data);
         } else {
           toastError("Lote não encontrado");
           this.setState({ loteCarregado: true });
@@ -87,6 +103,18 @@ class CadastroLote extends Component {
       });
     }
   }
+
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/configuracoes/cadastros/lotes-cadastrados" />;
+    }
+  };
 
   exibirModal() {
     this.setState({ exibirModal: true });
@@ -97,19 +125,22 @@ class CadastroLote extends Component {
   }
 
   excluirLote() {
-    excluirLote(this.state.uuid).then(
-      res => {
-        if (res.status === HTTP_STATUS.NO_CONTENT) {
-          toastSuccess("Lote excluído com sucesso");
-          this.resetForm();
-        } else {
+    if (window.confirm("Tem certeza que deseja excluir o lote?")) {
+      excluirLote(this.state.uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess("Lote excluído com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao excluir o lote");
+          }
+        },
+        function(error) {
           toastError("Houve um erro ao excluir o lote");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o lote");
-      }
-    );
+      );
+    }
   }
 
   onDiretoriaRegionalSelected(value) {
@@ -172,20 +203,39 @@ class CadastroLote extends Component {
     values.subprefeituras = this.state.subprefeiturasSelecionadas;
     values.diretoria_regional = this.props.diretoria_regional;
     values.tipo_gestao = this.props.tipo_gestao;
-    criarLote(JSON.stringify(values)).then(
-      res => {
-        if (res.status === HTTP_STATUS.CREATED) {
-          toastSuccess("Lote salvo com sucesso");
-          this.resetForm();
-        } else {
+    if (!this.state.uuid) {
+      criarLote(JSON.stringify(values)).then(
+        res => {
+          if (res.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Lote salvo com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao salvar o lote");
+          }
+        },
+        function(error) {
           toastError("Houve um erro ao salvar o lote");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao salvar a inclusão de alimentação");
-      }
-    );
-    this.fecharModal();
+      );
+      this.fecharModal();
+    } else {
+      atualizarLote(JSON.stringify(values), this.state.uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.OK) {
+            toastSuccess("Lote atualizado com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao atualizar o lote");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao atualizar o lote");
+        }
+      );
+      this.fecharModal();
+    }
   }
 
   render() {
@@ -210,12 +260,14 @@ class CadastroLote extends Component {
     } = this.state;
     return (
       <div className="cadastro pt-3">
+        {this.renderRedirect()}
         <ModalCadastroLote
           closeModal={this.fecharModal}
           showModal={exibirModal}
           diretoria_regional={diretoria_regional}
           subprefeituras={subprefeiturasSelecionadasNomes}
           nome={nome}
+          atualizando={uuid !== null}
           iniciais={iniciais}
           tipo_gestao={tipo_gestao}
           escolasSelecionadas={escolasSelecionadasNomes}
@@ -360,12 +412,14 @@ class CadastroLote extends Component {
               )}
               <div style={{ marginTop: "100px" }} className="row float-right">
                 <div className="col-12">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
-                    noBorder
-                  />
+                  {!uuid && (
+                    <BaseButton
+                      label="Cancelar"
+                      onClick={event => this.resetForm(event)}
+                      style={ButtonStyle.OutlinePrimary}
+                      noBorder
+                    />
+                  )}
                   {uuid && (
                     <BaseButton
                       label="Excluir"

@@ -18,6 +18,7 @@ export class ModalCadastroLote extends Component {
 
   render() {
     const {
+      atualizando,
       showModal,
       closeModal,
       diretoria_regional,
@@ -27,6 +28,9 @@ export class ModalCadastroLote extends Component {
       tipo_gestao,
       escolasSelecionadas
     } = this.props;
+    const title = atualizando
+      ? "Deseja atualizar o lote?"
+      : "Deseja criar um novo lote?";
     return (
       <Modal
         dialogClassName="modal-cadastro-lote modal-90w"
@@ -34,7 +38,7 @@ export class ModalCadastroLote extends Component {
         onHide={closeModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Deseja criar um novo lote?</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">

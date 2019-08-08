@@ -14,9 +14,9 @@ export const EmpresaDoLote = props => {
     <td className={"blueish"} colSpan="2">
       <span>Tel: </span>
       {mascaraTelefoneOuCelular(
-        empresa.contato.celular ||
-          empresa.contato.telefone ||
-          empresa.contato.telefone2
+        empresa.contatos[0].celular ||
+          empresa.contatos[0].telefone ||
+          empresa.contatos[0].telefone2
       )}
     </td>
   ];
