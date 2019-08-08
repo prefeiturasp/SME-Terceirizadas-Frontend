@@ -3,8 +3,6 @@ import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
-import TourRequestPage from "../pages/Escola/TourRequestPage";
-import DayChangePage from "../pages/Escola/DayChangePage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
 import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
