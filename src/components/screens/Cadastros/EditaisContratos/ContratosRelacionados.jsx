@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Field } from "redux-form";
+import { Field, FormSection } from "redux-form";
 import {
   LabelAndInput,
   LabelAndDate
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { required } from "../../../../helpers/fieldValidators";
 
 import {
   renderizarLabelLote,
@@ -17,21 +18,88 @@ class ContratosRelacionados extends Component {
     super(props);
     this.state = {
       lotesSelecionados: [],
+      lotesNomesSelecionados: [],
+
       diretoriasSelecionadas: [],
-      empresasSelecionadas: []
+      diretoriasNomesSelecionadas: [],
+
+      empresasSelecionadas: [],
+      empresasNomesSelecionados: [],
+
+      contratos_datas: [
+        {
+          numero_contrato: null,
+          data_inicio: null,
+          data_fim: null
+        }
+      ],
+
+      formVigenciaContratos: ["vigenciaContrato0"]
     };
   }
 
-  atualizarDiretoriasSelecionadas(diretoriasSelecionadas) {
-    this.setState({ diretoriasSelecionadas });
+  handleField(field, value, key, indice) {
+    let contratos_datas = this.state.contratos_datas;
+    contratos_datas[key][field] = value;
+    this.setState({ contratos_datas });
+
+    this.props.adicionaVigenciaContrato(indice, this.state.contratos_datas);
   }
 
-  atualizarLotesSelecionados(lotesSelecionados) {
-    this.setState({ lotesSelecionados });
+  adicionaContratoData() {
+    this.setState({
+      contratos_datas: this.state.contratos_datas.concat([
+        {
+          numero_contrato: null,
+          data_inicio: null,
+          data_fim: null
+        }
+      ])
+    });
   }
 
-  atualizarEmpresasSelecionadas(empresasSelecionadas) {
-    this.setState({ empresasSelecionadas });
+  nomeFormAtual() {
+    const indiceDoFormAtual = `vigenciaContrato${
+      this.state.formVigenciaContratos.length
+    }`;
+    let forms = this.state.formVigenciaContratos;
+    forms.push(indiceDoFormAtual);
+    this.setState({ forms });
+  }
+
+  atualizarDiretoriasSelecionadas(values) {
+    let diretoriasNomesSelecionadas = [];
+    const diretoriasRegionais = this.props.diretoriasRegionais;
+    values.forEach(value => {
+      const indice = diretoriasRegionais.findIndex(
+        diretoriaRegional => diretoriaRegional.value == value
+      );
+      diretoriasNomesSelecionadas.push(diretoriasRegionais[indice].label);
+    });
+    this.setState({
+      diretoriasSelecionadas: values,
+      diretoriasNomesSelecionadas
+    });
+  }
+
+  atualizarLotesSelecionados(values) {
+    let lotesNomesSelecionados = [];
+    const lotes = this.props.lotes;
+    values.forEach(value => {
+      const indice = lotes.findIndex(lote => lote.value === value);
+      lotesNomesSelecionados.push(lotes[indice].label);
+    });
+    this.setState({ lotesSelecionados: values, lotesNomesSelecionados });
+  }
+
+  atualizarEmpresasSelecionadas(values) {
+    let empresasNomesSelecionados = [];
+    const empresas = this.props.empresas;
+    values.forEach(value => {
+      const indice = empresas.findIndex(empresa => empresa.value === value);
+      empresasNomesSelecionados.push(empresas[indice].label);
+    });
+    this.setState({ empresasSelecionadas: values, empresasNomesSelecionados });
   }
 
   componentDidMount() {
@@ -41,36 +109,133 @@ class ContratosRelacionados extends Component {
   render() {
     const {
       lotesSelecionados,
+      lotesNomesSelecionados,
+      diretoriasNomesSelecionadas,
+      empresasNomesSelecionados,
       diretoriasSelecionadas,
-      empresasSelecionadas
+      empresasSelecionadas,
+      formVigenciaContratos
     } = this.state;
-    const { lotes, diretoriasRegionais, empresas } = this.props;
+    const {
+      lotes,
+      diretoriasRegionais,
+      empresas,
+      obtemDadosParaSubmit,
+      indice
+    } = this.props;
     return (
       <div>
         <div>
           <article className="card-body contratos-relacionados">
             <section className="section-inputs">
-              <div className="section-contrato-vigencia" />
+              <div className="section-contrato-vigencia">
+                <section>
+                  {formVigenciaContratos.map((formContrato, key) => {
+                    return (
+                      <FormSection name={`secaoContrato${key}`}>
+                        <div className="colunas">
+                          <div className="coluna">
+                            <label className="label">
+                              <span>* </span>N° do contrato
+                            </label>
+                            <Field
+                              name={`numero_contrato${key}`}
+                              component={LabelAndInput}
+                              validate={required}
+                              onChange={value =>
+                                this.handleField(
+                                  `numero_contrato`,
+                                  value.target.value,
+                                  key,
+                                  indice
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="coluna">
+                            <label className="label">
+                              <span>* </span>Vigencia
+                            </label>
+                            <Field
+                              name={`data_inicio${key}`}
+                              component={LabelAndDate}
+                              validate={required}
+                              onChange={value =>
+                                this.handleField(
+                                  `data_inicio`,
+                                  value,
+                                  key,
+                                  indice
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="coluna">
+                            <Field
+                              name={`data_fim${key}`}
+                              component={LabelAndDate}
+                              label=" "
+                              validate={required}
+                              onChange={value =>
+                                this.handleField(`data_fim`, value, key, indice)
+                              }
+                            />
+                          </div>
+                        </div>
+                      </FormSection>
+                    );
+                  })}
+                </section>
+                <aside>
+                  <button
+                    type="button"
+                    className="btn btn-outline-info"
+                    onClick={() => {
+                      this.nomeFormAtual();
+                      this.adicionaContratoData();
+                    }}
+                  >
+                    +
+                  </button>
+                </aside>
+              </div>
               <div className="container-processo-adm">
                 <div className="data-processo-adm">
                   <div className="inputs-processo">
                     <div>
+                      <label className="label">
+                        <span>* </span>Processo administrativo do contrato
+                      </label>
                       <Field
                         name={`processo_administrativo`}
-                        label="* Processo administrativo do contrato"
                         component={LabelAndInput}
+                        validate={required}
+                        onChange={value => {
+                          obtemDadosParaSubmit(
+                            `processo_administrativo`,
+                            value.target.value,
+                            indice
+                          );
+                        }}
                       />
                     </div>
                     <div>
+                      <label className="label">
+                        <span>* </span>Data do proposta
+                      </label>
                       <Field
                         name={`data_proposta`}
-                        label="* Data do proposta"
                         component={LabelAndDate}
+                        validate={required}
+                        onChange={value => {
+                          obtemDadosParaSubmit(`data_proposta`, value, indice);
+                        }}
                       />
                     </div>
                   </div>
                   <div />
                 </div>
+
                 <div className="container-lote-dre">
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (
@@ -86,6 +251,11 @@ class ContratosRelacionados extends Component {
                           valueRenderer={renderizarLabelLote}
                           onSelectedChanged={values => {
                             this.atualizarLotesSelecionados(values);
+                            obtemDadosParaSubmit(
+                              `lotes`,
+                              lotesSelecionados,
+                              indice
+                            );
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -94,6 +264,7 @@ class ContratosRelacionados extends Component {
                               "Todos os itens estão selecionados",
                             selectAll: "Todos"
                           }}
+                          validate={required}
                         />
                       </div>
                     ) : (
@@ -107,12 +278,17 @@ class ContratosRelacionados extends Component {
                         </label>
                         <Field
                           component={StatefulMultiSelect}
-                          name={".lotes"}
+                          name={".dres"}
                           selected={diretoriasSelecionadas}
                           options={diretoriasRegionais}
                           valueRenderer={renderizarLabelDiretoria}
                           onSelectedChanged={values => {
                             this.atualizarDiretoriasSelecionadas(values);
+                            obtemDadosParaSubmit(
+                              `dres`,
+                              diretoriasSelecionadas,
+                              indice
+                            );
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -121,11 +297,56 @@ class ContratosRelacionados extends Component {
                               "Todos os itens estão selecionados",
                             selectAll: "Todos"
                           }}
+                          validate={required}
                         />
                       </div>
                     ) : (
                       <div>Carregando diretorias regionais..</div>
                     )}
+
+                    <div>
+                      {lotesNomesSelecionados.length > 0 && (
+                        <div className="row pt-3">
+                          <div className="col-12">
+                            <label className="label-selected-unities">
+                              Lotes selecionados
+                            </label>
+                            {lotesNomesSelecionados.map((lote, indice) => {
+                              return (
+                                <div
+                                  className="value-selected-unities"
+                                  key={indice}
+                                >
+                                  {lote}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      {diretoriasSelecionadas.length > 0 && (
+                        <div className="pt-3">
+                          <div>
+                            <label className="label-selected-unities">
+                              DRE's selecionadas
+                            </label>
+                            {diretoriasNomesSelecionadas.map((dre, indice) => {
+                              return (
+                                <div
+                                  className="value-selected-unities"
+                                  key={indice}
+                                >
+                                  {dre}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -136,12 +357,17 @@ class ContratosRelacionados extends Component {
                       </label>
                       <Field
                         component={StatefulMultiSelect}
-                        name={".lotes"}
+                        name={".empresas"}
                         selected={empresasSelecionadas}
                         options={empresas}
                         valueRenderer={renderizarLabelEmpresa}
                         onSelectedChanged={values => {
                           this.atualizarEmpresasSelecionadas(values);
+                          obtemDadosParaSubmit(
+                            `empresas`,
+                            empresasSelecionadas,
+                            indice
+                          );
                         }}
                         overrideStrings={{
                           search: "Busca",
@@ -150,10 +376,32 @@ class ContratosRelacionados extends Component {
                             "Todos os itens estão selecionados",
                           selectAll: "Todos"
                         }}
+                        validate={required}
                       />
                     </div>
                   ) : (
                     <div>Carregando empresas..</div>
+                  )}
+                </div>
+                <div className="col-12">
+                  {empresasNomesSelecionados.length > 0 && (
+                    <div className="row pt-3">
+                      <div className="">
+                        <label className="label-selected-unities">
+                          Empresas selecionadas
+                        </label>
+                        {empresasNomesSelecionados.map((empresa, indice) => {
+                          return (
+                            <div
+                              className="value-selected-unities"
+                              key={indice}
+                            >
+                              {empresa}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>

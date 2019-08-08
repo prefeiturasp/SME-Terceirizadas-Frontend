@@ -292,7 +292,7 @@ table.cadastro-empresa {
 .button-container {
   display: flex;
   justify-content: flex-end;
-  padding-top: 20%;
+  padding-top: 10%;
 }
 
 .button-action {
@@ -446,5 +446,34 @@ section {
 
 .container-lote-dre{
   margin: 1.5em 0;
+}
+
+
+.section-contrato-vigencia{
+  display: grid;
+  grid-template-columns: 95% 5%;
+  margin-bottom: 1em;
+
+  section {
+    .colunas{
+      display: grid;
+      grid-template-columns: 38% 28% 28%;
+      grid-column-gap: 2%;
+      margin-top: 1em;
+      
+      .coluna{
+        display: grid;
+        grid-template-columns: 100%;
+      }
+    }
+
+    
+  }
+
+  aside{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
 }
 
