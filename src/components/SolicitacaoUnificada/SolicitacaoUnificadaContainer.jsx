@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { escolas } from "../../services/school.service";
+import { getEscolas } from "../../services/escola.service";
 import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
 import { diasUteis } from "../../services/workingDays.service";
 import SolicitacaoUnificada from "./SolicitacaoUnificada";
@@ -17,7 +17,7 @@ class SolicitacaoUnificadaContainer extends Component {
   }
 
   componentDidMount() {
-    escolas().then(resultadoEscolas => {
+    getEscolas().then(resultadoEscolas => {
       motivosSolicitacaoUnificada().then(resultadoMotivos => {
         diasUteis().then(resultadoDiasUteis => {
           let escolas = resultadoEscolas.results;
