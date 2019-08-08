@@ -1,12 +1,15 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  createOrUpdateFoodSuspension,
-  deleteFoodSuspension,
-  getSavedFoodSuspensions
-} from "../../services/foodSuspension.service";
-import { validateSubmit } from "./FoodSuspensionValidation";
+  createSuspensaoDeAlimentacao,
+  deleteSuspensaoDeAlimentacao,
+  getSuspensoesDeAlimentacaoSalvas,
+  updateSuspensaoDeAlimentacao,
+  enviarSuspensaoDeAlimentacao
+} from "../../services/suspensaoDeAlimentacao.service";
+import { validateSubmit } from "./SuspensaoDeAlimentacaoValidation";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
@@ -20,15 +23,15 @@ import { required } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Modal } from "react-bootstrap";
-import { FoodSuspensionItemList } from "./FoodSuspensionItemList";
+import { FoodSuspensionItemList } from "./SuspensaoDeAlimentacaoItemList";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/foodSuspensionReducer";
+import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 
 class FoodSuspensionEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      foodSuspensionList: [],
+      suspensoesDeAlimentacaoList: [],
       status: "SEM STATUS",
       title: "Nova Suspensão de Alimentação",
       id: "",
@@ -37,19 +40,15 @@ class FoodSuspensionEditor extends Component {
       dias_razoes: [
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
+          data: null,
+          motivo: null
         }
       ],
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
       },
       selectDefault: [
         {
@@ -68,26 +67,14 @@ class FoodSuspensionEditor extends Component {
     this.titleRef = React.createRef();
   }
 
-  handleField(field, value, id) {
-    var foundIndex = this.state.dias_razoes.findIndex(x => x.id === id);
-    var dias_razoes = this.state.dias_razoes;
-    if (field === "which_reason") value = value.target.value;
-    dias_razoes[foundIndex][field] = value;
-    this.setState({
-      ...this.state,
-      dias_razoes: dias_razoes
-    });
-    if (field === "date") {
-      const _date = value.split("/");
-      if (
-        this.props.two_working_days <=
-          new Date(_date[2], _date[1] - 1, _date[0]) &&
-        new Date(_date[2], _date[1] - 1, _date[0]) <
-          this.props.five_working_days
-      ) {
-        this.showModal();
-      }
-    }
+  handleField(field, value, key) {
+
+    let dias_razoes = this.state.dias_razoes;
+
+    dias_razoes[key][field] = value
+
+    this.setState({ dias_razoes });
+
   }
 
   closeModal(e) {
@@ -99,11 +86,8 @@ class FoodSuspensionEditor extends Component {
       dias_razoes: this.state.dias_razoes.concat([
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
+          data: null,
+          motivo: null
         }
       ])
     });
@@ -115,13 +99,13 @@ class FoodSuspensionEditor extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions;
+    options[period.nome] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
     });
     this.props.change(
-      `descricoes_${period.value}.tipo_de_refeicao`,
+      `suspensoes_${period.nome}.tipo_de_refeicao`,
       selectedOptions
     );
   };
@@ -134,19 +118,21 @@ class FoodSuspensionEditor extends Component {
   };
 
   OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
-      res => {
-        if (res.code === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
-          this.refresh();
-        } else {
-          toastError(res.log_content[0]);
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteSuspensaoDeAlimentacao(uuid).then(
+        statusCode => {
+          if (statusCode === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      );
+    }
   }
 
   resetForm(event) {
@@ -162,18 +148,14 @@ class FoodSuspensionEditor extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          razao: null,
-          data_de: null,
-          data_ate: null,
-          weekdays: []
+          motivo: null
         }
       ],
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
       },
       selectDefault: [
         {
@@ -185,35 +167,50 @@ class FoodSuspensionEditor extends Component {
     });
   }
 
+  diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
+    let novoDiasRazoes = [];
+    suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
+      const idx = suspensoesAlimentacao.findIndex(value2 => value2.data === suspensaoAlimentacao.data)
+      let novoDia = {
+        id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
+        data: suspensaoAlimentacao.data,
+        motivo: suspensaoAlimentacao.motivo.uuid
+      }
+      novoDia[`data${idx}`] = suspensaoAlimentacao.data
+      novoDia[`motivo${idx}`] = suspensaoAlimentacao.motivo.uuid
+      novoDiasRazoes.push(novoDia);
+    });
+    return novoDiasRazoes;
+  }
+
   OnEditButtonClicked(param) {
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(param.dayChange);
     this.setState({
       status: param.dayChange.status,
-      title: `Suspensão de Cardápio # ${param.dayChange.id}`,
+      title: `Suspensão de Alimentação`,
       salvarAtualizarLbl: "Atualizar",
       id: param.dayChange.id,
-      dias_razoes: param.dayChange.dias_razoes,
+      // dias_razoes: param.dayChange.dias_razoes,
+      dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(
+        param.dayChange.suspensoes_alimentacao
+      ),
       options: {
-        first_period:
-          param.dayChange.descricoes_first_period !== undefined
-            ? param.dayChange.descricoes_first_period.tipo_de_refeicao
+        MANHA:
+          param.dayChange.suspensoes_MANHA !== undefined
+            ? param.dayChange.suspensoes_MANHA.tipo_de_refeicao
             : [],
-        second_period:
-          param.dayChange.descricoes_second_period !== undefined
-            ? param.dayChange.descricoes_second_period.tipo_de_refeicao
+        TARDE:
+          param.dayChange.suspensoes_TARDE !== undefined
+            ? param.dayChange.suspensoes_TARDE.tipo_de_refeicao
             : [],
-        third_period:
-          param.dayChange.descricoes_third_period !== undefined
-            ? param.dayChange.descricoes_third_period.tipo_de_refeicao
+        NOITE:
+          param.dayChange.suspensoes_NOITE !== undefined
+            ? param.dayChange.suspensoes_NOITE.tipo_de_refeicao
             : [],
-        fourth_period:
-          param.dayChange.descricoes_fourth_period !== undefined
-            ? param.dayChange.descricoes_fourth_period.tipo_de_refeicao
-            : [],
-        integrate:
-          param.dayChange.descricoes_integrate !== undefined
-            ? param.dayChange.descricoes_integrate.tipo_de_refeicao
+        INTEGRAL:
+          param.dayChange.suspensoes_INTEGRAL !== undefined
+            ? param.dayChange.suspensoes_INTEGRAL.tipo_de_refeicao
             : []
       }
     });
@@ -226,11 +223,10 @@ class FoodSuspensionEditor extends Component {
 
   componentDidUpdate(prevProps) {
     const fields = [
-      "descricoes_first_period",
-      "descricoes_second_period",
-      "descricoes_third_period",
-      "descricoes_fourth_period",
-      "descricoes_integrate"
+      "suspensoes_MANHA",
+      "suspensoes_TARDE",
+      "suspensoes_NOITE",
+      "suspensoes_INTEGRAL"
     ];
     fields.forEach(
       function(field) {
@@ -241,7 +237,7 @@ class FoodSuspensionEditor extends Component {
           !this.props[field].check
         ) {
           let options = this.state.options;
-          const value = field.split("descricoes_")[1];
+          const value = field.split("suspensoes_")[1];
           options[value] = [];
           this.setState({
             ...this.state,
@@ -255,46 +251,110 @@ class FoodSuspensionEditor extends Component {
   }
 
   refresh() {
-    getSavedFoodSuspensions().then(
+    getSuspensoesDeAlimentacaoSalvas().then(
       res => {
         this.setState({
-          ...this.state,
-          foodSuspensionList: res.content.suspensoes_de_alimentacao
+          suspensoesDeAlimentacaoList: res.results
         });
       },
       function(error) {
-        toastError("Erro ao carregar as inclusões salvas");
+        toastError("Erro ao carregar as suspensões salvas");
       }
     );
     this.resetForm("foodSuspension");
   }
 
+  enviaSuspensaoDeAlimentacao(uuid) {
+    enviarSuspensaoDeAlimentacao(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          this.refresh();
+          toastSuccess("Suspensão de Alimentação enviada com sucesso");
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Suspensão de Alimentação");
+      }
+    );
+  }
+
   onSubmit(values) {
     values.dias_razoes = this.state.dias_razoes;
+
+    values.dias_razoes.forEach(value => {
+      const idx = values.dias_razoes.findIndex(value2 => value2.id === value.id)
+      values.dias_razoes[idx]["data"] = values.dias_razoes[idx][`data${idx}`]
+      values.dias_razoes[idx]["motivo"] = values.dias_razoes[idx][`motivo${idx}`]
+    })
+
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateFoodSuspension(JSON.stringify(values)).then(
-        res => {
-          if (res.status === 200) {
-            toastSuccess(
-              (values.status === "SALVO"
-                ? "Rascunho salvo"
-                : "Suspensão de Alimentação enviada") + " com sucesso"
-            );
-            this.refresh();
-          } else {
-            toastError(res.error);
+      // TODO Retirar escola hard coded
+
+      const payload = {
+        escola: "a5dfd157-c3ed-4a14-ac6c-9406d06bb3f8", //this.state.escola.uuid,
+        observacao: values.observacao,
+        quantidades_por_periodo: values.suspensoes,
+        suspensoes_alimentacao: values.dias_razoes
+      };
+
+      if (!values.uuid) {
+        createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.CREATED) {
+              toastSuccess("Suspensão de Alimentação salva com sucesso");
+              this.refresh();
+
+              if (values.status === "A_VALIDAR") {
+                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a Suspensão de alimentação");
-        }
-      );
+        );
+      } else {
+        updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(payload)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.OK) {
+              toastSuccess("Suspensão de Alimentação salva com sucesso");
+              this.refresh();
+              if (values.status === "A_VALIDAR") {
+                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
+          }
+        );
+      }
+
       this.closeModal();
     } else {
       toastError(error);
     }
   }
+
+  getOptionsFromTiposAlimentacao = tiposAlimentacao => {
+    let options = [];
+    tiposAlimentacao.forEach(function(tipoAlimentacao) {
+      options.push({
+        label: tipoAlimentacao.nome,
+        value: tipoAlimentacao.uuid
+      });
+    });
+    return options;
+  };
 
   render() {
     const {
@@ -302,49 +362,46 @@ class FoodSuspensionEditor extends Component {
       pristine,
       submitting,
       enrolled,
-      reasons_simple,
-      reasons_continuous_program,
       periods,
-      descricoes_first_period,
-      descricoes_second_period,
-      descricoes_third_period,
-      descricoes_fourth_period,
-      descricoes_integrate,
+      escola,
+      motivosList,
+      suspensoes_MANHA,
+      suspensoes_TARDE,
+      suspensoes_NOITE,
+      suspensoes_INTEGRAL,
       two_working_days,
       typeFoodContinuousProgram
     } = this.props;
     const {
       title,
       options,
-      foodSuspensionList,
+      suspensoesDeAlimentacaoList,
       selectDefault,
       dias_razoes,
       showModal
     } = this.state;
     let checkMap = {
-      first_period: descricoes_first_period && descricoes_first_period.check,
-      second_period: descricoes_second_period && descricoes_second_period.check,
-      third_period: descricoes_third_period && descricoes_third_period.check,
-      fourth_period: descricoes_fourth_period && descricoes_fourth_period.check,
-      integrate: descricoes_integrate && descricoes_integrate.check
+      MANHA: suspensoes_MANHA && suspensoes_MANHA.check,
+      TARDE: suspensoes_TARDE && suspensoes_TARDE.check,
+      NOITE: suspensoes_NOITE && suspensoes_NOITE.check,
+      INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check
     };
     const colors = {
-      first_period: "#FFF7CB",
-      second_period: "#EAFFE3",
-      third_period: "#FFEED6",
-      fourth_period: "#E4F1FF",
-      integrate: "#EBEDFF"
+      MANHA: "#FFF7CB",
+      TARDE: "#FFEED6",
+      NOITE: "#E4F1FF",
+      INTEGRAL: "#EBEDFF"
     };
     return (
       <div>
         <form onSubmit={this.props.handleSubmit}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados numeroAlunos={enrolled} />
-          {foodSuspensionList.length > 0 && (
+          {suspensoesDeAlimentacaoList.length > 0 && (
             <div className="mt-3">
               <span className="page-title">Rascunhos</span>
               <FoodSuspensionItemList
-                foodSuspensionList={foodSuspensionList}
+                suspensoesDeAlimentacaoList={suspensoesDeAlimentacaoList}
                 OnDeleteButtonClicked={this.OnDeleteButtonClicked}
                 resetForm={event => this.resetForm(event)}
                 OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
@@ -364,20 +421,19 @@ class FoodSuspensionEditor extends Component {
               >
                 Descrição da Suspensão
               </div>
-              {dias_razoes.map((dia_razao, key) => {
+              {dias_razoes.map((dia_motivo, key) => {
                 return (
-                  <FormSection name={`dias_razoes_${dia_razao.id}`}>
+                  <FormSection name={`dias_razoes_${dia_motivo.data}`}>
                     <div className="form-row">
-                      {(!dia_razao.razao ||
-                        !dia_razao.razao.includes("Programa Contínuo")) && (
+                      {(!dia_motivo.motivo ||
+                        !dia_motivo.motivo.includes("Programa Contínuo")) && (
                         <div className="form-group col-sm-3">
                           <Field
                             component={LabelAndDate}
-                            name="data"
+                            name={`data${key}`}
                             onChange={value =>
-                              this.handleField("data", value, dia_razao.id)
+                              this.handleField(`data${key}`, value, key)
                             }
-                            minDate={two_working_days}
                             label="Dia"
                             validate={required}
                           />
@@ -386,28 +442,22 @@ class FoodSuspensionEditor extends Component {
                       <div className="form-group col-sm-8">
                         <Field
                           component={LabelAndCombo}
-                          name="razao"
+                          name={`motivo${key}`}
                           label="Motivo"
+                          options={motivosList}
                           onChange={value =>
-                            this.handleField("razao", value, dia_razao.id)
-                          }
-                          options={
-                            dias_razoes.length > 1
-                              ? selectDefault.concat(reasons_simple)
-                              : selectDefault
-                                  .concat(reasons_simple)
-                                  .concat(reasons_continuous_program)
+                            this.handleField(`motivo${key}`, value, key)
                           }
                           validate={required}
                         />
                       </div>
                     </div>
-                    {dia_razao.razao && dia_razao.razao.includes("Outro") && (
+                    {dia_motivo.motivo && dia_motivo.motivo.includes("Outro") && (
                       <div className="form-row">
                         <div
                           className={
-                            !dia_razao.razao ||
-                            !dia_razao.razao.includes(
+                            !dia_motivo.motivo ||
+                            !dia_motivo.motivo.includes(
                               "Programa Contínuo - Outro"
                             )
                               ? "form-group col-sm-8 offset-sm-3"
@@ -419,26 +469,30 @@ class FoodSuspensionEditor extends Component {
                             label="Qual o motivo?"
                             onChange={event =>
                               this.handleField(
-                                "qual_razao",
+                                "qual_motivo",
                                 event,
-                                dia_razao.id
+                                dia_motivo.id
                               )
                             }
-                            name="qual_razao"
+                            name="qual_motivo"
                             className="form-control"
                             validate={required}
                           />
                         </div>
                       </div>
                     )}
-                    {dia_razao.razao &&
-                      dia_razao.razao.includes("Programa Contínuo") && (
+                    {dia_motivo.motivo &&
+                      dia_motivo.motivo.includes("Programa Contínuo") && (
                         <div className="form-row">
                           <div className="form-group col-sm-3">
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
-                                this.handleField("data_de", value, dia_razao.id)
+                                this.handleField(
+                                  "data_de",
+                                  value,
+                                  dia_motivo.id
+                                )
                               }
                               name="data_de"
                               label="De"
@@ -452,7 +506,7 @@ class FoodSuspensionEditor extends Component {
                                 this.handleField(
                                   "data_ate",
                                   value,
-                                  dia_razao.id
+                                  dia_motivo.id
                                 )
                               }
                               name="data_ate"
@@ -467,7 +521,7 @@ class FoodSuspensionEditor extends Component {
                               this.handleField(
                                 "dias_de_semana",
                                 value,
-                                dia_razao.id
+                                dia_motivo.id
                               )
                             }
                             classNameArgs="form-group col-sm-4"
@@ -483,8 +537,8 @@ class FoodSuspensionEditor extends Component {
                 className="col-sm-3"
                 onClick={() => this.addDay()}
                 disabled={
-                  dias_razoes[0].razao &&
-                  dias_razoes[0].razao.includes("Programa Contínuo")
+                  dias_razoes[0].motivo &&
+                  dias_razoes[0].motivo.includes("Programa Contínuo")
                 }
                 style={ButtonStyle.OutlinePrimary}
               />
@@ -497,11 +551,11 @@ class FoodSuspensionEditor extends Component {
               </table>
               {periods.map((period, key) => {
                 this.props.change(
-                  `descricoes_${period.value}.periodo`,
-                  period.value
+                  `suspensoes_${period.nome}.periodo`,
+                  period.uuid
                 );
                 return (
-                  <FormSection name={`descricoes_${period.value}`}>
+                  <FormSection name={`suspensoes_${period.nome}`}>
                     <div className="form-row">
                       <Field component={"input"} type="hidden" name="value" />
                       <div className="form-check col-md-3 mr-4 ml-4">
@@ -509,7 +563,7 @@ class FoodSuspensionEditor extends Component {
                           className="pl-5 pt-2 pb-2"
                           style={{
                             marginLeft: "-1.4rem",
-                            background: colors[period.value],
+                            background: colors[period.nome],
                             borderRadius: "7px"
                           }}
                         >
@@ -522,20 +576,20 @@ class FoodSuspensionEditor extends Component {
                             <span
                               onClick={() =>
                                 this.props.change(
-                                  `descricoes_${period.value}.check`,
-                                  !checkMap[period.value]
+                                  `suspensoes_${period.nome}.check`,
+                                  !checkMap[period.nome]
                                 )
                               }
                               className="checkbox-custom"
                             />{" "}
-                            {period.label}
+                            {period.nome}
                           </label>
                         </div>
                       </div>
                       <div className="form-group col-md-5 mr-5">
                         <div
                           className={
-                            checkMap[period.value]
+                            checkMap[period.nome]
                               ? "multiselect-wrapper-enabled"
                               : "multiselect-wrapper-disabled"
                           }
@@ -543,13 +597,10 @@ class FoodSuspensionEditor extends Component {
                           <Field
                             component={StatefulMultiSelect}
                             name=".tipo_de_refeicao"
-                            selected={options[period.value] || []}
-                            options={
-                              dias_razoes[0].razao &&
-                              dias_razoes[0].razao.includes("Programa Contínuo")
-                                ? typeFoodContinuousProgram
-                                : period.meal_types
-                            }
+                            selected={options[period.nome] || []}
+                            options={this.getOptionsFromTiposAlimentacao(
+                              period.tipos_alimentacao
+                            )}
                             onSelectedChanged={values =>
                               this.handleSelectedChanged(values, period)
                             }
@@ -566,15 +617,11 @@ class FoodSuspensionEditor extends Component {
                       <div className="form-group col-md-2">
                         <Field
                           component={LabelAndInput}
-                          disabled={
-                            options[period.value].length === 0 ||
-                            !checkMap[period.value]
-                          }
                           type="number"
                           name="numero_de_alunos"
                           min="0"
                           className="form-control"
-                          validate={checkMap[period.value] ? required : null}
+                          validate={checkMap[period.nome] ? required : null}
                         />
                       </div>
                     </div>
@@ -587,7 +634,7 @@ class FoodSuspensionEditor extends Component {
                   component={LabelAndTextArea}
                   placeholder="Campo opcional"
                   label="Observações"
-                  name="obs"
+                  name="observacao"
                 />
               </div>
               <div className="form-group row float-right mt-4">
@@ -661,12 +708,11 @@ const FoodSuspensionEditorForm = reduxForm({
 const selector = formValueSelector("foodSuspension");
 const mapStateToProps = state => {
   return {
-    initialValues: state.foodSuspension.data,
-    descricoes_first_period: selector(state, "descricoes_first_period"),
-    descricoes_second_period: selector(state, "descricoes_second_period"),
-    descricoes_third_period: selector(state, "descricoes_third_period"),
-    descricoes_fourth_period: selector(state, "descricoes_fourth_period"),
-    descricoes_integrate: selector(state, "descricoes_integrate")
+    initialValues: state.suspensaoDeAlimentacao.data,
+    suspensoes_MANHA: selector(state, "suspensoes_MANHA"),
+    suspensoes_TARDE: selector(state, "suspensoes_TARDE"),
+    suspensoes_NOITE: selector(state, "suspensoes_NOITE"),
+    suspensoes_INTEGRAL: selector(state, "suspensoes_INTEGRAL")
   };
 };
 

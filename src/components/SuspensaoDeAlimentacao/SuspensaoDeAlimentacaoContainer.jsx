@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { getPeriods } from "../../services/escola.service";
-import { getReasons } from "../../services/foodSuspension.service";
+import { getEscolas, getPeriods } from "../../services/escola.service";
+import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
 import { getWorkingDays } from "../../services/workingDays.service";
-import FoodSuspension from "./FoodSuspension";
+import FoodSuspension from "./SuspensaoDeAlimentacao";
 
 class FoodSuspensionContainer extends Component {
   typeFoodContinuousProgram = [
@@ -32,33 +32,35 @@ class FoodSuspensionContainer extends Component {
       reasons_continuous_program: [],
       day: new Date(),
       periods: [],
+      escola: null,
       typeFoodContinuousProgram: this.typeFoodContinuousProgram,
       two_working_days: null,
       five_working_days: null
     };
   }
 
+  agregarDefault = lista => {
+    return [{ nome: "Selecione", uuid: null }].concat(lista);
+  };
+
   componentDidMount() {
-    let _two,
-      _five = null;
-    getPeriods().then(resPeriods => {
-      getReasons().then(resReasons => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.content.school_periods,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program:
-            resReasons.content.reasons_continuous_program
+    getEscolas().then(resEscolas => {
+      getPeriods().then(resPeriods => {
+        getMotivosSuspensaoCardapio().then(resMotivos => {
+
+          this.setState({
+            periods: resPeriods.results,
+            motivosList: this.agregarDefault(resMotivos.results),
+            escola: resEscolas.results[0]
+          });
         });
       });
     });
+
     getWorkingDays().then(res => {
-      _two = res[0].date_two_working_days.split("/");
-      _five = res[0].date_five_working_days.split("/");
       this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
+        two_working_days: new Date(res.proximos_dois_dias_uteis),
+        five_working_days: new Date(res.proximos_cinco_dias_uteis)
       });
     });
   }
