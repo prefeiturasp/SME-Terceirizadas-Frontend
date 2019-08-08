@@ -41,18 +41,12 @@ class ContratosRelacionados extends Component {
   handleField(field, value, key, indice) {
     let contratos_datas = this.state.contratos_datas;
     contratos_datas[key][field] = value;
-    this.setState({
-      ...this.state,
-      contratos_datas: contratos_datas
-    });
+    this.setState({ contratos_datas });
 
     this.props.adicionaVigenciaContrato(indice, this.state.contratos_datas);
-
-  
   }
 
   adicionaContratoData() {
-    
     this.setState({
       contratos_datas: this.state.contratos_datas.concat([
         {
@@ -62,8 +56,6 @@ class ContratosRelacionados extends Component {
         }
       ])
     });
-
-    
   }
 
   nomeFormAtual() {
@@ -129,8 +121,7 @@ class ContratosRelacionados extends Component {
       diretoriasRegionais,
       empresas,
       obtemDadosParaSubmit,
-      indice,
-      adicionaContrato
+      indice
     } = this.props;
     return (
       <div>

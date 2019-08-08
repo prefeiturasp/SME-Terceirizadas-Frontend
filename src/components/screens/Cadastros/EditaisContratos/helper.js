@@ -58,7 +58,3 @@ export const renderizarLabelEmpresa = (selected, options) => {
   }
   return `${selected.length} empresas selecionadas`;
 };
-
-
-
-

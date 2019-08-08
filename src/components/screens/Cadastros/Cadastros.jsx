@@ -55,7 +55,7 @@ class Cadastros extends Component {
           <div className="linked-card col-4">
             <Link to="/configuracoes/cadastros/editais-contratos">
               <CardLogo titulo={"Cadastro de Editais e Contratos"}>
-                <IconeEmpresa />
+                <IconeEdital />
               </CardLogo>
             </Link>
           </div>

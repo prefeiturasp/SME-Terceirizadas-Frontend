@@ -41,7 +41,7 @@ class EditaisContratos extends Component {
       ],
       forms: ["secaoEdital0"],
 
-      contratos_ralacionados: [
+      contratos_relacionados: [
         {
           contratos_datas: [
             {
@@ -62,26 +62,30 @@ class EditaisContratos extends Component {
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
   }
 
+  salvaFormulario(values){
+    console.log(values)
+  }
+
   obtemDadosParaSubmit(field, value, key) {
-    let contratos_ralacionados = this.state.contratos_ralacionados;
-    contratos_ralacionados[key][field] = value;
+    let contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[key][field] = value;
     this.setState({
       ...this.state,
-      contratos_ralacionados: contratos_ralacionados
+      contratos_relacionados: contratos_relacionados
     });
   }
 
   adicionaVigenciaContrato(indice, contratos_datas) {
-    const contratos_ralacionados = this.state.contratos_ralacionados;
-    contratos_ralacionados[indice].contratos_datas = contratos_datas;
+    const contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[indice].contratos_datas = contratos_datas;
     this.setState({
-      contratos_ralacionados
+      contratos_relacionados
     });
   }
 
   adicionaContratosRelacionados() {
     this.setState({
-      contratos_ralacionados: this.state.contratos_ralacionados.concat([
+      contratos_relacionados: this.state.contratos_relacionados.concat([
         {
           contratos_datas: [
             {
@@ -122,7 +126,6 @@ class EditaisContratos extends Component {
   render() {
     const { handleSubmit } = this.props;
     const { lotes, forms, diretoriasRegionais, empresas } = this.state;
-    console.log(this.state.contratos_ralacionados);
     return (
       <section className="cadastro pt-3">
         <div className="card">
@@ -179,7 +182,7 @@ class EditaisContratos extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario())}
+                    onClick={handleSubmit(values => this.salvaFormulario(values))}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
