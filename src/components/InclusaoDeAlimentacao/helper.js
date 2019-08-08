@@ -13,10 +13,6 @@ export const formatarPeriodos = periodos => {
   return periodos;
 };
 
-export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: null }].concat(lista);
-};
-
 export const extrairTiposALimentacao = tiposAlimentacao => {
   let uuidsTiposAlimentacao = [];
   tiposAlimentacao.forEach(tipoAlimentacao => {

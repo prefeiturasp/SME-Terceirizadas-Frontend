@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { escolas, getPeriods } from "../../services/school.service";
+import { getEscolas, getPeriods } from "../../services/escola.service";
 import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import FoodSuspension from "./SuspensaoDeAlimentacao";
@@ -44,7 +44,7 @@ class FoodSuspensionContainer extends Component {
   };
 
   componentDidMount() {
-    escolas().then(resEscolas => {
+    getEscolas().then(resEscolas => {
       getPeriods().then(resPeriods => {
         getMotivosSuspensaoCardapio().then(resMotivos => {
 

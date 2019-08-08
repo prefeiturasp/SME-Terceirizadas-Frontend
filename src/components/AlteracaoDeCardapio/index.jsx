@@ -14,7 +14,7 @@ import {
   getMotivosAlteracaoCardapio,
   updateAlteracaoCardapio
 } from "../../services/cardapio.service";
-import { escolas, getPeriods } from "../../services/school.service";
+import { getEscolas, getPeriods } from "../../services/escola.service";
 import { getWorkingDays } from "../../services/workingDays.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -244,7 +244,7 @@ class AlteracaoCardapio extends Component {
   componentDidMount() {
     let _two,
       _five = null;
-    escolas().then(resEscolas => {
+    getEscolas().then(resEscolas => {
       getPeriods().then(resPeriods => {
         getMotivosAlteracaoCardapio().then(resMotivos => {
           this.setState({

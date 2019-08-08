@@ -22,19 +22,7 @@ export const getPeriods = user_uuid => {
     });
 };
 
-export const getSchools = () => {
-  var proxyUrl = "https://cors-anywhere.herokuapp.com/",
-    targetUrl = "https://pratoaberto.sme.prefeitura.sp.gov.br/api/escolas";
-  return fetch(proxyUrl + targetUrl)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
-
-export const escolas = () => {
+export const getEscolas = () => {
   const url = `${API_URL}/escolas/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -48,3 +36,49 @@ export const escolas = () => {
       return error.json();
     });
 };
+
+export const getEscolasSimples = () => {
+  const url = `${API_URL}/escolas-simples/?limit=1034`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getTiposGestao = () => {
+  const url = `${API_URL}/tipos-gestao/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getSubprefeituras = () => {
+  const url = `${API_URL}/subprefeituras/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
