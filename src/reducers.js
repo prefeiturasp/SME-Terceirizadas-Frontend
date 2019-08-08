@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import { permissionReducer } from "./reducers/permission.reducers";
 import foodInclusionReducer from "./reducers/foodInclusionReducer";
-import foodSuspensionReducer from "./reducers/foodSuspensionReducer";
+import suspensaoDeAlimentacaoReducer from "./reducers/suspensaoDeAlimentacaoReducer";
 import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.reducer";
 import alteracaoCardapioReducer from "./reducers/alteracaoCardapioReducer";
 import { tourRequestReducer } from "./reducers/tourRequest.reducer";
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   alteracaoCardapio: alteracaoCardapioReducer,
   unifiedSolicitation: loadUnifiedReducer,
   foodInclusion: foodInclusionReducer,
-  foodSuspension: foodSuspensionReducer
+  suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer
 });
 
 export default rootReducer;

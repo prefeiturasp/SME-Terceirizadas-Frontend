@@ -37,9 +37,25 @@ export class FoodSuspensionItemList extends Component {
     this.props.resetForm();
   }
 
+  datasAlteracao(suspensoes_alimentacao) {
+    let datas = ""
+    suspensoes_alimentacao.forEach(function(suspensaoAlimentacao) {
+      datas = `${datas}${suspensaoAlimentacao.data} `
+    })
+    return datas
+  }
+
   render() {
-    const { foodSuspensionList } = this.props;
-    const allDaysInfo = foodSuspensionList.map(dayChange => {
+    const { suspensoesDeAlimentacaoList } = this.props;
+    const allDaysInfo = suspensoesDeAlimentacaoList.map(dayChange => {
+
+
+      dayChange.suspensoes_alimentacao.forEach(value => {
+        const idx = dayChange.suspensoes_alimentacao.findIndex(value2 => value2.data === value.data)
+        dayChange.suspensoes_alimentacao[idx][`data${idx}`] = dayChange.suspensoes_alimentacao[idx][`data`]
+        dayChange.suspensoes_alimentacao[idx][`motivo${idx}`] = dayChange.suspensoes_alimentacao[idx][`motivo`]
+      })
+
       const { id } = dayChange;
       let backgroundColor =
         dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
@@ -47,7 +63,7 @@ export class FoodSuspensionItemList extends Component {
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              Inclusão de Alimentação {`# ${dayChange.id}`}
+              Inclusão de Alimentação
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -57,7 +73,7 @@ export class FoodSuspensionItemList extends Component {
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.created_at}
+            Salvo em: {dayChange.criado_em}
             <span
               onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
             >
@@ -75,19 +91,9 @@ export class FoodSuspensionItemList extends Component {
           </div>
           <div className="ml-3">
             <p>
-              {dayChange.dias_razoes.length > 1
-                ? dayChange.dias_razoes.length + " dias"
-                : dayChange.dias_razoes[0].razao.includes("Programa Contínuo")
-                ? dayChange.dias_razoes[0].razao +
-                  " (" +
-                  dayChange.dias_razoes[0].data_de +
-                  " - " +
-                  dayChange.dias_razoes[0].data_ate +
-                  ")"
-                : dayChange.dias_razoes[0].razao +
-                  " - " +
-                  dayChange.dias_razoes[0].data}
+              Datas:{this.datasAlteracao(dayChange.suspensoes_alimentacao)}
             </p>
+            <small>{dayChange.uuid}</small>
           </div>
         </div>
       );
