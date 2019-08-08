@@ -7,7 +7,7 @@ const authToken = {
 };
 
 
-export const getDiretoriaRegional = async () => {
+export const getLotes = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -19,4 +19,23 @@ export const getDiretoriaRegional = async () => {
     .then(response => {
       return response.json();
     })
+};
+
+export const getDiretoriaregional = () => {
+  const url = `${API_URL}/diretorias-regionais/`;
+  let status = 0;
+  return fetch(url, {
+    headers: authToken,
+    method: "GET"
+  })
+    .then(response => {
+      status = response.status;
+      return response.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
 };

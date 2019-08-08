@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { requiredCheck } from "../../helpers/fieldValidators";
+import { requiredCheck } from "../../../../helpers/fieldValidators";
 import RadioboxGroup from "./RadioboxGroup";
 
 export const HORAS_ENUM = {

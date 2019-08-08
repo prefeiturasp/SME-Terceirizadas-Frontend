@@ -2,6 +2,7 @@ import { createTextMask } from 'redux-form-input-masks';
 
 export function transformaObjetos(objetos, lista = [], obj = {}){
     try{
+        // eslint-disable-next-line array-callback-return
         objetos.results.map(objeto => {
             obj.uuid = objeto['uuid'];
             obj.label = objeto['nome'] 

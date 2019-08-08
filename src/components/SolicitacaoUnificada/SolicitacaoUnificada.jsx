@@ -15,12 +15,12 @@ import { Modal } from "react-bootstrap";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
 import { required, maxValue } from "../../helpers/fieldValidators";
-import SelecionaTempoPasseio from "../TourRequest/TourRequestCheck";
-import SelecionaKitLancheBox from "../TourRequest/SelecionaKitLancheBox";
+import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
+import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
-import { adapterEnumKits } from "../TourRequest/ConvertToFormat";
-import { kitLanches } from "../../services/tourRequest.service";
+import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
+import { kitLanches } from "../../services/solicitacaoDeKitLanche.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {
@@ -224,7 +224,7 @@ class SolicitacaoUnificada extends Component {
     kitLanches()
       .then(response => {
         this.setState({
-          enumKits: adapterEnumKits(response)
+          enumKits: extrairKitsLanchesParaCards(response)
         });
       })
       .catch(error => {
@@ -449,7 +449,7 @@ class SolicitacaoUnificada extends Component {
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação Unificada enviada com sucesso!");
-          this.resetForm();;
+          this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
           toastError("Houve um erro ao enviar a solicitação unificada");
         }

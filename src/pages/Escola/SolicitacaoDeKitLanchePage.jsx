@@ -1,9 +1,9 @@
 import React from "react";
 import Page from "../../components/Shareable/Page/Page";
-import TourRequest from "../../components/TourRequest/TourRequest";
+import Container from "../../components/SolicitacaoDeKitLanche/Container";
 
 export default props => (
   <Page titulo="Solicitação de Kit Lanche" tituloRastro="Solicitações">
-    <TourRequest />
+    <Container />
   </Page>
 );

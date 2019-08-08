@@ -5,9 +5,7 @@ import { fieldTel } from "./helper";
 
 import {
   renderTelefone,
-  renderEmail,
-  renderTelefonePlus,
-  renderEmailPlus
+  renderEmail
 } from "./RenderField";
 
 export const ContatosEmpresa = ({ fields, meta: { error } }) => (
