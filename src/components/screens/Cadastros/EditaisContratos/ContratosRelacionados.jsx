@@ -140,7 +140,6 @@ class ContratosRelacionados extends Component {
               <div className="section-contrato-vigencia">
                 <section>
                   {formVigenciaContratos.map((formContrato, key) => {
-                    {console.log(this.state.contratos_datas)}
                     return (
                       <FormSection name={`secaoContrato${key}`}>
                         <div className="colunas">
@@ -202,7 +201,6 @@ class ContratosRelacionados extends Component {
                     className="btn btn-outline-info"
                     onClick={() => {
                       this.nomeFormAtual();
-                      adicionaContrato(indice);
                       this.adicionaContratoData();
                     }}
                   >

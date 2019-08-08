@@ -43,7 +43,6 @@ class EditaisContratos extends Component {
 
       contratos_ralacionados: [
         {
-          key: null,
           contratos_datas: [
             {
               numero_contrato: null,
@@ -60,7 +59,6 @@ class EditaisContratos extends Component {
       ]
     };
     this.obtemDadosParaSubmit = this.obtemDadosParaSubmit.bind(this);
-    this.adicionaContrato = this.adicionaContrato.bind(this);
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
   }
 
@@ -73,28 +71,32 @@ class EditaisContratos extends Component {
     });
   }
 
-  adicionaContrato(indice) {
-    const contratos_ralacionados = this.state.contratos_ralacionados;
-    contratos_ralacionados[indice].contratos_datas.concat([
-      {
-        numero_contrato: null,
-        data_inicio: null,
-        data_fim: null
-      }
-    ]);
-    
-    this.setState({
-      contratos_ralacionados
-    });
-
-    
-  }
-
   adicionaVigenciaContrato(indice, contratos_datas) {
     const contratos_ralacionados = this.state.contratos_ralacionados;
     contratos_ralacionados[indice].contratos_datas = contratos_datas;
     this.setState({
       contratos_ralacionados
+    });
+  }
+
+  adicionaContratosRelacionados() {
+    this.setState({
+      contratos_ralacionados: this.state.contratos_ralacionados.concat([
+        {
+          contratos_datas: [
+            {
+              numero_contrato: null,
+              data_inicio: null,
+              data_fim: null
+            }
+          ],
+          processo_administrativo: null,
+          data_proposta: null,
+          lotes: null,
+          dres: null,
+          empresas: null
+        }
+      ])
     });
   }
 
@@ -119,13 +121,8 @@ class EditaisContratos extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-    const {
-      lotes,
-      forms,
-      diretoriasRegionais,
-      empresas
-    } = this.state;
-    console.log(this.state.contratos_ralacionados)
+    const { lotes, forms, diretoriasRegionais, empresas } = this.state;
+    console.log(this.state.contratos_ralacionados);
     return (
       <section className="cadastro pt-3">
         <div className="card">
@@ -155,7 +152,6 @@ class EditaisContratos extends Component {
                   obtemDadosParaSubmit={this.obtemDadosParaSubmit}
                   obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
                   indice={key}
-                  adicionaContrato={this.adicionaContrato}
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                 />
               );
@@ -168,6 +164,7 @@ class EditaisContratos extends Component {
                 style={ButtonStyle.OutlinePrimary}
                 onClick={() => {
                   this.nomeFormAtual();
+                  this.adicionaContratosRelacionados();
                 }}
               />
             </article>
