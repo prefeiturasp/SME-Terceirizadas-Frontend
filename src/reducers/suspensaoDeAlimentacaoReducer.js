@@ -7,7 +7,7 @@ export default function reducer(state = {}, action) {
     case LOAD_FOOD_SUSPENSION:
       if (action.data != null) {
         action.data.suspensoes_alimentacao.forEach(function(dia_motivo) {
-          const idx = action.data.suspensoes_alimentacao.findIndex(value2 => value2.data === dia_motivo.data)
+          const idx = action.data.suspensoes_alimentacao.findIndex(suspensao => suspensao.data === dia_motivo.data)
           let diaMotivo = {}
           diaMotivo["data"] = dia_motivo.data
           diaMotivo["motivo"] = dia_motivo.motivo.uuid

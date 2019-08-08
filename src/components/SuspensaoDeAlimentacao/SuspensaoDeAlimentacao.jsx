@@ -1,3 +1,4 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -120,7 +121,7 @@ class FoodSuspensionEditor extends Component {
     if (window.confirm("Deseja remover este rascunho?")) {
       deleteSuspensaoDeAlimentacao(uuid).then(
         statusCode => {
-          if (statusCode === 204) {
+          if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho excluído com sucesso`);
             this.refresh();
           } else {
@@ -266,7 +267,7 @@ class FoodSuspensionEditor extends Component {
   enviaSuspensaoDeAlimentacao(uuid) {
     enviarSuspensaoDeAlimentacao(uuid).then(
       res => {
-        if (res.status === 200) {
+        if (res.status === HTTP_STATUS.OK) {
           this.refresh();
           toastSuccess("Suspensão de Alimentação enviada com sucesso");
         } else {
@@ -302,7 +303,7 @@ class FoodSuspensionEditor extends Component {
       if (!values.uuid) {
         createSuspensaoDeAlimentacao(JSON.stringify(payload)).then(
           async res => {
-            if (res.status === 201) {
+            if (res.status === HTTP_STATUS.CREATED) {
               toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
 
@@ -321,7 +322,7 @@ class FoodSuspensionEditor extends Component {
       } else {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(payload)).then(
           async res => {
-            if (res.status === 200) {
+            if (res.status === HTTP_STATUS.OK) {
               toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
               if (values.status === "A_VALIDAR") {
