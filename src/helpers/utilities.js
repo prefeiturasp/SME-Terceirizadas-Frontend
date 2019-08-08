@@ -36,6 +36,9 @@ export const dataPrioritaria = (
   proximos_cinco_dias_uteis
 ) => {
   const data_objeto = new Date(moment(data).format("DD/MM/YYYY"));
+  console.log(data_objeto);
+  console.log(proximos_dois_dias_uteis);
+  console.log(proximos_cinco_dias_uteis);
   return (
     proximos_dois_dias_uteis <= data_objeto &&
     data_objeto < proximos_cinco_dias_uteis
@@ -58,4 +61,15 @@ export const extrairUUIDs = lista => {
     uuids.push(element.uuid);
   });
   return uuids;
+};
+
+export const dataParaUTC = data => {
+  return new Date(
+    data.getUTCFullYear(),
+    data.getUTCMonth(),
+    data.getUTCDate(),
+    data.getUTCHours(),
+    data.getUTCMinutes(),
+    data.getUTCSeconds()
+  );
 };

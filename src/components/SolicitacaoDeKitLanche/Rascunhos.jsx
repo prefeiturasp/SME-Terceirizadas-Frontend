@@ -10,13 +10,8 @@ export class Rascunhos extends Component {
     lineLeight: "21px"
   };
 
-  OnDeleteButtonClicked(id) {
-    this.props.OnDeleteButtonClicked(id);
-    this.props.resetForm();
-  }
-
   render() {
-    const { rascunhosSolicitacoesKitLanche } = this.props;
+    const { rascunhosSolicitacoesKitLanche, OnDeleteButtonClicked } = this.props;
     const cardsRascunhos = rascunhosSolicitacoesKitLanche.map(
       solicitacaoKitLanche => {
         const {
@@ -25,6 +20,7 @@ export class Rascunhos extends Component {
           local,
           quantidade_alunos
         } = solicitacaoKitLanche;
+        console.log(uuid);
         let backgroundColor = "#DADADA";
         return (
           <div
@@ -33,7 +29,7 @@ export class Rascunhos extends Component {
           >
             <div className="mt-2">
               <label style={this.styleTitle} className="bold ml-3">
-                {`Solicitação de Kit Lanche ${id_externo}`}
+                {`Solicitação de Kit Lanche # ${id_externo}`}
               </label>
               <span
                 className="ml-3 p-1 border rounded"
@@ -57,7 +53,7 @@ export class Rascunhos extends Component {
                         .criado_em
                     }
                     <span
-                      onClick={() => this.OnDeleteButtonClicked(uuid)}
+                      onClick={() => OnDeleteButtonClicked(id_externo, solicitacaoKitLanche.uuid)}
                     >
                       <i className="fas fa-trash" />
                     </span>

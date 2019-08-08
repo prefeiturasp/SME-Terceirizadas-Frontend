@@ -1,22 +1,17 @@
 import React, { Component } from "react";
-import {
-  getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
-} from "../../services/inclusaoDeAlimentacao.service";
+import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import { getPeriods } from "../../services/escola.service";
-import { formatarPeriodos } from "./helper";
-import { dataParaUTC } from "../../helpers/utilities";
-import InclusaoDeAlimentacao from ".";
+import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import AlteracaoDeCardapio from ".";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
       meusDados: null,
-      motivos_simples: [],
-      motivos_continuos: [],
+      motivos: [],
       periodos: [],
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null
@@ -25,30 +20,20 @@ class Container extends Component {
 
   componentDidMount() {
     meusDados().then(response => {
-      const meusDados = response;
       this.setState({
-        meusDados
-      });
-    });
-
-    getMotivosInclusaoContinua().then(response => {
-      const motivos_continuos = response.results;
-      this.setState({
-        motivos_continuos
-      });
-    });
-
-    getMotivosInclusaoNormal().then(response => {
-      const motivos_simples = response.results;
-      this.setState({
-        motivos_simples
+        meusDados: response
       });
     });
 
     getPeriods().then(response => {
-      const periodos = response.results;
       this.setState({
-        periodos: formatarPeriodos(periodos)
+        periodos: response.results
+      });
+    });
+
+    getMotivosAlteracaoCardapio().then(response => {
+      this.setState({
+        motivos: agregarDefault(response.results)
       });
     });
 
@@ -59,6 +44,7 @@ class Container extends Component {
       const proximos_dois_dias_uteis = dataParaUTC(
         new Date(response.proximos_dois_dias_uteis)
       );
+      console.log(proximos_dois_dias_uteis);
       this.setState({
         proximos_dois_dias_uteis,
         proximos_cinco_dias_uteis
@@ -67,7 +53,7 @@ class Container extends Component {
   }
 
   render() {
-    return <InclusaoDeAlimentacao {...this.state} />;
+    return <AlteracaoDeCardapio {...this.state} />;
   }
 }
 

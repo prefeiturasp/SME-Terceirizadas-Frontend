@@ -14,7 +14,7 @@ import {
 import { Grid } from "../Shareable/responsiveBs4";
 import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
 import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
-import { dataPrioritaria } from "../../helpers/utilities";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { Rascunhos } from "./Rascunhos";
 import {
   removeKitLanche,
@@ -25,6 +25,7 @@ import {
 } from "../../services/solicitacaoDeKitLanche.service";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { Modal } from "react-bootstrap";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import BaseButton from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { montaObjetoRequisicao } from "./helper";
@@ -60,12 +61,22 @@ export class SolicitacaoDeKitLanche extends Component {
     this.handleConfirmation = this.handleConfirmation.bind(this);
   }
 
-  OnDeleteButtonClicked(id) {
-    if (window.confirm("Deseja remover esta solicitação salva?")) {
-      removeKitLanche(id).then(resp => {
-        this.refresh();
-        toastSuccess("solicitação removida com sucesso!");
-      });
+  OnDeleteButtonClicked(id_externo, uuid) {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removeKitLanche(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
+        }
+      );
+      this.resetForm();
     }
   }
 
@@ -138,7 +149,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   validaDiasUteis = event => {
     if (
-      dataPrioritaria(
+      checaSeDataEstaEntre2e5DiasUteis(
         event.target.value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
@@ -274,7 +285,9 @@ export class SolicitacaoDeKitLanche extends Component {
             />
             <Rascunhos
               rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
-              OnDeleteButtonClicked={id => this.OnDeleteButtonClicked(id)}
+              OnDeleteButtonClicked={(id_externo, uuid) =>
+                this.OnDeleteButtonClicked(id_externo, uuid)
+              }
               resetForm={event => this.resetForm(event)}
               refreshComponent={this.refresh.bind(this)}
               OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
@@ -429,26 +442,10 @@ export class SolicitacaoDeKitLanche extends Component {
             </div>
           </form>
         )}
-        <Modal show={showModal} onHide={this.closeModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Atenção</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Atenção, a solicitação está fora do prazo contratual (entre
-            <b> 2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-            disponibilidade dos alimentos adequados para o cumprimento do
-            cardápio.
-          </Modal.Body>
-          <Modal.Footer>
-            <BaseButton
-              label="OK"
-              type={ButtonType.BUTTON}
-              onClick={this.closeModal}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
-          </Modal.Footer>
-        </Modal>
+        <ModalDataPrioritaria
+          showModal={showModal}
+          closeModal={this.closeModal}
+        />
       </div>
     );
   }

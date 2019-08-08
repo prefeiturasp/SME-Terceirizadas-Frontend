@@ -40,35 +40,33 @@ export class Rascunhos extends Component {
   render() {
     const { alteracaoCardapioList } = this.props;
 
-    const allDaysInfo = alteracaoCardapioList.map(dayChange => {
-      const { id } = dayChange;
+    const cardsRascunhos = alteracaoCardapioList.map(alteracaoDeCardapio => {
+      const { uuid, id_externo } = alteracaoDeCardapio;
       let backgroundColor =
-        dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
+        alteracaoDeCardapio.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              {/* Alteração de Cardápio por {`# ${dayChange.motivo.nome}`} */}
-              Alteração de Cardápio
+              {/* Alteração de Cardápio por {`# ${alteracaoDeCardapio.motivo.nome}`} */}
+              {`Alteração de Cardápio ${id_externo}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {dayChange.status}
+              {alteracaoDeCardapio.status}
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.criado_em}
-            <span
-              onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
-            >
+            Salvo em: {alteracaoDeCardapio.criado_em}
+            <span onClick={() => this.OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />
             </span>
             <span
               onClick={p =>
                 this.props.OnEditButtonClicked({
-                  dayChange
+                  alteracaoDeCardapio
                 })
               }
             >
@@ -77,13 +75,13 @@ export class Rascunhos extends Component {
           </div>
           <div className="ml-3">
             <p>
-              De {dayChange.data_inicial} a {dayChange.data_final}
+              De {alteracaoDeCardapio.data_inicial} a{" "}
+              {alteracaoDeCardapio.data_final}
             </p>
-            <small>{dayChange.uuid}</small>
           </div>
         </div>
       );
     });
-    return <div>{allDaysInfo}</div>;
+    return <div>{cardsRascunhos}</div>;
   }
 }

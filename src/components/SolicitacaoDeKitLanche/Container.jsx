@@ -3,6 +3,7 @@ import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import { getRefeicoesApi } from "../../services/solicitacaoDeKitLanche.service";
 import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
+import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoDeKitLanche from ".";
 
 class Container extends Component {
@@ -30,11 +31,11 @@ class Container extends Component {
     });
 
     getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = new Date(
-        response.proximos_cinco_dias_uteis
+      const proximos_cinco_dias_uteis = dataParaUTC(
+        new Date(response.proximos_cinco_dias_uteis)
       );
-      const proximos_dois_dias_uteis = new Date(
-        response.proximos_dois_dias_uteis
+      const proximos_dois_dias_uteis = dataParaUTC(
+        new Date(response.proximos_dois_dias_uteis)
       );
       this.setState({
         proximos_dois_dias_uteis,
