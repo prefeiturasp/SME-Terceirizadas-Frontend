@@ -20,7 +20,6 @@ export const normalizaLabelValueLote = response => {
   return lotes;
 };
 
-
 export const renderizarLabelLote = (selected, options) => {
   if (selected.length === 0) {
     return "Selecione um ou mais lotes...";
@@ -32,7 +31,7 @@ export const renderizarLabelLote = (selected, options) => {
     return `${selected.length} lote selecionado`;
   }
   return `${selected.length} lotes selecionados`;
-}
+};
 
 export const renderizarLabelDiretoria = (selected, options) => {
   if (selected.length === 0) {
@@ -45,7 +44,7 @@ export const renderizarLabelDiretoria = (selected, options) => {
     return `${selected.length} diretoria selecionada`;
   }
   return `${selected.length} diretorias selecionadas`;
-}
+};
 
 export const renderizarLabelEmpresa = (selected, options) => {
   if (selected.length === 0) {
@@ -58,4 +57,4 @@ export const renderizarLabelEmpresa = (selected, options) => {
     return `${selected.length} empresa selecionada`;
   }
   return `${selected.length} empresas selecionadas`;
-}
+};

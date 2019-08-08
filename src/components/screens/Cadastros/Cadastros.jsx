@@ -5,6 +5,7 @@ import IconePerfil from "../../Shareable/Icones/Cadastros/IconePerfil";
 import IconeUnidadeEscolar from "../../Shareable/Icones/Cadastros/IconeUnidadeEscolar";
 import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
+import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";
 import "./style.scss";
 
 class Cadastros extends Component {
@@ -48,6 +49,13 @@ class Cadastros extends Component {
             <Link to="/configuracoes/cadastros/empresa">
               <CardLogo titulo={"Cadastro de Empresas"}>
                 <IconeEmpresa />
+              </CardLogo>
+            </Link>
+          </div>
+          <div className="linked-card col-4">
+            <Link to="/configuracoes/cadastros/editais-contratos">
+              <CardLogo titulo={"Cadastro de Editais e Contratos"}>
+                <IconeEdital />
               </CardLogo>
             </Link>
           </div>

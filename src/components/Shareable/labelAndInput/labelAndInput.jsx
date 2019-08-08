@@ -194,9 +194,9 @@ export class LabelAndDate extends Component {
     } = this.props;
     return (
       <Grid cols={cols}>
-        <label htmlFor={name} className={"col-form-label"}>
+        {label &&<label htmlFor={name} className={"col-form-label"}>
           {label}
-        </label>
+        </label>}
         <div>
           <div
             className={

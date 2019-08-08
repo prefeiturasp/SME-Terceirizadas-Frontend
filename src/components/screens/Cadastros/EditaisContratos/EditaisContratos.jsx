@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { reduxForm, FormSection } from "redux-form";
 import { Link } from "react-router-dom";
-import BaseButton, { ButtonStyle } from "../../../Shareable/button";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLotes,
   getDiretoriaregional
@@ -19,28 +19,89 @@ class EditaisContratos extends Component {
       diretoriasRegionais: [],
       empresas: [
         {
-          label: 'SINGULAR GESTÃO DE SERVIÇOS LTDA',
-          value: '24B20725-17B1-4E83-8EE9-1B0CAD5C4F51'
+          label: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
+          value: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
         },
         {
-          label: 'APETECE SISTEMAS DE ALIMENTAÇÃO S/A.',
-          value: '366270C1-3156-4792-920C-399B1973C58D'
+          label: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
+          value: "366270C1-3156-4792-920C-399B1973C58D"
         },
         {
-          label: 'S.H.A COMÉRCIO DE ALIMENTOS LTDA',
-          value: 'F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269'
+          label: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
+          value: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
         },
         {
-          label: 'P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ',
-          value: '3FA6EB36-7456-4274-824E-A4809494412A'
+          label: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
+          value: "3FA6EB36-7456-4274-824E-A4809494412A"
         },
         {
-          label: 'COMERCIAL MILANO BRASIL',
-          value: '097783FB-FEC6-4DD2-98EC-832138F294F9'
+          label: "COMERCIAL MILANO BRASIL",
+          value: "097783FB-FEC6-4DD2-98EC-832138F294F9"
         }
       ],
-      forms: ["secaoEdital0"]
+      forms: ["secaoEdital0"],
+
+      contratos_relacionados: [
+        {
+          contratos_datas: [
+            {
+              numero_contrato: null,
+              data_inicio: null,
+              data_fim: null
+            }
+          ],
+          processo_administrativo: null,
+          data_proposta: null,
+          lotes: null,
+          dres: null,
+          empresas: null
+        }
+      ]
     };
+    this.obtemDadosParaSubmit = this.obtemDadosParaSubmit.bind(this);
+    this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
+  }
+
+  salvaFormulario(values){
+    console.log(values)
+  }
+
+  obtemDadosParaSubmit(field, value, key) {
+    let contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[key][field] = value;
+    this.setState({
+      ...this.state,
+      contratos_relacionados: contratos_relacionados
+    });
+  }
+
+  adicionaVigenciaContrato(indice, contratos_datas) {
+    const contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[indice].contratos_datas = contratos_datas;
+    this.setState({
+      contratos_relacionados
+    });
+  }
+
+  adicionaContratosRelacionados() {
+    this.setState({
+      contratos_relacionados: this.state.contratos_relacionados.concat([
+        {
+          contratos_datas: [
+            {
+              numero_contrato: null,
+              data_inicio: null,
+              data_fim: null
+            }
+          ],
+          processo_administrativo: null,
+          data_proposta: null,
+          lotes: null,
+          dres: null,
+          empresas: null
+        }
+      ])
+    });
   }
 
   nomeFormAtual() {
@@ -56,7 +117,9 @@ class EditaisContratos extends Component {
     });
 
     getDiretoriaregional().then(response => {
-      this.setState({ diretoriasRegionais: normalizaLabelValueDRE(response.data) });
+      this.setState({
+        diretoriasRegionais: normalizaLabelValueDRE(response.data)
+      });
     });
   }
 
@@ -80,15 +143,19 @@ class EditaisContratos extends Component {
             <SectionFormEdital />
             <hr />
             <nav className="titulo">Contratos relacionados</nav>
-            {forms.map((formEdital, indice) => {
+            {forms.map((formEdital, key) => {
               return (
                 <FormSection
                   component={ContratosRelacionados}
                   lotes={lotes}
-                  name={`secaoEdital${indice}`}
+                  name={`secaoEdital${key}`}
                   nomeForm={formEdital}
                   diretoriasRegionais={diretoriasRegionais}
                   empresas={empresas}
+                  obtemDadosParaSubmit={this.obtemDadosParaSubmit}
+                  obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
+                  indice={key}
+                  adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                 />
               );
             })}
@@ -100,12 +167,28 @@ class EditaisContratos extends Component {
                 style={ButtonStyle.OutlinePrimary}
                 onClick={() => {
                   this.nomeFormAtual();
+                  this.adicionaContratosRelacionados();
                 }}
               />
             </article>
 
-            <footer>
-              <button type="submit">Submit</button>
+            <footer className="card-body">
+              <div className="button-container">
+                <div className="button-submit">
+                  <BaseButton
+                    label="Cancelar"
+                    onClick={event => this.resetForm(event)}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label={"Salvar"}
+                    onClick={handleSubmit(values => this.salvaFormulario(values))}
+                    className="ml-3"
+                    type={ButtonType.SUBMIT}
+                    style={ButtonStyle.Primary}
+                  />
+                </div>
+              </div>
             </footer>
           </form>
         </div>
@@ -115,5 +198,5 @@ class EditaisContratos extends Component {
 }
 
 export default reduxForm({
-  form: "cadastroEditaisForm",
+  form: "cadastroEditaisForm"
 })(EditaisContratos);
