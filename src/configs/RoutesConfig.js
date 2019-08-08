@@ -3,9 +3,9 @@ import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
 import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
-import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
@@ -76,7 +76,7 @@ const routesConfig = [
   },
   {
     path: "/escola/suspensao-de-alimentacao",
-    component: FoodSuspensionPage,
+    component: SuspensaoDeAlimentacaoPage,
     exact: false
   },
   {
