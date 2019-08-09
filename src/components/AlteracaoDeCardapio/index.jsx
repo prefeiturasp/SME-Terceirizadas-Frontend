@@ -152,7 +152,7 @@ class AlteracaoCardapio extends Component {
     this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.setState({
       status: param.alteracaoDeCardapio.status,
-      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id}`,
+      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.alteracaoDeCardapio.id,
       dias_razoes: param.alteracaoDeCardapio.dias_razoes,
@@ -178,10 +178,6 @@ class AlteracaoCardapio extends Component {
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
-
-  agregarDefault = lista => {
-    return [{ nome: "Selecione", uuid: null }].concat(lista);
-  };
 
   componentDidMount() {
     this.refresh();
@@ -244,7 +240,7 @@ class AlteracaoCardapio extends Component {
         });
       },
       function(error) {
-        toastError("Erro ao carregar as inclusões salvas");
+        toastError("Erro ao carregar as alterações de cardápio salvas");
       }
     );
     this.resetForm("alteracaoCardapio");
@@ -293,7 +289,7 @@ class AlteracaoCardapio extends Component {
       } else {
         updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
           async res => {
-            if (res.status === 200) {
+            if (res.status === HTTP_STATUS.OK) {
               toastSuccess("Alteração de Cardápio salva com sucesso");
               this.refresh();
               if (status === "DRE_A_VALIDAR") {

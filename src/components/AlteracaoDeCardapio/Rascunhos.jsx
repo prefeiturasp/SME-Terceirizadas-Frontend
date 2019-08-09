@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import AlteracaoDeCardapio from ".";
 
 export class Rascunhos extends Component {
   constructor(props) {
@@ -48,8 +49,7 @@ export class Rascunhos extends Component {
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              {/* Alteração de Cardápio por {`# ${alteracaoDeCardapio.motivo.nome}`} */}
-              {`Alteração de Cardápio ${id_externo}`}
+              {`Alteração de Cardápio # ${id_externo}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
@@ -75,8 +75,13 @@ export class Rascunhos extends Component {
           </div>
           <div className="ml-3">
             <p>
-              De {alteracaoDeCardapio.data_inicial} a{" "}
-              {alteracaoDeCardapio.data_final}
+              {alteracaoDeCardapio.data_inicial ===
+              alteracaoDeCardapio.data_final
+                ? `Dia: ${alteracaoDeCardapio.data_inicial ||
+                    alteracaoDeCardapio.alterar_dia}`
+                : `De ${alteracaoDeCardapio.data_inicial} a ${
+                    alteracaoDeCardapio.data_final
+                  }`}
             </p>
           </div>
         </div>

@@ -16,9 +16,8 @@ class Container extends Component {
 
   componentDidMount() {
     meusDados().then(response => {
-      const meusDados = response;
       this.setState({
-        meusDados
+        meusDados: response
       });
     });
 
