@@ -6,7 +6,6 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-
 export const getLotes = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
@@ -15,10 +14,9 @@ export const getLotes = async () => {
 
   const url = API_URL + "/lotes/";
   OBJ_REQUEST["method"] = "GET";
-  return await fetch(url, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
+  return await fetch(url, OBJ_REQUEST).then(response => {
+    return response.json();
+  });
 };
 
 export const getDiretoriaregional = () => {

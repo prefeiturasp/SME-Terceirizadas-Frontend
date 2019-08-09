@@ -20,6 +20,17 @@ export const normalizaLabelValueLote = response => {
   return lotes;
 };
 
+export const normalizaLabelValueEmpresa = response => {
+  let empresas = response.map(empresa => {
+    return {
+      label: empresa.nome_fantasia,
+      value: empresa.uuid,
+      uuid: empresa.uuid
+    };
+  });
+  return empresas;
+};
+
 export const renderizarLabelLote = (selected, options) => {
   if (selected.length === 0) {
     return "Selecione um ou mais lotes...";

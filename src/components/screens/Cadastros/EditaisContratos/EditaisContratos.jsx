@@ -6,7 +6,12 @@ import {
   getLotes,
   getDiretoriaregional
 } from "../../../../services/diretoriaRegional.service";
-import { normalizaLabelValueLote, normalizaLabelValueDRE } from "./helper";
+import { getTerceirizada } from "../../../../services/terceirizada.service";
+import {
+  normalizaLabelValueLote,
+  normalizaLabelValueDRE,
+  normalizaLabelValueEmpresa
+} from "./helper";
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
@@ -17,39 +22,18 @@ class EditaisContratos extends Component {
     this.state = {
       lotes: [],
       diretoriasRegionais: [],
-      empresas: [
-        {
-          label: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
-          value: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
-        },
-        {
-          label: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
-          value: "366270C1-3156-4792-920C-399B1973C58D"
-        },
-        {
-          label: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
-          value: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
-        },
-        {
-          label: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
-          value: "3FA6EB36-7456-4274-824E-A4809494412A"
-        },
-        {
-          label: "COMERCIAL MILANO BRASIL",
-          value: "097783FB-FEC6-4DD2-98EC-832138F294F9"
-        }
-      ],
+      empresas: [],
       forms: ["secaoEdital0"],
 
       contratos_relacionados: [
         {
-          contratos_datas: [
+          vigencias: [
             {
-              numero_contrato: null,
               data_inicio: null,
               data_fim: null
             }
           ],
+          numero_contrato: null,
           processo_administrativo: null,
           data_proposta: null,
           lotes: null,
@@ -60,10 +44,20 @@ class EditaisContratos extends Component {
     };
     this.obtemDadosParaSubmit = this.obtemDadosParaSubmit.bind(this);
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
+    this.adicionaNumeroContrato = this.adicionaNumeroContrato.bind(this);
   }
 
-  salvaFormulario(values){
-    console.log(values)
+  adicionaNumeroContrato(indice, numero_contrato){
+    const contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[indice].numero_contrato = numero_contrato;
+    this.setState({
+      contratos_relacionados
+    });
+  }
+
+  salvaFormulario(values) {
+    console.log(values);
+    console.log(this.state.contratos_relacionados)
   }
 
   obtemDadosParaSubmit(field, value, key) {
@@ -75,9 +69,9 @@ class EditaisContratos extends Component {
     });
   }
 
-  adicionaVigenciaContrato(indice, contratos_datas) {
+  adicionaVigenciaContrato(indice, vigencias) {
     const contratos_relacionados = this.state.contratos_relacionados;
-    contratos_relacionados[indice].contratos_datas = contratos_datas;
+    contratos_relacionados[indice].vigencias = vigencias;
     this.setState({
       contratos_relacionados
     });
@@ -87,13 +81,13 @@ class EditaisContratos extends Component {
     this.setState({
       contratos_relacionados: this.state.contratos_relacionados.concat([
         {
-          contratos_datas: [
+          vigencias: [
             {
-              numero_contrato: null,
               data_inicio: null,
               data_fim: null
             }
           ],
+          numero_contrato: null,
           processo_administrativo: null,
           data_proposta: null,
           lotes: null,
@@ -121,11 +115,18 @@ class EditaisContratos extends Component {
         diretoriasRegionais: normalizaLabelValueDRE(response.data)
       });
     });
+
+    getTerceirizada().then(response => {
+      this.setState({
+        empresas: normalizaLabelValueEmpresa(response.data.results)
+      });
+    });
   }
 
   render() {
     const { handleSubmit } = this.props;
     const { lotes, forms, diretoriasRegionais, empresas } = this.state;
+    {console.log(this.state.contratos_relacionados)}
     return (
       <section className="cadastro pt-3">
         <div className="card">
@@ -156,6 +157,7 @@ class EditaisContratos extends Component {
                   obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
                   indice={key}
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
+                  adicionaNumeroContrato={this.adicionaNumeroContrato}
                 />
               );
             })}
@@ -182,7 +184,9 @@ class EditaisContratos extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario(values))}
+                    onClick={handleSubmit(values =>
+                      this.salvaFormulario(values)
+                    )}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
