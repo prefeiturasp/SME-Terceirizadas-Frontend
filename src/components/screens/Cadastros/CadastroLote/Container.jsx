@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { meusDados } from "../../../../services/perfil.service";
 import {
-  getEscolasSimples,
+  getEscolasCombo,
   getTiposGestao,
   getSubprefeituras
 } from "../../../../services/escola.service";
-import { getDiretoriaregional } from "../../../../services/diretoriaRegional.service";
+import { getDiretoriaregionalCombo } from "../../../../services/diretoriaRegional.service";
 import { agregarDefault } from "../../../../helpers/utilities";
 import { formatarEscolasParaMultiselect } from "./helper";
 import { formatarParaMultiselect } from "../../../../helpers/utilities";
@@ -31,13 +31,13 @@ class Container extends Component {
       });
     });
 
-    getDiretoriaregional().then(response => {
+    getDiretoriaregionalCombo().then(response => {
       this.setState({
         diretoriasRegionais: agregarDefault(response.data.results)
       });
     });
 
-    getEscolasSimples().then(response => {
+    getEscolasCombo().then(response => {
       this.setState({
         escolas: formatarEscolasParaMultiselect(response.results)
       });

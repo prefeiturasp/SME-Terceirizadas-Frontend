@@ -8,9 +8,9 @@ export default props => (
       <Modal.Title>Atenção</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      Atenção, a solicitação está fora do prazo contratual (entre{" "}
-      <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-      disponibilidade dos alimentos adequados para o cumprimento do cardápio.
+      A solicitação está fora do prazo contratual de cinco dias úteis. Sendo
+      assim, a autorização dependerá da disponibilidade dos alimentos adequados
+      para o cumprimento do cardápio.
     </Modal.Body>
     <Modal.Footer>
       <BaseButton
