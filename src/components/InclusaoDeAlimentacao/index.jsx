@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
-  GeradorUUID,
   formatarSubmissaoSolicitacaoNormal,
   formatarSubmissaoSolicitacaoContinua,
   extrairTiposALimentacao
 } from "./helper";
 import {
+  geradorUUID,
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect
@@ -56,7 +56,7 @@ class InclusaoDeAlimentacao extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       inclusoes: [
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           outroMotivo: false,
@@ -152,7 +152,7 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       inclusoes: this.state.inclusoes.concat([
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           data_inicial: null,
@@ -219,7 +219,7 @@ class InclusaoDeAlimentacao extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       inclusoes: [
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           data_inicial: null,

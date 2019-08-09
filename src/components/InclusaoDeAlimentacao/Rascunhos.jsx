@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 import {
   removerInclusaoDeAlimentacaoContinua,
@@ -7,15 +6,6 @@ import {
 import "../Shareable/style.scss";
 
 export class Rascunhos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  static propTypes = {
-    salvo_em: PropTypes.string.isRequired
-  };
-
   removerRascunho(id, uuid, ehInclusaoContinua) {
     const removerRascunhoEndpointCorreto = ehInclusaoContinua
       ? removerInclusaoDeAlimentacaoContinua
@@ -25,13 +15,12 @@ export class Rascunhos extends Component {
   }
 
   render() {
-    const { rascunhosInclusaoDeAlimentacao } = this.props;
-    const allDaysInfo = rascunhosInclusaoDeAlimentacao.map(
+    const { rascunhosInclusaoDeAlimentacao, carregarRascunho } = this.props;
+    const cardsInclusoes = rascunhosInclusaoDeAlimentacao.map(
       inclusaoDeAlimentacao => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
         const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
-        let backgroundColor =
-          inclusaoDeAlimentacao.status === "SALVO" ? "#82B7E8" : "#DADADA";
+        let backgroundColor = "#DADADA";
         return (
           <div className="bg-white border rounded mt-1">
             <div className="mt-2">
@@ -56,7 +45,7 @@ export class Rascunhos extends Component {
               </span>
               <span
                 onClick={() =>
-                  this.props.carregarRascunho({
+                  carregarRascunho({
                     inclusaoDeAlimentacao
                   })
                 }
@@ -80,6 +69,6 @@ export class Rascunhos extends Component {
         );
       }
     );
-    return <div>{allDaysInfo}</div>;
+    return <div>{cardsInclusoes}</div>;
   }
 }

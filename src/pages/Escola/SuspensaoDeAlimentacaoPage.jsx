@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 import Page from "../../components/Shareable/Page/Page";
-import SuspensaoDeAlimentacaoContainer from '../../components/SuspensaoDeAlimentacao/SuspensaoDeAlimentacaoContainer';
+import Container from "../../components/SuspensaoDeAlimentacao/Container";
 
 export default props => (
   <Page titulo="Suspensão de Alimentação" tituloRastro="Solicitações">
-      <SuspensaoDeAlimentacaoContainer />
+    <Container />
   </Page>
-)
+);

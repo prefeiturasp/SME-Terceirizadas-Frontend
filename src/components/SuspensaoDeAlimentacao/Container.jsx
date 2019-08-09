@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
+import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
 import { getPeriods } from "../../services/escola.service";
 import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
-import AlteracaoDeCardapio from ".";
+import SuspensaoDeAlimentacao from ".";
 
 class Container extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Container extends Component {
       });
     });
 
-    getMotivosAlteracaoCardapio().then(response => {
+    getMotivosSuspensaoCardapio().then(response => {
       this.setState({
         motivos: agregarDefault(response.results)
       });
@@ -52,7 +52,7 @@ class Container extends Component {
   }
 
   render() {
-    return <AlteracaoDeCardapio {...this.state} />;
+    return <SuspensaoDeAlimentacao {...this.state} />;
   }
 }
 

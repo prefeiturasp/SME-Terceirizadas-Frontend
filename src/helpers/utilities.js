@@ -36,9 +36,6 @@ export const dataPrioritaria = (
   proximos_cinco_dias_uteis
 ) => {
   const data_objeto = new Date(moment(data).format("DD/MM/YYYY"));
-  console.log(data_objeto);
-  console.log(proximos_dois_dias_uteis);
-  console.log(proximos_cinco_dias_uteis);
   return (
     proximos_dois_dias_uteis <= data_objeto &&
     data_objeto < proximos_cinco_dias_uteis
@@ -72,4 +69,32 @@ export const dataParaUTC = data => {
     data.getUTCMinutes(),
     data.getUTCSeconds()
   );
+};
+
+export const geradorUUID = () => {
+  var S4 = function() {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return (
+    S4() +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    S4() +
+    S4()
+  );
+};
+
+export const stringSeparadaPorVirgulas = (obj, campo) => {
+  let array = [];
+  obj.forEach(function(elemento) {
+    array.push(elemento[campo]);
+  });
+  return array.join(", ");
 };
