@@ -6,21 +6,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getLotes = async () => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-
-  const url = API_URL + "/lotes/";
-  OBJ_REQUEST["method"] = "GET";
-  return await fetch(url, OBJ_REQUEST).then(response => {
-    return response.json();
-  });
-};
-
-export const getDiretoriaregional = () => {
-  const url = `${API_URL}/diretorias-regionais/`;
+export const getTerceirizada = () => {
+  const url = `${API_URL}/terceirizadas/`;
   let status = 0;
   return fetch(url, {
     headers: authToken,

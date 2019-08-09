@@ -6,7 +6,12 @@ import {
   getLotes,
   getDiretoriaregional
 } from "../../../../services/diretoriaRegional.service";
-import { normalizaLabelValueLote, normalizaLabelValueDRE } from "./helper";
+import { getTerceirizada } from "../../../../services/terceirizada.service";
+import {
+  normalizaLabelValueLote,
+  normalizaLabelValueDRE,
+  normalizaLabelValueEmpresa
+} from "./helper";
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
@@ -17,28 +22,7 @@ class EditaisContratos extends Component {
     this.state = {
       lotes: [],
       diretoriasRegionais: [],
-      empresas: [
-        {
-          label: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
-          value: "24B20725-17B1-4E83-8EE9-1B0CAD5C4F51"
-        },
-        {
-          label: "APETECE SISTEMAS DE ALIMENTAÇÃO S/A.",
-          value: "366270C1-3156-4792-920C-399B1973C58D"
-        },
-        {
-          label: "S.H.A COMÉRCIO DE ALIMENTOS LTDA",
-          value: "F5CB749C-A1A8-4D4D-8276-AAD2EF3D9269"
-        },
-        {
-          label: "P.R.M. SERVIÇOS E MÃO DE OBRA ESPECIALIZADA EIRELI ",
-          value: "3FA6EB36-7456-4274-824E-A4809494412A"
-        },
-        {
-          label: "COMERCIAL MILANO BRASIL",
-          value: "097783FB-FEC6-4DD2-98EC-832138F294F9"
-        }
-      ],
+      empresas: [],
       forms: ["secaoEdital0"],
 
       contratos_relacionados: [
@@ -62,8 +46,9 @@ class EditaisContratos extends Component {
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
   }
 
-  salvaFormulario(values){
-    console.log(values)
+  salvaFormulario(values) {
+    console.log(values);
+    console.log(this.state.contratos_relacionados)
   }
 
   obtemDadosParaSubmit(field, value, key) {
@@ -119,6 +104,12 @@ class EditaisContratos extends Component {
     getDiretoriaregional().then(response => {
       this.setState({
         diretoriasRegionais: normalizaLabelValueDRE(response.data)
+      });
+    });
+
+    getTerceirizada().then(response => {
+      this.setState({
+        empresas: normalizaLabelValueEmpresa(response.data.results)
       });
     });
   }
@@ -182,7 +173,9 @@ class EditaisContratos extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario(values))}
+                    onClick={handleSubmit(values =>
+                      this.salvaFormulario(values)
+                    )}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}

@@ -90,6 +90,7 @@ class ContratosRelacionados extends Component {
       lotesNomesSelecionados.push(lotes[indice].label);
     });
     this.setState({ lotesSelecionados: values, lotesNomesSelecionados });
+
   }
 
   atualizarEmpresasSelecionadas(values) {
@@ -251,11 +252,7 @@ class ContratosRelacionados extends Component {
                           valueRenderer={renderizarLabelLote}
                           onSelectedChanged={values => {
                             this.atualizarLotesSelecionados(values);
-                            obtemDadosParaSubmit(
-                              `lotes`,
-                              lotesSelecionados,
-                              indice
-                            );
+                            obtemDadosParaSubmit(`lotes`, values, indice)
                           }}
                           overrideStrings={{
                             search: "Busca",
@@ -286,7 +283,7 @@ class ContratosRelacionados extends Component {
                             this.atualizarDiretoriasSelecionadas(values);
                             obtemDadosParaSubmit(
                               `dres`,
-                              diretoriasSelecionadas,
+                              values,
                               indice
                             );
                           }}
@@ -365,9 +362,10 @@ class ContratosRelacionados extends Component {
                           this.atualizarEmpresasSelecionadas(values);
                           obtemDadosParaSubmit(
                             `empresas`,
-                            empresasSelecionadas,
+                            values,
                             indice
                           );
+                          
                         }}
                         overrideStrings={{
                           search: "Busca",

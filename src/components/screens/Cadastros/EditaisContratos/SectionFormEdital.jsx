@@ -32,7 +32,7 @@ export const SectionFormEdital = props => {
       <div className="input-duplo">
         <div>
           <label className="label">
-            <span>* </span>Processo administrativo do contrato
+            <span>* </span>Processo administrativo n°
           </label>
           <Field
             component={LabelAndInput}
