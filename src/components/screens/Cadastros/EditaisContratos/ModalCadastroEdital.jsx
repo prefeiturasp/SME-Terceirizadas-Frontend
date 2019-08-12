@@ -34,159 +34,105 @@ export class ModalCadastroEdital extends Component {
         </Modal.Header>
         <Modal.Body>
           <section>
-            <article className="modal-cadastro-edital">
-              <header>Resumo</header>
-              <div className="detalhes">
-                <div>
-                  <span>Tipo de contratação:</span> Pregão eletrônico{" "}
-                </div>
-                <div>
-                  <span>Edital nº:</span> 78/SME/2016
-                </div>
-                <div>
-                  <span>Processo administrativo do contrato:</span>{" "}
-                  6016.2016/0003098-3
-                </div>
-                <div>
-                  <span>Objeto resumido:</span> Contratação de empresa
-                  especializada para prestação de serviço de nutrição e
-                  alimentação escolar - terceirização total
-                </div>
-              </div>
-            </article>
-            <hr />
+            {edital_contratos && (
+              <Fragment>
+                <article className="modal-cadastro-edital">
+                  <header>Resumo</header>
+                  <div className="detalhes">
+                    <div>
+                      <span>Tipo de contratação:</span>{" "}
+                      {edital_contratos.tipo_contratacao}
+                    </div>
+                    <div>
+                      <span>Edital nº:</span> {edital_contratos.numero}
+                    </div>
+                    <div>
+                      <span>Processo administrativo do contrato:</span>{" "}
+                      {edital_contratos.numero_processo}
+                    </div>
+                    <div>
+                      <span>Objeto resumido:</span> {edital_contratos.resumo}
+                    </div>
+                  </div>
+                </article>
+                <hr />
 
-            <article className="modal-cadastro-edital">
-              <header className="pb-3">Contratos relacionados</header>
+                <article className="modal-cadastro-edital">
+                  <header className="pb-3">Contratos relacionados</header>
 
-              <section>
-                <div className="detalhes">
-                  <div>
-                    <span>Contrato n°:</span> 38/SME/CODAE/2017
-                  </div>
-                  <div className="vigencias">
-                    <span>Vigência: </span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
+                  {edital_contratos.contratos_relacionados.map(contrato => {
+                    return (
+                      <Fragment>
+                        <section>
+                          <div className="detalhes">
+                            <div>
+                              <span>Contrato n°:</span>{" "}{contrato.numero_contrato}
+                            </div>
+                            <div className="vigencias">
+                              <span>Vigência: </span>
+                              <div className="iteracao-elementos">
+                                {contrato.vigencias.map(vigencia => {
+                                  return (
+                                    <div className="elementos">
+                                      De {vigencia.data_inicio} até{" "}
+                                      {vigencia.data_fim};
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            <div>
+                              <span>Processo administrativo do contrato:</span>{" "}
+                              {contrato.processo_administrativo}
+                            </div>
+                            <div>
+                              <span>Data da proposta:</span>{" "}{contrato.data_proposta}
+                            </div>
+                            <div className="iteracao-elementos">
+                              <span>Lote:</span>
+                              <div className="iteracao-elementos">
+                                {contrato.lotes_nomes.map(lote => {
+                                  return (
+                                    <div className="elementos">
+                                      {lote};{" "}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            <div className="iteracao-elementos">
+                              <span>DRE:</span>
+                              <div className="iteracao-elementos">
+                                {contrato.dres_nomes.map(dre => {
+                                  return (
+                                    <div className="elementos">
+                                      {dre};{" "}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                            <div className="iteracao-elementos">
+                              <span>Empresa:</span>
+                              <div className="iteracao-elementos">
+                                {contrato.empresas_nomes.map(empresa => {
+                                  return (
+                                    <div className="elementos">
+                                      {empresa};{" "}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div>
-                    <span>Processo administrativo do contrato:</span>{" "}
-                    6016.2017/0029748-5
-                  </div>
-                  <div>
-                    <span>Data da proposta:</span> 10/04/17
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>Lote:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>DRE:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>Empresa:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </section>
-              
-              <hr/>
-              
-              <section>
-                <div className="detalhes">
-                  <div>
-                    <span>Contrato n°:</span> 38/SME/CODAE/2017
-                  </div>
-                  <div className="vigencias">
-                    <span>Vigência: </span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div>
-                    <span>Processo administrativo do contrato:</span>{" "}
-                    6016.2017/0029748-5
-                  </div>
-                  <div>
-                    <span>Data da proposta:</span> 10/04/17
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>Lote:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>DRE:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="iteracao-elementos">
-                    <span>Empresa:</span>
-                    <div className="iteracao-elementos">
-                      {vigencias.map(vigencia => {
-                        return (
-                          <div className="elementos">
-                            De {vigencia.data_ini} até {vigencia.data_fim};
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </article>
+                        </section>
+                        <hr />
+                      </Fragment>
+                    );
+                  })}
+                </article>
+              </Fragment>
+            )}
           </section>
         </Modal.Body>
 

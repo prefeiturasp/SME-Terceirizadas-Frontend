@@ -53,7 +53,7 @@ class EditaisContratos extends Component {
 
         }
       ],
-      exibirModal: true,
+      exibirModal: false,
       edital_contratos: null,
     };
     this.exibirModal = this.exibirModal.bind(this);
@@ -62,6 +62,7 @@ class EditaisContratos extends Component {
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
     this.adicionaNumeroContrato = this.adicionaNumeroContrato.bind(this);
     this.adicionaFieldsFormEdital = this.adicionaFieldsFormEdital.bind(this);
+    this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
   }
 
   exibirModal() {
@@ -70,6 +71,12 @@ class EditaisContratos extends Component {
 
   fecharModal(e) {
     this.setState({ exibirModal: false });
+  }
+
+  adicionarNomesListagem(chave, valor, indice) {
+    let contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados[indice][chave] = valor
+    this.setState({ contratos_relacionados })
   }
 
   adicionaNumeroContrato(indice, numero_contrato) {
@@ -119,8 +126,11 @@ class EditaisContratos extends Component {
           processo_administrativo: null,
           data_proposta: null,
           lotes: null,
+          lotes_nomes: null,
           dres: null,
-          empresas: null
+          dres_nomes: null,
+          empresas: null,
+          empresas_nomes: null
         }
       ])
     });
@@ -199,6 +209,7 @@ class EditaisContratos extends Component {
                   indice={key}
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                   adicionaNumeroContrato={this.adicionaNumeroContrato}
+                  adicionarNomesListagem={this.adicionarNomesListagem}
                 />
               );
             })}
