@@ -1,12 +1,12 @@
 import { Login } from "../components/Login";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import Home from "../pages/Home";
-import FoodInclusionPage from "../pages/Escola/FoodInclusionPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
-import TourRequestPage from "../pages/Escola/TourRequestPage";
-import DayChangePage from "../pages/Escola/DayChangePage";
-import FoodSuspensionPage from "../pages/Escola/FoodSuspensionPage";
-import UnifiedSolicitationPage from "../pages/DRE/UnifiedSolicitationPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
+import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
+import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
@@ -31,6 +31,7 @@ import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
+import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 
 const routesConfig = [
   {
@@ -55,7 +56,7 @@ const routesConfig = [
   },
   {
     path: "/escola/inclusao-de-alimentacao",
-    component: FoodInclusionPage,
+    component: InclusaoDeAlimentacaoPage,
     exact: false
   },
   {
@@ -65,17 +66,17 @@ const routesConfig = [
   },
   {
     path: "/escola/solicitacao-de-kit-lanche",
-    component: TourRequestPage,
+    component: SolicitacaoDeKitLanchePage,
     exact: false
   },
   {
     path: "/escola/inversao-de-dia-de-cardapio",
-    component: DayChangePage,
+    component: InversaoDeDiaDeCardapioPage,
     exact: false
   },
   {
     path: "/escola/suspensao-de-alimentacao",
-    component: FoodSuspensionPage,
+    component: SuspensaoDeAlimentacaoPage,
     exact: false
   },
   {
@@ -100,7 +101,7 @@ const routesConfig = [
   },
   {
     path: "/dre/solicitacao-unificada",
-    component: UnifiedSolicitationPage,
+    component: SolicitacaoUnificadaPage,
     exact: false
   },
   {
@@ -147,6 +148,11 @@ const routesConfig = [
     path: "/configuracoes/cadastros/empresa",
     component: CadastroEmpresaPage,
     exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/editais-contratos",
+    component: EditaisContratosPage,
+    exact: true
   },
   {
     path: "/configuracoes/cadastros",

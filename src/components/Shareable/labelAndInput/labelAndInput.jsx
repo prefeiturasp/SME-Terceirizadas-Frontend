@@ -27,7 +27,8 @@ export const LabelAndInput = props => {
     readOnly,
     type,
     meta,
-    disabled
+    disabled,
+    classNameInput
   } = props;
   return (
     <Grid cols={cols}>
@@ -38,7 +39,7 @@ export const LabelAndInput = props => {
       )}
       <input
         {...input}
-        className="form-control"
+        className={`form-control ${classNameInput}`}
         disabled={disabled}
         name={name}
         id={name}
@@ -59,7 +60,8 @@ LabelAndInput.propTypes = {
   readOnly: PropTypes.bool
 };
 LabelAndInput.defaultProps = {
-  readOnly: false
+  readOnly: false,
+  classNameInput: ""
 };
 export class LabelAndCombo extends Component {
   constructor(props) {
@@ -89,8 +91,8 @@ export class LabelAndCombo extends Component {
   };
   static defaultProps = {
     options: [
-      { value: "...", label: "op1", disable: false },
-      { value: "***", label: "op2", selected: true }
+      { uuid: "...", nome: "op1", disable: false },
+      { uuid: "***", nome: "op2", selected: true }
     ],
     disabled: false
   };
@@ -112,8 +114,8 @@ export class LabelAndCombo extends Component {
         >
           {options.map((e, key) => {
             return (
-              <option key={key} value={e.value} disabled={e.disabled}>
-                {e.label}
+              <option key={key} value={e.uuid} disabled={e.disabled}>
+                {e.nome}
               </option>
             );
           })}
@@ -153,6 +155,7 @@ export class LabelAndDate extends Component {
     minDate: dateDelta(0),
     maxDate: dateDelta(360),
     cols: "",
+    disabled: false,
     fullScreen: false,
     inline: false,
     hasIcon: true
@@ -179,6 +182,7 @@ export class LabelAndDate extends Component {
       cols,
       name,
       label,
+      disabled,
       dateFormat,
       minDate,
       maxDate,
@@ -190,15 +194,17 @@ export class LabelAndDate extends Component {
     } = this.props;
     return (
       <Grid cols={cols}>
-        <label htmlFor={name} className={"col-form-label"}>
+        {label &&<label htmlFor={name} className={"col-form-label"}>
           {label}
-        </label>
+        </label>}
         <div>
           <div
             className={
               activeCalendar
-                ? "input-group active-calendar" :
-                textoLabel ? "input-group calendar" : "input-group"
+                ? "input-group active-calendar"
+                : textoLabel
+                ? "input-group calendar"
+                : "input-group"
             }
           >
             {textoLabel && (
@@ -217,8 +223,9 @@ export class LabelAndDate extends Component {
               inline={inline}
               minDate={minDate}
               maxDate={maxDate}
+              disabled={disabled}
               className="form-control"
-              ref={(c) => this._calendar = c}
+              ref={c => (this._calendar = c)}
               onChange={this.handleChange}
               locale={ptBR}
               id={name}
@@ -364,4 +371,53 @@ export class LabelAndTextArea extends Component {
       </Grid>
     );
   }
-}
+};
+
+
+export const LabelAndTextAreaCustom = props => {
+  const {
+    cols,
+    name,
+    label,
+    input,
+    min,
+    placeholder,
+    readOnly,
+    type,
+    meta,
+    disabled,
+    classNameInput,
+  } = props;
+  return (
+    <Grid cols={cols}>
+      {label && (
+        <label htmlFor={name} className={"col-form-label"}>
+          {label}
+        </label>
+      )}
+      <textarea
+        {...input}
+        className={`form-control ${classNameInput}`}
+        disabled={disabled}
+        name={name}
+        id={name}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        type={type}
+        min={min}
+      />
+      <If isVisible={meta}>
+        <ErrorAlert meta={meta} />
+      </If>
+    </Grid>
+  );
+};
+LabelAndInput.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  readOnly: PropTypes.bool
+};
+LabelAndInput.defaultProps = {
+  readOnly: false,
+  classNameInput: ""
+};

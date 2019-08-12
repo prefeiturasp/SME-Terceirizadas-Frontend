@@ -10,7 +10,7 @@ class DashboardCODAEContainer extends Component {
         {
           id: 1,
           nome: "Butantã",
-          pedidos: 20      
+          pedidos: 20
         },
         {
           id: 2,
@@ -30,7 +30,7 @@ class DashboardCODAEContainer extends Component {
         {
           id: 5,
           nome: "Guaianases",
-          pedidos: 7 
+          pedidos: 7
         },
         {
           id: 6,
@@ -70,7 +70,7 @@ class DashboardCODAEContainer extends Component {
         {
           id: 13,
           nome: "São Miguel",
-          pedidos: 43 
+          pedidos: 43
         }
       ],
       lotes: [
@@ -147,28 +147,28 @@ class DashboardCODAEContainer extends Component {
       ],
       vision_by: [
         {
-          label: "Visão por",
-          value: ""
+          nome: "Visão por",
+          uuid: ""
         },
         {
-          label: "DRE",
-          value: "dre"
+          nome: "DRE",
+          uuid: "dre"
         },
         {
-          label: "Dia",
-          value: "day"
+          nome: "Dia",
+          uuid: "day"
         },
         {
-          label: "Semana",
-          value: "week"
+          nome: "Semana",
+          uuid: "week"
         },
         {
-          label: "Mês",
-          value: "month"
+          nome: "Mês",
+          uuid: "month"
         },
         {
-          label: "Lote",
-          value: "lote"
+          nome: "Lote",
+          uuid: "lote"
         }
       ]
     };

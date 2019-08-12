@@ -1,5 +1,5 @@
 import React from "react";
-import Relatorio from "../../components/TourRequest/Terceirizada/Relatorio";
+import Relatorio from "../../components/SolicitacaoDeKitLanche/Terceirizada/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 
 export default props => (

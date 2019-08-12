@@ -1,135 +1,78 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {
-  createOrUpdateFoodSuspension,
-  deleteFoodSuspension,
-  getSavedFoodSuspensions
-} from "../../services/foodSuspension.service";
-import { getPeriods } from "../../services/school.service";
-import { getReasons } from "../../services/foodSuspension.service";
-import { getWorkingDays } from "../../services/workingDays.service";
-import { validateSubmit } from "./ValidacaoFormulario";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
+import {
+  createAlteracaoCardapio,
+  deleteAlteracaoCardapio,
+  enviarAlteracaoCardapio,
+  getAlteracoesCardapioList,
+  updateAlteracaoCardapio
+} from "../../services/alteracaoDecardapio.service";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect
+} from "../../helpers/utilities";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Modal } from "react-bootstrap";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import {
+  LabelAndCombo,
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/foodSuspensionReducer";
 import "./style.scss";
+import { validateSubmit } from "./ValidacaoFormulario";
 
-class AlteracaoDeCardapio extends Component {
-  typeFoodContinuousProgram = [
-    {
-      label: "Lanche 4 Horas",
-      value: "Lanche 4 Horas"
-    },
-    {
-      label: "Refeição/Sobremesa",
-      value: "Refeição/Sobremesa"
-    },
-    {
-      label: "Lanche 5/6 Horas",
-      value: "Lanche 5/6 Horas"
-    },
-    {
-      label: "Sobremesa",
-      value: "Sobremesa"
-    }
-  ];
-
+class AlteracaoCardapio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      foodSuspensionList: [],
+      periodos: [],
+      loading: true,
+      alteracaoCardapioList: [],
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-      dias_razoes: [
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
-        }
-      ],
+      // TODO: Desacoplar options do nome dos períodos escolares
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
-      },
-      selectDefault: [
-        {
-          key: 0,
-          label: "Selecione",
-          value: ""
-        }
-      ],
-      enrolled: 300,
-      reasons_simple: [],
-      reasons_continuous_program: [],
-      day: new Date(),
-      periods: [],
-      typeFoodContinuousProgram: this.typeFoodContinuousProgram,
-      two_working_days: null,
-      five_working_days: null
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      }
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
-    this.addDay = this.addDay.bind(this);
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.refresh = this.refresh.bind(this);
     this.titleRef = React.createRef();
   }
 
-  handleField(field, value) {
-    if (field === "which_reason") value = value.target.value;
-    if (field === "alterar_dia") {
-      console.log("VRUM");
-      const _date = value.split("/");
-      if (
-        this.props.two_working_days <=
-          new Date(_date[2], _date[1] - 1, _date[0]) &&
-        new Date(_date[2], _date[1] - 1, _date[0]) <
-          this.props.five_working_days
-      ) {
-        this.showModal();
-      }
+  onAlterarDiaChanged(event) {
+    if (
+      checaSeDataEstaEntre2e5DiasUteis(
+        event.target.value,
+        this.props.proximos_dois_dias_uteis,
+        this.props.proximos_cinco_dias_uteis
+      )
+    ) {
+      this.showModal();
     }
   }
 
   closeModal(e) {
     this.setState({ ...this.state, showModal: false });
-  }
-
-  addDay() {
-    this.setState({
-      dias_razoes: this.state.dias_razoes.concat([
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          date: null,
-          reason: null,
-          date_from: null,
-          date_to: null,
-          weekdays: []
-        }
-      ])
-    });
   }
 
   showModal() {
@@ -138,13 +81,13 @@ class AlteracaoDeCardapio extends Component {
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
-    options[period.value] = selectedOptions;
+    options[period.nome] = selectedOptions;
     this.setState({
       ...this.state,
       options: options
     });
     this.props.change(
-      `descricoes_${period.value}.tipo_de_refeicao`,
+      `substituicoes_${period.nome}.tipo_de_refeicao`,
       selectedOptions
     );
   };
@@ -156,25 +99,27 @@ class AlteracaoDeCardapio extends Component {
     background: "#FFF7CB"
   };
 
-  OnDeleteButtonClicked(id, uuid) {
-    deleteFoodSuspension(JSON.stringify({ uuid: uuid })).then(
-      res => {
-        if (res.code === 200) {
-          toastSuccess(`Rascunho # ${id} excluído com sucesso`);
-          this.refresh();
-        } else {
-          toastError(res.log_content[0]);
+  OnDeleteButtonClicked(id_externo, uuid) {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteAlteracaoCardapio(uuid).then(
+        statusCode => {
+          if (statusCode === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      );
+    }
   }
 
   resetForm(event) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(null);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(null);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
@@ -185,58 +130,49 @@ class AlteracaoDeCardapio extends Component {
         {
           id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
           data: null,
-          razao: null,
-          data_de: null,
-          data_ate: null,
+          motivo: null,
+          observacao: null,
+          data_inicial: null,
+          data_final: null,
           weekdays: []
         }
       ],
+      // TODO: Desacoplar options dos nomes dos períodos escolares
       options: {
-        first_period: [],
-        second_period: [],
-        third_period: [],
-        fourth_period: [],
-        integrate: []
-      },
-      selectDefault: [
-        {
-          key: 0,
-          label: "Selecione",
-          value: ""
-        }
-      ]
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      }
     });
   }
 
   OnEditButtonClicked(param) {
-    this.props.reset("foodSuspension");
-    this.props.loadFoodSuspension(param.dayChange);
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.setState({
-      status: param.dayChange.status,
-      title: `Alteração de Cardápio # ${param.dayChange.id}`,
+      status: param.alteracaoDeCardapio.status,
+      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.dayChange.id,
-      dias_razoes: param.dayChange.dias_razoes,
+      id: param.alteracaoDeCardapio.id,
+      dias_razoes: param.alteracaoDeCardapio.dias_razoes,
+      // TODO: Desacoplar options dos nomes dos períodos escolares
       options: {
-        first_period:
-          param.dayChange.descricoes_first_period !== undefined
-            ? param.dayChange.descricoes_first_period.tipo_de_refeicao
+        MANHA:
+          param.alteracaoDeCardapio.substituicoes_MANHA !== undefined
+            ? param.alteracaoDeCardapio.substituicoes_MANHA.tipo_de_refeicao
             : [],
-        second_period:
-          param.dayChange.descricoes_second_period !== undefined
-            ? param.dayChange.descricoes_second_period.tipo_de_refeicao
+        TARDE:
+          param.alteracaoDeCardapio.substituicoes_TARDE !== undefined
+            ? param.alteracaoDeCardapio.substituicoes_TARDE.tipo_de_refeicao
             : [],
-        third_period:
-          param.dayChange.descricoes_third_period !== undefined
-            ? param.dayChange.descricoes_third_period.tipo_de_refeicao
+        NOITE:
+          param.alteracaoDeCardapio.substituicoes_NOITE !== undefined
+            ? param.alteracaoDeCardapio.substituicoes_NOITE.tipo_de_refeicao
             : [],
-        fourth_period:
-          param.dayChange.descricoes_fourth_period !== undefined
-            ? param.dayChange.descricoes_fourth_period.tipo_de_refeicao
-            : [],
-        integrate:
-          param.dayChange.descricoes_integrate !== undefined
-            ? param.dayChange.descricoes_integrate.tipo_de_refeicao
+        INTEGRAL:
+          param.alteracaoDeCardapio.substituicoes_INTEGRAL !== undefined
+            ? param.alteracaoDeCardapio.substituicoes_INTEGRAL.tipo_de_refeicao
             : []
       }
     });
@@ -244,38 +180,16 @@ class AlteracaoDeCardapio extends Component {
   }
 
   componentDidMount() {
-    let _two,
-      _five = null;
-    getPeriods().then(resPeriods => {
-      getReasons().then(resReasons => {
-        this.setState({
-          ...this.state,
-          periods: resPeriods.content.school_periods,
-          reasons_simple: resReasons.content.reasons_simple,
-          reasons_continuous_program:
-            resReasons.content.reasons_continuous_program
-        });
-      });
-    });
-    getWorkingDays().then(res => {
-      _two = res[0].date_two_working_days.split("/");
-      _five = res[0].date_five_working_days.split("/");
-      this.setState({
-        ...this.state,
-        two_working_days: new Date(_two[2], _two[1] - 1, _two[0]),
-        five_working_days: new Date(_five[2], _five[1] - 1, _five[0])
-      });
-    });
     this.refresh();
   }
 
   componentDidUpdate(prevProps) {
+    // TODO: Desacoplar dos nomes dos períodos escolares
     const fields = [
-      "descricoes_first_period",
-      "descricoes_second_period",
-      "descricoes_third_period",
-      "descricoes_fourth_period",
-      "descricoes_integrate"
+      "substituicoes_MANHA",
+      "substituicoes_TARDE",
+      "substituicoes_NOITE",
+      "substituicoes_INTEGRAL"
     ];
     fields.forEach(
       function(field) {
@@ -286,7 +200,7 @@ class AlteracaoDeCardapio extends Component {
           !this.props[field].check
         ) {
           let options = this.state.options;
-          const value = field.split("descricoes_")[1];
+          const value = field.split("substituicoes_")[1];
           options[value] = [];
           this.setState({
             ...this.state,
@@ -297,44 +211,100 @@ class AlteracaoDeCardapio extends Component {
         }
       }.bind(this)
     );
+    if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
+      this.setState({
+        periodos: this.props.periodos
+      });
+    }
+    const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
+    const { loading, periodos } = this.state;
+    if (
+      motivos !== [] &&
+      periodos !== [] &&
+      meusDados !== null &&
+      proximos_dois_dias_uteis !== null &&
+      loading
+    ) {
+      this.setState({
+        loading: false
+      });
+    }
   }
 
   refresh() {
-    getSavedFoodSuspensions().then(
+    getAlteracoesCardapioList().then(
       res => {
         this.setState({
           ...this.state,
-          foodSuspensionList: res.content.suspensoes_de_alimentacao
+          alteracaoCardapioList: res.results
         });
       },
       function(error) {
-        toastError("Erro ao carregar as inclusões salvas");
+        toastError("Erro ao carregar as alterações de cardápio salvas");
       }
     );
-    this.resetForm("foodSuspension");
+    this.resetForm("alteracaoCardapio");
+  }
+
+  enviaAlteracaoCardapio(uuid) {
+    enviarAlteracaoCardapio(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          this.refresh();
+          toastSuccess("Alteração de Cardápio enviada com sucesso");
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+      }
+    );
   }
 
   onSubmit(values) {
-    values.dias_razoes = this.state.dias_razoes;
+    values.escola = this.props.meusDados.escolas[0].uuid;
+    const status = values.status;
+    delete values.status;
     const error = validateSubmit(values, this.state);
     if (!error) {
-      createOrUpdateFoodSuspension(JSON.stringify(values)).then(
-        res => {
-          if (res.status === 200) {
-            toastSuccess(
-              (values.status === "SALVO"
-                ? "Rascunho salvo"
-                : "Alteração de Cardápio enviada") + " com sucesso"
-            );
-            this.refresh();
-          } else {
-            toastError(res.error);
+      if (!values.uuid) {
+        createAlteracaoCardapio(JSON.stringify(values)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.CREATED) {
+              toastSuccess("Alteração de Cardápio salva com sucesso");
+              this.refresh();
+              if (status === "DRE_A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
-        },
-        function(error) {
-          toastError("Houve um erro ao salvar a Alteração de alimentação");
-        }
-      );
+        );
+      } else {
+        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.OK) {
+              toastSuccess("Alteração de Cardápio salva com sucesso");
+              this.refresh();
+              if (status === "DRE_A_VALIDAR") {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function(error) {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          }
+        );
+      }
       this.closeModal();
     } else {
       toastError(error);
@@ -346,281 +316,275 @@ class AlteracaoDeCardapio extends Component {
       handleSubmit,
       pristine,
       submitting,
-      descricoes_first_period,
-      descricoes_second_period,
-      descricoes_third_period,
-      descricoes_fourth_period,
-      descricoes_integrate
+      periodos,
+      motivos,
+      meusDados,
+      proximos_dois_dias_uteis,
+      substituicoes_MANHA, // TODO: Desacoplar variáveis dos nomes de períodos escolares.
+      substituicoes_TARDE,
+      substituicoes_NOITE,
+      substituicoes_INTEGRAL
     } = this.props;
     const {
-      typeFoodContinuousProgram,
-      periods,
-      enrolled,
+      loading,
       title,
       options,
-      foodSuspensionList,
-      dias_razoes,
+      alteracaoCardapioList,
       showModal
     } = this.state;
+    // TODO: Desacoplar checkMap dos nomes de períodos escolares.
     let checkMap = {
-      first_period: descricoes_first_period && descricoes_first_period.check,
-      second_period: descricoes_second_period && descricoes_second_period.check,
-      third_period: descricoes_third_period && descricoes_third_period.check,
-      fourth_period: descricoes_fourth_period && descricoes_fourth_period.check,
-      integrate: descricoes_integrate && descricoes_integrate.check
+      MANHA: substituicoes_MANHA && substituicoes_MANHA.check,
+      TARDE: substituicoes_TARDE && substituicoes_TARDE.check,
+      NOITE: substituicoes_NOITE && substituicoes_NOITE.check,
+      INTEGRAL: substituicoes_INTEGRAL && substituicoes_INTEGRAL.check
     };
+    // TODO: Desacoplar colors dos nomes de períodos escolares
     const colors = {
-      first_period: "#FFF7CB",
-      second_period: "#EAFFE3",
-      third_period: "#FFEED6",
-      fourth_period: "#E4F1FF",
-      integrate: "#EBEDFF"
+      manha: "#FFF7CB",
+      tarde: "#FFEED6",
+      noite: "#E4F1FF",
+      integral: "#EBEDFF"
     };
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit}>
-          <Field component={"input"} type="hidden" name="uuid" />
-          <CardMatriculados numeroAlunos={enrolled} />
-          {foodSuspensionList.length > 0 && (
-            <div className="mt-3">
-              <span className="page-title">Rascunhos</span>
-              <Rascunhos
-                foodSuspensionList={foodSuspensionList}
-                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                resetForm={event => this.resetForm(event)}
-                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-              />
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          <form onSubmit={this.props.handleSubmit}>
+            <Field component={"input"} type="hidden" name="uuid" />
+            <CardMatriculados
+              numeroAlunos={meusDados.escolas[0].quantidade_alunos}
+            />
+            {alteracaoCardapioList.length > 0 && (
+              <div className="mt-3">
+                <span className="page-title">Rascunhos</span>
+                <Rascunhos
+                  alteracaoCardapioList={alteracaoCardapioList}
+                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                  resetForm={event => this.resetForm(event)}
+                  OnEditButtonClicked={params =>
+                    this.OnEditButtonClicked(params)
+                  }
+                />
+              </div>
+            )}
+            <div ref={this.titleRef} className="form-row mt-3 ml-1">
+              <h3 className="font-weight-bold" style={{ color: "#353535" }}>
+                {title}
+              </h3>
             </div>
-          )}
-          <div ref={this.titleRef} className="form-row mt-3 ml-1">
-            <h3 className="font-weight-bold" style={{ color: "#353535" }}>
-              {title}
-            </h3>
-          </div>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div
-                className="card-title font-weight-bold"
-                style={this.fontHeader}
-              >
-                Descrição da Alteração
-              </div>
-              <div className="form-row">
-                <div className="form-group col-sm-3">
+            <div className="card mt-3">
+              <div className="card-body">
+                <div
+                  className="card-title font-weight-bold"
+                  style={this.fontHeader}
+                >
+                  Descrição da Alteração
+                </div>
+                <div className="form-row">
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      onBlur={event => this.onAlterarDiaChanged(event)}
+                      name="alterar_dia"
+                      minDate={proximos_dois_dias_uteis}
+                      label="Alterar dia"
+                      disabled={
+                        this.props.data_inicial || this.props.data_final
+                      }
+                    />
+                  </div>
+                  <div className="or-div form-group col-sm-1">Ou</div>
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      name="data_inicial"
+                      label="De"
+                      disabled={this.props.alterar_dia}
+                    />
+                  </div>
+                  <div className="form-group col-sm-3">
+                    <Field
+                      component={LabelAndDate}
+                      name="data_final"
+                      label="Até"
+                      disabled={this.props.alterar_dia}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
                   <Field
-                    component={LabelAndDate}
-                    onChange={value => this.handleField("alterar_dia", value)}
-                    name="alterar_dia"
-                    label="Alterar dia"
+                    component={LabelAndCombo}
+                    name="motivo"
+                    label="Motivo"
+                    options={motivos}
                     validate={required}
                   />
                 </div>
-                <div className="or-div form-group col-sm-1">Ou</div>
-                <div className="form-group col-sm-3">
-                  <Field
-                    component={LabelAndDate}
-                    onChange={value => this.handleField("data_de", value)}
-                    name="data_de"
-                    label="De"
-                    validate={required}
-                  />
-                </div>
-                <div className="form-group col-sm-3">
-                  <Field
-                    component={LabelAndDate}
-                    onChange={value => this.handleField("data_ate", value)}
-                    name="data_ate"
-                    label="Até"
-                    validate={required}
-                  />
-                </div>
-              </div>
-              <table className="table table-borderless">
-                <tr>
-                  <td>Período</td>
-                  <td style={{ paddingLeft: "9rem" }}>Tipo de Alimentação</td>
-                  <td>Nº de Alunos</td>
-                </tr>
-              </table>
-              {periods.map((period, key) => {
-                this.props.change(
-                  `descricoes_${period.value}.periodo`,
-                  period.value
-                );
-                return (
-                  <FormSection name={`descricoes_${period.value}`}>
-                    <div className="form-row">
-                      <Field component={"input"} type="hidden" name="value" />
-                      <div className="form-check col-md-3 mr-4 ml-4">
-                        <div
-                          className="pl-5 pt-2 pb-2"
-                          style={{
-                            marginLeft: "-1.4rem",
-                            background: colors[period.value],
-                            borderRadius: "7px"
-                          }}
-                        >
-                          <label htmlFor="check" className="checkbox-label">
-                            <Field
-                              component={"input"}
-                              type="checkbox"
-                              name="check"
-                            />
-                            <span
-                              onClick={() =>
-                                this.props.change(
-                                  `descricoes_${period.value}.check`,
-                                  !checkMap[period.value]
-                                )
-                              }
-                              className="checkbox-custom"
-                            />{" "}
-                            {period.label}
-                          </label>
-                        </div>
-                      </div>
-                      <div className="form-group col-md-5 mr-5">
-                        <div
-                          className={
-                            checkMap[period.value]
-                              ? "multiselect-wrapper-enabled"
-                              : "multiselect-wrapper-disabled"
-                          }
-                        >
-                          <Field
-                            component={StatefulMultiSelect}
-                            name=".tipo_de_refeicao"
-                            selected={options[period.value] || []}
-                            options={
-                              dias_razoes[0].razao &&
-                              dias_razoes[0].razao.includes("Programa Contínuo")
-                                ? typeFoodContinuousProgram
-                                : period.meal_types
-                            }
-                            onSelectedChanged={values =>
-                              this.handleSelectedChanged(values, period)
-                            }
-                            disableSearch={true}
-                            overrideStrings={{
-                              selectSomeItems: "Selecione",
-                              allItemsAreSelected:
-                                "Todos os itens estão selecionados",
-                              selectAll: "Todos"
+                <table className="table table-borderless">
+                  <tr>
+                    <td>Período</td>
+                    <td style={{ paddingLeft: "9rem" }}>Tipo de Alimentação</td>
+                    <td>Nº de Alunos</td>
+                  </tr>
+                </table>
+                {periodos.map((period, key) => {
+                  this.props.change(
+                    `substituicoes_${period.nome}.periodo`,
+                    period.uuid
+                  );
+
+                  return (
+                    <FormSection name={`substituicoes_${period.nome}`}>
+                      <div className="form-row">
+                        <Field component={"input"} type="hidden" name="value" />
+                        <div className="form-check col-md-3 mr-4 ml-4">
+                          <div
+                            className="pl-5 pt-2 pb-2"
+                            style={{
+                              marginLeft: "-1.4rem",
+                              background: colors[period.nome.toLowerCase()],
+                              borderRadius: "7px"
                             }}
+                          >
+                            <label htmlFor="check" className="checkbox-label">
+                              <Field
+                                component={"input"}
+                                type="checkbox"
+                                name="check"
+                              />
+                              <span
+                                onClick={() =>
+                                  this.props.change(
+                                    `substituicoes_${period.nome}.check`,
+                                    !checkMap[period.nome]
+                                  )
+                                }
+                                className="checkbox-custom"
+                              />{" "}
+                              {period.nome}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="form-group col-md-5 mr-5">
+                          <div
+                            className={
+                              checkMap[period.nome]
+                                ? "multiselect-wrapper-enabled"
+                                : "multiselect-wrapper-disabled"
+                            }
+                          >
+                            <Field
+                              component={StatefulMultiSelect}
+                              name=".tipo_de_refeicao"
+                              selected={options[period.nome] || []}
+                              options={formatarParaMultiselect(
+                                period.tipos_alimentacao
+                              )}
+                              onSelectedChanged={values =>
+                                this.handleSelectedChanged(values, period)
+                              }
+                              disableSearch={true}
+                              overrideStrings={{
+                                selectSomeItems: "Selecione",
+                                allItemsAreSelected:
+                                  "Todos os itens estão selecionados",
+                                selectAll: "Todos"
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="form-group col-md-2">
+                          <Field
+                            component={LabelAndInput}
+                            type="number"
+                            name="numero_de_alunos"
+                            min="0"
+                            className="form-control"
+                            validate={checkMap[period.nome] ? required : null}
                           />
                         </div>
                       </div>
-                      <div className="form-group col-md-2">
-                        <Field
-                          component={LabelAndInput}
-                          disabled={
-                            options[period.value].length === 0 ||
-                            !checkMap[period.value]
-                          }
-                          type="number"
-                          name="numero_de_alunos"
-                          min="0"
-                          className="form-control"
-                          validate={checkMap[period.value] ? required : null}
-                        />
-                      </div>
-                    </div>
-                  </FormSection>
-                );
-              })}
-              <hr className="w-100" />
-              <div className="form-group">
-                <Field
-                  component={LabelAndTextArea}
-                  placeholder="Campo opcional"
-                  label="Observações"
-                  name="obs"
-                />
-              </div>
-              <div className="form-group row float-right mt-4">
-                <BaseButton
-                  label="Cancelar"
-                  onClick={event => this.resetForm(event)}
-                  disabled={pristine || submitting}
-                  style={ButtonStyle.OutlinePrimary}
-                />
-                <BaseButton
-                  label={this.state.salvarAtualizarLbl}
-                  disabled={pristine || submitting}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: "SALVO",
-                      salvo_em: new Date(),
-                      id: this.state.id
-                    })
-                  )}
-                  className="ml-3"
-                  type={ButtonType.SUBMIT}
-                  style={ButtonStyle.OutlinePrimary}
-                />
-                <BaseButton
-                  label="Enviar Solicitação"
-                  disabled={pristine || submitting}
-                  type={ButtonType.SUBMIT}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: "A_VALIDAR"
-                    })
-                  )}
-                  style={ButtonStyle.Primary}
-                  className="ml-3"
-                />
+                    </FormSection>
+                  );
+                })}
+                <hr className="w-100" />
+                <div className="form-group">
+                  <Field
+                    component={LabelAndTextArea}
+                    placeholder="Campo opcional"
+                    label="Observações"
+                    name="observacao"
+                  />
+                </div>
+                <div className="form-group row float-right mt-4">
+                  <BaseButton
+                    label="Cancelar"
+                    onClick={event => this.resetForm(event)}
+                    disabled={pristine || submitting}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label={this.state.salvarAtualizarLbl}
+                    disabled={pristine || submitting}
+                    onClick={handleSubmit(values => this.onSubmit(values))}
+                    className="ml-3"
+                    type={ButtonType.SUBMIT}
+                    style={ButtonStyle.OutlinePrimary}
+                  />
+                  <BaseButton
+                    label="Enviar Solicitação"
+                    disabled={pristine || submitting}
+                    type={ButtonType.SUBMIT}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values,
+                        status: "DRE_A_VALIDAR"
+                      })
+                    )}
+                    style={ButtonStyle.Primary}
+                    className="ml-3"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          <Modal show={showModal} onHide={this.closeModal}>
-            <Modal.Header closeButton>
-              <Modal.Title>Atenção</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              Atenção, a solicitação está fora do prazo contratual (entre{" "}
-              <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-              disponibilidade dos alimentos adequados para o cumprimento do
-              cardápio.
-            </Modal.Body>
-            <Modal.Footer>
-              <BaseButton
-                label="OK"
-                type={ButtonType.BUTTON}
-                onClick={this.closeModal}
-                style={ButtonStyle.Primary}
-                className="ml-3"
-              />
-            </Modal.Footer>
-          </Modal>
-        </form>
+            <ModalDataPrioritaria
+              showModal={showModal}
+              closeModal={this.closeModal}
+            />
+          </form>
+        )}
       </div>
     );
   }
 }
 
-const AlteracaoDeCardapioForm = reduxForm({
-  form: "alteracaoDeCardapio",
+const AlteracaoCardapioForm = reduxForm({
+  form: "alteracaoCardapio",
   enableReinitialize: true
-})(AlteracaoDeCardapio);
-const selector = formValueSelector("alteracaoDeCardapio");
+})(AlteracaoCardapio);
+const selector = formValueSelector("alteracaoCardapio");
+
 const mapStateToProps = state => {
   return {
-    initialValues: state.foodSuspension.data,
-    descricoes_first_period: selector(state, "descricoes_first_period"),
-    descricoes_second_period: selector(state, "descricoes_second_period"),
-    descricoes_third_period: selector(state, "descricoes_third_period"),
-    descricoes_fourth_period: selector(state, "descricoes_fourth_period"),
-    descricoes_integrate: selector(state, "descricoes_integrate")
+    initialValues: state.alteracaoCardapio.data,
+    // TODO: Desacoplar do nome dos períodos escolares
+    substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
+    substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
+    substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
+    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL"),
+    data_inicial: selector(state, "data_inicial"),
+    data_final: selector(state, "data_final"),
+    alterar_dia: selector(state, "alterar_dia")
   };
 };
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadFoodSuspension
+      loadAlteracaoCardapio
     },
     dispatch
   );
@@ -628,4 +592,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AlteracaoDeCardapioForm);
+)(AlteracaoCardapioForm);

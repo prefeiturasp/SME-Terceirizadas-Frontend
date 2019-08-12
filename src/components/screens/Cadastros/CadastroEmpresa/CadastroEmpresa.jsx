@@ -1,19 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
-  required,
-  email,
-  phoneNumber
+  required
 } from "../../../../helpers/fieldValidators";
 import "../style.scss";
-import { getDiretoriaRegional } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep, fieldTel } from "./helper";
+import { getLotes } from "../../../../services/diretoriaRegional.service";
+import {
+  transformaObjetos,
+  fieldCnpj,
+  fieldCep,
+  fieldTel
+} from "./helper";
 import { toastSuccess } from "../../../Shareable/dialogs";
+import { ContatosEmpresa } from "./ContatosEmpresa";
+import { ContatosTerceirizada } from "./ContatosTerceirizada";
+import { EditalInput } from "./EditalInputForm";
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -26,11 +32,15 @@ class CadastroEmpresa extends Component {
   }
 
   componentDidMount() {
-    getDiretoriaRegional().then(response => {
-      let lotes = transformaObjetos(response);
-      this.setState({ lotes });
-    });
-  }
+    getLotes()
+      .then(response => {
+        let lotes = transformaObjetos(response);
+        this.setState({ lotes });
+      })
+      .catch(error => {
+        console.log(error)
+      })    
+  };
 
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
@@ -80,252 +90,211 @@ class CadastroEmpresa extends Component {
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>
           <div className="card">
-            <div className="card-body">
-              <div className="row">
-                <div className="col-12">
-                  <label className="font-weight-bold">Dados da Empresa</label>
+            <div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-12">
+                    <label className="font-weight-bold">Dados da Empresa</label>
+                  </div>
                 </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                    <label className="link">
-                      Consulta de empresas cadastradas
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                      <BaseButton
+                        label="Consulta de empresas cadastradas"
+                        style={ButtonStyle.OutlinePrimary}
+                      />
+                    </Link>
+                  </div>
+                </div>
+                <div className="row pt-3">
+                  <div className="col-9">
+                    <label className="label">
+                      <span>* </span>Razão social
                     </label>
-                  </Link>
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-9">
-                  <label className="label">
-                    <span>* </span>Razão social
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="razão_social"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-3">
-                  <label className="label">
-                    <span>* </span>CNPJ
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="cnpj"
-                    {...fieldCnpj}
-                    validate={required}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-9">
-                  <label className="label">Nome Fantasia</label>
-                  <Field component={LabelAndInput} name="nome_fantasia" />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-10">
-                  <label className="label">
-                    <span>* </span>Endereço
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="endereco"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-2">
-                  <label className="label">
-                    <span>* </span>CEP
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="cep"
-                    {...fieldCep}
-                    validate={required}
-                  />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_empresa"
-                    {...fieldTel}
-                    validate={[required, phoneNumber]}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_empresa"
-                    validate={[required, email]}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>Representante Legal
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="representante_legal"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">Contato</label>
-                  <Field component={LabelAndInput} name="contato" />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>Nutricionista Responsavel Técnico
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="nutricionista"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">CRN</label>
-                  <Field component={LabelAndInput} name="crn" />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Telefone/Fax
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="telefone_nutricionista"
-                    {...fieldTel}
-                    validate={required}
-                  />
-                </div>
-                <div className="col-7">
-                  <label className="label">
-                    <span>* </span>E-mail
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="email_nutricionista"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-6">
-                  <label className="label">
-                    <span>* </span>Edital de Pregão n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="edital"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-5">
-                  <label className="label">
-                    <span>* </span>Contrato n°
-                  </label>
-                  <Field
-                    component={LabelAndInput}
-                    name="contrato"
-                    validate={required}
-                  />
-                </div>
-                <div className="col-1 button-action">
-                  <BaseButton label="+" style={ButtonStyle.OutlineInfo} doNotSetSizeProperties/>
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-12">
-                  <label className="label">Lotes de atendimento</label>
-
-                  {this.state.lotes.length ? (
                     <Field
-                      component={StatefulMultiSelect}
-                      name="lotes"
-                      selected={this.state.lotesSelecionados}
-                      options={this.state.lotes}
-                      valueRenderer={this.renderizarLabelLote}
-                      onSelectedChanged={value =>
-                        this.lidarComSelecionados(value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
+                      component={LabelAndInput}
+                      name="razão_social"
+                      validate={required}
                     />
-                  ) : (
-                    <div className="col-6">Carregando lotes..</div>
-                  )}
+                  </div>
+                  <div className="col-3">
+                    <label className="label">
+                      <span>* </span>CNPJ
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="cnpj"
+                      {...fieldCnpj}
+                      validate={required}
+                    />
+                  </div>
                 </div>
-                <div className="col-12">
-                  {this.state.lotesSelecionados.length > 0 && (
-                    <div className="row pt-3">
-                      <div className="col-12">
-                        <label className="label-selected-unities">
-                          Lotes Selecionados
-                        </label>
-                        {this.state.lotesSelecionados.map((lote, indice) => {
-                          return (
-                            <div
-                              className="value-selected-unities"
-                              key={indice}
-                            >
-                              {lote}
-                            </div>
-                          );
-                        })}
-                      </div>
+                <div className="row pt-3">
+                  <div className="col-9">
+                    <label className="label">Nome Fantasia</label>
+                    <Field component={LabelAndInput} name="nome_fantasia" />
+                  </div>
+                </div>
+
+                <div className="row pt-3">
+                  <div className="col-10">
+                    <label className="label">
+                      <span>* </span>Endereço
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="endereco"
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-2">
+                    <label className="label">
+                      <span>* </span>CEP
+                    </label>
+                    <Field
+                      component={LabelAndInput}
+                      name="cep"
+                      {...fieldCep}
+                      validate={required}
+                    />
+                  </div>
+                </div>
+
+                <FieldArray
+                  name="contatos-empresa"
+                  component={ContatosEmpresa}
+                />
+              </div>
+
+              <hr className="linha-form" />
+
+              <div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-7">
+                      <label className="label">
+                        <span>* </span>Representante Legal
+                      </label>
+                      <Field
+                        component={LabelAndInput}
+                        name="representante_legal"
+                        validate={required}
+                      />
                     </div>
-                  )}
+                    <div className="col-5">
+                      <label className="label">Telefone</label>
+                      <Field
+                        component={LabelAndInput}
+                        name="telefone_representante_legal"
+                        {...fieldTel}
+                        validate={required}
+                      />
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-7">
+                      <label className="label">
+                        <span>* </span>Email
+                      </label>
+                      <Field
+                        component={LabelAndInput}
+                        name="email_representante_legal"
+                        validate={required}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="float-right button-container pt-3">
-                <div className="button-submit">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
+              <hr className="linha-form" />
+
+              <div>
+                <div className="card-body">
+                  <FieldArray
+                    name="contatos-terceirizada"
+                    component={ContatosTerceirizada}
                   />
-                  <BaseButton
-                    label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario())}
-                    className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.Primary}
-                  />
+                </div>
+              </div>
+
+              <hr className="linha-form" />
+
+              <div>
+                <div className="card-body">
+
+
+                  <FieldArray name="edital" component={EditalInput} />
+
+
+
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <label className="label">Lotes de atendimento</label>
+
+                      {this.state.lotes.length ? (
+                        <Field
+                          component={StatefulMultiSelect}
+                          name="lotes"
+                          selected={this.state.lotesSelecionados}
+                          options={this.state.lotes}
+                          valueRenderer={this.renderizarLabelLote}
+                          onSelectedChanged={value =>
+                            this.lidarComSelecionados(value)
+                          }
+                          overrideStrings={{
+                            search: "Busca",
+                            selectSomeItems: "Selecione",
+                            allItemsAreSelected:
+                              "Todos os itens estão selecionados",
+                            selectAll: "Todos"
+                          }}
+                        />
+                      ) : (
+                        <div className="col-6">Carregando lotes..</div>
+                      )}
+                    </div>
+                    <div className="col-12">
+                      {this.state.lotesSelecionados.length > 0 && (
+                        <div className="row pt-3">
+                          <div className="col-12">
+                            <label className="label-selected-unities">
+                              Lotes Selecionados
+                            </label>
+                            {this.state.lotesSelecionados.map(
+                              (lote, indice) => {
+                                return (
+                                  <div
+                                    className="value-selected-unities"
+                                    key={indice}
+                                  >
+                                    {lote}
+                                  </div>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="button-container">
+                    <div className="button-submit">
+                      <BaseButton
+                        label="Cancelar"
+                        onClick={event => this.resetForm(event)}
+                        style={ButtonStyle.OutlinePrimary}
+                      />
+                      <BaseButton
+                        label={"Salvar"}
+                        onClick={handleSubmit(values => this.salvaFormulario())}
+                        className="ml-3"
+                        type={ButtonType.SUBMIT}
+                        style={ButtonStyle.Primary}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -337,8 +306,7 @@ class CadastroEmpresa extends Component {
 }
 
 const CadastroEmpresaForm = reduxForm({
-  form: "cadastroEmpresaForm",
-  enableReinitialize: true
+  form: "cadastroEmpresaForm"
 })(CadastroEmpresa);
 
 const selector = formValueSelector("cadastroEmpresaForm");

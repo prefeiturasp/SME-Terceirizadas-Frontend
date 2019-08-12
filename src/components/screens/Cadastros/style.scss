@@ -42,14 +42,6 @@
     font-size: 12px;
     color: #353535;
   }
-  .dropdown-content {
-    position: relative !important;
-    label[aria-selected="true"] {
-      font-weight: bold !important;
-      color: white !important;
-      background-color: #109cf1 !important;
-    }
-  }
 }
 
 .modal-cadastro-lote {
@@ -80,7 +72,7 @@ table.cadastro {
     }
   }
 
-  th, tr:last-child {
+  th {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
@@ -89,11 +81,6 @@ table.cadastro {
     padding-bottom: 10px;
     &:first-child {
       padding-left: 20px;
-    }
-  }
-  tr:last-child {
-    td {
-      padding-bottom: 50px;
     }
   }
   td {
@@ -147,9 +134,6 @@ table.cadastro {
       }
       &:first-child {
         padding-left: 20px;
-        &.blueish {
-          color: #035d96;
-        }
       }
       &.last-item {
         padding-bottom: 30px;
@@ -262,28 +246,53 @@ table.cadastro-empresa {
   tr {
     td.container-detalhe {
       background: #f2fbfe;
-      padding: 15px 20px 15px 0px;
-      div.container-info {
+      padding: 0px 20px 15px 0px;
+
+      .secao-empresa {
         display: grid;
-        grid-template-columns: 46% 54%;
-        grid-template-rows: 20% 20% 20% 20% 20%;
 
-        div:not(:first-child):not(:nth-child(1)) {
-          padding: 10px 0 5px;
+        .endereco-empresa {
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+        .contato-empresa {
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
+        }
+      }
+
+      .secao-representante {
+        display: grid;
+
+        .nome-representante {
+          display: grid;
+          grid-template-columns: 60% 40%;
+        }
+        .contato-representante {
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 40% 60%;
         }
 
-        div ul {
-          list-style: none;
-          padding: 0;
-        }
-
-        li {
-          font-weight: bold;
-          color: #353535;
+        .contato-nutri {
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 60% 40%;
         }
       }
     }
+    .linha-detalhe {
+      margin: 1.5em 2em 1em 0;
+      border: 1px #a8a8a8 solid;
+    }
   }
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10%;
 }
 
 .button-action {
@@ -306,4 +315,162 @@ table.cadastro-empresa {
     width: 50%;
     padding-left: 15px;
   }
+}
+
+.container-fields {
+  display: grid;
+  grid-template-columns: 95% 5%;
+
+  .fields-set {
+    display: grid;
+    grid-template-columns: 38% 58%;
+    grid-template-rows: 50% 50%;
+    grid-column-gap: 4%;
+  }
+
+  .fields-set-edital {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: 52% 44%;
+    grid-column-gap: 4%;
+  }
+
+  .fields-set-edital-plus {
+    display: flex;
+    justify-content: flex-end;
+
+    div {
+      width: 44%;
+    }
+  }
+
+  .button-field {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
+.linha-form {
+  margin: 0 !important;
+}
+
+.dropdown-content {
+  position: relative !important;
+}
+
+.lista-lotes {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    font-weight: bold;
+    color: #353535;
+  }
+}
+
+.pesquisar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 2em;
+
+  i {
+    margin: 0.5em;
+  }
+}
+
+.btn-action {
+  padding-right: 2em !important;
+}
+
+section {
+  display: flex;
+
+  .header-form {
+    padding: 1.5em 32px 0 32px;
+
+    nav {
+      color: #686868;
+    }
+
+    .header-button {
+      margin-top: 0.5em;
+      width: 242px;
+      height: 40px;
+      border-radius: 4px;
+      border: solid 1px #035d96;
+    }
+  }
+
+  .dados-editais {
+    display: grid;
+    grid-template-rows: auto;
+    grid-row-gap: 1em;
+  }
+
+  .input-duplo {
+    display: grid;
+    grid-template-columns: 48% 48%;
+    grid-template-rows: 15px 60px;
+    grid-column-gap: 4%;
+  }
+
+  .input-unico {
+    display: grid;
+  }
+
+  .titulo {
+    padding: 0 32px;
+  }
+}
+.data-processo-adm {
+  display: grid;
+  grid-template-columns: 90% 10%;
+
+  .inputs-processo {
+    display: grid;
+    grid-template-columns: 68% 28%;
+    grid-column-gap: 4%;
+  }
+}
+
+.inputs-select-lote-dre {
+  display: grid;
+  grid-template-columns: 48% 48%;
+  grid-column-gap: 4%;
+}
+
+.container-lote-dre {
+  margin: 1.5em 0;
+}
+
+.section-contrato-vigencia {
+  display: grid;
+  grid-template-columns: 41% 50% 3%;
+  grid-column-gap: 2%;
+  margin-bottom: 1em;
+
+  section {
+    .colunas {
+      display: grid;
+      grid-template-columns: 48% 48%;
+      grid-column-gap: 2%;
+      margin-top: 1em;
+
+      .coluna {
+        display: grid;
+        grid-template-columns: 100%;
+      }
+    }
+  }
+
+  aside {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
+.contrato {
+  margin-top: 1em;
 }
