@@ -53,7 +53,7 @@ export const removerInclusaoDeAlimentacaoNormal = async uuid => {
   };
   let status = 0;
   return await fetch(
-    `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}`,
+    `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/`,
     OBJ_REQUEST
   )
     .then(res => {
@@ -84,7 +84,7 @@ export const getInclusoesNormaisSalvas = () => {
 };
 
 export const inicioPedidoNormal = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio_de_pedido`;
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -149,7 +149,7 @@ export const removerInclusaoDeAlimentacaoContinua = async uuid => {
   };
   let status = 0;
   return await fetch(
-    `${API_URL}/inclusoes-alimentacao-continua/${uuid}`,
+    `${API_URL}/inclusoes-alimentacao-continua/${uuid}/`,
     OBJ_REQUEST
   )
     .then(res => {
@@ -180,7 +180,7 @@ export const getInclusoesContinuasSalvas = () => {
 };
 
 export const inicioPedidoContinua = uuid => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/inicio_de_pedido`;
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",

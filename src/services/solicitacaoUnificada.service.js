@@ -47,7 +47,7 @@ export const atualizarSolicitacaoUnificada = (uuid, payload) => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/inicio-pedido`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -88,7 +88,7 @@ export const removerSolicitacaoUnificada = async uuid => {
   };
   let status = 0;
   return await fetch(
-    `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}`,
+    `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/`,
     OBJ_REQUEST
   )
     .then(res => {
