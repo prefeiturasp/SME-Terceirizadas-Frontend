@@ -6,6 +6,7 @@ import {
   getLotes,
   getDiretoriaregional
 } from "../../../../services/diretoriaRegional.service";
+import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
 import {
   normalizaLabelValueLote,
@@ -25,6 +26,13 @@ class EditaisContratos extends Component {
       empresas: [],
       forms: ["secaoEdital0"],
 
+      edital: {
+        tipo_contratacao: null,
+        numero: null,
+        numero_processo: null,
+        resumo: null
+      },
+
       contratos_relacionados: [
         {
           vigencias: [
@@ -37,17 +45,34 @@ class EditaisContratos extends Component {
           processo_administrativo: null,
           data_proposta: null,
           lotes: null,
+          lotes_nomes: null,
           dres: null,
-          empresas: null
+          dres_nomes: null,
+          empresas: null,
+          empresas_nomes: null
+
         }
-      ]
+      ],
+      exibirModal: true,
+      edital_contratos: null,
     };
+    this.exibirModal = this.exibirModal.bind(this);
+    this.fecharModal = this.fecharModal.bind(this);
     this.obtemDadosParaSubmit = this.obtemDadosParaSubmit.bind(this);
     this.adicionaVigenciaContrato = this.adicionaVigenciaContrato.bind(this);
     this.adicionaNumeroContrato = this.adicionaNumeroContrato.bind(this);
+    this.adicionaFieldsFormEdital = this.adicionaFieldsFormEdital.bind(this);
   }
 
-  adicionaNumeroContrato(indice, numero_contrato){
+  exibirModal() {
+    this.setState({ exibirModal: true });
+  }
+
+  fecharModal(e) {
+    this.setState({ exibirModal: false });
+  }
+
+  adicionaNumeroContrato(indice, numero_contrato) {
     const contratos_relacionados = this.state.contratos_relacionados;
     contratos_relacionados[indice].numero_contrato = numero_contrato;
     this.setState({
@@ -55,26 +80,29 @@ class EditaisContratos extends Component {
     });
   }
 
+  adicionaFieldsFormEdital(field, value) {
+    let edital = this.state.edital;
+    edital[field] = value;
+    this.setState({ edital });
+  }
+
   salvaFormulario(values) {
-    console.log(values);
-    console.log(this.state.contratos_relacionados)
+    const edital_contratos = this.state.edital;
+    edital_contratos['contratos_relacionados'] = this.state.contratos_relacionados
+    this.setState({ edital_contratos })
+    this.exibirModal()
   }
 
   obtemDadosParaSubmit(field, value, key) {
     let contratos_relacionados = this.state.contratos_relacionados;
     contratos_relacionados[key][field] = value;
-    this.setState({
-      ...this.state,
-      contratos_relacionados: contratos_relacionados
-    });
+    this.setState({ contratos_relacionados });
   }
 
   adicionaVigenciaContrato(indice, vigencias) {
     const contratos_relacionados = this.state.contratos_relacionados;
     contratos_relacionados[indice].vigencias = vigencias;
-    this.setState({
-      contratos_relacionados
-    });
+    this.setState({ contratos_relacionados });
   }
 
   adicionaContratosRelacionados() {
@@ -125,10 +153,21 @@ class EditaisContratos extends Component {
 
   render() {
     const { handleSubmit } = this.props;
-    const { lotes, forms, diretoriasRegionais, empresas } = this.state;
-    {console.log(this.state.contratos_relacionados)}
+    const {
+      lotes,
+      forms,
+      diretoriasRegionais,
+      empresas,
+      exibirModal,
+      edital_contratos
+    } = this.state;
     return (
       <section className="cadastro pt-3">
+        <ModalCadastroEdital 
+          closeModal={this.fecharModal}
+          showModal={exibirModal}
+          edital_contratos={edital_contratos}
+        />
         <div className="card">
           <form onSubmit={handleSubmit}>
             <header className="header-form">
@@ -141,7 +180,9 @@ class EditaisContratos extends Component {
                 />
               </Link>
             </header>
-            <SectionFormEdital />
+            <SectionFormEdital
+              adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
+            />
             <hr />
             <nav className="titulo">Contratos relacionados</nav>
             {forms.map((formEdital, key) => {
@@ -184,9 +225,7 @@ class EditaisContratos extends Component {
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values =>
-                      this.salvaFormulario(values)
-                    )}
+                    onClick={handleSubmit(values => this.salvaFormulario(values))}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}

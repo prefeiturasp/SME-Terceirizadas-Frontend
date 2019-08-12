@@ -69,3 +69,10 @@ export const renderizarLabelEmpresa = (selected, options) => {
   }
   return `${selected.length} empresas selecionadas`;
 };
+
+
+export const montaEstadoEditalEContrato = (edital, contratos) => {
+  const editalContrato = edital;
+  editalContrato['contratos_relacionados'] = contratos;
+  return editalContrato
+}

@@ -90,7 +90,7 @@ class ContratosRelacionados extends Component {
       const indice = lotes.findIndex(lote => lote.value === value);
       lotesNomesSelecionados.push(lotes[indice].label);
     });
-    this.setState({ lotesSelecionados: values, lotesNomesSelecionados });
+    this.setState({ lotesSelecionados: values, lotesNomesSelecionados }); 
 
   }
 
