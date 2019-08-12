@@ -144,7 +144,7 @@ export const getSolicitacoesKitLancheApi = async () => {
   };
 
   return await fetch(
-    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes`,
+    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes/`,
     OBJ_REQUEST
   )
     .then(response => {
