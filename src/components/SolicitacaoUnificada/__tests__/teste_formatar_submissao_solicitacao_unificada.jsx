@@ -3,6 +3,7 @@ import { formatarSubmissao } from "../helper";
 describe("Teste formatarSubmissão Solicitação Unificada", () => {
   const solicitacaoKitLanche = {
     data: "02/08/2019",
+    diretoria_regional: "dae78a0b-b16d-4bbe-aa96-b91d906199bc",
     motivo: "a84e782a-2851-4e67-8d84-502529079f0a",
     descricao: "<p></p>\n",
     quantidade_max_alunos_por_escola: null,
@@ -13,9 +14,6 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
       {
         checked: true,
         tempo_passeio: "4h",
-        diretoria_regional: {
-          uuid: "dae78a0b-b16d-4bbe-aa96-b91d906199bc"
-        },
         quantidade_alunos: "22",
         nro_alunos: "33",
         kit_lanche: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
