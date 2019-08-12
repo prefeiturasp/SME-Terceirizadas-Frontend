@@ -107,24 +107,24 @@ class OrdersDashboardContainer extends Component {
       pedidos: pedidos,
       vision_by: [
         {
-          label: "Visão por dia",
-          value: ""
+          nome: "Visão por dia",
+          uuid: ""
         },
         {
-          label: "Dia",
-          value: "day"
+          nome: "Dia",
+          uuid: "day"
         },
         {
-          label: "Semana",
-          value: "week"
+          nome: "Semana",
+          uuid: "week"
         },
         {
-          label: "Mês",
-          value: "month"
+          nome: "Mês",
+          uuid: "month"
         },
         {
-          label: "Lote",
-          value: "lote"
+          nome: "Lote",
+          uuid: "lote"
         }
       ]
     };
