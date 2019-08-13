@@ -11,8 +11,8 @@ import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistori
 import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
-import KitsLancheOrdersPage from "../pages/DRE/KitLancheOrdersPage";
-import KitsLancheRelatorioPage from "../pages/DRE/KitLancheRelatorioPage";
+import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
+import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
@@ -32,6 +32,7 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
+import PainelPedidosPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 
 const routesConfig = [
   {
@@ -87,6 +88,11 @@ const routesConfig = [
   {
     path: "/dre/solicitacoes",
     component: StatusSolicitacoesDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/inclusoes-de-alimentacao",
+    component: PainelPedidosPage,
     exact: false
   },
   {

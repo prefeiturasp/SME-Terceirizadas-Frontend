@@ -198,6 +198,25 @@ export const inicioPedidoContinua = uuid => {
     });
 };
 
+export const confirmaPedidoContinua = uuid => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/confirma_pedido`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getMotivosInclusaoContinua = () => {
   const url = `${API_URL}/motivos-inclusao-continua/`;
   const OBJ_REQUEST = {

@@ -29,6 +29,7 @@ export class CardPendenciaAprovacao extends Component {
   render() {
     const { titulo, tipoDeCard, totalDePedidos, totalDeEscolas } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
+    console.log(pedidosFiltrados);
     return (
       <div className="card card-pendency-approval">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
