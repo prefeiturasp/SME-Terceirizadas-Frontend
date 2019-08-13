@@ -31,6 +31,8 @@ export const normalizaLabelValueEmpresa = response => {
   return empresas;
 };
 
+
+
 export const renderizarLabelLote = (selected, options) => {
   if (selected.length === 0) {
     return "Selecione um ou mais lotes...";
@@ -76,3 +78,4 @@ export const montaEstadoEditalEContrato = (edital, contratos) => {
   editalContrato['contratos_relacionados'] = contratos;
   return editalContrato
 }
+

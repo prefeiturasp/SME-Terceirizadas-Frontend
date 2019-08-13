@@ -1,30 +1,30 @@
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { montaEstadoEditalEContrato } from "./helper";
 
 import "../style.scss";
 
 export class ModalCadastroEdital extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      vigencias: [
+  onSubmit() {
+    let req = this.props.edital_contratos
+    
+    const values = {
+      numero: req.numero,
+      tipo_contratacao: req.tipo_contratacao,
+      processo: req.numero_processo,
+      objeto: req.resumo,
+      contratos: [
         {
-          data_ini: "17/07/07",
-          data_fim: "14/07/07"
-        },
-        {
-          data_ini: "17/07/07",
-          data_fim: "14/07/07"
+          vigencias: req.vigencias
         }
       ]
-    };
+    }
+    console.log(values)
+    //this.props.onSubmit(values);
   }
 
   render() {
     const { showModal, closeModal, edital_contratos } = this.props;
-    const { vigencias } = this.state;
     return (
       <Modal dialogClassName=" modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -66,7 +66,8 @@ export class ModalCadastroEdital extends Component {
                         <section>
                           <div className="detalhes">
                             <div>
-                              <span>Contrato n°:</span>{" "}{contrato.numero_contrato}
+                              <span>Contrato n°:</span>{" "}
+                              {contrato.numero_contrato}
                             </div>
                             <div className="vigencias">
                               <span>Vigência: </span>
@@ -86,16 +87,15 @@ export class ModalCadastroEdital extends Component {
                               {contrato.processo_administrativo}
                             </div>
                             <div>
-                              <span>Data da proposta:</span>{" "}{contrato.data_proposta}
+                              <span>Data da proposta:</span>{" "}
+                              {contrato.data_proposta}
                             </div>
                             <div className="iteracao-elementos">
                               <span>Lote:</span>
                               <div className="iteracao-elementos">
                                 {contrato.lotes_nomes.map(lote => {
                                   return (
-                                    <div className="elementos">
-                                      {lote};{" "}
-                                    </div>
+                                    <div className="elementos">{lote}; </div>
                                   );
                                 })}
                               </div>
@@ -105,9 +105,7 @@ export class ModalCadastroEdital extends Component {
                               <div className="iteracao-elementos">
                                 {contrato.dres_nomes.map(dre => {
                                   return (
-                                    <div className="elementos">
-                                      {dre};{" "}
-                                    </div>
+                                    <div className="elementos">{dre}; </div>
                                   );
                                 })}
                               </div>
@@ -117,9 +115,7 @@ export class ModalCadastroEdital extends Component {
                               <div className="iteracao-elementos">
                                 {contrato.empresas_nomes.map(empresa => {
                                   return (
-                                    <div className="elementos">
-                                      {empresa};{" "}
-                                    </div>
+                                    <div className="elementos">{empresa}; </div>
                                   );
                                 })}
                               </div>

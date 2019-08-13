@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLotes,
-  getDiretoriaregional
+  getDiretoriaregionalCombo
 } from "../../../../services/diretoriaRegional.service";
+import HTTP_STATUS from "http-status-codes";
+import {
+  criarEditalEContrato
+} from "../../../../services/edital.service";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
 import {
@@ -16,6 +20,8 @@ import {
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
+import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+
 
 class EditaisContratos extends Component {
   constructor(props) {
@@ -63,6 +69,7 @@ class EditaisContratos extends Component {
     this.adicionaNumeroContrato = this.adicionaNumeroContrato.bind(this);
     this.adicionaFieldsFormEdital = this.adicionaFieldsFormEdital.bind(this);
     this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   exibirModal() {
@@ -71,6 +78,21 @@ class EditaisContratos extends Component {
 
   fecharModal(e) {
     this.setState({ exibirModal: false });
+  }
+
+  onSubmit(values){
+    criarEditalEContrato(JSON.stringify(values)).then(
+      response => {
+        if(response.status === HTTP_STATUS.CREATED){
+          toastSuccess("Edital salvo com sucesso");
+        } else {
+          toastError("Houve um erro ao salvar o edital");
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao salvar o lote");
+      }
+    )
   }
 
   adicionarNomesListagem(chave, valor, indice) {
@@ -148,7 +170,7 @@ class EditaisContratos extends Component {
       this.setState({ lotes: normalizaLabelValueLote(response.results) });
     });
 
-    getDiretoriaregional().then(response => {
+    getDiretoriaregionalCombo().then(response => {
       this.setState({
         diretoriasRegionais: normalizaLabelValueDRE(response.data)
       });
@@ -177,6 +199,7 @@ class EditaisContratos extends Component {
           closeModal={this.fecharModal}
           showModal={exibirModal}
           edital_contratos={edital_contratos}
+          onSubmit={this.onSubmit}
         />
         <div className="card">
           <form onSubmit={handleSubmit}>
