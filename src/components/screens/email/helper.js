@@ -1,7 +1,7 @@
 export const generateOptions = optionsArray => {
   let options = [];
   optionsArray.forEach(option => {
-    options.push({ value: option, label: option });
+    options.push({ nome: option, uuid: option });
   });
   return options;
 };

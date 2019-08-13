@@ -190,7 +190,7 @@ export class SolicitacaoDeKitLanche extends Component {
           if (resp.status === HTTP_STATUS.CREATED) {
             toastSuccess("Solicitação de Kit Lanche salva com sucesso!");
             if (values.status === "DRE_A_VALIDAR") {
-              this.iniciarPedido(values.uuid);
+              this.iniciarPedido(resp.data.uuid);
             } else this.resetForm();
           } else {
             toastError("Erro ao salvar Solicitação de Kit Lanche");
