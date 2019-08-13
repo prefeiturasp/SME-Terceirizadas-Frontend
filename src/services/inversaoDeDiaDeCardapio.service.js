@@ -63,7 +63,7 @@ export const atualizarInversaoDeDiaDeCardapio = (uuid, payload) => {
 };
 
 export const removerInversaoDeDiaDeCardapio = async uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "DELETE"
@@ -83,7 +83,7 @@ export const removerInversaoDeDiaDeCardapio = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/inicio_de_pedido`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",

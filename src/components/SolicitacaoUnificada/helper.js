@@ -1,12 +1,10 @@
-export const adicionarDefault = combo => {
-  return [{ uuid: null, nome: "Selecionar" }].concat(combo);
-};
-
 export const formatarTempoPasseio = value => {
   switch (value) {
     case "8h":
+    case 2:
       return 2;
     case "5_7h":
+    case 1:
       return 1;
     default:
       return 0;
@@ -36,8 +34,7 @@ export const formatarSubmissao = values => {
   let dataFormatada = {};
   dataFormatada.motivo = values.motivo;
   dataFormatada.local = values.local;
-  dataFormatada.diretoria_regional =
-    values.escolas[0]["diretoria_regional"]["uuid"];
+  dataFormatada.diretoria_regional = values.diretoria_regional;
   dataFormatada.lista_kit_lanche_igual = values.lista_kit_lanche_igual || false;
   dataFormatada.quantidade_max_alunos_por_escola = dataFormatada.lista_kit_lanche_igual
     ? values.quantidade_max_alunos_por_escola

@@ -52,7 +52,7 @@ export const excluirLote = async uuid => {
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(`${API_URL}/lotes/${uuid}`, OBJ_REQUEST)
+  return await fetch(`${API_URL}/lotes/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();

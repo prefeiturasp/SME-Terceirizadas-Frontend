@@ -40,7 +40,6 @@ export const getDiretoriaregional = () => {
     });
 };
 
-
 export const getDiretoriaregionalCombo = () => {
   const url = `${API_URL}/diretorias-regionais-combo/`;
   let status = 0;

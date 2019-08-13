@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
-  GeradorUUID,
   formatarSubmissaoSolicitacaoNormal,
   formatarSubmissaoSolicitacaoContinua,
   extrairTiposALimentacao
 } from "./helper";
 import {
+  geradorUUID,
   agregarDefault,
-  dataPrioritaria,
+  checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect
 } from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Modal } from "react-bootstrap";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
@@ -56,7 +56,7 @@ class InclusaoDeAlimentacao extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       inclusoes: [
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           outroMotivo: false,
@@ -108,7 +108,7 @@ class InclusaoDeAlimentacao extends Component {
     });
     if (field === "data") {
       if (
-        dataPrioritaria(
+        checaSeDataEstaEntre2e5DiasUteis(
           value,
           this.props.proximos_dois_dias_uteis,
           this.props.proximos_cinco_dias_uteis
@@ -152,7 +152,7 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       inclusoes: this.state.inclusoes.concat([
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           data_inicial: null,
@@ -185,19 +185,21 @@ class InclusaoDeAlimentacao extends Component {
   };
 
   removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
-    removerInclusaoDeAlimentacao(uuid).then(
-      res => {
-        if (res.status === HTTP_STATUS.NO_CONTENT) {
-          toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-          this.refresh();
-        } else {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerInclusaoDeAlimentacao(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
           toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
+      );
+    }
   }
 
   resetForm(event) {
@@ -217,7 +219,7 @@ class InclusaoDeAlimentacao extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       inclusoes: [
         {
-          id: GeradorUUID(),
+          id: geradorUUID(),
           data: null,
           motivo: null,
           data_inicial: null,
@@ -763,26 +765,10 @@ class InclusaoDeAlimentacao extends Component {
                 </div>
               </div>
             </div>
-            <Modal show={showModal} onHide={this.closeModal}>
-              <Modal.Header closeButton>
-                <Modal.Title>Atenção</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Atenção, a solicitação está fora do prazo contratual (entre{" "}
-                <b>2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá
-                da disponibilidade dos alimentos adequados para o cumprimento do
-                cardápio.
-              </Modal.Body>
-              <Modal.Footer>
-                <BaseButton
-                  label="OK"
-                  type={ButtonType.BUTTON}
-                  onClick={this.closeModal}
-                  style={ButtonStyle.Primary}
-                  className="ml-3"
-                />
-              </Modal.Footer>
-            </Modal>
+            <ModalDataPrioritaria
+              showModal={showModal}
+              closeModal={this.closeModal}
+            />
           </form>
         )}
       </div>

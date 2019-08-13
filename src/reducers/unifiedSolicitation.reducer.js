@@ -37,6 +37,7 @@ export default function reducer(state = {}, action) {
               : null
           };
         });
+        console.log(action.data);
       }
       return {
         data: {

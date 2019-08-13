@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { reduxForm } from "redux-form";
-import { getUnifiedSolicitations } from "../../services/solicitacaoUnificada.service";
+import { solicitacoesUnificadasSalvas } from "../../services/solicitacaoUnificada.service";
 import { toastError } from "../Shareable/dialogs";
 import DetailUnifiedSolicitation from "./DetailUnifiedSolicitation";
 
@@ -25,11 +25,11 @@ class UnifiedSolicitationFilled extends Component {
   }
 
   componentDidMount() {
-    getUnifiedSolicitations().then(
-      res => {
+    solicitacoesUnificadasSalvas().then(
+      response => {
         this.setState({
           ...this.state,
-          unifiedSolicitationList: res
+          unifiedSolicitationList: response.results
         });
       },
       function(error) {
@@ -42,7 +42,7 @@ class UnifiedSolicitationFilled extends Component {
     let listSolicitation = this.state.unifiedSolicitationList;
     let list = [];
     listSolicitation.forEach(objeto => {
-      if (objeto.formulario.id === solicitation.formulario.id) {
+      if (objeto.uuid === solicitation.uuid) {
         list.push(objeto);
       }
     });
@@ -54,22 +54,23 @@ class UnifiedSolicitationFilled extends Component {
 
     return (
       <div>
-        {unifiedSolicitationList.map((unifiedSolicitation, key) => {
-          return (
-            <div>
-              <p
-                style={{ cursor: "pointer" }}
-                onClick={() => this.preencherFormulario(unifiedSolicitation)}
-              >
-                {unifiedSolicitation.dre} - {unifiedSolicitation.lote} -{" "}
-                {unifiedSolicitation.formulario.dia}
-              </p>
-            </div>
-          );
-        })}
+        {unifiedSolicitationList.length > 0 &&
+          unifiedSolicitationList.map((unifiedSolicitation, key) => {
+            return (
+              <div>
+                <p
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.preencherFormulario(unifiedSolicitation)}
+                >
+                  {unifiedSolicitation.diretoria_regional.nome} - {unifiedSolicitation.lote} -{" "}
+                  {unifiedSolicitation.solicitacao_kit_lanche.data}
+                </p>
+              </div>
+            );
+          })}
 
         {this.state.solicitationsList.map(solicitation => {
-          return <DetailUnifiedSolicitation solicitation={solicitation}/>;
+          return <DetailUnifiedSolicitation solicitation={solicitation} />;
         })}
       </div>
     );

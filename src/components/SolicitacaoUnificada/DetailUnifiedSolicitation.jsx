@@ -77,7 +77,9 @@ class DetailUnifiedSolicitation extends Component {
                   <div className="lote">Lote</div>
                 </div>
                 <div>
-                  <div className="prop-solicitante">{solicitation.dre}</div>
+                  <div className="prop-solicitante">{`DRE ${
+                    solicitation.diretoria_regional.nome
+                  }`}</div>
                   <div className="prop-lote">{solicitation.lote}</div>
                 </div>
               </div>
@@ -96,20 +98,18 @@ class DetailUnifiedSolicitation extends Component {
               <div className="descricao-container">
                 <div className="descricao-titulo">Motivo</div>
                 <div className="descricao-texto">
-                  {solicitation.formulario.razao}
+                  {solicitation.motivo.nome}
                 </div>
               </div>
               <div className="descricao-container">
                 <div className="descricao-titulo">Local do passeio</div>
-                <div className="descricao-texto">
-                  {solicitation.formulario.local_passeio}
-                </div>
+                <div className="descricao-texto">{solicitation.local}</div>
               </div>
             </div>
             <div className="esquerda">
               <div className="descricao-titulo">Data do evento</div>
               <div className="descricao-observacao">
-                {solicitation.formulario.dia}
+                {solicitation.solicitacao_kit_lanche.data}
               </div>
             </div>
           </div>
@@ -124,9 +124,12 @@ class DetailUnifiedSolicitation extends Component {
           </div>
 
           <div>
-            {solicitation.formulario.escolas.map(escola => {
+            {solicitation.escolas_quantidades.map(escola_quantidade => {
               return (
-                <RowTableSchool escola={escola} solicitation={solicitation} />
+                <RowTableSchool
+                  escola_quantidade={escola_quantidade}
+                  solicitation={solicitation}
+                />
               );
             })}
           </div>
@@ -137,12 +140,16 @@ class DetailUnifiedSolicitation extends Component {
                 <div className="descricao-titulo">
                   N° total de Unidade Escolares beneficiadas
                 </div>
-                <div className="descricao-texto">20 Unidades Escolares</div>
+                <div className="descricao-texto">{`${
+                  solicitation.escolas_quantidades.length
+                } Unidades Escolares`}</div>
               </div>
               <div className="kits">
                 <div>
                   <div className="descricao-titulo">N° total de Kits</div>
-                  <div className="descricao-texto">203 Kits</div>
+                  <div className="descricao-texto">
+                    {solicitation.total_kit_lanche} Kits
+                  </div>
                 </div>
               </div>
             </div>
@@ -151,7 +158,7 @@ class DetailUnifiedSolicitation extends Component {
               <div
                 className="descricao-texto"
                 dangerouslySetInnerHTML={{
-                  __html: solicitation.formulario.obs
+                  __html: solicitation.solicitacao_kit_lanche.descricao
                 }}
               />
             </div>

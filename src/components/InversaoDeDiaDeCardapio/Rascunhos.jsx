@@ -2,9 +2,13 @@ import React, { Component } from "react";
 
 export class Rascunhos extends Component {
   render() {
-    const { rascunhosInversoes } = this.props;
+    const {
+      rascunhosInversoes,
+      removerRascunho,
+      carregarRascunho
+    } = this.props;
     if (rascunhosInversoes && rascunhosInversoes.length) {
-      const allDaysInfo = rascunhosInversoes.map(inversaoDeDiaDeCardapio => {
+      const cardsInversoes = rascunhosInversoes.map(inversaoDeDiaDeCardapio => {
         const { uuid, id_externo } = inversaoDeDiaDeCardapio;
         let backgroundColor = "#DADADA";
         return (
@@ -39,14 +43,12 @@ export class Rascunhos extends Component {
               </div>
               <div className="icon-draft-card float-right">
                 Salvo em: {inversaoDeDiaDeCardapio.criado_em}
-                <span
-                  onClick={() => this.props.removerRascunho(id_externo, uuid)}
-                >
+                <span onClick={() => removerRascunho(id_externo, uuid)}>
                   <i className="fas fa-trash" />
                 </span>
                 <span
                   onClick={() =>
-                    this.props.carregarRascunho({
+                    carregarRascunho({
                       inversaoDeDiaDeCardapio
                     })
                   }
@@ -58,7 +60,7 @@ export class Rascunhos extends Component {
           </div>
         );
       });
-      return <div>{allDaysInfo}</div>;
+      return <div>{cardsInversoes}</div>;
     } else {
       return <div />;
     }

@@ -1,74 +1,38 @@
-import PropTypes from "prop-types";
 import React, { Component } from "react";
 
 export class Rascunhos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { checkedObjects: [] };
-    this.onCheckChange = this.onCheckChange.bind(this);
-  }
-
-  static propTypes = {
-    salvo_em: PropTypes.string.isRequired
-  };
-
-  onCheckChange(event, object) {
-    let { checkedObjects } = this.state;
-    if (event.target.checked) {
-      checkedObjects.push(object);
-      this.setState({ checkedObjects });
-    } else {
-      checkedObjects = checkedObjects.filter(obj => {
-        return obj.id !== object.id;
-      });
-      this.setState({ checkedObjects });
-    }
-  }
-
-  OnDeleteButtonClicked(id, uuid) {
-    // faz o pai apagar o elemento
-    // atualiza o estado do componente e limpa o form do pai
-    this.props.OnDeleteButtonClicked(id, uuid);
-    let { checkedObjects } = this.state;
-    checkedObjects = checkedObjects.filter(obj => {
-      return obj.id !== id;
-    });
-    this.setState({ checkedObjects });
-    this.props.resetForm();
-  }
-
   render() {
-    const { alteracaoCardapioList } = this.props;
-
-    const allDaysInfo = alteracaoCardapioList.map(dayChange => {
-      const { id } = dayChange;
+    const {
+      alteracaoCardapioList,
+      OnDeleteButtonClicked,
+      OnEditButtonClicked
+    } = this.props;
+    const cardsRascunhos = alteracaoCardapioList.map(alteracaoDeCardapio => {
+      const { uuid, id_externo } = alteracaoDeCardapio;
       let backgroundColor =
-        dayChange.status === "SALVO" ? "#82B7E8" : "#DADADA";
+        alteracaoDeCardapio.status === "SALVO" ? "#82B7E8" : "#DADADA";
       return (
         <div className="bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
-              {/* Alteração de Cardápio por {`# ${dayChange.motivo.nome}`} */}
-              Alteração de Cardápio
+              {`Alteração de Cardápio # ${id_externo}`}
             </label>
             <span
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              {dayChange.status}
+              {alteracaoDeCardapio.status}
             </span>
           </div>
           <div className="icon-draft-card float-right">
-            Salvo em: {dayChange.criado_em}
-            <span
-              onClick={p => this.OnDeleteButtonClicked(id, dayChange.uuid)}
-            >
+            Salvo em: {alteracaoDeCardapio.criado_em}
+            <span onClick={() => OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />
             </span>
             <span
-              onClick={p =>
-                this.props.OnEditButtonClicked({
-                  dayChange
+              onClick={() =>
+                OnEditButtonClicked({
+                  alteracaoDeCardapio
                 })
               }
             >
@@ -77,13 +41,18 @@ export class Rascunhos extends Component {
           </div>
           <div className="ml-3">
             <p>
-              De {dayChange.data_inicial} a {dayChange.data_final}
+              {alteracaoDeCardapio.data_inicial ===
+              alteracaoDeCardapio.data_final
+                ? `Dia: ${alteracaoDeCardapio.data_inicial ||
+                    alteracaoDeCardapio.alterar_dia}`
+                : `De ${alteracaoDeCardapio.data_inicial} a ${
+                    alteracaoDeCardapio.data_final
+                  }`}
             </p>
-            <small>{dayChange.uuid}</small>
           </div>
         </div>
       );
     });
-    return <div>{allDaysInfo}</div>;
+    return <div>{cardsRascunhos}</div>;
   }
 }

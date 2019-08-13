@@ -30,24 +30,24 @@ class DashboardDREContainer extends Component {
       ],
       vision_by: [
         {
-          label: "Visão por",
-          value: ""
+          nome: "Visão por",
+          uuid: ""
         },
         {
-          label: "Dia",
-          value: "day"
+          nome: "Dia",
+          uuid: "day"
         },
         {
-          label: "Semana",
-          value: "week"
+          nome: "Semana",
+          uuid: "week"
         },
         {
-          label: "Mês",
-          value: "month"
+          nome: "Mês",
+          uuid: "month"
         },
         {
-          label: "Lote",
-          value: "lote"
+          nome: "Lote",
+          uuid: "lote"
         }
       ]
     };

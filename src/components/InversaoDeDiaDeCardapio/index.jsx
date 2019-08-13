@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import HTTP_STATUS from "http-status-codes";
-import { dataPrioritaria } from "../../helpers/utilities";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
@@ -21,7 +21,7 @@ import {
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Modal } from "react-bootstrap";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import "./style.scss";
 
 export class InversaoDeDiaDeCardapio extends Component {
@@ -43,20 +43,22 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   removerRascunho(id_externo, uuid) {
-    removerInversaoDeDiaDeCardapio(uuid).then(
-      res => {
-        if (res.status === HTTP_STATUS.NO_CONTENT) {
-          toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-          this.refresh();
-        } else {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerInversaoDeDiaDeCardapio(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function(error) {
           toastError("Houve um erro ao excluir o rascunho");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao excluir o rascunho");
-      }
-    );
-    this.resetForm();
+      );
+      this.resetForm();
+    }
   }
 
   resetForm(event) {
@@ -118,7 +120,7 @@ export class InversaoDeDiaDeCardapio extends Component {
 
   validaDiasUteis = event => {
     if (
-      dataPrioritaria(
+      checaSeDataEstaEntre2e5DiasUteis(
         event.target.value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
@@ -296,26 +298,10 @@ export class InversaoDeDiaDeCardapio extends Component {
             </div>
           </form>
         )}
-        <Modal show={showModal} onHide={this.closeModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Atenção</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Atenção, a solicitação está fora do prazo contratual (entre
-            <b> 2 e 5 dias úteis</b>). Sendo assim, a autorização dependerá da
-            disponibilidade dos alimentos adequados para o cumprimento do
-            cardápio.
-          </Modal.Body>
-          <Modal.Footer>
-            <BaseButton
-              label="OK"
-              type={ButtonType.BUTTON}
-              onClick={this.closeModal}
-              style={ButtonStyle.Primary}
-              className="ml-3"
-            />
-          </Modal.Footer>
-        </Modal>
+        <ModalDataPrioritaria
+          showModal={showModal}
+          closeModal={this.closeModal}
+        />
       </div>
     );
   }

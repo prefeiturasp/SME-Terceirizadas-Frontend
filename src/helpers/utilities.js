@@ -59,3 +59,42 @@ export const extrairUUIDs = lista => {
   });
   return uuids;
 };
+
+export const dataParaUTC = data => {
+  return new Date(
+    data.getUTCFullYear(),
+    data.getUTCMonth(),
+    data.getUTCDate(),
+    data.getUTCHours(),
+    data.getUTCMinutes(),
+    data.getUTCSeconds()
+  );
+};
+
+export const geradorUUID = () => {
+  var S4 = function() {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return (
+    S4() +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    "-" +
+    S4() +
+    S4() +
+    S4()
+  );
+};
+
+export const stringSeparadaPorVirgulas = (obj, campo) => {
+  let array = [];
+  obj.forEach(function(elemento) {
+    array.push(elemento[campo]);
+  });
+  return array.join(", ");
+};

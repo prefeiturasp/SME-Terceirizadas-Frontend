@@ -5,8 +5,8 @@ import {
 } from "../../services/inclusaoDeAlimentacao.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
-import { getPeriods } from "../../services/escola.service";
 import { formatarPeriodos } from "./helper";
+import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacao from ".";
 
 class Container extends Component {
@@ -26,7 +26,8 @@ class Container extends Component {
     meusDados().then(response => {
       const meusDados = response;
       this.setState({
-        meusDados
+        meusDados,
+        periodos: formatarPeriodos(response.escolas[0].periodos_escolares)
       });
     });
 
@@ -44,19 +45,12 @@ class Container extends Component {
       });
     });
 
-    getPeriods().then(response => {
-      const periodos = response.results;
-      this.setState({
-        periodos: formatarPeriodos(periodos)
-      });
-    });
-
     getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = new Date(
-        response.proximos_cinco_dias_uteis
+      const proximos_cinco_dias_uteis = dataParaUTC(
+        new Date(response.proximos_cinco_dias_uteis)
       );
-      const proximos_dois_dias_uteis = new Date(
-        response.proximos_dois_dias_uteis
+      const proximos_dois_dias_uteis = dataParaUTC(
+        new Date(response.proximos_dois_dias_uteis)
       );
       this.setState({
         proximos_dois_dias_uteis,

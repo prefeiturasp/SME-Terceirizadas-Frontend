@@ -99,24 +99,27 @@ export const atualizarKitLanche = async values => {
     });
 };
 
-export const removeKitLanche = async idKit => {
+export const removeKitLanche = async uuid => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "DELETE",
-    body: JSON.stringify({ id: idKit })
+    method: "DELETE"
   };
-
-  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${idKit}`, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
+  let status = 0;
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${uuid}/`, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
     })
-    .catch(erro => {
-      console.log("Remover Kit Lanche: ", erro);
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
     });
 };
 
 export const inicioPedido = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -140,7 +143,10 @@ export const getSolicitacoesKitLancheApi = async () => {
     method: "GET"
   };
 
-  return await fetch(`${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes`, OBJ_REQUEST)
+  return await fetch(
+    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes/`,
+    OBJ_REQUEST
+  )
     .then(response => {
       const resp = response.json();
       return resp;

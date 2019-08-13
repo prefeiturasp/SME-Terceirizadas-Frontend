@@ -73,7 +73,7 @@ class ContratosRelacionados extends Component {
     const diretoriasRegionais = this.props.diretoriasRegionais;
     values.forEach(value => {
       const indice = diretoriasRegionais.findIndex(
-        diretoriaRegional => diretoriaRegional.value == value
+        diretoriaRegional => diretoriaRegional.value === value
       );
       diretoriasNomesSelecionadas.push(diretoriasRegionais[indice].label);
     });

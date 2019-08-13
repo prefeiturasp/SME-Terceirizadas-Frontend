@@ -1,14 +1,17 @@
 import React, { Component } from "react";
+import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
 import { meusDados } from "../../services/perfil.service";
 import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
-import { dataParaUTC } from "../../helpers/utilities";
-import InversaoDeDiaDeCardapio from ".";
+import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import AlteracaoDeCardapio from ".";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
       meusDados: null,
+      motivos: [],
+      periodos: [],
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null
     };
@@ -17,7 +20,14 @@ class Container extends Component {
   componentDidMount() {
     meusDados().then(response => {
       this.setState({
-        meusDados: response
+        meusDados: response,
+        periodos: response.escolas[0].periodos_escolares
+      });
+    });
+
+    getMotivosAlteracaoCardapio().then(response => {
+      this.setState({
+        motivos: agregarDefault(response.results)
       });
     });
 
@@ -36,7 +46,7 @@ class Container extends Component {
   }
 
   render() {
-    return <InversaoDeDiaDeCardapio {...this.state} />;
+    return <AlteracaoDeCardapio {...this.state} />;
   }
 }
 
