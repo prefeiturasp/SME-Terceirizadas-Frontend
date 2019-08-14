@@ -6,21 +6,25 @@ import "../style.scss";
 
 export class ModalCadastroEdital extends Component {
   onSubmit() {
-    let req = this.props.edital_contratos
-    
+    let requisicao_edital = this.props.edital_contratos;
     const values = {
-      numero: req.numero,
-      tipo_contratacao: req.tipo_contratacao,
-      processo: req.numero_processo,
-      objeto: req.resumo,
-      contratos: [
-        {
-          vigencias: req.vigencias
-        }
-      ]
-    }
-    console.log(values)
-    //this.props.onSubmit(values);
+      numero: requisicao_edital.numero,
+      tipo_contratacao: requisicao_edital.tipo_contratacao,
+      processo: requisicao_edital.numero_processo,
+      objeto: requisicao_edital.resumo,
+      contratos: requisicao_edital.contratos_relacionados.map(contrato => {
+        return {
+          terceirizadas: contrato.empresas,
+          vigencias: contrato.vigencias,
+          numero: contrato.numero_contrato,
+          processo: contrato.processo_administrativo,
+          lotes: contrato.lotes,
+          dres: contrato.dres,
+          data_proposta: contrato.data_proposta
+        };
+      })
+    };
+    this.props.onSubmit(values);
   }
 
   render() {
