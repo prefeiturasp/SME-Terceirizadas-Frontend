@@ -19,7 +19,7 @@ export class ModalCadastroEdital extends Component {
           numero: contrato.numero_contrato,
           processo: contrato.processo_administrativo,
           lotes: contrato.lotes,
-          dres: contrato.dres,
+          diretorias_regionais: contrato.dres,
           data_proposta: contrato.data_proposta
         };
       })

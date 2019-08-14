@@ -100,25 +100,27 @@ class EditaisContratos extends Component {
       "processo_administrativo",
       "resumo_objeto"
     ].forEach(element => {
-      this.props.change(element, "");
+      this.props.change(element, null);
     });
 
     this.setState({ reseta: true });
 
     this.state.forms.forEach((form, index) => {
-      this.props.change(`${form}.numero_contrato${index}`, "");
-      this.props.change(`${form}.processo_administrativo${index}`, "");
-      this.props.change(`${form}.data_proposta${index}`, "");
+      this.props.change(`${form}.numero_contrato${index}`, null);
+      this.props.change(`${form}.processo_administrativo${index}`, null);
+      this.props.change(`${form}.data_proposta${index}`, null);
       this.state.contratos_relacionados[index].vigencias.forEach(
         (vigencia, key) => {
           this.props.change(
             `${form}.secaoContrato${key}.data_inicio${key}`,
-            ""
+            null
           );
-          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, "");
+          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, null);
         }
       );
     });
+
+    this.state.forms.splice(1, Number.MAX_VALUE);
   }
 
   adicionarNomesListagem(chave, valor, indice) {
@@ -303,7 +305,9 @@ class EditaisContratos extends Component {
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
-                    onClick={value => this.resetForm(value)}
+                    onClick={value => {
+                      this.resetForm(value);
+                    }}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton

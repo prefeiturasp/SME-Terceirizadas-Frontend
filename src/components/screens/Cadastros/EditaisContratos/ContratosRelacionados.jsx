@@ -121,6 +121,15 @@ class ContratosRelacionados extends Component {
 
   componentDidUpdate() {
     if (
+      this.props.reseta === true &&
+      this.state.formVigenciaContratos.length > 1
+    ) {
+      this.state.formVigenciaContratos.splice(1, Number.MAX_VALUE);
+      if (this.props.reseta === true) {
+        this.props.setaResetFormChild();
+      }
+    }
+    if (
       this.state.lotesSelecionados.length > 0 ||
       this.state.diretoriasSelecionadas.length > 0 ||
       this.state.empresasSelecionadas.length > 0
@@ -134,6 +143,7 @@ class ContratosRelacionados extends Component {
           empresasSelecionadas: [],
           empresasNomesSelecionados: []
         });
+
         this.props.setaResetFormChild();
       }
     }
@@ -174,6 +184,7 @@ class ContratosRelacionados extends Component {
                     onChange={event =>
                       adicionaNumeroContrato(indice, event.target.value)
                     }
+                    max={50}
                   />
                 </div>
                 <section>
@@ -251,6 +262,7 @@ class ContratosRelacionados extends Component {
                             indice
                           );
                         }}
+                        max={50}
                       />
                     </div>
                     <div>
