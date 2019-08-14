@@ -19,6 +19,8 @@ export const getLotes = async () => {
   });
 };
 
+
+
 export const getDiretoriaregional = () => {
   const url = `${API_URL}/diretorias-regionais/`;
   let status = 0;

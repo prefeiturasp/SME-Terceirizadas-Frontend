@@ -81,6 +81,7 @@ class ContratosRelacionados extends Component {
       diretoriasSelecionadas: values,
       diretoriasNomesSelecionadas
     });
+    this.props.adicionarNomesListagem('dres_nomes', diretoriasNomesSelecionadas, this.props.indice)
   }
 
   atualizarLotesSelecionados(values) {
@@ -90,8 +91,8 @@ class ContratosRelacionados extends Component {
       const indice = lotes.findIndex(lote => lote.value === value);
       lotesNomesSelecionados.push(lotes[indice].label);
     });
-    this.setState({ lotesSelecionados: values, lotesNomesSelecionados });
-
+    this.setState({ lotesSelecionados: values, lotesNomesSelecionados }); 
+    this.props.adicionarNomesListagem('lotes_nomes', lotesNomesSelecionados, this.props.indice)
   }
 
   atualizarEmpresasSelecionadas(values) {
@@ -102,6 +103,7 @@ class ContratosRelacionados extends Component {
       empresasNomesSelecionados.push(empresas[indice].label);
     });
     this.setState({ empresasSelecionadas: values, empresasNomesSelecionados });
+    this.props.adicionarNomesListagem('empresas_nomes', empresasNomesSelecionados, this.props.indice)
   }
 
   componentDidMount() {

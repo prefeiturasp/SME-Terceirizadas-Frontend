@@ -31,6 +31,8 @@ export const normalizaLabelValueEmpresa = response => {
   return empresas;
 };
 
+
+
 export const renderizarLabelLote = (selected, options) => {
   if (selected.length === 0) {
     return "Selecione um ou mais lotes...";
@@ -69,3 +71,11 @@ export const renderizarLabelEmpresa = (selected, options) => {
   }
   return `${selected.length} empresas selecionadas`;
 };
+
+
+export const montaEstadoEditalEContrato = (edital, contratos) => {
+  const editalContrato = edital;
+  editalContrato['contratos_relacionados'] = contratos;
+  return editalContrato
+}
+
