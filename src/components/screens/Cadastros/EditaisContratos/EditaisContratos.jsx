@@ -43,8 +43,8 @@ class EditaisContratos extends Component {
         {
           vigencias: [
             {
-              data_inicio: null,
-              data_fim: null
+              data_inicial: null,
+              data_final: null
             }
           ],
           numero_contrato: null,
@@ -140,8 +140,8 @@ class EditaisContratos extends Component {
         {
           vigencias: [
             {
-              data_inicio: null,
-              data_fim: null
+              data_inicial: null,
+              data_final: null
             }
           ],
           numero_contrato: null,

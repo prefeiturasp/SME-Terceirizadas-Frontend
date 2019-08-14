@@ -28,8 +28,8 @@ class ContratosRelacionados extends Component {
 
       vigencias: [
         {
-          data_inicio: null,
-          data_fim: null
+          data_inicial: null,
+          data_final: null
         }
       ],
 
@@ -52,8 +52,8 @@ class ContratosRelacionados extends Component {
     this.setState({
       vigencias: this.state.vigencias.concat([
         {
-          data_inicio: null,
-          data_fim: null
+          data_inicial: null,
+          data_final: null
         }
       ])
     });
@@ -160,7 +160,7 @@ class ContratosRelacionados extends Component {
                               validate={required}
                               onChange={value =>
                                 this.handleField(
-                                  `data_inicio`,
+                                  `data_inicial`,
                                   value,
                                   key,
                                   indice
@@ -176,7 +176,7 @@ class ContratosRelacionados extends Component {
                               validate={required}
                               onChange={value =>
                                 this.handleField(
-                                  `data_fim`,
+                                  `data_final`,
                                   value,
                                   key,
                                   indice
