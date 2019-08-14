@@ -1,41 +1,35 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import "../../Shareable/style.scss";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus/FluxoDeStatus";
+import { prazoDoPedidoMensagem } from "./helper";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import { toastSuccess } from "../../../Shareable/dialogs";
+import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  getInclusaoDeAlimentacaoContinua,
+  DREConfirmaInclusaoDeAlimentacaoContinua
+} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { dataParaUTC } from "../../../../helpers/utilities";
+import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
+import "./style.scss";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       unifiedSolicitationList: [],
+      uuid: null,
+      redirect: false,
       showModal: false,
-      solicitacao: {
-        id: "12083",
-        lote: "7A IP I",
-        gestao: "TERC TOTAL",
-        dre: "DRE Ipiranga",
-        razao: "Programa Contínuo - Mais Educação",
-        data: "27/04/2019",
-        local: "Aquário de São Paulo",
-        escola: {
-          nome: "EMEF JOSE CARLOS DE FIGUEIREDO FERRAZ, PREF.",
-          alunos_total: "1705",
-          matutino: "705",
-          vespertino: "700",
-          noturno: "300"
-        },
-        kits: ["1", "3"],
-        tempo_passeio: "5 a 7 horas (2 kits)",
-        estudantes_total: 75,
-        obs:
-          "A observação é uma das etapas do método científico. Consiste em perceber," +
-          "ver e não interpretar. A observação é relatada como foi visualizada, sem que," +
-          " a princípio, as idéias interpretativas dos observadores sejam tomadas."
-      },
+      ehInclusaoContinua: false,
+      inclusaoDeAlimentacao: null,
+      proximos_dois_dias_uteis: null,
+      proximos_cinco_dias_uteis: null,
       listaDeStatus: [
         {
           titulo: "Solicitação Realizada",
@@ -68,8 +62,46 @@ class Relatorio extends Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+    }
+  };
+
   componentDidMount() {
-    this.preencherFormulario(this.state.solicitacao);
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    const getInclusaoDeAlimentacao = ehInclusaoContinua
+      ? getInclusaoDeAlimentacaoContinua
+      : getInclusaoDeAlimentacaoAvulsa;
+    getDiasUteis().then(response => {
+      const proximos_cinco_dias_uteis = dataParaUTC(
+        new Date(response.proximos_cinco_dias_uteis)
+      );
+      const proximos_dois_dias_uteis = dataParaUTC(
+        new Date(response.proximos_dois_dias_uteis)
+      );
+      this.setState({
+        proximos_dois_dias_uteis,
+        proximos_cinco_dias_uteis
+      });
+    });
+    if (uuid) {
+      getInclusaoDeAlimentacao(uuid).then(response => {
+        this.setState({
+          inclusaoDeAlimentacao: response,
+          ehInclusaoContinua,
+          uuid
+        });
+      });
+    }
   }
 
   showModal() {
@@ -78,79 +110,99 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Kit Lanche recusado com sucesso!");
+    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
   }
 
   handleSubmit() {
-    toastSuccess("Kit Lanche validado com sucesso!");
-  }
-
-  preencherFormulario(solicitacao) {
-    this.setState({
-      ...this.state,
-      solicitacao
-    });
+    const uuid = this.state.uuid;
+    DREConfirmaInclusaoDeAlimentacaoContinua(uuid).then(
+      response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
+          this.setRedirect();
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError("Houve um erro ao aprovar a Inclusão de Alimentação");
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+      }
+    );
   }
 
   render() {
     const {
-      id,
-      lote,
-      gestao,
-      dre,
-      razao,
-      data,
-      local,
-      escola,
-      kits,
-      estudantes_total,
-      tempo_passeio,
-      obs
-    } = this.state.solicitacao;
-    const { listaDeStatus, showModal } = this.state;
+      listaDeStatus,
+      showModal,
+      inclusaoDeAlimentacao,
+      ehInclusaoContinua,
+      proximos_cinco_dias_uteis,
+      proximos_dois_dias_uteis
+    } = this.state;
     return (
       <div>
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {id && (
+        {this.renderRedirect()}
+        {!inclusaoDeAlimentacao ? (
+          <div>Carregando...</div>
+        ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">Kit Lanche Pedido nº {id}</span>
+            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
+              inclusaoDeAlimentacao.id_externo
+            }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
                   <p className="col-12">
-                    Pedidos enviado próximo ao prazo de vencimento (2 dias ou
-                    menos)
+                    {prazoDoPedidoMensagem(
+                      inclusaoDeAlimentacao.data_inicial,
+                      proximos_dois_dias_uteis,
+                      proximos_cinco_dias_uteis
+                    )}
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {id} - {lote}
+                        {inclusaoDeAlimentacao.id_externo}
                       </span>
                       <br />{" "}
-                      <span className="number-of-order-label">Nº PEDIDO</span>
+                      <span className="number-of-order-label">
+                        ID DO PEDIDO
+                      </span>
                     </span>
                   </div>
                   <div className="report-div-beside-order my-auto col-8">
                     <span className="requester">Escola Solicitante</span>
                     <br />
-                    <span className="dre-name">{escola.nome}</span>
+                    <span className="dre-name">
+                      {inclusaoDeAlimentacao.escola.nome}
+                    </span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
-                    <p className="value-important">{dre}</p>
+                    <p className="value-important">
+                      {
+                        inclusaoDeAlimentacao.escola.lote.diretoria_regional
+                          .nome
+                      }
+                    </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
-                    <p className="value-important">{lote}</p>
+                    <p className="value-important">
+                      {inclusaoDeAlimentacao.escola.lote.nome}
+                    </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
-                    <p className="value-important">{gestao}</p>
+                    <p className="value-important">
+                      {inclusaoDeAlimentacao.escola.lote.tipo_gestao.nome}
+                    </p>
                   </div>
                 </div>
                 <hr />
@@ -161,74 +213,85 @@ class Relatorio extends Component {
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>{escola.alunos_total}</span>
+                    <span>
+                      {inclusaoDeAlimentacao.escola.quantidade_alunos}
+                    </span>
                   </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos matutino</span>
-                    <span>{escola.matutino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos vespertino</span>
-                    <span>{escola.vespertino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos nortuno</span>
-                    <span>{escola.noturno}</span>
-                  </div>
+                  {/*<div className="report-students-div col-3">
+                  <span>Nº de alunos matutino</span>
+                  <span>{escola.matutino}</span>
+                </div>
+                <div className="report-students-div col-3">
+                  <span>Nº de alunos vespertino</span>
+                  <span>{escola.vespertino}</span>
+                </div>
+                <div className="report-students-div col-3">
+                  <span>Nº de alunos nortuno</span>
+                  <span>{escola.noturno}</span>
+                </div>*/}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
-                    <p className="value">Descrição da Solicitação</p>
+                    <p className="value">
+                      Descrição da Inclusão de Alimentação
+                    </p>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-4 report-label-value">
                     <p>Data do evento</p>
-                    <p className="value">{data}</p>
-                  </div>
-                  <div className="col-8 report-label-value">
-                    <p>Motivo</p>
-                    <p className="value">{razao}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Local do passeio</p>
-                    <p className="value">{local}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-4 report-label-value">
-                    <p>Nº de alunos participantes</p>
-                    <p className="value">{estudantes_total} alunos</p>
-                  </div>
-                  <div className="col-8 report-label-value">
-                    <p>Tempo previsto do passeio</p>
-                    <p className="value">{tempo_passeio}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 float-right report-label-value">
-                    <p>Opção desejada</p>
-                    {kits.map((kit, key) => {
-                      return <p className="value">Modelo de kit nº {kit}</p>;
-                    })}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 float-right report-label-value">
-                    <p>Nº total de kits</p>
                     <p className="value">
-                      {kits.length * estudantes_total} kits
+                      {ehInclusaoContinua
+                        ? `${inclusaoDeAlimentacao.data_inicial} - ${
+                            inclusaoDeAlimentacao.data_final
+                          }`
+                        : `${inclusaoDeAlimentacao.data}`}
                     </p>
                   </div>
+                  {inclusaoDeAlimentacao.dias_semana_explicacao !== null && (
+                    <div className="col-4 report-label-value">
+                      <p>Dias da Semana</p>
+                      <p className="value">
+                        {inclusaoDeAlimentacao.dias_semana_explicacao}
+                      </p>
+                    </div>
+                  )}
+                  <div className="col-4 report-label-value">
+                    <p>Motivo</p>
+                    <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+                  </div>
                 </div>
+                <table className="table-periods">
+                  <tr>
+                    <th>Período</th>
+                    <th>Tipos de Alimentação</th>
+                    <th>Quantidade de Alunos</th>
+                  </tr>
+                  {inclusaoDeAlimentacao.quantidades_periodo.map(
+                    quantidade_por_periodo => {
+                      return (
+                        <tr>
+                          <td>{quantidade_por_periodo.periodo_escolar.nome}</td>
+                          <td>
+                            {stringSeparadaPorVirgulas(
+                              quantidade_por_periodo.tipos_alimentacao,
+                              "nome"
+                            )}
+                          </td>
+                          <td>{quantidade_por_periodo.numero_alunos}</td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </table>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
                     <p
                       className="value"
-                      dangerouslySetInnerHTML={{ __html: obs }}
+                      dangerouslySetInnerHTML={{
+                        __html: inclusaoDeAlimentacao.descricao
+                      }}
                     />
                   </div>
                 </div>

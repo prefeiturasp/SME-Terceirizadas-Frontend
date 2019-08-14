@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import CardHistorico from "../../../Shareable/CardHistorico/CardHistorico";
 
 class PainelPedidos extends Component {
@@ -49,81 +50,90 @@ class PainelPedidos extends Component {
 
   render() {
     const { trs, theadList } = this.state;
-    const { pedidos, vision_by } = this.props;
-    console.log(pedidos);
-
+    const {
+      pedidosCarregados,
+      pedidosPrioritarios,
+      pedidosNoPrazoLimite,
+      pedidosNoPrazoRegular,
+      visaoPorCombo
+    } = this.props;
     return (
       <div>
-        <div className="row">
-          <div className="col-7">
-            <div className="page-title">Inclusão de Alimentação - Pendente Aprovação</div>
-          </div>
-          <div className="col-5">
+        {pedidosCarregados !== 3 ? (
+          <div>Carregando...</div>
+        ) : (
+          <div>
             <div className="row">
-              <div className="col-6">
-                <LabelAndCombo
-                  onChange={value => this.handleField("reason", value)}
-                  placeholder={"Visão por dia"}
-                  options={vision_by}
+              <div className="col-7">
+                <div className="page-title">
+                  Inclusão de Alimentação - Pendente Aprovação
+                </div>
+              </div>
+              <div className="col-5">
+                <div className="row">
+                  <div className="col-6">
+                    <LabelAndCombo
+                      onChange={value => this.handleField("reason", value)}
+                      placeholder={"Visão por dia"}
+                      options={visaoPorCombo}
+                    />
+                  </div>
+                  <div className="text-dark col-6 my-auto">{`Visão dia ${dataAtualDDMMYYYY()}`}</div>
+                </div>
+              </div>
+            </div>
+            <div className="row pt-3">
+              <div className="col-12">
+                <CardPendenciaAprovacao
+                  titulo={
+                    "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
+                  }
+                  tipoDeCard={"priority"}
+                  pedidos={pedidosPrioritarios}
+                  ultimaColunaLabel={"Data da Inclusão"}
                 />
               </div>
-              <div className="text-dark col-6 my-auto">Visão dia 01/07/2019</div>
+            </div>
+            <div className="row pt-3">
+              <div className="col-12">
+                <CardPendenciaAprovacao
+                  titulo={"Pedidos no prazo limite"}
+                  tipoDeCard={"on-limit"}
+                  pedidos={pedidosNoPrazoLimite}
+                  ultimaColunaLabel={"Data da Inclusão"}
+                />
+              </div>
+            </div>
+            <div className="row pt-3">
+              <div className="col-12">
+                <CardPendenciaAprovacao
+                  titulo={"Pedidos no prazo regular"}
+                  tipoDeCard={"regular"}
+                  pedidos={pedidosNoPrazoRegular}
+                  ultimaColunaLabel={"Data da Inclusão"}
+                />
+              </div>
+            </div>
+            <div className="row pt-3">
+              <div className="col-12">
+                <CardHistorico
+                  thead={theadList}
+                  trs={trs}
+                  titulo={"Histórico de Alimentações Aprovadas"}
+                />
+              </div>
+            </div>
+            <div className="row pt-3">
+              <div className="col-12">
+                <CardHistorico
+                  thead={theadList}
+                  trs={trs}
+                  titulo={"Histórico de Alimentações Canceladas"}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardPendenciaAprovacao
-              titulo={
-                "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
-              }
-              tipoDeCard={"priority"}
-              totalDePedidos={20}
-              totalDeEscolas={13}
-              pedidos={pedidos}
-            />
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardPendenciaAprovacao
-              titulo={"Pedidos no prazo limite"}
-              tipoDeCard={"on-limit"}
-              totalDePedidos={40}
-              totalDeEscolas={8}
-              pedidos={pedidos}
-            />
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardPendenciaAprovacao
-              titulo={"Pedidos no prazo regular"}
-              tipoDeCard={"regular"}
-              totalDePedidos={60}
-              totalDeEscolas={20}
-              pedidos={pedidos}
-            />
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardHistorico
-              thead={theadList}
-              trs={trs}
-              titulo={"Histórico de Alimentações Aprovadas"}
-            />
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-12">
-            <CardHistorico
-              thead={theadList}
-              trs={trs}
-              titulo={"Histórico de Alimentações Canceladas"}
-            />
-          </div>
-        </div>
+        )}
       </div>
     );
   }

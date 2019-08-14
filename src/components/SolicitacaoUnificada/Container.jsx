@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
-import { diasUteis } from "../../services/workingDays.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
 import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoUnificada from ".";
 
@@ -41,7 +41,7 @@ class SolicitacaoUnificadaContainer extends Component {
       this.setState({ motivos: agregarDefault(response.results) });
     });
 
-    diasUteis().then(response => {
+    getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
       );

@@ -25,9 +25,9 @@ import {
   atualizarInclusaoDeAlimentacaoNormal,
   getInclusoesContinuasSalvas,
   getInclusoesNormaisSalvas,
-  inicioPedidoContinua,
   inicioPedidoNormal
-} from "../../services/inclusaoDeAlimentacao.service";
+} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";

@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
+import { Link } from "react-router-dom";
+import { calcularNumeroDeEscolas } from "./helper";
+import { talvezPluralizar } from "../../../helpers/utilities";
 import "./style.scss";
 
 export class CardPendenciaAprovacao extends Component {
@@ -20,46 +23,64 @@ export class CardPendenciaAprovacao extends Component {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.escola.cod_eol.includes(palavraAFiltrar)
+        item.escola.codigo_eol.includes(palavraAFiltrar)
       );
     });
     this.setState({ pedidosFiltrados });
   }
 
   render() {
-    const { titulo, tipoDeCard, totalDePedidos, totalDeEscolas } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
-    console.log(pedidosFiltrados);
     return (
       <div className="card card-pendency-approval">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
         <div className="row">
           <div className="col-2">
             <div className={"order-box " + tipoDeCard}>
-              <span className="number">{totalDePedidos}</span>
-              <span className="order">pedidos</span>
-            </div>
-          </div>
-          <div className="col-9">
-            <div className="order-lines">
-              <div className="label" />
-              <span className="text">
-                <span className="value">{totalDeEscolas} </span>escolas
-                solicitantes
+              <span className="number">{pedidos.length}</span>
+              <span className="order">
+                {`${talvezPluralizar(
+                  calcularNumeroDeEscolas(pedidos),
+                  "pedido"
+                )}`}
               </span>
             </div>
           </div>
+          {pedidos.length > 0 && (
+            <div className="col-9">
+              <div className="order-lines">
+                <div className="label" />
+                <span className="text">
+                  <span className="value">
+                    {calcularNumeroDeEscolas(pedidos)}{" "}
+                  </span>
+                  {`
+                  ${talvezPluralizar(
+                    calcularNumeroDeEscolas(pedidos),
+                    "escola"
+                  )} ${talvezPluralizar(
+                    calcularNumeroDeEscolas(pedidos),
+                    "solicitante"
+                  )}
+                  `}
+                </span>
+              </div>
+            </div>
+          )}
           <div className="col-1">
-            <Stand
-              onClick={() => this.setState({ collapsed: !collapsed })}
-              color={"#C8C8C8"}
-              width={18}
-              padding={0}
-              lineHeight={3}
-              lineSpacing={3}
-              className="float-right"
-              active={!collapsed}
-            />
+            {pedidos.length > 0 && (
+              <Stand
+                onClick={() => this.setState({ collapsed: !collapsed })}
+                color={"#C8C8C8"}
+                width={18}
+                padding={0}
+                lineHeight={3}
+                lineSpacing={3}
+                className="float-right"
+                active={!collapsed}
+              />
+            )}
           </div>
         </div>
         <Collapse isOpened={!collapsed}>
@@ -76,21 +97,28 @@ export class CardPendenciaAprovacao extends Component {
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
                 <tr>
-                  <th>Nº Pedido</th>
-                  <th>Código</th>
+                  <th>Código do Pedido</th>
+                  <th>Código EOL</th>
                   <th>Nome da Escola</th>
-                  <th>Qtd solicitada</th>
+                  <th>{ultimaColunaLabel}</th>
                 </tr>
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
                   return (
-                    <tr>
-                      <td>{pedido.id}</td>
-                      <td>{pedido.escola.cod_eol}</td>
-                      <td>{pedido.escola.nome}</td>
-                      <td>{pedido.quantidade}</td>
-                    </tr>
+                    <Link
+                      to={`/dre/inclusoes-de-alimentacao/relatorio?uuid=${
+                        pedido.uuid
+                      }&ehInclusaoContinua=${pedido.data_inicial !==
+                        undefined}`}
+                    >
+                      <tr>
+                        <td>{pedido.id_externo}</td>
+                        <td>{pedido.escola.codigo_eol}</td>
+                        <td>{pedido.escola.nome}</td>
+                        <td>{pedido.data_inicial}</td>
+                      </tr>
+                    </Link>
                   );
                 })}
               </tbody>

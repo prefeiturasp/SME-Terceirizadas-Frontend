@@ -32,7 +32,8 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
-import PainelPedidosPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
+import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 
 const routesConfig = [
   {
@@ -91,8 +92,13 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/dre/inclusoes-de-alimentacao/Relatorio",
+    component: InclusaoDeAlimentacaoRelatorioDREPage,
+    exact: false
+  },
+  {
     path: "/dre/inclusoes-de-alimentacao",
-    component: PainelPedidosPage,
+    component: PainelPedidosInclusaoDeAlimentacaoDREPage,
     exact: false
   },
   {

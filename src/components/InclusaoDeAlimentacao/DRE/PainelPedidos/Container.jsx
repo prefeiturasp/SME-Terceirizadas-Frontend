@@ -1,132 +1,50 @@
 import React, { Component } from "react";
+import { visaoPorCombo } from "../../../../constants/painelPedidos.constants";
+import {
+  getDiretoriaRegionalPedidosPrioritarios,
+  getDiretoriaRegionalPedidosNoPrazoLimite,
+  getDiretoriaRegionalPedidosNoPrazoRegular
+} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import PainelPedidos from ".";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidos: [
-        {
-          id: "12083",
-          escola: {
-            cod_eol: "009148",
-            nome: "EMEF CACILDA BECKER"
-          },
-          quantidade: "1705"
-        },
-        {
-          id: "12084",
-          escola: {
-            cod_eol: "013528",
-            nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12085",
-          escola: {
-            cod_eol: "014699",
-            nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12086",
-          escola: {
-            cod_eol: "097705",
-            nome: "EMEF ABRAO DE MORAES, PROF."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12083",
-          escola: {
-            cod_eol: "009148",
-            nome: "EMEF CACILDA BECKER"
-          },
-          quantidade: "1705"
-        },
-        {
-          id: "12084",
-          escola: {
-            cod_eol: "013528",
-            nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12085",
-          escola: {
-            cod_eol: "014699",
-            nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12086",
-          escola: {
-            cod_eol: "097705",
-            nome: "EMEF ABRAO DE MORAES, PROF."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12083",
-          escola: {
-            cod_eol: "009148",
-            nome: "EMEF CACILDA BECKER"
-          },
-          quantidade: "1705"
-        },
-        {
-          id: "12084",
-          escola: {
-            cod_eol: "013528",
-            nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12085",
-          escola: {
-            cod_eol: "014699",
-            nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
-          },
-          quantidade: "150"
-        },
-        {
-          id: "12086",
-          escola: {
-            cod_eol: "097705",
-            nome: "EMEF ABRAO DE MORAES, PROF."
-          },
-          quantidade: "150"
-        }
-      ],
-      vision_by: [
-        {
-          nome: "Visão por dia",
-          uuid: ""
-        },
-        {
-          nome: "Dia",
-          uuid: "day"
-        },
-        {
-          nome: "Semana",
-          uuid: "week"
-        },
-        {
-          nome: "Mês",
-          uuid: "month"
-        },
-        {
-          nome: "Lote",
-          uuid: "lote"
-        }
-      ]
+      pedidosCarregados: 0,
+      pedidosPrioritarios: [],
+      pedidosNoPrazoLimite: [],
+      pedidosNoPrazoRegular: [],
+      visaoPorCombo: visaoPorCombo
     };
   }
+
+  componentDidMount() {
+    getDiretoriaRegionalPedidosPrioritarios().then(response => {
+      const pedidosPrioritarios = response.results;
+      this.setState({
+        pedidosPrioritarios,
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+
+    getDiretoriaRegionalPedidosNoPrazoLimite().then(response => {
+      const pedidosNoPrazoLimite = response.results;
+      this.setState({
+        pedidosNoPrazoLimite,
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+
+    getDiretoriaRegionalPedidosNoPrazoRegular().then(response => {
+      const pedidosNoPrazoRegular = response.results;
+      this.setState({
+        pedidosNoPrazoRegular,
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+  }
+
   render() {
     return <PainelPedidos {...this.state} />;
   }

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   removerInclusaoDeAlimentacaoContinua,
   removerInclusaoDeAlimentacaoNormal
-} from "../../services/inclusaoDeAlimentacao.service";
+} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 import "../Shareable/style.scss";
 
 export class Rascunhos extends Component {

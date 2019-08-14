@@ -1,0 +1,19 @@
+table.table-periods {
+  tr {
+    color: #686868;
+    margin-top: 20px;
+    font-size: 14px;
+    th {
+      font-weight: normal;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+    td {
+      font-weight: bold;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+  }
+}
