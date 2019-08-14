@@ -7,9 +7,7 @@ import {
   getDiretoriaregionalCombo
 } from "../../../../services/diretoriaRegional.service";
 import HTTP_STATUS from "http-status-codes";
-import {
-  criarEditalEContrato
-} from "../../../../services/edital.service";
+import { criarEditalEContrato } from "../../../../services/edital.service";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
 import {
@@ -21,7 +19,6 @@ import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
-
 
 class EditaisContratos extends Component {
   constructor(props) {
@@ -43,8 +40,8 @@ class EditaisContratos extends Component {
         {
           vigencias: [
             {
-              data_inicio: null,
-              data_fim: null
+              data_inicial: null,
+              data_final: null
             }
           ],
           numero_contrato: null,
@@ -56,11 +53,11 @@ class EditaisContratos extends Component {
           dres_nomes: null,
           empresas: null,
           empresas_nomes: null
-
         }
       ],
       exibirModal: false,
       edital_contratos: null,
+      reseta: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -70,6 +67,7 @@ class EditaisContratos extends Component {
     this.adicionaFieldsFormEdital = this.adicionaFieldsFormEdital.bind(this);
     this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.setaResetFormChild = this.setaResetFormChild.bind(this);
   }
 
   exibirModal() {
@@ -80,10 +78,10 @@ class EditaisContratos extends Component {
     this.setState({ exibirModal: false });
   }
 
-  onSubmit(values){
+  onSubmit(values) {
     criarEditalEContrato(JSON.stringify(values)).then(
       response => {
-        if(response.status === HTTP_STATUS.CREATED){
+        if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Edital salvo com sucesso");
         } else {
           toastError("Houve um erro ao salvar o edital");
@@ -92,13 +90,41 @@ class EditaisContratos extends Component {
       function(error) {
         toastError("Houve um erro ao salvar o lote");
       }
-    )
+    );
+  }
+
+  resetForm(value) {
+    [
+      "tipo_contratacao",
+      "edital_numero",
+      "processo_administrativo",
+      "resumo_objeto"
+    ].forEach(element => {
+      this.props.change(element, "");
+    });
+
+    this.setState({ reseta: true });
+
+    this.state.forms.forEach((form, index) => {
+      this.props.change(`${form}.numero_contrato${index}`, "");
+      this.props.change(`${form}.processo_administrativo${index}`, "");
+      this.props.change(`${form}.data_proposta${index}`, "");
+      this.state.contratos_relacionados[index].vigencias.forEach(
+        (vigencia, key) => {
+          this.props.change(
+            `${form}.secaoContrato${key}.data_inicio${key}`,
+            ""
+          );
+          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, "");
+        }
+      );
+    });
   }
 
   adicionarNomesListagem(chave, valor, indice) {
     let contratos_relacionados = this.state.contratos_relacionados;
-    contratos_relacionados[indice][chave] = valor
-    this.setState({ contratos_relacionados })
+    contratos_relacionados[indice][chave] = valor;
+    this.setState({ contratos_relacionados });
   }
 
   adicionaNumeroContrato(indice, numero_contrato) {
@@ -115,11 +141,27 @@ class EditaisContratos extends Component {
     this.setState({ edital });
   }
 
+  validarForm(edital_contratos) {
+    edital_contratos.contratos_relacionados.forEach(contrato => {
+      if (
+        contrato.lotes === null ||
+        contrato.dres === null ||
+        contrato.empresas === null
+      ) {
+        toastError("Verifique os itens obrigatórios no formulario");
+      } else {
+        this.setState({ edital_contratos });
+        this.exibirModal();
+      }
+    });
+  }
+
   salvaFormulario(values) {
     const edital_contratos = this.state.edital;
-    edital_contratos['contratos_relacionados'] = this.state.contratos_relacionados
-    this.setState({ edital_contratos })
-    this.exibirModal()
+    edital_contratos[
+      "contratos_relacionados"
+    ] = this.state.contratos_relacionados;
+    this.validarForm(edital_contratos);
   }
 
   obtemDadosParaSubmit(field, value, key) {
@@ -140,8 +182,8 @@ class EditaisContratos extends Component {
         {
           vigencias: [
             {
-              data_inicio: null,
-              data_fim: null
+              data_inicial: null,
+              data_final: null
             }
           ],
           numero_contrato: null,
@@ -159,7 +201,7 @@ class EditaisContratos extends Component {
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `secaoEdital${this.state.forms.length - 1}`;
+    const indiceDoFormAtual = `secaoEdital${this.state.forms.length}`;
     let forms = this.state.forms;
     forms.push(indiceDoFormAtual);
     this.setState({ forms });
@@ -183,6 +225,10 @@ class EditaisContratos extends Component {
     });
   }
 
+  setaResetFormChild() {
+    this.setState({ reseta: false });
+  }
+
   render() {
     const { handleSubmit } = this.props;
     const {
@@ -191,11 +237,12 @@ class EditaisContratos extends Component {
       diretoriasRegionais,
       empresas,
       exibirModal,
-      edital_contratos
+      edital_contratos,
+      reseta
     } = this.state;
     return (
       <section className="cadastro pt-3">
-        <ModalCadastroEdital 
+        <ModalCadastroEdital
           closeModal={this.fecharModal}
           showModal={exibirModal}
           edital_contratos={edital_contratos}
@@ -233,6 +280,8 @@ class EditaisContratos extends Component {
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                   adicionaNumeroContrato={this.adicionaNumeroContrato}
                   adicionarNomesListagem={this.adicionarNomesListagem}
+                  reseta={reseta}
+                  setaResetFormChild={this.setaResetFormChild}
                 />
               );
             })}
@@ -254,12 +303,14 @@ class EditaisContratos extends Component {
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
-                    onClick={event => this.resetForm(event)}
+                    onClick={value => this.resetForm(value)}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values => this.salvaFormulario(values))}
+                    onClick={handleSubmit(values =>
+                      this.salvaFormulario(values)
+                    )}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}
