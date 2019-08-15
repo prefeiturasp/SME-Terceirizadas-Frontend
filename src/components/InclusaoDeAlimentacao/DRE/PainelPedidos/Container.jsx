@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import { visaoPorCombo } from "../../../../constants/painelPedidos.constants";
+import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import {
-  getDiretoriaRegionalPedidosPrioritarios,
-  getDiretoriaRegionalPedidosNoPrazoLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular
+  getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
+  getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
+  getDiretoriaRegionalPedidosNoPrazoRegular as regularesContinuo
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import {
+  getDiretoriaRegionalPedidosPrioritarios as prioritariosAvulso,
+  getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
+  getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
+} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import PainelPedidos from ".";
 
 class Container extends Component {
@@ -15,31 +20,67 @@ class Container extends Component {
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
-      visaoPorCombo: visaoPorCombo
+      visaoPorCombo: visaoPorComboSomenteDatas
     };
   }
 
   componentDidMount() {
-    getDiretoriaRegionalPedidosPrioritarios().then(response => {
+    prioritariosContinuo().then(response => {
       const pedidosPrioritarios = response.results;
       this.setState({
-        pedidosPrioritarios,
+        pedidosPrioritarios: this.state.pedidosPrioritarios.concat(
+          pedidosPrioritarios
+        ),
         pedidosCarregados: this.state.pedidosCarregados + 1
       });
     });
 
-    getDiretoriaRegionalPedidosNoPrazoLimite().then(response => {
+    prioritariosAvulso().then(response => {
+      const pedidosPrioritarios = response.results;
+      this.setState({
+        pedidosPrioritarios: this.state.pedidosPrioritarios.concat(
+          pedidosPrioritarios
+        ),
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+
+    limitesContinuo().then(response => {
       const pedidosNoPrazoLimite = response.results;
       this.setState({
-        pedidosNoPrazoLimite,
+        pedidosNoPrazoLimite: this.state.pedidosNoPrazoLimite.concat(
+          pedidosNoPrazoLimite
+        ),
         pedidosCarregados: this.state.pedidosCarregados + 1
       });
     });
 
-    getDiretoriaRegionalPedidosNoPrazoRegular().then(response => {
+    limitesAvulso().then(response => {
+      const pedidosNoPrazoLimite = response.results;
+      this.setState({
+        pedidosNoPrazoLimite: this.state.pedidosNoPrazoLimite.concat(
+          pedidosNoPrazoLimite
+        ),
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+
+    regularesContinuo().then(response => {
       const pedidosNoPrazoRegular = response.results;
       this.setState({
-        pedidosNoPrazoRegular,
+        pedidosNoPrazoRegular: this.state.pedidosNoPrazoRegular.concat(
+          pedidosNoPrazoRegular
+        ),
+        pedidosCarregados: this.state.pedidosCarregados + 1
+      });
+    });
+
+    regularesAvulso().then(response => {
+      const pedidosNoPrazoRegular = response.results;
+      this.setState({
+        pedidosNoPrazoRegular: this.state.pedidosNoPrazoRegular.concat(
+          pedidosNoPrazoRegular
+        ),
         pedidosCarregados: this.state.pedidosCarregados + 1
       });
     });

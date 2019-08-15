@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import CardHistorico from "../../../Shareable/CardHistorico/CardHistorico";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      visaoPor: "Dia",
       theadList: [
         "Nº Solicitação",
         "Escola",
@@ -49,7 +49,7 @@ class PainelPedidos extends Component {
   }
 
   render() {
-    const { trs, theadList } = this.state;
+    const { visaoPor, trs, theadList } = this.state;
     const {
       pedidosCarregados,
       pedidosPrioritarios,
@@ -59,7 +59,7 @@ class PainelPedidos extends Component {
     } = this.props;
     return (
       <div>
-        {pedidosCarregados !== 3 ? (
+        {pedidosCarregados < 6 ? (
           <div>Carregando...</div>
         ) : (
           <div>
@@ -71,14 +71,16 @@ class PainelPedidos extends Component {
               </div>
               <div className="col-5">
                 <div className="row">
+                  <div classame="col-6">
+                    <span>Vencimento para:</span>
+                  </div>
                   <div className="col-6">
                     <LabelAndCombo
-                      onChange={value => this.handleField("reason", value)}
+                      onChange={value => this.setState({ visaoPor: value })}
                       placeholder={"Visão por dia"}
                       options={visaoPorCombo}
                     />
                   </div>
-                  <div className="text-dark col-6 my-auto">{`Visão dia ${dataAtualDDMMYYYY()}`}</div>
                 </div>
               </div>
             </div>
@@ -94,26 +96,30 @@ class PainelPedidos extends Component {
                 />
               </div>
             </div>
-            <div className="row pt-3">
-              <div className="col-12">
-                <CardPendenciaAprovacao
-                  titulo={"Pedidos no prazo limite"}
-                  tipoDeCard={"on-limit"}
-                  pedidos={pedidosNoPrazoLimite}
-                  ultimaColunaLabel={"Data da Inclusão"}
-                />
+            {(visaoPor === "Semana" || visaoPor === "Mes") && (
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardPendenciaAprovacao
+                    titulo={"Pedidos no prazo limite"}
+                    tipoDeCard={"on-limit"}
+                    pedidos={pedidosNoPrazoLimite}
+                    ultimaColunaLabel={"Data da Inclusão"}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="row pt-3">
-              <div className="col-12">
-                <CardPendenciaAprovacao
-                  titulo={"Pedidos no prazo regular"}
-                  tipoDeCard={"regular"}
-                  pedidos={pedidosNoPrazoRegular}
-                  ultimaColunaLabel={"Data da Inclusão"}
-                />
+            )}
+            {visaoPor === "Mes" && (
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardPendenciaAprovacao
+                    titulo={"Pedidos no prazo regular"}
+                    tipoDeCard={"regular"}
+                    pedidos={pedidosNoPrazoRegular}
+                    ultimaColunaLabel={"Data da Inclusão"}
+                  />
+                </div>
               </div>
-            </div>
+            )}
             <div className="row pt-3">
               <div className="col-12">
                 <CardHistorico

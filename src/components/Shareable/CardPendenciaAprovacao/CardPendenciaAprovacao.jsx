@@ -116,7 +116,9 @@ export class CardPendenciaAprovacao extends Component {
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial}</td>
+                        <td>
+                          {pedido.data_inicial || pedido.inclusoes[0].data}
+                        </td>
                       </tr>
                     </Link>
                   );

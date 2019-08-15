@@ -19,14 +19,16 @@ import { Field, FormSection, reduxForm } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
-  criarInclusaoDeAlimentacaoContinua,
   criarInclusaoDeAlimentacaoNormal,
-  atualizarInclusaoDeAlimentacaoContinua,
   atualizarInclusaoDeAlimentacaoNormal,
-  getInclusoesContinuasSalvas,
   getInclusoesNormaisSalvas,
   inicioPedidoNormal
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  criarInclusaoDeAlimentacaoContinua,
+  atualizarInclusaoDeAlimentacaoContinua,
+  getInclusoesContinuasSalvas
+} from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";

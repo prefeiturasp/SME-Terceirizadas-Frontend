@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import {
-  removerInclusaoDeAlimentacaoContinua,
-  removerInclusaoDeAlimentacaoNormal
-} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { removerInclusaoDeAlimentacaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { removerInclusaoDeAlimentacaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import "../Shareable/style.scss";
 
 export class Rascunhos extends Component {

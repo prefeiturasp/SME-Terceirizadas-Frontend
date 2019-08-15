@@ -71,7 +71,9 @@ export class LabelAndCombo extends Component {
 
   handleChange(event) {
     const value = event.target.value;
-    this.props.input.onChange(value);
+    this.props.input
+      ? this.props.input.onChange(value)
+      : this.props.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
 
@@ -194,9 +196,11 @@ export class LabelAndDate extends Component {
     } = this.props;
     return (
       <Grid cols={cols}>
-        {label &&<label htmlFor={name} className={"col-form-label"}>
-          {label}
-        </label>}
+        {label && (
+          <label htmlFor={name} className={"col-form-label"}>
+            {label}
+          </label>
+        )}
         <div>
           <div
             className={
@@ -371,8 +375,7 @@ export class LabelAndTextArea extends Component {
       </Grid>
     );
   }
-};
-
+}
 
 export const LabelAndTextAreaCustom = props => {
   const {
@@ -386,7 +389,7 @@ export const LabelAndTextAreaCustom = props => {
     type,
     meta,
     disabled,
-    classNameInput,
+    classNameInput
   } = props;
   return (
     <Grid cols={cols}>

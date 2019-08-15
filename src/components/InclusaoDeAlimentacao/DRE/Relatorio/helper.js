@@ -11,3 +11,9 @@ export const prazoDoPedidoMensagem = (
     return "Pedido no prazo limite";
   else return "Pedido no prazo regular";
 };
+
+export const corDaMensagem = mensagem => {
+  if (mensagem.includes("vencimento")) return "red";
+  else if (mensagem.includes("limite")) return "yellow";
+  else return "green";
+};

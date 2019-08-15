@@ -4,10 +4,13 @@ import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus/FluxoDeStatus";
-import { prazoDoPedidoMensagem } from "./helper";
+import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  getInclusaoDeAlimentacaoAvulsa,
+  DREConfirmaInclusaoDeAlimentacaoAvulsa
+} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
   getInclusaoDeAlimentacaoContinua,
   DREConfirmaInclusaoDeAlimentacaoContinua
@@ -28,8 +31,7 @@ class Relatorio extends Component {
       showModal: false,
       ehInclusaoContinua: false,
       inclusaoDeAlimentacao: null,
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null,
+      prazoDoPedidoMensagem: null,
       listaDeStatus: [
         {
           titulo: "Solicitação Realizada",
@@ -78,9 +80,10 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    const getInclusaoDeAlimentacao = ehInclusaoContinua
-      ? getInclusaoDeAlimentacaoContinua
-      : getInclusaoDeAlimentacaoAvulsa;
+    const getInclusaoDeAlimentacao =
+      ehInclusaoContinua === "true"
+        ? getInclusaoDeAlimentacaoContinua
+        : getInclusaoDeAlimentacaoAvulsa;
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -88,20 +91,21 @@ class Relatorio extends Component {
       const proximos_dois_dias_uteis = dataParaUTC(
         new Date(response.proximos_dois_dias_uteis)
       );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
-    });
-    if (uuid) {
-      getInclusaoDeAlimentacao(uuid).then(response => {
-        this.setState({
-          inclusaoDeAlimentacao: response,
-          ehInclusaoContinua,
-          uuid
+      if (uuid) {
+        getInclusaoDeAlimentacao(uuid).then(response => {
+          this.setState({
+            inclusaoDeAlimentacao: response,
+            ehInclusaoContinua: ehInclusaoContinua === "true",
+            uuid,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+              response.data_inicial || response.inclusoes[0].data,
+              proximos_dois_dias_uteis,
+              proximos_cinco_dias_uteis
+            )
+          });
         });
-      });
-    }
+      }
+    });
   }
 
   showModal() {
@@ -115,7 +119,10 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    DREConfirmaInclusaoDeAlimentacaoContinua(uuid).then(
+    const DREConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
+      ? DREConfirmaInclusaoDeAlimentacaoContinua
+      : DREConfirmaInclusaoDeAlimentacaoAvulsa;
+    DREConfirmaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
@@ -130,14 +137,66 @@ class Relatorio extends Component {
     );
   }
 
+  renderParteAvulsa() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    return (
+      !ehInclusaoContinua && (
+        <table className="table-periods">
+          <tr>
+            <th>Data</th>
+            <th>Motivo</th>
+          </tr>
+          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
+            return (
+              <tr>
+                <td>{inclusao.data}</td>
+                <td>{inclusao.motivo.nome}</td>
+              </tr>
+            );
+          })}
+        </table>
+      )
+    );
+  }
+
+  renderParteContinua() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    return (
+      ehInclusaoContinua && (
+        <div>
+          <div className="row">
+            <div className="col-4 report-label-value">
+              <p>Data do evento</p>
+              <p className="value">
+                {`${inclusaoDeAlimentacao.data_inicial} - ${
+                  inclusaoDeAlimentacao.data_final
+                }`}
+              </p>
+            </div>
+            <div className="col-4 report-label-value">
+              <p>Dias da Semana</p>
+              <p className="value">
+                {inclusaoDeAlimentacao.dias_semana_explicacao}
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>Motivo</p>
+              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+            </div>
+          </div>
+        </div>
+      )
+    );
+  }
+
   render() {
     const {
       listaDeStatus,
       showModal,
       inclusaoDeAlimentacao,
-      ehInclusaoContinua,
-      proximos_cinco_dias_uteis,
-      proximos_dois_dias_uteis
+      prazoDoPedidoMensagem
     } = this.state;
     return (
       <div>
@@ -156,12 +215,12 @@ class Relatorio extends Component {
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
-                  <p className="col-12">
-                    {prazoDoPedidoMensagem(
-                      inclusaoDeAlimentacao.data_inicial,
-                      proximos_dois_dias_uteis,
-                      proximos_cinco_dias_uteis
-                    )}
+                  <p
+                    className={`col-12 title-message ${corDaMensagem(
+                      prazoDoPedidoMensagem
+                    )}`}
+                  >
+                    {prazoDoPedidoMensagem}
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -237,30 +296,8 @@ class Relatorio extends Component {
                     </p>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-4 report-label-value">
-                    <p>Data do evento</p>
-                    <p className="value">
-                      {ehInclusaoContinua
-                        ? `${inclusaoDeAlimentacao.data_inicial} - ${
-                            inclusaoDeAlimentacao.data_final
-                          }`
-                        : `${inclusaoDeAlimentacao.data}`}
-                    </p>
-                  </div>
-                  {inclusaoDeAlimentacao.dias_semana_explicacao !== null && (
-                    <div className="col-4 report-label-value">
-                      <p>Dias da Semana</p>
-                      <p className="value">
-                        {inclusaoDeAlimentacao.dias_semana_explicacao}
-                      </p>
-                    </div>
-                  )}
-                  <div className="col-4 report-label-value">
-                    <p>Motivo</p>
-                    <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
-                  </div>
-                </div>
+                {this.renderParteContinua()}
+                {this.renderParteAvulsa()}
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>

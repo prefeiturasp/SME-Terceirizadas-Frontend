@@ -20,3 +20,22 @@ export const visaoPorCombo = [
     uuid: "lote"
   }
 ];
+
+export const visaoPorComboSomenteDatas = [
+  {
+    nome: "Visão por dia",
+    uuid: ""
+  },
+  {
+    nome: "Dia",
+    uuid: "Dia"
+  },
+  {
+    nome: "Semana",
+    uuid: "Semana"
+  },
+  {
+    nome: "Mês",
+    uuid: "Mes"
+  }
+];

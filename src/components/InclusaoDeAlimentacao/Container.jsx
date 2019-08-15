@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import {
-  getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
-} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getMotivosInclusaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { formatarPeriodos } from "./helper";
