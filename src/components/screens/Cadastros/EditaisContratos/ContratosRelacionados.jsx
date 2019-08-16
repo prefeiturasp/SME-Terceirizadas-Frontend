@@ -32,7 +32,8 @@ class ContratosRelacionados extends Component {
           data_final: null
         }
       ],
-
+      status: false,
+      update: false,
       formVigenciaContratos: ["vigenciaContrato0"]
     };
   }
@@ -133,12 +134,19 @@ class ContratosRelacionados extends Component {
     this.setState({ nomeDoFormAtual: this.props.nomeForm });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (
       this.props.reseta === true &&
       this.state.formVigenciaContratos.length > 1
     ) {
       this.state.formVigenciaContratos.splice(1, Number.MAX_VALUE);
+      let vigencias = [
+        {
+          data_inicial: null,
+          data_final: null
+        }
+      ];
+      this.setState({ vigencias });
       if (this.props.reseta === true) {
         this.props.setaResetFormChild();
       }
@@ -163,6 +171,15 @@ class ContratosRelacionados extends Component {
     }
   }
 
+  renderExcluirNoUltimo(indiceDoForm) {
+    let indice = indiceDoForm + 1;
+    if (indice !== 1 && indice + 1 > this.props.contratos_relacionados.length) {
+      return true
+    }else {
+      return false
+    }
+  }
+
   render() {
     const {
       lotesSelecionados,
@@ -180,13 +197,26 @@ class ContratosRelacionados extends Component {
       empresas,
       obtemDadosParaSubmit,
       indice,
-      adicionaNumeroContrato
+      adicionaNumeroContrato,
+      excluirContratoRelacionado
     } = this.props;
     return (
       <div>
         <div>
           <article className="card-body contratos-relacionados">
             <section className="section-inputs">
+              {this.renderExcluirNoUltimo(indice) && (
+                <div className="excluir-form">
+                  <button
+                    className="excluir"
+                    onClick={() => {
+                      excluirContratoRelacionado(indice);
+                    }}
+                  >
+                    excluir <i class="fas fa-trash-alt" />
+                  </button>
+                </div>
+              )}
               <div className="data-processo-adm">
                 <div className="inputs-processo">
                   <div>

@@ -68,6 +68,17 @@ class EditaisContratos extends Component {
     this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.setaResetFormChild = this.setaResetFormChild.bind(this);
+    this.excluirContratoRelacionado = this.excluirContratoRelacionado.bind(
+      this
+    );
+  }
+
+  excluirContratoRelacionado(indiceForm) {
+    let contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados.splice(indiceForm, 1);
+    let forms = this.state.forms;
+    forms.splice(indiceForm, 1);
+    this.setState({ contratos_relacionados, forms });
   }
 
   exibirModal() {
@@ -121,6 +132,30 @@ class EditaisContratos extends Component {
     });
 
     this.state.forms.splice(1, Number.MAX_VALUE);
+
+    this.state.contratos_relacionados.splice(1, Number.MAX_VALUE);
+
+    let contratos_relacionados = [
+      {
+        vigencias: [
+          {
+            data_inicial: null,
+            data_final: null
+          }
+        ],
+        numero_contrato: null,
+        processo_administrativo: null,
+        data_proposta: null,
+        lotes: null,
+        lotes_nomes: null,
+        dres: null,
+        dres_nomes: null,
+        empresas: null,
+        empresas_nomes: null
+      }
+    ];
+
+    this.setState({ contratos_relacionados });
   }
 
   adicionarNomesListagem(chave, valor, indice) {
@@ -283,6 +318,7 @@ class EditaisContratos extends Component {
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                   adicionaNumeroContrato={this.adicionaNumeroContrato}
                   adicionarNomesListagem={this.adicionarNomesListagem}
+                  excluirContratoRelacionado={this.excluirContratoRelacionado}
                   reseta={reseta}
                   setaResetFormChild={this.setaResetFormChild}
                   contratos_relacionados={contratos_relacionados}
