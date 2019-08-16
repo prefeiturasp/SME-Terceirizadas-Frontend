@@ -240,7 +240,8 @@ class EditaisContratos extends Component {
       empresas,
       exibirModal,
       edital_contratos,
-      reseta
+      reseta,
+      contratos_relacionados
     } = this.state;
     return (
       <section className="cadastro pt-3">
@@ -284,6 +285,7 @@ class EditaisContratos extends Component {
                   adicionarNomesListagem={this.adicionarNomesListagem}
                   reseta={reseta}
                   setaResetFormChild={this.setaResetFormChild}
+                  contratos_relacionados={contratos_relacionados}
                 />
               );
             })}

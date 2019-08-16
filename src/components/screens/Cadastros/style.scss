@@ -426,12 +426,11 @@ section {
 }
 .data-processo-adm {
   display: grid;
-  grid-template-columns: 90% 10%;
 
   .inputs-processo {
     display: grid;
-    grid-template-columns: 68% 28%;
-    grid-column-gap: 4%;
+    grid-template-columns: 74% 25%;
+    grid-column-gap: 2%;
   }
 }
 

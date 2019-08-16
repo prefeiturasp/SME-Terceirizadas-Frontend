@@ -6,7 +6,7 @@ import {
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required } from "../../../../helpers/fieldValidators";
-
+import moment from "moment";
 import {
   renderizarLabelLote,
   renderizarLabelDiretoria,
@@ -35,6 +35,20 @@ class ContratosRelacionados extends Component {
 
       formVigenciaContratos: ["vigenciaContrato0"]
     };
+  }
+
+  obtemDataInicial(keyVigencia, indiceForm) {
+    if (keyVigencia === 0) {
+      return moment(
+        this.props.contratos_relacionados[indiceForm]["data_proposta"],
+        "DD/MM/YYYY"
+      )["_d"];
+    } else {
+      return moment(
+        this.state.vigencias[keyVigencia - 1]["data_final"],
+        "DD/MM/YYYY"
+      )["_d"];
+    }
   }
 
   handleField(field, value, key, indice) {
@@ -157,7 +171,8 @@ class ContratosRelacionados extends Component {
       empresasNomesSelecionados,
       diretoriasSelecionadas,
       empresasSelecionadas,
-      formVigenciaContratos
+      formVigenciaContratos,
+      vigencias
     } = this.state;
     const {
       lotes,
@@ -172,6 +187,42 @@ class ContratosRelacionados extends Component {
         <div>
           <article className="card-body contratos-relacionados">
             <section className="section-inputs">
+              <div className="data-processo-adm">
+                <div className="inputs-processo">
+                  <div>
+                    <label className="label">
+                      <span>* </span>Processo administrativo do contrato
+                    </label>
+                    <Field
+                      name={`processo_administrativo${indice}`}
+                      component={LabelAndInput}
+                      validate={required}
+                      onChange={value => {
+                        obtemDadosParaSubmit(
+                          `processo_administrativo`,
+                          value.target.value,
+                          indice
+                        );
+                      }}
+                      max={50}
+                    />
+                  </div>
+                  <div>
+                    <label className="label">
+                      <span>* </span>Data da proposta
+                    </label>
+                    <Field
+                      name={`data_proposta${indice}`}
+                      component={LabelAndDate}
+                      validate={required}
+                      onChange={value => {
+                        obtemDadosParaSubmit(`data_proposta`, value, indice);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div />
+              </div>
               <div className="section-contrato-vigencia">
                 <div className="coluna contrato">
                   <label className="label">
@@ -200,6 +251,7 @@ class ContratosRelacionados extends Component {
                               name={`data_inicio${key}`}
                               component={LabelAndDate}
                               validate={required}
+                              minDate={this.obtemDataInicial(key, indice)}
                               onChange={value =>
                                 this.handleField(
                                   `data_inicial`,
@@ -215,6 +267,12 @@ class ContratosRelacionados extends Component {
                               name={`data_fim${key}`}
                               component={LabelAndDate}
                               label=" "
+                              minDate={
+                                moment(
+                                  vigencias[key]["data_inicial"],
+                                  "DD/MM/YYYY"
+                                )["_d"]
+                              }
                               validate={required}
                               onChange={value =>
                                 this.handleField(
@@ -245,43 +303,6 @@ class ContratosRelacionados extends Component {
                 </aside>
               </div>
               <div className="container-processo-adm">
-                <div className="data-processo-adm">
-                  <div className="inputs-processo">
-                    <div>
-                      <label className="label">
-                        <span>* </span>Processo administrativo do contrato
-                      </label>
-                      <Field
-                        name={`processo_administrativo${indice}`}
-                        component={LabelAndInput}
-                        validate={required}
-                        onChange={value => {
-                          obtemDadosParaSubmit(
-                            `processo_administrativo`,
-                            value.target.value,
-                            indice
-                          );
-                        }}
-                        max={50}
-                      />
-                    </div>
-                    <div>
-                      <label className="label">
-                        <span>* </span>Data da proposta
-                      </label>
-                      <Field
-                        name={`data_proposta${indice}`}
-                        component={LabelAndDate}
-                        validate={required}
-                        onChange={value => {
-                          obtemDadosParaSubmit(`data_proposta`, value, indice);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div />
-                </div>
-
                 <div className="container-lote-dre">
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (
