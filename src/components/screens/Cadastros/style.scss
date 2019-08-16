@@ -474,3 +474,42 @@ section {
 .contrato {
   margin-top: 1em;
 }
+
+.modal-cadastro-edital {
+  margin: 0 1em;
+  display: grid;
+
+  header {
+    color: #686868;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .detalhes {
+    font-weight: bold;
+    color: #353535;
+    font-size: 14px;
+
+    span {
+      font-family: Roboto;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 1.29;
+      color: #353535;
+    }
+
+    .vigencias{
+      display: flex;
+    }
+
+    .iteracao-elementos{
+      display: flex;
+
+      .elementos{
+        margin-left: 0.5em;
+      }
+    }
+    
+  }
+}

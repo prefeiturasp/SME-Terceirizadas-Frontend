@@ -19,6 +19,8 @@ export const getLotes = async () => {
   });
 };
 
+
+
 export const getDiretoriaregional = () => {
   const url = `${API_URL}/diretorias-regionais/`;
   let status = 0;
@@ -38,8 +40,8 @@ export const getDiretoriaregional = () => {
     });
 };
 
-export const getDiretoriaregionalCombo = () => {
-  const url = `${API_URL}/diretorias-regionais-combo/`;
+export const getDiretoriaregionalSimplissima = () => {
+  const url = `${API_URL}/diretorias-regionais-simplissima/`;
   let status = 0;
   return fetch(url, {
     headers: authToken,

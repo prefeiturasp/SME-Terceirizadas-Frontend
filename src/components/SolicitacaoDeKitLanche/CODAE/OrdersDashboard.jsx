@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 

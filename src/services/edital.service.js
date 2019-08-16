@@ -6,14 +6,20 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const meusDados = () => {
-  const url = `${API_URL}/usuarios/meus-dados/`;
+export const criarEditalEContrato = payload => {
+  const url = `${API_URL}/editais-contratos/`;
+  let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "POST",
+    body: payload,
     headers: authToken
   })
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
       return error.json();

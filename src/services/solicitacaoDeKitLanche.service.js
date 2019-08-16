@@ -105,7 +105,7 @@ export const removeKitLanche = async uuid => {
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${uuid}`, OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -119,7 +119,7 @@ export const removeKitLanche = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -144,7 +144,7 @@ export const getSolicitacoesKitLancheApi = async () => {
   };
 
   return await fetch(
-    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes`,
+    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes/`,
     OBJ_REQUEST
   )
     .then(response => {

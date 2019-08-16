@@ -22,7 +22,7 @@ export const getTemplatesMensagem = async () => {
 export const getTemplateMensagemDetalhe = async uuid => {
   try {
     const response = await fetch(
-      `${CONFIG.API_URL}/templates-mensagem/${uuid}`,
+      `${CONFIG.API_URL}/templates-mensagem/${uuid}/`,
       {
         method: "GET",
         headers: authHeader

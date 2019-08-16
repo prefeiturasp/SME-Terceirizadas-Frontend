@@ -52,8 +52,8 @@ export const getEscolasSimples = () => {
     });
 };
 
-export const getEscolasCombo = () => {
-  const url = `${API_URL}/escolas-combo/?limit=1034`;
+export const getEscolasSimplissima = () => {
+  const url = `${API_URL}/escolas-simplissima/?limit=1034`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
