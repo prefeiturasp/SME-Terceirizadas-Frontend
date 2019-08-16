@@ -1,4 +1,4 @@
-export const calcularNumeroDeEscolas = pedidos => {
+export const calcularNumeroDeEscolasUnicas = pedidos => {
   let escolasDiferentes = [];
   pedidos.forEach(pedido => {
     if (!escolasDiferentes.includes(pedido.escola.uuid))

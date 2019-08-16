@@ -102,7 +102,7 @@ export const inicioPedidoNormal = uuid => {
   const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
@@ -181,7 +181,7 @@ export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
   const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/confirma_pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {

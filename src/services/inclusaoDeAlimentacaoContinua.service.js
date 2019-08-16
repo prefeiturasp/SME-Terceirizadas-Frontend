@@ -181,7 +181,7 @@ export const inicioPedidoContinua = uuid => {
   const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/inicio_de_pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
@@ -200,7 +200,7 @@ export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
   const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/confirma_pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {

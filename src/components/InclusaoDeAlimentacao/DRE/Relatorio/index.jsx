@@ -16,6 +16,7 @@ import {
   DREConfirmaInclusaoDeAlimentacaoContinua
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
@@ -27,6 +28,7 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
+      meusDados: null,
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -70,7 +72,7 @@ class Relatorio extends Component {
     });
   }
 
-  renderRedirect = () => {
+  renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
       return <Redirect to="/dre/inclusoes-de-alimentacao" />;
     }
@@ -84,6 +86,11 @@ class Relatorio extends Component {
       ehInclusaoContinua === "true"
         ? getInclusaoDeAlimentacaoContinua
         : getInclusaoDeAlimentacaoAvulsa;
+    meusDados().then(response => {
+      this.setState({
+        meusDados: response
+      });
+    });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -93,12 +100,14 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getInclusaoDeAlimentacao(uuid).then(response => {
+          const dataMaisProxima =
+            response.inclusoes && response.inclusoes[0].data;
           this.setState({
             inclusaoDeAlimentacao: response,
             ehInclusaoContinua: ehInclusaoContinua === "true",
             uuid,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial || response.inclusoes[0].data,
+              response.data_inicial || dataMaisProxima,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
@@ -196,7 +205,8 @@ class Relatorio extends Component {
       listaDeStatus,
       showModal,
       inclusaoDeAlimentacao,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      meusDados
     } = this.state;
     return (
       <div>
@@ -204,7 +214,7 @@ class Relatorio extends Component {
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {this.renderRedirect()}
+        {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
         {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
@@ -237,7 +247,8 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {inclusaoDeAlimentacao.escola.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -245,22 +256,24 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {
-                        inclusaoDeAlimentacao.escola.lote.diretoria_regional
-                          .nome
-                      }
+                      {meusDados.diretorias_regionais &&
+                        meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola.lote.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.lote &&
+                        inclusaoDeAlimentacao.escola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola.lote.tipo_gestao.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.tipo_gestao &&
+                        inclusaoDeAlimentacao.escola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
@@ -308,7 +321,10 @@ class Relatorio extends Component {
                     quantidade_por_periodo => {
                       return (
                         <tr>
-                          <td>{quantidade_por_periodo.periodo_escolar.nome}</td>
+                          <td>
+                            {quantidade_por_periodo.periodo_escolar &&
+                              quantidade_por_periodo.periodo_escolar.nome}
+                          </td>
                           <td>
                             {stringSeparadaPorVirgulas(
                               quantidade_por_periodo.tipos_alimentacao,

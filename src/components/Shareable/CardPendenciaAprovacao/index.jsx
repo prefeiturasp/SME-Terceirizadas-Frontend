@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
-import { calcularNumeroDeEscolas } from "./helper";
+import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../helpers/utilities";
 import "./style.scss";
 
@@ -41,7 +41,7 @@ export class CardPendenciaAprovacao extends Component {
               <span className="number">{pedidos.length}</span>
               <span className="order">
                 {`${talvezPluralizar(
-                  calcularNumeroDeEscolas(pedidos),
+                  calcularNumeroDeEscolasUnicas(pedidos),
                   "pedido"
                 )}`}
               </span>
@@ -53,14 +53,14 @@ export class CardPendenciaAprovacao extends Component {
                 <div className="label" />
                 <span className="text">
                   <span className="value">
-                    {calcularNumeroDeEscolas(pedidos)}{" "}
+                    {calcularNumeroDeEscolasUnicas(pedidos)}{" "}
                   </span>
                   {`
                   ${talvezPluralizar(
-                    calcularNumeroDeEscolas(pedidos),
+                    calcularNumeroDeEscolasUnicas(pedidos),
                     "escola"
                   )} ${talvezPluralizar(
-                    calcularNumeroDeEscolas(pedidos),
+                    calcularNumeroDeEscolasUnicas(pedidos),
                     "solicitante"
                   )}
                   `}
@@ -100,11 +100,13 @@ export class CardPendenciaAprovacao extends Component {
                   <th>Código do Pedido</th>
                   <th>Código EOL</th>
                   <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel}</th>
+                  <th>{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
+                  const dataMaisProxima =
+                    pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
                       to={`/dre/inclusoes-de-alimentacao/relatorio?uuid=${
@@ -116,9 +118,7 @@ export class CardPendenciaAprovacao extends Component {
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>
-                          {pedido.data_inicial || pedido.inclusoes[0].data}
-                        </td>
+                        <td>{pedido.data_inicial || dataMaisProxima}</td>
                       </tr>
                     </Link>
                   );
