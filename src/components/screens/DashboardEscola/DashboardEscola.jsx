@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { dataAtual } from "./utils";
+import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "./CardAtalho";
