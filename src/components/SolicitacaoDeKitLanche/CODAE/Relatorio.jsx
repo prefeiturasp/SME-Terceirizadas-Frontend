@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { reduxForm } from "redux-form";
 import "../../Shareable/style.scss";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus/FluxoDeStatus";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess } from "../../Shareable/dialogs";
 import "./style.scss";
@@ -246,7 +246,7 @@ class Relatorio extends Component {
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}
                     className="ml-3"
-                  /> 
+                  />
                 </div>
               </div>
             </div>
