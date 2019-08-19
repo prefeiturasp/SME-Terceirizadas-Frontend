@@ -12,6 +12,7 @@ import {
   renderizarLabelDiretoria,
   renderizarLabelEmpresa
 } from "./helper";
+import { dateDelta } from "../../../../helpers/utilities";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
@@ -33,7 +34,6 @@ class ContratosRelacionados extends Component {
         }
       ],
       status: false,
-      update: false,
       formVigenciaContratos: ["vigenciaContrato0"]
     };
   }
@@ -174,9 +174,9 @@ class ContratosRelacionados extends Component {
   renderExcluirNoUltimo(indiceDoForm) {
     let indice = indiceDoForm + 1;
     if (indice !== 1 && indice + 1 > this.props.contratos_relacionados.length) {
-      return true
-    }else {
-      return false
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -290,6 +290,7 @@ class ContratosRelacionados extends Component {
                                   indice
                                 )
                               }
+                              maxDate={dateDelta(1825)}
                             />
                           </div>
                           <div className="coluna">
@@ -303,6 +304,7 @@ class ContratosRelacionados extends Component {
                                   "DD/MM/YYYY"
                                 )["_d"]
                               }
+                              maxDate={dateDelta(1825)}
                               validate={required}
                               onChange={value =>
                                 this.handleField(
