@@ -23,7 +23,7 @@ export const fluxoPartindoEscola = [
     criado_em: "",
     usuario: null
   }
-]
+];
 
 export const tipoDeStatus = status => {
   switch (status) {
@@ -37,6 +37,8 @@ export const tipoDeStatus = status => {
     case "CODAE cancelou pedido":
     case "DRE cancelou pedido":
       return "cancelado";
+    case "DRE reprovou":
+      return "reprovado";
     default:
       return "";
   }

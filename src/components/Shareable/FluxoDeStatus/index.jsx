@@ -26,9 +26,11 @@ export const FluxoDeStatus = props => {
                     tipoDeStatus(novoStatus.status_evento_explicacao) ===
                     "aprovado"
                       ? "active"
-                      : status.status === "reprovado"
+                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
+                        "reprovado"
                       ? "disapproved"
-                      : status.status === "cancelado"
+                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
+                        "cancelado"
                       ? "cancelled"
                       : ""
                   }

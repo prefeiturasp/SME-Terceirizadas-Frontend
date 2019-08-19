@@ -133,7 +133,7 @@ export const getInclusaoDeAlimentacaoContinua = uuid => {
 };
 
 export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-prioritarios-diretoria-regional/${filtroAplicado}`;
+  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -148,7 +148,7 @@ export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-no-limite-diretoria-regional/${filtroAplicado}`;
+  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -163,7 +163,37 @@ export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-no-prazo-diretoria-regional/${filtroAplicado}`;
+  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosAprovados = () => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
