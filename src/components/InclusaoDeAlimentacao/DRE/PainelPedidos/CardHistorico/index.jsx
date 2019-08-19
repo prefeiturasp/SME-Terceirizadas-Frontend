@@ -40,6 +40,7 @@ export class CardHistorico extends Component {
     this.setState({ pedidos });
   }
 
+  // TODO: chamar "imprimir" quando tiver endpoint definido
   handleClickSubmit = e => {};
 
   selecionarTodos() {
@@ -83,7 +84,7 @@ export class CardHistorico extends Component {
                       name="selecionar_todos"
                     />
                     <span
-                      onClick={value => this.selecionarTodos()}
+                      onClick={() => this.selecionarTodos()}
                       className="checkbox-custom"
                     />
                     Selecionar todos

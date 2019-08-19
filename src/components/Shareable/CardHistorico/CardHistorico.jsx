@@ -20,8 +20,8 @@ export class CardHistorico extends Component {
   };
 
   selecionarTodos() {
-    this.props.trs.forEach(tr => {
-      this.props.change(`check_${tr._id}`, !this.props.selecionar_todos);
+    this.props.pedidos.forEach(pedido => {
+      this.props.change(`check_${pedido.uuid}`, !this.props.selecionar_todos);
     });
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }

@@ -126,7 +126,7 @@ class PainelPedidos extends Component {
     } = this.state;
     const {
       visaoPorCombo,
-      visaoPor,
+      valorDoFiltro,
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
@@ -173,7 +173,7 @@ class PainelPedidos extends Component {
                   />
                 </div>
               </div>
-              {visaoPor !== "hoje" && (
+              {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenciaAprovacao
@@ -185,7 +185,7 @@ class PainelPedidos extends Component {
                   </div>
                 </div>
               )}
-              {visaoPor !== "hoje" && (
+              {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenciaAprovacao
@@ -230,7 +230,7 @@ const PainelPedidosForm = reduxForm({
 const selector = formValueSelector("painelPedidos");
 const mapStateToProps = state => {
   return {
-    visaoPor: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por")
   };
 };
 
