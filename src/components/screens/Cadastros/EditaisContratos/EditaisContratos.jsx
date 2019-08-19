@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLotes,
-  getDiretoriaregionalCombo
+  getDiretoriaregionalSimplissima
 } from "../../../../services/diretoriaRegional.service";
 import HTTP_STATUS from "http-status-codes";
 import { criarEditalEContrato } from "../../../../services/edital.service";
@@ -265,7 +265,7 @@ class EditaisContratos extends Component {
       this.setState({ lotes: normalizaLabelValueLote(response.results) });
     });
 
-    getDiretoriaregionalCombo().then(response => {
+    getDiretoriaregionalSimplissima().then(response => {
       this.setState({
         diretoriasRegionais: normalizaLabelValueDRE(response.data)
       });

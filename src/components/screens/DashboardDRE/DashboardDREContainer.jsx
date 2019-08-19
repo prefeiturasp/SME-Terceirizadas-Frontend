@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import DashboardDRE from "./DashboardDRE";
+import { getPendentesAprovacaoList } from "../../../services/painelDRE.service";
 
 class DashboardDREContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       enrolled: 4050,
+      pendentesAprovacaoList: [],
       solicitations: [
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
@@ -52,6 +54,17 @@ class DashboardDREContainer extends Component {
       ]
     };
   }
+
+
+  componentDidMount() {
+    getPendentesAprovacaoList().then(response => {
+      this.setState({
+        pendentesAprovacaoList: response
+      });
+    });
+
+  }
+
 
   render() {
     return <DashboardDRE {...this.state} />;

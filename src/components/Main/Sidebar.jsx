@@ -156,6 +156,13 @@ export class Sidebar extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
+                  to="/dre/inclusoes-de-alimentacao"
+                >
+                  Inclusão de Alimentação
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
                   to="/dre/kits-lanche"
                 >
                   Kit Lanche

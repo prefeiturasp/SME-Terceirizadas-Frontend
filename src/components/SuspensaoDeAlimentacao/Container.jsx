@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
 import { meusDados } from "../../services/perfil.service";
-import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
 import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
 import SuspensaoDeAlimentacao from ".";
 
