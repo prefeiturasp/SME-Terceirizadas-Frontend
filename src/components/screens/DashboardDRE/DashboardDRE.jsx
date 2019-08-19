@@ -36,8 +36,9 @@ class DashboardDRE extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
+    const { enrolled, handleSubmit, solicitations, vision_by, pendentesAprovacaoList } = this.props;
     const { collapsed, lotes } = this.state;
+
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -98,7 +99,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
-                    solicitations={solicitations}
+                    solicitations={pendentesAprovacaoList}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes"}
                   />
@@ -262,13 +263,7 @@ const mapStateToProps = state => {
   };
 };
 
-/*const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      loadFoodInclusion
-    },
-    dispatch
-  );*/
+
 
 export default connect(
   mapStateToProps
