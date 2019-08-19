@@ -4,6 +4,7 @@ import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+import { formatarPedidos } from "./helper";
 import {
   getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
   getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
@@ -14,7 +15,7 @@ import {
   getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
   getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import CardHistorico from "../../../Shareable/CardHistorico/CardHistorico";
+import CardHistorico from "./CardHistorico";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -23,44 +24,7 @@ class PainelPedidos extends Component {
       pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: [],
-      theadList: [
-        "Nº Solicitação",
-        "Escola",
-        "Quantidade de Alimentações solicitadas"
-      ],
-      trs: [
-        {
-          _id: 12083,
-          escola: "EMEF CACILDA BECKER",
-          quantidade: 1705
-        },
-        {
-          _id: 12084,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12085,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12086,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12087,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12088,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        }
-      ]
+      pedidosNoPrazoRegular: []
     };
   }
 
@@ -155,14 +119,17 @@ class PainelPedidos extends Component {
 
   render() {
     const {
-      trs,
-      theadList,
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
     } = this.state;
-    const { visaoPorCombo, visaoPor } = this.props;
+    const {
+      visaoPorCombo,
+      visaoPor,
+      pedidosAprovados,
+      pedidosReprovados
+    } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados === 6;
     return (
       <div>
@@ -233,18 +200,18 @@ class PainelPedidos extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <CardHistorico
-                    thead={theadList}
-                    trs={trs}
-                    titulo={"Histórico de Alimentações Aprovadas"}
+                    pedidos={formatarPedidos(pedidosAprovados)}
+                    ultimaColunaLabel={"Data(s)"}
+                    titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
                   />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-12">
                   <CardHistorico
-                    thead={theadList}
-                    trs={trs}
-                    titulo={"Histórico de Alimentações Canceladas"}
+                    pedidos={formatarPedidos(pedidosReprovados)}
+                    ultimaColunaLabel={"Data(s)"}
+                    titulo={"Histórico de Inclusões de Alimentação Reprovadas"}
                   />
                 </div>
               </div>

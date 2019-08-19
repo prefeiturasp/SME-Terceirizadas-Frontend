@@ -1,6 +1,6 @@
 import { mount } from "enzyme";
 import React from "react";
-import { FluxoDeStatus } from "../../FluxoDeStatus/FluxoDeStatus";
+import { FluxoDeStatus } from "../../FluxoDeStatus";
 
 describe("Teste <FluxoDeStatus>", () => {
   let wrapper;
@@ -8,28 +8,28 @@ describe("Teste <FluxoDeStatus>", () => {
     {
       titulo: "Solicitação Realizada",
       status: "aprovado",
-      timestamp: "25/04/2019 às 9:20",
-      rf: "7972324",
-      nome: "João da Silva"
+      status_evento_explicacao: "Solicitação Realizada",
+      criado_em: "25/04/2019 às 9:20",
+      usuario: { rf: "7972324", nome: "João da Silva" }
     },
     {
       titulo: "Reprovado da DRE",
       status: "reprovado",
-      timestamp: "25/04/2019 às 9:20",
-      rf: "7972324",
-      nome: "João da Silva"
+      status_evento_explicacao: "DRE reprovou",
+      criado_em: "25/04/2019 às 9:20",
+      usuario: { rf: "7972324", nome: "João da Silva" }
     },
     {
       titulo: "Cancelado pela CODAE",
       status: "cancelado",
-      timestamp: "25/04/2019 às 9:20",
-      rf: "7972324",
-      nome: "João da Silva"
+      criado_em: "25/04/2019 às 9:20",
+      usuario: { rf: "7972324", nome: "João da Silva" }
     },
     {
       titulo: "Visualizado pela Terceirizada",
       status: null,
-      timestamp: null
+      criado_em: null,
+      usuario: null
     }
   ];
 

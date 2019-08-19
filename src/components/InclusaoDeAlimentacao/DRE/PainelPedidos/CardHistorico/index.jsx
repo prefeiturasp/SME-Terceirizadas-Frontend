@@ -3,31 +3,54 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import BaseButton, {
+  ButtonStyle,
+  ButtonType
+} from "../../../../Shareable/button";
+import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
 import "./style.scss";
 
 export class CardHistorico extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      pedidos: this.props.pedidos || []
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
 
-  handleClickSubmit = e => {
-    alert("it will be submited");
-  };
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.pedidos &&
+      prevProps.pedidos.length === 0 &&
+      this.props.pedidos &&
+      this.props.pedidos.length > 0
+    ) {
+      this.setState({
+        pedidos: this.props.pedidos
+      });
+    }
+  }
+
+  onCheckClicked(key) {
+    let pedidos = this.state.pedidos;
+    pedidos[key].checked = !pedidos[key].checked;
+    this.props.change(`check_${key}`, pedidos[key].checked);
+    this.setState({ pedidos });
+  }
+
+  handleClickSubmit = e => {};
 
   selecionarTodos() {
-    this.props.trs.forEach(tr => {
-      this.props.change(`check_${tr._id}`, !this.props.selecionar_todos);
+    this.props.pedidos.forEach((_, key) => {
+      this.props.change(`check_${key}`, !this.props.selecionar_todos);
     });
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
   render() {
-    const { titulo, ultimaColunaLabel, pedidos, handleSubmit } = this.props;
-    const { collapsed } = this.state;
+    const { titulo, ultimaColunaLabel, handleSubmit } = this.props;
+    const { collapsed, pedidos } = this.state;
     return (
       <div className="card mt-3">
         <div className="card-header">
@@ -87,34 +110,36 @@ export class CardHistorico extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {pedidos &&
+                  {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
                         <tr>
                           <td className="td-check">
                             <label
-                              htmlFor={`check_${pedido.uuid}`}
+                              htmlFor={`check_${key}`}
                               className="checkbox-label"
                             >
                               <Field
                                 component={"input"}
                                 type="checkbox"
-                                name={`check_${pedido.uuid}`}
+                                name={`check_${key}`}
                               />
                               <span
-                                onClick={() =>
-                                  this.props.change(
-                                    `check_${pedido.uuid}`,
-                                    true
-                                  )
-                                }
+                                onClick={() => this.onCheckClicked(key)}
                                 className="checkbox-custom"
                               />
                             </label>
                             {pedido.id_externo}
                           </td>
                           <td>{pedido.escola.nome}</td>
-                          <td>{pedido.data_inicial}</td>
+                          <td>
+                            {pedido.data_inicial
+                              ? `${pedido.data_inicial} a ${pedido.data_final}`
+                              : stringSeparadaPorVirgulas(
+                                  pedido.inclusoes,
+                                  "data"
+                                )}
+                          </td>
                         </tr>
                       );
                     })}
