@@ -34,6 +34,10 @@ import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodae
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 
 const routesConfig = [
   {
@@ -92,7 +96,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/dre/inclusoes-de-alimentacao/Relatorio",
+    path: "/dre/inclusoes-de-alimentacao/relatorio",
     component: InclusaoDeAlimentacaoRelatorioDREPage,
     exact: false
   },
@@ -117,6 +121,16 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/codae/inclusoes-de-alimentacao/relatorio",
+    component: InclusaoDeAlimentacaoRelatorioCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/inclusoes-de-alimentacao",
+    component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
+    exact: false
+  },
+  {
     path: "/codae/solicitacao-unificada/historico",
     component: UnifiedSolicitationHistoricPage,
     exact: false
@@ -129,6 +143,16 @@ const routesConfig = [
   {
     path: "/terceirizada/solicitacoes",
     component: StatusSolicitacoesTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/inclusoes-de-alimentacao/relatorio",
+    component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/inclusoes-de-alimentacao",
+    component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false
   },
   {

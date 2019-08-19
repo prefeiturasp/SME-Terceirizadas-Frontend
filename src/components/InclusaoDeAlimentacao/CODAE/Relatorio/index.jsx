@@ -9,11 +9,11 @@ import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getInclusaoDeAlimentacaoAvulsa,
-  DREConfirmaInclusaoDeAlimentacaoAvulsa
+  CODAEConfirmaInclusaoDeAlimentacaoAvulsa
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
   getInclusaoDeAlimentacaoContinua,
-  DREConfirmaInclusaoDeAlimentacaoContinua
+  CODAEConfirmaInclusaoDeAlimentacaoContinua
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -100,10 +100,10 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    const DREConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
-      ? DREConfirmaInclusaoDeAlimentacaoContinua
-      : DREConfirmaInclusaoDeAlimentacaoAvulsa;
-    DREConfirmaInclusaoDeAlimentacao(uuid).then(
+    const CODAEConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
+      ? CODAEConfirmaInclusaoDeAlimentacaoContinua
+      : CODAEConfirmaInclusaoDeAlimentacaoAvulsa;
+    CODAEConfirmaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
