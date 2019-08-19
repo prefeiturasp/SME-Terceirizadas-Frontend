@@ -19,6 +19,7 @@ import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { Redirect } from "react-router-dom";
 
 class EditaisContratos extends Component {
   constructor(props) {
@@ -57,7 +58,8 @@ class EditaisContratos extends Component {
       ],
       exibirModal: false,
       edital_contratos: null,
-      reseta: false
+      reseta: false,
+      redirect: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -72,6 +74,18 @@ class EditaisContratos extends Component {
       this
     );
   }
+
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/configuracoes/cadastros/lotes-cadastrados" />;
+    }
+  };
 
   excluirContratoRelacionado(indiceForm) {
     let contratos_relacionados = this.state.contratos_relacionados;
@@ -94,6 +108,8 @@ class EditaisContratos extends Component {
       response => {
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Edital salvo com sucesso");
+          this.setRedirect();
+          this.resetForm();
         } else {
           toastError("Houve um erro ao salvar o edital");
         }
@@ -280,6 +296,7 @@ class EditaisContratos extends Component {
     } = this.state;
     return (
       <section className="cadastro pt-3">
+        {this.renderRedirect()}
         <ModalCadastroEdital
           closeModal={this.fecharModal}
           showModal={exibirModal}
@@ -290,7 +307,7 @@ class EditaisContratos extends Component {
           <form onSubmit={handleSubmit}>
             <header className="header-form">
               <nav>Dados do Edital e contrato</nav>
-              <Link to="#">
+              <Link to="/configuracoes/cadastros/editais-cadastrados">
                 <BaseButton
                   className="header-button"
                   label="Consulta de lotes cadastrados"
