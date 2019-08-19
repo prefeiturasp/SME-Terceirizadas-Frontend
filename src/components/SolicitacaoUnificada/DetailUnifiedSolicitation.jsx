@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FluxoDeStatus } from "../Shareable/FluxoDeStatus/FluxoDeStatus";
+import { FluxoDeStatus } from "../Shareable/FluxoDeStatus";
 import { RowTableSchool } from "./RowTableSchool";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { ModalRecusarSolicitacao } from "../Shareable/ModalRecusarSolicitacao";

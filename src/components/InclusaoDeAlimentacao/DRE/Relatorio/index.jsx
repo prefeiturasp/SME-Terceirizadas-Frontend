@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus/FluxoDeStatus";
+import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
@@ -202,7 +202,6 @@ class Relatorio extends Component {
 
   render() {
     const {
-      listaDeStatus,
       showModal,
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
@@ -278,9 +277,11 @@ class Relatorio extends Component {
                   </div>
                 </div>
                 <hr />
-                <div className="row">
-                  <FluxoDeStatus listaDeStatus={listaDeStatus} />
-                </div>
+                {inclusaoDeAlimentacao.logs && (
+                  <div className="row">
+                    <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
+                  </div>
+                )}
                 <hr />
                 <div className="row">
                   <div className="report-students-div col-3">
