@@ -19,6 +19,7 @@ import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { Redirect } from "react-router-dom";
 
 class EditaisContratos extends Component {
   constructor(props) {
@@ -57,7 +58,8 @@ class EditaisContratos extends Component {
       ],
       exibirModal: false,
       edital_contratos: null,
-      reseta: false
+      reseta: false,
+      redirect: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -68,6 +70,29 @@ class EditaisContratos extends Component {
     this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.setaResetFormChild = this.setaResetFormChild.bind(this);
+    this.excluirContratoRelacionado = this.excluirContratoRelacionado.bind(
+      this
+    );
+  }
+
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/configuracoes/cadastros/lotes-cadastrados" />;
+    }
+  };
+
+  excluirContratoRelacionado(indiceForm) {
+    let contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados.splice(indiceForm, 1);
+    let forms = this.state.forms;
+    forms.splice(indiceForm, 1);
+    this.setState({ contratos_relacionados, forms });
   }
 
   exibirModal() {
@@ -83,6 +108,8 @@ class EditaisContratos extends Component {
       response => {
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Edital salvo com sucesso");
+          this.setRedirect();
+          this.resetForm();
         } else {
           toastError("Houve um erro ao salvar o edital");
         }
@@ -100,25 +127,51 @@ class EditaisContratos extends Component {
       "processo_administrativo",
       "resumo_objeto"
     ].forEach(element => {
-      this.props.change(element, "");
+      this.props.change(element, null);
     });
 
     this.setState({ reseta: true });
 
     this.state.forms.forEach((form, index) => {
-      this.props.change(`${form}.numero_contrato${index}`, "");
-      this.props.change(`${form}.processo_administrativo${index}`, "");
-      this.props.change(`${form}.data_proposta${index}`, "");
+      this.props.change(`${form}.numero_contrato${index}`, null);
+      this.props.change(`${form}.processo_administrativo${index}`, null);
+      this.props.change(`${form}.data_proposta${index}`, null);
       this.state.contratos_relacionados[index].vigencias.forEach(
         (vigencia, key) => {
           this.props.change(
             `${form}.secaoContrato${key}.data_inicio${key}`,
-            ""
+            null
           );
-          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, "");
+          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, null);
         }
       );
     });
+
+    this.state.forms.splice(1, Number.MAX_VALUE);
+
+    this.state.contratos_relacionados.splice(1, Number.MAX_VALUE);
+
+    let contratos_relacionados = [
+      {
+        vigencias: [
+          {
+            data_inicial: null,
+            data_final: null
+          }
+        ],
+        numero_contrato: null,
+        processo_administrativo: null,
+        data_proposta: null,
+        lotes: null,
+        lotes_nomes: null,
+        dres: null,
+        dres_nomes: null,
+        empresas: null,
+        empresas_nomes: null
+      }
+    ];
+
+    this.setState({ contratos_relacionados });
   }
 
   adicionarNomesListagem(chave, valor, indice) {
@@ -238,10 +291,12 @@ class EditaisContratos extends Component {
       empresas,
       exibirModal,
       edital_contratos,
-      reseta
+      reseta,
+      contratos_relacionados
     } = this.state;
     return (
       <section className="cadastro pt-3">
+        {this.renderRedirect()}
         <ModalCadastroEdital
           closeModal={this.fecharModal}
           showModal={exibirModal}
@@ -252,7 +307,7 @@ class EditaisContratos extends Component {
           <form onSubmit={handleSubmit}>
             <header className="header-form">
               <nav>Dados do Edital e contrato</nav>
-              <Link to="#">
+              <Link to="/configuracoes/cadastros/editais-cadastrados">
                 <BaseButton
                   className="header-button"
                   label="Consulta de lotes cadastrados"
@@ -280,8 +335,10 @@ class EditaisContratos extends Component {
                   adicionaVigenciaContrato={this.adicionaVigenciaContrato}
                   adicionaNumeroContrato={this.adicionaNumeroContrato}
                   adicionarNomesListagem={this.adicionarNomesListagem}
+                  excluirContratoRelacionado={this.excluirContratoRelacionado}
                   reseta={reseta}
                   setaResetFormChild={this.setaResetFormChild}
+                  contratos_relacionados={contratos_relacionados}
                 />
               );
             })}
@@ -303,7 +360,9 @@ class EditaisContratos extends Component {
                 <div className="button-submit">
                   <BaseButton
                     label="Cancelar"
-                    onClick={value => this.resetForm(value)}
+                    onClick={value => {
+                      this.resetForm(value);
+                    }}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton

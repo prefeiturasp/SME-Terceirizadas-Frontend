@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesContinuo
+  getDiretoriaRegionalPedidosAprovados as pedidosAprovadosContinuos,
+  getDiretoriaRegionalPedidosReprovados as pedidosReprovadosContinuos
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosAvulso,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
+  getDiretoriaRegionalPedidosAprovados as pedidosAprovadosNormais,
+  getDiretoriaRegionalPedidosReprovados as pedidosReprovadosNormais
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import PainelPedidos from ".";
 
@@ -16,73 +14,52 @@ class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
-      pedidosPrioritarios: [],
-      pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: [],
-      visaoPorCombo: visaoPorComboSomenteDatas
+      visaoPorCombo: visaoPorComboSomenteDatas,
+      pedidosAprovados: [],
+      pedidosReprovados: []
     };
   }
 
   componentDidMount() {
-    prioritariosContinuo().then(response => {
-      const pedidosPrioritarios = response.results;
-      this.setState({
-        pedidosPrioritarios: this.state.pedidosPrioritarios.concat(
-          pedidosPrioritarios
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
+    let pedidosAprovadosRetornados = 0;
+    let pedidosReprovadosRetornados = 0;
+    let pedidosAprovados = [];
+    let pedidosReprovados = [];
+
+    pedidosAprovadosContinuos().then(response => {
+      pedidosAprovadosRetornados += 1;
+      pedidosAprovados = pedidosAprovados.concat(response.results);
+      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
+      if (todosPedidosAprovadosRetornados) {
+        this.setState({ pedidosAprovados });
+      }
     });
 
-    prioritariosAvulso().then(response => {
-      const pedidosPrioritarios = response.results;
-      this.setState({
-        pedidosPrioritarios: this.state.pedidosPrioritarios.concat(
-          pedidosPrioritarios
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
+    pedidosAprovadosNormais().then(response => {
+      pedidosAprovadosRetornados += 1;
+      pedidosAprovados = pedidosAprovados.concat(response.results);
+      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
+      if (todosPedidosAprovadosRetornados) {
+        this.setState({ pedidosAprovados });
+      }
     });
 
-    limitesContinuo().then(response => {
-      const pedidosNoPrazoLimite = response.results;
-      this.setState({
-        pedidosNoPrazoLimite: this.state.pedidosNoPrazoLimite.concat(
-          pedidosNoPrazoLimite
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
+    pedidosReprovadosContinuos().then(response => {
+      pedidosReprovadosRetornados += 1;
+      pedidosReprovados = pedidosReprovados.concat(response.results);
+      let todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
+      if (todosPedidosReprovadosRetornados) {
+        this.setState({ pedidosReprovados });
+      }
     });
 
-    limitesAvulso().then(response => {
-      const pedidosNoPrazoLimite = response.results;
-      this.setState({
-        pedidosNoPrazoLimite: this.state.pedidosNoPrazoLimite.concat(
-          pedidosNoPrazoLimite
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesContinuo().then(response => {
-      const pedidosNoPrazoRegular = response.results;
-      this.setState({
-        pedidosNoPrazoRegular: this.state.pedidosNoPrazoRegular.concat(
-          pedidosNoPrazoRegular
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesAvulso().then(response => {
-      const pedidosNoPrazoRegular = response.results;
-      this.setState({
-        pedidosNoPrazoRegular: this.state.pedidosNoPrazoRegular.concat(
-          pedidosNoPrazoRegular
-        ),
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
+    pedidosReprovadosNormais().then(response => {
+      pedidosReprovadosRetornados += 1;
+      pedidosReprovados = pedidosReprovados.concat(response.results);
+      let todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
+      if (todosPedidosReprovadosRetornados) {
+        this.setState({ pedidosReprovados });
+      }
     });
   }
 

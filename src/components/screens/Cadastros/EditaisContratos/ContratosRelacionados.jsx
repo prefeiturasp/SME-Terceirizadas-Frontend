@@ -6,12 +6,13 @@ import {
 } from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required } from "../../../../helpers/fieldValidators";
-
+import moment from "moment";
 import {
   renderizarLabelLote,
   renderizarLabelDiretoria,
   renderizarLabelEmpresa
 } from "./helper";
+import { dateDelta } from "../../../../helpers/utilities";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
@@ -32,9 +33,23 @@ class ContratosRelacionados extends Component {
           data_final: null
         }
       ],
-
+      status: false,
       formVigenciaContratos: ["vigenciaContrato0"]
     };
+  }
+
+  obtemDataInicial(keyVigencia, indiceForm) {
+    if (keyVigencia === 0) {
+      return moment(
+        this.props.contratos_relacionados[indiceForm]["data_proposta"],
+        "DD/MM/YYYY"
+      )["_d"];
+    } else {
+      return moment(
+        this.state.vigencias[keyVigencia - 1]["data_final"],
+        "DD/MM/YYYY"
+      )["_d"];
+    }
   }
 
   handleField(field, value, key, indice) {
@@ -119,7 +134,23 @@ class ContratosRelacionados extends Component {
     this.setState({ nomeDoFormAtual: this.props.nomeForm });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.reseta === true &&
+      this.state.formVigenciaContratos.length > 1
+    ) {
+      this.state.formVigenciaContratos.splice(1, Number.MAX_VALUE);
+      let vigencias = [
+        {
+          data_inicial: null,
+          data_final: null
+        }
+      ];
+      this.setState({ vigencias });
+      if (this.props.reseta === true) {
+        this.props.setaResetFormChild();
+      }
+    }
     if (
       this.state.lotesSelecionados.length > 0 ||
       this.state.diretoriasSelecionadas.length > 0 ||
@@ -134,8 +165,18 @@ class ContratosRelacionados extends Component {
           empresasSelecionadas: [],
           empresasNomesSelecionados: []
         });
+
         this.props.setaResetFormChild();
       }
+    }
+  }
+
+  renderExcluirNoUltimo(indiceDoForm) {
+    let indice = indiceDoForm + 1;
+    if (indice !== 1 && indice + 1 > this.props.contratos_relacionados.length) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -147,7 +188,8 @@ class ContratosRelacionados extends Component {
       empresasNomesSelecionados,
       diretoriasSelecionadas,
       empresasSelecionadas,
-      formVigenciaContratos
+      formVigenciaContratos,
+      vigencias
     } = this.state;
     const {
       lotes,
@@ -155,13 +197,62 @@ class ContratosRelacionados extends Component {
       empresas,
       obtemDadosParaSubmit,
       indice,
-      adicionaNumeroContrato
+      adicionaNumeroContrato,
+      excluirContratoRelacionado
     } = this.props;
     return (
       <div>
         <div>
           <article className="card-body contratos-relacionados">
             <section className="section-inputs">
+              {this.renderExcluirNoUltimo(indice) && (
+                <div className="excluir-form">
+                  <button
+                    className="excluir"
+                    onClick={() => {
+                      excluirContratoRelacionado(indice);
+                    }}
+                  >
+                    excluir <i class="fas fa-trash-alt" />
+                  </button>
+                </div>
+              )}
+              <div className="data-processo-adm">
+                <div className="inputs-processo">
+                  <div>
+                    <label className="label">
+                      <span>* </span>Processo administrativo do contrato
+                    </label>
+                    <Field
+                      name={`processo_administrativo${indice}`}
+                      component={LabelAndInput}
+                      validate={required}
+                      onChange={value => {
+                        obtemDadosParaSubmit(
+                          `processo_administrativo`,
+                          value.target.value,
+                          indice
+                        );
+                      }}
+                      max={50}
+                    />
+                  </div>
+                  <div>
+                    <label className="label">
+                      <span>* </span>Data da proposta
+                    </label>
+                    <Field
+                      name={`data_proposta${indice}`}
+                      component={LabelAndDate}
+                      validate={required}
+                      onChange={value => {
+                        obtemDadosParaSubmit(`data_proposta`, value, indice);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div />
+              </div>
               <div className="section-contrato-vigencia">
                 <div className="coluna contrato">
                   <label className="label">
@@ -174,6 +265,7 @@ class ContratosRelacionados extends Component {
                     onChange={event =>
                       adicionaNumeroContrato(indice, event.target.value)
                     }
+                    max={50}
                   />
                 </div>
                 <section>
@@ -189,6 +281,7 @@ class ContratosRelacionados extends Component {
                               name={`data_inicio${key}`}
                               component={LabelAndDate}
                               validate={required}
+                              minDate={this.obtemDataInicial(key, indice)}
                               onChange={value =>
                                 this.handleField(
                                   `data_inicial`,
@@ -197,6 +290,7 @@ class ContratosRelacionados extends Component {
                                   indice
                                 )
                               }
+                              maxDate={dateDelta(1825)}
                             />
                           </div>
                           <div className="coluna">
@@ -204,6 +298,13 @@ class ContratosRelacionados extends Component {
                               name={`data_fim${key}`}
                               component={LabelAndDate}
                               label=" "
+                              minDate={
+                                moment(
+                                  vigencias[key]["data_inicial"],
+                                  "DD/MM/YYYY"
+                                )["_d"]
+                              }
+                              maxDate={dateDelta(1825)}
                               validate={required}
                               onChange={value =>
                                 this.handleField(
@@ -234,42 +335,6 @@ class ContratosRelacionados extends Component {
                 </aside>
               </div>
               <div className="container-processo-adm">
-                <div className="data-processo-adm">
-                  <div className="inputs-processo">
-                    <div>
-                      <label className="label">
-                        <span>* </span>Processo administrativo do contrato
-                      </label>
-                      <Field
-                        name={`processo_administrativo${indice}`}
-                        component={LabelAndInput}
-                        validate={required}
-                        onChange={value => {
-                          obtemDadosParaSubmit(
-                            `processo_administrativo`,
-                            value.target.value,
-                            indice
-                          );
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label className="label">
-                        <span>* </span>Data da proposta
-                      </label>
-                      <Field
-                        name={`data_proposta${indice}`}
-                        component={LabelAndDate}
-                        validate={required}
-                        onChange={value => {
-                          obtemDadosParaSubmit(`data_proposta`, value, indice);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div />
-                </div>
-
                 <div className="container-lote-dre">
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (

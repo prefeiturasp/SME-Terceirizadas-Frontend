@@ -1,4 +1,5 @@
 import React from "react";
+import { fluxoPartindoEscola, tipoDeStatus } from "./helper";
 import "./style.scss";
 
 export const FluxoDeStatus = props => {
@@ -11,31 +12,37 @@ export const FluxoDeStatus = props => {
         </div>
         <div className="col-10">
           <ul className="progressbar-titles">
-            {listaDeStatus.map((status, key) => {
+            {fluxoPartindoEscola.map((status, key) => {
               return <li key={key}>{status.titulo}</li>;
             })}
           </ul>
           <ul className="progressbar">
-            {listaDeStatus.map((status, key) => {
+            {fluxoPartindoEscola.map((status, key) => {
+              let novoStatus = listaDeStatus[key] || status;
               return (
                 <li
                   key={key}
                   className={
-                    status.status === "aprovado"
+                    tipoDeStatus(novoStatus.status_evento_explicacao) ===
+                    "aprovado"
                       ? "active"
-                      : status.status === "reprovado"
+                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
+                        "reprovado"
                       ? "disapproved"
-                      : status.status === "cancelado"
+                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
+                        "cancelado"
                       ? "cancelled"
                       : ""
                   }
-                  style={{ width: 100 / listaDeStatus.length + "%" }}
+                  style={{ width: 100 / fluxoPartindoEscola.length + "%" }}
                 >
-                  {status.timestamp}
+                  {novoStatus.criado_em}
                   <br />
-                  {status.status && (
+                  {novoStatus.usuario && (
                     <span>
-                      RF: {status.rf} - {status.nome}
+                      {novoStatus.usuario.rf !== undefined &&
+                        `RF: ${novoStatus.usuario.rf} - `}
+                      {novoStatus.usuario && novoStatus.usuario.nome}
                     </span>
                   )}
                 </li>

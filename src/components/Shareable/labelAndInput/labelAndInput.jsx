@@ -28,7 +28,8 @@ export const LabelAndInput = props => {
     type,
     meta,
     disabled,
-    classNameInput
+    classNameInput,
+    max
   } = props;
   return (
     <Grid cols={cols}>
@@ -47,6 +48,7 @@ export const LabelAndInput = props => {
         readOnly={readOnly}
         type={type}
         min={min}
+        maxlength={max}
       />
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />

@@ -17,6 +17,7 @@ export const SectionFormEdital = props => {
             name="tipo_contratacao"
             validate={required}
             onChange={event => adicionaFieldsFormEdital(`tipo_contratacao`, event.target.value)}
+            max={50}
           />
         </div>
         <div>
@@ -29,6 +30,7 @@ export const SectionFormEdital = props => {
             name="edital_numero"
             validate={required}
             onChange={event => adicionaFieldsFormEdital(`numero`, event.target.value)}
+            max={50}
           />
         </div>
       </div>
@@ -43,6 +45,7 @@ export const SectionFormEdital = props => {
             name="processo_administrativo"
             validate={required}
             onChange={event => adicionaFieldsFormEdital(`numero_processo`, event.target.value)}
+            max={50}
           />
         </div>
       </div>

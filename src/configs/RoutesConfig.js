@@ -32,6 +32,7 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
+import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage"
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 
@@ -145,6 +146,11 @@ const routesConfig = [
     path: "/configuracoes/cadastros/lotes-cadastrados",
     component: LotesCadastradosPage,
     exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/editais-cadastrados",
+    component: EditaisCadastradosPage,
+    exact: true
   },
   {
     path: "/configuracoes/cadastros/lote",

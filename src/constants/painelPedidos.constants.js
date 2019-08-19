@@ -23,19 +23,19 @@ export const visaoPorCombo = [
 
 export const visaoPorComboSomenteDatas = [
   {
-    nome: "Visão por dia",
-    uuid: ""
+    nome: "Sem filtro",
+    uuid: "sem_filtro"
   },
   {
-    nome: "Dia",
-    uuid: "Dia"
+    nome: "Hoje",
+    uuid: "hoje"
   },
   {
-    nome: "Semana",
-    uuid: "Semana"
+    nome: "Daqui a 7 dias",
+    uuid: "daqui_a_7_dias"
   },
   {
-    nome: "Mês",
-    uuid: "Mes"
+    nome: "Daqui a 30 dias",
+    uuid: "daqui_a_30_dias"
   }
 ];
