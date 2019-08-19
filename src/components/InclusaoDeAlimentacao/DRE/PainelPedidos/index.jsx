@@ -197,24 +197,30 @@ class PainelPedidos extends Component {
                   </div>
                 </div>
               )}
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardHistorico
-                    pedidos={formatarPedidos(pedidosAprovados)}
-                    ultimaColunaLabel={"Data(s)"}
-                    titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
-                  />
+              {pedidosAprovados.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardHistorico
+                      pedidos={formatarPedidos(pedidosAprovados)}
+                      ultimaColunaLabel={"Data(s)"}
+                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardHistorico
-                    pedidos={formatarPedidos(pedidosReprovados)}
-                    ultimaColunaLabel={"Data(s)"}
-                    titulo={"Histórico de Inclusões de Alimentação Reprovadas"}
-                  />
+              )}
+              {pedidosReprovados.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardHistorico
+                      pedidos={formatarPedidos(pedidosReprovados)}
+                      ultimaColunaLabel={"Data(s)"}
+                      titulo={
+                        "Histórico de Inclusões de Alimentação Reprovadas"
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </form>
         )}

@@ -22,15 +22,14 @@ class Container extends Component {
 
   componentDidMount() {
     let pedidosAprovadosRetornados = 0;
-    const todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
     let pedidosReprovadosRetornados = 0;
-    const todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
     let pedidosAprovados = [];
     let pedidosReprovados = [];
 
     pedidosAprovadosContinuos().then(response => {
       pedidosAprovadosRetornados += 1;
       pedidosAprovados = pedidosAprovados.concat(response.results);
+      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
       if (todosPedidosAprovadosRetornados) {
         this.setState({ pedidosAprovados });
       }
@@ -39,6 +38,7 @@ class Container extends Component {
     pedidosAprovadosNormais().then(response => {
       pedidosAprovadosRetornados += 1;
       pedidosAprovados = pedidosAprovados.concat(response.results);
+      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
       if (todosPedidosAprovadosRetornados) {
         this.setState({ pedidosAprovados });
       }
@@ -47,6 +47,7 @@ class Container extends Component {
     pedidosReprovadosContinuos().then(response => {
       pedidosReprovadosRetornados += 1;
       pedidosReprovados = pedidosReprovados.concat(response.results);
+      let todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
       if (todosPedidosReprovadosRetornados) {
         this.setState({ pedidosReprovados });
       }
@@ -55,6 +56,7 @@ class Container extends Component {
     pedidosReprovadosNormais().then(response => {
       pedidosReprovadosRetornados += 1;
       pedidosReprovados = pedidosReprovados.concat(response.results);
+      let todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
       if (todosPedidosReprovadosRetornados) {
         this.setState({ pedidosReprovados });
       }

@@ -15,22 +15,15 @@ export class CardHistorico extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidos: this.props.pedidos || []
+      pedidos: []
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.pedidos &&
-      prevProps.pedidos.length === 0 &&
-      this.props.pedidos &&
-      this.props.pedidos.length > 0
-    ) {
-      this.setState({
-        pedidos: this.props.pedidos
-      });
-    }
+  componentDidMount() {
+    this.setState({
+      pedidos: this.props.pedidos
+    });
   }
 
   onCheckClicked(key) {
