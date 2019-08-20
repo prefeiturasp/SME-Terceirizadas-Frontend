@@ -10,6 +10,9 @@ script:
   - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend
   - docker ps -a
 
+after_script:
+  - bash utility/telegram_notification.sh
+
 deploy:
   provider: script
   script: bash ./deploy_dockerhub.sh
