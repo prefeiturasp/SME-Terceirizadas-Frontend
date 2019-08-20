@@ -126,6 +126,9 @@ const routesConfig = [
   {
     path: "/dre/alteracoes-de-cardapio/relatorio",
     component: AlteracaoDeCardapioRelatorioDREPage,
+    exact: false
+  },
+  {
     path: "/codae/inclusoes-de-alimentacao/relatorio",
     component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
