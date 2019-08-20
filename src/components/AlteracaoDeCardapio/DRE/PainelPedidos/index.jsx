@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../../Shareable/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";

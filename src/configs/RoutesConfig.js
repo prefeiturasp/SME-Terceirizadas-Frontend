@@ -119,12 +119,17 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/dre/alteracoes-de-cardapio/relatorio",
+    component: AlteracaoDeCardapioRelatorioDREPage,
+    exact: false
+  },
+  {
     path: "/dre/alteracoes-de-cardapio",
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false
   },
   {
-    path: "/dre/alteracoes-de-cardapio/Relatorio",
+    path: "/dre/alteracoes-de-cardapio/relatorio",
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
