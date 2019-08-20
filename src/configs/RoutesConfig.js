@@ -35,6 +35,8 @@ import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage"
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
+import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
 
 const routesConfig = [
   {
@@ -115,6 +117,16 @@ const routesConfig = [
   {
     path: "/dre/solicitacao-unificada",
     component: SolicitacaoUnificadaPage,
+    exact: false
+  },
+  {
+    path: "/dre/alteracoes-de-cardapio",
+    component: PainelPedidosAlteracaoDeCardapioDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/alteracoes-de-cardapio/Relatorio",
+    component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
