@@ -47,7 +47,7 @@ export const atualizarInversaoDeDiaDeCardapio = (uuid, payload) => {
   let status = 0;
   return fetch(url, {
     method: "PUT",
-    body: payload,
+    body: JSON.stringify(payload),
     headers: authToken
   })
     .then(res => {
@@ -83,10 +83,10 @@ export const removerInversaoDeDiaDeCardapio = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/inicio_de_pedido/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
