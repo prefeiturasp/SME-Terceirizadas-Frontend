@@ -46,7 +46,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/terceirizada/inclusoes-de-alimentacao" />;
     }
   };
 
