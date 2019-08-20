@@ -4,6 +4,10 @@ node_js:
 cache:
   directories:
     - node_modules
+
+before_script:
+  - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
+
 script:
   - npm test
   - docker build -t marcelomaia/terceirizadas_frontend .

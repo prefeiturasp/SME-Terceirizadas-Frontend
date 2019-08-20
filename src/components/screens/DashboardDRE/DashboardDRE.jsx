@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Field, reduxForm, formValueSelector } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";
 
 class DashboardDRE extends Component {
@@ -36,7 +36,13 @@ class DashboardDRE extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, solicitations, vision_by, pendentesAprovacaoList } = this.props;
+    const {
+      enrolled,
+      handleSubmit,
+      solicitations,
+      vision_by,
+      pendentesAprovacaoList
+    } = this.props;
     const { collapsed, lotes } = this.state;
 
     return (
@@ -177,13 +183,15 @@ class DashboardDRE extends Component {
                   </Link>
                 </div>
                 <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Alteração de Dias de Cardápio"}
-                    totalOfOrders={50}
-                    priorityOrders={2}
-                    onLimitOrders={18}
-                    regularOrders={30}
-                  />
+                  <Link to="/dre/inversoes-dia-cardapio">
+                    <CardPendencia
+                      cardTitle={"Inversão de Dia de Cardápio"}
+                      totalOfOrders={50}
+                      priorityOrders={2}
+                      onLimitOrders={18}
+                      regularOrders={30}
+                    />
+                  </Link>
                 </div>
               </div>
               <div className="row pt-3">
@@ -262,8 +270,6 @@ const mapStateToProps = state => {
     description_integrate: selector(state, "description_integrate")
   };
 };
-
-
 
 export default connect(
   mapStateToProps
