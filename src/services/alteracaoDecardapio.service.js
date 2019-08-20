@@ -111,3 +111,112 @@ export const enviarAlteracaoCardapio = (uuid, payload) => {
       return error.json();
     });
 };
+
+export const getDiretoriaRegionalPedidosAprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const DREConfirmaAlteracaoCardapio = uuid => {
+  const url = `${API_URL}/alteracoes_cardapio/${uuid}/confirma_pedido/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getAlteracaoCardapio = uuid => {
+  const url = `${API_URL}/alteracoes_cardapio/${uuid}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

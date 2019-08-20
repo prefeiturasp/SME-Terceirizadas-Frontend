@@ -6,15 +6,10 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { formatarPedidos } from "./helper";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesContinuo
-} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
-import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosAvulso,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+  getDiretoriaRegionalPedidosPrioritarios as prioritarios,
+  getDiretoriaRegionalPedidosNoPrazoLimite as limites,
+  getDiretoriaRegionalPedidosNoPrazoRegular as regular
+} from "../../../../services/alteracaoDecardapio.service";
 import CardHistorico from "./CardHistorico";
 
 class PainelPedidos extends Component {
@@ -33,7 +28,8 @@ class PainelPedidos extends Component {
     let pedidosNoPrazoLimite = [];
     let pedidosNoPrazoRegular = [];
     this.setState({ pedidosCarregados: 0 });
-    prioritariosContinuo(filtro).then(response => {
+
+    prioritarios(filtro).then(response => {
       pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
       this.setState({
         pedidosPrioritarios,
@@ -41,15 +37,7 @@ class PainelPedidos extends Component {
       });
     });
 
-    prioritariosAvulso(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limitesContinuo(filtro).then(response => {
+    limites(filtro).then(response => {
       pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
       this.setState({
         pedidosNoPrazoLimite,
@@ -57,23 +45,7 @@ class PainelPedidos extends Component {
       });
     });
 
-    limitesAvulso(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
-        pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesContinuo(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesAvulso(filtro).then(response => {
+    regular(filtro).then(response => {
       pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
       this.setState({
         pedidosNoPrazoRegular,
@@ -99,16 +71,9 @@ class PainelPedidos extends Component {
 
   filtrarHoje() {
     let pedidosPrioritarios = [];
-    this.setState({ pedidosCarregados: 4 });
-    prioritariosContinuo(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
+    this.setState({ pedidosCarregados: 2 });
 
-    prioritariosAvulso(FiltroEnum.HOJE).then(response => {
+    prioritarios(FiltroEnum.HOJE).then(response => {
       pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
       this.setState({
         pedidosPrioritarios,
@@ -130,7 +95,7 @@ class PainelPedidos extends Component {
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
-    const todosOsPedidosForamCarregados = pedidosCarregados === 6;
+    const todosOsPedidosForamCarregados = pedidosCarregados === 3;
     return (
       <div>
         {!todosOsPedidosForamCarregados ? (
@@ -141,12 +106,12 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inclusão de Alimentação - Pendente Aprovação
+                    Alteração de Cardápio - Pendente Aprovação
                   </div>
                 </div>
                 <div className="col-5">
                   <div className="row">
-                    <div classame="col-6">
+                    <div className="col-6">
                       <span>Vencimento para:</span>
                     </div>
                     <div className="col-6">
@@ -203,7 +168,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Alterações de Cardápio Aprovadas"}
                     />
                   </div>
                 </div>
@@ -215,7 +180,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
+                        "Histórico de Alterações de Cardápio Reprovadas"
                       }
                     />
                   </div>

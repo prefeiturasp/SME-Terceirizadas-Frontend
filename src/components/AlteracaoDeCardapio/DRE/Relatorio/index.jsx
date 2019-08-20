@@ -8,13 +8,9 @@ import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
-  getInclusaoDeAlimentacaoAvulsa,
-  DREConfirmaInclusaoDeAlimentacaoAvulsa
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import {
-  getInclusaoDeAlimentacaoContinua,
-  DREConfirmaInclusaoDeAlimentacaoContinua
-} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+  getAlteracaoCardapio,
+  DREConfirmaAlteracaoCardapio
+} from "../../../../services/alteracaoDecardapio.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
@@ -32,36 +28,9 @@ class Relatorio extends Component {
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
-      inclusaoDeAlimentacao: null,
+      alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
-      listaDeStatus: [
-        {
-          titulo: "Solicitação Realizada",
-          status: "aprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Reprovado da DRE",
-          status: "reprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Cancelado pela CODAE",
-          status: "cancelado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Visualizado pela Terceirizada",
-          status: null,
-          timestamp: null
-        }
-      ]
+      listaDeStatus: []
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -72,20 +41,16 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaPedidosDeInclusao = () => {
+  renderizarRedirecionamentoParaPedidos = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/dre/alteracoes-de-cardapio" />;
     }
   };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    const getInclusaoDeAlimentacao =
-      ehInclusaoContinua === "true"
-        ? getInclusaoDeAlimentacaoContinua
-        : getInclusaoDeAlimentacaoAvulsa;
+
     meusDados().then(response => {
       this.setState({
         meusDados: response
@@ -99,12 +64,11 @@ class Relatorio extends Component {
         new Date(response.proximos_dois_dias_uteis)
       );
       if (uuid) {
-        getInclusaoDeAlimentacao(uuid).then(response => {
+        getAlteracaoCardapio(uuid).then(response => {
           const dataMaisProxima =
             response.inclusoes && response.inclusoes[0].data;
           this.setState({
-            inclusaoDeAlimentacao: response,
-            ehInclusaoContinua: ehInclusaoContinua === "true",
+            alteracaoDeCardapio: response,
             uuid,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               response.data_inicial || dataMaisProxima,
@@ -123,79 +87,40 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
+    toastSuccess("Alteração de Cardápio recusado com sucesso!");
   }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    const DREConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
-      ? DREConfirmaInclusaoDeAlimentacaoContinua
-      : DREConfirmaInclusaoDeAlimentacaoAvulsa;
-    DREConfirmaInclusaoDeAlimentacao(uuid).then(
+    DREConfirmaAlteracaoCardapio(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
+          toastSuccess("Alteração de Cardápio aprovada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Inclusão de Alimentação");
+          toastError("Houve um erro ao aprovar a Alteração de Cardápio");
         }
       },
       function(error) {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+        toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
     );
   }
 
   renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    const { alteracaoDeCardapio } = this.state;
     return (
-      !ehInclusaoContinua && (
+      (
         <table className="table-periods">
           <tr>
-            <th>Data</th>
-            <th>Motivo</th>
+            <th>Data Inicial</th>
+            <th>Data Final</th>
           </tr>
-          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
-            return (
-              <tr>
-                <td>{inclusao.data}</td>
-                <td>{inclusao.motivo.nome}</td>
-              </tr>
-            );
-          })}
+          <tr>
+            <td>{alteracaoDeCardapio.data_inicial}</td>
+            <td>{alteracaoDeCardapio.data_final}</td>
+          </tr>
         </table>
-      )
-    );
-  }
-
-  renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
-    return (
-      ehInclusaoContinua && (
-        <div>
-          <div className="row">
-            <div className="col-4 report-label-value">
-              <p>Data do evento</p>
-              <p className="value">
-                {`${inclusaoDeAlimentacao.data_inicial} - ${
-                  inclusaoDeAlimentacao.data_final
-                }`}
-              </p>
-            </div>
-            <div className="col-4 report-label-value">
-              <p>Dias da Semana</p>
-              <p className="value">
-                {inclusaoDeAlimentacao.dias_semana_explicacao}
-              </p>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 report-label-value">
-              <p>Motivo</p>
-              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
-            </div>
-          </div>
-        </div>
       )
     );
   }
@@ -203,7 +128,7 @@ class Relatorio extends Component {
   render() {
     const {
       showModal,
-      inclusaoDeAlimentacao,
+      alteracaoDeCardapio,
       prazoDoPedidoMensagem,
       meusDados
     } = this.state;
@@ -213,13 +138,13 @@ class Relatorio extends Component {
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
-        {!inclusaoDeAlimentacao ? (
+        {this.renderizarRedirecionamentoParaPedidos()}
+        {!alteracaoDeCardapio ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
-              inclusaoDeAlimentacao.id_externo
+            <span className="page-title">{`Alteração de Cardápio - Pedido # ${
+              alteracaoDeCardapio.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
@@ -234,7 +159,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {inclusaoDeAlimentacao.id_externo}
+                        {alteracaoDeCardapio.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -246,8 +171,8 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.nome}
+                      {alteracaoDeCardapio.escola &&
+                        alteracaoDeCardapio.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -262,24 +187,24 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.lote &&
-                        inclusaoDeAlimentacao.escola.lote.nome}
+                      {alteracaoDeCardapio.escola &&
+                        alteracaoDeCardapio.escola.lote &&
+                        alteracaoDeCardapio.escola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.tipo_gestao &&
-                        inclusaoDeAlimentacao.escola.tipo_gestao.nome}
+                      {alteracaoDeCardapio.escola &&
+                        alteracaoDeCardapio.escola.tipo_gestao &&
+                        alteracaoDeCardapio.escola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
-                {inclusaoDeAlimentacao.logs && (
+                {alteracaoDeCardapio.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
+                    <FluxoDeStatus listaDeStatus={alteracaoDeCardapio.logs} />
                   </div>
                 )}
                 <hr />
@@ -287,30 +212,17 @@ class Relatorio extends Component {
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
                     <span>
-                      {inclusaoDeAlimentacao.escola.quantidade_alunos}
+                      {alteracaoDeCardapio.escola.quantidade_alunos}
                     </span>
                   </div>
-                  {/*<div className="report-students-div col-3">
-                  <span>Nº de alunos matutino</span>
-                  <span>{escola.matutino}</span>
-                </div>
-                <div className="report-students-div col-3">
-                  <span>Nº de alunos vespertino</span>
-                  <span>{escola.vespertino}</span>
-                </div>
-                <div className="report-students-div col-3">
-                  <span>Nº de alunos nortuno</span>
-                  <span>{escola.noturno}</span>
-                </div>*/}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p className="value">
-                      Descrição da Inclusão de Alimentação
+                      Descrição da Alteração de Cardápio
                     </p>
                   </div>
                 </div>
-                {this.renderParteContinua()}
                 {this.renderParteAvulsa()}
                 <table className="table-periods">
                   <tr>
@@ -318,7 +230,7 @@ class Relatorio extends Component {
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {inclusaoDeAlimentacao.quantidades_periodo.map(
+                  {alteracaoDeCardapio.substituicoes.map(
                     quantidade_por_periodo => {
                       return (
                         <tr>
@@ -344,7 +256,7 @@ class Relatorio extends Component {
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: inclusaoDeAlimentacao.descricao
+                        __html: alteracaoDeCardapio.descricao
                       }}
                     />
                   </div>
