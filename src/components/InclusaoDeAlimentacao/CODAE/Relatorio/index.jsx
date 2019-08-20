@@ -46,7 +46,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/codae/inclusoes-de-alimentacao" />;
     }
   };
 
@@ -106,10 +106,10 @@ class Relatorio extends Component {
     CODAEConfirmaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
+          toastSuccess("Inclusão de Alimentação autorizada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Inclusão de Alimentação");
+          toastError("Houve um erro ao autorizar a Inclusão de Alimentação");
         }
       },
       function(error) {
@@ -323,14 +323,14 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Recusar Solicitação"}
+                    label={"Negar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Aprovar Solicitação"
+                    label="Autorizar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

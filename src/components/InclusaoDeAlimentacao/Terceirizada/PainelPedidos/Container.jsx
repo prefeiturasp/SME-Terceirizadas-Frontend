@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import {
-  getCodaePedidosAprovados as pedidosAprovadosContinuos,
-  getCodaePedidosReprovados as pedidosReprovadosContinuos
+  getTerceirizadaPedidosAprovados as pedidosAprovadosContinuos,
+  getTerceirizadaPedidosReprovados as pedidosReprovadosContinuos
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import {
-  getCodaePedidosAprovados as pedidosAprovadosNormais,
-  getCodaePedidosReprovados as pedidosReprovadosNormais
+  getTerceirizadaPedidosAprovados as pedidosAprovadosNormais,
+  getTerceirizadaPedidosReprovados as pedidosReprovadosNormais
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import PainelPedidos from ".";
 

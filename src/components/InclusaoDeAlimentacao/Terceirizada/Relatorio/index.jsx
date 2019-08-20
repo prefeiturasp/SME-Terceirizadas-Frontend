@@ -9,11 +9,11 @@ import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getInclusaoDeAlimentacaoAvulsa,
-  CODAEConfirmaInclusaoDeAlimentacaoAvulsa
+  TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
   getInclusaoDeAlimentacaoContinua,
-  CODAEConfirmaInclusaoDeAlimentacaoContinua
+  TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -95,25 +95,25 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
+    toastSuccess("Solicitação de Alimentação recusada com sucesso!");
   }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    const CODAEConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
-      ? CODAEConfirmaInclusaoDeAlimentacaoContinua
-      : CODAEConfirmaInclusaoDeAlimentacaoAvulsa;
-    CODAEConfirmaInclusaoDeAlimentacao(uuid).then(
+    const TerceirizadaTomaCienciaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
+      ? TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
+      : TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa;
+    TerceirizadaTomaCienciaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
+          toastSuccess("Ciência da Inclusão de Alimentação salva com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Inclusão de Alimentação");
+          toastError("Houve um erro ao dar ciência para a Inclusão de Alimentação");
         }
       },
       function(error) {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+        toastError("Houve um erro ao dar ciência para a Inclusão de Alimentação");
       }
     );
   }
@@ -330,7 +330,7 @@ class Relatorio extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Aprovar Solicitação"
+                    label="Ciente"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

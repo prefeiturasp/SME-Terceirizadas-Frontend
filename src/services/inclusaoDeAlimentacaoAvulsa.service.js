@@ -99,7 +99,7 @@ export const getInclusoesNormaisSalvas = () => {
 };
 
 export const inicioPedidoNormal = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio_de_pedido/`;
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -282,8 +282,83 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
+export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosAprovados = () => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-aprovados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosReprovados = () => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-reprovados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/confirma_pedido/`;
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/diretoria-regional-aprova-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -302,7 +377,26 @@ export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const CODAEConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/codae_aprovou/`;
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/codae-aprova-pedido/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",

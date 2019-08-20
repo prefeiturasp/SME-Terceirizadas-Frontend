@@ -141,7 +141,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inclusão de Alimentação - Pendente Aprovação
+                    Inclusão de Alimentação - Pendente Validação
                   </div>
                 </div>
                 <div className="col-5">
