@@ -39,6 +39,8 @@ import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/Inclusao
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
+import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
 
 const routesConfig = [
   {
@@ -129,6 +131,16 @@ const routesConfig = [
   {
     path: "/codae/inclusoes-de-alimentacao",
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
+    exact: false
+  },
+  {
+    path: "/dre/alteracoes-de-cardapio",
+    component: PainelPedidosAlteracaoDeCardapioDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/alteracoes-de-cardapio/Relatorio",
+    component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
