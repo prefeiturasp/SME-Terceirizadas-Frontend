@@ -51,9 +51,9 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
-    meusDados().then(response => {
+    meusDados().then(meusDados => {
       this.setState({
-        meusDados: response
+        meusDados
       });
     });
     getDiasUteis().then(response => {
@@ -93,8 +93,8 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const uuid = this.state.uuid;
-    DREConfirmaAlteracaoCardapio(uuid).then(
+    const alteracaoCardapioUuid = this.state.uuid;
+    DREConfirmaAlteracaoCardapio(alteracaoCardapioUuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio aprovada com sucesso!");
