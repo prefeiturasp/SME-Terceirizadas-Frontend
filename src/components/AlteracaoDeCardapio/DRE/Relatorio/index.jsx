@@ -51,9 +51,9 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
-    meusDados().then(response => {
+    meusDados().then(meusDados => {
       this.setState({
-        meusDados: response
+        meusDados
       });
     });
     getDiasUteis().then(response => {
@@ -65,6 +65,8 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(response => {
+          console.log("response: ", response);
+
           const dataMaisProxima =
             response.inclusoes && response.inclusoes[0].data;
           this.setState({
@@ -91,8 +93,8 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const uuid = this.state.uuid;
-    DREConfirmaAlteracaoCardapio(uuid).then(
+    const alteracaoCardapioUuid = this.state.uuid;
+    DREConfirmaAlteracaoCardapio(alteracaoCardapioUuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio aprovada com sucesso!");
@@ -121,7 +123,8 @@ class Relatorio extends Component {
             <td>{alteracaoDeCardapio.data_final}</td>
           </tr>
         </table>
-      )
+
+)
     );
   }
 
@@ -180,7 +183,7 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
+                      {meusDados && meusDados.diretorias_regionais &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
@@ -244,23 +247,36 @@ class Relatorio extends Component {
                               "nome"
                             )}
                           </td>
-                          <td>{quantidade_por_periodo.numero_alunos}</td>
+                          <td>{quantidade_por_periodo.qtd_alunos}</td>
                         </tr>
                       );
                     }
                   )}
                 </table>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Observações</p>
-                    <p
+
+                <table className="table-periods">
+                  <tr>
+                    <th>Motivo</th>
+                  </tr>
+                  <tr>
+                    <td>{alteracaoDeCardapio.motivo.nome}</td>
+                  </tr>
+                </table>
+
+                <table className="table-periods">
+                  <tr>
+                    <th>Observações</th>
+                  </tr>
+                  <tr>
+                    <td><p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: alteracaoDeCardapio.descricao
+                        __html: alteracaoDeCardapio.observacao
                       }}
-                    />
-                  </div>
-                </div>
+                    /></td>
+                  </tr>
+                </table>
+
                 <div className="form-group row float-right mt-4">
                   <BaseButton
                     label={"Recusar Solicitação"}
@@ -270,7 +286,7 @@ class Relatorio extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Aprovar Solicitação"
+                    label="Validar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

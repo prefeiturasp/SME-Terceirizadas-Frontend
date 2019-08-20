@@ -124,6 +124,11 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/dre/alteracoes-de-cardapio/relatorio",
+    component: AlteracaoDeCardapioRelatorioDREPage,
+    exact: false
+  },
+  {
     path: "/codae/inclusoes-de-alimentacao/relatorio",
     component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
@@ -139,7 +144,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/dre/alteracoes-de-cardapio/Relatorio",
+    path: "/dre/alteracoes-de-cardapio/relatorio",
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },

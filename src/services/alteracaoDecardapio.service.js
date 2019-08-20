@@ -93,7 +93,7 @@ export const getMotivosAlteracaoCardapio = () => {
 };
 
 export const enviarAlteracaoCardapio = (uuid, payload) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio_de_pedido/`;
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -188,7 +188,7 @@ export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
 };
 
 export const DREConfirmaAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes_cardapio/${uuid}/confirma_pedido/`;
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/diretoria-regional-aprova/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -207,7 +207,7 @@ export const DREConfirmaAlteracaoCardapio = uuid => {
 };
 
 export const getAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes_cardapio/${uuid}/`;
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
