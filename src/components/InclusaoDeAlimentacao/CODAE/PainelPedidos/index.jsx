@@ -6,14 +6,14 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { formatarPedidos } from "./helper";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesContinuo
+  getCodaePedidosPrioritarios as prioritariosContinuo,
+  getCodaePedidosNoPrazoLimite as limitesContinuo,
+  getCodaePedidosNoPrazoRegular as regularesContinuo
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosAvulso,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
+  getCodaePedidosPrioritarios as prioritariosAvulso,
+  getCodaePedidosNoPrazoLimite as limitesAvulso,
+  getCodaePedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import CardHistorico from "./CardHistorico";
 
@@ -141,7 +141,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inclusão de Alimentação - Pendente Validação
+                    Inclusão de Alimentação - Pendente Autorização
                   </div>
                 </div>
                 <div className="col-5">
@@ -170,7 +170,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"dre"}
+                    parametroURL={"codae"}
                   />
                 </div>
               </div>
@@ -182,7 +182,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={"codae"}
                     />
                   </div>
                 </div>
@@ -195,7 +195,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={"codae"}
                     />
                   </div>
                 </div>

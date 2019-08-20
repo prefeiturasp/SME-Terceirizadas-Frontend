@@ -6,13 +6,13 @@ export const fluxoPartindoEscola = [
     usuario: null
   },
   {
-    titulo: "DRE aprovou",
+    titulo: "DRE validou",
     status: "",
     criado_em: "",
     usuario: null
   },
   {
-    titulo: "CODAE aprovou",
+    titulo: "CODAE autorizou",
     status: "",
     criado_em: "",
     usuario: null

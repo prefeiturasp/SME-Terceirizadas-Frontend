@@ -32,8 +32,13 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
+import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage"
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
 
@@ -94,7 +99,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/dre/inclusoes-de-alimentacao/Relatorio",
+    path: "/dre/inclusoes-de-alimentacao/relatorio",
     component: InclusaoDeAlimentacaoRelatorioDREPage,
     exact: false
   },
@@ -121,6 +126,13 @@ const routesConfig = [
   {
     path: "/dre/alteracoes-de-cardapio/relatorio",
     component: AlteracaoDeCardapioRelatorioDREPage,
+    path: "/codae/inclusoes-de-alimentacao/relatorio",
+    component: InclusaoDeAlimentacaoRelatorioCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/inclusoes-de-alimentacao",
+    component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
     exact: false
   },
   {
@@ -149,6 +161,16 @@ const routesConfig = [
     exact: false
   },
   {
+    path: "/terceirizada/inclusoes-de-alimentacao/relatorio",
+    component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/inclusoes-de-alimentacao",
+    component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
+    exact: false
+  },
+  {
     path: "/terceirizada/kits-lanche/relatorio",
     component: KitsLancheRelatorioTerceirizadaPage,
     exact: false
@@ -162,6 +184,11 @@ const routesConfig = [
     path: "/configuracoes/cadastros/lotes-cadastrados",
     component: LotesCadastradosPage,
     exact: false
+  },
+  {
+    path: "/configuracoes/cadastros/editais-cadastrados",
+    component: EditaisCadastradosPage,
+    exact: true
   },
   {
     path: "/configuracoes/cadastros/lote",
