@@ -1,46 +1,48 @@
 import { Login } from "../components/Login";
-import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
-import Home from "../pages/Home";
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
-import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
-import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
-import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
-import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
-import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
-import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
-import DashboardDREPage from "../pages/DRE/DashboardDREPage";
-import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
-import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
-import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
-import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
-import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
-import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
-import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
-import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
-import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
-import CadastrosPage from "../pages/Cadastros/CadastrosPage";
-import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
-import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
-import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
-import MensagemPage from "../pages/Configuracoes/MensagemPage";
-import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
-import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
-import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
-import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
-import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
+import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
+import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
-import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage"
-import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
+import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
+import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
+import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
+import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
-import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
+import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
+import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
+import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
+import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
+import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
+import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
+import DashboardDREPage from "../pages/DRE/DashboardDREPage";
+import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
+import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapio/RelatorioPage";
+import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
+import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
+import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
+import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
+import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
+import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
+import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
+import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import Home from "../pages/Home";
+import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
+import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
+import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
+import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
+import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
+import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
+import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 
 const routesConfig = [
   {
@@ -106,6 +108,16 @@ const routesConfig = [
   {
     path: "/dre/inclusoes-de-alimentacao",
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/inversoes-dia-cardapio/relatorio",
+    component: InversaoDiaCardapioRelatorioDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/inversoes-dia-cardapio",
+    component: PainelPedidosInversaoDiaCardapioDREPage,
     exact: false
   },
   {
