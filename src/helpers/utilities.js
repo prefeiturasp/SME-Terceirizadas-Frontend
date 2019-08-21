@@ -113,3 +113,10 @@ export const dataAtualDDMMYYYY = () => {
 export const talvezPluralizar = (contador, substantivo, sufixo = "s") => {
   return `${substantivo}${contador !== 1 ? sufixo : ""}`;
 };
+
+export const getDataObj = data => {
+  return moment(
+    data,
+    "DD/MM/YYYY"
+  )["_d"];
+}

@@ -139,7 +139,7 @@ class LotesCadastrados extends Component {
                           return (
                             <tr key={indice} className="relationed-companies">
                               <td className="pt-0 pb-0 blueish" colSpan="4">
-                                {`${escola.codigo_eol} - ${escola.nome}`}
+                                {`${escola.codigo_eol} - ${escola.nome} - ${escola.lote}`}
                               </td>
                             </tr>
                           );

@@ -3,6 +3,13 @@
   overflow-y: scroll;
   overflow-x: hidden;
   max-height: 1000px;
+  .school-checked {
+    .school-container {
+      font-weight: bold;
+    color: white;
+    background-color: #109cf1;
+    }
+  }
 }
 
 .school-container {
@@ -186,14 +193,13 @@ table.report-table {
     grid-template-columns: 8% auto 10% 15% 15% 10%;
     grid-auto-rows: 47px auto;
     border-bottom: 1px solid #353535;
-    
 
     div {
       padding: 0.5em;
     }
   }
 
-  .tabela-escolas:nth-last-child(-n+1) {
+  .tabela-escolas:nth-last-child(-n + 1) {
     border-bottom: 2px solid #353535;
     margin-bottom: 1.5em;
   }
@@ -207,13 +213,13 @@ table.report-table {
     .div-topo {
       display: grid;
       grid-template-columns: 49% 49%;
-      grid-column-gap: 2%
+      grid-column-gap: 2%;
     }
 
     .kits {
       display: flex;
       justify-content: flex-end;
-      padding-right: 2em; 
+      padding-right: 2em;
     }
 
     .descricao-titulo {
