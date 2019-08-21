@@ -45,3 +45,21 @@ export const obterEditaisEContratos = payload => {
     });
 };
 
+export const obtemEdital = uuid => {
+  const url = `${API_URL}/editais-contratos/${uuid}`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

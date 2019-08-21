@@ -33,15 +33,19 @@ class ContratosRelacionados extends Component {
           data_final: null
         }
       ],
+      atualizado: false,
       status: false,
-      formVigenciaContratos: ["vigenciaContrato0"]
+      formVigenciaContratos: ["vigenciaContrato_0"]
     };
   }
 
   obtemDataInicial(keyVigencia, indiceForm) {
+    const { contratos_relacionados, atualizacao } = this.props;
     if (keyVigencia === 0) {
       return moment(
-        this.props.contratos_relacionados[indiceForm]["data_proposta"],
+        atualizacao
+          ? contratos_relacionados[indiceForm]["data_proposta"]
+          : null,
         "DD/MM/YYYY"
       )["_d"];
     } else {
@@ -72,7 +76,7 @@ class ContratosRelacionados extends Component {
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `vigenciaContrato${
+    const indiceDoFormAtual = `vigenciaContrato_${
       this.state.formVigenciaContratos.length
     }`;
     let forms = this.state.formVigenciaContratos;
@@ -169,6 +173,57 @@ class ContratosRelacionados extends Component {
         this.props.setaResetFormChild();
       }
     }
+
+    if (
+      this.props.atualizacao &&
+      this.state.formVigenciaContratos.length === 1 &&
+      !this.state.atualizado
+    ) {
+      const {contratos_relacionados, indice} = this.props;
+
+      let vigencias = contratos_relacionados[indice].vigencias;
+
+      let lotesSelecionados = contratos_relacionados[
+        indice
+      ].lotes;
+      let lotesNomesSelecionados = contratos_relacionados[
+        indice
+      ].lotes_nomes;
+
+      let diretoriasSelecionadas = contratos_relacionados[
+        indice
+      ].dres;
+      let diretoriasNomesSelecionadas = contratos_relacionados[
+        indice
+      ].dres_nomes;
+
+      let empresasSelecionadas = contratos_relacionados[
+        indice
+      ].empresas;
+      let empresasNomesSelecionados = contratos_relacionados[
+        indice
+      ].empresas_nomes;
+
+      vigencias.forEach((vigencia, indice) => {
+        if(indice !== 0){
+          this.nomeFormAtual()
+        }
+      })
+
+      this.setState({
+        atualizado: true,
+        vigencias,
+        lotesSelecionados,
+        lotesNomesSelecionados,
+        diretoriasSelecionadas,
+        diretoriasNomesSelecionadas,
+        empresasSelecionadas,
+        empresasNomesSelecionados
+      });
+      
+     
+    }
+
   }
 
   renderExcluirNoUltimo(indiceDoForm) {
@@ -278,7 +333,7 @@ class ContratosRelacionados extends Component {
                               <span>* </span>Vigencia
                             </label>
                             <Field
-                              name={`data_inicio${key}`}
+                              name={`data_inicial${key}`}
                               component={LabelAndDate}
                               validate={required}
                               minDate={this.obtemDataInicial(key, indice)}
@@ -295,7 +350,7 @@ class ContratosRelacionados extends Component {
                           </div>
                           <div className="coluna">
                             <Field
-                              name={`data_fim${key}`}
+                              name={`data_final${key}`}
                               component={LabelAndDate}
                               label=" "
                               minDate={

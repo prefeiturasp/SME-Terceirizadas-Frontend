@@ -79,8 +79,8 @@ export class ModalCadastroEdital extends Component {
                                 {contrato.vigencias.map(vigencia => {
                                   return (
                                     <div className="elementos">
-                                      De {vigencia.data_inicio} até{" "}
-                                      {vigencia.data_fim};
+                                      De {vigencia.data_inicial} até{" "}
+                                      {vigencia.data_final};
                                     </div>
                                   );
                                 })}
