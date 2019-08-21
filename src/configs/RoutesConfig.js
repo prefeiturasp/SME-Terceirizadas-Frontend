@@ -45,6 +45,8 @@ import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSoli
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
 import AlteracaoDeCardapioRelatorioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/RelatorioPage";
+import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
+import AlteracaoDeCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/RelatorioPage";
 
 const routesConfig = [
   {
@@ -285,6 +287,16 @@ const routesConfig = [
   {
     path: "/codae/detalhe-dashboard-dre",
     component: DashboardCODAEDetailDRE,
+    exact: false
+  },
+  {
+    path: "/terceirizada/alteracoes-de-cardapio/relatorio",
+    component: AlteracaoDeCardapioRelatorioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/alteracoes-de-cardapio",
+    component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
   }
 ];

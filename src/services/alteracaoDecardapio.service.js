@@ -314,3 +314,97 @@ export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
       return error.json();
     });
 };
+
+export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosAprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosReprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const TerceirizadaTomaCiencia = uuid => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/terceirizada-toma-ciencia/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
