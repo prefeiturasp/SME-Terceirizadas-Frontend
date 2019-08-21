@@ -1,21 +1,15 @@
 import React, { Component } from "react";
+import { createTextMask } from "redux-form-input-masks";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import {
-  required
-} from "../../../../helpers/fieldValidators";
+import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
-import {
-  transformaObjetos,
-  fieldCnpj,
-  fieldCep,
-  fieldTel
-} from "./helper";
+import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
 import { toastSuccess } from "../../../Shareable/dialogs";
 import { ContatosEmpresa } from "./ContatosEmpresa";
 import { ContatosTerceirizada } from "./ContatosTerceirizada";
@@ -38,9 +32,9 @@ class CadastroEmpresa extends Component {
         this.setState({ lotes });
       })
       .catch(error => {
-        console.log(error)
-      })    
-  };
+        console.log(error);
+      });
+  }
 
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
@@ -85,7 +79,7 @@ class CadastroEmpresa extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, resumo } = this.props;
     return (
       <div className="cadastro pt-3">
         <form onSubmit={this.props.handleSubmit}>
@@ -186,8 +180,16 @@ class CadastroEmpresa extends Component {
                       <label className="label">Telefone</label>
                       <Field
                         component={LabelAndInput}
+                        max={14}
                         name="telefone_representante_legal"
-                        {...fieldTel}
+                        {...createTextMask({
+                          pattern:
+                            resumo.telefone_representante_legal &&
+                            resumo.telefone_representante_legal.length < 11
+                              ? "99 9999 99999"
+                              : "99 9 9999 99999",
+                          guide: false
+                        })}
                         validate={required}
                       />
                     </div>
@@ -222,11 +224,7 @@ class CadastroEmpresa extends Component {
 
               <div>
                 <div className="card-body">
-
-
                   <FieldArray name="edital" component={EditalInput} />
-
-
 
                   <div className="row pt-3">
                     <div className="col-12">
@@ -322,6 +320,12 @@ const mapStateToProps = state => {
       telefone_empresa: selector(state, "telefone_empresa"),
       email_empresa: selector(state, "email_empresa"),
       representante_legal: selector(state, "representante_legal"),
+      contatos_empresa: selector(state, "contatos-empresa"),
+      contatos_terceirizada: selector(state, "contatos-terceirizada"),
+      telefone_representante_legal: selector(
+        state,
+        "telefone_representante_legal"
+      ),
       contato: selector(state, "contato"),
       nutricionista: selector(state, "nutricionista"),
       crn: selector(state, "crn"),

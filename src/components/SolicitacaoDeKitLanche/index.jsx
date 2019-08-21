@@ -351,7 +351,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 />
               )}
 
-              <div className="form-group pt-3">
+              <div className="form-group mt-2 pt-3">
                 <label className="font-weight-bold">
                   {"Número total kits:"}
                 </label>

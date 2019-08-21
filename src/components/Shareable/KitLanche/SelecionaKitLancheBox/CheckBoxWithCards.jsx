@@ -112,7 +112,7 @@ export class Cards extends Component {
             style={{
               width: "14rem",
               border: "solid",
-              height: showOptions ? "15rem" : "",
+              height: showOptions ? "16rem" : "",
               opacity: opacity
             }}
           >

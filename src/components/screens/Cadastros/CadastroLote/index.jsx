@@ -80,7 +80,7 @@ class CadastroLote extends Component {
           let escolasSelecionadasNomes = [];
           response.data.escolas.forEach(escola => {
             escolasSelecionadasNomes.push(
-              `${escola.codigo_eol} - ${escola.nome}`
+              `${escola.codigo_eol} - ${escola.nome} - ${escola.lote}`
             );
           });
           this.setState({

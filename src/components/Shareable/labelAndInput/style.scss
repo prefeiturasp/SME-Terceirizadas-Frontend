@@ -10,7 +10,9 @@ div.react-datepicker-wrapper {
     }
     display: -webkit-inline-box;
     .input-group-prepend {
-      margin-top: 2px;
+      @media only screen and (max-width: 1650px) {
+        margin-top: 2px;
+      }
       .input-group-text {
         display: block;
         text-align: center;
@@ -29,7 +31,9 @@ div.react-datepicker-wrapper {
       border: none;
     }
     .input-group-prepend {
-      margin-top: 1px;
+      @media only screen and (max-width: 1650px) {
+        margin-top: 1px;
+      }
       .input-group-text {
         display: block;
         min-width: 140px;
