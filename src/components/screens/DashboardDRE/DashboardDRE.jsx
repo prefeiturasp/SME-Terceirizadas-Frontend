@@ -196,13 +196,15 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Alteração de Cardápio"}
-                    totalOfOrders={20}
-                    priorityOrders={5}
-                    onLimitOrders={10}
-                    regularOrders={10}
-                  />
+                 <Link to="/dre/alteracoes-de-cardapio">
+                    <CardPendencia
+                      cardTitle={"Alteração de Cardápio"}
+                      totalOfOrders={20}
+                      priorityOrders={5}
+                      onLimitOrders={10}
+                      regularOrders={10}
+                    />
+                  </Link>
                 </div>
                 <div className="col-6">
                   <Link to="/dre/kits-lanche">
