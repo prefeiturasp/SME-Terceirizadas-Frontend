@@ -43,6 +43,8 @@ import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrd
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
+import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
+import AlteracaoDeCardapioRelatorioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/RelatorioPage";
 
 const routesConfig = [
   {
@@ -148,6 +150,16 @@ const routesConfig = [
   {
     path: "/codae/inclusoes-de-alimentacao",
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/alteracoes-de-cardapio/relatorio",
+    component: AlteracaoDeCardapioRelatorioCODAEPage,
+    exact: false
+  },
+  {
+    path: "/codae/alteracoes-de-cardapio",
+    component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false
   },
   {
