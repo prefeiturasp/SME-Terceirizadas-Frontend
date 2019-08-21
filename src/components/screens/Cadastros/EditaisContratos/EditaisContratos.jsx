@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { reduxForm, FormSection } from "redux-form";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { loadEdital } from "../../../../reducers/edital.reducer";
 import { Link } from "react-router-dom";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
@@ -7,7 +10,10 @@ import {
   getDiretoriaregionalSimplissima
 } from "../../../../services/diretoriaRegional.service";
 import HTTP_STATUS from "http-status-codes";
-import { criarEditalEContrato } from "../../../../services/edital.service";
+import {
+  criarEditalEContrato,
+  obtemEdital
+} from "../../../../services/edital.service";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
 import {
@@ -59,7 +65,10 @@ class EditaisContratos extends Component {
       exibirModal: false,
       edital_contratos: null,
       reseta: false,
-      redirect: false
+      redirect: false,
+      loading: true,
+      uuid: null,
+      atualizacao: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -75,6 +84,133 @@ class EditaisContratos extends Component {
     );
   }
 
+  componentDidUpdate(prevState) {
+    if (prevState.uuid !== this.state.uuid) {
+      const { loading } = this.state;
+      if (loading) {
+        this.setState({
+          loading: false
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const uuid = urlParams.get("uuid");
+        if (uuid) {
+          obtemEdital(uuid).then(response => {
+            this.props.reset("cadastroEditaisForm");
+            response.data.contratos.forEach((contrato, indice_contrato) => {
+              if (indice_contrato !== 0) {
+                this.nomeFormAtual();
+                this.adicionaContratosRelacionados();
+              }
+              let contratos_relacionados = this.state.contratos_relacionados;
+
+              contratos_relacionados[
+                indice_contrato
+              ].lotes = contrato.lotes.map(lote => {
+                return lote.uuid;
+              });
+              contratos_relacionados[
+                indice_contrato
+              ].lotes_nomes = contrato.lotes.map(lote => {
+                return lote.nome;
+              });
+
+              contratos_relacionados[
+                indice_contrato
+              ].dres = contrato.diretorias_regionais.map(dre => {
+                return dre.uuid;
+              });
+              contratos_relacionados[
+                indice_contrato
+              ].dres_nomes = contrato.diretorias_regionais.map(dre => {
+                return dre.nome;
+              });
+
+              contratos_relacionados[
+                indice_contrato
+              ].empresas = contrato.terceirizadas.map(terceirizada => {
+                return terceirizada.uuid;
+              });
+
+              contratos_relacionados[
+                indice_contrato
+              ].empresas_nomes = contrato.terceirizadas.map(terceirizada => {
+                return terceirizada.nome_fantasia;
+              });
+              contratos_relacionados[indice_contrato].processo_administrativo =
+                contrato.processo;
+              contratos_relacionados[indice_contrato].numero_contrato =
+                contrato.numero;
+              contratos_relacionados[indice_contrato].data_proposta =
+                contrato.data_proposta;
+              contrato.vigencias.forEach((vigencia, indice_vigencia) => {
+                if (indice_vigencia === 0) {
+                  contratos_relacionados[indice_contrato].vigencias[
+                    indice_vigencia
+                  ].data_inicial = vigencia["data_inicial"];
+                  contratos_relacionados[indice_contrato].vigencias[
+                    indice_vigencia
+                  ].data_final = vigencia["data_final"];
+                } else {
+                  let vigencia_temp = {
+                    data_inicial: vigencia["data_inicial"],
+                    data_final: vigencia["data_final"]
+                  };
+                  contratos_relacionados[indice_contrato].vigencias.push(
+                    vigencia_temp
+                  );
+                }
+              });
+
+              let edital = this.state.edital;
+              edital["tipo_contratacao"] = response.data.tipo_contratacao;
+              edital["numero"] = response.data.numero;
+              edital["numero_processo"] = response.data.processo;
+              edital["resumo"] = response.data.objeto;
+
+              this.setState({ contratos_relacionados, edital });
+            });
+            if (this.state.edital.resumo.length > 0) {
+              this.setState({ atualizacao: true });
+            }
+            this.props.loadEdital(response.data);
+          });
+        }
+      }
+    }
+  }
+
+  adicionaContratosRelacionados() {
+    this.setState({
+      contratos_relacionados: this.state.contratos_relacionados.concat([
+        {
+          vigencias: [
+            {
+              data_inicial: null,
+              data_final: null
+            }
+          ],
+          numero_contrato: null,
+          processo_administrativo: null,
+          data_proposta: null,
+          lotes: null,
+          lotes_nomes: null,
+          dres: null,
+          dres_nomes: null,
+          empresas: null,
+          empresas_nomes: null
+        }
+      ])
+    });
+  }
+
+  nomeFormAtual() {
+    const indiceDoFormAtual = `secaoEdital${this.state.forms.length}`;
+    let forms = this.state.forms;
+    forms.push(indiceDoFormAtual);
+    this.setState({ forms });
+  }
+
   setRedirect() {
     this.setState({
       redirect: true
@@ -83,7 +219,7 @@ class EditaisContratos extends Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/configuracoes/cadastros/lotes-cadastrados" />;
+      return <Redirect to="/configuracoes/cadastros/editais-cadastrados" />;
     }
   };
 
@@ -229,37 +365,6 @@ class EditaisContratos extends Component {
     this.setState({ contratos_relacionados });
   }
 
-  adicionaContratosRelacionados() {
-    this.setState({
-      contratos_relacionados: this.state.contratos_relacionados.concat([
-        {
-          vigencias: [
-            {
-              data_inicial: null,
-              data_final: null
-            }
-          ],
-          numero_contrato: null,
-          processo_administrativo: null,
-          data_proposta: null,
-          lotes: null,
-          lotes_nomes: null,
-          dres: null,
-          dres_nomes: null,
-          empresas: null,
-          empresas_nomes: null
-        }
-      ])
-    });
-  }
-
-  nomeFormAtual() {
-    const indiceDoFormAtual = `secaoEdital${this.state.forms.length}`;
-    let forms = this.state.forms;
-    forms.push(indiceDoFormAtual);
-    this.setState({ forms });
-  }
-
   componentDidMount() {
     getLotes().then(response => {
       this.setState({ lotes: normalizaLabelValueLote(response.results) });
@@ -292,7 +397,8 @@ class EditaisContratos extends Component {
       exibirModal,
       edital_contratos,
       reseta,
-      contratos_relacionados
+      contratos_relacionados,
+      atualizacao
     } = this.state;
     return (
       <section className="cadastro pt-3">
@@ -339,6 +445,7 @@ class EditaisContratos extends Component {
                   reseta={reseta}
                   setaResetFormChild={this.setaResetFormChild}
                   contratos_relacionados={contratos_relacionados}
+                  atualizacao={atualizacao}
                 />
               );
             })}
@@ -384,6 +491,24 @@ class EditaisContratos extends Component {
   }
 }
 
-export default reduxForm({
-  form: "cadastroEditaisForm"
+const cadastroEditaisForm = reduxForm({
+  form: "cadastroEditaisForm",
+  enableReinitialize: true
 })(EditaisContratos);
+const mapStateToProps = state => {
+  return {
+    initialValues: state.cadastroEditaisForm.data
+  };
+};
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadEdital
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(cadastroEditaisForm);

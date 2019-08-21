@@ -33,6 +33,7 @@ class ContratosRelacionados extends Component {
           data_final: null
         }
       ],
+      atualizado: false,
       status: false,
       formVigenciaContratos: ["vigenciaContrato0"]
     };
@@ -41,7 +42,9 @@ class ContratosRelacionados extends Component {
   obtemDataInicial(keyVigencia, indiceForm) {
     if (keyVigencia === 0) {
       return moment(
-        this.props.contratos_relacionados[indiceForm]["data_proposta"],
+        this.props.atualizacao
+          ? this.props.contratos_relacionados[indiceForm]["data_proposta"]
+          : null,
         "DD/MM/YYYY"
       )["_d"];
     } else {
@@ -169,6 +172,48 @@ class ContratosRelacionados extends Component {
         this.props.setaResetFormChild();
       }
     }
+
+    if (
+      this.props.atualizacao &&
+      this.state.formVigenciaContratos.length === 1 &&
+      !this.state.atualizado
+    ) {
+      let vigencias = this.props.contratos_relacionados[this.props.indice]
+        .vigencias;
+
+      let lotesSelecionados = this.props.contratos_relacionados[
+        this.props.indice
+      ].lotes;
+      let lotesNomesSelecionados = this.props.contratos_relacionados[
+        this.props.indice
+      ].lotes_nomes;
+
+      let diretoriasSelecionadas = this.props.contratos_relacionados[
+        this.props.indice
+      ].dres;
+      let diretoriasNomesSelecionadas = this.props.contratos_relacionados[
+        this.props.indice
+      ].dres_nomes;
+
+      let empresasSelecionadas = this.props.contratos_relacionados[
+        this.props.indice
+      ].empresas;
+      let empresasNomesSelecionados = this.props.contratos_relacionados[
+        this.props.indice
+      ].empresas_nomes;
+
+      this.setState({
+        atualizado: true,
+        vigencias,
+        lotesSelecionados,
+        lotesNomesSelecionados,
+        diretoriasSelecionadas,
+        diretoriasNomesSelecionadas,
+        empresasSelecionadas,
+        empresasNomesSelecionados
+      });
+      this.nomeFormAtual();
+    }
   }
 
   renderExcluirNoUltimo(indiceDoForm) {
@@ -278,7 +323,7 @@ class ContratosRelacionados extends Component {
                               <span>* </span>Vigencia
                             </label>
                             <Field
-                              name={`data_inicio${key}`}
+                              name={`data_inicial${key}`}
                               component={LabelAndDate}
                               validate={required}
                               minDate={this.obtemDataInicial(key, indice)}
@@ -295,7 +340,7 @@ class ContratosRelacionados extends Component {
                           </div>
                           <div className="coluna">
                             <Field
-                              name={`data_fim${key}`}
+                              name={`data_final${key}`}
                               component={LabelAndDate}
                               label=" "
                               minDate={
