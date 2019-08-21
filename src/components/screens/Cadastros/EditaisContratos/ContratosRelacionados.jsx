@@ -35,15 +35,16 @@ class ContratosRelacionados extends Component {
       ],
       atualizado: false,
       status: false,
-      formVigenciaContratos: ["vigenciaContrato0"]
+      formVigenciaContratos: ["vigenciaContrato_0"]
     };
   }
 
   obtemDataInicial(keyVigencia, indiceForm) {
+    const { contratos_relacionados, atualizacao } = this.props;
     if (keyVigencia === 0) {
       return moment(
-        this.props.atualizacao
-          ? this.props.contratos_relacionados[indiceForm]["data_proposta"]
+        atualizacao
+          ? contratos_relacionados[indiceForm]["data_proposta"]
           : null,
         "DD/MM/YYYY"
       )["_d"];
@@ -75,7 +76,8 @@ class ContratosRelacionados extends Component {
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `vigenciaContrato${
+    console.log('passei')
+    const indiceDoFormAtual = `vigenciaContrato_${
       this.state.formVigenciaContratos.length
     }`;
     let forms = this.state.formVigenciaContratos;
@@ -178,29 +180,36 @@ class ContratosRelacionados extends Component {
       this.state.formVigenciaContratos.length === 1 &&
       !this.state.atualizado
     ) {
-      let vigencias = this.props.contratos_relacionados[this.props.indice]
-        .vigencias;
+      const {contratos_relacionados, indice} = this.props;
 
-      let lotesSelecionados = this.props.contratos_relacionados[
-        this.props.indice
+      let vigencias = contratos_relacionados[indice].vigencias;
+
+      let lotesSelecionados = contratos_relacionados[
+        indice
       ].lotes;
-      let lotesNomesSelecionados = this.props.contratos_relacionados[
-        this.props.indice
+      let lotesNomesSelecionados = contratos_relacionados[
+        indice
       ].lotes_nomes;
 
-      let diretoriasSelecionadas = this.props.contratos_relacionados[
-        this.props.indice
+      let diretoriasSelecionadas = contratos_relacionados[
+        indice
       ].dres;
-      let diretoriasNomesSelecionadas = this.props.contratos_relacionados[
-        this.props.indice
+      let diretoriasNomesSelecionadas = contratos_relacionados[
+        indice
       ].dres_nomes;
 
-      let empresasSelecionadas = this.props.contratos_relacionados[
-        this.props.indice
+      let empresasSelecionadas = contratos_relacionados[
+        indice
       ].empresas;
-      let empresasNomesSelecionados = this.props.contratos_relacionados[
-        this.props.indice
+      let empresasNomesSelecionados = contratos_relacionados[
+        indice
       ].empresas_nomes;
+
+      vigencias.forEach((vigencia, indice) => {
+        if(indice !== 0){
+          this.nomeFormAtual()
+        }
+      })
 
       this.setState({
         atualizado: true,
@@ -212,8 +221,10 @@ class ContratosRelacionados extends Component {
         empresasSelecionadas,
         empresasNomesSelecionados
       });
-      this.nomeFormAtual();
+      
+     
     }
+
   }
 
   renderExcluirNoUltimo(indiceDoForm) {
