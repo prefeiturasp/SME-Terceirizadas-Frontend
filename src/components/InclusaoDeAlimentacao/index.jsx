@@ -9,7 +9,8 @@ import {
   geradorUUID,
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
-  formatarParaMultiselect
+  formatarParaMultiselect,
+  getDataObj
 } from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
@@ -108,16 +109,17 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       inclusoes
     });
-    if (field === "data") {
-      if (
-        checaSeDataEstaEntre2e5DiasUteis(
-          value,
-          this.props.proximos_dois_dias_uteis,
-          this.props.proximos_cinco_dias_uteis
-        )
-      ) {
-        this.showModal();
-      }
+  }
+
+  onDataChanged(value) {
+    if (
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        this.props.proximos_dois_dias_uteis,
+        this.props.proximos_cinco_dias_uteis
+      )
+    ) {
+      this.showModal();
     }
   }
 
@@ -543,6 +545,9 @@ class InclusaoDeAlimentacao extends Component {
                               onChange={value =>
                                 this.handleField("data", value, dia_motivo.id)
                               }
+                              onBlur={event =>
+                                this.onDataChanged(event.target.value)
+                              }
                               minDate={proximos_dois_dias_uteis}
                               label="Dia"
                               validate={required}
@@ -606,9 +611,13 @@ class InclusaoDeAlimentacao extends Component {
                                   dia_motivo.id
                                 )
                               }
+                              onBlur={event =>
+                                this.onDataChanged(event.target.value)
+                              }
                               name="data_inicial"
                               label="De"
                               validate={required}
+                              minDate={proximos_dois_dias_uteis}
                             />
                           </div>
                           <div className="form-group col-sm-3">
@@ -621,6 +630,8 @@ class InclusaoDeAlimentacao extends Component {
                                   dia_motivo.id
                                 )
                               }
+                              minDate={getDataObj(inclusoes[0].data_inicial)}
+                              disabled={!inclusoes[0].data_inicial}
                               name="data_final"
                               label="Até"
                               validate={required}

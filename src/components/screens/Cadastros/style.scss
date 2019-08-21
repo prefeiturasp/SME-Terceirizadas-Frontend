@@ -374,6 +374,11 @@ table.cadastro-empresa {
 
 .dropdown-content {
   position: relative !important;
+  label[aria-selected="true"] {
+    font-weight: bold !important;
+    color: white !important;
+    background-color: #109cf1 !important;
+  }
 }
 
 .lista-lotes {
@@ -590,7 +595,7 @@ table.cadastro-lote {
       &:first-child {
         padding: 0 20px;
       }
-      
+
     }
   }
 
@@ -601,7 +606,7 @@ table.cadastro-lote {
       color: #353535;
       font-size: 15px;
       padding-right: 20px;
-      
+
 
       .divisao {
         padding-top: 10px;
@@ -611,7 +616,7 @@ table.cadastro-lote {
       .detalhe-edital-contrato {
         display: grid;
         grid-template-rows: 1.5em 2em auto;
-        
+
 
         span {
           line-height: 14px;

@@ -752,7 +752,11 @@ class SolicitacaoUnificada extends Component {
                     schoolsFiltered.map((school, key) => {
                       return (
                         <FormSection name={`school_${school.codigo_eol}`}>
-                          <div>
+                          <div
+                            className={`${school.checked &&
+                              !school.burger_active &&
+                              "school-checked"}`}
+                          >
                             <div
                               className="school-container col-md-12 mr-4"
                               style={
