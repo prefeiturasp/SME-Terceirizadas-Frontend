@@ -202,13 +202,15 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Inclusão de Refeição"}
-                      totalOfOrders={16}
-                      priorityOrders={8}
-                      onLimitOrders={2}
-                      regularOrders={6}
-                    />
+                    <Link to="/terceirizada/inclusoes-de-alimentacao">
+                      <CardPendencia
+                        cardTitle={"Inclusão de Alimentação"}
+                        totalOfOrders={16}
+                        priorityOrders={8}
+                        onLimitOrders={2}
+                        regularOrders={6}
+                      />
+                    </Link>
                   </div>
                   <div className="col-6">
                     <CardPendencia

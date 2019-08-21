@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../../Shareable/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
@@ -141,7 +141,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inclusão de Alimentação - Pendente Aprovação
+                    Inclusão de Alimentação - Pendente Validação
                   </div>
                 </div>
                 <div className="col-5">
@@ -170,6 +170,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
+                    parametroURL={"dre"}
                   />
                 </div>
               </div>
@@ -181,6 +182,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={"dre"}
                     />
                   </div>
                 </div>
@@ -193,6 +195,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={"dre"}
                     />
                   </div>
                 </div>

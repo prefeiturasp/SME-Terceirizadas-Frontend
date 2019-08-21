@@ -1,27 +1,18 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import HTTP_STATUS from "http-status-codes";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import { Field, reduxForm } from "redux-form";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
-import {
-  LabelAndDate,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput/labelAndInput";
-import { Rascunhos } from "./Rascunhos";
-import {
-  getInversoesDeDiaDeCardapio,
-  criarInversaoDeDiaDeCardapio,
-  removerInversaoDeDiaDeCardapio,
-  atualizarInversaoDeDiaDeCardapio,
-  inicioPedido
-} from "../../services/inversaoDeDiaDeCardapio.service";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { atualizarInversaoDeDiaDeCardapio, criarInversaoDeDiaDeCardapio, getInversoesDeDiaDeCardapio, inicioPedido, removerInversaoDeDiaDeCardapio } from "../../services/inversaoDeDiaDeCardapio.service";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 
 export class InversaoDeDiaDeCardapio extends Component {
@@ -167,7 +158,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           console.log("ERRO AO TENTAR SALVAR: ", error);
         });
     } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, JSON.stringify(values))
+      atualizarInversaoDeDiaDeCardapio(values.uuid, values)
         .then(response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
@@ -251,7 +242,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                   <Field
                     component={LabelAndTextArea}
                     label="Motivo"
-                    name="descricao"
+                    name="motivo"
                     validate={[textAreaRequired]}
                   />
                 </div>

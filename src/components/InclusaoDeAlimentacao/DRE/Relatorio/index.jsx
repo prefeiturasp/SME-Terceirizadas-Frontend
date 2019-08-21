@@ -33,35 +33,7 @@ class Relatorio extends Component {
       showModal: false,
       ehInclusaoContinua: false,
       inclusaoDeAlimentacao: null,
-      prazoDoPedidoMensagem: null,
-      listaDeStatus: [
-        {
-          titulo: "Solicitação Realizada",
-          status: "aprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Reprovado da DRE",
-          status: "reprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Cancelado pela CODAE",
-          status: "cancelado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Visualizado pela Terceirizada",
-          status: null,
-          timestamp: null
-        }
-      ]
+      prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -123,7 +95,7 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
+    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
   }
 
   handleSubmit() {
@@ -134,14 +106,14 @@ class Relatorio extends Component {
     DREConfirmaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação aprovada com sucesso!");
+          toastSuccess("Inclusão de Alimentação validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Inclusão de Alimentação");
+          toastError("Houve um erro ao validar a Inclusão de Alimentação");
         }
       },
       function(error) {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+        toastError("Houve um erro ao validar a Inclusão de Alimentação");
       }
     );
   }
@@ -351,14 +323,14 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Recusar Solicitação"}
+                    label={"Não Validar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Aprovar Solicitação"
+                    label="Validar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

@@ -93,11 +93,214 @@ export const getMotivosAlteracaoCardapio = () => {
 };
 
 export const enviarAlteracaoCardapio = (uuid, payload) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio_de_pedido/`;
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getDiretoriaRegionalPedidosAprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const DREConfirmaAlteracaoCardapio = uuid => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/diretoria-regional-aprova/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getAlteracaoCardapio = uuid => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosPrioritarios = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosAprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosReprovados = () => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/codae-aprova-pedido/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
