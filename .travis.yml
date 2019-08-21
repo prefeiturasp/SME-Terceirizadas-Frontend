@@ -19,6 +19,6 @@ after_script:
 
 deploy:
   provider: script
-  script: bash ./deploy_dockerhub.sh
+  script: bash utility/deploy_dockerhub.sh
   on:
     all_branches: true
