@@ -27,10 +27,6 @@ export const visaoPorComboSomenteDatas = [
     uuid: "sem_filtro"
   },
   {
-    nome: "Hoje",
-    uuid: "hoje"
-  },
-  {
     nome: "Daqui a 7 dias",
     uuid: "daqui_a_7_dias"
   },

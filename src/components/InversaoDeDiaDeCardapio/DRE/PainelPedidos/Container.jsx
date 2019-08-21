@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { FiltroEnum } from "../../../../constants/filtroEnum";
 
 class Container extends Component {
   constructor(props) {
@@ -15,18 +16,18 @@ class Container extends Component {
 
   componentDidMount() {
     let pedidosAprovadosRetornados = 0;
-    let pedidosReprovadosRetornados = 0;
     let pedidosAprovados = [];
-    let pedidosReprovados = [];
 
-    getDiretoriaRegionalPedidosDeInversoes("sem_filtro").then(response => {
-      pedidosAprovadosRetornados += 1;
-      pedidosAprovados = pedidosAprovados.concat(response.results);
-      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 4;
-      if (todosPedidosAprovadosRetornados) {
-        this.setState({ pedidosAprovados, pedidosCarregados: true });
+    getDiretoriaRegionalPedidosDeInversoes(FiltroEnum.SEM_FILTRO).then(
+      response => {
+        pedidosAprovadosRetornados += 1;
+        pedidosAprovados = pedidosAprovados.concat(response.results);
+        let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 4;
+        if (todosPedidosAprovadosRetornados) {
+          this.setState({ pedidosAprovados, pedidosCarregados: true });
+        }
       }
-    });
+    );
   }
 
   render() {

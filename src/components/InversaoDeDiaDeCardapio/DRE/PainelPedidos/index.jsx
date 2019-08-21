@@ -6,7 +6,12 @@ import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inv
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
-import { formatarPedidos } from "./helper";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular,
+  formatarPedidos
+} from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -25,9 +30,13 @@ class PainelPedidos extends Component {
     let pedidosNoPrazoRegular = [];
     this.setState({ pedidosCarregados: 0 });
     getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
+      pedidosPrioritarios = filtraPrioritarios(response.results);
+      pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      pedidosNoPrazoRegular = filtraRegular(response.results);
       this.setState({
         pedidosPrioritarios,
+        pedidosNoPrazoLimite,
+        pedidosNoPrazoRegular,
         pedidosCarregados: this.state.pedidosCarregados + 1
       });
     });
@@ -61,6 +70,7 @@ class PainelPedidos extends Component {
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
+
     const todosOsPedidosForamCarregados = pedidosCarregados;
     return (
       <div>
