@@ -1,8 +1,11 @@
+@import "../../styles/variables.scss";
+
 label {
   margin-bottom: 0 !important;
 }
 
 input::placeholder {
+  color: $placeholder !important;
   text-align: left;
 }
 
@@ -38,7 +41,7 @@ input.input-search {
 }
 
 .dashboard-card-title {
-  color: #035d96;
+  color: $blue;
   i {
     color: #334d6e;
     padding-right: 15px;
@@ -99,6 +102,10 @@ div.caption-choices {
       }
     }
   }
+}
+
+.col-form-label {
+  color: $gray !important;
 }
 
 .badge-sme {
@@ -185,18 +192,23 @@ div.caption-choices {
   max-width: 90% !important;
 }
 
+.c-pointer {
+  cursor: pointer;
+}
+
 .checkbox-label {
+  color: $gray;
   input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     &:checked {
       ~ .checkbox-custom {
-        background-color: #fff;
+        background-color: $blueCheckAndRadio;
         border-radius: 5px;
         transform: rotate(0deg) scale(1);
         opacity: 1;
-        border: 1px solid #686868;
+        border: 1px solid $blueCheckAndRadio;
         &:after {
           transform: rotate(45deg) scale(1);
           opacity: 1;
@@ -204,7 +216,7 @@ div.caption-choices {
           top: 2px;
           width: 6px;
           height: 12px;
-          border: solid #686868;
+          border: solid white;
           border-width: 0 2px 2px 0;
           background-color: transparent;
           border-radius: 0;
@@ -220,7 +232,7 @@ div.caption-choices {
     width: 20px;
     background-color: #fff;
     border-radius: 3px;
-    border: 1px solid #686868;
+    border: 1px solid $gray;
     cursor: pointer;
     &:after {
       position: absolute;
@@ -230,7 +242,7 @@ div.caption-choices {
       height: 0px;
       width: 0px;
       border-radius: 5px;
-      border: solid #009bff;
+      border: solid $blueCheckAndRadio;
       border-width: 0 3px 3px 0;
       transform: rotate(0deg) scale(0);
       opacity: 1;
@@ -249,16 +261,29 @@ div.caption-choices {
     border: none;
   }
   &.btn-primary {
-    background-color: #035d96;
+    background-color: $blue;
     &:hover {
-      background-color: #035d96;
+      background-color: $blue;
     }
   }
   &.btn-outline-primary {
-    color: #035d96;
+    color: $blue;
     &:hover {
       background-color: white;
-      color: #035d96;
+      color: $blue;
+    }
+  }
+  &.btn-success {
+    background-color: $green;
+    &:hover {
+      background-color: $green;
+    }
+  }
+  &.btn-outline-success {
+    color: $green;
+    &:hover {
+      background-color: white;
+      color: $green;
     }
   }
 }
@@ -266,7 +291,7 @@ div.caption-choices {
 .icon-draft-card {
   span {
     i {
-      color: #035d96;
+      color: $blue;
       cursor: pointer;
       padding: 0 10px;
     }
