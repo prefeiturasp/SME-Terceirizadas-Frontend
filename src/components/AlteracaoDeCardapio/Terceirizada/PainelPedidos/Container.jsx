@@ -17,27 +17,17 @@ class Container extends Component {
   }
 
   componentDidMount() {
-    let pedidosAprovadosRetornados = 0;
-    let pedidosReprovadosRetornados = 0;
     let pedidosAprovados = [];
     let pedidosReprovados = [];
 
     pedidosAprovadosNormais().then(response => {
-      pedidosAprovadosRetornados += 1;
-      pedidosAprovados = pedidosAprovados.concat(response.results);
-      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
-      if (todosPedidosAprovadosRetornados) {
-        this.setState({ pedidosAprovados });
-      }
+      pedidosAprovados = response.results;
+      this.setState({ pedidosAprovados })
     });
 
     pedidosReprovadosNormais().then(response => {
-      pedidosReprovadosRetornados += 1;
-      pedidosReprovados = pedidosReprovados.concat(response.results);
-      let todosPedidosReprovadosRetornados = pedidosReprovadosRetornados === 2;
-      if (todosPedidosReprovadosRetornados) {
-        this.setState({ pedidosReprovados });
-      }
+      pedidosReprovados = response.results;
+      this.setState({ pedidosReprovados })
     });
   }
 
