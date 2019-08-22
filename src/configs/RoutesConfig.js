@@ -12,6 +12,8 @@ import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
+import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
 import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
@@ -25,9 +27,6 @@ import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
-
-import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
-
 import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapio/RelatorioPage";
 import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
@@ -50,6 +49,8 @@ import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrd
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
+
+
 
 const routesConfig = [
   {
@@ -169,7 +170,7 @@ const routesConfig = [
   },
   {
     path: "/codae/inversoes-dia-cardapio/relatorio",
-    component: InversaoDiaCardapioRelatorioDREPage,
+    component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
     exact: false
   },
   {
