@@ -2,18 +2,18 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
-import IconePD from "../../Shareable/Icones/IconePD";
-import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
-import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
+import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
+import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconePD from "../../Shareable/Icones/IconePD";
+import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
+import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
+import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -213,13 +213,15 @@ class DashboardTerceirizada extends Component {
                     </Link>
                   </div>
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Alteração de Dias de Cardápio"}
-                      totalOfOrders={50}
-                      priorityOrders={2}
-                      onLimitOrders={18}
-                      regularOrders={30}
-                    />
+                    <Link to="/terceirizada/inversoes-dia-cardapio">
+                      <CardPendencia
+                        cardTitle={"Inversão de dias de cardápio"}
+                        totalOfOrders={50}
+                        priorityOrders={2}
+                        onLimitOrders={18}
+                        regularOrders={30}
+                      />
+                    </Link>
                   </div>
                 </div>
                 <div className="row pt-3">

@@ -1,9 +1,9 @@
 import React from "react";
+import Container from "../../../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/Container";
 import Page from "../../../components/Shareable/Page/Page";
-import Relatorio from "../../../components/InversaoDeDiaDeCardapio/CODAE/Relatorio";
 
 export default () => (
   <Page tituloRastro="solicitações">
-    <Relatorio />
+    <Container />
   </Page>
 );

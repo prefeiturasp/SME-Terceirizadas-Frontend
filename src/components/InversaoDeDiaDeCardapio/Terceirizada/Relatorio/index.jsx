@@ -6,8 +6,8 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  getInversaoDeDiaDeCardapio,
-  CODAEAprovaPedidoDRE
+  dreAprovaPedidoEscola,
+  getInversaoDeDiaDeCardapio
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
@@ -96,7 +96,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    CODAEAprovaPedidoDRE(uuid).then(
+    dreAprovaPedidoEscola(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dias de cardápio validada com sucesso!");
