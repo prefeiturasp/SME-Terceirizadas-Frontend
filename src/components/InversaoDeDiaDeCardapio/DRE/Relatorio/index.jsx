@@ -5,9 +5,10 @@ import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import { DREConfirmaInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { DREConfirmaInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
-import { getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import {
+  dreAprovaPedidoEscola,
+  getInversaoDeDiaDeCardapio
+} from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
@@ -61,18 +62,18 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const xxx = response.data;
-          const data_de = moment(xxx.data_de, "DD/MM/YYYY");
-          const data_para = moment(xxx.data_para, "DD/MM/YYYY");
+          const InversaoCardapio = response.data;
+          const data_de = moment(InversaoCardapio.data_de, "DD/MM/YYYY");
+          const data_para = moment(InversaoCardapio.data_para, "DD/MM/YYYY");
           let dataMaisProxima = data_de;
           if (dataMaisProxima < data_para) {
             dataMaisProxima = data_para;
           }
 
           this.setState({
-            InversaoCardapio: xxx,
+            InversaoCardapio,
             uuid,
-            escolaDaInversao: xxx.escola,
+            escolaDaInversao: InversaoCardapio.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               dataMaisProxima,
               proximos_dois_dias_uteis,
@@ -95,73 +96,18 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    const DREConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
-      ? DREConfirmaInclusaoDeAlimentacaoContinua
-      : DREConfirmaInclusaoDeAlimentacaoAvulsa;
-    DREConfirmaInclusaoDeAlimentacao(uuid).then(
+    dreAprovaPedidoEscola(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação validada com sucesso!");
+          toastSuccess("Inversão de dias de cardápio validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Inclusão de Alimentação");
+          toastError("Houve um erro ao validar a Inversão de dias de cardápio");
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Inclusão de Alimentação");
+        toastError("Houve um erro ao validar a Inversão de dias de cardápio");
       }
-    );
-  }
-
-  renderParteAvulsa() {
-    const { ehInclusaoContinua, InversaoCardapio } = this.state;
-    return (
-      !ehInclusaoContinua && (
-        <table className="table-periods">
-          <tr>
-            <th>Data</th>
-            <th>Motivo</th>
-          </tr>
-          {InversaoCardapio.inclusoes.map(inclusao => {
-            return (
-              <tr>
-                <td>{inclusao.data}</td>
-                <td>{inclusao.motivo.nome}</td>
-              </tr>
-            );
-          })}
-        </table>
-      )
-    );
-  }
-
-  renderParteContinua() {
-    const { ehInclusaoContinua, InversaoCardapio } = this.state;
-    return (
-      ehInclusaoContinua && (
-        <div>
-          <div className="row">
-            <div className="col-4 report-label-value">
-              <p>Data do evento</p>
-              <p className="value">
-                {`${InversaoCardapio.data_inicial} - ${
-                  InversaoCardapio.data_final
-                }`}
-              </p>
-            </div>
-            <div className="col-4 report-label-value">
-              <p>Dias da Semana</p>
-              <p className="value">{InversaoCardapio.dias_semana_explicacao}</p>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 report-label-value">
-              <p>Motivo</p>
-              <p className="value">{InversaoCardapio.motivo.nome}</p>
-            </div>
-          </div>
-        </div>
-      )
     );
   }
 
@@ -184,7 +130,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
+            <span className="page-title">{`Inversão de dia de cardápio - Pedido #${
               InversaoCardapio.id_externo
             }`}</span>
             <div className="card mt-3">
@@ -259,8 +205,7 @@ class Relatorio extends Component {
                     </p>
                   </div>
                 </div>
-                {this.renderParteContinua()}
-                {/* {this.renderParteAvulsa()} */}
+                {/* {this.renderDetalheInversao()} */}
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
