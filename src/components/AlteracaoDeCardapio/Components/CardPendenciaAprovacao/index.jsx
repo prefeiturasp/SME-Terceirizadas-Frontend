@@ -105,8 +105,6 @@ export class CardPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
-                  const dataMaisProxima =
-                    pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
                       to={`/${parametroURL}/alteracoes-de-cardapio/relatorio?uuid=${
@@ -117,7 +115,7 @@ export class CardPendenciaAprovacao extends Component {
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial || dataMaisProxima}</td>
+                        <td>{pedido.data_inicial}</td>
                       </tr>
                     </Link>
                   );

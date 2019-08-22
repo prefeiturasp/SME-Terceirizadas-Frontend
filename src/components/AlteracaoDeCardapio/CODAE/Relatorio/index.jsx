@@ -62,13 +62,11 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(alteracaoDeCardapio => {
-          const dataMaisProxima =
-            alteracaoDeCardapio.substituicoes && alteracaoDeCardapio.substituicoes[0].data;
           this.setState({
             alteracaoDeCardapio,
             uuid,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              alteracaoDeCardapio.data_inicial || dataMaisProxima,
+              alteracaoDeCardapio.data_inicial,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
