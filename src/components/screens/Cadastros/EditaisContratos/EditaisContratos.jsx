@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { reduxForm, FormSection } from "redux-form";
+import { reduxForm, FormSection, reset } from "redux-form";
+import rootReducer from "../../../../reducers";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { loadEdital } from "../../../../reducers/edital.reducer";
@@ -12,7 +13,9 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import {
   criarEditalEContrato,
-  obtemEdital
+  obtemEdital,
+  excluirEdital,
+  atualizarEditalEContrato
 } from "../../../../services/edital.service";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
@@ -89,12 +92,9 @@ class EditaisContratos extends Component {
     if (prevState.uuid !== this.state.uuid) {
       const { loading } = this.state;
       if (loading) {
-        this.setState({
-          loading: false
-        });
-
         const urlParams = new URLSearchParams(window.location.search);
         const uuid = urlParams.get("uuid");
+        this.setState({ uuid });
         if (uuid) {
           obtemEdital(uuid).then(response => {
             this.props.reset("cadastroEditaisForm");
@@ -122,8 +122,32 @@ class EditaisContratos extends Component {
             }
             this.props.loadEdital(response.data);
           });
+        } else {
+          this.props.reset('cadastroEditaisForm');
         }
+        this.setState({
+          loading: false
+        });
       }
+    }
+  }
+
+  excluirEdital(uuid) {
+    if (window.confirm("Tem certeza que deseja excluir o lote?")) {
+      excluirEdital(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess("Edital excluído com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao excluir o edital");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao excluir o edital");
+        }
+      );
     }
   }
 
@@ -187,20 +211,37 @@ class EditaisContratos extends Component {
   }
 
   onSubmit(values) {
-    criarEditalEContrato(JSON.stringify(values)).then(
-      response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          toastSuccess("Edital salvo com sucesso");
-          this.setRedirect();
-          this.resetForm();
-        } else {
+    if (!this.state.uuid) {
+      criarEditalEContrato(JSON.stringify(values)).then(
+        response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Edital salvo com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao salvar o edital");
+          }
+        },
+        function(error) {
           toastError("Houve um erro ao salvar o edital");
         }
-      },
-      function(error) {
-        toastError("Houve um erro ao salvar o lote");
-      }
-    );
+      );
+    } else {
+      atualizarEditalEContrato(JSON.stringify(values), this.state.uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.OK) {
+            toastSuccess("Edital atualizado com sucesso");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Houve um erro ao atualizar o edital");
+          }
+        },
+        function(error) {
+          toastError("Houve um erro ao atualizar o edital");
+        }
+      );
+    }
   }
 
   resetForm(value) {
@@ -213,7 +254,7 @@ class EditaisContratos extends Component {
       this.props.change(element, null);
     });
 
-    this.setState({ reseta: true });
+    this.setState({ reseta: true, uuid: null });
 
     this.state.forms.forEach((form, index) => {
       this.props.change(`${form}.numero_contrato${index}`, null);
@@ -222,10 +263,13 @@ class EditaisContratos extends Component {
       this.state.contratos_relacionados[index].vigencias.forEach(
         (vigencia, key) => {
           this.props.change(
-            `${form}.secaoContrato${key}.data_inicio${key}`,
+            `${form}.secaoContrato${key}.data_inicial${key}`,
             null
           );
-          this.props.change(`${form}.secaoContrato${key}.data_fim${key}`, null);
+          this.props.change(
+            `${form}.secaoContrato${key}.data_final${key}`,
+            null
+          );
         }
       );
     });
@@ -345,8 +389,10 @@ class EditaisContratos extends Component {
       edital_contratos,
       reseta,
       contratos_relacionados,
-      atualizacao
+      atualizacao,
+      uuid
     } = this.state;
+    console.log(contratos_relacionados);
     return (
       <section className="cadastro pt-3">
         {this.renderRedirect()}
@@ -412,13 +458,24 @@ class EditaisContratos extends Component {
             <footer className="card-body">
               <div className="button-container">
                 <div className="button-submit">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={value => {
-                      this.resetForm(value);
-                    }}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
+                  {!uuid ? (
+                    <BaseButton
+                      label="Cancelar"
+                      onClick={value => {
+                        this.resetForm(value);
+                      }}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                  ) : (
+                    <BaseButton
+                      label="Excluir"
+                      onClick={event => {
+                        this.excluirEdital(uuid);
+                      }}
+                      style={ButtonStyle.OutlinePrimary}
+                      noBorder
+                    />
+                  )}
                   <BaseButton
                     label={"Salvar"}
                     onClick={handleSubmit(values =>
