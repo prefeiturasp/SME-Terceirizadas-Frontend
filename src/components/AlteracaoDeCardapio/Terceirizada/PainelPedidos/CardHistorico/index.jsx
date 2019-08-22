@@ -42,6 +42,7 @@ export class CardHistorico extends Component {
     });
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
+  
   render() {
     const { titulo, ultimaColunaLabel, handleSubmit } = this.props;
     const { collapsed, pedidos } = this.state;
