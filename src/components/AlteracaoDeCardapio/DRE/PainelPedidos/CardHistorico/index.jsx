@@ -127,12 +127,7 @@ export class CardHistorico extends Component {
                           </td>
                           <td>{pedido.escola.nome}</td>
                           <td>
-                            {pedido.data_inicial
-                              ? `${pedido.data_inicial} a ${pedido.data_final}`
-                              : stringSeparadaPorVirgulas(
-                                  pedido.inclusoes,
-                                  "data"
-                                )}
+                            {`${pedido.data_inicial} a ${pedido.data_final}`}
                           </td>
                         </tr>
                       );
