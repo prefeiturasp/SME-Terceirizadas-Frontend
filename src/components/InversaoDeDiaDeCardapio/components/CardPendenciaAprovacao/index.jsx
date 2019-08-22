@@ -2,11 +2,17 @@ import React, { Component } from "react";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
-import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
+import { calcularNumeroDeEscolasUnicas } from "./helper";
 import "./style.scss";
 
-export class CardPendenciaAprovacao extends Component {
+export const TIPO_CARD_ENUM = {
+  LIMITE: "on-limit",
+  REGULAR: "regular",
+  PRIORIDADE: "priority"
+};
+
+export class CardInversaoPendenciaAprovacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,7 +36,13 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
+    const {
+      pedidos,
+      titulo,
+      tipoDeCard,
+      ultimaColunaLabel,
+      parametroURL
+    } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -105,14 +117,14 @@ export class CardPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
+                  debugger;
                   const dataMaisProxima =
                     pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
-                      to={`/${parametroURL}/inclusoes-de-alimentacao/relatorio?uuid=${
+                      to={`/${parametroURL}/inversoes-dia-cardapio/relatorio?uuid=${
                         pedido.uuid
-                      }&ehInclusaoContinua=${pedido.data_inicial !==
-                        undefined}`}
+                      }`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

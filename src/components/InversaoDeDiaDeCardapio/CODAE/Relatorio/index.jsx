@@ -1,21 +1,25 @@
-import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  dreAprovaPedidoEscola,
-  getInversaoDeDiaDeCardapio
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { meusDados } from "../../../../services/perfil.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { toastError, toastSuccess } from "../../../Shareable/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import {
+  getInclusaoDeAlimentacaoAvulsa,
+  CODAEConfirmaInclusaoDeAlimentacaoAvulsa
+} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  getInclusaoDeAlimentacaoContinua,
+  CODAEConfirmaInclusaoDeAlimentacaoContinua
+} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { meusDados } from "../../../../services/perfil.service";
+import { dataParaUTC } from "../../../../helpers/utilities";
+import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
 
 class Relatorio extends Component {
@@ -24,12 +28,11 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: { diretorias_regionais: [{ nome: "" }] },
+      meusDados: null,
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
-      InversaoCardapio: null,
-      escolaDaInversao: null,
+      inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
@@ -41,17 +44,24 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaInversoesDeCardapio = () => {
+  renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/codae/inclusoes-de-alimentacao" />;
     }
   };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    meusDados().then(meusDados => {
-      this.setState({ meusDados });
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    const getInclusaoDeAlimentacao =
+      ehInclusaoContinua === "true"
+        ? getInclusaoDeAlimentacaoContinua
+        : getInclusaoDeAlimentacaoAvulsa;
+    meusDados().then(response => {
+      this.setState({
+        meusDados: response
+      });
     });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
@@ -61,21 +71,15 @@ class Relatorio extends Component {
         new Date(response.proximos_dois_dias_uteis)
       );
       if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const data_de = moment(InversaoCardapio.data_de, "DD/MM/YYYY");
-          const data_para = moment(InversaoCardapio.data_para, "DD/MM/YYYY");
-          let dataMaisProxima = data_de;
-          if (dataMaisProxima < data_para) {
-            dataMaisProxima = data_para;
-          }
-
+        getInclusaoDeAlimentacao(uuid).then(response => {
+          const dataMaisProxima =
+            response.inclusoes && response.inclusoes[0].data;
           this.setState({
-            InversaoCardapio,
+            inclusaoDeAlimentacao: response,
+            ehInclusaoContinua: ehInclusaoContinua === "true",
             uuid,
-            escolaDaInversao: InversaoCardapio.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
+              response.data_inicial || dataMaisProxima,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
@@ -91,33 +95,89 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
+    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
   }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    dreAprovaPedidoEscola(uuid).then(
+    const CODAEConfirmaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
+      ? CODAEConfirmaInclusaoDeAlimentacaoContinua
+      : CODAEConfirmaInclusaoDeAlimentacaoAvulsa;
+    CODAEConfirmaInclusaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inversão de dias de cardápio validada com sucesso!");
+          toastSuccess("Inclusão de Alimentação autorizada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+          toastError("Houve um erro ao autorizar a Inclusão de Alimentação");
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
+    );
+  }
+
+  renderParteAvulsa() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    return (
+      !ehInclusaoContinua && (
+        <table className="table-periods">
+          <tr>
+            <th>Data</th>
+            <th>Motivo</th>
+          </tr>
+          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
+            return (
+              <tr>
+                <td>{inclusao.data}</td>
+                <td>{inclusao.motivo.nome}</td>
+              </tr>
+            );
+          })}
+        </table>
+      )
+    );
+  }
+
+  renderParteContinua() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    return (
+      ehInclusaoContinua && (
+        <div>
+          <div className="row">
+            <div className="col-4 report-label-value">
+              <p>Data do evento</p>
+              <p className="value">
+                {`${inclusaoDeAlimentacao.data_inicial} - ${
+                  inclusaoDeAlimentacao.data_final
+                }`}
+              </p>
+            </div>
+            <div className="col-4 report-label-value">
+              <p>Dias da Semana</p>
+              <p className="value">
+                {inclusaoDeAlimentacao.dias_semana_explicacao}
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>Motivo</p>
+              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+            </div>
+          </div>
+        </div>
+      )
     );
   }
 
   render() {
     const {
       showModal,
-      InversaoCardapio,
+      inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
-      meusDados,
-      escolaDaInversao
+      meusDados
     } = this.state;
     return (
       <div>
@@ -125,13 +185,13 @@ class Relatorio extends Component {
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
-        {!InversaoCardapio ? (
+        {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
+        {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido #${
-              InversaoCardapio.id_externo
+            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
+              inclusaoDeAlimentacao.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
@@ -146,7 +206,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {InversaoCardapio.id_externo}
+                        {inclusaoDeAlimentacao.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -158,7 +218,8 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -173,46 +234,63 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.lote &&
+                        inclusaoDeAlimentacao.escola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {escolaDaInversao &&
-                        escolaDaInversao.tipo_gestao &&
-                        escolaDaInversao.tipo_gestao.nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.tipo_gestao &&
+                        inclusaoDeAlimentacao.escola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
-                {InversaoCardapio.logs && (
+                {inclusaoDeAlimentacao.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
+                    <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
                   </div>
                 )}
                 <hr />
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>{escolaDaInversao.quantidade_alunos}</span>
+                    <span>
+                      {inclusaoDeAlimentacao.escola.quantidade_alunos}
+                    </span>
                   </div>
+                  {/*<div className="report-students-div col-3">
+                  <span>Nº de alunos matutino</span>
+                  <span>{escola.matutino}</span>
+                </div>
+                <div className="report-students-div col-3">
+                  <span>Nº de alunos vespertino</span>
+                  <span>{escola.vespertino}</span>
+                </div>
+                <div className="report-students-div col-3">
+                  <span>Nº de alunos nortuno</span>
+                  <span>{escola.noturno}</span>
+                </div>*/}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p className="value">
-                      Descrição da inversão de dias de cardápio
+                      Descrição da Inclusão de Alimentação
                     </p>
                   </div>
                 </div>
-                {/* {this.renderDetalheInversao()} */}
+                {this.renderParteContinua()}
+                {this.renderParteAvulsa()}
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {/* {InversaoCardapio.quantidades_periodo.map(
+                  {inclusaoDeAlimentacao.quantidades_periodo.map(
                     quantidade_por_periodo => {
                       return (
                         <tr>
@@ -230,7 +308,7 @@ class Relatorio extends Component {
                         </tr>
                       );
                     }
-                  )} */}
+                  )}
                 </table>
                 <div className="row">
                   <div className="col-12 report-label-value">
@@ -238,21 +316,21 @@ class Relatorio extends Component {
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.descricao
+                        __html: inclusaoDeAlimentacao.descricao
                       }}
                     />
                   </div>
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Não Validar Solicitação"}
+                    label={"Negar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Validar Solicitação"
+                    label="Autorizar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

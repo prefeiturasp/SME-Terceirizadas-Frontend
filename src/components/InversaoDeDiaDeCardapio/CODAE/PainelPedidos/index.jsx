@@ -2,12 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
-import {
-  CardInversaoPendenciaAprovacao,
-  TIPO_CARD_ENUM
-} from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao, TIPO_CARD_ENUM } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
 import {
   filtraNoLimite,
@@ -20,7 +17,6 @@ class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: []
@@ -28,19 +24,14 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
-    this.setState({ pedidosCarregados: 0 });
-    getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
-      pedidosPrioritarios = filtraPrioritarios(response.results);
-      pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      pedidosNoPrazoRegular = filtraRegular(response.results);
+    getCODAEPedidosDeInversoes(filtro).then(response => {
+      let pedidosPrioritarios = filtraPrioritarios(response.results);
+      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      let pedidosNoPrazoRegular = filtraRegular(response.results);
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
+        pedidosNoPrazoRegular
       });
     });
   }
@@ -60,9 +51,28 @@ class PainelPedidos extends Component {
     }
   }
 
+  // filtrarHoje() {
+  //   let pedidosPrioritarios = [];
+  //   this.setState({ pedidosCarregados: 4 });
+  //   getCODAEPedidosDeInversoes(FiltroEnum.HOJE).then(response => {
+  //     pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
+  //     this.setState({
+  //       pedidosPrioritarios,
+  //       pedidosCarregados: this.state.pedidosCarregados + 1
+  //     });
+  //   });
+
+  //   prioritariosAvulso(FiltroEnum.HOJE).then(response => {
+  //     pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
+  //     this.setState({
+  //       pedidosPrioritarios,
+  //       pedidosCarregados: this.state.pedidosCarregados + 1
+  //     });
+  //   });
+  // }
+
   render() {
     const {
-      pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
@@ -73,8 +83,7 @@ class PainelPedidos extends Component {
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
-
-    const todosOsPedidosForamCarregados = pedidosCarregados;
+    const todosOsPedidosForamCarregados = true;
     return (
       <div>
         {!todosOsPedidosForamCarregados ? (
@@ -85,7 +94,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inversão de dia de Cardápio - Pendente Validação
+                    Inclusão de Alimentação - Pendente Autorização
                   </div>
                 </div>
                 <div className="col-5">
@@ -114,32 +123,32 @@ class PainelPedidos extends Component {
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"dre"}
+                    parametroURL={"codae"}
                   />
                 </div>
               </div>
-              {valorDoFiltro !== "hoje" && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardInversaoPendenciaAprovacao
-                      titulo={"Pedidos no prazo limite"}
-                      tipoDeCard={TIPO_CARD_ENUM.LIMITE}
-                      pedidos={pedidosNoPrazoLimite}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
-                    />
-                  </div>
+
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardInversaoPendenciaAprovacao
+                    titulo={"Pedidos no prazo limite"}
+                    tipoDeCard={"on-limit"}
+                    pedidos={pedidosNoPrazoLimite}
+                    ultimaColunaLabel={"Data da Inclusão"}
+                    parametroURL={"codae"}
+                  />
                 </div>
-              )}
+              </div>
+
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardInversaoPendenciaAprovacao
                       titulo={"Pedidos no prazo regular"}
-                      tipoDeCard={TIPO_CARD_ENUM.REGULAR}
+                      tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={"codae"}
                     />
                   </div>
                 </div>

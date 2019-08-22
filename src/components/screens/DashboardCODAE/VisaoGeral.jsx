@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 import { Link } from "react-router-dom";
+import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
   render() {
@@ -17,13 +17,15 @@ class VisaoGeral extends Component {
             />
           </div>
           <div className="col-6">
-            <CardPendencia
-              cardTitle={"Alteração de Dias de Cardápio"}
-              totalOfOrders={50}
-              priorityOrders={2}
-              onLimitOrders={18}
-              regularOrders={30}
-            />
+            <Link to="/codae/inversoes-dia-cardapio">
+              <CardPendencia
+                cardTitle={"Inversão de dias de cardápio"}
+                totalOfOrders={50}
+                priorityOrders={2}
+                onLimitOrders={18}
+                regularOrders={30}
+              />
+            </Link>
           </div>
         </div>
         <div className="row pt-3">
