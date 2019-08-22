@@ -187,3 +187,18 @@ export const getCODAEPedidosDeInversoes = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-terceirizada/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

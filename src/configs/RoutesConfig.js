@@ -13,6 +13,11 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
+
+
+import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
+
+
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
 import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
@@ -176,6 +181,16 @@ const routesConfig = [
   {
     path: "/codae/inversoes-dia-cardapio",
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/inversoes-dia-cardapio/relatorio",
+    component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/inversoes-dia-cardapio",
+    component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false
   },
   {
