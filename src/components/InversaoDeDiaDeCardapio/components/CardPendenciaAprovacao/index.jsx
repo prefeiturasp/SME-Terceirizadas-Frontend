@@ -117,6 +117,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
+                  debugger;
                   const dataMaisProxima =
                     pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
