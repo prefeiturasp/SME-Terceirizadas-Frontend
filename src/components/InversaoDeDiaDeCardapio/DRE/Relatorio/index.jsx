@@ -1,25 +1,20 @@
-import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import moment from "moment";
+import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import {
-  getInclusaoDeAlimentacaoAvulsa,
-  DREConfirmaInclusaoDeAlimentacaoAvulsa
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import {
-  getInclusaoDeAlimentacaoContinua,
-  DREConfirmaInclusaoDeAlimentacaoContinua
-} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
-import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../../Shareable/dialogs";
+import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { DREConfirmaInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { DREConfirmaInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { meusDados } from "../../../../services/perfil.service";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
+import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
 
 class Relatorio extends Component {
@@ -28,11 +23,12 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: null,
+      meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
-      inclusaoDeAlimentacao: null,
+      InversaoCardapio: null,
+      escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
@@ -44,7 +40,7 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaPedidosDeInclusao = () => {
+  renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
       return <Redirect to="/dre/inclusoes-de-alimentacao" />;
     }
@@ -53,15 +49,8 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    const getInclusaoDeAlimentacao =
-      ehInclusaoContinua === "true"
-        ? getInclusaoDeAlimentacaoContinua
-        : getInclusaoDeAlimentacaoAvulsa;
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
+    meusDados().then(meusDados => {
+      this.setState({ meusDados });
     });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
@@ -71,15 +60,21 @@ class Relatorio extends Component {
         new Date(response.proximos_dois_dias_uteis)
       );
       if (uuid) {
-        getInclusaoDeAlimentacao(uuid).then(response => {
-          const dataMaisProxima =
-            response.inclusoes && response.inclusoes[0].data;
+        getInversaoDeDiaDeCardapio(uuid).then(response => {
+          const xxx = response.data;
+          const data_de = moment(xxx.data_de, "DD/MM/YYYY");
+          const data_para = moment(xxx.data_para, "DD/MM/YYYY");
+          let dataMaisProxima = data_de;
+          if (dataMaisProxima < data_para) {
+            dataMaisProxima = data_para;
+          }
+
           this.setState({
-            inclusaoDeAlimentacao: response,
-            ehInclusaoContinua: ehInclusaoContinua === "true",
+            InversaoCardapio: xxx,
             uuid,
+            escolaDaInversao: xxx.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial || dataMaisProxima,
+              dataMaisProxima,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
@@ -119,7 +114,7 @@ class Relatorio extends Component {
   }
 
   renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    const { ehInclusaoContinua, InversaoCardapio } = this.state;
     return (
       !ehInclusaoContinua && (
         <table className="table-periods">
@@ -127,7 +122,7 @@ class Relatorio extends Component {
             <th>Data</th>
             <th>Motivo</th>
           </tr>
-          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
+          {InversaoCardapio.inclusoes.map(inclusao => {
             return (
               <tr>
                 <td>{inclusao.data}</td>
@@ -141,7 +136,7 @@ class Relatorio extends Component {
   }
 
   renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    const { ehInclusaoContinua, InversaoCardapio } = this.state;
     return (
       ehInclusaoContinua && (
         <div>
@@ -149,22 +144,20 @@ class Relatorio extends Component {
             <div className="col-4 report-label-value">
               <p>Data do evento</p>
               <p className="value">
-                {`${inclusaoDeAlimentacao.data_inicial} - ${
-                  inclusaoDeAlimentacao.data_final
+                {`${InversaoCardapio.data_inicial} - ${
+                  InversaoCardapio.data_final
                 }`}
               </p>
             </div>
             <div className="col-4 report-label-value">
               <p>Dias da Semana</p>
-              <p className="value">
-                {inclusaoDeAlimentacao.dias_semana_explicacao}
-              </p>
+              <p className="value">{InversaoCardapio.dias_semana_explicacao}</p>
             </div>
           </div>
           <div className="row">
             <div className="col-12 report-label-value">
               <p>Motivo</p>
-              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+              <p className="value">{InversaoCardapio.motivo.nome}</p>
             </div>
           </div>
         </div>
@@ -175,9 +168,10 @@ class Relatorio extends Component {
   render() {
     const {
       showModal,
-      inclusaoDeAlimentacao,
+      InversaoCardapio,
       prazoDoPedidoMensagem,
-      meusDados
+      meusDados,
+      escolaDaInversao
     } = this.state;
     return (
       <div>
@@ -185,13 +179,13 @@ class Relatorio extends Component {
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
-        {!inclusaoDeAlimentacao ? (
+        {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
+        {!InversaoCardapio ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
-              inclusaoDeAlimentacao.id_externo
+            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
+              InversaoCardapio.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
@@ -206,7 +200,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {inclusaoDeAlimentacao.id_externo}
+                        {InversaoCardapio.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -218,8 +212,7 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.nome}
+                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -234,63 +227,47 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.lote &&
-                        inclusaoDeAlimentacao.escola.lote.nome}
+                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {inclusaoDeAlimentacao.escola &&
-                        inclusaoDeAlimentacao.escola.tipo_gestao &&
-                        inclusaoDeAlimentacao.escola.tipo_gestao.nome}
+                      {escolaDaInversao &&
+                        escolaDaInversao.tipo_gestao &&
+                        escolaDaInversao.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
-                {inclusaoDeAlimentacao.logs && (
+                {InversaoCardapio.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
+                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
                   </div>
                 )}
                 <hr />
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>
-                      {inclusaoDeAlimentacao.escola.quantidade_alunos}
-                    </span>
+                    <span>{escolaDaInversao.quantidade_alunos}</span>
                   </div>
-                  {/*<div className="report-students-div col-3">
-                  <span>Nº de alunos matutino</span>
-                  <span>{escola.matutino}</span>
-                </div>
-                <div className="report-students-div col-3">
-                  <span>Nº de alunos vespertino</span>
-                  <span>{escola.vespertino}</span>
-                </div>
-                <div className="report-students-div col-3">
-                  <span>Nº de alunos nortuno</span>
-                  <span>{escola.noturno}</span>
-                </div>*/}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p className="value">
-                      Descrição da Inclusão de Alimentação
+                      Descrição da inversão de dias de cardápio
                     </p>
                   </div>
                 </div>
                 {this.renderParteContinua()}
-                {this.renderParteAvulsa()}
+                {/* {this.renderParteAvulsa()} */}
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {inclusaoDeAlimentacao.quantidades_periodo.map(
+                  {/* {InversaoCardapio.quantidades_periodo.map(
                     quantidade_por_periodo => {
                       return (
                         <tr>
@@ -308,7 +285,7 @@ class Relatorio extends Component {
                         </tr>
                       );
                     }
-                  )}
+                  )} */}
                 </table>
                 <div className="row">
                   <div className="col-12 report-label-value">
@@ -316,7 +293,7 @@ class Relatorio extends Component {
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: inclusaoDeAlimentacao.descricao
+                        __html: InversaoCardapio.descricao
                       }}
                     />
                   </div>

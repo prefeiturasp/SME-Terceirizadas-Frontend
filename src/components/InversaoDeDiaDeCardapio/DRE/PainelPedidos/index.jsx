@@ -4,7 +4,10 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import {
+  CardInversaoPendenciaAprovacao,
+  TIPO_CARD_ENUM
+} from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
 import {
   filtraNoLimite,
@@ -104,11 +107,11 @@ class PainelPedidos extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <CardPendenciaAprovacao
+                  <CardInversaoPendenciaAprovacao
                     titulo={
                       "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
                     }
-                    tipoDeCard={"priority"}
+                    tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
                     parametroURL={"dre"}
@@ -118,9 +121,9 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardInversaoPendenciaAprovacao
                       titulo={"Pedidos no prazo limite"}
-                      tipoDeCard={"on-limit"}
+                      tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={"dre"}
@@ -131,9 +134,9 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardInversaoPendenciaAprovacao
                       titulo={"Pedidos no prazo regular"}
-                      tipoDeCard={"regular"}
+                      tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={"dre"}

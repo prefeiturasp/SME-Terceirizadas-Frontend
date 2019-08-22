@@ -62,6 +62,25 @@ export const atualizarInversaoDeDiaDeCardapio = (uuid, payload) => {
     });
 };
 
+export const getInversaoDeDiaDeCardapio = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const removerInversaoDeDiaDeCardapio = async uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/`;
   const OBJ_REQUEST = {
