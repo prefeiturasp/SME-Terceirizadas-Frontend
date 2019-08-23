@@ -158,6 +158,25 @@ export const CODAEAprovaPedidoDRE = uuid => {
     });
 };
 
+export const terceirizadaTomaCiencia = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/terceirizada-toma-ciencia/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getDiretoriaRegionalPedidosDeInversoes = filtroAplicado => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {

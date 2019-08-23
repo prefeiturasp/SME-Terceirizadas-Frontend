@@ -16,6 +16,7 @@ import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDi
 
 
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
+import PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/RelatorioPage";
 
 
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
@@ -185,7 +186,7 @@ const routesConfig = [
   },
   {
     path: "/terceirizada/inversoes-dia-cardapio/relatorio",
-    component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
+    component: PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {

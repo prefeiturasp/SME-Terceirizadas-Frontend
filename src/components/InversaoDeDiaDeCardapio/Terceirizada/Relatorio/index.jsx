@@ -6,8 +6,8 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  dreAprovaPedidoEscola,
-  getInversaoDeDiaDeCardapio
+  getInversaoDeDiaDeCardapio,
+  terceirizadaTomaCiencia
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
@@ -43,7 +43,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/terceirizada/inversoes-dia-cardapio" />;
     }
   };
 
@@ -96,17 +96,17 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    dreAprovaPedidoEscola(uuid).then(
+    terceirizadaTomaCiencia(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dias de cardápio validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+          toastError("xxxxxxx");
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+        toastError("xxxxx");
       }
     );
   }

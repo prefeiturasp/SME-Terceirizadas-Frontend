@@ -43,7 +43,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/dre/inversoes-dia-cardapio" />;
     }
   };
 
