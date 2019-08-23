@@ -150,7 +150,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inversões de cardápio aprovadas"}
                     />
                   </div>
                 </div>
@@ -162,7 +162,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
+                        "Histórico de Inversões de cardápio reprovadas"
                       }
                     />
                   </div>

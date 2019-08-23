@@ -99,14 +99,14 @@ class Relatorio extends Component {
     terceirizadaTomaCiencia(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inversão de dias de cardápio validada com sucesso!");
+          toastSuccess("Ciência de Inversão de dias de cardápio avisada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("xxxxxxx");
+          toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
         }
       },
       function(error) {
-        toastError("xxxxx");
+        toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
       }
     );
   }
@@ -212,25 +212,6 @@ class Relatorio extends Component {
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {/* {InversaoCardapio.quantidades_periodo.map(
-                    quantidade_por_periodo => {
-                      return (
-                        <tr>
-                          <td>
-                            {quantidade_por_periodo.periodo_escolar &&
-                              quantidade_por_periodo.periodo_escolar.nome}
-                          </td>
-                          <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
-                          </td>
-                          <td>{quantidade_por_periodo.numero_alunos}</td>
-                        </tr>
-                      );
-                    }
-                  )} */}
                 </table>
                 <div className="row">
                   <div className="col-12 report-label-value">

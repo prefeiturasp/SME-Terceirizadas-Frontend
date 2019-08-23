@@ -6,12 +6,7 @@ import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDe
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { CardInversaoPendenciaAprovacao, TIPO_CARD_ENUM } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
-import {
-  filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
-} from "./helper";
+import { filtraNoLimite, filtraPrioritarios, filtraRegular, formatarPedidos } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -50,26 +45,6 @@ class PainelPedidos extends Component {
         break;
     }
   }
-
-  // filtrarHoje() {
-  //   let pedidosPrioritarios = [];
-  //   this.setState({ pedidosCarregados: 4 });
-  //   getCODAEPedidosDeInversoes(FiltroEnum.HOJE).then(response => {
-  //     pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-  //     this.setState({
-  //       pedidosPrioritarios,
-  //       pedidosCarregados: this.state.pedidosCarregados + 1
-  //     });
-  //   });
-
-  //   prioritariosAvulso(FiltroEnum.HOJE).then(response => {
-  //     pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-  //     this.setState({
-  //       pedidosPrioritarios,
-  //       pedidosCarregados: this.state.pedidosCarregados + 1
-  //     });
-  //   });
-  // }
 
   render() {
     const {
@@ -140,7 +115,7 @@ class PainelPedidos extends Component {
                 </div>
               </div>
 
-              {valorDoFiltro !== "hoje" && (
+              {pedidosNoPrazoRegular.length > 0 && valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardInversaoPendenciaAprovacao

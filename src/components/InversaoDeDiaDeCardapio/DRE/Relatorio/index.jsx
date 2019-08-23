@@ -212,25 +212,6 @@ class Relatorio extends Component {
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {/* {InversaoCardapio.quantidades_periodo.map(
-                    quantidade_por_periodo => {
-                      return (
-                        <tr>
-                          <td>
-                            {quantidade_por_periodo.periodo_escolar &&
-                              quantidade_por_periodo.periodo_escolar.nome}
-                          </td>
-                          <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
-                          </td>
-                          <td>{quantidade_por_periodo.numero_alunos}</td>
-                        </tr>
-                      );
-                    }
-                  )} */}
                 </table>
                 <div className="row">
                   <div className="col-12 report-label-value">
