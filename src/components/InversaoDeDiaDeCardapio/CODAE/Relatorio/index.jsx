@@ -5,10 +5,7 @@ import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  getInversaoDeDiaDeCardapio,
-  CODAEAprovaPedidoDRE
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { CODAEAprovaPedidoDRE, getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
@@ -43,7 +40,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/inclusoes-de-alimentacao" />;
+      return <Redirect to="/codae/inversoes-dia-cardapio" />;
     }
   };
 
@@ -212,25 +209,6 @@ class Relatorio extends Component {
                     <th>Tipos de Alimentação</th>
                     <th>Quantidade de Alunos</th>
                   </tr>
-                  {/* {InversaoCardapio.quantidades_periodo.map(
-                    quantidade_por_periodo => {
-                      return (
-                        <tr>
-                          <td>
-                            {quantidade_por_periodo.periodo_escolar &&
-                              quantidade_por_periodo.periodo_escolar.nome}
-                          </td>
-                          <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
-                          </td>
-                          <td>{quantidade_por_periodo.numero_alunos}</td>
-                        </tr>
-                      );
-                    }
-                  )} */}
                 </table>
                 <div className="row">
                   <div className="col-12 report-label-value">

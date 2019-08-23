@@ -114,7 +114,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"dre"}
+                    parametroURL={"terceirizada"}
                   />
                 </div>
               </div>
@@ -126,7 +126,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={"terceirizada"}
                     />
                   </div>
                 </div>
@@ -139,7 +139,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={"terceirizada"}
                     />
                   </div>
                 </div>
@@ -150,7 +150,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inversões de cardápio aprovadas"}
                     />
                   </div>
                 </div>
@@ -162,7 +162,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
+                        "Histórico de Inversões de cardápio reprovadas"
                       }
                     />
                   </div>
