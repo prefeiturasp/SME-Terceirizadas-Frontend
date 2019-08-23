@@ -154,7 +154,7 @@ export class Login extends Component {
             />
           </div>
           <p className="terms my-auto pt-2">Termos de uso</p>
-          <div className="col-12 pt-2 pb-2" style={{ paddingLeft: "2rem" }}>
+          <div className="col-12 pl-4 pt-2 pb-2" >
             <label htmlFor="check" className="checkbox-label">
               <Field component={"input"} type="checkbox" name="termos" />
               <span

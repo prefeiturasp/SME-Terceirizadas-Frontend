@@ -1,6 +1,6 @@
 import React from "react";
-import { Header } from "../../Main/Header";
-import { Sidebar } from "../../Main/Sidebar";
+import { Header } from "../Header";
+import { Sidebar } from "../../Shareable/Sidebar";
 import "./style.scss";
 
 export default props => (

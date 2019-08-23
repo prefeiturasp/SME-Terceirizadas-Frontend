@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Home from "../../pages/Home";
-import authService from "../../services/auth";
-import BaseButton, { ButtonIcon } from "../Shareable/button";
+import Home from "../../../pages/Home";
+import authService from "../../../services/auth";
+import BaseButton, { ButtonIcon } from "../button";
+import "./style.scss";
 
 export class Header extends Component {
   state = {};
@@ -13,7 +14,7 @@ export class Header extends Component {
           <div className="container-fluid">
             <div className="nav-bar">
               <Link className="navbar-brand" exact to="/" component={Home}>
-                <img src="http://placehold.it/150x50?text=Logo" alt="" />
+                <img src="/assets/image/logo-sigpae.png" alt="" />
               </Link>
             </div>
             <button
