@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../Shareable/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 
@@ -49,7 +49,7 @@ class OrdersDashboard extends Component {
 
   render() {
     const { trs, theadList } = this.state;
-    const { pedidos, vision_by } = this.props;
+    const { pedidosPrioritarios, pedidosNoPrazoLimite, pedidosNoPrazoRegular, vision_by } = this.props;
     return (
       <div>
         <div className="row">
@@ -65,7 +65,6 @@ class OrdersDashboard extends Component {
                   options={vision_by}
                 />
               </div>
-              <div className="text-dark col-6 my-auto">Visão dia 25/04/2019</div>
             </div>
           </div>
         </div>
@@ -78,7 +77,7 @@ class OrdersDashboard extends Component {
               tipoDeCard={"priority"}
               totalDePedidos={20}
               totalDeEscolas={13}
-              pedidos={pedidos}
+              pedidos={pedidosPrioritarios}
             />
           </div>
         </div>
@@ -89,7 +88,7 @@ class OrdersDashboard extends Component {
               tipoDeCard={"on-limit"}
               totalDePedidos={40}
               totalDeEscolas={8}
-              pedidos={pedidos}
+              pedidos={pedidosNoPrazoLimite}
             />
           </div>
         </div>
@@ -100,7 +99,7 @@ class OrdersDashboard extends Component {
               tipoDeCard={"regular"}
               totalDePedidos={60}
               totalDeEscolas={20}
-              pedidos={pedidos}
+              pedidos={pedidosNoPrazoRegular}
             />
           </div>
         </div>
