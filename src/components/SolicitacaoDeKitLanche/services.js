@@ -21,3 +21,18 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado =>{
         console.log(error);
       });
   }
+
+export const getDetalheKitLancheAvulsa = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/`;
+    const OBJ_REQUEST = {
+      headers: authToken,
+      method: "GET"
+    };
+    return fetch(url, OBJ_REQUEST)
+      .then(result => {
+        return result.json();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+}

@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { reduxForm } from "redux-form";
 import "../../Shareable/style.scss";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { FluxoDeStatus } from "../FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess } from "../../Shareable/dialogs";
 import "./style.scss";
+import { getDetalheKitLancheAvulsa } from '../services'
 
 class Relatorio extends Component {
   constructor(props) {
@@ -13,29 +14,7 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       showModal: false,
-      solicitacao: {
-        id: "12083",
-        lote: "7A IP I",
-        gestao: "TERC TOTAL",
-        dre: "DRE Ipiranga",
-        razao: "Programa Contínuo - Mais Educação",
-        data: "27/04/2019",
-        local: "Aquário de São Paulo",
-        escola: {
-          nome: "EMEF JOSE CARLOS DE FIGUEIREDO FERRAZ, PREF.",
-          alunos_total: "1705",
-          matutino: "705",
-          vespertino: "700",
-          noturno: "300"
-        },
-        kits: ["1", "3"],
-        tempo_passeio: "5 a 7 horas (2 kits)",
-        estudantes_total: 75,
-        obs:
-          "A observação é uma das etapas do método científico. Consiste em perceber," +
-          "ver e não interpretar. A observação é relatada como foi visualizada, sem que," +
-          " a princípio, as idéias interpretativas dos observadores sejam tomadas."
-      },
+      solicitacao: {},
       listaDeStatus: [
         {
           titulo: "Solicitação Realizada",
@@ -66,10 +45,50 @@ class Relatorio extends Component {
       ]
     };
     this.closeModal = this.closeModal.bind(this);
+    this.selecionarKits = this.selecionarKits.bind(this)
+  }
+
+  selecionarKits = kits => {
+    let kitList = []
+    kits.forEach(kit => {
+      kitList.push(kit.nome)
+    });
+    return kitList
   }
 
   componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
     this.preencherFormulario(this.state.solicitacao);
+    getDetalheKitLancheAvulsa(uuid).then(response =>{
+      this.setState({
+        ...response,
+        solicitacao : {
+          id: response.id_externo,
+          lote: response.escola.lote.nome,
+          gestao: response.escola.tipo_gestao.nome,
+          dre: response.escola.diretoria_regional.nome,
+          razao: response.solicitacao_kit_lanche.motivo,
+        data: response.solicitacao_kit_lanche.data,
+        local: response.local,
+        escola: {
+          nome: response.escola.nome,
+          alunos_total: response.escola.quantidade_alunos,
+          matutino: "0",
+          vespertino: "0",
+          noturno: "0"
+        },
+        kits: this.selecionarKits(response.solicitacao_kit_lanche.kits),
+        tempo_passeio: response.solicitacao_kit_lanche.tempo_passeio_explicacao,
+        estudantes_total: response.quantidade_alunos,
+        obs:response.solicitacao_kit_lanche.descricao         
+        }
+      })
+
+    }).catch(error =>{
+      console.log('Error ao pegar kit lanche: ', error)
+    })
+
   }
 
   showModal() {
