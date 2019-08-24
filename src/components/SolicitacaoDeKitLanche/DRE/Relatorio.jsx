@@ -101,7 +101,9 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    toastSuccess("Kit Lanche validado com sucesso!");
+    if(window.confirm('Deseja confirmar esta solicitação?')){
+      toastSuccess("Kit Lanche validado com sucesso!");
+    }
   }
 
   preencherFormulario(solicitacao) {
