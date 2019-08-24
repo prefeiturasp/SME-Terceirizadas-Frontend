@@ -19,7 +19,6 @@ export const FluxoDeStatus = props => {
           <ul className="progressbar">
             {fluxoPartindoEscola.map((status, key) => {
               let novoStatus = listaDeStatus[key] || status;
-              console.log(novoStatus)
               return (
                 <li
                   key={key}
