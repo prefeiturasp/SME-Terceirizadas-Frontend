@@ -36,3 +36,19 @@ export const getDetalheKitLancheAvulsa = uuid => {
         console.log(error);
       });
 }
+
+export const aprovaDeKitLancheAvulsoDiretoriaRegional = values =>{
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${values.uuid}/diretoria-regional-aprova-pedido/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(values)
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}

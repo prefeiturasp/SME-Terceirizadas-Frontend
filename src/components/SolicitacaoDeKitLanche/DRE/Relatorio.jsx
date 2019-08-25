@@ -4,17 +4,18 @@ import { reduxForm } from "redux-form";
 import "../../Shareable/style.scss";
 import { FluxoDeStatus } from "../FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
-import { toastSuccess } from "../../Shareable/dialogs";
+import { toastSuccess, toastError } from "../../Shareable/dialogs";
 import "./style.scss";
-import { getDetalheKitLancheAvulsa } from '../services'
+import { getDetalheKitLancheAvulsa, aprovaDeKitLancheAvulsoDiretoriaRegional } from '../services'
+import {montaBarraStatus} from '../helper'
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unifiedSolicitationList: [],
       showModal: false,
       solicitacao: {},
+      uuid : "",
       listaDeStatus: [
         {
           titulo: "Solicitação Realizada",
@@ -22,30 +23,13 @@ class Relatorio extends Component {
           timestamp: "25/04/2019 às 9:20",
           rf: "7972324",
           nome: "João da Silva"
-        },
-        {
-          titulo: "Reprovado da DRE",
-          status: "reprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Cancelado pela CODAE",
-          status: "cancelado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Visualizado pela Terceirizada",
-          status: null,
-          timestamp: null
         }
-      ]
+      ], 
+      inativarBotao : true
     };
     this.closeModal = this.closeModal.bind(this);
     this.selecionarKits = this.selecionarKits.bind(this)
+    this.handleStatusBarra = this.handleStatusBarra.bind(this)
   }
 
   selecionarKits = kits => {
@@ -58,9 +42,14 @@ class Relatorio extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
+    const uuidParam = urlParams.get("uuid");
     this.preencherFormulario(this.state.solicitacao);
-    getDetalheKitLancheAvulsa(uuid).then(response =>{
+    this.preencheRelatorio(uuidParam)
+  }
+
+  preencheRelatorio = uuidParam =>{
+    getDetalheKitLancheAvulsa(uuidParam).then(response =>{
+      this.handleBotoesAtivados(response.status)
       this.setState({
         ...response,
         solicitacao : {
@@ -69,6 +58,7 @@ class Relatorio extends Component {
           gestao: response.escola.tipo_gestao.nome,
           dre: response.escola.diretoria_regional.nome,
           razao: response.solicitacao_kit_lanche.motivo,
+          solicitacao_kit_lanche : response.solicitacao_kit_lanche,
         data: response.solicitacao_kit_lanche.data,
         local: response.local,
         escola: {
@@ -82,13 +72,14 @@ class Relatorio extends Component {
         tempo_passeio: response.solicitacao_kit_lanche.tempo_passeio_explicacao,
         estudantes_total: response.quantidade_alunos,
         obs:response.solicitacao_kit_lanche.descricao         
-        }
+        },
+        uuid: uuidParam,
+        listaDeStatus: montaBarraStatus(response.status)
       })
 
     }).catch(error =>{
       console.log('Error ao pegar kit lanche: ', error)
     })
-
   }
 
   showModal() {
@@ -100,9 +91,31 @@ class Relatorio extends Component {
     toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
-  handleSubmit() {
+  handleStatusBarra(status){
+    this.setState({
+      listaDeStatus: montaBarraStatus(status)
+    })
+  }
+
+  handleBotoesAtivados = status =>{
+    if(status === 'DRE_A_VALIDAR'){
+      this.setState({inativarBotao : false})
+    }
+  }
+
+  handleSubmit(values) {
     if(window.confirm('Deseja confirmar esta solicitação?')){
-      toastSuccess("Kit Lanche validado com sucesso!");
+      aprovaDeKitLancheAvulsoDiretoriaRegional(values).then(response => {
+        if(response.status === 'DRE_APROVADO'){
+          this.handleStatusBarra(response.status)
+          this.handleBotoesAtivados('DRE_APROVADO')
+          toastSuccess("Kit Lanche validado com sucesso.");
+        }else{
+          toastError('Não foi possível validar esta solicitação!')
+        }
+      }).catch(error => {
+        console.log('Error na aprovação: ', error)
+      })
     }
   }
 
@@ -126,9 +139,10 @@ class Relatorio extends Component {
       kits,
       estudantes_total,
       tempo_passeio,
-      obs
+      obs,
+      solicitacao_kit_lanche,
     } = this.state.solicitacao;
-    const { listaDeStatus, showModal } = this.state;
+    const { listaDeStatus, showModal, uuid, inativarBotao } = this.state;
     return (
       <div>
         <ModalRecusarSolicitacao
@@ -255,6 +269,7 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
+                    disabled={this.state.inativarBotao}
                     label={"Recusar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
@@ -262,11 +277,21 @@ class Relatorio extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
+                    disabled={this.state.inativarBotao}
                     label="Aprovar Solicitação"
                     type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
+                    onClick={() => this.handleSubmit({
+                      uuid: uuid,
+                      solicitacao_kit_lanche: solicitacao_kit_lanche,
+                      id_externo: id,
+                      status: "DRE_APROVADO",
+                      local: local,
+                      quantidade_alunos: estudantes_total,
+                    })}
                     style={ButtonStyle.Primary}
                     className="ml-3"
+                    
+
                   />
                 </div>
               </div>
@@ -279,7 +304,7 @@ class Relatorio extends Component {
 }
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: "solicitacaoKitLancheAvulsaForm",
   enableReinitialize: true
 })(Relatorio);
 export default RelatorioForm;

@@ -1,5 +1,5 @@
 import React from "react";
-import { fluxoPartindoEscola, tipoDeStatus } from "./helper";
+import { fluxoPartindoEscola } from "./helper";
 import "./style.scss";
 
 export const FluxoDeStatus = props => {
@@ -23,13 +23,11 @@ export const FluxoDeStatus = props => {
                 <li
                   key={key}
                   className={
-                    tipoDeStatus(novoStatus.titulo) ===
-                    "aprovado"
-                      ? "active"
-                      : tipoDeStatus(novoStatus.titulo) ===
+                    novoStatus.status === "aprovado" ? "active"
+                      : novoStatus.status ===
                         "reprovado"
                       ? "disapproved"
-                      : tipoDeStatus(novoStatus.titulo) ===
+                      : novoStatus.status ===
                         "cancelado"
                       ? "cancelled"
                       : ""
