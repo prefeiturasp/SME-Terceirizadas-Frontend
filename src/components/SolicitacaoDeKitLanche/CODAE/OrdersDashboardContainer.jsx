@@ -1,9 +1,99 @@
 import React, { Component } from "react";
 import OrdersDashboard from "./OrdersDashboard";
+import {getCodaePedidosDeKitLanche} from '../services'
 import { FiltroEnum } from "../../../constants/filtroEnum";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "../services";
 import {filtraNoLimite, filtraPrioritarios, filtraRegular} from '../helper'
 
+const pedidos = [
+  {
+    id: "12083",
+    escola: {
+      cod_eol: "009148",
+      nome: "EMEF CACILDA BECKER"
+    },
+    quantidade: "1705"
+  },
+  {
+    id: "12084",
+    escola: {
+      cod_eol: "013528",
+      nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12085",
+    escola: {
+      cod_eol: "014699",
+      nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12086",
+    escola: {
+      cod_eol: "097705",
+      nome: "EMEF ABRAO DE MORAES, PROF."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12083",
+    escola: {
+      cod_eol: "009148",
+      nome: "EMEF CACILDA BECKER"
+    },
+    quantidade: "1705"
+  },
+  {
+    id: "12084",
+    escola: {
+      cod_eol: "013528",
+      nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12085",
+    escola: {
+      cod_eol: "014699",
+      nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12086",
+    escola: {
+      cod_eol: "097705",
+      nome: "EMEF ABRAO DE MORAES, PROF."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12083",
+    escola: {
+      cod_eol: "009148",
+      nome: "EMEF CACILDA BECKER"
+    },
+    quantidade: "1705"
+  },
+  {
+    id: "12084",
+    escola: {
+      cod_eol: "013528",
+      nome: "EMEF ANTONIO CARLOS ROCHA, PROF."
+    },
+    quantidade: "150"
+  },
+  {
+    id: "12085",
+    escola: {
+      cod_eol: "014699",
+      nome: "EMEF ROSANGELA RODRIGUES VIEIRA, PROFA."
+    },
+    quantidade: "150"
+  },
+];
 
 class OrdersDashboardContainer extends Component {
   constructor(props) {
@@ -13,6 +103,7 @@ class OrdersDashboardContainer extends Component {
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
+      pedidos: pedidos,
       vision_by: [
         {
           nome: "Sem Filtro",
@@ -36,7 +127,7 @@ class OrdersDashboardContainer extends Component {
 
   filtrar(filtro) {
     this.setState({ pedidosCarregados: 0 });
-    getDiretoriaRegionalPedidosDeKitLanche(filtro).then(resposta =>{
+    getCodaePedidosDeKitLanche(filtro).then(resposta =>{
       let pedidosPrioritarios = filtraPrioritarios(resposta.results);
       let pedidosNoPrazoLimite = filtraNoLimite(resposta.results);
       let pedidosNoPrazoRegular = filtraRegular(resposta.results);
@@ -51,7 +142,6 @@ class OrdersDashboardContainer extends Component {
   componentDidMount(){
     this.filtrar(FiltroEnum.SEM_FILTRO)
   }
-
   render() {
     return <OrdersDashboard {...this.state} />;
   }

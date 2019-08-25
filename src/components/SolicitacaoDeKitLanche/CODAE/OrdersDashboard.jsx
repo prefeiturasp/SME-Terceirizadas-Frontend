@@ -78,6 +78,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={20}
               totalDeEscolas={13}
               pedidos={pedidosPrioritarios}
+              url={'/codae/kits-lanche/'}
             />
           </div>
         </div>
@@ -89,6 +90,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={40}
               totalDeEscolas={8}
               pedidos={pedidosNoPrazoLimite}
+              url={'/codae/kits-lanche/'}
             />
           </div>
         </div>
@@ -100,6 +102,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={60}
               totalDeEscolas={20}
               pedidos={pedidosNoPrazoRegular}
+              url={'/codae/kits-lanche/'}
             />
           </div>
         </div>

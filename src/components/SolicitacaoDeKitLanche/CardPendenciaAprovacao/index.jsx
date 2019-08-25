@@ -31,7 +31,7 @@ export class CardPendenciaAprovacao extends Component {
   }
   
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, url } = this.props;
     const { collapsed } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -109,7 +109,7 @@ export class CardPendenciaAprovacao extends Component {
                   
                   return (
                     <Link
-                      to={`/dre/kits-lanche/relatorio?uuid=${pedido.uuid}`}
+                      to={`${url}relatorio?uuid=${pedido.uuid}`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>
