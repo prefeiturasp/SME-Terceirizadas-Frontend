@@ -269,7 +269,7 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    disabled={this.state.inativarBotao}
+                    disabled={inativarBotao}
                     label={"Recusar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
@@ -277,7 +277,7 @@ class Relatorio extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    disabled={this.state.inativarBotao}
+                    disabled={inativarBotao}
                     label="Aprovar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit({
