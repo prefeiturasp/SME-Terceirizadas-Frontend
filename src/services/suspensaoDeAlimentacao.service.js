@@ -74,10 +74,10 @@ export const getMotivosSuspensaoCardapio = () => {
 };
 
 export const enviarSuspensaoDeAlimentacao = (uuid) => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/inicio_de_pedido/`;
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/informa-suspensao/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
