@@ -40,7 +40,7 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
+    const { enrolled, handleSubmit, solicitations, vision_by, quantidade_suspensoes } = this.props;
     const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>
@@ -260,11 +260,10 @@ class DashboardTerceirizada extends Component {
                   </div>
                   <div className="col-6">
                     <CardPendencia
-                      cardTitle={"Suspensão de Refeição"}
-                      totalOfOrders={47}
-                      priorityOrders={10}
-                      onLimitOrders={7}
-                      regularOrders={30}
+                      cardTitle={"Suspensão de Alimentação"}
+                      totalOfOrders={quantidade_suspensoes}
+                      priorityOrders={quantidade_suspensoes}
+                      priorityOrdersOnly={true}
                     />
                   </div>
                 </div>
