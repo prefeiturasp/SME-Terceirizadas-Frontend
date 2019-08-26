@@ -33,7 +33,6 @@ import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapi
 import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
-import StatusSolicitacoesDREPage from "../pages/DRE/StatusSolicitacoesDREPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -51,6 +50,9 @@ import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrd
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
+import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
+import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
+
 
 const routesConfig = [
   {
@@ -104,8 +106,13 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/dre/solicitacoes",
-    component: StatusSolicitacoesDREPage,
+    path: "/dre/solicitacoes-autorizadas",
+    component: StatusSolicitacoesAutorizadasDREPage,
+    exact: false
+  },
+  {
+    path: "/dre/solicitacoes-pendentes",
+    component: StatusSolicitacoesPendentesDREPage,
     exact: false
   },
   {
