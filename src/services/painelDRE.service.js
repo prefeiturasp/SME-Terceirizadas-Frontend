@@ -38,3 +38,19 @@ export const getSolicitacoesAutorizadasPelaDRE = (dreUuid) => {
       console.log(error);
     });
 };
+
+export const getSolicitacoesPendentesParaDRE = (dreUuid) => {
+  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

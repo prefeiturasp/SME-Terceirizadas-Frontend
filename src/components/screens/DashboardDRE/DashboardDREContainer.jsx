@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import DashboardDRE from "./DashboardDRE";
-import { getSolicitacoesAutorizadasPelaDRE } from "../../../services/painelDRE.service";
+import { getSolicitacoesAutorizadasPelaDRE, getSolicitacoesPendentesParaDRE } from "../../../services/painelDRE.service";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
 class DashboardDREContainer extends Component {
   constructor(props) {
@@ -8,6 +9,8 @@ class DashboardDREContainer extends Component {
     this.state = {
       enrolled: 4050,
       autorizadasList: [],
+      pendentesList: [],
+      
       solicitations: [
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
@@ -55,13 +58,14 @@ class DashboardDREContainer extends Component {
     };
   }
 
-  componentDidMount() {
-    getSolicitacoesAutorizadasPelaDRE("5a702b2c-0e3b-468a-a97a-5904d0061ff0").then(autorizadasList => {
-      this.setState({
-        autorizadasList:autorizadasList.results
-      });
+  async componentDidMount() {
+    const meusDados = await getMeusDados()
+    const autorizadas = await getSolicitacoesAutorizadasPelaDRE(meusDados.diretorias_regionais[0].uuid)
+    const pendentes = await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid)
+    this.setState({
+      autorizadasList:autorizadas.results,
+      pendentesList:pendentes.results
     });
-
   }
 
 

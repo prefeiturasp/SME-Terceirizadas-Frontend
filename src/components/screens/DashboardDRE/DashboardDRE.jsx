@@ -41,7 +41,8 @@ class DashboardDRE extends Component {
       handleSubmit,
       solicitations,
       vision_by,
-      autorizadasList
+      autorizadasList,
+      pendentesList
     } = this.props;
     const { collapsed, lotes } = this.state;
 
@@ -105,7 +106,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
-                    solicitations={solicitations}
+                    solicitations={pendentesList}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes"}
                   />
