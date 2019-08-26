@@ -39,7 +39,6 @@ class DashboardDRE extends Component {
     const {
       enrolled,
       handleSubmit,
-      solicitations,
       vision_by,
       autorizadasList,
       pendentesList,

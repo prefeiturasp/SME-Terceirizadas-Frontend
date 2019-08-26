@@ -142,7 +142,7 @@ class Relatorio extends Component {
       obs,
       solicitacao_kit_lanche,
     } = this.state.solicitacao;
-    const { listaDeStatus, showModal, uuid } = this.state;
+    const { listaDeStatus, showModal, uuid, inativarBotao } = this.state;
     return (
       <div>
         <ModalRecusarSolicitacao
