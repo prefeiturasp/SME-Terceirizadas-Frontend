@@ -18,14 +18,14 @@ class Relatorio extends Component {
       uuid : "",
       listaDeStatus: [
         {
-          titulo: "Solicitação Realizada",
-          status: "aprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
+          titulo: "",
+          status: "",
+          timestamp: "",
+          rf: "",
+          nome: ""
         }
       ], 
-      inativarBotao : true
+      inativarBotao : false
     };
     this.closeModal = this.closeModal.bind(this);
     this.selecionarKits = this.selecionarKits.bind(this)
@@ -98,8 +98,9 @@ class Relatorio extends Component {
   }
 
   handleBotoesAtivados = status =>{
-    if(status === 'DRE_A_VALIDAR'){
-      this.setState({inativarBotao : false})
+    console.log(status)
+    if(status === 'DRE_APROVADO'){
+      this.setState({inativarBotao : true})
     }
   }
 
@@ -108,7 +109,7 @@ class Relatorio extends Component {
       aprovaDeKitLancheAvulsoDiretoriaRegional(values).then(response => {
         if(response.status === 'DRE_APROVADO'){
           this.handleStatusBarra(response.status)
-          this.handleBotoesAtivados('DRE_APROVADO')
+          this.handleBotoesAtivados(response.status)
           toastSuccess("Kit Lanche validado com sucesso.");
         }else{
           toastError('Não foi possível validar esta solicitação!')

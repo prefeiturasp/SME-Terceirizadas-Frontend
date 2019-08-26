@@ -37,6 +37,21 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado =>{
       });
   }
 
+  export const getTerceirizadasPedidosDeKitLanche = filtroAplicado =>{
+    const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-terceirizadas/${filtroAplicado}/`;
+    const OBJ_REQUEST = {
+      headers: authToken,
+      method: "GET"
+    };
+    return fetch(url, OBJ_REQUEST)
+      .then(result => {
+        return result.json();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
 export const getDetalheKitLancheAvulsa = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/`;
     const OBJ_REQUEST = {
@@ -70,6 +85,22 @@ export const aprovaDeKitLancheAvulsoDiretoriaRegional = values =>{
 
 export const aprovaDeKitLancheAvulsoCodae = values =>{
   const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${values.uuid}/codae-aprova-pedido/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(values)
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+export const aprovaDeKitLancheAvulsoTerceirizadas = values =>{
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${values.uuid}/terceirizada-toma-ciencia/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
