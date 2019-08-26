@@ -101,7 +101,7 @@ class DashboardDRE extends Component {
                     cardType={"card-authorized"}
                     solicitations={autorizadasList}
                     icon={"fa-check"}
-                    href={"/dre/solicitacoes"}
+                    href={"/dre/solicitacoes-autorizadas"}
                   />
                 </div>
                 <div className="col-6">
@@ -110,7 +110,7 @@ class DashboardDRE extends Component {
                     cardType={"card-pending"}
                     solicitations={pendentesList}
                     icon={"fa-exclamation-triangle"}
-                    href={"/dre/solicitacoes"}
+                    href={"/dre/solicitacoes-pendentes"}
                   />
                 </div>
               </div>
@@ -121,7 +121,7 @@ class DashboardDRE extends Component {
                     cardType={"card-denied"}
                     solicitations={recusadasList}
                     icon={"fa-ban"}
-                    href={"/dre/solicitacoes"}
+                    href={"/dre/solicitacoes-recusadas"}
                   />
                 </div>
                 <div className="col-6">
@@ -130,7 +130,7 @@ class DashboardDRE extends Component {
                     cardType={"card-cancelled"}
                     solicitations={canceladasList}
                     icon={"fa-times-circle"}
-                    href={"/dre/solicitacoes"}
+                    href={"/dre/solicitacoes-canceladas"}
                   />
                 </div>
               </div>
