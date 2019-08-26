@@ -48,7 +48,7 @@ export const LabelAndInput = props => {
         readOnly={readOnly}
         type={type}
         min={min}
-        maxlength={max}
+        maxLength={max}
       />
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
