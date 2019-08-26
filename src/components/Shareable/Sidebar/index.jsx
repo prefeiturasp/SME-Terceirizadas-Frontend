@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { SidebarEscola } from "./SidebarEscola";
+import { SidebarTerceirizada } from "./SidebarTerceirizada";
 import "./style.scss";
 
 export class Sidebar extends Component {
@@ -22,10 +22,7 @@ export class Sidebar extends Component {
           id="accordionSidebar"
         >
           <div className="sidebar-divider my-0" />
-          <p
-            onClick={() => toggle()}
-            className="text-right c-pointer"
-          >
+          <p onClick={() => toggle()} className="text-right c-pointer">
             <i
               className={
                 toggled
@@ -61,7 +58,7 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          {perfil === "escola" && <SidebarEscola />}
+          {perfil === "escola" && <SidebarTerceirizada />}
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">
               <img

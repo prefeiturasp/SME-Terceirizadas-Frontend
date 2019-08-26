@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, NavLink, Redirect } from "react-router-dom";
 
-export class Sidebarterceirizada extends Component {
+export class SidebarTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
