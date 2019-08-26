@@ -27,7 +27,6 @@ export const createSuspensaoDeAlimentacao = payload => {
     });
 };
 
-
 export const deleteSuspensaoDeAlimentacao = uuid => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
   return fetch(url, {
@@ -43,14 +42,13 @@ export const deleteSuspensaoDeAlimentacao = uuid => {
 };
 
 export const getSuspensoesDeAlimentacaoSalvas = () => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/meus_rascunhos/`
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/meus_rascunhos/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
   return fetch(url, OBJ_REQUEST)
     .then(result => {
-
       return result.json();
     })
     .catch(error => {
@@ -73,11 +71,11 @@ export const getMotivosSuspensaoCardapio = () => {
     });
 };
 
-export const enviarSuspensaoDeAlimentacao = (uuid) => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/inicio_de_pedido/`;
+export const enviarSuspensaoDeAlimentacao = uuid => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/informa-suspensao/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
@@ -95,7 +93,6 @@ export const enviarSuspensaoDeAlimentacao = (uuid) => {
 export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
   let status = 0;
-  console.log("Update Payload: ", payload);
 
   return fetch(url, {
     method: "PUT",
@@ -111,5 +108,20 @@ export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
     })
     .catch(error => {
       return error.json();
+    });
+};
+
+export const getSuspensoesDeAlimentacaoInformadas = () => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/informadas/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
     });
 };
