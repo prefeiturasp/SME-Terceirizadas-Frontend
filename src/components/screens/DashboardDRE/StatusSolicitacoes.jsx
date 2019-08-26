@@ -6,48 +6,21 @@ import {
   getSolicitacoesPendentesParaDRE
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
-const solicitacoes = [
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "11:19"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-    date: "Qua 11:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  }
-];
 
 export default class StatusSolicitacoes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       autorizadasList: [],
+      autorizadasListFiltered: [],
       pendentesList: [],
+      pendentesListFiltered: [],
       recusadasList: [],
       canceladasList: [],
       showAutorizadas: this.props.showAutorizadas,
       showPendentes: this.props.showPendentes
     };
+    this.filterList = this.filterList.bind(this);
   }
 
   async componentDidMount() {
@@ -60,33 +33,65 @@ export default class StatusSolicitacoes extends Component {
 
     this.setState({
       autorizadasList: autorizadas.results,
-      pendentesList: pendentes.results
+      autorizadasListFiltered: autorizadas.results,
+      pendentesList: pendentes.results,
+      pendentesListFiltered: pendentes.results
     });
   }
 
+  filterList(event) {
+    const {showAutorizadas, showPendentes} = this.state
+    if (event === undefined) event = { target: { value: "" } };
+
+    if (showAutorizadas) {
+      let autorizadasListFiltered = this.state.autorizadasList;
+      autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
+        const wordToFilter = event.target.value.toLowerCase();
+        return (
+          item.text.toLowerCase().search(wordToFilter) !== -1
+        );
+      });
+      this.setState({ autorizadasListFiltered });
+    }
+
+    if (showPendentes) {
+      let pendentesListFiltered = this.state.pendentesList;
+      pendentesListFiltered = pendentesListFiltered.filter(function(item) {
+        const wordToFilter = event.target.value.toLowerCase();
+        return (
+          item.text.toLowerCase().search(wordToFilter) !== -1
+        );
+      });
+      this.setState({ pendentesListFiltered });
+    }
+  }
+
   render() {
-    const {autorizadasList, pendentesList, recusadasList, canceladasList,} = this.state;
+    const {autorizadasListFiltered, pendentesListFiltered, recusadasList, canceladasList,} = this.state;
 
     return (
       <div className="card mt-3">
         <div className="card-body">
           <div className="mr-4">
-            <InputSearch voltarLink="/dre/painel-de-controle" />
+            <InputSearch
+              voltarLink="/dre/painel-de-controle"
+              filterList={this.filterList}
+            />
           </div>
           <div className="pb-3" />
-          {autorizadasList && autorizadasList.length > 0 && (
+          {autorizadasListFiltered && autorizadasListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Aprovadas"}
-              solicitacoes={autorizadasList}
+              solicitacoes={autorizadasListFiltered}
               tipo={"card-authorized"}
               icone={"fa-check"}
             />
           )}
 
-          {pendentesList && pendentesList.length > 0 && (
+          {pendentesListFiltered && pendentesListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Pendente Aprovação"}
-              solicitacoes={pendentesList}
+              solicitacoes={pendentesListFiltered}
               tipo={"card-pending"}
               icone={"fa-exclamation-triangle"}
             />
