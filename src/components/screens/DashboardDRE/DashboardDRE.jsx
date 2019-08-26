@@ -41,7 +41,10 @@ class DashboardDRE extends Component {
       handleSubmit,
       solicitations,
       vision_by,
-      autorizadasList
+      autorizadasList,
+      pendentesList,
+      canceladasList,
+      recusadasList,
     } = this.props;
     const { collapsed, lotes } = this.state;
 
@@ -105,7 +108,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
-                    solicitations={solicitations}
+                    solicitations={pendentesList}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes"}
                   />
@@ -116,7 +119,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
-                    solicitations={solicitations}
+                    solicitations={recusadasList}
                     icon={"fa-ban"}
                     href={"/dre/solicitacoes"}
                   />
@@ -125,7 +128,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
-                    solicitations={solicitations}
+                    solicitations={canceladasList}
                     icon={"fa-times-circle"}
                     href={"/dre/solicitacoes"}
                   />
