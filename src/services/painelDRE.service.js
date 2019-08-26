@@ -24,7 +24,7 @@ export const getPendentesAprovacaoList = () => {
 };
 
 export const getSolicitacoesAutorizadasPelaDRE = (dreUuid) => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes_autorizadas_por_mim/`;
+  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-autorizadas-por-mim/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
