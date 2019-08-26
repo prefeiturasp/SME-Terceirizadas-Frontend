@@ -8,22 +8,16 @@ describe("Teste <FluxoDeStatus>", () => {
     {
       titulo: "Solicitação Realizada",
       status: "aprovado",
-      status_evento_explicacao: "Solicitação Realizada",
-      criado_em: "25/04/2019 às 9:20",
-      usuario: { rf: "7972324", nome: "João da Silva" }
+      status_evento_explicacao: "Solicitação Realizada"
     },
     {
       titulo: "Reprovado da DRE",
       status: "reprovado",
-      status_evento_explicacao: "DRE reprovou",
-      criado_em: "25/04/2019 às 9:20",
-      usuario: { rf: "7972324", nome: "João da Silva" }
+      status_evento_explicacao: "DRE reprovou"
     },
     {
       titulo: "Cancelado pela CODAE",
       status: "cancelado",
-      criado_em: "25/04/2019 às 9:20",
-      usuario: { rf: "7972324", nome: "João da Silva" }
     },
     {
       titulo: "Visualizado pela Terceirizada",
