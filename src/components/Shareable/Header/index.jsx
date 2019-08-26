@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Home from "../../../pages/Home";
 import authService from "../../../services/auth";
-import BaseButton, { ButtonIcon } from "../button";
 import "./style.scss";
 
 export class Header extends Component {

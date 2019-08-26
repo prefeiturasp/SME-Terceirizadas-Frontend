@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import DetalhePendenciaPorDRE from './DetalhePendenciaPorDRE';
 
 class DetailDREContainer extends Component {

@@ -64,7 +64,6 @@ export default class DashboardEscolaContainer extends Component {
   }
   render() {
     const { autorizadas, theadList, trs } = this.state;
-    console.log(window.location.pathname);
     return (
       <div>
         <DashboardEscola

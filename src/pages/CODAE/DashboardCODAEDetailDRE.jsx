@@ -1,44 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import DetailDREContainer from "../../components/screens/DashboardCODAE/DetailDREContainer";
+import { HOME } from "./constants";
 
-export default class DashboardCODAEDetailDRE extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      vision_by: [
-        {
-          label: "Visão por",
-          value: ""
-        },
-        {
-          label: "DRE",
-          value: "dre"
-        },
-        {
-          label: "Dia",
-          value: "day"
-        },
-        {
-          label: "Semana",
-          value: "week"
-        },
-        {
-          label: "Mês",
-          value: "month"
-        },
-        {
-          label: "Lote",
-          value: "lote"
-        }
-      ]
-    };
-  }
-  render() {
-    return (
-      <Page tituloRastro="SOLICITAÇÕES">
-        <DetailDREContainer {...this.state }/>
-      </Page>
-    );
-  }
-}
+export default () => (
+  <Page>
+    <Breadcrumb home={HOME} />
+    <DetailDREContainer />
+  </Page>
+);

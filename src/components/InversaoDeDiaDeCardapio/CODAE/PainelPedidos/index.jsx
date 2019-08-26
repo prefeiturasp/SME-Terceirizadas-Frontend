@@ -4,9 +4,17 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
-import { CardInversaoPendenciaAprovacao, TIPO_CARD_ENUM } from "../../components/CardPendenciaAprovacao";
+import {
+  CardInversaoPendenciaAprovacao,
+  TIPO_CARD_ENUM
+} from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
-import { filtraNoLimite, filtraPrioritarios, filtraRegular, formatarPedidos } from "./helper";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular,
+  formatarPedidos
+} from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -69,7 +77,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inclusão de Alimentação - Pendente Autorização
+                    Inversão de dia de Cardápio - Pendente Autorização
                   </div>
                 </div>
                 <div className="col-5">
@@ -103,17 +111,19 @@ class PainelPedidos extends Component {
                 </div>
               </div>
 
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos no prazo limite"}
-                    tipoDeCard={"on-limit"}
-                    pedidos={pedidosNoPrazoLimite}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
-                  />
+              {pedidosNoPrazoLimite && pedidosNoPrazoLimite.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardInversaoPendenciaAprovacao
+                      titulo={"Pedidos no prazo limite"}
+                      tipoDeCard={"on-limit"}
+                      pedidos={pedidosNoPrazoLimite}
+                      ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={"codae"}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {pedidosNoPrazoRegular.length > 0 && valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">

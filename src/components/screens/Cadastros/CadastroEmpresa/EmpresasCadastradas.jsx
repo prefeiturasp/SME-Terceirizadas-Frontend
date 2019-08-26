@@ -267,7 +267,6 @@ class EmpresasCadastradas extends Component {
       empresas: EMPRESAS,
       empresasFiltradas: EMPRESAS
     };
-    this.filtrarEmpresas = this.filtrarEmpresas.bind(this);
   }
 
 
@@ -290,7 +289,6 @@ class EmpresasCadastradas extends Component {
                 <div className="pesquisar">
                   <input
                     className="input-search"
-                    onChange={this.filtrarEmpresas}
                     placeholder="Pesquisar"
                   />
                   <i className="fas fa-search" />
