@@ -54,9 +54,6 @@ export default class StatusSolicitacoes extends Component {
 
     const meusDados = await getMeusDados();
 
-    console.log();
-
-
     const autorizadas = !this.state.showAutorizadas ? [] : await getSolicitacoesAutorizadasPelaDRE(meusDados.diretorias_regionais[0].uuid);
 
     const pendentes = !this.state.showPendentes ? [] : await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid);
@@ -68,6 +65,8 @@ export default class StatusSolicitacoes extends Component {
   }
 
   render() {
+    const {autorizadasList, pendentesList, recusadasList, canceladasList,} = this.state;
+
     return (
       <div className="card mt-3">
         <div className="card-body">
@@ -75,37 +74,37 @@ export default class StatusSolicitacoes extends Component {
             <InputSearch voltarLink="/dre/painel-de-controle" />
           </div>
           <div className="pb-3" />
-          {this.state.autorizadasList && this.state.autorizadasList.length > 0 && (
+          {autorizadasList && autorizadasList.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Aprovadas"}
-              solicitacoes={this.state.autorizadasList}
+              solicitacoes={autorizadasList}
               tipo={"card-authorized"}
               icone={"fa-check"}
             />
           )}
 
-          {this.state.pendentesList && this.state.pendentesList.length > 0 && (
+          {pendentesList && pendentesList.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Pendente Aprovação"}
-              solicitacoes={this.state.pendentesList}
+              solicitacoes={pendentesList}
               tipo={"card-pending"}
               icone={"fa-exclamation-triangle"}
             />
           )}
 
-          {this.state.recusadasList && this.state.recusadasList.length > 0 && (
+          {recusadasList && recusadasList.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Recusadas"}
-              solicitacoes={this.state.recusadasList}
+              solicitacoes={recusadasList}
               tipo={"card-denied"}
               icone={"fa-check"}
             />
           )}
 
-          {this.state.canceladasList && this.state.canceladasList.length > 0 && (
+          {canceladasList && canceladasList.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Canceladas"}
-              solicitacoes={this.state.canceladasList}
+              solicitacoes={canceladasList}
               tipo={"card-cancelled"}
               icone={"fa-times-circle"}
             />
