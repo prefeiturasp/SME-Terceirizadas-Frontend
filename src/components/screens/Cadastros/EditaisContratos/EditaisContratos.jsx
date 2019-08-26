@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { reduxForm, FormSection, reset } from "redux-form";
-import rootReducer from "../../../../reducers";
+import { reduxForm, FormSection } from "redux-form";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { loadEdital } from "../../../../reducers/edital.reducer";
