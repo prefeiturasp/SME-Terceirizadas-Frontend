@@ -5,7 +5,6 @@ export class SidebarCODAE extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isVisible: true,
       redirectPainel: false,
       redirectRelatorio: false,
       menuOpened: "",
@@ -67,6 +66,8 @@ export class SidebarCODAE extends Component {
   render() {
     const { menuOpened, subMenu } = this.state;
     return [
+      this.renderizarRedirecionamentoPainel(),
+      this.renderizarRedirecionamentoRelatorio(),
       <li onMouseLeave={event => this.closeMenu(event)} className="nav-item">
         <NavLink
           onClick={() => this.setRedirectPainel()}

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Link, NavLink, Redirect } from "react-router-dom";
 
-export class SidebarCODAE extends Component {
+export class Sidebarterceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isVisible: true,
       redirectPainel: false,
       redirectRelatorio: false,
       menuOpened: "",
@@ -53,7 +52,7 @@ export class SidebarCODAE extends Component {
   renderizarRedirecionamentoPainel = () => {
     if (this.state.redirectPainel) {
       this.setState({ redirectPainel: false });
-      return <Redirect to={"/codae/painel-de-controle"} />;
+      return <Redirect to={"/terceirizada/painel-de-controle"} />;
     }
   };
 
@@ -67,6 +66,8 @@ export class SidebarCODAE extends Component {
   renderTerceirizada() {
     const { menuOpened, subMenu } = this.state;
     return [
+      this.renderizarRedirecionamentoPainel(),
+      this.renderizarRedirecionamentoRelatorio(),
       <li onMouseLeave={event => this.closeMenu(event)} className="nav-item">
         <NavLink
           onClick={() => this.setRedirectPainel()}
@@ -91,14 +92,14 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/codae/solicitacoes"
+              to="/terceirizada/solicitacoes"
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/codae/solicitacoes"
+              to="/terceirizada/solicitacoes"
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -106,14 +107,14 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/codae/solicitacoes"
+              to="/terceirizada/solicitacoes"
             >
               Solicitações Recusadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/codae/solicitacoes"
+              to="/terceirizada/solicitacoes"
             >
               Solicitações Canceladas
             </NavLink>
