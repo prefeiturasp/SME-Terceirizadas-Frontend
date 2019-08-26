@@ -10,7 +10,9 @@ class DashboardDREContainer extends Component {
       enrolled: 4050,
       autorizadasList: [],
       pendentesList: [],
-      
+      recusadasList: [],
+      canceladasList:[],
+
       solicitations: [
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
