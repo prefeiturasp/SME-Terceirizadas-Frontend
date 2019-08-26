@@ -17,6 +17,11 @@ body {
 }
 
 .sidebar-dark {
+  i.fa-chevron-circle-left,
+  i.fa-chevron-circle-right {
+    padding-right: 10px;
+    color: white;
+  }
   .nav-item {
     text-align: -webkit-center;
     .bg-white.collapse-inner.rounded {
@@ -56,12 +61,10 @@ body {
       font-weight: bold;
       span {
         color: white !important;
-        font-size: 14px !important;
         letter-spacing: 0.14px;
       }
       i {
         color: white !important;
-        padding-right: 13.4px;
       }
       &:hover,
       &.keep-hover-settings,
@@ -82,6 +85,56 @@ body {
       &:not(.collapsed) {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+      }
+    }
+  }
+  .sidebar-brand-text {
+    .nav-item {
+      .profile {
+        i,
+        span {
+          font-size: 8px;
+          color: white;
+        }
+        span {
+          padding-left: 5px;
+        }
+      }
+    }
+  }
+  .page-footer {
+    p {
+      color: white;
+      font-size: 9px;
+      padding-top: 13px;
+    }
+  }
+}
+
+.sidebar-dark.toggled {
+  .nav-item {
+    .bg-white.collapse-inner.rounded {
+      margin-left: -20px;
+    }
+    .nav-link {
+      span {
+        font-size: 10px !important;
+      }
+      i {
+        font-size: 26px;
+      }
+    }
+  }
+}
+
+.sidebar-dark:not(.toggled) {
+  .nav-item {
+    .nav-link {
+      span {
+        font-size: 14px !important;
+      }
+      i {
+        padding-right: 13.4px;
       }
     }
   }

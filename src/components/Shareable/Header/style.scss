@@ -1,5 +1,10 @@
 .nav-bar {
-  padding-left: 2rem;
+  &:not(.toggled) {
+    padding-left: 3rem;
+  }
+  &.toggled {
+    margin-left: -2rem;
+  }
   img {
     height: 64px;
     width: auto;

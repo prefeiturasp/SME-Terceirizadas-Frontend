@@ -6,13 +6,13 @@ import BaseButton, { ButtonIcon } from "../button";
 import "./style.scss";
 
 export class Header extends Component {
-  state = {};
   render() {
+    const { toggled } = this.props;
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme fixed-top">
           <div className="container-fluid">
-            <div className="nav-bar">
+            <div className={`nav-bar ${toggled && "toggled"}`}>
               <Link className="navbar-brand" exact to="/" component={Home}>
                 <img src="/assets/image/logo-sigpae.png" alt="" />
               </Link>

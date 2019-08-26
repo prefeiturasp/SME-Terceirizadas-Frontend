@@ -196,7 +196,7 @@ export class Login extends Component {
             </div>
             {!mostrarCadastro ? this.renderLogin() : this.renderCadastro()}
             <div className="logo-prefeitura">
-              <img src="/assets/image/logo-prefeitura.png" alt="" />
+              <img src="/assets/image/logo-sme.svg" alt="" />
             </div>
           </div>
         </div>
