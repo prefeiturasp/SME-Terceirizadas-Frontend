@@ -1,39 +1,20 @@
 import React, { Component } from "react";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { reduxForm } from "redux-form";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { FluxoDeStatus } from "../FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
-import { toastSuccess } from "../../Shareable/dialogs";
+import { toastSuccess, toastError } from "../../Shareable/dialogs";
+import { getDetalheKitLancheAvulsa, aprovaDeKitLancheAvulsoTerceirizadas } from '../services'
+import {montaBarraStatus} from '../helper'
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inativarBotao: false,
       unifiedSolicitationList: [],
       showModal: false,
-      solicitacao: {
-        id: "12083",
-        lote: "7A IP I",
-        gestao: "TERC TOTAL",
-        dre: "DRE Ipiranga",
-        razao: "Programa Contínuo - Mais Educação",
-        data: "27/04/2019",
-        local: "Aquário de São Paulo",
-        escola: {
-          nome: "EMEF JOSE CARLOS DE FIGUEIREDO FERRAZ, PREF.",
-          alunos_total: "1705",
-          matutino: "705",
-          vespertino: "700",
-          noturno: "300"
-        },
-        kits: ["1", "3"],
-        tempo_passeio: "5 a 7 horas (2 kits)",
-        estudantes_total: 75,
-        obs:
-          "A observação é uma das etapas do método científico. Consiste em perceber," +
-          "ver e não interpretar. A observação é relatada como foi visualizada, sem que," +
-          " a princípio, as idéias interpretativas dos observadores sejam tomadas."
-      },
+      solicitacao: {},
       listaDeStatus: [
         {
           titulo: "Solicitação Realizada",
@@ -42,32 +23,61 @@ class Relatorio extends Component {
           rf: "7972324",
           nome: "João da Silva"
         },
-        {
-          titulo: "Reprovado da DRE",
-          status: "reprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Cancelado pela CODAE",
-          status: "cancelado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
-        },
-        {
-          titulo: "Visualizado pela Terceirizada",
-          status: null,
-          timestamp: null
-        }
       ]
     };
     this.closeModal = this.closeModal.bind(this);
+    this.selecionarKits = this.selecionarKits.bind(this)
+    this.handleStatusBarra = this.handleStatusBarra.bind(this)
+  }
+
+  selecionarKits = kits => {
+    let kitList = []
+    kits.forEach(kit => {
+      kitList.push(kit.nome)
+    });
+    return kitList
   }
 
   componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuidParam = urlParams.get("uuid");
     this.preencherFormulario(this.state.solicitacao);
+    this.preencheRelatorio(uuidParam)
+  }
+
+  preencheRelatorio = uuidParam =>{
+    getDetalheKitLancheAvulsa(uuidParam).then(response =>{
+      this.handleBotoesAtivados(response.status)
+      this.setState({
+        ...response,
+        solicitacao : {
+          id: response.id_externo,
+          lote: response.escola.lote.nome,
+          gestao: response.escola.tipo_gestao.nome,
+          dre: response.escola.diretoria_regional.nome,
+          razao: response.solicitacao_kit_lanche.motivo,
+          solicitacao_kit_lanche : response.solicitacao_kit_lanche,
+        data: response.solicitacao_kit_lanche.data,
+        local: response.local,
+        escola: {
+          nome: response.escola.nome,
+          alunos_total: response.escola.quantidade_alunos,
+          matutino: "0",
+          vespertino: "0",
+          noturno: "0"
+        },
+        kits: this.selecionarKits(response.solicitacao_kit_lanche.kits),
+        tempo_passeio: response.solicitacao_kit_lanche.tempo_passeio_explicacao,
+        estudantes_total: response.quantidade_alunos,
+        obs:response.solicitacao_kit_lanche.descricao         
+        },
+        uuid: uuidParam,
+        listaDeStatus: montaBarraStatus(response.status)
+      })
+
+    }).catch(error =>{
+      console.log('Error ao pegar kit lanche: ', error)
+    })
   }
 
   showModal() {
@@ -79,8 +89,36 @@ class Relatorio extends Component {
     toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
-  handleSubmit() {
-    toastSuccess("Ciência de Kit Lanche enviada com sucesso!");
+  handleStatusBarra(status){
+    this.setState({
+      listaDeStatus: montaBarraStatus(status)
+    })
+  }
+
+
+  handleBotoesAtivados = status =>{
+    console.log(status)
+    if(status === 'TERCEIRIZADA_TOMA_CIENCIA'){
+      this.setState({inativarBotao : true})
+    }
+  }
+
+
+
+  handleSubmit(values) {
+    if(window.confirm('Deseja confirmar esta solicitação?')){
+      aprovaDeKitLancheAvulsoTerceirizadas(values).then(response => {
+        if(response.status === 'TERCEIRIZADA_TOMA_CIENCIA'){
+          this.handleStatusBarra(response.status)
+          this.handleBotoesAtivados('TERCEIRIZADA_TOMA_CIENCIA')
+          toastSuccess("Kit Lanche autorizado com sucesso.");
+        }else{
+          toastError('Não foi possível autorizar esta solicitação!')
+        }
+      }).catch(error => {
+        console.log('Error na aprovação: ', error)
+      })
+    }
   }
 
   preencherFormulario(solicitacao) {
@@ -103,9 +141,10 @@ class Relatorio extends Component {
       kits,
       estudantes_total,
       tempo_passeio,
-      obs
+      obs,
+      solicitacao_kit_lanche,
     } = this.state.solicitacao;
-    const { listaDeStatus, showModal } = this.state;
+    const { listaDeStatus, showModal, uuid, inativarBotao } = this.state;
     return (
       <div>
         <ModalRecusarSolicitacao
@@ -131,7 +170,7 @@ class Relatorio extends Component {
                       <span className="number-of-order-label">Nº PEDIDO</span>
                     </span>
                   </div>
-                  <div className="my-auto col-8 ml-4">
+                  <div className="my-auto col-8 ml-5">
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">{escola.nome}</span>
@@ -232,16 +271,25 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
+                    disabled={inativarBotao}
                     label={"Recusar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
-                  />
+                    />
                   <BaseButton
+                    disabled={inativarBotao}
                     label="Ciente"
                     type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
+                    onClick={() => this.handleSubmit({
+                      uuid: uuid,
+                      solicitacao_kit_lanche: solicitacao_kit_lanche,
+                      id_externo: id,
+                      status: "TERCEIRIZADA_TOMA_CIENCIA",
+                      local: local,
+                      quantidade_alunos: estudantes_total,
+                    })}
                     style={ButtonStyle.Primary}
                     className="ml-3"
                   />

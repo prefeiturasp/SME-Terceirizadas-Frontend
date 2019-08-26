@@ -18,14 +18,14 @@ class Relatorio extends Component {
       uuid : "",
       listaDeStatus: [
         {
-          titulo: "Solicitação Realizada",
-          status: "aprovado",
-          timestamp: "25/04/2019 às 9:20",
-          rf: "7972324",
-          nome: "João da Silva"
+          titulo: "",
+          status: "",
+          timestamp: "",
+          rf: "",
+          nome: ""
         }
       ], 
-      inativarBotao : true
+      inativarBotao : false
     };
     this.closeModal = this.closeModal.bind(this);
     this.selecionarKits = this.selecionarKits.bind(this)
@@ -99,7 +99,7 @@ class Relatorio extends Component {
 
   handleBotoesAtivados = status =>{
     if(status === 'CODAE_APROVADO'){
-      this.setState({inativarBotao : false})
+      this.setState({inativarBotao : true})
     }
   }
 
@@ -108,7 +108,7 @@ class Relatorio extends Component {
       aprovaDeKitLancheAvulsoCodae(values).then(response => {
         if(response.status === 'CODAE_APROVADO'){
           this.handleStatusBarra(response.status)
-          this.handleBotoesAtivados('CODAE_APROVADO')
+          this.handleBotoesAtivados(response.status)
           toastSuccess("Kit Lanche autorizado com sucesso.");
         }else{
           toastError('Não foi possível autorizar esta solicitação!')
@@ -269,7 +269,7 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    disabled={false}
+                    disabled={inativarBotao}
                     label={"Recusar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
@@ -277,7 +277,7 @@ class Relatorio extends Component {
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    disabled={false}
+                    disabled={inativarBotao}
                     label="Aprovar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit({
