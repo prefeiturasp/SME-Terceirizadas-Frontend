@@ -1,11 +1,22 @@
 import React, { Component } from "react";
-import DashboardCODAE from './DashboardCODAE';
+import { getTotalAlunos } from "../../../services/codae.service";
+import DashboardCODAE from "./DashboardCODAE";
+import { getSolicitacoesAprovadosCodae } from "../../../services/painelCODAE.service";
+import { ajustarFormatoLog } from "./helper";
 
 class DashboardCODAEContainer extends Component {
+  async componentDidMount() {
+    const enrolled = await getTotalAlunos();
+    let solicitacoesAprovadas = await getSolicitacoesAprovadosCodae();
+    solicitacoesAprovadas = ajustarFormatoLog(solicitacoesAprovadas);
+    this.setState({ enrolled, solicitacoesAprovadas });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: 31500,
+      solicitacoesAprovadas: [],
+      enrolled: 0,
       dres: [
         {
           id: 1,
@@ -175,7 +186,7 @@ class DashboardCODAEContainer extends Component {
   }
 
   render() {
-    return < DashboardCODAE {...this.state} />;
+    return <DashboardCODAE {...this.state} />;
   }
 }
 

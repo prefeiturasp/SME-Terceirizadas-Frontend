@@ -37,6 +37,7 @@ class DashboardCODAE extends Component {
       enrolled,
       handleSubmit,
       solicitations,
+      solicitacoesAprovadas,
       vision_by,
       lotes
     } = this.props;
@@ -77,7 +78,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={"card-authorized"}
-                    solicitations={solicitations}
+                    solicitations={solicitacoesAprovadas}
                     icon={"fa-check"}
                     href={"/codae/solicitacoes"}
                   />
