@@ -67,12 +67,12 @@ export default class DashboardEscola extends Component {
         <div className="row row-shortcuts">
           <div className="col-3">
             <CardAtalho
-              titulo={"Inversão de Dias de Cardapio"}
+              titulo={"Inclusão de Alimentação"}
               texto={
                 "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
               }
               textoLink={"Novo pedido"}
-              href={"/escola/inversao-de-dia-de-cardapio"}
+              href={"/escola/inclusao-de-alimentacao"}
             />
           </div>
           <div className="col-3">
@@ -87,14 +87,26 @@ export default class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Inclusão de Alimentação"}
+              titulo={"Solicitação de Kit Lanche"}
               texto={
                 "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
               }
               textoLink={"Novo pedido"}
-              href={"/escola/inclusao-de-alimentacao"}
+              href="/escola/solicitacao-de-kit-lanche"
             />
           </div>
+          <div className="col-3">
+            <CardAtalho
+              titulo={"Inversão de Dias de Cardapio"}
+              texto={
+                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+              }
+              textoLink={"Novo pedido"}
+              href={"/escola/inversao-de-dia-de-cardapio"}
+            />
+          </div>
+        </div>
+        <div className="row">
           <div className="col-3">
             <CardAtalho
               titulo={"Suspensão de Alimentação"}
@@ -103,18 +115,6 @@ export default class DashboardEscola extends Component {
               }
               textoLink={"Novo pedido"}
               href={"/escola/suspensao-de-alimentacao"}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-3">
-            <CardAtalho
-              titulo={"Kit Lanche"}
-              texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
-              }
-              textoLink={"Novo pedido"}
-              href="/escola/solicitacao-de-kit-lanche"
             />
           </div>
         </div>

@@ -29,7 +29,7 @@ export class CardHistorico extends Component {
     const { titulo, ultimaColunaLabel, pedidos, handleSubmit } = this.props;
     const { collapsed } = this.state;
     return (
-      <div className="card mt-3">
+      <div className="card card-history mt-3">
         <div className="card-header">
           <div className="row">
             <div className="col-11">
