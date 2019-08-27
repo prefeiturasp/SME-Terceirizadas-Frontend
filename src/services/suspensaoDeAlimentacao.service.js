@@ -125,3 +125,22 @@ export const getSuspensoesDeAlimentacaoInformadas = () => {
       console.log(error);
     });
 };
+
+export const getSuspensaoDeAlimentacaoUUID = uuid => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "get",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

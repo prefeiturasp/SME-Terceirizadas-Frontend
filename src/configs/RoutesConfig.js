@@ -53,6 +53,7 @@ import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistori
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
+import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 
 const routesConfig = [
   {
@@ -238,6 +239,11 @@ const routesConfig = [
   {
     path: "/terceirizada/kits-lanche",
     component: KitsLancheOrdersTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: "/terceirizada/suspensoes-alimentacao/relatorio",
+    component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
   {
