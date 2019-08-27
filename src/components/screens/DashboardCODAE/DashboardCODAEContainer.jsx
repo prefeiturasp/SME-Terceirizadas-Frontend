@@ -1,21 +1,39 @@
 import React, { Component } from "react";
 import { getTotalAlunos } from "../../../services/codae.service";
 import DashboardCODAE from "./DashboardCODAE";
-import { getSolicitacoesAprovadosCodae } from "../../../services/painelCODAE.service";
+import {
+  getSolicitacoesAprovadosCodae,
+  getSolicitacoesPendentesAprovacaoCodae,
+  getSolicitacoesCanceladasCodae
+} from "../../../services/painelCODAE.service";
 import { ajustarFormatoLog } from "./helper";
 
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
     const enrolled = await getTotalAlunos();
     let solicitacoesAprovadas = await getSolicitacoesAprovadosCodae();
+    let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae();
+    let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae()
+
     solicitacoesAprovadas = ajustarFormatoLog(solicitacoesAprovadas);
-    this.setState({ enrolled, solicitacoesAprovadas });
+    solicitacoesPendentesAprovacao = ajustarFormatoLog(
+      solicitacoesPendentesAprovacao
+    );
+    solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas)
+    this.setState({
+      enrolled,
+      solicitacoesAprovadas,
+      solicitacoesPendentesAprovacao,
+      solicitacoesCanceladas
+    });
   }
 
   constructor(props) {
     super(props);
     this.state = {
       solicitacoesAprovadas: [],
+      solicitacoesPendentesAprovacao: [],
+      solicitacoesCanceladas: [],
       enrolled: 0,
       dres: [
         {
