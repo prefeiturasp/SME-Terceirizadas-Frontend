@@ -43,7 +43,7 @@ export default class Page extends Component {
         />
         <div id="content-wrapper" className="pt-5">
           <div className="d-flex flex-column p-4 mt-5">
-            {children[0]}
+            {children.length ? children[0] : children}
             <span className="page-title">{titulo}</span>
             {children[1]}
           </div>

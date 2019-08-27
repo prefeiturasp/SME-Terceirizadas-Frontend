@@ -1,9 +1,17 @@
 import React from "react";
-import StatusSolicitacoesTerceirizada from "../../components/screens/DashboardTerceirizada/StatusSolicitacoesTerceirizada";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
+import StatusSolicitacoes from "../../components/screens/DashboardTerceirizada/StatusSolicitacoesTerceirizada";
 import Page from "../../components/Shareable/Page/Page";
+import { HOME } from "./constants";
 
-export default props => (
-  <Page titulo="Painel de Status de Solicitações" tituloRastro="solicitações">
-    <StatusSolicitacoesTerceirizada />
+const atual = {
+  href: "/terceirizada/solicitacoes",
+  titulo: "Status de Solicitações"
+};
+
+export default () => (
+  <Page titulo={atual.titulo}>
+    <Breadcrumb home={HOME} atual={atual} />
+    <StatusSolicitacoes />
   </Page>
 );

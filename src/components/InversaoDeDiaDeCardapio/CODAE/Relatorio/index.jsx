@@ -88,7 +88,7 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
+    toastSuccess("Solicitação de Alimentação não autorizado com sucesso!");
   }
 
   handleSubmit() {
@@ -96,14 +96,14 @@ class Relatorio extends Component {
     CODAEAprovaPedidoDRE(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inversão de dias de cardápio validada com sucesso!");
+          toastSuccess("Inversão de dias de cardápio autorizada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+          toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+        toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
       }
     );
   }
@@ -223,14 +223,14 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Não Validar Solicitação"}
+                    label={"Negar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Validar Solicitação"
+                    label="Autorizar Solicitação"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}
