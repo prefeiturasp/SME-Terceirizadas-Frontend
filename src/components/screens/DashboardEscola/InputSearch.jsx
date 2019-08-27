@@ -10,7 +10,11 @@ export const InputSearch = props =>
         <i class="fas fa-arrow-left" /> Voltar
       </NavLink>
       <span class="float-right">
-        <input class="input-search" placeholder="Pesquisar" />
+        <input
+          class="input-search"
+          placeholder="Pesquisar"
+          onChange={props.filterList}
+        />
         <i class="fas fa-search" />
       </span>
     </div>

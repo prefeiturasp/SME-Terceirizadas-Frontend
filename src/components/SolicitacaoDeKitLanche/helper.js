@@ -2,6 +2,8 @@ import { retornaTempoPasseio } from "../Shareable/KitLanche/helper";
 
 
 export const montaObjetoRequisicao = values => {
+  
+
   let kit_lanche_avulso = {
     solicitacao_kit_lanche: {
       kits: values.kit_lanche,
@@ -11,7 +13,7 @@ export const montaObjetoRequisicao = values => {
     },
     escola: values.escola,
     local: values.local,
-    quantidade_alunos: values.quantidade_alunos
+    quantidade_alunos: values.quantidade_alunos,
   };
   return kit_lanche_avulso;
 };

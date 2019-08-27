@@ -119,10 +119,10 @@ export const removeKitLanche = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
