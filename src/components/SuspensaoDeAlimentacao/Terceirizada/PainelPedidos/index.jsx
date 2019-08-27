@@ -6,14 +6,13 @@ import {
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../../services/suspensaoDeAlimentacao.service.js";
-import { filtraSolicitacoes } from "./helper.js"
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
       solicitacoesCarregadas: 0,
-      todasSolicitacoes: [],
+      todasSolicitacoes: []
     };
   }
 
@@ -21,9 +20,9 @@ class PainelPedidos extends Component {
     let todasSolicitacoes = [];
     this.setState({ solicitacoesCarregadas: 0 });
     getSuspensoesDeAlimentacaoInformadas().then(response => {
-      todasSolicitacoes = filtraSolicitacoes(response.results);
+      todasSolicitacoes = response.results;
       this.setState({
-        //todasSolicitacoes,
+        todasSolicitacoes,
         solicitacoesCarregadas: this.state.solicitacoesCarregadas + 1
       });
     });
@@ -33,13 +32,8 @@ class PainelPedidos extends Component {
     this.filtrar();
   }
 
-
-
   render() {
-    const {
-      solicitacoesCarregadas,
-      todasSolicitacoes,
-    } = this.state;
+    const { solicitacoesCarregadas, todasSolicitacoes } = this.state;
 
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
     return (
@@ -52,18 +46,15 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inversão de dia de Cardápio - Pendente Validação
+                    Suspensão de Alimentação - Pendente Validação
                   </div>
                 </div>
-                <div className="col-5">
-                </div>
+                <div className="col-5" />
               </div>
               <div className="row pt-3">
                 <div className="col-12">
                   <CardInversaoPendenciaAprovacao
-                    titulo={
-                      "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
-                    }
+                    titulo={"Pedidos para dar ciencia"}
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={todasSolicitacoes}
                     ultimaColunaLabel={"Data da Inclusão"}
