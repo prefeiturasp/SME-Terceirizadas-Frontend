@@ -7,7 +7,7 @@ import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "./CardAtalho";
-import CardLegendas from "./CardLegendas";
+import CardLegendas from "../../Shareable/CardLegendas";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import "./style.scss";
 
@@ -42,18 +42,22 @@ export class DashboardEscola extends Component {
                     <Field
                       component={LabelAndInput}
                       label="RF Responsável"
+                      placeholder="00000000"
                       type="text"
                       name="numero_alunos"
                       className="form-control"
+                      hasIcon
                     />
                   </div>
                   <div className="form-group col-6">
                     <Field
                       component={LabelAndInput}
                       label="Cargo / Função"
+                      placeholder="Nome do Cargo"
                       type="text"
                       name="numero_alunos"
                       className="form-control"
+                      hasIcon
                     />
                   </div>
                 </div>
@@ -62,9 +66,11 @@ export class DashboardEscola extends Component {
                     <Field
                       component={LabelAndInput}
                       label="Nome"
+                      placeholder="Nome Completo"
                       type="text"
                       name="numero_alunos"
                       className="form-control"
+                      hasIcon
                     />
                   </div>
                 </div>

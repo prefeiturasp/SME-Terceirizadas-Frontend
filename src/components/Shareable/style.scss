@@ -4,9 +4,10 @@ label {
   margin-bottom: 0 !important;
 }
 
-input::placeholder {
+input::placeholder:not(.input-search) {
   color: $placeholder !important;
   text-align: left;
+  font-size: 12px;
 }
 
 textarea {

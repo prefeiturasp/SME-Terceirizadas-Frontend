@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "./InputSearch";
+import CardLegendas from "../../Shareable/CardLegendas";
+import { InputSearch } from "../../Shareable/InputSearch";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",
@@ -42,13 +43,13 @@ export default class StatusSolicitacoes extends Component {
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Aprovadas"}
+            titulo={"Autorizadas"}
             solicitacoes={solicitacoes}
             tipo={"card-authorized"}
             icone={"fa-check"}
           />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Pendente Aprovação"}
+            titulo={"Pendente de Aprovação"}
             solicitacoes={solicitacoes}
             tipo={"card-pending"}
             icone={"fa-exclamation-triangle"}
@@ -65,6 +66,7 @@ export default class StatusSolicitacoes extends Component {
             tipo={"card-cancelled"}
             icone={"fa-times-circle"}
           />
+          <CardLegendas />
         </div>
       </div>
     );

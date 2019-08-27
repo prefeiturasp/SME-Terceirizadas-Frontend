@@ -39,21 +39,23 @@ export const LabelAndInput = props => {
           {label}
         </label>
       )}
-      <input
-        {...input}
-        className={`form-control ${classNameInput}`}
-        disabled={disabled}
-        name={name}
-        id={name}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        type={type}
-        min={min}
-        maxlength={max}
-      />
-      <If isVisible={hasIcon}>
-        <i className="fas fa-pen" />
-      </If>
+      <div className="d-flex">
+        <input
+          {...input}
+          className={`form-control ${classNameInput}`}
+          disabled={disabled}
+          name={name}
+          id={name}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          type={type}
+          min={min}
+          maxlength={max}
+        />
+        <If isVisible={hasIcon}>
+          <i className="fas fa-pen" />
+        </If>
+      </div>
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
       </If>
