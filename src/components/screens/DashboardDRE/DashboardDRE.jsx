@@ -16,6 +16,10 @@ class DashboardDRE extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      autorizadasList: [],
+      autorizadasListFiltered: [],
+      pendentesList: [],
+      pendentesListFiltered: [],
       collapsed: true,
       lotes: [
         {
@@ -29,6 +33,45 @@ class DashboardDRE extends Component {
       ]
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.filterList = this.filterList.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.autorizadasListFiltered.length !== this.props.autorizadasListFiltered.length)
+      this.setState({
+        autorizadasListFiltered: this.props.autorizadasListFiltered,
+        autorizadasList: this.props.autorizadasList
+      } )
+
+    if (prevProps.pendentesListFiltered.length !== this.props.pendentesListFiltered.length)
+    this.setState({
+      pendentesListFiltered: this.props.pendentesListFiltered,
+      pendentesList: this.props.pendentesList
+    } )
+
+  }
+
+  filterList(event) {
+
+    if (event === undefined) event = { target: { value: "" } };
+
+    let autorizadasListFiltered = this.state.autorizadasList;
+    autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return (
+        item.text.toLowerCase().search(wordToFilter) !== -1
+      );
+    });
+
+    let pendentesListFiltered = this.state.pendentesList;
+    pendentesListFiltered = pendentesListFiltered.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return (
+        item.text.toLowerCase().search(wordToFilter) !== -1
+      );
+    });
+
+    this.setState({autorizadasListFiltered, pendentesListFiltered})
   }
 
   alterarCollapse() {
@@ -40,12 +83,11 @@ class DashboardDRE extends Component {
       enrolled,
       handleSubmit,
       vision_by,
-      autorizadasList,
-      pendentesList,
       canceladasList,
       recusadasList,
     } = this.props;
-    const { collapsed, lotes } = this.state;
+
+    const { collapsed, lotes, autorizadasListFiltered, pendentesListFiltered  } = this.state;
 
     return (
       <div>
@@ -84,7 +126,7 @@ class DashboardDRE extends Component {
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" />
+                  <input className="input-search" placeholder="Pesquisar" onChange={this.filterList}/>
                   <i className="fas fa-search" />
                 </span>
               </div>
@@ -98,7 +140,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={"card-authorized"}
-                    solicitations={autorizadasList}
+                    solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
                     href={"/dre/solicitacoes-autorizadas"}
                   />
@@ -107,7 +149,7 @@ class DashboardDRE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
-                    solicitations={pendentesList}
+                    solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes-pendentes"}
                   />
