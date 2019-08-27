@@ -15,7 +15,7 @@ export default class DashboardEscola extends Component {
       <div>
         <div className="row">
           <div className="col-12">
-            <CardMatriculados numeroAlunos={numeroAlunos} collapsed={true}/>
+            <CardMatriculados numeroAlunos={numeroAlunos} collapsed={true} />
           </div>
         </div>
         <CardBody

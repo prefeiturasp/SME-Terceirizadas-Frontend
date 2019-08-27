@@ -91,7 +91,7 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
+    toastSuccess("Inversão de dia de Cardápio recusado com sucesso!");
   }
 
   handleSubmit() {
@@ -226,14 +226,14 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Não Validar Solicitação"}
+                    label={"Recusar Solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
                     style={ButtonStyle.OutlinePrimary}
                   />
                   <BaseButton
-                    label="Validar Solicitação"
+                    label="Ciente"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

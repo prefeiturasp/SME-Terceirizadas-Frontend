@@ -1,12 +1,29 @@
-.nav-bar {
-  &:not(.toggled) {
-    padding-left: 3rem;
+@import "../../../styles/variables.scss";
+
+.navbar {
+  .nav-bar {
+    &:not(.toggled) {
+      padding-left: 3rem;
+    }
+    &.toggled {
+      margin-left: -2rem;
+    }
+    img {
+      height: 64px;
+      width: auto;
+    }
   }
-  &.toggled {
-    margin-left: -2rem;
-  }
-  img {
-    height: 64px;
-    width: auto;
+  .navbar-nav {
+    .nav-item {
+      padding-left: 30px;
+      img {
+        height: 28px;
+      }
+      p {
+        text-align: center;
+        color: $grayHeader;
+        font-size: 10px;
+      }
+    }
   }
 }

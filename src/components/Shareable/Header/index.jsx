@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Home from "../../../pages/Home";
 import authService from "../../../services/auth";
-import BaseButton, { ButtonIcon } from "../button";
 import "./style.scss";
 
 export class Header extends Component {
@@ -33,17 +32,24 @@ export class Header extends Component {
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link className="nav-link">
-                    Profile &nbsp;
-                    <i className="fa fa-1x fa-user-circle" />
+                    <img src="/assets/image/ajuda.svg" alt="Ícone de ajuda" />
                   </Link>
+                  <p className="title">Ajuda</p>
                 </li>
                 <li className="nav-item">
-                  <BaseButton
-                    className="nav-link"
-                    icon={ButtonIcon.POWER_OFF}
-                    label="Sair &nbsp;"
-                    onClick={() => authService.logout()}
-                  />
+                  <Link className="nav-link">
+                    <img
+                      src="/assets/image/vinculo.svg"
+                      alt="Ícone de vínculo"
+                    />
+                  </Link>
+                  <p className="title">Vínculo</p>
+                </li>
+                <li onClick={() => authService.logout()} className="nav-item">
+                  <Link className="nav-link">
+                    <img src="/assets/image/sair.svg" alt="Ícone de logout" />
+                  </Link>
+                  <p className="title">Sair</p>
                 </li>
               </ul>
             </div>

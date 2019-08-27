@@ -31,7 +31,7 @@ export default class Page extends Component {
 
   render() {
     const { nome, perfil, toggled } = this.state;
-    const { children, tituloRastro, titulo } = this.props;
+    const { children, titulo } = this.props;
     return (
       <div id="wrapper">
         <Header toggled={toggled} />
@@ -43,9 +43,9 @@ export default class Page extends Component {
         />
         <div id="content-wrapper" className="pt-5">
           <div className="d-flex flex-column p-4 mt-5">
-            <h1 className="breadcrumb-title">{tituloRastro}</h1>
+            {children.length ? children[0] : children}
             <span className="page-title">{titulo}</span>
-            {children}
+            {children[1]}
           </div>
         </div>
       </div>

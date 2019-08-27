@@ -9,24 +9,24 @@ class DetalhePendenciaPorDRE extends Component {
     this.state = {
       vision_by: [
         {
-          label: "Visão por",
-          value: ""
+          nome: "Visão por",
+          uuid: ""
         },
         {
-          label: "Dia",
-          value: "day"
+          nome: "Dia",
+          uuid: "day"
         },
         {
-          label: "Semana",
-          value: "week"
+          nome: "Semana",
+          uuid: "week"
         },
         {
-          label: "Mês",
-          value: "month"
+          nome: "Mês",
+          uuid: "month"
         },
         {
-          label: "Lote",
-          value: "lote"
+          nome: "Lote",
+          uuid: "lote"
         }
       ]
     }
@@ -56,7 +56,7 @@ class DetalhePendenciaPorDRE extends Component {
               <span className="combo-box">
                 <Field
                   component={LabelAndCombo}
-                  onChange={value => this.handleField(value)}
+                  onChange={uuid => this.handleField(uuid)}
                   placeholder={"Visão por"}
                   options={this.state.vision_by}
                 />

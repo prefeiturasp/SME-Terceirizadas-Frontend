@@ -100,7 +100,8 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    const TerceirizadaTomaCienciaInclusaoDeAlimentacao = this.state.ehInclusaoContinua
+    const TerceirizadaTomaCienciaInclusaoDeAlimentacao = this.state
+      .ehInclusaoContinua
       ? TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
       : TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa;
     TerceirizadaTomaCienciaInclusaoDeAlimentacao(uuid).then(
@@ -109,11 +110,15 @@ class Relatorio extends Component {
           toastSuccess("Ciência da Inclusão de Alimentação salva com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao dar ciência para a Inclusão de Alimentação");
+          toastError(
+            "Houve um erro ao dar ciência para a Inclusão de Alimentação"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao dar ciência para a Inclusão de Alimentação");
+        toastError(
+          "Houve um erro ao dar ciência para a Inclusão de Alimentação"
+        );
       }
     );
   }
@@ -227,7 +232,8 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
+                      {meusDados &&
+                        meusDados.diretorias_regionais &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
