@@ -25,3 +25,15 @@ input:-moz-placeholder {
     }
   }
 }
+
+.dashboard-school {
+  .ReactCollapse--collapse {
+    width: 100%;
+    .user-data {
+      padding-top: 2rem;
+      .form-group {
+        padding: 0;
+      }
+    }
+  }
+}

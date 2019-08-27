@@ -20,9 +20,11 @@ export class CardHistorico extends Component {
   };
 
   selecionarTodos() {
-    this.props.pedidos.forEach(pedido => {
-      this.props.change(`check_${pedido.uuid}`, !this.props.selecionar_todos);
-    });
+    if (this.props.pedidos) {
+      this.props.pedidos.forEach(pedido => {
+        this.props.change(`check_${pedido.uuid}`, !this.props.selecionar_todos);
+      });
+    }
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
   render() {
@@ -81,9 +83,12 @@ export class CardHistorico extends Component {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>ID do Pedido</th>
+                    <th>Nº Solicitação</th>
                     <th>Escola</th>
-                    <th>{ultimaColunaLabel}</th>
+                    <th>
+                      {ultimaColunaLabel ||
+                        "Quantidade de Alimentações Solicitadas"}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

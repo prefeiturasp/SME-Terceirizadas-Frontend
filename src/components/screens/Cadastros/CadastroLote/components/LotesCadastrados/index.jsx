@@ -37,8 +37,9 @@ class LotesCadastrados extends Component {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.dre.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.tipo_de_gestao.toLowerCase().search(palavraAFiltrar) !== -1
+        item.iniciais.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.tipo_gestao.nome.toLowerCase().search(palavraAFiltrar) !== -1
       );
     });
     this.setState({ lotesFiltrados });

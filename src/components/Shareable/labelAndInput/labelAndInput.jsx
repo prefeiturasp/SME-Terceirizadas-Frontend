@@ -29,6 +29,7 @@ export const LabelAndInput = props => {
     meta,
     disabled,
     classNameInput,
+    hasIcon,
     max
   } = props;
   return (
@@ -50,6 +51,9 @@ export const LabelAndInput = props => {
         min={min}
         maxlength={max}
       />
+      <If isVisible={hasIcon}>
+        <i className="fas fa-pen" />
+      </If>
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
       </If>
