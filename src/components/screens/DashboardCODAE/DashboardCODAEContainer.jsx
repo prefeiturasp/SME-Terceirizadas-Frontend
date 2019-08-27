@@ -4,7 +4,8 @@ import DashboardCODAE from "./DashboardCODAE";
 import {
   getSolicitacoesAprovadosCodae,
   getSolicitacoesPendentesAprovacaoCodae,
-  getSolicitacoesCanceladasCodae
+  getSolicitacoesCanceladasCodae,
+  getSolicitacoesRevisaoAprovacaoCodae
 } from "../../../services/painelCODAE.service";
 import { ajustarFormatoLog } from "./helper";
 
@@ -13,18 +14,20 @@ class DashboardCODAEContainer extends Component {
     const enrolled = await getTotalAlunos();
     let solicitacoesAprovadas = await getSolicitacoesAprovadosCodae();
     let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae();
-    let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae()
+    let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
+    let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
 
     solicitacoesAprovadas = ajustarFormatoLog(solicitacoesAprovadas);
     solicitacoesPendentesAprovacao = ajustarFormatoLog(
       solicitacoesPendentesAprovacao
     );
-    solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas)
+    solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
     this.setState({
       enrolled,
       solicitacoesAprovadas,
       solicitacoesPendentesAprovacao,
-      solicitacoesCanceladas
+      solicitacoesCanceladas,
+      solicitacoesRevisao
     });
   }
 
@@ -34,6 +37,7 @@ class DashboardCODAEContainer extends Component {
       solicitacoesAprovadas: [],
       solicitacoesPendentesAprovacao: [],
       solicitacoesCanceladas: [],
+      solicitacoesRevisao: [],
       enrolled: 0,
       dres: [
         {

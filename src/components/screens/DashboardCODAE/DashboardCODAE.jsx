@@ -106,6 +106,15 @@ class DashboardCODAE extends Component {
                     href={"/codae/solicitacoes"}
                   />
                 </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Solicitação recusada"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesCanceladas}
+                    icon={"fa-times-circle"}
+                    href={"/codae/solicitacoes"}
+                  />
+                </div>
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
