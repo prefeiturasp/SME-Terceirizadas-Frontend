@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
+import { getSolicitacoesAprovadosCodae } from "../../../services/painelCODAE.service";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",

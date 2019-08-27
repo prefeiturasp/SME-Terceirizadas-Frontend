@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../../Shareable/style.scss";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import VisaoGeral from "./VisaoGeral";
-import VisaoPorDRE from "./VisaoPorDRE";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
+import VisaoGeral from "./VisaoGeral";
+import VisaoPorDRE from "./VisaoPorDRE";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -36,7 +38,9 @@ class DashboardCODAE extends Component {
     const {
       enrolled,
       handleSubmit,
-      solicitations,
+      solicitacoesAprovadas,
+      solicitacoesPendentesAprovacao,
+      solicitacoesCanceladas,
       vision_by,
       lotes
     } = this.props;
@@ -76,8 +80,8 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.APROVADO}
+                    solicitations={solicitacoesAprovadas}
                     icon={"fa-check"}
                     href={"/codae/solicitacoes"}
                   />
@@ -85,8 +89,8 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
-                    cardType={"card-pending"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
                     href={"/codae/solicitacoes"}
                   />
@@ -96,8 +100,17 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={solicitacoesCanceladas}
+                    icon={"fa-times-circle"}
+                    href={"/codae/solicitacoes"}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Solicitação recusada"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
                     href={"/codae/solicitacoes"}
                   />

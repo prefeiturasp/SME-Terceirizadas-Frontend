@@ -2,6 +2,13 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
 
+export const CARD_TYPE_ENUM = {
+  CANCELADO: "card-cancelled",
+  PENDENTE: "card-pending",
+  APROVADO: "card-authorized",
+  NEGADO: "card-denied"
+};
+
 export const CardStatusDeSolicitacao = props => {
   const { cardTitle, cardType, solicitations, icon, href } = props;
   return (

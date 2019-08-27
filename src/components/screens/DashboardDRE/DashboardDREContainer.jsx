@@ -12,6 +12,10 @@ class DashboardDREContainer extends Component {
       pendentesList: [],
       recusadasList: [],
       canceladasList:[],
+      autorizadasListFiltered: [],
+      pendentesListFiltered: [],
+      recusadasListFiltered: [],
+      canceladasListFiltered:[],
 
       solicitations: [
         {
@@ -66,7 +70,9 @@ class DashboardDREContainer extends Component {
     const pendentes = await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid)
     this.setState({
       autorizadasList:autorizadas.results,
-      pendentesList:pendentes.results
+      pendentesList:pendentes.results,
+      autorizadasListFiltered:autorizadas.results,
+      pendentesListFiltered:pendentes.results
     });
   }
 
