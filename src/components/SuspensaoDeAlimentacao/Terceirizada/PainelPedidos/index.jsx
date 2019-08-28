@@ -56,7 +56,7 @@ class PainelPedidos extends Component {
       todasSolicitacoes,
       todasSolicitacoesTomadaCiencia
     } = this.state;
-   
+
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
     return (
       <div>
