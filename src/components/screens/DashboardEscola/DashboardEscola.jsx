@@ -1,23 +1,83 @@
 import React, { Component } from "react";
+import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
+import { Field, reduxForm } from "redux-form";
 import CardMatriculados from "../../Shareable/CardMatriculados";
+import { Collapse } from "react-collapse";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "./CardAtalho";
-import CardLegendas from "./CardLegendas";
+import CardLegendas from "../../Shareable/CardLegendas";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import "./style.scss";
 
-export default class DashboardEscola extends Component {
+export class DashboardEscola extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: true
+    };
+    this.alterarCollapse = this.alterarCollapse.bind(this);
+  }
+
+  alterarCollapse() {
+    this.setState({ collapsed: !this.state.collapsed });
+  }
+
   render() {
+    const { collapsed } = this.state;
     const { numeroAlunos, autorizadas, theadList, trs } = this.props;
     return (
-      <div>
-        <div className="row">
-          <div className="col-12">
-            <CardMatriculados numeroAlunos={numeroAlunos} collapsed={true} />
-          </div>
-        </div>
+      <div className="dashboard-school">
+        <CardMatriculados
+          numeroAlunos={numeroAlunos}
+          collapsed={collapsed}
+          alterarCollapse={this.alterarCollapse}
+        >
+          <Collapse isOpened={!collapsed}>
+            <div className="user-data">
+              <form>
+                <div className="row">
+                  <div className="form-group col-6">
+                    <Field
+                      component={LabelAndInput}
+                      label="RF Responsável"
+                      placeholder="00000000"
+                      type="text"
+                      name="numero_alunos"
+                      className="form-control"
+                      hasIcon
+                    />
+                  </div>
+                  <div className="form-group col-6">
+                    <Field
+                      component={LabelAndInput}
+                      label="Cargo / Função"
+                      placeholder="Nome do Cargo"
+                      type="text"
+                      name="numero_alunos"
+                      className="form-control"
+                      hasIcon
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="form-group col-12">
+                    <Field
+                      component={LabelAndInput}
+                      label="Nome"
+                      placeholder="Nome Completo"
+                      type="text"
+                      name="numero_alunos"
+                      className="form-control"
+                      hasIcon
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </Collapse>
+        </CardMatriculados>
         <CardBody
           titulo={"Painel de Status de Solicitações"}
           dataAtual={dataAtual()}
@@ -67,12 +127,12 @@ export default class DashboardEscola extends Component {
         <div className="row row-shortcuts">
           <div className="col-3">
             <CardAtalho
-              titulo={"Inversão de Dias de Cardapio"}
+              titulo={"Inclusão de Alimentação"}
               texto={
                 "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
               }
               textoLink={"Novo pedido"}
-              href={"/escola/inversao-de-dia-de-cardapio"}
+              href={"/escola/inclusao-de-alimentacao"}
             />
           </div>
           <div className="col-3">
@@ -87,14 +147,26 @@ export default class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Inclusão de Alimentação"}
+              titulo={"Solicitação de Kit Lanche"}
               texto={
                 "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
               }
               textoLink={"Novo pedido"}
-              href={"/escola/inclusao-de-alimentacao"}
+              href="/escola/solicitacao-de-kit-lanche"
             />
           </div>
+          <div className="col-3">
+            <CardAtalho
+              titulo={"Inversão de Dias de Cardapio"}
+              texto={
+                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+              }
+              textoLink={"Novo pedido"}
+              href={"/escola/inversao-de-dia-de-cardapio"}
+            />
+          </div>
+        </div>
+        <div className="row">
           <div className="col-3">
             <CardAtalho
               titulo={"Suspensão de Alimentação"}
@@ -103,18 +175,6 @@ export default class DashboardEscola extends Component {
               }
               textoLink={"Novo pedido"}
               href={"/escola/suspensao-de-alimentacao"}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-3">
-            <CardAtalho
-              titulo={"Kit Lanche"}
-              texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
-              }
-              textoLink={"Novo pedido"}
-              href="/escola/solicitacao-de-kit-lanche"
             />
           </div>
         </div>
@@ -127,3 +187,10 @@ export default class DashboardEscola extends Component {
     );
   }
 }
+
+const DashboardEscolaForm = reduxForm({
+  form: "dashboardEscola",
+  enableReinitialize: true
+})(DashboardEscola);
+
+export default DashboardEscolaForm;

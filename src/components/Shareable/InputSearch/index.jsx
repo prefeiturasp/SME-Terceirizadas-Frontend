@@ -4,14 +4,14 @@ import "./style.scss";
 
 export const InputSearch = props =>
 (
-  <div className="row">
+  <div className="div-input-search row">
     <div className="col-12">
-      <NavLink to={props.voltarLink || "/"} className="btn btn-outline-secondary">
+      <NavLink to={props.voltarLink || "/"} className="btn btn-outline-primary">
         <i class="fas fa-arrow-left" /> Voltar
       </NavLink>
-      <span class="float-right">
+      <span className="float-right">
         <input
-          class="input-search"
+          className="input-search"
           placeholder="Pesquisar"
           onChange={props.filterList}
         />

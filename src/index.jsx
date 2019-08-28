@@ -14,8 +14,6 @@ import App from "./App";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/custom.css";
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'startbootstrap-sb-admin-2/css/sb-admin-2.css'
 import "./styles/sb-admin-2.css";
 
 toast.configure();

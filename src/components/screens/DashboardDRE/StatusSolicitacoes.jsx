@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../DashboardEscola/InputSearch";
+import { InputSearch } from "../../Shareable/InputSearch";
 import {
   getSolicitacoesAutorizadasPelaDRE,
   getSolicitacoesPendentesParaDRE

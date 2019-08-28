@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .card-title-status {
   font-weight: 600;
   font-size: 13px;
@@ -27,31 +29,31 @@
     font-weight: bold;
     font-size: 13px;
     text-align: center;
-    color: #035d96;
+    color: $blue;
     padding-bottom: 10px;
   }
   &.card-authorized {
-    border-left-color: #5ec430 !important;
+    border-left-color: $greenPanel !important;
     i {
-      color: #5ec430;
+      color: $greenPanel;
     }
   }
   &.card-pending {
-    border-left-color: #eb8002 !important;
+    border-left-color: $orange !important;
     i {
-      color: #eb8002;
+      color: $orange;
     }
   }
   &.card-denied {
-    border-left-color: #c9251b !important;
+    border-left-color: $red !important;
     i {
-      color: #c9251b;
+      color: $red;
     }
   }
   &.card-cancelled {
-    border-left-color: #000000 !important;
+    border-left-color: $black !important;
     i {
-      color: #000000;
+      color: $black;
     }
   }
 }
