@@ -12,6 +12,7 @@ import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
 } from "../../../../services/suspensaoDeAlimentacao.service";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -47,8 +48,6 @@ class Relatorio extends Component {
       });
     }
   }
-
-
 
   handleSubmit() {
     const uuid = this.state.uuid;
@@ -151,13 +150,25 @@ class Relatorio extends Component {
                   </div>
                 </div>
                 {/* {this.renderDetalheInversao()} */}
-                <table className="table-periods">
-                  <tr>
-                    <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
-                  </tr>
-                </table>
+                <div className="descricao-suspensao">
+                  <div>Período</div>
+                  <div>Tipos de Alimentação</div>
+                  <div>Quantidade de Alunos</div>
+                </div>
+                <div>
+                  {suspensaoAlimentacao.quantidades_por_periodo.map(item => {
+                    return (
+                      <div className="descricao-suspensao pt-2">
+                        <div>{item.periodo_escolar.nome}</div>
+                        <div className="tipos-alimentacoes">
+                          {stringSeparadaPorVirgulas(item.tipos_alimentacao, "nome")}
+                        </div>
+                        <div>{item.numero_alunos}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="pt-5" />
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
@@ -169,15 +180,18 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label="Tomar ciência"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {suspensaoAlimentacao.status !==
+                  "TERCEIRIZADA_TOMA_CIENCIA" && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label="Tomar ciência"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

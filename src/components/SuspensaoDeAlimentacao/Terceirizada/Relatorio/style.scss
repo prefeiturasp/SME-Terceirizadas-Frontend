@@ -24,3 +24,16 @@ table.table-periods {
     }
   }
 }
+
+
+.descricao-suspensao{
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  font-size: 14px;
+  color: #686868;
+
+  .tipos-alimentacoes{
+    display: flex;
+    flex-direction: row;
+  }
+}

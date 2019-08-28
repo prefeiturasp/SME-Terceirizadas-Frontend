@@ -7,7 +7,8 @@ import BaseButton, {
   ButtonStyle,
   ButtonType
 } from "../../../../Shareable/button";
-import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
+import { Link } from "react-router-dom";
+import { obtemDataSolicitacao } from "../helper";
 import "./style.scss";
 
 export class CardHistorico extends Component {
@@ -123,16 +124,32 @@ export class CardHistorico extends Component {
                                 className="checkbox-custom"
                               />
                             </label>
-                            {pedido.id_externo}
+                            <Link
+                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                                pedido.uuid
+                              }`}
+                            >
+                              {pedido.id_externo}
+                            </Link>
                           </td>
-                          <td>{pedido.escola.nome}</td>
+
                           <td>
-                            {pedido.data_inicial
-                              ? `${pedido.data_inicial} a ${pedido.data_final}`
-                              : stringSeparadaPorVirgulas(
-                                  pedido.inclusoes,
-                                  "data"
-                                )}
+                            <Link
+                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                                pedido.uuid
+                              }`}
+                            >
+                              {pedido.escola.nome}
+                            </Link>
+                          </td>
+                          <td>
+                            <Link
+                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                                pedido.uuid
+                              }`}
+                            >
+                              {obtemDataSolicitacao(pedido)}
+                            </Link>
                           </td>
                         </tr>
                       );

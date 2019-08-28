@@ -188,7 +188,7 @@ class PainelPedidos extends Component {
                     />
                   </div>
                 </div>
-              )}
+              )} 
             </div>
           </form>
         )}
