@@ -144,3 +144,24 @@ export const getSuspensaoDeAlimentacaoUUID = uuid => {
       return error.json();
     });
 };
+
+
+export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/terceirizada-toma-ciencia/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+

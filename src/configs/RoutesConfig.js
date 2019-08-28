@@ -242,12 +242,12 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/terceirizada/suspensoes-alimentacao/relatorio",
+    path: "/terceirizada/suspensoes-de-alimentacao/relatorio",
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
   {
-    path: "/terceirizada/suspensoes-alimentacao",
+    path: "/terceirizada/suspensoes-de-alimentacao",
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false
   },
