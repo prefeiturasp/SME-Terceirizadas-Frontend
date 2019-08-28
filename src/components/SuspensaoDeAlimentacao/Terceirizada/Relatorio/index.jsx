@@ -1,35 +1,40 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  getInversaoDeDiaDeCardapio,
-  terceirizadaTomaCiencia
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
+import { corDaMensagem } from "./helper";
 import "./style.scss";
-import { getSuspensaoDeAlimentacaoUUID } from "../../../../services/suspensaoDeAlimentacao.service";
+import {
+  getSuspensaoDeAlimentacaoUUID,
+  terceirizadaTomaCienciaSuspensaoDeAlimentacao
+} from "../../../../services/suspensaoDeAlimentacao.service";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uuid: null,
-      showModal: false,
       suspensaoAlimentacao: null,
-      dadosEscola: null
+      dadosEscola: null,
+      redirect: false
     };
-    this.closeModal = this.closeModal.bind(this);
   }
+
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderizarRedirecionamentoParaSuspensoesDeAlimentacao = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/terceirizada/suspensoes-de-alimentacao" />;
+    }
+  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -38,30 +43,37 @@ class Relatorio extends Component {
       getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
         let suspensaoAlimentacao = response.data;
         let dadosEscola = suspensaoAlimentacao.escola;
-        this.setState({ suspensaoAlimentacao, dadosEscola });
+        this.setState({ suspensaoAlimentacao, dadosEscola, uuid });
       });
     }
   }
 
-  showModal() {
-    this.setState({ showModal: true });
-  }
 
-  closeModal(e) {
-    this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
-  }
 
-  handleSubmit() {}
+  handleSubmit() {
+    const uuid = this.state.uuid;
+    terceirizadaTomaCienciaSuspensaoDeAlimentacao(uuid).then(
+      response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess(
+            "Ciência de suspensão de alimentação avisada com sucesso!"
+          );
+          this.setRedirect();
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError("Erro ao tomar ciência de suspensão de alimentação");
+        }
+      },
+      function(error) {
+        toastError("Erro ao tomar ciência de suspensão de alimentação");
+      }
+    );
+  }
 
   render() {
-    const { showModal, suspensaoAlimentacao, dadosEscola } = this.state;
+    const { suspensaoAlimentacao, dadosEscola } = this.state;
     return (
       <div>
-        <ModalRecusarSolicitacao
-          closeModal={this.closeModal}
-          showModal={showModal}
-        />
+        {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
         {!suspensaoAlimentacao ? (
           <div>Carregando...</div>
         ) : (
@@ -99,29 +111,29 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {dadosEscola &&
-                        dadosEscola.diretoria_regional.nome}
+                      {dadosEscola && dadosEscola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {dadosEscola &&
-                        dadosEscola.lote.nome}
+                      {dadosEscola && dadosEscola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {dadosEscola &&
-                        dadosEscola.tipo_gestao.nome}
+                      {dadosEscola && dadosEscola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
                 {suspensaoAlimentacao.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={suspensaoAlimentacao.logs} tipoDeFluxo={"informativo"} />
+                    <FluxoDeStatus
+                      listaDeStatus={suspensaoAlimentacao.logs}
+                      tipoDeFluxo={"informativo"}
+                    />
                   </div>
                 )}
                 <hr />
