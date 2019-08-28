@@ -23,6 +23,8 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+import { getDiretoriaRegionalPedidosDeKitLanche } from "../components/SolicitacaoDeKitLanche/services";
+// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 
 import authService from "./auth";
 
@@ -179,6 +181,36 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
   let pedidosRegular = [];
 
   const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+export const getResumoPendenciasDREKitLanche = async (
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeKitLanche(filtro);
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);

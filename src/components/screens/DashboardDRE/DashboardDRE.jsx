@@ -14,7 +14,8 @@ import "./style.scss";
 import {
   getResumoPendenciasDREAlteracoesDeCardapio,
   getResumoPendenciasDREInclusaoDeAlimentacao,
-  getResumoPendenciasDREInversaoDeDiaDeCardapio
+  getResumoPendenciasDREInversaoDeDiaDeCardapio,
+  getResumoPendenciasDREKitLanche
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
@@ -40,6 +41,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDREAlteracoesDeCardapio: {},
       resumoPendenciasDREInclusoesDeAlimentacao: {},
       resumoPendenciasDREInversaoDeDiaDeCardapio: {},
+      resumoPendenciasDREKitLanche: {},
       filtroPendencias: "sem_filtro",
       meusDados: []
     };
@@ -61,10 +63,14 @@ class DashboardDRE extends Component {
     const resumoPendenciasDREInversaoDeDiaDeCardapio = await getResumoPendenciasDREInversaoDeDiaDeCardapio(
       filtroPendencias
     );
+    const resumoPendenciasDREKitLanche = await getResumoPendenciasDREKitLanche(
+      filtroPendencias
+    );
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
+      resumoPendenciasDREKitLanche,
       filtroPendencias
     });
   }
@@ -135,7 +141,8 @@ class DashboardDRE extends Component {
       pendentesListFiltered,
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
-      resumoPendenciasDREInversaoDeDiaDeCardapio
+      resumoPendenciasDREInversaoDeDiaDeCardapio,
+      resumoPendenciasDREKitLanche
     } = this.state;
 
     return (
@@ -331,10 +338,10 @@ class DashboardDRE extends Component {
                   <Link to="/dre/kits-lanche">
                     <CardPendencia
                       cardTitle={"Kit Lanche"}
-                      totalOfOrders={100}
-                      priorityOrders={50}
-                      onLimitOrders={25}
-                      regularOrders={25}
+                      totalOfOrders={resumoPendenciasDREKitLanche.total}
+                      priorityOrders={resumoPendenciasDREKitLanche.prioritario}
+                      onLimitOrders={resumoPendenciasDREKitLanche.limite}
+                      regularOrders={resumoPendenciasDREKitLanche.regular}
                     />
                   </Link>
                 </div>
