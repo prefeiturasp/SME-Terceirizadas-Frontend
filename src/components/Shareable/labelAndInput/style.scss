@@ -1,5 +1,12 @@
+@import "../../../styles/variables.scss";
+
 div.react-datepicker-wrapper {
   margin-right: -30px;
+}
+
+.col-form-label {
+  font-weight: 600 !important;
+  font-size: 14px !important;
 }
 
 .input-group {
@@ -56,10 +63,10 @@ div.react-datepicker-wrapper {
   }
 }
 
-.fa-calendar {
+.fa-calendar-alt {
   z-index: 1;
   padding-top: 12px;
-  color: #a8a8a8;
+  color: $green;
   position: relative;
 }
 

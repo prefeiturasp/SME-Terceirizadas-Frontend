@@ -1,13 +1,22 @@
-.schools-group {
-  height: 520px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  max-height: 1000px;
-  .school-checked {
+@import "../../styles/variables.scss";
+
+.unified-solicitation {
+  .schools-group {
+    height: 520px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 1000px;
     .school-container {
-      font-weight: bold;
-    color: white;
-    background-color: #109cf1;
+      padding-top: 8px;
+      label.checkbox-label {
+        height: 25px;
+        color: $black;
+      }
+    }
+    .school-checked {
+      .school-container {
+        background-color: $blueSelected;
+      }
     }
   }
 }
@@ -39,7 +48,18 @@ table.report-table {
 
 .label-n-alunos {
   span {
+    font-size: 14px;
+    font-weight: 600;
     padding-right: 10px;
+  }
+  input {
+    font-size: 14px;
+    height: 25px;
+    border-radius: 4px;
+    border: 1px solid $grayLight;
+    background-color: $grayInputBackground;
+    font-weight: bold;
+    color: $black;
   }
 }
 

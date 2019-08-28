@@ -244,7 +244,7 @@ export class LabelAndDate extends Component {
               name={name}
             />
             <If isVisible={hasIcon}>
-              <i onClick={this.openDatepicker} className="fa fa-calendar" />
+              <i onClick={this.openDatepicker} className="fas fa-calendar-alt" />
             </If>
           </div>
         </div>
