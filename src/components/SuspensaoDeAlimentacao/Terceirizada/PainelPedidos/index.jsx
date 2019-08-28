@@ -91,7 +91,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(todasSolicitacoesTomadaCiencia)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
-                        "Histórico de Suspensões de Alimentação Tomadas Ciência"
+                        "Histórico de Suspensão de Alimentações Tomadas Ciência"
                       }
                     />
                   </div>
