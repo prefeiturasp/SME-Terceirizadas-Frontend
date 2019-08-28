@@ -53,6 +53,7 @@ import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistori
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
+import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 
 const routesConfig = [
   {
@@ -241,7 +242,12 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/terceirizada/suspensoes-alimentacao",
+    path: "/terceirizada/suspensoes-de-alimentacao/relatorio",
+    component: PainelPedidosSuspensaoAlimentacaoRelatorio,
+    exact: false
+  },
+  {
+    path: "/terceirizada/suspensoes-de-alimentacao",
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false
   },

@@ -1,38 +1,27 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  getInversaoDeDiaDeCardapio,
-  terceirizadaTomaCiencia
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
+import { corDaMensagem } from "./helper";
 import "./style.scss";
+import {
+  getSuspensaoDeAlimentacaoUUID,
+  terceirizadaTomaCienciaSuspensaoDeAlimentacao
+} from "../../../../services/suspensaoDeAlimentacao.service";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unifiedSolicitationList: [],
       uuid: null,
-      meusDados: { diretorias_regionais: [{ nome: "" }] },
-      redirect: false,
-      showModal: false,
-      ehInclusaoContinua: false,
-      InversaoCardapio: null,
-      escolaDaInversao: null,
-      prazoDoPedidoMensagem: null
+      suspensaoAlimentacao: null,
+      dadosEscola: null,
+      redirect: false
     };
-    this.closeModal = this.closeModal.bind(this);
   }
 
   setRedirect() {
@@ -41,116 +30,71 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaInversoesDeCardapio = () => {
+  renderizarRedirecionamentoParaSuspensoesDeAlimentacao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/terceirizada/inversoes-dia-cardapio" />;
+      return <Redirect to="/terceirizada/suspensoes-de-alimentacao" />;
     }
   };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    meusDados().then(meusDados => {
-      this.setState({ meusDados });
-    });
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const data_de = moment(InversaoCardapio.data_de, "DD/MM/YYYY");
-          const data_para = moment(InversaoCardapio.data_para, "DD/MM/YYYY");
-          let dataMaisProxima = data_de;
-          if (dataMaisProxima < data_para) {
-            dataMaisProxima = data_para;
-          }
-
-          this.setState({
-            InversaoCardapio,
-            uuid,
-            escolaDaInversao: InversaoCardapio.escola,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
-        });
-      }
-    });
+    if (uuid) {
+      getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
+        let suspensaoAlimentacao = response.data;
+        let dadosEscola = suspensaoAlimentacao.escola;
+        this.setState({ suspensaoAlimentacao, dadosEscola, uuid });
+      });
+    }
   }
 
-  showModal() {
-    this.setState({ showModal: true });
-  }
 
-  closeModal(e) {
-    this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
-  }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    terceirizadaTomaCiencia(uuid).then(
+    terceirizadaTomaCienciaSuspensaoDeAlimentacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Ciência de Inversão de dias de cardápio avisada com sucesso!");
+          toastSuccess(
+            "Ciência de suspensão de alimentação avisada com sucesso!"
+          );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
+          toastError("Erro ao tomar ciência de suspensão de alimentação");
         }
       },
       function(error) {
-        toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
+        toastError("Erro ao tomar ciência de suspensão de alimentação");
       }
     );
   }
 
   render() {
-    const {
-      showModal,
-      InversaoCardapio,
-      prazoDoPedidoMensagem,
-      meusDados,
-      escolaDaInversao
-    } = this.state;
+    const { suspensaoAlimentacao, dadosEscola } = this.state;
     return (
       <div>
-        <ModalRecusarSolicitacao
-          closeModal={this.closeModal}
-          showModal={showModal}
-        />
-        {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
-        {!InversaoCardapio ? (
+        {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
+        {!suspensaoAlimentacao ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido #${
-              InversaoCardapio.id_externo
+            <span className="page-title">{`Suspensao de alimentação - Solicitação #${
+              suspensaoAlimentacao.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
-                  <p
-                    className={`col-12 title-message ${corDaMensagem(
-                      prazoDoPedidoMensagem
-                    )}`}
-                  >
-                    {prazoDoPedidoMensagem}
+                  <p className={`col-12 title-message ${corDaMensagem("red")}`}>
+                    Solicitação no prazo limite
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {InversaoCardapio.id_externo}
+                        {suspensaoAlimentacao.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
-                        ID DO PEDIDO
+                        ID DA SOLICITAÇÂO
                       </span>
                     </span>
                   </div>
@@ -158,7 +102,8 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
+                      {suspensaoAlimentacao.escola &&
+                        suspensaoAlimentacao.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -166,42 +111,42 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {dadosEscola && dadosEscola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
+                      {dadosEscola && dadosEscola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {escolaDaInversao &&
-                        escolaDaInversao.tipo_gestao &&
-                        escolaDaInversao.tipo_gestao.nome}
+                      {dadosEscola && dadosEscola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
-                {InversaoCardapio.logs && (
+                {suspensaoAlimentacao.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
+                    <FluxoDeStatus
+                      listaDeStatus={suspensaoAlimentacao.logs}
+                      tipoDeFluxo={"informativo"}
+                    />
                   </div>
                 )}
                 <hr />
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>{escolaDaInversao.quantidade_alunos}</span>
+                    <span>{dadosEscola.quantidade_alunos}</span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p className="value">
-                      Descrição da inversão de dias de cardápio
+                      Descrição da suspensão de alimentação
                     </p>
                   </div>
                 </div>
@@ -219,21 +164,14 @@ class Relatorio extends Component {
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.descricao
+                        __html: suspensaoAlimentacao.observacao
                       }}
                     />
                   </div>
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Não Validar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Validar Solicitação"
+                    label="Tomar ciência"
                     type={ButtonType.SUBMIT}
                     onClick={() => this.handleSubmit()}
                     style={ButtonStyle.Primary}

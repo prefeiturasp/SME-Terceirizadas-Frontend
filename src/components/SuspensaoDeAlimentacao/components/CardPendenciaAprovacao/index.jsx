@@ -40,7 +40,6 @@ export class CardInversaoPendenciaAprovacao extends Component {
       pedidos,
       titulo,
       tipoDeCard,
-      ultimaColunaLabel,
       parametroURL
     } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
@@ -112,24 +111,22 @@ export class CardInversaoPendenciaAprovacao extends Component {
                   <th>Código do Pedido</th>
                   <th>Código EOL</th>
                   <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel || "Data"}</th>
+                  <th>Data da Solicitação</th>
                 </tr>
               </thead>
               <tbody>
-                {pedidosFiltrados.map((pedido, key) => {
-                  const dataMaisProxima =
-                    pedido.inclusoes && pedido.inclusoes[0].data;
+                {pedidosFiltrados.map((solicitacao) => {
                   return (
                     <Link
-                      to={`/${parametroURL}/inversoes-dia-cardapio/relatorio?uuid=${
-                        pedido.uuid
+                      to={`/${parametroURL}/suspensoes-de-alimentacao/relatorio?uuid=${
+                        solicitacao.uuid
                       }`}
                     >
                       <tr>
-                        <td>{pedido.id_externo}</td>
-                        <td>{pedido.escola.codigo_eol}</td>
-                        <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial || dataMaisProxima}</td>
+                        <td>{solicitacao.id_externo}</td>
+                        <td>{solicitacao.escola.codigo_eol}</td>
+                        <td>{solicitacao.escola.nome}</td>
+                        <td>{solicitacao.criado_em}</td>
                       </tr>
                     </Link>
                   );

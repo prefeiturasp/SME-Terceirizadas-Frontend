@@ -25,6 +25,22 @@ export const fluxoPartindoEscola = [
   }
 ];
 
+
+export const fluxoInformativoPartindoEscola = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "Terceirizada tomou ciência",
+    status: "",
+    criado_em: "",
+    usuario: null
+  }
+];
+
 export const tipoDeStatus = status => {
   switch (status) {
     case "Solicitação Realizada":
