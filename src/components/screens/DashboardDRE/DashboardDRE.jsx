@@ -11,7 +11,11 @@ import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";
-import { getResumoPendenciasDREAlteracoesDeCardapio, getResumoPendenciasDREInclusaoDeAlimentacao } from "../../../services/painelDRE.service";
+import {
+  getResumoPendenciasDREAlteracoesDeCardapio,
+  getResumoPendenciasDREInclusaoDeAlimentacao,
+  getResumoPendenciasDREInversaoDeDiaDeCardapio
+} from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
 class DashboardDRE extends Component {
@@ -35,6 +39,7 @@ class DashboardDRE extends Component {
       ],
       resumoPendenciasDREAlteracoesDeCardapio: {},
       resumoPendenciasDREInclusoesDeAlimentacao: {},
+      resumoPendenciasDREInversaoDeDiaDeCardapio: {},
       filtroPendencias: "sem_filtro",
       meusDados: []
     };
@@ -53,9 +58,13 @@ class DashboardDRE extends Component {
       minhaDRE,
       filtroPendencias
     );
+    const resumoPendenciasDREInversaoDeDiaDeCardapio = await getResumoPendenciasDREInversaoDeDiaDeCardapio(
+      filtroPendencias
+    );
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
+      resumoPendenciasDREInversaoDeDiaDeCardapio,
       filtroPendencias
     });
   }
@@ -125,7 +134,8 @@ class DashboardDRE extends Component {
       autorizadasListFiltered,
       pendentesListFiltered,
       resumoPendenciasDREAlteracoesDeCardapio,
-      resumoPendenciasDREInclusoesDeAlimentacao
+      resumoPendenciasDREInclusoesDeAlimentacao,
+      resumoPendenciasDREInversaoDeDiaDeCardapio
     } = this.state;
 
     return (
@@ -262,10 +272,18 @@ class DashboardDRE extends Component {
                   <Link to="/dre/inclusoes-de-alimentacao">
                     <CardPendencia
                       cardTitle={"Inclusão de Alimentação"}
-                      totalOfOrders={resumoPendenciasDREInclusoesDeAlimentacao.total}
-                      priorityOrders={resumoPendenciasDREInclusoesDeAlimentacao.prioritario}
-                      onLimitOrders={resumoPendenciasDREInclusoesDeAlimentacao.limite}
-                      regularOrders={resumoPendenciasDREInclusoesDeAlimentacao.regular}
+                      totalOfOrders={
+                        resumoPendenciasDREInclusoesDeAlimentacao.total
+                      }
+                      priorityOrders={
+                        resumoPendenciasDREInclusoesDeAlimentacao.prioritario
+                      }
+                      onLimitOrders={
+                        resumoPendenciasDREInclusoesDeAlimentacao.limite
+                      }
+                      regularOrders={
+                        resumoPendenciasDREInclusoesDeAlimentacao.regular
+                      }
                     />
                   </Link>
                 </div>
@@ -273,10 +291,18 @@ class DashboardDRE extends Component {
                   <Link to="/dre/inversoes-dia-cardapio">
                     <CardPendencia
                       cardTitle={"Inversão de Dia de Cardápio"}
-                      totalOfOrders={100}
-                      priorityOrders={50}
-                      onLimitOrders={25}
-                      regularOrders={25}
+                      totalOfOrders={
+                        resumoPendenciasDREInversaoDeDiaDeCardapio.total
+                      }
+                      priorityOrders={
+                        resumoPendenciasDREInversaoDeDiaDeCardapio.prioritario
+                      }
+                      onLimitOrders={
+                        resumoPendenciasDREInversaoDeDiaDeCardapio.limite
+                      }
+                      regularOrders={
+                        resumoPendenciasDREInversaoDeDiaDeCardapio.regular
+                      }
                     />
                   </Link>
                 </div>
