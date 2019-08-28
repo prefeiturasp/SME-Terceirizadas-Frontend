@@ -16,6 +16,8 @@ class DashboardDREContainer extends Component {
       pendentesListFiltered: [],
       recusadasListFiltered: [],
       canceladasListFiltered:[],
+      resumoPendenciasDREAlteracoesDeCardapio: {},
+      meusDados: [],
 
       solicitations: [
         {
@@ -42,23 +44,19 @@ class DashboardDREContainer extends Component {
       vision_by: [
         {
           nome: "Visão por",
-          uuid: ""
+          uuid: "sem_filtro"
         },
         {
-          nome: "Dia",
-          uuid: "day"
+          nome: "Sem filtro",
+          uuid: "sem_filtro"
         },
         {
           nome: "Semana",
-          uuid: "week"
+          uuid: "daqui_a_7_dias"
         },
         {
           nome: "Mês",
-          uuid: "month"
-        },
-        {
-          nome: "Lote",
-          uuid: "lote"
+          uuid: "daqui_a_30_dias"
         }
       ]
     };
@@ -72,7 +70,8 @@ class DashboardDREContainer extends Component {
       autorizadasList:autorizadas.results,
       pendentesList:pendentes.results,
       autorizadasListFiltered:autorizadas.results,
-      pendentesListFiltered:pendentes.results
+      pendentesListFiltered:pendentes.results,
+      meusDados
     });
   }
 

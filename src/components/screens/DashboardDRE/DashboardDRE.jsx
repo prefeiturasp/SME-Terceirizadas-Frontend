@@ -11,6 +11,8 @@ import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";
+import { getResumoPendenciasDREAlteracoesDeCardapio, getResumoPendenciasDREInclusaoDeAlimentacao } from "../../../services/painelDRE.service";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -30,52 +32,82 @@ class DashboardDRE extends Component {
           nome: "7A IP II IPIRANGA",
           tipo_de_gestao: "TERC TOTAL"
         }
-      ]
+      ],
+      resumoPendenciasDREAlteracoesDeCardapio: {},
+      resumoPendenciasDREInclusoesDeAlimentacao: {},
+      filtroPendencias: "sem_filtro",
+      meusDados: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.filterList = this.filterList.bind(this);
+    this.changeFiltroPendencias = this.changeFiltroPendencias.bind(this);
+  }
+
+  async carregaResumosPendencias(filtroPendencias) {
+    const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
+    const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
+      minhaDRE,
+      filtroPendencias
+    );
+    const resumoPendenciasDREInclusoesDeAlimentacao = await getResumoPendenciasDREInclusaoDeAlimentacao(
+      minhaDRE,
+      filtroPendencias
+    );
+    this.setState({
+      resumoPendenciasDREAlteracoesDeCardapio,
+      resumoPendenciasDREInclusoesDeAlimentacao,
+      filtroPendencias
+    });
+  }
+
+  componentDidMount() {
+    this.carregaResumosPendencias("sem_filtro");
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.autorizadasListFiltered.length !== this.props.autorizadasListFiltered.length)
+    if (
+      prevProps.autorizadasListFiltered.length !==
+      this.props.autorizadasListFiltered.length
+    )
       this.setState({
         autorizadasListFiltered: this.props.autorizadasListFiltered,
         autorizadasList: this.props.autorizadasList
-      } )
+      });
 
-    if (prevProps.pendentesListFiltered.length !== this.props.pendentesListFiltered.length)
-    this.setState({
-      pendentesListFiltered: this.props.pendentesListFiltered,
-      pendentesList: this.props.pendentesList
-    } )
-
+    if (
+      prevProps.pendentesListFiltered.length !==
+      this.props.pendentesListFiltered.length
+    )
+      this.setState({
+        pendentesListFiltered: this.props.pendentesListFiltered,
+        pendentesList: this.props.pendentesList
+      });
   }
 
   filterList(event) {
-
     if (event === undefined) event = { target: { value: "" } };
 
     let autorizadasListFiltered = this.state.autorizadasList;
     autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
       const wordToFilter = event.target.value.toLowerCase();
-      return (
-        item.text.toLowerCase().search(wordToFilter) !== -1
-      );
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
 
     let pendentesListFiltered = this.state.pendentesList;
     pendentesListFiltered = pendentesListFiltered.filter(function(item) {
       const wordToFilter = event.target.value.toLowerCase();
-      return (
-        item.text.toLowerCase().search(wordToFilter) !== -1
-      );
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
 
-    this.setState({autorizadasListFiltered, pendentesListFiltered})
+    this.setState({ autorizadasListFiltered, pendentesListFiltered });
   }
 
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
+  }
+
+  changeFiltroPendencias(filtro) {
+    this.carregaResumosPendencias(filtro);
   }
 
   render() {
@@ -84,10 +116,17 @@ class DashboardDRE extends Component {
       handleSubmit,
       vision_by,
       canceladasList,
-      recusadasList,
+      recusadasList
     } = this.props;
 
-    const { collapsed, lotes, autorizadasListFiltered, pendentesListFiltered  } = this.state;
+    const {
+      collapsed,
+      lotes,
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      resumoPendenciasDREAlteracoesDeCardapio,
+      resumoPendenciasDREInclusoesDeAlimentacao
+    } = this.state;
 
     return (
       <div>
@@ -126,7 +165,11 @@ class DashboardDRE extends Component {
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" onChange={this.filterList}/>
+                  <input
+                    className="input-search"
+                    placeholder="Pesquisar"
+                    onChange={this.filterList}
+                  />
                   <i className="fas fa-search" />
                 </span>
               </div>
@@ -206,7 +249,7 @@ class DashboardDRE extends Component {
                   </div>
                   <div className="offset-6 col-3 text-right my-auto">
                     <LabelAndCombo
-                      onChange={() => {}}
+                      onChange={this.changeFiltroPendencias}
                       placeholder={"Visão por"}
                       options={vision_by}
                     />
@@ -219,10 +262,10 @@ class DashboardDRE extends Component {
                   <Link to="/dre/inclusoes-de-alimentacao">
                     <CardPendencia
                       cardTitle={"Inclusão de Alimentação"}
-                      totalOfOrders={16}
-                      priorityOrders={8}
-                      onLimitOrders={2}
-                      regularOrders={6}
+                      totalOfOrders={resumoPendenciasDREInclusoesDeAlimentacao.total}
+                      priorityOrders={resumoPendenciasDREInclusoesDeAlimentacao.prioritario}
+                      onLimitOrders={resumoPendenciasDREInclusoesDeAlimentacao.limite}
+                      regularOrders={resumoPendenciasDREInclusoesDeAlimentacao.regular}
                     />
                   </Link>
                 </div>
@@ -230,23 +273,31 @@ class DashboardDRE extends Component {
                   <Link to="/dre/inversoes-dia-cardapio">
                     <CardPendencia
                       cardTitle={"Inversão de Dia de Cardápio"}
-                      totalOfOrders={50}
-                      priorityOrders={2}
-                      onLimitOrders={18}
-                      regularOrders={30}
+                      totalOfOrders={100}
+                      priorityOrders={50}
+                      onLimitOrders={25}
+                      regularOrders={25}
                     />
                   </Link>
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                 <Link to="/dre/alteracoes-de-cardapio">
+                  <Link to="/dre/alteracoes-de-cardapio">
                     <CardPendencia
                       cardTitle={"Alteração de Cardápio"}
-                      totalOfOrders={20}
-                      priorityOrders={5}
-                      onLimitOrders={10}
-                      regularOrders={10}
+                      totalOfOrders={
+                        resumoPendenciasDREAlteracoesDeCardapio.total
+                      }
+                      priorityOrders={
+                        resumoPendenciasDREAlteracoesDeCardapio.prioritario
+                      }
+                      onLimitOrders={
+                        resumoPendenciasDREAlteracoesDeCardapio.limite
+                      }
+                      regularOrders={
+                        resumoPendenciasDREAlteracoesDeCardapio.regular
+                      }
                     />
                   </Link>
                 </div>
@@ -254,10 +305,10 @@ class DashboardDRE extends Component {
                   <Link to="/dre/kits-lanche">
                     <CardPendencia
                       cardTitle={"Kit Lanche"}
-                      totalOfOrders={120}
-                      priorityOrders={20}
-                      onLimitOrders={40}
-                      regularOrders={60}
+                      totalOfOrders={100}
+                      priorityOrders={50}
+                      onLimitOrders={25}
+                      regularOrders={25}
                     />
                   </Link>
                 </div>
@@ -266,19 +317,19 @@ class DashboardDRE extends Component {
                 <div className="col-6">
                   <CardPendencia
                     cardTitle={"Pedido Unificado"}
-                    totalOfOrders={2}
-                    priorityOrders={1}
-                    onLimitOrders={0}
-                    regularOrders={1}
+                    totalOfOrders={100}
+                    priorityOrders={50}
+                    onLimitOrders={25}
+                    regularOrders={25}
                   />
                 </div>
                 <div className="col-6">
                   <CardPendencia
                     cardTitle={"Suspensão de Refeição"}
-                    totalOfOrders={47}
-                    priorityOrders={10}
-                    onLimitOrders={7}
-                    regularOrders={30}
+                    totalOfOrders={100}
+                    priorityOrders={50}
+                    onLimitOrders={25}
+                    regularOrders={25}
                   />
                 </div>
               </div>
