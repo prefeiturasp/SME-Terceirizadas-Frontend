@@ -356,6 +356,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     name
                   )
                 }
+                mostrarExplicacao
               />
 
               <hr className="mt-4 mb-4 w-100" />

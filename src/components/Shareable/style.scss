@@ -10,6 +10,10 @@ input::placeholder:not(.input-search) {
   font-size: 12px;
 }
 
+input::placeholder {
+  text-align: left;
+}
+
 textarea {
   min-height: 121px;
 }
@@ -252,7 +256,11 @@ div.caption-choices {
       transform: rotate(0deg) scale(0);
       opacity: 1;
     }
+    &.radio {
+      border-radius: 15px;
+    }
   }
+
 }
 
 .btn-styled {
@@ -279,14 +287,18 @@ div.caption-choices {
     }
   }
   &.btn-success {
+    border-color: $green;
     background-color: $green;
     &:hover {
+      border-color: $green;
       background-color: $green;
     }
   }
   &.btn-outline-success {
     color: $green;
+    border-color: $green;
     &:hover {
+      border-color: $green;
       background-color: white;
       color: $green;
     }
@@ -296,7 +308,7 @@ div.caption-choices {
 .icon-draft-card {
   span {
     i {
-      color: $blue;
+      color: $green;
       cursor: pointer;
       padding: 0 10px;
     }

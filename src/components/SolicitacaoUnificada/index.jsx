@@ -572,7 +572,7 @@ class SolicitacaoUnificada extends Component {
       collapsed
     } = this.state;
     return (
-      <div>
+      <div className="unified-solicitation">
         {loading ? (
           <div>Carregando...</div>
         ) : (
@@ -622,7 +622,7 @@ class SolicitacaoUnificada extends Component {
                       validate={required}
                     />
                   </div>
-                  <div className="form-group col-8">
+                  <div className="form-group col-9">
                     <Field
                       component={LabelAndCombo}
                       name="motivo"
@@ -661,6 +661,18 @@ class SolicitacaoUnificada extends Component {
                     />
                   </div>
                 </div>
+                <hr />
+                <div className="row">
+                  <div className="col-12 pl-0 pr-0 pb-3">
+                    <Field
+                      component={LabelAndInput}
+                      label="Unidades Escolares"
+                      placeholder="Pesquisar"
+                      onChange={this.filterList}
+                      className="form-control"
+                    />
+                  </div>
+                </div>
                 <div
                   ref={this.pedidoMultiploRef}
                   className="col-md-12 pt-2 pb-2"
@@ -675,7 +687,6 @@ class SolicitacaoUnificada extends Component {
                     <span
                       onClick={() => this.handleMultipleOrder()}
                       className="checkbox-custom"
-                      style={{ borderRadius: "15px" }}
                     />{" "}
                     Realizar pedido múltiplo
                   </label>
@@ -731,12 +742,6 @@ class SolicitacaoUnificada extends Component {
                     />
                   )}
                 </Collapse>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Pesquisar"
-                  onChange={this.filterList}
-                />
                 <span ref={this.escolasRef} />
                 <div scrollTop={100} ref="escolas" className="schools-group">
                   {schoolsFiltered.length === 0 && (
@@ -834,7 +839,7 @@ class SolicitacaoUnificada extends Component {
                                           event
                                         )
                                       }
-                                      label="Número de alunos participantes"
+                                      label="Nº de alunos participantes"
                                       validate={
                                         school.checked &&
                                         !multipleOrder && [required]
@@ -958,14 +963,14 @@ class SolicitacaoUnificada extends Component {
                   <BaseButton
                     label="Cancelar"
                     onClick={event => this.cancelForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={ButtonStyle.OutlineSuccess}
                   />
                   <BaseButton
                     label={"Salvar Rascunho"}
                     onClick={handleSubmit(values => this.handleSubmit(values))}
                     className="ml-3"
                     type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={ButtonStyle.OutlineSuccess}
                   />
                   <BaseButton
                     label="Enviar Solicitação"
@@ -973,7 +978,7 @@ class SolicitacaoUnificada extends Component {
                     onClick={handleSubmit(values =>
                       this.handleSubmit({ ...values, status: "DRE_A_VALIDAR" })
                     )}
-                    style={ButtonStyle.Primary}
+                    style={ButtonStyle.Success}
                     className="ml-3"
                   />
                 </div>
