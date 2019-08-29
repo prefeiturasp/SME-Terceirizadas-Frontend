@@ -13,8 +13,6 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
-import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
-import PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
 import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
 import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
@@ -33,6 +31,8 @@ import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapi
 import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
+import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
+import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -46,14 +46,33 @@ import AlteracaoDeCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
+import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
+import PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/RelatorioPage";
 import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
-import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
-import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
-import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
+
+const INVERSAO_CARDAPIO = "inversao-dia-cardapio";
+const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
+const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
+const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
+const PAINEL_CONTROLE = "painel-de-controle";
+const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
+const SOLICITACAO_UNIFICADA = "solicitacao-unificada";
+
+const CODAE = "codae";
+const TERCEIRIZADA = "terceirizada";
+const DRE = "dre";
+const ESCOLA = "escola";
+
+const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+
+const RELATORIO = "relatorio";
+const HISTORICO = "historico";
+const SOLICITACOES = "solicitacoes";
 
 const routesConfig = [
   {
@@ -67,277 +86,277 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/escola/painel-de-controle",
+    path: `/${ESCOLA}/${PAINEL_CONTROLE}`,
     component: DashboardEscolaPage,
     exact: false
   },
   {
-    path: "/escola/status-solicitacoes",
+    path: `/${ESCOLA}/status-solicitacoes`,
     component: StatusSolicitacoesPage,
     exact: false
   },
   {
-    path: "/escola/inclusao-de-alimentacao",
+    path: `/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
     exact: false
   },
   {
-    path: "/escola/alteracao-de-cardapio",
+    path: `/${ESCOLA}/${ALTERACAO_CARDAPIO}`,
     component: AlteracaoDeCardapioPage,
     exact: false
   },
   {
-    path: "/escola/solicitacao-de-kit-lanche",
+    path: `/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`,
     component: SolicitacaoDeKitLanchePage,
     exact: false
   },
   {
-    path: "/escola/inversao-de-dia-de-cardapio",
+    path: `/${ESCOLA}/${INVERSAO_CARDAPIO}`,
     component: InversaoDeDiaDeCardapioPage,
     exact: false
   },
   {
-    path: "/escola/suspensao-de-alimentacao",
+    path: `/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`,
     component: SuspensaoDeAlimentacaoPage,
     exact: false
   },
   {
-    path: "/dre/painel-de-controle",
+    path: `/${DRE}/${PAINEL_CONTROLE}`,
     component: DashboardDREPage,
     exact: false
   },
   {
-    path: "/dre/solicitacoes-autorizadas",
+    path: `/${DRE}/${SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
     exact: false
   },
   {
-    path: "/dre/solicitacoes-pendentes",
+    path: `/${DRE}/solicitacoes-pendentes`,
     component: StatusSolicitacoesPendentesDREPage,
     exact: false
   },
   {
-    path: "/dre/inclusoes-de-alimentacao/relatorio",
+    path: `/${DRE}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioDREPage,
     exact: false
   },
   {
-    path: "/dre/inclusoes-de-alimentacao",
+    path: `/${DRE}/${INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
     exact: false
   },
   {
-    path: "/dre/inversoes-dia-cardapio/relatorio",
+    path: `/${DRE}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
     component: InversaoDiaCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: "/dre/inversoes-dia-cardapio",
+    path: `/${DRE}/${INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioDREPage,
     exact: false
   },
   {
-    path: "/dre/kits-lanche/relatorio",
+    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
     component: KitsLancheRelatorioPage,
     exact: false
   },
   {
-    path: "/dre/kits-lanche",
+    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}`,
     component: KitsLancheOrdersPage,
     exact: false
   },
   {
-    path: "/dre/solicitacao-unificada",
+    path: `/${DRE}/${SOLICITACAO_UNIFICADA}`,
     component: SolicitacaoUnificadaPage,
     exact: false
   },
   {
-    path: "/dre/alteracoes-de-cardapio/relatorio",
+    path: `/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: "/codae/inclusoes-de-alimentacao/relatorio",
+    path: `/${CODAE}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
   },
   {
-    path: "/codae/inclusoes-de-alimentacao",
+    path: `/${CODAE}/${INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
     exact: false
   },
   {
-    path: "/codae/alteracoes-de-cardapio/relatorio",
+    path: `/${CODAE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioCODAEPage,
     exact: false
   },
   {
-    path: "/codae/alteracoes-de-cardapio",
+    path: `/${CODAE}/${ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false
   },
   {
-    path: "/codae/inversoes-dia-cardapio/relatorio",
+    path: `/${CODAE}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
     component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
     exact: false
   },
   {
-    path: "/codae/inversoes-dia-cardapio",
+    path: `/${CODAE}/${INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false
   },
   {
-    path: "/terceirizada/inversoes-dia-cardapio/relatorio",
+    path: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
     component: PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/inversoes-dia-cardapio",
+    path: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false
   },
   {
-    path: "/dre/alteracoes-de-cardapio",
+    path: `/${DRE}/${ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false
   },
   {
-    path: "/dre/alteracoes-de-cardapio/relatorio",
+    path: `/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: "/codae/solicitacao-unificada/historico",
+    path: `/${CODAE}/${SOLICITACAO_UNIFICADA}/${HISTORICO}`,
     component: UnifiedSolicitationHistoricPage,
     exact: false
   },
   {
-    path: "/terceirizada/painel-de-controle",
+    path: `/${TERCEIRIZADA}/${PAINEL_CONTROLE}`,
     component: DashboardTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/solicitacoes",
+    path: `/${TERCEIRIZADA}/${SOLICITACOES}`,
     component: StatusSolicitacoesTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/inclusoes-de-alimentacao/relatorio",
+    path: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/inclusoes-de-alimentacao",
+    path: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/kits-lanche/relatorio",
+    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
     component: KitsLancheRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/kits-lanche",
+    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
     component: KitsLancheOrdersTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/suspensoes-de-alimentacao/relatorio",
+    path: `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/${RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
   {
-    path: "/terceirizada/suspensoes-de-alimentacao",
+    path: `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false
   },
   {
-    path: "/configuracoes/cadastros/lotes-cadastrados",
+    path: `/configuracoes/cadastros/lotes-cadastrados`,
     component: LotesCadastradosPage,
     exact: false
   },
   {
-    path: "/configuracoes/cadastros/editais-cadastrados",
+    path: `/configuracoes/cadastros/editais-cadastrados`,
     component: EditaisCadastradosPage,
     exact: true
   },
   {
-    path: "/configuracoes/cadastros/lote",
+    path: `/configuracoes/cadastros/lote`,
     component: CadastroLotePage,
     exact: false
   },
   {
-    path: "/configuracoes/cadastros/empresas-cadastradas",
+    path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false
   },
   {
-    path: "/configuracoes/cadastros/empresa",
+    path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false
   },
   {
-    path: "/configuracoes/cadastros/editais-contratos",
+    path: `/configuracoes/cadastros/editais-contratos`,
     component: EditaisContratosPage,
     exact: true
   },
   {
-    path: "/configuracoes/cadastros",
+    path: `/configuracoes/cadastros`,
     component: CadastrosPage,
     exact: false
   },
   {
-    path: "/configuracoes/mensagem",
+    path: `/configuracoes/mensagem`,
     component: MensagemPage,
     exact: false
   },
   {
-    path: "/configuracoes/permissoes",
+    path: `/configuracoes/permissoes`,
     component: PermissionsPage,
     exact: false
   },
   {
-    path: "/permission-root/permissions/:type/:subtype",
+    path: `/permission-root/permissions/:type/:subtype`,
     component: PermissionsCheckBoxesPage,
     exact: null
   },
   {
-    path: "/configuracoes",
+    path: `/configuracoes`,
     component: ConfigEmailPage,
     exact: false
   },
   {
-    path: "/codae/solicitacoes",
+    path: `/${CODAE}/${SOLICITACOES}`,
     component: StatusSolicitacoesCODAEPage,
     exact: false
   },
   {
-    path: "/codae/kits-lanche/relatorio",
+    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
     component: KitsLancheRelatorioCodaePage,
     exact: false
   },
   {
-    path: "/codae/kits-lanche",
+    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}`,
     component: KitLancheOrdersPageCodae,
     exact: true
   },
   {
-    path: "/codae/painel-de-controle",
+    path: `/${CODAE}/${PAINEL_CONTROLE}`,
     component: DashboardCODAEPage,
     exact: false
   },
   {
-    path: "/codae/detalhe-dashboard-dre",
+    path: `/${CODAE}/detalhe-dashboard-dre`,
     component: DashboardCODAEDetailDRE,
     exact: false
   },
   {
-    path: "/terceirizada/alteracoes-de-cardapio/relatorio",
+    path: `/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: "/terceirizada/alteracoes-de-cardapio",
+    path: `/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
   }
