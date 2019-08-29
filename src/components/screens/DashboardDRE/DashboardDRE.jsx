@@ -382,17 +382,6 @@ class DashboardDRE extends Component {
                   />
                 </div>
               </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Lotes"}
-                    totalOfOrders={47}
-                    priorityOrders={10}
-                    onLimitOrders={7}
-                    regularOrders={30}
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </form>
