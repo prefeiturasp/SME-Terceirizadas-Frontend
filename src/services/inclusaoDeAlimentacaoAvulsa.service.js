@@ -413,3 +413,18 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
       return error.json();
     });
 };
+
+export const getCODAEPedidosInclusaoAvulsoPendentes = filtroAplicado => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

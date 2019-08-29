@@ -9,7 +9,10 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
 } from "../../../configs/RoutesConfig";
-import { getResumoPendenciasInversoesCardapio } from "../../../services/painelCODAE.service";
+import {
+  getResumoPendenciasInversoesCardapio,
+  getResumoPendenciasInclusaoAlimentacao
+} from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
@@ -17,22 +20,34 @@ class VisaoGeral extends Component {
     super(props);
     this.state = {
       resumoPendenciasInversoesCardapio: {
-        total: 1,
-        limite: 1,
-        prioritario: 1,
-        regular: 1
+        total: "...",
+        limite: "...",
+        prioritario: "...",
+        regular: "..."
+      },
+      resumoPendenciasInclusaoAlimentacao: {
+        total: "...",
+        limite: "...",
+        prioritario: "...",
+        regular: "..."
       }
     };
   }
 
   async componentDidMount() {
     const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
-    console.log(resumoPendenciasInversoesCardapio, "xxxxxxxxxxxxxx");
-    this.setState({ resumoPendenciasInversoesCardapio });
+    const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao();
+    this.setState({
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasInclusaoAlimentacao
+    });
   }
 
   render() {
-    const { resumoPendenciasInversoesCardapio } = this.state;
+    const {
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasInclusaoAlimentacao
+    } = this.state;
     return (
       <div>
         <div className="row">
@@ -62,10 +77,10 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
               <CardPendencia
                 cardTitle={"Inclusão de alimentação"}
-                totalOfOrders={16}
-                priorityOrders={8}
-                onLimitOrders={2}
-                regularOrders={6}
+                totalOfOrders={resumoPendenciasInclusaoAlimentacao.total}
+                priorityOrders={resumoPendenciasInclusaoAlimentacao.prioritario}
+                onLimitOrders={resumoPendenciasInclusaoAlimentacao.limite}
+                regularOrders={resumoPendenciasInclusaoAlimentacao.regular}
               />
             </Link>
           </div>
