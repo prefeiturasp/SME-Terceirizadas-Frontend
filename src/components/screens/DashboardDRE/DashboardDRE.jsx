@@ -46,7 +46,9 @@ class DashboardDRE extends Component {
       resumoPendenciasDREKitLanche: {},
       resumoPendenciasDRESuspensaoDeAlimentacao: {},
       filtroPendencias: "sem_filtro",
-      meusDados: []
+      meusDados: [],
+      loadingAutorizadas: true,
+      loadingPendentes: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.filterList = this.filterList.bind(this);
@@ -104,6 +106,14 @@ class DashboardDRE extends Component {
         pendentesListFiltered: this.props.pendentesListFiltered,
         pendentesList: this.props.pendentesList
       });
+
+    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas){
+      this.setState({loadingAutorizadas: this.props.loadingAutorizadas})
+    };
+
+    if (prevProps.loadingPendentes !== this.props.loadingPendentes){
+      this.setState({loadingPendentes: this.props.loadingPendentes})
+    }
   }
 
   filterList(event) {
@@ -150,7 +160,9 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDRESuspensaoDeAlimentacao,
-      resumoPendenciasDREKitLanche
+      resumoPendenciasDREKitLanche,
+      loadingAutorizadas,
+      loadingPendentes
     } = this.state;
 
     return (
@@ -211,6 +223,7 @@ class DashboardDRE extends Component {
                     solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
                     href={"/dre/solicitacoes-autorizadas"}
+                    loading={loadingAutorizadas}
                   />
                 </div>
                 <div className="col-6">
@@ -220,6 +233,7 @@ class DashboardDRE extends Component {
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes-pendentes"}
+                    loading={loadingPendentes}
                   />
                 </div>
               </div>

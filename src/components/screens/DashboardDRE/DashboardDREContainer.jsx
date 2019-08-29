@@ -18,6 +18,8 @@ class DashboardDREContainer extends Component {
       canceladasListFiltered:[],
       resumoPendenciasDREAlteracoesDeCardapio: {},
       meusDados: [],
+      loadingAutorizadas: true,
+      loadingPendentes: true,
 
       solicitations: [
         {
@@ -71,7 +73,9 @@ class DashboardDREContainer extends Component {
       pendentesList:pendentes.results,
       autorizadasListFiltered:autorizadas.results,
       pendentesListFiltered:pendentes.results,
-      meusDados
+      meusDados,
+      loadingAutorizadas: false,
+      loadingPendentes: false,
     });
   }
 
