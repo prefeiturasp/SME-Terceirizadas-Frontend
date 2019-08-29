@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { SidebarDRE } from "./SidebarDRE";
+import { SidebarEscola } from "./SidebarEscola";
 import "./style.scss";
 
 export class Sidebar extends Component {
@@ -58,7 +58,7 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          {perfil === "escola" && <SidebarDRE />}
+          {perfil === "escola" && <SidebarEscola />}
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">
               <img

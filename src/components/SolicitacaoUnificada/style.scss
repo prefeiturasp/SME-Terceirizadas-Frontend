@@ -210,13 +210,9 @@ table.report-table {
 
   .tabela-escolas {
     display: grid;
-    font-size: 14px;
     grid-template-columns: 8% auto 10% 15% 15% 10%;
     grid-auto-rows: 47px auto;
     border-bottom: 1px solid #353535;
-    &:not(.header-tabela) {
-      color: $blackSubtle;
-    }
 
     div {
       padding: 0.5em;

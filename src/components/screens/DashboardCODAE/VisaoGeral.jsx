@@ -76,15 +76,13 @@ class VisaoGeral extends Component {
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/solicitacoes-unificadas">
-              <CardPendencia
-                cardTitle={"Pedido Unificado"}
-                totalOfOrders={2}
-                priorityOrders={1}
-                onLimitOrders={0}
-                regularOrders={0}
-              />
-            </Link>
+            <CardPendencia
+              cardTitle={"Pedido Unificado"}
+              totalOfOrders={2}
+              priorityOrders={1}
+              onLimitOrders={0}
+              regularOrders={0}
+            />
           </div>
           <div className="col-6">
             <CardPendencia

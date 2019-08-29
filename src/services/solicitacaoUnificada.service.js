@@ -50,7 +50,7 @@ export const inicioPedido = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "PATCH",
+    method: "GET",
     headers: authToken
   })
     .then(res => {
@@ -103,6 +103,22 @@ export const removerSolicitacaoUnificada = async uuid => {
     });
 };
 
+export const getUnifiedSolicitations = async () => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  const url = `${API_URL}/solicitacao-unificada/`;
+  return await fetch(url, OBJ_REQUEST)
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      console.log("Error Kit Lanche: ", error);
+      return {};
+    });
+};
+
 export const motivosSolicitacaoUnificada = () => {
   const url = `${API_URL}/motivos-solicitacao-unificada/`;
   const OBJ_REQUEST = {
@@ -115,92 +131,5 @@ export const motivosSolicitacaoUnificada = () => {
     })
     .catch(error => {
       console.log(error);
-    });
-};
-
-export const getSolicitacaoUnificada = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
-
-export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const CODAEAprovaPedidoDRE = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/codae-aprova-pedido/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
-
-export const TerceirizadaAprovaPedidoDRE = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/terceirizada-toma-ciencia/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
     });
 };

@@ -1,5 +1,3 @@
-@import "../../../styles/variables.scss";
-
 .progressbar-main-title {
   font-size: 10px;
   color: #353535;
@@ -34,18 +32,18 @@
     text-align: center;
     z-index: 0;
     &.active {
-      color: $green !important;
+      color: green;
       &:before {
         font-family: "Font Awesome 5 Free";
         font-size: 18px;
         content: "\f00c";
         font-weight: 900;
-        background-color: $green !important;
+        background-color: #4f9d40;
         color: #fff;
-        border-color: $green !important;
+        border-color: green;
       }
       + li:after {
-        background-color: $green !important;
+        background-color: green;
       }
     }
     &:first-child:after {
@@ -74,13 +72,13 @@
       z-index: -1;
     }
     &.disapproved {
-      color: $red;
+      color: #C9251B;
       &:before {
         font-family: "Font Awesome 5 Free";
         font-size: 18px;
         content: "\f05e";
         font-weight: 900;
-        background-color: $red;
+        background-color: #C9251B;
         color: #fff;
       }
     }

@@ -49,15 +49,11 @@ import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizad
 import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
 import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
+import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
-import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/RelatorioPage";
-
 
 const routesConfig = [
   {
@@ -211,13 +207,8 @@ const routesConfig = [
     exact: false
   },
   {
-    path: "/codae/solicitacoes-unificadas/relatorio",
-    component: SolicitacaoUnificadaRelatorioCODAEPage,
-    exact: false
-  },
-  {
-    path: "/codae/solicitacoes-unificadas",
-    component: PainelPedidosSolicitacaoUnificadaCODAEPage,
+    path: "/codae/solicitacao-unificada/historico",
+    component: UnifiedSolicitationHistoricPage,
     exact: false
   },
   {
@@ -258,16 +249,6 @@ const routesConfig = [
   {
     path: "/terceirizada/suspensoes-de-alimentacao",
     component: PainelPedidosSuspensaoAlimentacao,
-    exact: false
-  },
-  {
-    path: "/terceirizada/solicitacoes-unificadas/relatorio",
-    component: SolicitacaoUnificadaRelatorioTerceirizadaPage,
-    exact: false
-  },
-  {
-    path: "/terceirizada/solicitacoes-unificadas",
-    component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false
   },
   {
