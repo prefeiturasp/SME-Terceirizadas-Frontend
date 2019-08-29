@@ -16,10 +16,10 @@ export const CardStatusDeSolicitacao = props => {
       <div className="card-title-status">
         <i className={"fas " + icon} />
         {cardTitle}
-        {loading ? (<img
+        {loading && <img
                         src="/assets/image/ajax-loader.gif"
                         alt="ajax-loader"
-                      />) : (<span></span>)}
+                      />}
       </div>
       <hr />
       {solicitations.slice(0, 3).map((solicitation, key) => {
