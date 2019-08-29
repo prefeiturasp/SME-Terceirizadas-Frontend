@@ -55,24 +55,24 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 
-const INVERSAO_CARDAPIO = "inversao-dia-cardapio";
-const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
-const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
-const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
-const PAINEL_CONTROLE = "painel-de-controle";
-const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
-const SOLICITACAO_UNIFICADA = "solicitacao-unificada";
+export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
+export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
+export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
+export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
+export const PAINEL_CONTROLE = "painel-de-controle";
+export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
+export const SOLICITACAO_UNIFICADA = "solicitacao-unificada";
 
-const CODAE = "codae";
-const TERCEIRIZADA = "terceirizada";
-const DRE = "dre";
-const ESCOLA = "escola";
+export const CODAE = "codae";
+export const TERCEIRIZADA = "terceirizada";
+export const DRE = "dre";
+export const ESCOLA = "escola";
 
-const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 
-const RELATORIO = "relatorio";
-const HISTORICO = "historico";
-const SOLICITACOES = "solicitacoes";
+export const RELATORIO = "relatorio";
+export const HISTORICO = "historico";
+export const SOLICITACOES = "solicitacoes";
 
 const routesConfig = [
   {

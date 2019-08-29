@@ -1,5 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import {
+  CODAE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  ALTERACAO_CARDAPIO,
+  SUSPENSAO_ALIMENTACAO,
+  SOLICITACAO_UNIFICADA
+} from "../../../configs/RoutesConfig";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
@@ -17,7 +26,7 @@ class VisaoGeral extends Component {
             />
           </div>
           <div className="col-6">
-            <Link to="/codae/inversoes-dia-cardapio">
+            <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Inversão de dias de cardápio"}
                 totalOfOrders={50}
@@ -30,9 +39,9 @@ class VisaoGeral extends Component {
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/inclusoes-de-alimentacao">
+            <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
               <CardPendencia
-                cardTitle={"Inclusão de Refeição"}
+                cardTitle={"Inclusão de alimentação"}
                 totalOfOrders={16}
                 priorityOrders={8}
                 onLimitOrders={2}
@@ -41,7 +50,7 @@ class VisaoGeral extends Component {
             </Link>
           </div>
           <div className="col-6">
-            <Link to="/codae/kits-lanche">
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
               <CardPendencia
                 cardTitle={"Kit Lanche"}
                 totalOfOrders={120}
@@ -54,7 +63,7 @@ class VisaoGeral extends Component {
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/alteracoes-de-cardapio">
+            <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Alteração de Cardápio"}
                 totalOfOrders={20}
@@ -65,24 +74,28 @@ class VisaoGeral extends Component {
             </Link>
           </div>
           <div className="col-6">
-            <CardPendencia
-              cardTitle={"Suspensão de Refeição"}
-              totalOfOrders={47}
-              priorityOrders={10}
-              onLimitOrders={7}
-              regularOrders={30}
-            />
+            <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
+              <CardPendencia
+                cardTitle={"Suspensão de Refeição"}
+                totalOfOrders={47}
+                priorityOrders={10}
+                onLimitOrders={7}
+                regularOrders={30}
+              />
+            </Link>
           </div>
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <CardPendencia
-              cardTitle={"Pedido Unificado"}
-              totalOfOrders={2}
-              priorityOrders={1}
-              onLimitOrders={0}
-              regularOrders={0}
-            />
+            <Link to={`/${CODAE}/${SOLICITACAO_UNIFICADA}`}>
+              <CardPendencia
+                cardTitle={"Pedido Unificado"}
+                totalOfOrders={2}
+                priorityOrders={1}
+                onLimitOrders={0}
+                regularOrders={0}
+              />
+            </Link>
           </div>
           <div className="col-6">
             <CardPendencia
