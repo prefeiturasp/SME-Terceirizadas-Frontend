@@ -53,7 +53,6 @@ import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLanche
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import UnifiedSolicitationHistoricPage from "../pages/UnifiedSolicitationHistoricPage";
 
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
@@ -223,11 +222,6 @@ const routesConfig = [
   {
     path: `/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioDREPage,
-    exact: false
-  },
-  {
-    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${HISTORICO}`,
-    component: UnifiedSolicitationHistoricPage,
     exact: false
   },
   {
