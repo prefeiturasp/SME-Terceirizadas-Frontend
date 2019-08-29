@@ -224,7 +224,7 @@ class DashboardDRE extends Component {
                 </div>
               </div>
               <div className="row pt-3">
-                <div className="col-6">
+                {recusadasList.length > 0 ? (<div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
@@ -232,8 +232,9 @@ class DashboardDRE extends Component {
                     icon={"fa-ban"}
                     href={"/dre/solicitacoes-recusadas"}
                   />
-                </div>
-                <div className="col-6">
+                </div>) : (<div></div>)}
+
+                {canceladasList.length > 0  ? (<div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
@@ -241,7 +242,8 @@ class DashboardDRE extends Component {
                     icon={"fa-times-circle"}
                     href={"/dre/solicitacoes-canceladas"}
                   />
-                </div>
+                </div>) : (<div></div>)}
+
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
