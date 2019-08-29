@@ -13,12 +13,20 @@ export const CardPendencia = props => {
   } = props;
   return (
     <div className="card card-pendency">
-      <div className="card-title">{cardTitle}</div>
+      {totalOfOrders ? (<div className="card-title">{cardTitle}</div>) : <div className="card-title">{cardTitle } <img
+                        src="/assets/image/ajax-loader.gif"
+                        alt="ajax-loader"
+                      /></div>}
+
       <hr />
       <div className="row">
         <div className="col-4">
           <div className="order-box">
+            { totalOfOrders ? (
             <span className="number">{totalOfOrders}</span>
+            ) : (
+              <span className="number">{0}</span>
+            )}
             <span className="order">pedidos</span>
           </div>
         </div>

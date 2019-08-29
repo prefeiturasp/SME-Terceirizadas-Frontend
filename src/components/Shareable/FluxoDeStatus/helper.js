@@ -25,6 +25,28 @@ export const fluxoPartindoEscola = [
   }
 ];
 
+export const fluxoPartindoDRE = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE autorizou",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "Terceirizada tomou ciência",
+    status: "",
+    criado_em: "",
+    usuario: null
+  }
+];
+
+
 
 export const fluxoInformativoPartindoEscola = [
   {

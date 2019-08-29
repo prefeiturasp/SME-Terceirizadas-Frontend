@@ -18,29 +18,9 @@ class DashboardDREContainer extends Component {
       canceladasListFiltered:[],
       resumoPendenciasDREAlteracoesDeCardapio: {},
       meusDados: [],
-
-      solicitations: [
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "11:19"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-          date: "Qua 11:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        }
-      ],
+      loadingAutorizadas: true,
+      loadingPendentes: true,
+      solicitations: [],
       vision_by: [
         {
           nome: "Visão por",
@@ -71,7 +51,9 @@ class DashboardDREContainer extends Component {
       pendentesList:pendentes.results,
       autorizadasListFiltered:autorizadas.results,
       pendentesListFiltered:pendentes.results,
-      meusDados
+      meusDados,
+      loadingAutorizadas: false,
+      loadingPendentes: false,
     });
   }
 

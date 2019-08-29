@@ -10,12 +10,16 @@ export const CARD_TYPE_ENUM = {
 };
 
 export const CardStatusDeSolicitacao = props => {
-  const { cardTitle, cardType, solicitations, icon, href } = props;
+  const { cardTitle, cardType, solicitations, icon, href, loading } = props;
   return (
     <div className={"card card-panel " + cardType}>
       <div className="card-title-status">
         <i className={"fas " + icon} />
         {cardTitle}
+        {loading ? (<img
+                        src="/assets/image/ajax-loader.gif"
+                        alt="ajax-loader"
+                      />) : (<span></span>)}
       </div>
       <hr />
       {solicitations.slice(0, 3).map((solicitation, key) => {
