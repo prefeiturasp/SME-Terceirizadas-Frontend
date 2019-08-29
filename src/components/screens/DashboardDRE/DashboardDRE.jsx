@@ -15,7 +15,8 @@ import {
   getResumoPendenciasDREAlteracoesDeCardapio,
   getResumoPendenciasDREInclusaoDeAlimentacao,
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
-  getResumoPendenciasDREKitLanche
+  getResumoPendenciasDREKitLanche,
+  getResumoPendenciasDRESuspensaoDeAlimentacao
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
@@ -42,6 +43,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInclusoesDeAlimentacao: {},
       resumoPendenciasDREInversaoDeDiaDeCardapio: {},
       resumoPendenciasDREKitLanche: {},
+      resumoPendenciasDRESuspensaoDeAlimentacao: {},
       filtroPendencias: "sem_filtro",
       meusDados: []
     };
@@ -66,11 +68,15 @@ class DashboardDRE extends Component {
     const resumoPendenciasDREKitLanche = await getResumoPendenciasDREKitLanche(
       filtroPendencias
     );
+    const resumoPendenciasDRESuspensaoDeAlimentacao = await getResumoPendenciasDRESuspensaoDeAlimentacao(
+      filtroPendencias
+    );
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDREKitLanche,
+      resumoPendenciasDRESuspensaoDeAlimentacao,
       filtroPendencias
     });
   }
@@ -142,6 +148,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
+      resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDREKitLanche
     } = this.state;
 
@@ -358,11 +365,20 @@ class DashboardDRE extends Component {
                 </div>
                 <div className="col-6">
                   <CardPendencia
+                    priorityOrdersOnly={true}
                     cardTitle={"Suspensão de Refeição"}
-                    totalOfOrders={100}
-                    priorityOrders={50}
-                    onLimitOrders={25}
-                    regularOrders={25}
+                    totalOfOrders={
+                      resumoPendenciasDRESuspensaoDeAlimentacao.total
+                    }
+                    priorityOrders={
+                      resumoPendenciasDRESuspensaoDeAlimentacao.prioritario
+                    }
+                    onLimitOrders={
+                      resumoPendenciasDRESuspensaoDeAlimentacao.limite
+                    }
+                    regularOrders={
+                      resumoPendenciasDRESuspensaoDeAlimentacao.regular
+                    }
                   />
                 </div>
               </div>
