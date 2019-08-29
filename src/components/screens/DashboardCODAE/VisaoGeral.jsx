@@ -1,35 +1,42 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
-  ALTERACAO_CARDAPIO,
-  CODAE,
-  INCLUSAO_ALIMENTACAO,
-  INVERSAO_CARDAPIO,
-  SOLICITACAO_KIT_LANCHE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
-} from "../../../configs/RoutesConfig";
-import {
+  getResumoPendenciasInclusaoAlimentacao,
   getResumoPendenciasInversoesCardapio,
-  getResumoPendenciasInclusaoAlimentacao
+  getResumoPendenciasKitLancheAvulso
 } from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
+import {
+  INVERSAO_CARDAPIO,
+  CODAE,
+  INCLUSAO_ALIMENTACAO,
+  SOLICITACAO_KIT_LANCHE,
+  ALTERACAO_CARDAPIO,
+  SUSPENSAO_ALIMENTACAO,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA
+} from "../../../configs/RoutesConfig";
 
 class VisaoGeral extends Component {
   constructor(props) {
     super(props);
     this.state = {
       resumoPendenciasInversoesCardapio: {
-        total: "...",
-        limite: "...",
-        prioritario: "...",
-        regular: "..."
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
       },
       resumoPendenciasInclusaoAlimentacao: {
-        total: "...",
-        limite: "...",
-        prioritario: "...",
-        regular: "..."
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasKitLancheAvulsa: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
       }
     };
   }
@@ -37,16 +44,19 @@ class VisaoGeral extends Component {
   async componentDidMount() {
     const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
     const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao();
+    const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso();
     this.setState({
       resumoPendenciasInversoesCardapio,
-      resumoPendenciasInclusaoAlimentacao
+      resumoPendenciasInclusaoAlimentacao,
+      resumoPendenciasKitLancheAvulsa
     });
   }
 
   render() {
     const {
       resumoPendenciasInversoesCardapio,
-      resumoPendenciasInclusaoAlimentacao
+      resumoPendenciasInclusaoAlimentacao,
+      resumoPendenciasKitLancheAvulsa
     } = this.state;
     return (
       <div>
@@ -88,10 +98,10 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
               <CardPendencia
                 cardTitle={"Kit Lanche"}
-                totalOfOrders={120}
-                priorityOrders={20}
-                onLimitOrders={40}
-                regularOrders={60}
+                totalOfOrders={resumoPendenciasKitLancheAvulsa.total}
+                priorityOrders={resumoPendenciasKitLancheAvulsa.prioritario}
+                onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}
+                regularOrders={resumoPendenciasKitLancheAvulsa.regular}
               />
             </Link>
           </div>

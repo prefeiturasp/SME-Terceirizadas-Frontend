@@ -1,9 +1,14 @@
-import { filtraNoLimite, filtraPrioritarios, filtraRegular } from "../components/InversaoDeDiaDeCardapio/CODAE/PainelPedidos/helper";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "../components/InversaoDeDiaDeCardapio/CODAE/PainelPedidos/helper";
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 import { getCODAEPedidosInclusaoAvulsoPendentes } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getCODAEPedidosInclusaoContinuosPendentes } from "./inclusaoDeAlimentacaoContinua.service";
 import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
+import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -125,6 +130,36 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
     pedidosPrioritarios = filtraPrioritarios(todasTmp);
     pedidosLimite = filtraNoLimite(todasTmp);
     pedidosRegular = filtraRegular(todasTmp);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+export const getResumoPendenciasKitLancheAvulso = async (
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoesContinuas = await getCODAEPedidosKitLanchePendentes(filtro);
+
+  if (solicitacoesContinuas) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoesContinuas.results);
+    pedidosLimite = filtraNoLimite(solicitacoesContinuas.results);
+    pedidosRegular = filtraRegular(solicitacoesContinuas.results);
   }
 
   resposta.limite = pedidosLimite.length;
