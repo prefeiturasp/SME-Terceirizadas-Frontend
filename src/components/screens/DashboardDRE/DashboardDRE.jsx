@@ -19,6 +19,7 @@ import {
   getResumoPendenciasDRESuspensaoDeAlimentacao
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import { dataAtual } from "../../../helpers/utilities";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -199,7 +200,7 @@ class DashboardDRE extends Component {
               </div>
               <div>
                 <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
+                  Data: <span>{dataAtual()}</span>
                 </p>
               </div>
               <div className="row">
