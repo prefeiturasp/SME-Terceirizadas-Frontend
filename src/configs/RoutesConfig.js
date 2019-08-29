@@ -61,7 +61,7 @@ export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const PAINEL_CONTROLE = "painel-de-controle";
 export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
-export const SOLICITACAO_UNIFICADA = "solicitacao-unificada";
+export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -166,7 +166,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${DRE}/${SOLICITACAO_UNIFICADA}`,
+    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: SolicitacaoUnificadaPage,
     exact: false
   },
@@ -226,7 +226,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACAO_UNIFICADA}/${HISTORICO}`,
+    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${HISTORICO}`,
     component: UnifiedSolicitationHistoricPage,
     exact: false
   },

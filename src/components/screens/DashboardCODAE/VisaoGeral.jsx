@@ -1,18 +1,38 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
+  ALTERACAO_CARDAPIO,
   CODAE,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
-  ALTERACAO_CARDAPIO,
-  SUSPENSAO_ALIMENTACAO,
-  SOLICITACAO_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
 } from "../../../configs/RoutesConfig";
+import { getResumoPendenciasInversoesCardapio } from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      resumoPendenciasInversoesCardapio: {
+        total: 1,
+        limite: 1,
+        prioritario: 1,
+        regular: 1
+      }
+    };
+  }
+
+  async componentDidMount() {
+    const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
+    console.log(resumoPendenciasInversoesCardapio, "xxxxxxxxxxxxxx");
+    this.setState({ resumoPendenciasInversoesCardapio });
+  }
+
   render() {
+    const { resumoPendenciasInversoesCardapio } = this.state;
     return (
       <div>
         <div className="row">
@@ -29,10 +49,10 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Inversão de dias de cardápio"}
-                totalOfOrders={50}
-                priorityOrders={2}
-                onLimitOrders={18}
-                regularOrders={30}
+                totalOfOrders={resumoPendenciasInversoesCardapio.total}
+                priorityOrders={resumoPendenciasInversoesCardapio.prioritario}
+                onLimitOrders={resumoPendenciasInversoesCardapio.limite}
+                regularOrders={resumoPendenciasInversoesCardapio.regular}
               />
             </Link>
           </div>
@@ -87,7 +107,7 @@ class VisaoGeral extends Component {
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to={`/${CODAE}/${SOLICITACAO_UNIFICADA}`}>
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
               <CardPendencia
                 cardTitle={"Pedido Unificado"}
                 totalOfOrders={2}
