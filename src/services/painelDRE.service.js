@@ -26,6 +26,7 @@ import {
 import { getDiretoriaRegionalPedidosDeKitLanche } from "../components/SolicitacaoDeKitLanche/services";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 
+import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 import authService from "./auth";
 
 const authToken = {
@@ -222,6 +223,24 @@ export const getResumoPendenciasDREKitLanche = async (
   resposta.prioritario = pedidosPrioritarios.length;
   resposta.regular = pedidosRegular.length;
   resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
+
+  resposta.limite = solicitacoes.count;
+  resposta.total = resposta.limite;
 
   return resposta;
 };
