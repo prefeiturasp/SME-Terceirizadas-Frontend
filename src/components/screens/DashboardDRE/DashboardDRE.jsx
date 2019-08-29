@@ -19,6 +19,7 @@ import {
   getResumoPendenciasDRESuspensaoDeAlimentacao
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import { dataAtual } from "../../../helpers/utilities";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -45,7 +46,9 @@ class DashboardDRE extends Component {
       resumoPendenciasDREKitLanche: {},
       resumoPendenciasDRESuspensaoDeAlimentacao: {},
       filtroPendencias: "sem_filtro",
-      meusDados: []
+      meusDados: [],
+      loadingAutorizadas: true,
+      loadingPendentes: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.filterList = this.filterList.bind(this);
@@ -103,6 +106,14 @@ class DashboardDRE extends Component {
         pendentesListFiltered: this.props.pendentesListFiltered,
         pendentesList: this.props.pendentesList
       });
+
+    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas){
+      this.setState({loadingAutorizadas: this.props.loadingAutorizadas})
+    };
+
+    if (prevProps.loadingPendentes !== this.props.loadingPendentes){
+      this.setState({loadingPendentes: this.props.loadingPendentes})
+    }
   }
 
   filterList(event) {
@@ -149,7 +160,9 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDRESuspensaoDeAlimentacao,
-      resumoPendenciasDREKitLanche
+      resumoPendenciasDREKitLanche,
+      loadingAutorizadas,
+      loadingPendentes
     } = this.state;
 
     return (
@@ -199,7 +212,7 @@ class DashboardDRE extends Component {
               </div>
               <div>
                 <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
+                  Data: <span>{dataAtual()}</span>
                 </p>
               </div>
               <div className="row">
@@ -210,6 +223,7 @@ class DashboardDRE extends Component {
                     solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
                     href={"/dre/solicitacoes-autorizadas"}
+                    loading={loadingAutorizadas}
                   />
                 </div>
                 <div className="col-6">
@@ -219,11 +233,12 @@ class DashboardDRE extends Component {
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
                     href={"/dre/solicitacoes-pendentes"}
+                    loading={loadingPendentes}
                   />
                 </div>
               </div>
               <div className="row pt-3">
-                <div className="col-6">
+                {recusadasList.length > 0 ? (<div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
@@ -231,8 +246,9 @@ class DashboardDRE extends Component {
                     icon={"fa-ban"}
                     href={"/dre/solicitacoes-recusadas"}
                   />
-                </div>
-                <div className="col-6">
+                </div>) : (<div></div>)}
+
+                {canceladasList.length > 0  ? (<div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
@@ -240,7 +256,8 @@ class DashboardDRE extends Component {
                     icon={"fa-times-circle"}
                     href={"/dre/solicitacoes-canceladas"}
                   />
-                </div>
+                </div>) : (<div></div>)}
+
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
@@ -379,17 +396,6 @@ class DashboardDRE extends Component {
                     regularOrders={
                       resumoPendenciasDRESuspensaoDeAlimentacao.regular
                     }
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Lotes"}
-                    totalOfOrders={47}
-                    priorityOrders={10}
-                    onLimitOrders={7}
-                    regularOrders={30}
                   />
                 </div>
               </div>
