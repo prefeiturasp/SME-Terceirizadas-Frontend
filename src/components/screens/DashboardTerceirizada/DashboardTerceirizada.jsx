@@ -256,13 +256,15 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Pedido Unificado"}
-                      totalOfOrders={2}
-                      priorityOrders={1}
-                      onLimitOrders={0}
-                      regularOrders={1}
-                    />
+                    <Link to="/terceirizada/solicitacoes-unificadas">
+                      <CardPendencia
+                        cardTitle={"Solicitação Unificada"}
+                        totalOfOrders={2}
+                        priorityOrders={1}
+                        onLimitOrders={0}
+                        regularOrders={1}
+                      />
+                    </Link>
                   </div>
                   <div className="col-6">
                     <Link to="/terceirizada/suspensoes-de-alimentacao">

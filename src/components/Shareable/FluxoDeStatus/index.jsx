@@ -1,6 +1,7 @@
 import React from "react";
 import {
   fluxoPartindoEscola,
+  fluxoPartindoDRE,
   tipoDeStatus,
   fluxoInformativoPartindoEscola
 } from "./helper";
@@ -11,6 +12,8 @@ export const FluxoDeStatus = props => {
   const fluxo =
     tipoDeFluxo === "informativo"
       ? fluxoInformativoPartindoEscola
+      : tipoDeFluxo === "partindoDRE"
+      ? fluxoPartindoDRE
       : fluxoPartindoEscola;
   return (
     <div className="w-100">
