@@ -145,7 +145,6 @@ export const getSuspensaoDeAlimentacaoUUID = uuid => {
     });
 };
 
-
 export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
@@ -165,3 +164,21 @@ export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
     });
 };
 
+export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/tomados_ciencia/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

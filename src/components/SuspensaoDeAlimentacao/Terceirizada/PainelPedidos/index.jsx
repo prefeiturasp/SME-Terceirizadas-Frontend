@@ -5,14 +5,20 @@ import {
   CardInversaoPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import { getSuspensoesDeAlimentacaoInformadas } from "../../../../services/suspensaoDeAlimentacao.service.js";
+import {
+  getSuspensoesDeAlimentacaoInformadas,
+  getSuspensaoDeAlimentacaoTomadaCiencia
+} from "../../../../services/suspensaoDeAlimentacao.service.js";
+import CardHistorico from "./CardHistorico";
+import { formatarPedidos } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
       solicitacoesCarregadas: 0,
-      todasSolicitacoes: []
+      todasSolicitacoes: [],
+      todasSolicitacoesTomadaCiencia: []
     };
   }
 
@@ -28,12 +34,28 @@ class PainelPedidos extends Component {
     });
   }
 
+  filtrarSolicitacoesTomadasCiencia() {
+    let todasSolicitacoesTomadaCiencia = [];
+    this.setState({ solicitacoesCarregadas: 0 });
+    getSuspensaoDeAlimentacaoTomadaCiencia().then(response => {
+      todasSolicitacoesTomadaCiencia = response.data.results;
+      this.setState({
+        todasSolicitacoesTomadaCiencia
+      });
+    });
+  }
+
   componentDidMount() {
+    this.filtrarSolicitacoesTomadasCiencia();
     this.filtrar();
   }
 
   render() {
-    const { solicitacoesCarregadas, todasSolicitacoes } = this.state;
+    const {
+      solicitacoesCarregadas,
+      todasSolicitacoes,
+      todasSolicitacoesTomadaCiencia
+    } = this.state;
 
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
     return (
@@ -62,6 +84,19 @@ class PainelPedidos extends Component {
                   />
                 </div>
               </div>
+              {todasSolicitacoesTomadaCiencia.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardHistorico
+                      pedidos={formatarPedidos(todasSolicitacoesTomadaCiencia)}
+                      ultimaColunaLabel={"Data(s)"}
+                      titulo={
+                        "Histórico de Suspensão de Alimentações Tomadas Ciência"
+                      }
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </form>
         )}
