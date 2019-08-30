@@ -1,20 +1,22 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
-  getResumoPendenciasInclusaoAlimentacao,
-  getResumoPendenciasInversoesCardapio,
-  getResumoPendenciasKitLancheAvulso
-} from "../../../services/painelCODAE.service";
-import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
-import {
-  INVERSAO_CARDAPIO,
+  ALTERACAO_CARDAPIO,
   CODAE,
   INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
-  ALTERACAO_CARDAPIO,
-  SUSPENSAO_ALIMENTACAO,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
 } from "../../../configs/RoutesConfig";
+import {
+  getResumoPendenciasInclusaoAlimentacao,
+  getResumoPendenciasInversoesCardapio,
+  getResumoPendenciasKitLancheAvulso,
+  getResumoPendenciasKitLancheUnificado,
+  getResumoPendenciasAlteracaoCardapio
+} from "../../../services/painelCODAE.service";
+import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
   constructor(props) {
@@ -37,6 +39,18 @@ class VisaoGeral extends Component {
         limite: 0,
         prioritario: 0,
         regular: 0
+      },
+      resumoPendenciasKitLancheUnificado: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasAlteracaoCardapio: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
       }
     };
   }
@@ -45,10 +59,14 @@ class VisaoGeral extends Component {
     const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
     const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao();
     const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso();
+    const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado();
+    const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio();
     this.setState({
       resumoPendenciasInversoesCardapio,
       resumoPendenciasInclusaoAlimentacao,
-      resumoPendenciasKitLancheAvulsa
+      resumoPendenciasKitLancheAvulsa,
+      resumoPendenciasKitLancheUnificado,
+      resumoPendenciasAlteracaoCardapio
     });
   }
 
@@ -56,19 +74,23 @@ class VisaoGeral extends Component {
     const {
       resumoPendenciasInversoesCardapio,
       resumoPendenciasInclusaoAlimentacao,
-      resumoPendenciasKitLancheAvulsa
+      resumoPendenciasKitLancheAvulsa,
+      resumoPendenciasKitLancheUnificado,
+      resumoPendenciasAlteracaoCardapio
     } = this.state;
     return (
       <div>
         <div className="row">
           <div className="col-6">
-            <CardPendencia
-              cardTitle={"DREs"}
-              totalOfOrders={255}
-              priorityOrders={25}
-              onLimitOrders={60}
-              regularOrders={170}
-            />
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+              <CardPendencia
+                cardTitle={"Pedido Unificado"}
+                totalOfOrders={resumoPendenciasKitLancheUnificado.total}
+                priorityOrders={resumoPendenciasKitLancheUnificado.prioritario}
+                onLimitOrders={resumoPendenciasKitLancheUnificado.limite}
+                regularOrders={resumoPendenciasKitLancheUnificado.regular}
+              />
+            </Link>
           </div>
           <div className="col-6">
             <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
@@ -111,10 +133,10 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Alteração de Cardápio"}
-                totalOfOrders={20}
-                priorityOrders={5}
-                onLimitOrders={10}
-                regularOrders={10}
+                totalOfOrders={resumoPendenciasAlteracaoCardapio.total}
+                priorityOrders={resumoPendenciasAlteracaoCardapio.prioritario}
+                onLimitOrders={resumoPendenciasAlteracaoCardapio.limite}
+                regularOrders={resumoPendenciasAlteracaoCardapio.regular}
               />
             </Link>
           </div>
@@ -128,28 +150,6 @@ class VisaoGeral extends Component {
                 regularOrders={30}
               />
             </Link>
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-6">
-            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
-              <CardPendencia
-                cardTitle={"Pedido Unificado"}
-                totalOfOrders={2}
-                priorityOrders={1}
-                onLimitOrders={0}
-                regularOrders={0}
-              />
-            </Link>
-          </div>
-          <div className="col-6">
-            <CardPendencia
-              cardTitle={"Lotes"}
-              totalOfOrders={47}
-              priorityOrders={10}
-              onLimitOrders={7}
-              regularOrders={30}
-            />
           </div>
         </div>
       </div>
