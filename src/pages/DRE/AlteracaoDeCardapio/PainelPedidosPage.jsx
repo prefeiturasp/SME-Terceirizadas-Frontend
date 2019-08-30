@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/AlteracaoDeCardapio/DRE/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { DRE, ALTERACAO_CARDAPIO } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/dre/alteracoes-de-cardapio",
+  href: `/${DRE}/${ALTERACAO_CARDAPIO}`,
   titulo: "Alterações de Cardápio"
 };
 

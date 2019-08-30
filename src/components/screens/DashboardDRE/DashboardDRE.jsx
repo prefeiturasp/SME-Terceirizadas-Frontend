@@ -21,6 +21,7 @@ import {
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { dataAtual } from "../../../helpers/utilities";
+import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/RoutesConfig";
 
 class DashboardDRE extends Component {
   constructor(props) {
@@ -307,7 +308,7 @@ class DashboardDRE extends Component {
               <div className="pt-3" />
               <div className="row">
                 <div className="col-6">
-                  <Link to="/dre/inclusoes-de-alimentacao">
+                  <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
                     <CardPendencia
                       cardTitle={"Inclusão de Alimentação"}
                       totalOfOrders={
@@ -326,7 +327,7 @@ class DashboardDRE extends Component {
                   </Link>
                 </div>
                 <div className="col-6">
-                  <Link to="/dre/inversoes-dia-cardapio">
+                  <Link to={`/${DRE}/${INVERSAO_CARDAPIO}`}>
                     <CardPendencia
                       cardTitle={"Inversão de Dia de Cardápio"}
                       totalOfOrders={
@@ -347,7 +348,7 @@ class DashboardDRE extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-6">
-                  <Link to="/dre/alteracoes-de-cardapio">
+                  <Link to={`/${DRE}/${ALTERACAO_CARDAPIO}`}>
                     <CardPendencia
                       cardTitle={"Alteração de Cardápio"}
                       totalOfOrders={
@@ -366,7 +367,7 @@ class DashboardDRE extends Component {
                   </Link>
                 </div>
                 <div className="col-6">
-                  <Link to="/dre/kits-lanche">
+                  <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
                     <CardPendencia
                       cardTitle={"Kit Lanche"}
                       totalOfOrders={resumoPendenciasDREKitLanche.total}

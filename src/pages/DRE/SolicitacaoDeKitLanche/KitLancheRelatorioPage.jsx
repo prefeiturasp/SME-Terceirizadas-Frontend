@@ -3,6 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Relatorio from "../../../components/SolicitacaoDeKitLanche/DRE/Relatorio";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
+import { SOLICITACAO_KIT_LANCHE, DRE } from "../../../configs/RoutesConfig";
 
 const atual = {
   href: "#",
@@ -11,7 +12,7 @@ const atual = {
 
 const anteriores = [
   {
-    href: "/dre/kits-lanche",
+    href: `/${DRE}/${SOLICITACAO_KIT_LANCHE}`,
     titulo: "Solicitações de Kit Lanche"
   }
 ];

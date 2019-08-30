@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { INVERSAO_CARDAPIO, DRE } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/dre/inversoes-dia-cardapio",
+  href: `/${DRE}/${INVERSAO_CARDAPIO}`,
   titulo: "Inversões de dia de Cardápio"
 };
 
