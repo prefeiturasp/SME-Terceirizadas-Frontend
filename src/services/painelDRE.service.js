@@ -27,6 +27,7 @@ import { getDiretoriaRegionalPedidosDeKitLanche } from "../components/Solicitaca
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 
 import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import authService from "./auth";
 
 const authToken = {
@@ -241,6 +242,36 @@ export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
 
   resposta.limite = solicitacoes.count;
   resposta.total = resposta.limite;
+
+  return resposta;
+};
+
+export const getResumoPendenciasDRESolicitacoesUnificadas = async (
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getCODAEPedidosSolicitacoesUnificadas(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results, filtro="solicitacao_kit_lanche");
+    pedidosLimite = filtraNoLimite(solicitacoes.results, filtro="solicitacao_kit_lanche");
+    pedidosRegular = filtraRegular(solicitacoes.results, filtro="solicitacao_kit_lanche");
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
 
   return resposta;
 };
