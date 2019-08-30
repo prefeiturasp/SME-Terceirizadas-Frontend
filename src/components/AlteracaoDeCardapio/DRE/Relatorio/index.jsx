@@ -17,6 +17,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
+import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidos = () => {
     if (this.state.redirect) {
-      return <Redirect to="/dre/alteracoes-de-cardapio" />;
+      return <Redirect to={`/${DRE}/${ALTERACAO_CARDAPIO}`} />;
     }
   };
 
