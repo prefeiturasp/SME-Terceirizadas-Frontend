@@ -18,6 +18,7 @@ import "../style.scss";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
 import { DRE } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -225,22 +226,24 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Não Validar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Validar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {InversaoCardapio.status === statusEnum.DRE_A_VALIDAR && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Não Validar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      label="Validar Solicitação"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

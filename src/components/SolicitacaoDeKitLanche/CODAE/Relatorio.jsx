@@ -6,8 +6,11 @@ import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess, toastError } from "../../Shareable/dialogs";
 import "./style.scss";
-import { getDetalheKitLancheAvulsa, aprovaDeKitLancheAvulsoCodae } from '../services'
-
+import {
+  getDetalheKitLancheAvulsa,
+  aprovaDeKitLancheAvulsoCodae
+} from "../services";
+import { statusEnum } from "../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -15,64 +18,66 @@ class Relatorio extends Component {
     this.state = {
       showModal: false,
       solicitacao: {},
-      uuid : "",
-      listaDeStatus: [], 
-      inativarBotao : false
+      uuid: "",
+      listaDeStatus: [],
+      inativarBotao: false
     };
     this.closeModal = this.closeModal.bind(this);
-    this.selecionarKits = this.selecionarKits.bind(this)
+    this.selecionarKits = this.selecionarKits.bind(this);
   }
 
   selecionarKits = kits => {
-    let kitList = []
+    let kitList = [];
     kits.forEach(kit => {
-      kitList.push(kit.nome)
+      kitList.push(kit.nome);
     });
-    return kitList
-  }
+    return kitList;
+  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuidParam = urlParams.get("uuid");
-    this.setState({uuid : uuidParam})
+    this.setState({ uuid: uuidParam });
     this.preencherFormulario(this.state.solicitacao);
-    this.preencheRelatorio(uuidParam)
+    this.preencheRelatorio(uuidParam);
   }
 
-  preencheRelatorio = uuidParam =>{
-    getDetalheKitLancheAvulsa(uuidParam).then(response =>{
-      this.handleBotoesAtivados(response.status)
-      this.setState({
-        ...response,
-        solicitacao : {
-          id: response.id_externo,
-          lote: response.escola.lote.nome,
-          gestao: response.escola.tipo_gestao.nome,
-          dre: response.escola.diretoria_regional.nome,
-          razao: response.solicitacao_kit_lanche.motivo,
-          solicitacao_kit_lanche : response.solicitacao_kit_lanche,
-        data: response.solicitacao_kit_lanche.data,
-        local: response.local,
-        escola: {
-          nome: response.escola.nome,
-          alunos_total: response.escola.quantidade_alunos,
-          matutino: "0",
-          vespertino: "0",
-          noturno: "0"
-        },
-        kits: this.selecionarKits(response.solicitacao_kit_lanche.kits),
-        tempo_passeio: response.solicitacao_kit_lanche.tempo_passeio_explicacao,
-        estudantes_total: response.quantidade_alunos,
-        obs:response.solicitacao_kit_lanche.descricao         
-        },
-        uuid: uuidParam,
-        listaDeStatus: response.logs
+  preencheRelatorio = uuidParam => {
+    getDetalheKitLancheAvulsa(uuidParam)
+      .then(response => {
+        this.handleBotoesAtivados(response.status);
+        this.setState({
+          ...response,
+          solicitacao: {
+            id: response.id_externo,
+            lote: response.escola.lote.nome,
+            gestao: response.escola.tipo_gestao.nome,
+            dre: response.escola.diretoria_regional.nome,
+            razao: response.solicitacao_kit_lanche.motivo,
+            solicitacao_kit_lanche: response.solicitacao_kit_lanche,
+            data: response.solicitacao_kit_lanche.data,
+            local: response.local,
+            escola: {
+              nome: response.escola.nome,
+              alunos_total: response.escola.quantidade_alunos,
+              matutino: "0",
+              vespertino: "0",
+              noturno: "0"
+            },
+            kits: this.selecionarKits(response.solicitacao_kit_lanche.kits),
+            tempo_passeio:
+              response.solicitacao_kit_lanche.tempo_passeio_explicacao,
+            estudantes_total: response.quantidade_alunos,
+            obs: response.solicitacao_kit_lanche.descricao
+          },
+          uuid: uuidParam,
+          listaDeStatus: response.logs
+        });
       })
-
-    }).catch(error =>{
-      console.log('Error ao pegar kit lanche: ', error)
-    })
-  }
+      .catch(error => {
+        console.log("Error ao pegar kit lanche: ", error);
+      });
+  };
 
   showModal() {
     this.setState({ showModal: true });
@@ -83,25 +88,27 @@ class Relatorio extends Component {
     toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
-  handleBotoesAtivados = status =>{
-    if(status === 'CODAE_APROVADO'){
-      this.setState({inativarBotao : true})
+  handleBotoesAtivados = status => {
+    if (status === "CODAE_APROVADO") {
+      this.setState({ inativarBotao: true });
     }
-  }
+  };
 
   handleSubmit(values) {
-    if(window.confirm('Deseja confirmar esta solicitação?')){
-      aprovaDeKitLancheAvulsoCodae(values).then(response => {
-        if(response.status === 'CODAE_APROVADO'){
-          this.preencheRelatorio()
-          this.handleBotoesAtivados(response.status)
-          toastSuccess("Kit Lanche autorizado com sucesso.");
-        }else{
-          toastError('Não foi possível autorizar esta solicitação!')
-        }
-      }).catch(error => {
-        console.log('Error na aprovação: ', error)
-      })
+    if (window.confirm("Deseja confirmar esta solicitação?")) {
+      aprovaDeKitLancheAvulsoCodae(values)
+        .then(response => {
+          if (response.status === "CODAE_APROVADO") {
+            this.preencheRelatorio();
+            this.handleBotoesAtivados(response.status);
+            toastSuccess("Kit Lanche autorizado com sucesso.");
+          } else {
+            toastError("Não foi possível autorizar esta solicitação!");
+          }
+        })
+        .catch(error => {
+          console.log("Error na aprovação: ", error);
+        });
     }
   }
 
@@ -122,11 +129,12 @@ class Relatorio extends Component {
       data,
       local,
       escola,
+      status,
       kits,
       estudantes_total,
       tempo_passeio,
       obs,
-      solicitacao_kit_lanche,
+      solicitacao_kit_lanche
     } = this.state.solicitacao;
     const { listaDeStatus, showModal, uuid, inativarBotao } = this.state;
     return (
@@ -253,31 +261,35 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    disabled={inativarBotao}
-                    label={"Recusar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    disabled={inativarBotao}
-                    label="Aprovar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit({
-                      uuid: uuid,
-                      solicitacao_kit_lanche: solicitacao_kit_lanche,
-                      id_externo: id,
-                      status: "CODAE_APROVADO",
-                      local: local,
-                      quantidade_alunos: estudantes_total,
-                    })}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {status === statusEnum.DRE_APROVADO && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      disabled={inativarBotao}
+                      label={"Recusar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      disabled={inativarBotao}
+                      label="Aprovar Solicitação"
+                      type={ButtonType.SUBMIT}
+                      onClick={() =>
+                        this.handleSubmit({
+                          uuid: uuid,
+                          solicitacao_kit_lanche: solicitacao_kit_lanche,
+                          id_externo: id,
+                          status: "CODAE_APROVADO",
+                          local: local,
+                          quantidade_alunos: estudantes_total
+                        })
+                      }
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

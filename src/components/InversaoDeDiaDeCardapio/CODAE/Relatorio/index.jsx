@@ -5,7 +5,10 @@ import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import { CODAEAprovaPedidoDRE, getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import {
+  CODAEAprovaPedidoDRE,
+  getInversaoDeDiaDeCardapio
+} from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
@@ -15,6 +18,7 @@ import "../style.scss";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
 import { CODAE, INVERSAO_CARDAPIO } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -100,7 +104,9 @@ class Relatorio extends Component {
           toastSuccess("Inversão de dias de cardápio autorizada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
+          toastError(
+            "Houve um erro ao autorizar a Inversão de dias de cardápio"
+          );
         }
       },
       function(error) {
@@ -222,22 +228,24 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Negar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Autorizar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {InversaoCardapio.status === statusEnum.DRE_APROVADO && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Negar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      label="Autorizar Solicitação"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

@@ -22,6 +22,7 @@ import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
 import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -323,7 +324,7 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {inclusaoDeAlimentacao.status === "DRE_APROVADO" && (
+                {inclusaoDeAlimentacao.status === statusEnum.DRE_APROVADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
                       label={"Negar Solicitação"}

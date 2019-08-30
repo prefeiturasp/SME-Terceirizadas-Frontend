@@ -31,6 +31,10 @@ import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapi
 import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
 import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
+import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
+import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
+import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
+import SolicitacaoUnificadaRelatorioTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/RelatorioPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
@@ -207,6 +211,16 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${RELATORIO}`,
+    component: SolicitacaoUnificadaRelatorioCODAEPage,
+    exact: false
+  },
+  {
+    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+    component: PainelPedidosSolicitacaoUnificadaCODAEPage,
+    exact: false
+  },
+  {
     path: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
     component: PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage,
     exact: false
@@ -254,6 +268,16 @@ const routesConfig = [
   {
     path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
     component: KitsLancheOrdersTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${RELATORIO}`,
+    component: SolicitacaoUnificadaRelatorioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+    component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false
   },
   {

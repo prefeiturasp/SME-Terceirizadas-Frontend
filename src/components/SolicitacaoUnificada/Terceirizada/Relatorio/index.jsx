@@ -18,7 +18,11 @@ import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import TabelaKits from "./TabelaKits";
 import "./style.scss";
-import { SOLICITACAO_KIT_LANCHE_UNIFICADA, TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import {
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  TERCEIRIZADA
+} from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -44,7 +48,9 @@ class Relatorio extends Component {
 
   renderizarRedirecionamento = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`} />;
+      return (
+        <Redirect to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`} />
+      );
     }
   };
 
@@ -242,23 +248,24 @@ class Relatorio extends Component {
                 />
               </div>
             </div>
-
-            <div className="botoes-acao">
-              <BaseButton
-                label={"Recusar Solicitação"}
-                className="ml-3"
-                onClick={() => this.showModal()}
-                type={ButtonType.BUTTON}
-                style={ButtonStyle.OutlineSuccess}
-              />
-              <BaseButton
-                label="Ciente"
-                type={ButtonType.SUBMIT}
-                onClick={() => this.handleSubmit()}
-                style={ButtonStyle.Success}
-                className="ml-3"
-              />
-            </div>
+            {solicitacaoUnificada.status === statusEnum.CODAE_APROVADO && (
+              <div className="botoes-acao">
+                <BaseButton
+                  label={"Recusar Solicitação"}
+                  className="ml-3"
+                  onClick={() => this.showModal()}
+                  type={ButtonType.BUTTON}
+                  style={ButtonStyle.OutlineSuccess}
+                />
+                <BaseButton
+                  label="Ciente"
+                  type={ButtonType.SUBMIT}
+                  onClick={() => this.handleSubmit()}
+                  style={ButtonStyle.Success}
+                  className="ml-3"
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

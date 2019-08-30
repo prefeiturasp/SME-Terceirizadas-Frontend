@@ -21,6 +21,7 @@ import {
   ALTERACAO_CARDAPIO,
   TERCEIRIZADA
 } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -272,23 +273,24 @@ class Relatorio extends Component {
                     </td>
                   </tr>
                 </table>
-
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Recusar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Ciente"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {alteracaoDeCardapio.status === statusEnum.CODAE_APROVADO && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Recusar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      label="Ciente"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>
