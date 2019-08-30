@@ -129,7 +129,9 @@ export class DashboardEscola extends Component {
             <CardAtalho
               titulo={"Inclusão de Alimentação"}
               texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+                "Quando houver necessidade de incluir dentro" +
+                " da unidade alimentação para os alunos matriculados" +
+                " na RME (exemplos: reposição de aula aos sábados; projetos)"
               }
               textoLink={"Novo pedido"}
               href={"/escola/inclusao-de-alimentacao"}
@@ -139,7 +141,9 @@ export class DashboardEscola extends Component {
             <CardAtalho
               titulo={"Alteração de Cardápio"}
               texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+                "Quando houver necessidade de alteração do cardápio dentro da unidade, " +
+                "alterando o tipo de alimentação (exemplos: alteração de refeição " +
+                "por lanche; alteração de refeição e lanche por merenda seca)"
               }
               textoLink={"Novo pedido"}
               href={"/escola/alteracao-de-cardapio"}
@@ -149,7 +153,10 @@ export class DashboardEscola extends Component {
             <CardAtalho
               titulo={"Solicitação de Kit Lanche"}
               texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+                "Quando houver necessidade da solicitação de Kit Lanche para consumo durante " +
+                "o passeio externo (situações em que não há possibilidade de oferecer a " +
+                "alimentação na própria unidade como por exemplo Kit Lanche para visitar " +
+                "o museu)"
               }
               textoLink={"Novo pedido"}
               href="/escola/solicitacao-de-kit-lanche"
@@ -159,7 +166,8 @@ export class DashboardEscola extends Component {
             <CardAtalho
               titulo={"Inversão de Dias de Cardapio"}
               texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+                "Quando houver necessidade da inversão de todo cardápio de um dia do mês por " +
+                "outro dia de atendimento (exemplo: inversão do cardápio do dia X pelo dia Y)"
               }
               textoLink={"Novo pedido"}
               href={"/escola/inversao-de-dia-de-cardapio"}
@@ -171,7 +179,9 @@ export class DashboardEscola extends Component {
             <CardAtalho
               titulo={"Suspensão de Alimentação"}
               texto={
-                "Para solicitar kits para passeios entre na pagina do Kit Lanche e faça um novo pedido"
+                "Quando houver necessidade de suspensão da alimentação de algum dia do mês " +
+                "(refeição/lanche) por não ter atendimento com alunos (exemplo: suspensão da " +
+                "alimentação do dia X devido a parada pedagógica)"
               }
               textoLink={"Novo pedido"}
               href={"/escola/suspensao-de-alimentacao"}

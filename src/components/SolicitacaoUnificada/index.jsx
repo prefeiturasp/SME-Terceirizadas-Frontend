@@ -63,6 +63,7 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: 0,
       collapsed: true,
       initialValues: false,
+      outroMotivo: false,
       lotes: [
         {
           nome: "7A IP I IPIRANGA",
@@ -156,7 +157,8 @@ class SolicitacaoUnificada extends Component {
       status: "RASCUNHO",
       title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.solicitacaoUnificada.id_externo
+      id: param.solicitacaoUnificada.id_externo,
+      outroMotivo: param.solicitacaoUnificada.outro_motivo !== null
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -167,7 +169,7 @@ class SolicitacaoUnificada extends Component {
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-            this.refresh();
+            this.resetForm();
           } else {
             toastError("Houve um erro ao excluir o rascunho");
           }
@@ -176,6 +178,15 @@ class SolicitacaoUnificada extends Component {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
+    }
+  }
+
+  onMotivoChanged(value) {
+    const motivo = this.props.motivos.find(motivo => motivo.uuid === value);
+    const outroMotivo = motivo.nome.includes("Outro");
+    this.setState({ outroMotivo });
+    if (!outroMotivo) {
+      this.props.change("outro_motivo", "");
     }
   }
 
@@ -214,6 +225,7 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: 0,
       choicesTotal: 0,
       studentsTotal: 0,
+      outroMotivo: false,
       initialValues: true
     });
     this.refresh();
@@ -550,7 +562,6 @@ class SolicitacaoUnificada extends Component {
       proximos_dois_dias_uteis,
       motivos,
       multipleOrder,
-      motivo,
       max_alunos,
       prosseguir
     } = this.props;
@@ -569,7 +580,8 @@ class SolicitacaoUnificada extends Component {
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,
-      collapsed
+      collapsed,
+      outroMotivo
     } = this.state;
     return (
       <div className="unified-solicitation">
@@ -626,8 +638,8 @@ class SolicitacaoUnificada extends Component {
                     <Field
                       component={LabelAndCombo}
                       name="motivo"
+                      onChange={value => this.onMotivoChanged(value)}
                       label="Motivo"
-                      onChange={value => this.props.change("motivo", value)}
                       options={motivos}
                       validate={required}
                     />
@@ -635,14 +647,11 @@ class SolicitacaoUnificada extends Component {
                 </div>
                 <div className="row">
                   <div className="form-group col-8 offset-3">
-                    {motivo === "Outro" && (
+                    {outroMotivo && (
                       <Field
                         component={LabelAndInput}
                         label="Qual o motivo?"
-                        onChange={value =>
-                          this.props.change("qual_motivo", value)
-                        }
-                        name="qual_motivo"
+                        name="outro_motivo"
                         className="form-control"
                         validate={required}
                       />
