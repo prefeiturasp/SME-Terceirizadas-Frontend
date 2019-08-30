@@ -1,8 +1,3 @@
-import {
-  filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular
-} from "../components/InversaoDeDiaDeCardapio/CODAE/PainelPedidos/helper";
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 import { getCODAEPedidosInclusaoAvulsoPendentes } from "./inclusaoDeAlimentacaoAvulsa.service";
@@ -11,6 +6,11 @@ import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import { getCODAEPedidosAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import {
+  filtraPrioritarios,
+  filtraNoLimite,
+  filtraRegular
+} from "../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -204,7 +204,9 @@ export const getResumoPendenciasKitLancheUnificado = async (
   return resposta;
 };
 
-export const getResumoPendenciasAlteracaoCardapio = async (filtro = "sem_filtro") => {
+export const getResumoPendenciasAlteracaoCardapio = async (
+  filtro = "sem_filtro"
+) => {
   let resposta = {
     total: 0,
     prioritario: 0,
@@ -216,9 +218,7 @@ export const getResumoPendenciasAlteracaoCardapio = async (filtro = "sem_filtro"
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoesUnificadas = await getCODAEPedidosAlteracaoCardapio(
-    filtro
-  );
+  const solicitacoesUnificadas = await getCODAEPedidosAlteracaoCardapio(filtro);
 
   if (solicitacoesUnificadas) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoesUnificadas.results);
