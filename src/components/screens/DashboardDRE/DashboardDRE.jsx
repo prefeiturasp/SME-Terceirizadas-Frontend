@@ -16,7 +16,8 @@ import {
   getResumoPendenciasDREInclusaoDeAlimentacao,
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
   getResumoPendenciasDREKitLanche,
-  getResumoPendenciasDRESuspensaoDeAlimentacao
+  getResumoPendenciasDRESuspensaoDeAlimentacao,
+  getResumoPendenciasDRESolicitacoesUnificadas
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { dataAtual } from "../../../helpers/utilities";
@@ -45,6 +46,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio: {},
       resumoPendenciasDREKitLanche: {},
       resumoPendenciasDRESuspensaoDeAlimentacao: {},
+      resumoPendenciasDRESolicitacoesUnificadas: {},
       filtroPendencias: "sem_filtro",
       meusDados: [],
       loadingAutorizadas: true,
@@ -74,12 +76,16 @@ class DashboardDRE extends Component {
     const resumoPendenciasDRESuspensaoDeAlimentacao = await getResumoPendenciasDRESuspensaoDeAlimentacao(
       filtroPendencias
     );
+    const resumoPendenciasDRESolicitacoesUnificadas = await getResumoPendenciasDRESolicitacoesUnificadas(
+      filtroPendencias
+    );
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESuspensaoDeAlimentacao,
+      resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias
     });
   }
@@ -161,6 +167,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDREKitLanche,
+      resumoPendenciasDRESolicitacoesUnificadas,
       loadingAutorizadas,
       loadingPendentes
     } = this.state;
@@ -238,7 +245,7 @@ class DashboardDRE extends Component {
                 </div>
               </div>
               <div className="row pt-3">
-                {recusadasList.length > 0 ? (<div className="col-6">
+                {recusadasList.length > 0 && <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Recusadas"}
                     cardType={"card-denied"}
@@ -246,9 +253,9 @@ class DashboardDRE extends Component {
                     icon={"fa-ban"}
                     href={"/dre/solicitacoes-recusadas"}
                   />
-                </div>) : (<div></div>)}
+                </div>}
 
-                {canceladasList.length > 0  ? (<div className="col-6">
+                {canceladasList.length > 0  && <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
@@ -256,7 +263,7 @@ class DashboardDRE extends Component {
                     icon={"fa-times-circle"}
                     href={"/dre/solicitacoes-canceladas"}
                   />
-                </div>) : (<div></div>)}
+                </div>}
 
               </div>
               <p className="caption">Legenda</p>
@@ -374,10 +381,10 @@ class DashboardDRE extends Component {
                 <div className="col-6">
                   <CardPendencia
                     cardTitle={"Pedido Unificado"}
-                    totalOfOrders={100}
-                    priorityOrders={50}
-                    onLimitOrders={25}
-                    regularOrders={25}
+                    totalOfOrders={resumoPendenciasDRESolicitacoesUnificadas.total}
+                    priorityOrders={resumoPendenciasDRESolicitacoesUnificadas.prioritario}
+                    onLimitOrders={resumoPendenciasDRESolicitacoesUnificadas.limite}
+                    regularOrders={resumoPendenciasDRESolicitacoesUnificadas.regular}
                   />
                 </div>
                 <div className="col-6">
