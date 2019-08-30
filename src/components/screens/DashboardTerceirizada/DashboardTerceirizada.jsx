@@ -6,7 +6,9 @@ import {
   ALTERACAO_CARDAPIO,
   INCLUSAO_ALIMENTACAO,
   TERCEIRIZADA,
-  INVERSAO_CARDAPIO
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
 } from "../../../configs/RoutesConfig";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -92,7 +94,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-pending"}
                     solicitations={solicitations}
                     icon={"fa-exclamation-triangle"}
-                    href={"/terceirizada/solicitacoes"}
+                    href={`${TERCEIRIZADA}/solicitacoes`}
                   />
                 </div>
                 <div className="col-6">
@@ -101,7 +103,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
                     icon={"fa-times-circle"}
-                    href={"/terceirizada/solicitacoes"}
+                    href={`/${TERCEIRIZADA}/solicitacoes`}
                   />
                 </div>
               </div>
@@ -249,7 +251,7 @@ class DashboardTerceirizada extends Component {
                     </Link>
                   </div>
                   <div className="col-6">
-                    <Link to="/terceirizada/kits-lanche">
+                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                       <CardPendencia
                         cardTitle={"Kit Lanche"}
                         totalOfOrders={120}
@@ -262,7 +264,7 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <Link to="/terceirizada/solicitacoes-unificadas">
+                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
                       <CardPendencia
                         cardTitle={"Solicitação Unificada"}
                         totalOfOrders={2}
@@ -273,7 +275,7 @@ class DashboardTerceirizada extends Component {
                     </Link>
                   </div>
                   <div className="col-6">
-                    <Link to="/terceirizada/suspensoes-de-alimentacao">
+                    <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
                       <CardPendencia
                         cardTitle={"Suspensão de Alimentação"}
                         totalOfOrders={quantidade_suspensoes}
