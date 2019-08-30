@@ -33,6 +33,7 @@ export const extrairTempoPasseio = tempoPasseio => {
 export const formatarSubmissao = values => {
   let dataFormatada = {};
   dataFormatada.motivo = values.motivo;
+  dataFormatada.outro_motivo = values.outro_motivo;
   dataFormatada.local = values.local;
   dataFormatada.diretoria_regional = values.diretoria_regional;
   dataFormatada.lista_kit_lanche_igual = values.lista_kit_lanche_igual || false;

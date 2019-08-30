@@ -2,6 +2,7 @@
 
 .card-shortcut {
   margin-top: 1rem;
+  min-height: 245px;
   .card-header {
     font-size: 16px;
     padding: 10px;
@@ -9,6 +10,7 @@
   }
   .card-body {
     padding: 20px 10px !important;
+    text-align: justify;
     .card-text {
       font-size: 10px;
       color: $gray;

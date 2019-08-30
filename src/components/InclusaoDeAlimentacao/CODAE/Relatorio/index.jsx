@@ -21,6 +21,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
+import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/codae/inclusoes-de-alimentacao" />;
+      return <Redirect to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`} />;
     }
   };
 
@@ -227,7 +228,8 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
+                      {meusDados &&
+                        meusDados.diretorias_regionais &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
@@ -321,22 +323,24 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Negar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Autorizar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {inclusaoDeAlimentacao.status === "DRE_APROVADO" && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Negar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      label="Autorizar Solicitação"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

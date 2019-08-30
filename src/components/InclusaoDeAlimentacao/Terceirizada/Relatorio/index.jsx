@@ -21,6 +21,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
+import { TERCEIRIZADA, INCLUSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/terceirizada/inclusoes-de-alimentacao" />;
+      return <Redirect to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`} />;
     }
   };
 
@@ -327,22 +328,24 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Recusar Solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Ciente"
-                    type={ButtonType.SUBMIT}
-                    onClick={() => this.handleSubmit()}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
-                </div>
+                {inclusaoDeAlimentacao.status === "CODAE_APROVADO" && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Recusar Solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                    <BaseButton
+                      label="Ciente"
+                      type={ButtonType.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={ButtonStyle.Primary}
+                      className="ml-3"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>
