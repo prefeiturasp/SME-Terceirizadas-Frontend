@@ -1,11 +1,12 @@
 import React from "react";
+import Container from "../../../components/AlteracaoDeCardapio/CODAE/PainelPedidos/Container";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
-import Container from "../../../components/AlteracaoDeCardapio/CODAE/PainelPedidos/Container";
+import { ALTERACAO_CARDAPIO, CODAE } from "../../../configs/RoutesConfig";
 import { HOME } from "../constants";
 
 const atual = {
-  href: "/codae/alteracoes-de-cardapio",
+  href: `/${CODAE}/${ALTERACAO_CARDAPIO}`,
   titulo: "Alterações de Cardápio"
 };
 
