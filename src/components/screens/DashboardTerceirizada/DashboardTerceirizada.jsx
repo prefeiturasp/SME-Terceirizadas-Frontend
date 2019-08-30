@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
+import {
+  ALTERACAO_CARDAPIO,
+  INCLUSAO_ALIMENTACAO,
+  TERCEIRIZADA
+} from "../../../configs/RoutesConfig";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
@@ -14,8 +19,6 @@ import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoC
 import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { INCLUSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
-import { ALTERACAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
