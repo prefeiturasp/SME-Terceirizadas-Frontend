@@ -14,6 +14,7 @@ import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoC
 import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
+import { ALTERACAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -232,7 +233,7 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <Link to="/terceirizada/alteracoes-de-cardapio">
+                    <Link to={`/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`}>
                       <CardPendencia
                         cardTitle={"Alteração de Cardápio"}
                         totalOfOrders={20}

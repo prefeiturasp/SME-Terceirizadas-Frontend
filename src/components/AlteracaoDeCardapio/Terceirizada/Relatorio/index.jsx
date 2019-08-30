@@ -17,6 +17,10 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
+import {
+  ALTERACAO_CARDAPIO,
+  TERCEIRIZADA
+} from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -39,9 +43,9 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaPedidos= () => {
+  renderizarRedirecionamentoParaPedidos = () => {
     if (this.state.redirect) {
-      return <Redirect to="/terceirizada/alteracoes-de-cardapio" />;
+      return <Redirect to={`/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`} />;
     }
   };
 
@@ -94,7 +98,9 @@ class Relatorio extends Component {
           toastSuccess("Ciência da Alteração de Cardápio salva com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao dar ciência sobre Alteração de Cardápio.");
+          toastError(
+            "Houve um erro ao dar ciência sobre Alteração de Cardápio."
+          );
         }
       },
       function(error) {
@@ -106,19 +112,16 @@ class Relatorio extends Component {
   renderParteAvulsa() {
     const { alteracaoDeCardapio } = this.state;
     return (
-      (
-        <table className="table-periods">
-          <tr>
-            <th>Data Inicial</th>
-            <th>Data Final</th>
-          </tr>
-          <tr>
-            <td>{alteracaoDeCardapio.data_inicial}</td>
-            <td>{alteracaoDeCardapio.data_final}</td>
-          </tr>
-        </table>
-
-)
+      <table className="table-periods">
+        <tr>
+          <th>Data Inicial</th>
+          <th>Data Final</th>
+        </tr>
+        <tr>
+          <td>{alteracaoDeCardapio.data_inicial}</td>
+          <td>{alteracaoDeCardapio.data_final}</td>
+        </tr>
+      </table>
     );
   }
 
@@ -177,7 +180,8 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados && meusDados.diretorias_regionais &&
+                      {meusDados &&
+                        meusDados.diretorias_regionais &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
@@ -208,16 +212,12 @@ class Relatorio extends Component {
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>
-                      {alteracaoDeCardapio.escola.quantidade_alunos}
-                    </span>
+                    <span>{alteracaoDeCardapio.escola.quantidade_alunos}</span>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
-                    <p className="value">
-                      Descrição da Alteração de Cardápio
-                    </p>
+                    <p className="value">Descrição da Alteração de Cardápio</p>
                   </div>
                 </div>
                 {this.renderParteAvulsa()}
@@ -262,15 +262,16 @@ class Relatorio extends Component {
                     <th>Observações</th>
                   </tr>
                   <tr>
-                    <td><p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: alteracaoDeCardapio.observacao
-                      }}
-                    /></td>
+                    <td>
+                      <p
+                        className="value"
+                        dangerouslySetInnerHTML={{
+                          __html: alteracaoDeCardapio.observacao
+                        }}
+                      />
+                    </td>
                   </tr>
                 </table>
-
 
                 <div className="form-group row float-right mt-4">
                   <BaseButton

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
+import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/RoutesConfig";
 
 export class CardPendenciaAprovacao extends Component {
   constructor(props) {
@@ -107,7 +108,7 @@ export class CardPendenciaAprovacao extends Component {
                 {pedidosFiltrados.map((pedido, key) => {
                   return (
                     <Link
-                      to={`/${parametroURL}/alteracoes-de-cardapio/relatorio?uuid=${
+                      to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
                         pedido.uuid}`
                       }
                     >
