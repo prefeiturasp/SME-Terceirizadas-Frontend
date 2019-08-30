@@ -14,6 +14,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
+import { CODAE, INVERSAO_CARDAPIO } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to="/codae/inversoes-dia-cardapio" />;
+      return <Redirect to={`/${CODAE}/${INVERSAO_CARDAPIO}`} />;
     }
   };
 

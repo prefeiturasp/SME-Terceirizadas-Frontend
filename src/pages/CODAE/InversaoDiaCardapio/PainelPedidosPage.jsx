@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/CODAE/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/codae/inversoes-dia-cardapio",
+  href: `/${CODAE}/${INVERSAO_CARDAPIO}`,
   titulo: "Inversões de dia de Cardápio"
 };
 

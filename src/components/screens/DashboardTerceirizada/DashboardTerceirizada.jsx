@@ -8,7 +8,8 @@ import {
   TERCEIRIZADA,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO
 } from "../../../configs/RoutesConfig";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -227,7 +228,7 @@ class DashboardTerceirizada extends Component {
                     </Link>
                   </div>
                   <div className="col-6">
-                    <Link to="/terceirizada/inversoes-dia-cardapio">
+                    <Link to={`/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`}>
                       <CardPendencia
                         cardTitle={"Inversão de dias de cardápio"}
                         totalOfOrders={50}
