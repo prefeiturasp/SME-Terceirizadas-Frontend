@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InclusaoDeAlimentacao/Terceirizada/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { TERCEIRIZADA, INCLUSAO_ALIMENTACAO } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/terceirizada/inclusoes-de-alimentacao",
+  href: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
   titulo: "Inclusões de Alimentação"
 };
 

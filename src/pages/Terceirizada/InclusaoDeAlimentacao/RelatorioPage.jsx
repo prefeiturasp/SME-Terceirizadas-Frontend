@@ -3,6 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/InclusaoDeAlimentacao/Terceirizada/Relatorio";
 import { HOME } from "../constants";
+import { INCLUSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
 
 const atual = {
   href: "#",
@@ -11,7 +12,7 @@ const atual = {
 
 const anteriores = [
   {
-    href: "/terceirizada/inclusoes-de-alimentacao",
+    href: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
     titulo: "Inclusões de Alimentação"
   }
 ];
