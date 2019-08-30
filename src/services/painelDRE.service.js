@@ -240,8 +240,8 @@ export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
 
   const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
 
-  resposta.limite = solicitacoes.count;
-  resposta.total = resposta.limite;
+  resposta.prioritario = solicitacoes.count;
+  resposta.total = resposta.prioritario;
 
   return resposta;
 };
