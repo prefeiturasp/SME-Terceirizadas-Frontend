@@ -51,7 +51,13 @@ class DashboardDRE extends Component {
       filtroPendencias: "sem_filtro",
       meusDados: [],
       loadingAutorizadas: true,
-      loadingPendentes: true
+      loadingPendentes: true,
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.filterList = this.filterList.bind(this);
@@ -80,6 +86,7 @@ class DashboardDRE extends Component {
     const resumoPendenciasDRESolicitacoesUnificadas = await getResumoPendenciasDRESolicitacoesUnificadas(
       filtroPendencias
     );
+
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
@@ -87,7 +94,13 @@ class DashboardDRE extends Component {
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDRESolicitacoesUnificadas,
-      filtroPendencias
+      filtroPendencias,
+      loadingAlteracaoCardapio : !(resumoPendenciasDREAlteracoesDeCardapio),
+      loadingInclusoesAlimentacao : !(resumoPendenciasDREInclusoesDeAlimentacao),
+      loadingInversoesCardapio : !(resumoPendenciasDREInversaoDeDiaDeCardapio),
+      loadingKitLanche : !(resumoPendenciasDREKitLanche),
+      loadingSuspensaoAlimentacao : !(resumoPendenciasDRESuspensaoDeAlimentacao),
+      loadingSolicitacoesUnificadas : !(resumoPendenciasDRESolicitacoesUnificadas)
     });
   }
 
@@ -170,7 +183,14 @@ class DashboardDRE extends Component {
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESolicitacoesUnificadas,
       loadingAutorizadas,
-      loadingPendentes
+      loadingPendentes,
+      loadingAlteracaoCardapio,
+      loadingInclusoesAlimentacao,
+      loadingInversoesCardapio,
+      loadingSuspensaoAlimentacao,
+      loadingKitLanche,
+      loadingSolicitacoesUnificadas
+
     } = this.state;
 
     return (
@@ -323,6 +343,7 @@ class DashboardDRE extends Component {
                       regularOrders={
                         resumoPendenciasDREInclusoesDeAlimentacao.regular
                       }
+                      loading={loadingInclusoesAlimentacao}
                     />
                   </Link>
                 </div>
@@ -342,6 +363,7 @@ class DashboardDRE extends Component {
                       regularOrders={
                         resumoPendenciasDREInversaoDeDiaDeCardapio.regular
                       }
+                      loading={loadingInversoesCardapio}
                     />
                   </Link>
                 </div>
@@ -363,6 +385,7 @@ class DashboardDRE extends Component {
                       regularOrders={
                         resumoPendenciasDREAlteracoesDeCardapio.regular
                       }
+                      loading={loadingAlteracaoCardapio}
                     />
                   </Link>
                 </div>
@@ -374,6 +397,7 @@ class DashboardDRE extends Component {
                       priorityOrders={resumoPendenciasDREKitLanche.prioritario}
                       onLimitOrders={resumoPendenciasDREKitLanche.limite}
                       regularOrders={resumoPendenciasDREKitLanche.regular}
+                      loading={loadingKitLanche}
                     />
                   </Link>
                 </div>
@@ -386,6 +410,7 @@ class DashboardDRE extends Component {
                     priorityOrders={resumoPendenciasDRESolicitacoesUnificadas.prioritario}
                     onLimitOrders={resumoPendenciasDRESolicitacoesUnificadas.limite}
                     regularOrders={resumoPendenciasDRESolicitacoesUnificadas.regular}
+                    loading={loadingSolicitacoesUnificadas}
                   />
                 </div>
                 <div className="col-6">
@@ -404,6 +429,7 @@ class DashboardDRE extends Component {
                     regularOrders={
                       resumoPendenciasDRESuspensaoDeAlimentacao.regular
                     }
+                    loading={loadingSuspensaoAlimentacao}
                   />
                 </div>
               </div>
