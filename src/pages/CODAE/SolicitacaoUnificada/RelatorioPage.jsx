@@ -3,6 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/SolicitacaoUnificada/CODAE/Relatorio";
 import { HOME } from "../constants";
+import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../configs/RoutesConfig";
 
 const atual = {
   href: "#",
@@ -11,7 +12,7 @@ const atual = {
 
 const anteriores = [
   {
-    href: "/codae/solicitacoes-unificadas",
+    href: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     titulo: "Solicitações Unificadas"
   }
 ];

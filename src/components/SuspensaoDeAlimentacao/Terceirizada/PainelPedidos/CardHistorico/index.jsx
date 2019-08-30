@@ -10,6 +10,7 @@ import BaseButton, {
 import { Link } from "react-router-dom";
 import { obtemDataSolicitacao } from "../helper";
 import "./style.scss";
+import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "../../../../../configs/RoutesConfig";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -125,7 +126,7 @@ export class CardHistorico extends Component {
                               />
                             </label>
                             <Link
-                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
                                 pedido.uuid
                               }`}
                             >
@@ -135,7 +136,7 @@ export class CardHistorico extends Component {
 
                           <td>
                             <Link
-                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
                                 pedido.uuid
                               }`}
                             >
@@ -144,7 +145,7 @@ export class CardHistorico extends Component {
                           </td>
                           <td>
                             <Link
-                              to={`/terceirizada/suspensoes-de-alimentacao/relatorio?uuid=${
+                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
                                 pedido.uuid
                               }`}
                             >

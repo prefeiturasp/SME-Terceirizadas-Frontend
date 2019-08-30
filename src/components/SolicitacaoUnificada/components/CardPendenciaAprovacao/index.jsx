@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeDREsUnicas } from "./helper";
 import "./style.scss";
+import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/RoutesConfig";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
@@ -119,7 +120,7 @@ export class CardPendenciaAprovacao extends Component {
                 {pedidosFiltrados.map((pedido, key) => {
                   return (
                     <Link
-                      to={`/${parametroURL}/solicitacoes-unificadas/relatorio?uuid=${
+                      to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
                         pedido.uuid
                       }`}
                     >
