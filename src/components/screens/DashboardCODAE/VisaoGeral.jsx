@@ -1,9 +1,53 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import {
+  ALTERACAO_CARDAPIO,
+  CODAE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
+} from "../../../configs/RoutesConfig";
+import {
+  getResumoPendenciasInversoesCardapio,
+  getResumoPendenciasInclusaoAlimentacao
+} from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
 class VisaoGeral extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      resumoPendenciasInversoesCardapio: {
+        total: "...",
+        limite: "...",
+        prioritario: "...",
+        regular: "..."
+      },
+      resumoPendenciasInclusaoAlimentacao: {
+        total: "...",
+        limite: "...",
+        prioritario: "...",
+        regular: "..."
+      }
+    };
+  }
+
+  async componentDidMount() {
+    const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
+    const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao();
+    this.setState({
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasInclusaoAlimentacao
+    });
+  }
+
   render() {
+    const {
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasInclusaoAlimentacao
+    } = this.state;
     return (
       <div>
         <div className="row">
@@ -17,31 +61,31 @@ class VisaoGeral extends Component {
             />
           </div>
           <div className="col-6">
-            <Link to="/codae/inversoes-dia-cardapio">
+            <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Inversão de dias de cardápio"}
-                totalOfOrders={50}
-                priorityOrders={2}
-                onLimitOrders={18}
-                regularOrders={30}
+                totalOfOrders={resumoPendenciasInversoesCardapio.total}
+                priorityOrders={resumoPendenciasInversoesCardapio.prioritario}
+                onLimitOrders={resumoPendenciasInversoesCardapio.limite}
+                regularOrders={resumoPendenciasInversoesCardapio.regular}
               />
             </Link>
           </div>
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/inclusoes-de-alimentacao">
+            <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
               <CardPendencia
-                cardTitle={"Inclusão de Refeição"}
-                totalOfOrders={16}
-                priorityOrders={8}
-                onLimitOrders={2}
-                regularOrders={6}
+                cardTitle={"Inclusão de alimentação"}
+                totalOfOrders={resumoPendenciasInclusaoAlimentacao.total}
+                priorityOrders={resumoPendenciasInclusaoAlimentacao.prioritario}
+                onLimitOrders={resumoPendenciasInclusaoAlimentacao.limite}
+                regularOrders={resumoPendenciasInclusaoAlimentacao.regular}
               />
             </Link>
           </div>
           <div className="col-6">
-            <Link to="/codae/kits-lanche">
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
               <CardPendencia
                 cardTitle={"Kit Lanche"}
                 totalOfOrders={120}
@@ -54,7 +98,7 @@ class VisaoGeral extends Component {
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/alteracoes-de-cardapio">
+            <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Alteração de Cardápio"}
                 totalOfOrders={20}
@@ -65,18 +109,20 @@ class VisaoGeral extends Component {
             </Link>
           </div>
           <div className="col-6">
-            <CardPendencia
-              cardTitle={"Suspensão de Refeição"}
-              totalOfOrders={47}
-              priorityOrders={10}
-              onLimitOrders={7}
-              regularOrders={30}
-            />
+            <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
+              <CardPendencia
+                cardTitle={"Suspensão de Refeição"}
+                totalOfOrders={47}
+                priorityOrders={10}
+                onLimitOrders={7}
+                regularOrders={30}
+              />
+            </Link>
           </div>
         </div>
         <div className="row pt-3">
           <div className="col-6">
-            <Link to="/codae/solicitacoes-unificadas">
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
               <CardPendencia
                 cardTitle={"Pedido Unificado"}
                 totalOfOrders={2}

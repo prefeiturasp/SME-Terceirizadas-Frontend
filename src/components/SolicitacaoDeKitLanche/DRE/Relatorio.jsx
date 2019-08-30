@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { reduxForm } from "redux-form";
 import "../../Shareable/style.scss";
-import { FluxoDeStatus } from "../FluxoDeStatus";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
 import { toastSuccess, toastError } from "../../Shareable/dialogs";
 import "./style.scss";
 import { getDetalheKitLancheAvulsa, aprovaDeKitLancheAvulsoDiretoriaRegional } from '../services'
-import {montaBarraStatus} from '../helper'
 
 class Relatorio extends Component {
   constructor(props) {
@@ -29,7 +28,6 @@ class Relatorio extends Component {
     };
     this.closeModal = this.closeModal.bind(this);
     this.selecionarKits = this.selecionarKits.bind(this)
-    this.handleStatusBarra = this.handleStatusBarra.bind(this)
   }
 
   selecionarKits = kits => {
@@ -74,7 +72,7 @@ class Relatorio extends Component {
         obs:response.solicitacao_kit_lanche.descricao         
         },
         uuid: uuidParam,
-        listaDeStatus: montaBarraStatus(response.status)
+        listaDeStatus: response.logs
       })
 
     }).catch(error =>{
@@ -91,11 +89,6 @@ class Relatorio extends Component {
     toastSuccess("Kit Lanche recusado com sucesso!");
   }
 
-  handleStatusBarra(status){
-    this.setState({
-      listaDeStatus: montaBarraStatus(status)
-    })
-  }
 
   handleBotoesAtivados = status =>{
     console.log(status)
@@ -108,7 +101,7 @@ class Relatorio extends Component {
     if(window.confirm('Deseja confirmar esta solicitação?')){
       aprovaDeKitLancheAvulsoDiretoriaRegional(values).then(response => {
         if(response.status === 'DRE_APROVADO'){
-          this.handleStatusBarra(response.status)
+          // this.handleStatusBarra(response.status)
           this.handleBotoesAtivados(response.status)
           toastSuccess("Kit Lanche validado com sucesso.");
         }else{
@@ -199,7 +192,7 @@ class Relatorio extends Component {
                     <span>Nº de alunos matriculados total</span>
                     <span>{escola.alunos_total}</span>
                   </div>
-                  <div className="report-students-div col-3">
+                  {/* <div className="report-students-div col-3">
                     <span>Nº de alunos matutino</span>
                     <span>{escola.matutino}</span>
                   </div>
@@ -210,7 +203,7 @@ class Relatorio extends Component {
                   <div className="report-students-div col-3">
                     <span>Nº de alunos nortuno</span>
                     <span>{escola.noturno}</span>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
