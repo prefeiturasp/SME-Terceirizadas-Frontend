@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import "./style.scss";
+import { SUSPENSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
@@ -118,7 +119,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                 {pedidosFiltrados.map((solicitacao) => {
                   return (
                     <Link
-                      to={`/${parametroURL}/suspensoes-de-alimentacao/relatorio?uuid=${
+                      to={`/${parametroURL}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
                         solicitacao.uuid
                       }`}
                     >
