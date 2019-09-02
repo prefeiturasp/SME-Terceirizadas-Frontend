@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import { getTotalAlunos } from "../../../services/codae.service";
+import { getLotes } from "../../../services/lote.service";
+import { getSolicitacoesAprovadosCodae, getSolicitacoesCanceladasCodae, getSolicitacoesPendentesAprovacaoCodae, getSolicitacoesRevisaoAprovacaoCodae } from "../../../services/painelCODAE.service";
 import DashboardCODAE from "./DashboardCODAE";
-import {
-  getSolicitacoesAprovadosCodae,
-  getSolicitacoesPendentesAprovacaoCodae,
-  getSolicitacoesCanceladasCodae,
-  getSolicitacoesRevisaoAprovacaoCodae
-} from "../../../services/painelCODAE.service";
-import { ajustarFormatoLog } from "./helper";
+import { ajustarFormaLotes, ajustarFormatoLog } from "./helper";
 
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
@@ -22,12 +18,16 @@ class DashboardCODAEContainer extends Component {
       solicitacoesPendentesAprovacao
     );
     solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
+    let lotes = await getLotes();
+    lotes = ajustarFormaLotes(lotes.results);
+
     this.setState({
       enrolled,
       solicitacoesAprovadas,
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
-      solicitacoesRevisao
+      solicitacoesRevisao,
+      lotes
     });
   }
 
@@ -106,56 +106,7 @@ class DashboardCODAEContainer extends Component {
           pedidos: 43
         }
       ],
-      lotes: [
-        {
-          id: 1,
-          lote: "1 BT",
-          dre: "BUTANTÃ",
-          tipo: "MISTA"
-        },
-        {
-          id: 2,
-          lote: "2 CLI",
-          dre: "CAMPO LIMPO",
-          tipo: "MISTA"
-        },
-        {
-          id: 3,
-          lote: "3 CLII",
-          dre: "CAMPO LIMPO",
-          tipo: "MISTA"
-        },
-        {
-          id: 4,
-          lote: "4 CS",
-          dre: "CAPELA DO SOCORRO",
-          tipo: "TERC TOTAL"
-        },
-        {
-          id: 5,
-          lote: "5 FO",
-          dre: "FREGUESIA do Ó",
-          tipo: "TERC TOTAL"
-        },
-        {
-          id: 6,
-          lote: "6 G",
-          dre: "GUAIANASES",
-          tipo: "TERC TOTAL"
-        },
-        {
-          id: 7,
-          lote: "7A IPI I",
-          dre: "IPIRANGA",
-          tipo: "TERC TOTAL"
-        },
-        {
-          id: 7,
-          lote: "7B IPI II",
-          dre: "IPIRANGA",
-          tipo: "TERC TOTAL"
-        }
-      ],
+      lotes: [],
       solicitations: [
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
@@ -184,24 +135,12 @@ class DashboardCODAEContainer extends Component {
           uuid: ""
         },
         {
-          nome: "DRE",
-          uuid: "dre"
-        },
-        {
-          nome: "Dia",
-          uuid: "day"
-        },
-        {
           nome: "Semana",
           uuid: "week"
         },
         {
           nome: "Mês",
           uuid: "month"
-        },
-        {
-          nome: "Lote",
-          uuid: "lote"
         }
       ]
     };
