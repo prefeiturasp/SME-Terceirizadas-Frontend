@@ -10,11 +10,12 @@ import {
   SUSPENSAO_ALIMENTACAO
 } from "../../../configs/RoutesConfig";
 import {
+  getResumoPendenciasAlteracaoCardapio,
   getResumoPendenciasInclusaoAlimentacao,
   getResumoPendenciasInversoesCardapio,
   getResumoPendenciasKitLancheAvulso,
   getResumoPendenciasKitLancheUnificado,
-  getResumoPendenciasAlteracaoCardapio
+  getResumoPendenciasSuspensaoCardapio
 } from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 
@@ -51,6 +52,11 @@ class VisaoGeral extends Component {
         limite: 0,
         prioritario: 0,
         regular: 0
+      },
+      resumoSuspensoesCardapio: {
+        total: 0,
+        informados: 0,
+        ciencia: 0
       }
     };
   }
@@ -61,12 +67,14 @@ class VisaoGeral extends Component {
     const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso();
     const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado();
     const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio();
+    const resumoSuspensoesCardapio = await getResumoPendenciasSuspensaoCardapio();
     this.setState({
       resumoPendenciasInversoesCardapio,
       resumoPendenciasInclusaoAlimentacao,
       resumoPendenciasKitLancheAvulsa,
       resumoPendenciasKitLancheUnificado,
-      resumoPendenciasAlteracaoCardapio
+      resumoPendenciasAlteracaoCardapio,
+      resumoSuspensoesCardapio
     });
   }
 
@@ -76,7 +84,8 @@ class VisaoGeral extends Component {
       resumoPendenciasInclusaoAlimentacao,
       resumoPendenciasKitLancheAvulsa,
       resumoPendenciasKitLancheUnificado,
-      resumoPendenciasAlteracaoCardapio
+      resumoPendenciasAlteracaoCardapio,
+      resumoSuspensoesCardapio
     } = this.state;
     return (
       <div>
@@ -144,10 +153,9 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
               <CardPendencia
                 cardTitle={"Suspensão de Refeição"}
-                totalOfOrders={0}
-                priorityOrders={1}
-                // onLimitOrders={7}
-                // regularOrders={30}
+                totalOfOrders={resumoSuspensoesCardapio.total}
+                priorityOrders={resumoSuspensoesCardapio.informados}
+                priorityOrdersOnly={true}
               />
             </Link>
           </div>

@@ -82,3 +82,23 @@ export const getLote = uuid => {
       return error.json();
     });
 };
+
+export const getLotes = payload => {
+  const url = `${API_URL}/lotes/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { ...data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
