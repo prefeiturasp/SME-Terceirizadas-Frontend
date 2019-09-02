@@ -92,10 +92,12 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          {perfil === "codae" && <SidebarCODAE />}
-          {perfil === "dre" && <SidebarDRE />}
-          {perfil === "escola" && <SidebarEscola />}
-          {perfil === "terceirizada" && <SidebarTerceirizada />}
+          <div className="sidebar-wrapper">
+            {perfil === "codae" && <SidebarCODAE />}
+            {perfil === "dre" && <SidebarDRE />}
+            {perfil === "escola" && <SidebarEscola />}
+            {perfil === "terceirizada" && <SidebarTerceirizada />}
+          </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">
               <img
