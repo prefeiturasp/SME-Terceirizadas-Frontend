@@ -14,6 +14,7 @@ import {
 } from "../../../../services/suspensaoDeAlimentacao.service";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -182,7 +183,7 @@ class Relatorio extends Component {
                   </div>
                 </div>
                 {suspensaoAlimentacao.status !==
-                  "TERCEIRIZADA_TOMA_CIENCIA" && (
+                  statusEnum.TERCEIRIZADA_TOMA_CIENCIA && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
                       label="Tomar ciência"

@@ -3,8 +3,15 @@ import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar } from "../../../helpers/utilities";
+import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
+import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
+
+export const TIPO_CARD_ENUM = {
+  LIMITE: "on-limit",
+  REGULAR: "regular",
+  PRIORIDADE: "priority"
+};
 
 export class CardPendenciaAprovacao extends Component {
   constructor(props) {
@@ -14,7 +21,7 @@ export class CardPendenciaAprovacao extends Component {
       pedidosFiltrados: this.props.pedidos
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
-    
+
   }
 
   filtrarPedidos(event) {
@@ -29,9 +36,9 @@ export class CardPendenciaAprovacao extends Component {
     });
     this.setState({ pedidosFiltrados });
   }
-  
+
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, url } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
     const { collapsed } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -106,10 +113,10 @@ export class CardPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidos.map((pedido, key) => {
-                  
+
                   return (
                     <Link
-                      to={`${url}relatorio?uuid=${pedido.uuid}`}
+                      to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${pedido.uuid}`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

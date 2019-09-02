@@ -21,7 +21,8 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
-import { ALTERACAO_CARDAPIO, DRE } from "../../../../configs/RoutesConfig";
+import { INCLUSAO_ALIMENTACAO, DRE } from "../../../../configs/RoutesConfig";
+import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -47,7 +48,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeInclusao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${DRE}/${ALTERACAO_CARDAPIO}`} />;
+      return <Redirect to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`} />;
     }
   };
 
@@ -323,7 +324,7 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {inclusaoDeAlimentacao.status === "DRE_A_VALIDAR" && (
+                {inclusaoDeAlimentacao.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
                       label={"Não Validar Solicitação"}
