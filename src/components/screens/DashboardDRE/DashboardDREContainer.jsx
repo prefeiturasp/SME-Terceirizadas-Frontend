@@ -23,9 +23,15 @@ class DashboardDREContainer extends Component {
       solicitations: [],
       vision_by: [
         {
-          nome: "Visão por",
-          uuid: "sem_filtro"
+          nome: "Tipo de Solicitação",
+          uuid: "tipo_solicitacao"
         },
+        {
+          nome: "Lote",
+          uuid: "lote"
+        }
+      ],
+      filtro_por: [
         {
           nome: "Sem filtro",
           uuid: "sem_filtro"
