@@ -7,7 +7,6 @@ import BaseButton, {
   ButtonStyle,
   ButtonType
 } from "../../../../Shareable/button";
-import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
 import "./style.scss";
 
 export class CardHistorico extends Component {
