@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { ESCOLA, INCLUSAO_ALIMENTACAO, ALTERACAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, INVERSAO_CARDAPIO, SUSPENSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
 
 export class SidebarEscola extends Component {
   constructor(props) {
@@ -39,14 +40,14 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/status-solicitacoes"
+              to={`${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/status-solicitacoes"
+              to={`${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -54,14 +55,14 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/status-solicitacoes"
+              to={`${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Recusadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/status-solicitacoes"
+              to={`${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Canceladas
             </NavLink>
@@ -89,35 +90,35 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/inclusao-de-alimentacao"
+              to={`${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
             >
               Inclusão de Alimentação
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/alteracao-de-cardapio"
+              to={`${ESCOLA}/${ALTERACAO_CARDAPIO}`}
             >
               Alteração de Cardápio
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/solicitacao-de-kit-lanche"
+              to={`${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
             >
               Solicitação de Kit Lanche
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/inversao-de-dia-de-cardapio"
+              to={`${ESCOLA}/${INVERSAO_CARDAPIO}`}
             >
               Inversão de Dia de Cardápio
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/escola/suspensao-de-alimentacao"
+              to={`${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
             >
               Suspensão de Alimentação
             </NavLink>

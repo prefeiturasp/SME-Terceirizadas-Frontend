@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { CODAE } from "../../../../configs/RoutesConfig";
 
 export class SidebarCODAE extends Component {
   constructor(props) {
@@ -39,14 +40,14 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/terceirizada/solicitacoes"
+              to={`${CODAE}/solicitacoes`}
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/terceirizada/solicitacoes"
+              to={`${CODAE}/solicitacoes`}
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -54,14 +55,14 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/terceirizada/solicitacoes"
+              to={`${CODAE}/solicitacoes`}
             >
               Solicitações Recusadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/terceirizada/solicitacoes"
+              to={`${CODAE}/solicitacoes`}
             >
               Solicitações Canceladas
             </NavLink>

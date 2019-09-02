@@ -17,6 +17,10 @@ body {
 }
 
 .sidebar-dark {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  left: 0;
   i.fa-chevron-circle-left,
   i.fa-chevron-circle-right {
     padding-right: 10px;
