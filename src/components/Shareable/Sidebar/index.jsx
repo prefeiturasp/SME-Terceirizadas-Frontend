@@ -16,7 +16,6 @@ export class Sidebar extends Component {
   }
 
   render() {
-    console.log('render sidebar');
     const { perfil } = this.state;
     const { nome, toggle, toggled } = this.props;
     return (
