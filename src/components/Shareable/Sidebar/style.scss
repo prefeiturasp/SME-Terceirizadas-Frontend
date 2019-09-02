@@ -17,10 +17,10 @@ body {
 }
 
 .sidebar-dark {
-  height: 100%;
-  position: fixed;
-  z-index: 1;
-  left: 0;
+  //height: 100%;
+  //position: fixed;
+  //z-index: 1;
+  //left: 0;
   i.fa-chevron-circle-left,
   i.fa-chevron-circle-right {
     padding-right: 10px;
@@ -104,6 +104,14 @@ body {
           padding-left: 5px;
         }
       }
+    }
+  }
+  .sidebar-wrapper {
+    //height: 12rem;
+    //overflow-y: hidden;
+    //overflow-x: hidden;
+    &:hover {
+      //overflow-y: auto;
     }
   }
   .page-footer {
