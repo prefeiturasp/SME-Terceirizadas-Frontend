@@ -1,5 +1,4 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
@@ -136,7 +135,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {solicitacaoKitLanche.id_externo}
+                        # {solicitacaoKitLanche.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">

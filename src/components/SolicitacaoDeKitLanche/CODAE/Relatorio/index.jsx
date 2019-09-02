@@ -5,7 +5,7 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  aprovaDeKitLancheAvulsoDiretoriaRegional,
+  aprovaDeKitLancheAvulsoCodae,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -16,7 +16,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { DRE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
+import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 
@@ -43,7 +43,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`} />;
+      return <Redirect to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`} />;
     }
   };
 
@@ -89,7 +89,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    aprovaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
+    aprovaDeKitLancheAvulsoCodae(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação de Kit Lanche validada com sucesso!");
@@ -135,7 +135,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {solicitacaoKitLanche.id_externo}
+                        # {solicitacaoKitLanche.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -276,17 +276,17 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {solicitacaoKitLanche.status === statusEnum.DRE_A_VALIDAR && (
+                {solicitacaoKitLanche.status === statusEnum.DRE_APROVADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Recusar Solicitação"}
+                      label={"Negar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}
                       style={ButtonStyle.OutlinePrimary}
                     />
                     <BaseButton
-                      label="Validar Solicitação"
+                      label="Autorizar Solicitação"
                       type={ButtonType.SUBMIT}
                       onClick={() => this.handleSubmit({})}
                       style={ButtonStyle.Primary}

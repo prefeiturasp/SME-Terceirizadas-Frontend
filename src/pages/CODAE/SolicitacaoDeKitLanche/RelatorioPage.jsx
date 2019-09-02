@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Relatorio from "../../../components/SolicitacaoDeKitLanche/DRE/Relatorio";
+import Relatorio from "../../../components/SolicitacaoDeKitLanche/CODAE/Relatorio";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
 import { SOLICITACAO_KIT_LANCHE, CODAE } from "../../../configs/RoutesConfig";
