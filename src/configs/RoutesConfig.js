@@ -1,3 +1,4 @@
+import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
 import { Login } from "../components/Login";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
@@ -14,8 +15,6 @@ import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/Inclusao
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
-import KitLancheOrdersPageCodae from "../pages/CODAE/KitLancheOrderPageCodae";
-import KitsLancheRelatorioCodaePage from "../pages/CODAE/KitLancheRelatorioCodaePage";
 import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
@@ -28,8 +27,6 @@ import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAl
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
 import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapio/RelatorioPage";
-import KitsLancheOrdersPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheOrdersPage";
-import KitsLancheRelatorioPage from "../pages/DRE/SolicitacaoDeKitLanche/KitLancheRelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
 import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
@@ -77,7 +74,7 @@ export const RELATORIO = "relatorio";
 export const HISTORICO = "historico";
 export const SOLICITACOES = "solicitacoes";
 
-export const DETALHE_DASHBOARD_DRE = 'detalhe-dashboard-dre'
+export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 const routesConfig = [
   {
@@ -162,12 +159,12 @@ const routesConfig = [
   },
   {
     path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
-    component: KitsLancheRelatorioPage,
+    component: solicitacaoKitLanchePaginas.RelatorioDRE,
     exact: false
   },
   {
     path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}`,
-    component: KitsLancheOrdersPage,
+    component: solicitacaoKitLanchePaginas.PainelPedidosDRE,
     exact: false
   },
   {
@@ -352,12 +349,12 @@ const routesConfig = [
   },
   {
     path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
-    component: KitsLancheRelatorioCodaePage,
+    component: solicitacaoKitLanchePaginas.RelatorioCODAE,
     exact: false
   },
   {
     path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}`,
-    component: KitLancheOrdersPageCodae,
+    component: solicitacaoKitLanchePaginas.PainelPedidosCODAE,
     exact: true
   },
   {

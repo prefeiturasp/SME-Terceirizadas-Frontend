@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
-import OrdersDashboardContainer from "../../../components/SolicitacaoDeKitLanche/DRE/OrdersDashboardContainer";
+import Container from "../../../components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
 import { HOME } from "../constants";
 import { SOLICITACAO_KIT_LANCHE } from "../../../configs/RoutesConfig";
 
@@ -10,9 +10,9 @@ const atual = {
   titulo: "Solicitações de Kit Lanche"
 };
 
-export default () => (
+export const PainelPedidosPage = () => (
   <Page>
     <Breadcrumb home={HOME} atual={atual} />
-    <OrdersDashboardContainer />
+    <Container />
   </Page>
 );

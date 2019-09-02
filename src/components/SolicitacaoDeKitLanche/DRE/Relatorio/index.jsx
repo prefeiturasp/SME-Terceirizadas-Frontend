@@ -6,19 +6,20 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  dreAprovaPedidoEscola,
-  getInversaoDeDiaDeCardapio
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
+  aprovaDeKitLancheAvulsoDiretoriaRegional,
+  getDetalheKitLancheAvulsa
+} from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
+import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { DRE, INVERSAO_CARDAPIO } from "../../../../configs/RoutesConfig";
+import { DRE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
 import { statusEnum } from "../../../../constants/statusEnum";
+import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -29,9 +30,7 @@ class Relatorio extends Component {
       meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
-      ehInclusaoContinua: false,
-      InversaoCardapio: null,
-      escolaDaInversao: null,
+      solicitacaoKitLanche: null,
       prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
@@ -43,9 +42,9 @@ class Relatorio extends Component {
     });
   }
 
-  renderizarRedirecionamentoParaInversoesDeCardapio = () => {
+  renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${DRE}/${INVERSAO_CARDAPIO}`} />;
+      return <Redirect to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`} />;
     }
   };
 
@@ -63,21 +62,14 @@ class Relatorio extends Component {
         new Date(response.proximos_dois_dias_uteis)
       );
       if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const data_de = moment(InversaoCardapio.data_de, "DD/MM/YYYY");
-          const data_para = moment(InversaoCardapio.data_para, "DD/MM/YYYY");
-          let dataMaisProxima = data_de;
-          if (dataMaisProxima < data_para) {
-            dataMaisProxima = data_para;
-          }
-
+        getDetalheKitLancheAvulsa(uuid).then(response => {
+          const solicitacaoKitLanche = response;
+          const data = solicitacaoKitLanche.solicitacao_kit_lanche.data;
           this.setState({
-            InversaoCardapio,
+            solicitacaoKitLanche,
             uuid,
-            escolaDaInversao: InversaoCardapio.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
+              data,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
@@ -98,43 +90,39 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    dreAprovaPedidoEscola(uuid).then(
+    aprovaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inversão de dias de cardápio validada com sucesso!");
+          toastSuccess("Solicitação de Kit Lanche validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+          toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Inversão de dias de cardápio");
+        toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
       }
     );
   }
 
   render() {
     const {
+      solicitacaoKitLanche,
       showModal,
-      InversaoCardapio,
-      prazoDoPedidoMensagem,
-      meusDados,
-      escolaDaInversao
+      prazoDoPedidoMensagem
     } = this.state;
     return (
       <div>
+        {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
         />
-        {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
-        {!InversaoCardapio ? (
-          <div>Carregando...</div>
-        ) : (
+        {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido #${
-              InversaoCardapio.id_externo
-            }`}</span>
+            <span className="page-title">
+              Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
+            </span>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
@@ -148,7 +136,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {InversaoCardapio.id_externo}
+                        {solicitacaoKitLanche.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -160,7 +148,8 @@ class Relatorio extends Component {
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
-                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
+                      {solicitacaoKitLanche.escola &&
+                        solicitacaoKitLanche.escola.nome}
                     </span>
                   </div>
                 </div>
@@ -168,68 +157,130 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {solicitacaoKitLanche.escola &&
+                        solicitacaoKitLanche.escola.diretoria_regional &&
+                        solicitacaoKitLanche.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Lote</p>
                     <p className="value-important">
-                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
+                      {solicitacaoKitLanche.escola &&
+                        solicitacaoKitLanche.escola.lote &&
+                        solicitacaoKitLanche.escola.lote.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
                     <p>Tipo de Gestão</p>
                     <p className="value-important">
-                      {escolaDaInversao &&
-                        escolaDaInversao.tipo_gestao &&
-                        escolaDaInversao.tipo_gestao.nome}
+                      {solicitacaoKitLanche.escola &&
+                        solicitacaoKitLanche.escola.tipo_gestao &&
+                        solicitacaoKitLanche.escola.tipo_gestao.nome}
                     </p>
                   </div>
                 </div>
                 <hr />
-                {InversaoCardapio.logs && (
-                  <div className="row">
-                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
-                  </div>
-                )}
+                <div className="row">
+                  <FluxoDeStatus listaDeStatus={solicitacaoKitLanche.logs} />
+                </div>
                 <hr />
                 <div className="row">
                   <div className="report-students-div col-3">
                     <span>Nº de alunos matriculados total</span>
-                    <span>{escolaDaInversao.quantidade_alunos}</span>
+                    <span>
+                      {solicitacaoKitLanche.escola &&
+                        solicitacaoKitLanche.escola.alunos_total}
+                    </span>
                   </div>
+                  {/* <div className="report-students-div col-3">
+                    <span>Nº de alunos matutino</span>
+                    <span>{escola.matutino}</span>
+                  </div>
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos vespertino</span>
+                    <span>{escola.vespertino}</span>
+                  </div>
+                  <div className="report-students-div col-3">
+                    <span>Nº de alunos nortuno</span>
+                    <span>{escola.noturno}</span>
+                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
+                    <p className="value">Descrição da Solicitação</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-4 report-label-value">
+                    <p>Data do evento</p>
                     <p className="value">
-                      Descrição da inversão de dias de cardápio
+                      {solicitacaoKitLanche.solicitacao_kit_lanche &&
+                        solicitacaoKitLanche.solicitacao_kit_lanche.data}
+                    </p>
+                  </div>
+                  <div className="col-8 report-label-value">
+                    <p>Local do passeio</p>
+                    <p className="value">{solicitacaoKitLanche.local}</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-4 report-label-value">
+                    <p>Nº de alunos participantes</p>
+                    <p className="value">
+                      {solicitacaoKitLanche.quantidade_alunos} alunos
+                    </p>
+                  </div>
+                  <div className="col-8 report-label-value">
+                    <p>Tempo previsto do passeio</p>
+                    <p className="value">
+                      {solicitacaoKitLanche.solicitacao_kit_lanche &&
+                        solicitacaoKitLanche.solicitacao_kit_lanche
+                          .tempo_passeio_explicacao}
                     </p>
                   </div>
                 </div>
-                {/* {this.renderDetalheInversao()} */}
-                <table className="table-periods">
-                  <tr>
-                    <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
-                  </tr>
-                </table>
+                <div className="row">
+                  <div className="col-12 float-right report-label-value">
+                    <p>Opção desejada</p>
+                    {solicitacaoKitLanche.solicitacao_kit_lanche &&
+                      solicitacaoKitLanche.solicitacao_kit_lanche.kits.map(
+                        (kit, key) => {
+                          return <p className="value">Modelo {kit.nome}</p>;
+                        }
+                      )}
+                  </div>
+                </div>
+                {solicitacaoKitLanche.solicitacao_kit_lanche &&
+                  solicitacaoKitLanche.solicitacao_kit_lanche.kits && (
+                    <div className="row">
+                      <div className="col-12 float-right report-label-value">
+                        <p>Nº total de kits</p>
+                        <p className="value">
+                          {solicitacaoKitLanche.solicitacao_kit_lanche.kits
+                            .length *
+                            solicitacaoKitLanche.quantidade_alunos}{" "}
+                          kits
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.descricao
+                        __html:
+                          solicitacaoKitLanche.solicitacao_kit_lanche &&
+                          solicitacaoKitLanche.solicitacao_kit_lanche.descricao
                       }}
                     />
                   </div>
                 </div>
-                {InversaoCardapio.status === statusEnum.DRE_A_VALIDAR && (
+                {solicitacaoKitLanche.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Não Validar Solicitação"}
+                      label={"Recusar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}
@@ -238,7 +289,7 @@ class Relatorio extends Component {
                     <BaseButton
                       label="Validar Solicitação"
                       type={ButtonType.SUBMIT}
-                      onClick={() => this.handleSubmit()}
+                      onClick={() => this.handleSubmit({})}
                       style={ButtonStyle.Primary}
                       className="ml-3"
                     />

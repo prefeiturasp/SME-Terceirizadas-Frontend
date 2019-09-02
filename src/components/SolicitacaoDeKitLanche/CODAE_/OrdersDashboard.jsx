@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../components/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../configs/RoutesConfig";
