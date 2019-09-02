@@ -15,6 +15,7 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
+import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -114,7 +115,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    parametroURL={`${TERCEIRIZADA}`}
                   />
                 </div>
               </div>
@@ -126,7 +127,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"terceirizada"}
+                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>
@@ -139,7 +140,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"terceirizada"}
+                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>

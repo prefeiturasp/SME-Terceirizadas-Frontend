@@ -73,6 +73,8 @@ export const RELATORIO = "relatorio";
 export const HISTORICO = "historico";
 export const SOLICITACOES = "solicitacoes";
 
+export const DETALHE_DASHBOARD_DRE = 'detalhe-dashboard-dre'
+
 const routesConfig = [
   {
     path: "/",
@@ -340,7 +342,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${CODAE}/detalhe-dashboard-dre`,
+    path: `/${CODAE}/${DETALHE_DASHBOARD_DRE}`,
     component: DashboardCODAEDetailDRE,
     exact: false
   },

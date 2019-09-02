@@ -3,6 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/InversaoDeDiaDeCardapio/CODAE/Relatorio";
 import { HOME } from "../constants";
+import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/RoutesConfig";
 
 const atual = {
   href: "#",
@@ -11,7 +12,7 @@ const atual = {
 
 const anteriores = [
   {
-    href: "/codae/inversoes-dia-cardapio",
+    href: `/${CODAE}/${INVERSAO_CARDAPIO}`,
     titulo: "Inversões de dia de Cardápio"
   }
 ];

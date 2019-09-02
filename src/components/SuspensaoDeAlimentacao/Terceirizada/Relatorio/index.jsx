@@ -13,6 +13,7 @@ import {
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
 } from "../../../../services/suspensaoDeAlimentacao.service";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaSuspensoesDeAlimentacao = () => {
     if (this.state.redirect) {
-      return <Redirect to="/terceirizada/suspensoes-de-alimentacao" />;
+      return <Redirect to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`} />;
     }
   };
 

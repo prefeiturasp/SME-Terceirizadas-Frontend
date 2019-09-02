@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InclusaoDeAlimentacao/CODAE/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/codae/inclusoes-de-alimentacao",
+  href: `/${CODAE}/${INCLUSAO_ALIMENTACAO}`,
   titulo: "Inclusões de Alimentação"
 };
 

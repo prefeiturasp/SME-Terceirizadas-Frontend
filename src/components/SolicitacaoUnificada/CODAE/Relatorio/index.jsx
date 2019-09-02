@@ -18,6 +18,7 @@ import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import TabelaKits from "./TabelaKits";
 import "./style.scss";
+import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/RoutesConfig";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamento = () => {
     if (this.state.redirect) {
-      return <Redirect to="/codae/solicitacoes-unificadas" />;
+      return <Redirect to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`} />;
     }
   };
 

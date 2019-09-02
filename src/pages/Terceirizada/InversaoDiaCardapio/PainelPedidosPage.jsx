@@ -3,9 +3,10 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/Container";
 import { HOME } from "../constants";
+import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
 
 const atual = {
-  href: "/terceirizada/inversoes-dia-cardapio",
+  href: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
   titulo: "Inversões de dia de Cardápio"
 };
 

@@ -9,12 +9,12 @@ import {
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "./CardHistorico";
+import { filtraPrioritarios } from "../../Terceirizada/PainelPedidos/helper";
 import {
   filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
-} from "./helper";
+  filtraRegular
+} from "../../../SolicitacaoDeKitLanche/helper";
+import { formatarPedidos } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {

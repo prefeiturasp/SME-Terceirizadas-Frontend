@@ -185,3 +185,19 @@ export const kitLanches = async () => {
       return erro;
     });
 };
+
+
+export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

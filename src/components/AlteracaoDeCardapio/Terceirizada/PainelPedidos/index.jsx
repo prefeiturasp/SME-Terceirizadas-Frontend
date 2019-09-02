@@ -11,6 +11,7 @@ import {
   getTerceirizadaPedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/alteracaoDecardapio.service";
 import CardHistorico from "./CardHistorico";
+import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -135,7 +136,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    parametroURL={`${TERCEIRIZADA}`}
                   />
                 </div>
               </div>
@@ -147,7 +148,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"terceirizada"}
+                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>
@@ -160,7 +161,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"terceirizada"}
+                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>
@@ -188,7 +189,7 @@ class PainelPedidos extends Component {
                     />
                   </div>
                 </div>
-              )} 
+              )}
             </div>
           </form>
         )}

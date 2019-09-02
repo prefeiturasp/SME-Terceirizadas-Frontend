@@ -3,9 +3,10 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import OrdersDashboardContainer from "../../components/SolicitacaoDeKitLanche/Terceirizada/OrdersDashboardContainer";
 import { HOME } from "./constants";
+import { SOLICITACAO_KIT_LANCHE } from "../../configs/RoutesConfig";
 
 const atual = {
-  href: "kits-lanche",
+  href: `${SOLICITACAO_KIT_LANCHE}`,
   titulo: "Solicitações de Kit Lanche"
 };
 

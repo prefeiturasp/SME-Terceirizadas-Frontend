@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import "./style.scss";
+import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/RoutesConfig";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
@@ -121,7 +122,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                     pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
-                      to={`/${parametroURL}/inversoes-dia-cardapio/relatorio?uuid=${
+                      to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
                         pedido.uuid
                       }`}
                     >

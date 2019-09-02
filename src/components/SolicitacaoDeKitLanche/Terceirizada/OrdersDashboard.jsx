@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { CardPendenciaAprovacao } from "../CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
+import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE } from "../../../configs/RoutesConfig";
 
 class OrdersDashboard extends Component {
   constructor(props) {
@@ -79,7 +80,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={20}
               totalDeEscolas={13}
               pedidos={pedidosPrioritarios}
-              url={'/terceirizada/kits-lanche/'}
+              url={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/`}
             />
           </div>
         </div>
@@ -91,7 +92,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={40}
               totalDeEscolas={8}
               pedidos={pedidosNoPrazoLimite}
-              url={'/terceirizada/kits-lanche/'}
+              url={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/`}
             />
           </div>
         </div>
@@ -103,7 +104,7 @@ class OrdersDashboard extends Component {
               totalDePedidos={60}
               totalDeEscolas={20}
               pedidos={pedidosNoPrazoRegular}
-              url={'/terceirizada/kits-lanche/'}
+              url={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/`}
             />
           </div>
         </div>
