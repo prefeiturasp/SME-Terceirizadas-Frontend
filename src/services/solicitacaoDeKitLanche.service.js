@@ -216,8 +216,38 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
     });
 };
 
+export const getDiretoriaRegionalPedidosDeKitLancheAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 export const getCodaePedidosDeKitLanche = filtroAplicado => {
   const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDrePedidosDeKitLancheAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-dre/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
