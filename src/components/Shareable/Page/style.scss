@@ -15,3 +15,12 @@
   padding-right: 3rem;
   background-color: $whiteBackground;
 }
+
+#content-wrapper {
+  div.content-wrapper-div {
+    margin-left: 18rem;
+    &.toggled {
+      margin-left: 6rem;
+    }
+  }
+}
