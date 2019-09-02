@@ -1,18 +1,23 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { SidebarCODAE } from "./SidebarCODAE";
+import { SidebarDRE } from "./SidebarDRE";
 import { SidebarEscola } from "./SidebarEscola";
+import { SidebarTerceirizada } from "./SidebarTerceirizada";
 import "./style.scss";
 
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      perfil: "escola",
       toggled: false
     };
   }
 
   render() {
-    const { nome, perfil, toggle, toggled } = this.props;
+    const { perfil } = this.state;
+    const { nome, toggle, toggled } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -22,6 +27,35 @@ export class Sidebar extends Component {
           id="accordionSidebar"
         >
           <div className="sidebar-divider my-0" />
+          {/* Somente para testar o sidebar enquanto ainda não há perfil/permissões */}
+          {!toggled && (
+            <div className="testing-sidebar row">
+              <div
+                onClick={() => this.setState({ perfil: "escola" })}
+                className="col-2"
+              >
+                Escola
+              </div>
+              <div
+                onClick={() => this.setState({ perfil: "dre" })}
+                className="col-2"
+              >
+                DRE
+              </div>
+              <div
+                onClick={() => this.setState({ perfil: "codae" })}
+                className="col-2"
+              >
+                CODAE
+              </div>
+              <div
+                onClick={() => this.setState({ perfil: "terceirizada" })}
+                className="col-2"
+              >
+                Terceirizada
+              </div>
+            </div>
+          )}
           <p onClick={() => toggle()} className="text-right c-pointer">
             <i
               className={
@@ -58,7 +92,10 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
+          {perfil === "codae" && <SidebarCODAE />}
+          {perfil === "dre" && <SidebarDRE />}
           {perfil === "escola" && <SidebarEscola />}
+          {perfil === "terceirizada" && <SidebarTerceirizada />}
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">
               <img

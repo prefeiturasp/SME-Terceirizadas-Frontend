@@ -3,7 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Relatorio from "../../../components/SolicitacaoDeKitLanche/Terceirizada/Relatorio";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { SOLICITACAO_KIT_LANCHE, CODAE } from "../../../configs/RoutesConfig";
+import { SOLICITACAO_KIT_LANCHE, TERCEIRIZADA } from "../../../configs/RoutesConfig";
 
 const atual = {
   href: "#",
@@ -12,7 +12,7 @@ const atual = {
 
 const anteriores = [
   {
-    href: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}`,
+    href: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
     titulo: "Solicitações de Kit Lanche"
   }
 ];
