@@ -49,8 +49,6 @@ import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceir
 import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/RelatorioPage";
-import KitsLancheOrdersTerceirizadaPage from "../pages/Terceirizada/KitLancheOrdersTerceirizadaPage";
-import KitsLancheRelatorioTerceirizadaPage from "../pages/Terceirizada/KitLancheRelatorioTerceirizadaPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
@@ -259,12 +257,12 @@ const routesConfig = [
   },
   {
     path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
-    component: KitsLancheRelatorioTerceirizadaPage,
+    component: solicitacaoKitLanchePaginas.RelatorioTerceirizada,
     exact: false
   },
   {
     path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
-    component: KitsLancheOrdersTerceirizadaPage,
+    component: solicitacaoKitLanchePaginas.PainelPedidosTerceirizada,
     exact: false
   },
   {

@@ -5,7 +5,7 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  aprovaDeKitLancheAvulsoCodae,
+  aprovaDeKitLancheAvulsoTerceirizadas,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -16,7 +16,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
+import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 
@@ -43,7 +43,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`} />;
+      return <Redirect to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`} />;
     }
   };
 
@@ -84,22 +84,22 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação negada com sucesso!");
+    toastSuccess("Solicitação de Alimentação recusada com sucesso!");
   }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    aprovaDeKitLancheAvulsoCodae(uuid).then(
+    aprovaDeKitLancheAvulsoTerceirizadas(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de Kit Lanche autorizada com sucesso!");
+          toastSuccess("Ciência de Solicitação de Kit Lanche enviada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao autorizar a Solicitação de Kit Lanche");
+          toastError("Houve um erro ao tomar ciência da Solicitação de Kit Lanche");
         }
       },
       function(error) {
-        toastError("Houve um erro ao autorizar a Solicitação de Kit Lanche");
+        toastError("Houve um erro ao tomar ciência da Solicitação de Kit Lanche");
       }
     );
   }
@@ -276,17 +276,17 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {solicitacaoKitLanche.status === statusEnum.DRE_APROVADO && (
+                {solicitacaoKitLanche.status === statusEnum.CODAE_APROVADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Negar Solicitação"}
+                      label={"Recusar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}
                       style={ButtonStyle.OutlinePrimary}
                     />
                     <BaseButton
-                      label="Autorizar Solicitação"
+                      label="Ciência"
                       type={ButtonType.SUBMIT}
                       onClick={() => this.handleSubmit({})}
                       style={ButtonStyle.Primary}

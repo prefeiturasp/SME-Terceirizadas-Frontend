@@ -15,3 +15,12 @@ export {
 export {
   RelatorioPage as RelatorioCODAE
 } from "../../pages/CODAE/SolicitacaoDeKitLanche/RelatorioPage";
+
+// Terceirizada
+
+export {
+  PainelPedidosPage as PainelPedidosTerceirizada
+} from "../../pages/Terceirizada/SolicitacaoDeKitLanche/PainelPedidosPage";
+export {
+  RelatorioPage as RelatorioTerceirizada
+} from "../../pages/Terceirizada/SolicitacaoDeKitLanche/RelatorioPage";
