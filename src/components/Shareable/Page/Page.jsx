@@ -42,7 +42,7 @@ export default class Page extends Component {
           toggled={toggled}
         />
         <div id="content-wrapper" className="pt-5">
-          <div className="d-flex flex-column p-4 mt-5">
+          <div className={`content-wrapper-div ${toggled && "toggled"} d-flex flex-column p-4 mt-5`}>
             {children.length ? children[0] : children}
             <span className="page-title">{titulo}</span>
             {children[1]}

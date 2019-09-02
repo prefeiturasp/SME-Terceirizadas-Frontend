@@ -139,3 +139,12 @@ body {
     }
   }
 }
+
+.testing-sidebar {
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+  div:first-child {
+    margin-left: 2rem;
+  }
+}
