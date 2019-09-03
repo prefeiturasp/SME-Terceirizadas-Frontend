@@ -67,8 +67,8 @@ export const getSolicitacoesAutorizadasPelaDRE = dreUuid => {
     });
 };
 
-export const getSolicitacoesPendentesParaDRE = dreUuid => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/`;
+export const getSolicitacoesPendentesParaDRE = (dreUuid, filtro="sem_filtro") => {
+  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -266,6 +266,36 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results, filtro="solicitacao_kit_lanche");
     pedidosLimite = filtraNoLimite(solicitacoes.results, filtro="solicitacao_kit_lanche");
     pedidosRegular = filtraRegular(solicitacoes.results, filtro="solicitacao_kit_lanche");
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+export const getResumoPendenciasDREPorLote = async (
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
   }
 
   resposta.limite = pedidosLimite.length;

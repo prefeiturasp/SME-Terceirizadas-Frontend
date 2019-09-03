@@ -9,11 +9,12 @@ export const CardPendencia = props => {
     priorityOrders,
     onLimitOrders,
     regularOrders,
-    priorityOrdersOnly
+    priorityOrdersOnly,
+    loading
   } = props;
   return (
     <div className="card card-pendency">
-      <div className="card-title">{cardTitle}{!totalOfOrders && <img
+      <div className="card-title">{cardTitle}{loading && <img
                         src="/assets/image/ajax-loader.gif"
                         alt="ajax-loader"
                       />}</div>
