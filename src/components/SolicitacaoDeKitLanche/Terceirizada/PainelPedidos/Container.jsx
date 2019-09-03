@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getTerceirizadasPedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { getPedidosDeKitLancheAprovadosTerceirizada } from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
@@ -10,24 +9,16 @@ class Container extends Component {
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
       pedidosAprovados: [],
-      pedidosReprovados: []
     };
   }
-
+  
   componentDidMount() {
-    let pedidosAprovadosRetornados = 0;
     let pedidosAprovados = [];
 
-    getTerceirizadasPedidosDeKitLanche(FiltroEnum.SEM_FILTRO).then(
-      response => {
-        pedidosAprovadosRetornados += 1;
-        pedidosAprovados = pedidosAprovados.concat(response.results);
-        let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 4;
-        if (todosPedidosAprovadosRetornados) {
-          this.setState({ pedidosAprovados, pedidosCarregados: true });
-        }
-      }
-    );
+    getPedidosDeKitLancheAprovadosTerceirizada().then(response => {
+      pedidosAprovados = response.results
+      this.setState({pedidosAprovados})
+    })
   }
 
   render() {

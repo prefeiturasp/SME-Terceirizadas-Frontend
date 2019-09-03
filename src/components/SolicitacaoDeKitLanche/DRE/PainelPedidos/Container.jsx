@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getDiretoriaRegionalPedidosDeKitLancheAprovados } from "../../../../services/solicitacaoDeKitLanche.service";
+import { getDiretoriaRegionalPedidosDeKitLancheAprovados, getDiretoriaRegionalPedidosDeKitLancheReprovados } from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
@@ -15,11 +15,19 @@ class Container extends Component {
 
   componentDidMount() {
     let pedidosAprovados = [];
+    let pedidosReprovados = [];
 
     getDiretoriaRegionalPedidosDeKitLancheAprovados().then(
       response => {
         pedidosAprovados = response.results;
           this.setState({ pedidosAprovados });
+      }
+    );
+
+    getDiretoriaRegionalPedidosDeKitLancheReprovados().then(
+      response => {
+        pedidosReprovados = response.results;
+          this.setState({ pedidosReprovados });
       }
     );
   }

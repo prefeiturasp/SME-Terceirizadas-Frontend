@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCodaePedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { getCodaePedidosDeKitLancheReprovados, getCodaePedidosDeKitLancheAprovados } from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
@@ -15,19 +14,19 @@ class Container extends Component {
   }
 
   componentDidMount() {
-    let pedidosAprovadosRetornados = 0;
+    let pedidosReprovados = [];
     let pedidosAprovados = [];
 
-    getCodaePedidosDeKitLanche(FiltroEnum.SEM_FILTRO).then(
-      response => {
-        pedidosAprovadosRetornados += 1;
-        pedidosAprovados = pedidosAprovados.concat(response.results);
-        let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 4;
-        if (todosPedidosAprovadosRetornados) {
-          this.setState({ pedidosAprovados, pedidosCarregados: true });
-        }
-      }
-    );
+    getCodaePedidosDeKitLancheAprovados().then(response => {
+      pedidosAprovados = response.results
+      this.setState({pedidosAprovados})
+    })
+
+    getCodaePedidosDeKitLancheReprovados().then(response => {
+      pedidosReprovados = response.results
+      this.setState({pedidosReprovados})
+    })
+
   }
 
   render() {
