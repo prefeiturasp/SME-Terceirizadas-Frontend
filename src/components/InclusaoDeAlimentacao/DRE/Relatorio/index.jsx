@@ -208,7 +208,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {inclusaoDeAlimentacao.id_externo}
+                        # {inclusaoDeAlimentacao.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">

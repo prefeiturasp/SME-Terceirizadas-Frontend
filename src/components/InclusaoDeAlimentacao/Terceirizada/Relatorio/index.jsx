@@ -21,7 +21,10 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
-import { TERCEIRIZADA, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
+import {
+  TERCEIRIZADA,
+  INCLUSAO_ALIMENTACAO
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
@@ -213,7 +216,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {inclusaoDeAlimentacao.id_externo}
+                        # {inclusaoDeAlimentacao.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">

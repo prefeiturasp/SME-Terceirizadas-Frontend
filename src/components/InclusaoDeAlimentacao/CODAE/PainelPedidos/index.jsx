@@ -208,6 +208,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      parametroURL={`${CODAE}`}
                     />
                   </div>
                 </div>
