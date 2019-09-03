@@ -118,7 +118,7 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
+              to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
             >
               Suspensão de Alimentação
             </NavLink>

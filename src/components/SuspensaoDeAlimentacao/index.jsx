@@ -301,7 +301,7 @@ class FoodSuspensionEditor extends Component {
         values.dias_razoes[idx][`outro_motivo${idx}`];
     });
     values.escola = this.props.meusDados.escolas[0].uuid;
-    const error = validateSubmit(values, this.state);
+    const error = validateSubmit(values, this.props.meusDados);
     values.quantidades_por_periodo = values.suspensoes;
     values.suspensoes_alimentacao = values.dias_razoes;
     const status = values.status;
@@ -369,7 +369,7 @@ class FoodSuspensionEditor extends Component {
       title,
       options,
       suspensoesDeAlimentacaoList,
-      dias_razoes      
+      dias_razoes
     } = this.state;
     let checkMap = {
       MANHA: suspensoes_MANHA && suspensoes_MANHA.check,
