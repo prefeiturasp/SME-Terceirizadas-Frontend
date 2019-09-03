@@ -7,7 +7,6 @@ import BaseButton, {
   ButtonStyle,
   ButtonType
 } from "../../../../Shareable/button";
-import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
 import "./style.scss";
 
 export class CardHistorico extends Component {
@@ -127,12 +126,7 @@ export class CardHistorico extends Component {
                           </td>
                           <td>{pedido.escola.nome}</td>
                           <td>
-                            {pedido.data_inicial
-                              ? `${pedido.data_inicial} a ${pedido.data_final}`
-                              : stringSeparadaPorVirgulas(
-                                  pedido.inclusoes,
-                                  "data"
-                                )}
+                            {pedido.solicitacao_kit_lanche.data}
                           </td>
                         </tr>
                       );

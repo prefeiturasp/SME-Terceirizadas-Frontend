@@ -72,7 +72,6 @@ class PainelPedidos extends Component {
       visaoPorCombo,
       valorDoFiltro,
       pedidosAprovados,
-      pedidosReprovados
     } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
     return (
@@ -152,19 +151,6 @@ class PainelPedidos extends Component {
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
                         "Histórico de Solicitações de Kit Lanche aprovadas"
-                      }
-                    />
-                  </div>
-                </div>
-              )}
-              {pedidosReprovados && pedidosReprovados.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(pedidosReprovados)}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Solicitações de Kit Lanche reprovadas"
                       }
                     />
                   </div>
