@@ -40,14 +40,14 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -55,14 +55,14 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Recusadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/status-solicitacoes`}
             >
               Solicitações Canceladas
             </NavLink>
@@ -90,28 +90,28 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
+              to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
             >
               Inclusão de Alimentação
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/${ALTERACAO_CARDAPIO}`}
+              to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}
             >
               Alteração de Cardápio
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
+              to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
             >
               Solicitação de Kit Lanche
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${ESCOLA}/${INVERSAO_CARDAPIO}`}
+              to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}
             >
               Inversão de Dia de Cardápio
             </NavLink>
