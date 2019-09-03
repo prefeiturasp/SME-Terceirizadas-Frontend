@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./style.scss";
 import { Link } from "react-router-dom";
-import { DETALHE_DASHBOARD_DRE, CODAE } from "../../../configs/RoutesConfig";
+import { DETALHE_DASHBOARD_DRE, CODAE } from "../../../configs/constants";
 
 export const CardPendenciaDRE = props => {
   const { totalPedidos, nomeDre } = props;

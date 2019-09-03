@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
-import { TERCEIRIZADA, PAINEL_CONTROLE } from "../../../configs/RoutesConfig";
+import { TERCEIRIZADA, PAINEL_CONTROLE } from "../../../configs/constants";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",

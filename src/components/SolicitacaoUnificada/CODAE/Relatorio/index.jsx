@@ -21,7 +21,7 @@ import "./style.scss";
 import {
   CODAE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA
-} from "../../../../configs/RoutesConfig";
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {

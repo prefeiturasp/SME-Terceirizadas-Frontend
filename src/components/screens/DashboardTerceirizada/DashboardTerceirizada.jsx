@@ -10,7 +10,7 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO
-} from "../../../configs/RoutesConfig";
+} from "../../../configs/constants";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";

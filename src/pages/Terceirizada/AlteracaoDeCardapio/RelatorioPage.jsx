@@ -6,7 +6,7 @@ import { HOME } from "../constants";
 import {
   ALTERACAO_CARDAPIO,
   TERCEIRIZADA
-} from "../../../configs/RoutesConfig";
+} from "../../../configs/constants";
 
 const atual = {
   href: "#",

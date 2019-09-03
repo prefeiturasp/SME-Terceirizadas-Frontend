@@ -16,7 +16,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
+import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 

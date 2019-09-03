@@ -260,7 +260,6 @@ div.caption-choices {
       border-radius: 15px;
     }
   }
-
 }
 
 .btn-styled {
@@ -354,5 +353,20 @@ div.caption-choices {
       bottom: -7px;
       height: 3px;
     }
+  }
+}
+
+.table-historic {
+  th {
+    font-weight: normal;
+    font-size: 14px;
+    color: #686868;
+  }
+  td {
+    font-weight: bold;
+    font-size: 15px;
+    color: #353535;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 0;
   }
 }

@@ -15,7 +15,7 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {

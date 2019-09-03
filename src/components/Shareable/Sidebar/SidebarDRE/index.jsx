@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { DRE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/RoutesConfig";
+import { DRE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 
 export class SidebarDRE extends Component {
   constructor(props) {

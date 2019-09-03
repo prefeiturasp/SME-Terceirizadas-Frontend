@@ -15,7 +15,8 @@ import {
   getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
   getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
+import { DRE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -206,7 +207,10 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      parametroURL={`${DRE}`}
+                      titulo={
+                        "Histórico de Inclusões de Alimentação Autorizadas"
+                      }
                     />
                   </div>
                 </div>

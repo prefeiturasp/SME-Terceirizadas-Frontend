@@ -13,7 +13,7 @@ import {
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
 } from "../../../../services/suspensaoDeAlimentacao.service";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {

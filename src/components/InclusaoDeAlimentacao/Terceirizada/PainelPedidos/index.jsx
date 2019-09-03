@@ -15,8 +15,8 @@ import {
   getTerceirizadaPedidosNoPrazoLimite as limitesAvulso,
   getTerceirizadaPedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import CardHistorico from "./CardHistorico";
-import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import CardHistorico from "../../components/CardHistorico";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -207,7 +207,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>

@@ -8,7 +8,7 @@ import {
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
-} from "../../../configs/RoutesConfig";
+} from "../../../configs/constants";
 import {
   getResumoPendenciasAlteracaoCardapio,
   getResumoPendenciasInclusaoAlimentacao,

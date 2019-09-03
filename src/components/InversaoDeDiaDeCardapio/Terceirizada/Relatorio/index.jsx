@@ -20,7 +20,7 @@ import "./style.scss";
 import {
   INVERSAO_CARDAPIO,
   TERCEIRIZADA
-} from "../../../../configs/RoutesConfig";
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {

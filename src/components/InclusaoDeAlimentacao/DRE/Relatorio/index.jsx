@@ -21,7 +21,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/dialogs";
 import "../style.scss";
 import "./style.scss";
-import { INCLUSAO_ALIMENTACAO, DRE } from "../../../../configs/RoutesConfig";
+import { INCLUSAO_ALIMENTACAO, DRE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {

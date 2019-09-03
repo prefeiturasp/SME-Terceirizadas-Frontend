@@ -3,7 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/Container";
 import { HOME } from "../constants";
-import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/RoutesConfig";
+import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
