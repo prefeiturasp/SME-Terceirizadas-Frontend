@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { getTotalAlunos } from "../../../services/codae.service";
 import { getLotes } from "../../../services/lote.service";
-import { getSolicitacoesAprovadosCodae, getSolicitacoesCanceladasCodae, getSolicitacoesPendentesAprovacaoCodae, getSolicitacoesRevisaoAprovacaoCodae } from "../../../services/painelCODAE.service";
+import {
+  getSolicitacoesAprovadosCodae,
+  getSolicitacoesCanceladasCodae,
+  getSolicitacoesPendentesAprovacaoCodae,
+  getSolicitacoesRevisaoAprovacaoCodae
+} from "../../../services/painelCODAE.service";
+import { VENCIMENTO, FILTRO } from "./const";
 import DashboardCODAE from "./DashboardCODAE";
 import { ajustarFormaLotes, ajustarFormatoLog } from "./helper";
 
@@ -129,18 +135,18 @@ class DashboardCODAEContainer extends Component {
           date: "Qua 10:07"
         }
       ],
-      vision_by: [
+      vencimentoPara: [
         {
-          nome: "Visão por",
-          uuid: ""
+          nome: VENCIMENTO.SEM_FILTRO,
+          uuid: FILTRO.SEM_FILTRO
         },
         {
-          nome: "Semana",
-          uuid: "week"
+          nome: VENCIMENTO.SEMANA,
+          uuid: FILTRO.DAQUI_A_7_DIAS
         },
         {
-          nome: "Mês",
-          uuid: "month"
+          nome: VENCIMENTO.MES,
+          uuid: FILTRO.DAQUI_A_30_DIAS
         }
       ]
     };
