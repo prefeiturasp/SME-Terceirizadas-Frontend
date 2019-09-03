@@ -595,7 +595,6 @@ table.cadastro-lote {
       &:first-child {
         padding: 0 20px;
       }
-
     }
   }
 
@@ -607,7 +606,6 @@ table.cadastro-lote {
       font-size: 15px;
       padding-right: 20px;
 
-
       .divisao {
         padding-top: 10px;
         border-bottom: 1px #e8e8e8 solid;
@@ -617,14 +615,13 @@ table.cadastro-lote {
         display: grid;
         grid-template-rows: 1.5em 2em auto;
 
-
         span {
           line-height: 14px;
           font-weight: 600;
         }
       }
 
-      .header{
+      .header {
         font-weight: bold;
         color: #686868;
       }
@@ -639,5 +636,18 @@ table.cadastro-lote {
         }
       }
     }
+  }
+}
+
+.form-section-terceirizada {
+  .section-nutri-crn {
+    display: grid;
+    grid-template-columns: 62% 36%;
+    grid-column-gap: 2%;
+  }
+  .section-nutri-contato{
+    display: grid;
+    grid-template-columns: 34% 64%;
+    grid-column-gap: 2%;
   }
 }
