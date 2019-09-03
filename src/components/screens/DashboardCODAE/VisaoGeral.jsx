@@ -18,50 +18,52 @@ import {
   getResumoPendenciasSuspensaoCardapio
 } from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
-
+const ESTADO_INICIAL = {
+  resumoPendenciasInversoesCardapio: {
+    total: 0,
+    limite: 0,
+    prioritario: 0,
+    regular: 0
+  },
+  resumoPendenciasInclusaoAlimentacao: {
+    total: 0,
+    limite: 0,
+    prioritario: 0,
+    regular: 0
+  },
+  resumoPendenciasKitLancheAvulsa: {
+    total: 0,
+    limite: 0,
+    prioritario: 0,
+    regular: 0
+  },
+  resumoPendenciasKitLancheUnificado: {
+    total: 0,
+    limite: 0,
+    prioritario: 0,
+    regular: 0
+  },
+  resumoPendenciasAlteracaoCardapio: {
+    total: 0,
+    limite: 0,
+    prioritario: 0,
+    regular: 0
+  },
+  resumoSuspensoesCardapio: {
+    total: 0,
+    informados: 0,
+    ciencia: 0
+  }
+};
 class VisaoGeral extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      resumoPendenciasInversoesCardapio: {
-        total: 0,
-        limite: 0,
-        prioritario: 0,
-        regular: 0
-      },
-      resumoPendenciasInclusaoAlimentacao: {
-        total: 0,
-        limite: 0,
-        prioritario: 0,
-        regular: 0
-      },
-      resumoPendenciasKitLancheAvulsa: {
-        total: 0,
-        limite: 0,
-        prioritario: 0,
-        regular: 0
-      },
-      resumoPendenciasKitLancheUnificado: {
-        total: 0,
-        limite: 0,
-        prioritario: 0,
-        regular: 0
-      },
-      resumoPendenciasAlteracaoCardapio: {
-        total: 0,
-        limite: 0,
-        prioritario: 0,
-        regular: 0
-      },
-      resumoSuspensoesCardapio: {
-        total: 0,
-        informados: 0,
-        ciencia: 0
-      }
-    };
+    this.state = ESTADO_INICIAL;
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.filtro !== this.props.filtro) {
+      this.setState(ESTADO_INICIAL);
       this.buscarPendencias(this.props.filtro);
     }
   }
