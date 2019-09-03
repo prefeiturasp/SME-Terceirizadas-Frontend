@@ -58,7 +58,7 @@ class DashboardDRE extends Component {
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
       loadingSolicitacoesUnificadas: true,
-      lotes: ["A", "B", "C"],
+      lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
       visao: "tipo_solicitacao"
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
@@ -337,7 +337,7 @@ class DashboardDRE extends Component {
                   <div className="col-3 text-right my-auto">
                     <LabelAndCombo
                       onChange={this.changeVisao}
-                      placeholder={"Visão por"} 
+                      placeholder={"Visão por"}
                       options={vision_by}
                     />
                   </div>
