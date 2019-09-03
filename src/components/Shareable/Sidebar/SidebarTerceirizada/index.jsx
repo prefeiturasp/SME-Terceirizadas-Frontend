@@ -40,14 +40,14 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${TERCEIRIZADA}/solicitacoes`}
+              to={`/${TERCEIRIZADA}/solicitacoes`}
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${TERCEIRIZADA}/solicitacoes`}
+              to={`/${TERCEIRIZADA}/solicitacoes`}
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -55,14 +55,14 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${TERCEIRIZADA}/solicitacoes`}
+              to={`/${TERCEIRIZADA}/solicitacoes`}
             >
               Solicitações Recusadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${TERCEIRIZADA}/solicitacoes`}
+              to={`/${TERCEIRIZADA}/solicitacoes`}
             >
               Solicitações Canceladas
             </NavLink>

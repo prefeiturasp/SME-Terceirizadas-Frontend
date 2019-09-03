@@ -40,14 +40,14 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${DRE}/solicitacoes-autorizadas`}
+              to={`/${DRE}/solicitacoes-autorizadas`}
             >
               Solicitações Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${DRE}/solicitacoes-pendentes`}
+              to={`/${DRE}/solicitacoes-pendentes`}
             >
               Solicitações Pendentes <br />
               de Autorização
@@ -90,7 +90,7 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
+              to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
             >
               Solicitação Unificada
             </NavLink>

@@ -281,7 +281,8 @@ class InclusaoDeAlimentacao extends Component {
           inclusao_formatada["data"] = inclusao.data;
           inclusao_formatada["motivo"] = inclusao.motivo.uuid;
           inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
-          inclusao_formatada["outroMotivo"] = inclusao.outro_motivo !== null;
+          inclusao_formatada["outroMotivo"] =
+            inclusao.outro_motivo !== null && inclusao.outro_motivo !== "";
           return inclusao_formatada;
         });
     this.setState({
@@ -468,7 +469,7 @@ class InclusaoDeAlimentacao extends Component {
     values.quantidades_periodo = this.state.periodos;
     const ehInclusaoContinua =
       values.inclusoes[0].data_inicial && values.inclusoes[0].data_final;
-    const error = validarSubmissao(values, this.state);
+    const error = validarSubmissao(values, this.props.meusDados);
     if (!error) {
       if (ehInclusaoContinua) {
         this.fluxoSolicitacaoContinua(values);

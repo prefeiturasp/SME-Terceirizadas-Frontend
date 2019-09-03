@@ -34,7 +34,7 @@ import { Rascunhos } from "./Rascunhos";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
-import { validateSubmit } from "./UnifiedSolicitationValidation";
+import { validateSubmit } from "./validacao";
 import { formatarSubmissao, extrairKitsLanche } from "./helper";
 
 export const HORAS_ENUM = {
@@ -158,7 +158,9 @@ class SolicitacaoUnificada extends Component {
       title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: param.solicitacaoUnificada.id_externo,
-      outroMotivo: param.solicitacaoUnificada.outro_motivo !== null
+      outroMotivo:
+        param.solicitacaoUnificada.outro_motivo !== null &&
+        param.solicitacaoUnificada.outro_motivo !== ""
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -199,6 +201,7 @@ class SolicitacaoUnificada extends Component {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
     let escolas = this.props.escolas;
+
     escolas.forEach(function(escola) {
       escola["burger_active"] = false;
       escola["limit_of_meal_kits"] = 0;

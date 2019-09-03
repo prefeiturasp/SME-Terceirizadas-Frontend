@@ -21,6 +21,7 @@ class SolicitacaoUnificadaContainer extends Component {
     meusDados().then(response => {
       let escolas = response.diretorias_regionais[0].escolas;
       escolas.forEach(function(escola) {
+        escola["total_alunos"] = escola.quantidade_alunos;
         escola["burger_active"] = false;
         escola["limit_of_meal_kits"] = 0;
         escola["number_of_choices"] = 0;

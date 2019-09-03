@@ -9,6 +9,7 @@ body {
 }
 
 .bg-gradiente-sme {
+  margin-top: -1.3rem;
   background-color: $green;
   box-shadow: 6px 0px 18px rgba(0, 0, 0, 0.15);
   background-size: cover;
@@ -69,9 +70,11 @@ body {
       }
       i {
         color: white !important;
+        &.fa-file-alt {
+          padding-left: 5px;
+        }
       }
       &:hover,
-      &.keep-hover-settings,
       &:not(.collapsed) {
         border-radius: 5px;
         background-color: white !important;
@@ -141,12 +144,18 @@ body {
 
 .sidebar-dark:not(.toggled) {
   .nav-item {
+    height: 35px;
     .nav-link {
       span {
         font-size: 14px !important;
       }
       i {
         padding-right: 13.4px;
+      }
+      &:hover,
+      &:not(.collapsed) {
+        height: 35px;
+        padding-top: 0.4rem;
       }
     }
   }

@@ -1,6 +1,7 @@
 @import "../../../styles/variables.scss";
 
 .navbar {
+  height: 70px;
   .nav-bar {
     &:not(.toggled) {
       padding-left: 3rem;
@@ -9,11 +10,12 @@
       margin-left: -2rem;
     }
     img {
-      height: 64px;
+      height: 55px;
       width: auto;
     }
   }
   .navbar-nav {
+    padding-top: 0.5rem;
     .nav-item {
       padding-left: 30px;
       img {

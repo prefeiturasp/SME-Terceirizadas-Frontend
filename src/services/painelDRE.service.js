@@ -23,7 +23,7 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "../components/SolicitacaoDeKitLanche/services";
+import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 
 import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
