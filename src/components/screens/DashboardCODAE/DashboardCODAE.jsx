@@ -3,10 +3,14 @@ import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import { CODAE, SOLICITACOES } from "../../../configs/RoutesConfig";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
+import { VENCIMENTO } from "./const";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
 
@@ -15,18 +19,14 @@ class DashboardCODAE extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      false: true,
-      dre: false
+      dre: false,
+      filtro: VENCIMENTO.SEM_FILTRO
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
-  handleField(value) {
-    if (value === "dre") {
-      this.setState({ dre: true });
-    } else {
-      this.setState({ dre: false });
-    }
+  onVencimentoPara(filtro) {
+    this.setState({ filtro });
   }
 
   alterarCollapse() {
@@ -40,7 +40,7 @@ class DashboardCODAE extends Component {
       solicitacoesAprovadas,
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
-      vision_by,
+      vencimentoPara,
       lotes
     } = this.props;
     const { collapsed, loading } = this.state;
@@ -149,9 +149,9 @@ class DashboardCODAE extends Component {
                 <span className="float-right">
                   <Field
                     component={LabelAndCombo}
-                    onChange={value => this.handleField(value)}
-                    placeholder={"Visão por"}
-                    options={vision_by}
+                    onChange={filtro => this.onVencimentoPara(filtro)}
+                    placeholder={"Vencimento para"}
+                    options={vencimentoPara}
                   />
                 </span>
               </div>
