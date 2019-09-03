@@ -29,6 +29,7 @@
     "react-router-dom": "^5.0.0",
     "react-rte": "^0.16.1",
     "react-scripts": "^3.0.0",
+    "react-text-mask": "^5.4.3",
     "react-toastify": "^5.1.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",

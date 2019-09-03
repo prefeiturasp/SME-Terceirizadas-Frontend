@@ -5,7 +5,7 @@ export function transformaObjetos(objetos, lista = [], obj = {}){
         // eslint-disable-next-line array-callback-return
         objetos.results.map(objeto => {
             obj.uuid = objeto['uuid'];
-            obj.label = objeto['nome'] 
+            obj.label = objeto['nome']
             obj.value = objeto['nome']
             lista.push(obj);
             obj = {}
@@ -13,7 +13,7 @@ export function transformaObjetos(objetos, lista = [], obj = {}){
     }catch(err){
         return lista
     }
-    
+
     return lista
 };
 
@@ -23,7 +23,7 @@ export const fieldCnpj = createTextMask({
     allowEmpty: false,
     guide: false,
 });
-  
+
 export const fieldCep = createTextMask({
     pattern: '99999-999',
     allowEmpty: false,
@@ -35,4 +35,20 @@ export const fieldTel = createTextMask({
     guide: false,
 });
 
-    
+
+export const retornArrayTerceirizadas = (response) => {
+  return [
+    response.map(resp => {
+      return {
+        codigo_empresa: resp.id_externo,
+        nome: resp.razao_social,
+        cnpj: resp.cnpj,
+        status: resp.ativo ? "Ativa" : "Inativa",
+        ativo: false,
+        endereco: `${resp.endereco.rua}, n°${resp.endereco.numero} - ${resp.endereco.bairro}`,
+        cep: resp.endereco.cep,
+        
+      }
+    })
+  ]
+}

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { Stand } from "react-burgers";
+import { getTerceirizada } from "../../../../services/terceirizada.service.js";
 import "../style.scss";
 
 export const EMPRESAS = [
@@ -269,6 +270,15 @@ class EmpresasCadastradas extends Component {
     };
   }
 
+  buscaTerceirizadas() {
+    getTerceirizada().then(response => {
+      console.log(response);
+    });
+  }
+
+  componentDidMount() {
+    this.buscaTerceirizadas();
+  }
 
   lidarComBurger(empresa) {
     empresa.ativo = !empresa.ativo;
@@ -287,10 +297,7 @@ class EmpresasCadastradas extends Component {
               <th>Situação</th>
               <th className="text-center">
                 <div className="pesquisar">
-                  <input
-                    className="input-search"
-                    placeholder="Pesquisar"
-                  />
+                  <input className="input-search" placeholder="Pesquisar" />
                   <i className="fas fa-search" />
                 </div>
               </th>
@@ -330,9 +337,7 @@ class EmpresasCadastradas extends Component {
                           </div>
                           <div>
                             <span className="descricao">CEP:</span>
-                            <span className="valor-desc">
-                              {empresa.cep}
-                            </span>
+                            <span className="valor-desc">{empresa.cep}</span>
                           </div>
                         </div>
 
@@ -345,9 +350,7 @@ class EmpresasCadastradas extends Component {
                           </div>
                           <div>
                             <span className="descricao">E-mail:</span>
-                            <span className="valor-desc">
-                              {empresa.email}
-                            </span>
+                            <span className="valor-desc">{empresa.email}</span>
                           </div>
                         </div>
                       </div>
@@ -377,9 +380,7 @@ class EmpresasCadastradas extends Component {
                           <div>
                             <span className="descricao">E-mail:</span>
                             <br />
-                            <span className="valor-desc">
-                              {empresa.email}
-                            </span>
+                            <span className="valor-desc">{empresa.email}</span>
                           </div>
                         </div>
                       </div>
