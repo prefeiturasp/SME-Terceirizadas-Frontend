@@ -60,14 +60,36 @@ class VisaoGeral extends Component {
       }
     };
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.filtro !== this.props.filtro) {
+      this.buscarPendencias(this.props.filtro);
+    }
+  }
 
   async componentDidMount() {
-    const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio();
-    const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao();
-    const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso();
-    const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado();
-    const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio();
-    const resumoSuspensoesCardapio = await getResumoPendenciasSuspensaoCardapio();
+    const filtro = this.props.filtro;
+    await this.buscarPendencias(filtro);
+  }
+
+  async buscarPendencias(filtro) {
+    const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio(
+      filtro
+    );
+    const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao(
+      filtro
+    );
+    const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso(
+      filtro
+    );
+    const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado(
+      filtro
+    );
+    const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio(
+      filtro
+    );
+    const resumoSuspensoesCardapio = await getResumoPendenciasSuspensaoCardapio(
+      filtro
+    );
     this.setState({
       resumoPendenciasInversoesCardapio,
       resumoPendenciasInclusaoAlimentacao,

@@ -10,7 +10,7 @@ import {
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
-import { VENCIMENTO } from "./const";
+import { FILTRO } from "./const";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
 
@@ -20,12 +20,13 @@ class DashboardCODAE extends Component {
     this.state = {
       collapsed: true,
       dre: false,
-      filtro: VENCIMENTO.SEM_FILTRO
+      filtro: FILTRO.SEM_FILTRO
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
   onVencimentoPara(filtro) {
+    console.log("filtro selecionado", filtro);
     this.setState({ filtro });
   }
 
@@ -160,7 +161,7 @@ class DashboardCODAE extends Component {
               {this.state.dre ? (
                 <VisaoPorDRE {...this.props} />
               ) : (
-                <VisaoGeral />
+                <VisaoGeral filtro={this.state.filtro} />
               )}
             </div>
           </div>
