@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { CODAE } from "../../../../configs/constants";
+import { CODAE, PAINEL_CONTROLE } from "../../../../configs/constants";
 
 export class SidebarCODAE extends Component {
   constructor(props) {
@@ -37,6 +37,13 @@ export class SidebarCODAE extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${CODAE}/${PAINEL_CONTROLE}`}
+            >
+              Home
+            </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"

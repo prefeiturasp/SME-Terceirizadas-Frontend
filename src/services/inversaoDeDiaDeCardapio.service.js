@@ -208,7 +208,53 @@ export const getCODAEPedidosDeInversoes = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-terceirizada/${filtroAplicado}/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-terceirizadas/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosAprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+
+export const getCODAEPedidosAprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosAprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

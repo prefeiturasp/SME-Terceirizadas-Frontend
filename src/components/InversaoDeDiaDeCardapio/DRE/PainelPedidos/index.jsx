@@ -8,13 +8,14 @@ import {
   CardInversaoPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
 } from "./helper";
+import { DRE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -113,7 +114,7 @@ class PainelPedidos extends Component {
                     }
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
+                    ultimaColunaLabel={"Data"}
                     parametroURL={"dre"}
                   />
                 </div>
@@ -125,7 +126,7 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo limite"}
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
-                      ultimaColunaLabel={"Data da Inclusão"}
+                      ultimaColunaLabel={"Data"}
                       parametroURL={"dre"}
                     />
                   </div>
@@ -138,7 +139,7 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo regular"}
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
-                      ultimaColunaLabel={"Data da Inclusão"}
+                      ultimaColunaLabel={"Data"}
                       parametroURL={"dre"}
                     />
                   </div>
@@ -150,7 +151,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inversões de cardápio aprovadas"}
+                      titulo={"Histórico de Inversões de cardápio Autorizadas"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -164,6 +166,7 @@ class PainelPedidos extends Component {
                       titulo={
                         "Histórico de Inversões de cardápio reprovadas"
                       }
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>

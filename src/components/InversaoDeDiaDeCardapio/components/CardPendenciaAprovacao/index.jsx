@@ -18,9 +18,15 @@ export class CardInversaoPendenciaAprovacao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: []
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.pedidos.length !== this.state.pedidosFiltrados.length) {
+      this.setState({ pedidosFiltrados: this.props.pedidos });
+    }
   }
 
   filtrarPedidos(event) {
@@ -109,30 +115,33 @@ export class CardInversaoPendenciaAprovacao extends Component {
             </div>
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr>
-                  <th>Código do Pedido</th>
-                  <th>Código EOL</th>
-                  <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel || "Data"}</th>
+                <tr className="row">
+                  <th className="col-2">Código do Pedido</th>
+                  <th className="col-2">Código EOL</th>
+                  <th className="col-3">Nome da Escola</th>
+                  <th className="col-5">{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
-                {pedidosFiltrados.map((pedido, key) => {
-                  return (
-                    <Link
-                      to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
-                        pedido.uuid
-                      }`}
-                    >
-                      <tr>
-                        <td>{pedido.id_externo}</td>
-                        <td>{pedido.escola.codigo_eol}</td>
-                        <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data}</td>
-                      </tr>
-                    </Link>
-                  );
-                })}
+                {pedidosFiltrados.length > 0 &&
+                  pedidosFiltrados.map((pedido, key) => {
+                    return (
+                      <Link
+                        to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
+                          pedido.uuid
+                        }`}
+                      >
+                        <tr className="row">
+                          <td className="col-2">{pedido.id_externo}</td>
+                          <td className="col-2">{pedido.escola.codigo_eol}</td>
+                          <td className="col-3">{pedido.escola.nome}</td>
+                          <td className="col-5">
+                            {pedido.data_de} -> {pedido.data_para}
+                          </td>
+                        </tr>
+                      </Link>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

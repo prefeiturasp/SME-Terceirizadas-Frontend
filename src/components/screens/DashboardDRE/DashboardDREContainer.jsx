@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import DashboardDRE from "./DashboardDRE";
 import { getSolicitacoesAutorizadasPelaDRE, getSolicitacoesPendentesParaDRE } from "../../../services/painelDRE.service";
+import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service"
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 
 class DashboardDREContainer extends Component {
@@ -21,6 +22,7 @@ class DashboardDREContainer extends Component {
       loadingAutorizadas: true,
       loadingPendentes: true,
       solicitations: [],
+      lotesDRE: [],
       vision_by: [
         {
           nome: "Tipo de Solicitação",
@@ -52,6 +54,9 @@ class DashboardDREContainer extends Component {
     const meusDados = await getMeusDados()
     const autorizadas = await getSolicitacoesAutorizadasPelaDRE(meusDados.diretorias_regionais[0].uuid)
     const pendentes = await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid)
+    const minhaDRE = await getDiretoriaregionalDetalhe(meusDados.diretorias_regionais[0].uuid)
+    const lotesDRE = (await minhaDRE).data.lotes
+
     this.setState({
       autorizadasList:autorizadas.results,
       pendentesList:pendentes.results,
@@ -60,10 +65,10 @@ class DashboardDREContainer extends Component {
       meusDados,
       loadingAutorizadas: false,
       loadingPendentes: false,
-      enrolled: meusDados.diretorias_regionais[0].quantidade_alunos
+      enrolled: meusDados.diretorias_regionais[0].quantidade_alunos,
+      lotesDRE
     });
   }
-
 
   render() {
     return <DashboardDRE {...this.state} />;
