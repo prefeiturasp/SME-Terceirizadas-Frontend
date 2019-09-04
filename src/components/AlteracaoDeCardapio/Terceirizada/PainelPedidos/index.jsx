@@ -11,7 +11,7 @@ import {
   getTerceirizadaPedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/alteracaoDecardapio.service";
 import CardHistorico from "./CardHistorico";
-import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {

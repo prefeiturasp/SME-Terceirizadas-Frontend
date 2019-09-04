@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
-import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/RoutesConfig";
+import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",

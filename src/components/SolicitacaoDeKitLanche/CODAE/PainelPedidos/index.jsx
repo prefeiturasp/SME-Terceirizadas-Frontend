@@ -15,7 +15,7 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { CODAE } from "../../../../configs/RoutesConfig";
+import { CODAE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {

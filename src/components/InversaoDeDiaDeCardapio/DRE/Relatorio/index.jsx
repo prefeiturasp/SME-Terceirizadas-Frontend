@@ -17,7 +17,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { DRE, INVERSAO_CARDAPIO } from "../../../../configs/RoutesConfig";
+import { DRE, INVERSAO_CARDAPIO } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {

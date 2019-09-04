@@ -3,7 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/Container";
 import { HOME } from "../constants";
-import { INVERSAO_CARDAPIO, DRE } from "../../../configs/RoutesConfig";
+import { INVERSAO_CARDAPIO, DRE } from "../../../configs/constants";
 
 const atual = {
   href: `/${DRE}/${INVERSAO_CARDAPIO}`,

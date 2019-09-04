@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
-import { INCLUSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
+import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
 export class CardPendenciaAprovacao extends Component {
   constructor(props) {

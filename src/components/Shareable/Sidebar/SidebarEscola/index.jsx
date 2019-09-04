@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ESCOLA, INCLUSAO_ALIMENTACAO, ALTERACAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, INVERSAO_CARDAPIO, SUSPENSAO_ALIMENTACAO } from "../../../../configs/RoutesConfig";
+import { ESCOLA, INCLUSAO_ALIMENTACAO, ALTERACAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, INVERSAO_CARDAPIO, SUSPENSAO_ALIMENTACAO } from "../../../../configs/constants";
 
 export class SidebarEscola extends Component {
   constructor(props) {

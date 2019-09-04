@@ -15,7 +15,8 @@ import {
   getCodaePedidosNoPrazoLimite as limitesAvulso,
   getCodaePedidosNoPrazoRegular as regularesAvulso
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
+import { CODAE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -206,7 +207,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      parametroURL={`${CODAE}`}
                     />
                   </div>
                 </div>
@@ -217,6 +219,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
+                      parametroURL={`${CODAE}`}
                       titulo={
                         "Histórico de Inclusões de Alimentação Reprovadas"
                       }

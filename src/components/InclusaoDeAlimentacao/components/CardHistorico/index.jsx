@@ -3,12 +3,17 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
+import { Link } from "react-router-dom";
 import BaseButton, {
   ButtonStyle,
   ButtonType
-} from "../../../../Shareable/button";
-import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
+} from "../../../Shareable/button";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
+import {
+  INCLUSAO_ALIMENTACAO,
+  RELATORIO
+} from "../../../../configs/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -43,7 +48,7 @@ export class CardHistorico extends Component {
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
   render() {
-    const { titulo, ultimaColunaLabel, handleSubmit } = this.props;
+    const { titulo, ultimaColunaLabel, handleSubmit, parametroURL } = this.props;
     const { collapsed, pedidos } = this.state;
     return (
       <div className="card mt-3">
@@ -95,46 +100,54 @@ export class CardHistorico extends Component {
                 </div>
               </div>
               <div className="pb-3" />
-              <table className="table">
+              <table className="table table-historic w-100">
                 <thead>
-                  <tr>
-                    <th>ID do Pedido</th>
-                    <th>Escola</th>
-                    <th>{ultimaColunaLabel}</th>
+                  <tr className="row">
+                    <th className="col-4">ID do Pedido</th>
+                    <th className="col-4">Escola</th>
+                    <th className="col-4">{ultimaColunaLabel}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <tr>
-                          <td className="td-check">
-                            <label
-                              htmlFor={`check_${key}`}
-                              className="checkbox-label"
-                            >
-                              <Field
-                                component={"input"}
-                                type="checkbox"
-                                name={`check_${key}`}
-                              />
-                              <span
-                                onClick={() => this.onCheckClicked(key)}
-                                className="checkbox-custom"
-                              />
-                            </label>
-                            {pedido.id_externo}
-                          </td>
-                          <td>{pedido.escola.nome}</td>
-                          <td>
-                            {pedido.data_inicial
-                              ? `${pedido.data_inicial} a ${pedido.data_final}`
-                              : stringSeparadaPorVirgulas(
-                                  pedido.inclusoes,
-                                  "data"
-                                )}
-                          </td>
-                        </tr>
+                        <Link
+                          to={`/${parametroURL}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
+                            pedido.uuid
+                          }&ehInclusaoContinua=${pedido.data_inicial !== undefined}`}
+                        >
+                          <tr className="row">
+                            <td className="td-check col-4">
+                              <label
+                                htmlFor={`check_${key}`}
+                                className="checkbox-label"
+                              >
+                                <Field
+                                  component={"input"}
+                                  type="checkbox"
+                                  name={`check_${key}`}
+                                />
+                                <span
+                                  onClick={() => this.onCheckClicked(key)}
+                                  className="checkbox-custom"
+                                />
+                              </label>
+                              {pedido.id_externo}
+                            </td>
+                            <td className="col-4">{pedido.escola.nome}</td>
+                            <td className="col-4">
+                              {pedido.data_inicial
+                                ? `${pedido.data_inicial} a ${
+                                    pedido.data_final
+                                  }`
+                                : stringSeparadaPorVirgulas(
+                                    pedido.inclusoes,
+                                    "data"
+                                  )}
+                            </td>
+                          </tr>
+                        </Link>
                       );
                     })}
                 </tbody>

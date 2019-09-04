@@ -3,7 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/SolicitacaoUnificada/Terceirizada/Relatorio";
 import { HOME } from "../constants";
-import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../configs/RoutesConfig";
+import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../configs/constants";
 
 const atual = {
   href: "#",

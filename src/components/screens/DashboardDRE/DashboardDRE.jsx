@@ -21,7 +21,7 @@ import {
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { dataAtual } from "../../../helpers/utilities";
-import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/RoutesConfig";
+import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
 
 class DashboardDRE extends Component {
   constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
-import { CODAE, SOLICITACOES } from "../../../configs/RoutesConfig";
+import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import {
   CardStatusDeSolicitacao,

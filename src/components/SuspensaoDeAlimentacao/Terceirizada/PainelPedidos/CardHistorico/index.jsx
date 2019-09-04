@@ -10,7 +10,7 @@ import BaseButton, {
 import { Link } from "react-router-dom";
 import { obtemDataSolicitacao } from "../helper";
 import "./style.scss";
-import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "../../../../../configs/RoutesConfig";
+import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "../../../../../configs/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {

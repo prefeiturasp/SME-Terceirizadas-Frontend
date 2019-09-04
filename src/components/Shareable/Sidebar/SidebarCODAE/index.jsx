@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { CODAE } from "../../../../configs/RoutesConfig";
+import { CODAE } from "../../../../configs/constants";
 
 export class SidebarCODAE extends Component {
   constructor(props) {

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeDREsUnicas } from "./helper";
 import "./style.scss";
-import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/RoutesConfig";
+import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",

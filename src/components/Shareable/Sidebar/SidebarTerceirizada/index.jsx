@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { TERCEIRIZADA } from "../../../../configs/RoutesConfig";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {

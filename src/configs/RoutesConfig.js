@@ -53,26 +53,7 @@ import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSoli
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 
-export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
-export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
-export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
-export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
-export const PAINEL_CONTROLE = "painel-de-controle";
-export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
-export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
-
-export const CODAE = "codae";
-export const TERCEIRIZADA = "terceirizada";
-export const DRE = "dre";
-export const ESCOLA = "escola";
-
-export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
-
-export const RELATORIO = "relatorio";
-export const HISTORICO = "historico";
-export const SOLICITACOES = "solicitacoes";
-
-export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
+import * as constants from "./constants";
 
 const routesConfig = [
   {
@@ -86,202 +67,232 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${ESCOLA}/${PAINEL_CONTROLE}`,
+    path: `/${constants.ESCOLA}/${constants.PAINEL_CONTROLE}`,
     component: DashboardEscolaPage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/status-solicitacoes`,
+    path: `/${constants.ESCOLA}/status-solicitacoes`,
     component: StatusSolicitacoesPage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`,
+    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/${ALTERACAO_CARDAPIO}`,
+    path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
     component: AlteracaoDeCardapioPage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`,
+    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: SolicitacaoDeKitLanchePage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/${INVERSAO_CARDAPIO}`,
+    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: InversaoDeDiaDeCardapioPage,
     exact: false
   },
   {
-    path: `/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`,
+    path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: SuspensaoDeAlimentacaoPage,
     exact: false
   },
   {
-    path: `/${DRE}/${PAINEL_CONTROLE}`,
+    path: `/${constants.DRE}/${constants.PAINEL_CONTROLE}`,
     component: DashboardDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${SOLICITACOES_AUTORIZADAS}`,
+    path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/solicitacoes-pendentes`,
+    path: `/${constants.DRE}/solicitacoes-pendentes`,
     component: StatusSolicitacoesPendentesDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
+    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}/${
+      constants.RELATORIO
+    }`,
     component: InclusaoDeAlimentacaoRelatorioDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${INCLUSAO_ALIMENTACAO}`,
+    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: InversaoDiaCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${INVERSAO_CARDAPIO}`,
+    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${
+      constants.RELATORIO
+    }`,
     component: solicitacaoKitLanchePaginas.RelatorioDRE,
     exact: false
   },
   {
-    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE}`,
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: solicitacaoKitLanchePaginas.PainelPedidosDRE,
     exact: false
   },
   {
-    path: `/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: SolicitacaoUnificadaPage,
     exact: false
   },
   {
-    path: `/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
+    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${
+      constants.RELATORIO
+    }`,
     component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${INCLUSAO_ALIMENTACAO}`,
+    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: AlteracaoDeCardapioRelatorioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${ALTERACAO_CARDAPIO}`,
+    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${INVERSAO_CARDAPIO}`,
+    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${RELATORIO}`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
+      constants.RELATORIO
+    }`,
     component: SolicitacaoUnificadaRelatorioCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${DRE}/${ALTERACAO_CARDAPIO}`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false
   },
   {
-    path: `/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${PAINEL_CONTROLE}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.PAINEL_CONTROLE}`,
     component: DashboardTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SOLICITACOES}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES}`,
     component: StatusSolicitacoesTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}/${
+      constants.RELATORIO
+    }`,
     component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${
+      constants.RELATORIO
+    }`,
     component: solicitacaoKitLanchePaginas.RelatorioTerceirizada,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: solicitacaoKitLanchePaginas.PainelPedidosTerceirizada,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${
+      constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
+    }/${constants.RELATORIO}`,
     component: SolicitacaoUnificadaRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+    path: `/${constants.TERCEIRIZADA}/${
+      constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
+    }`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${
+      constants.RELATORIO
+    }`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false
   },
@@ -341,37 +352,41 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACOES}`,
+    path: `/${constants.CODAE}/${constants.SOLICITACOES}`,
     component: StatusSolicitacoesCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
+      constants.RELATORIO
+    }`,
     component: solicitacaoKitLanchePaginas.RelatorioCODAE,
     exact: false
   },
   {
-    path: `/${CODAE}/${SOLICITACAO_KIT_LANCHE}`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: solicitacaoKitLanchePaginas.PainelPedidosCODAE,
     exact: true
   },
   {
-    path: `/${CODAE}/${PAINEL_CONTROLE}`,
+    path: `/${constants.CODAE}/${constants.PAINEL_CONTROLE}`,
     component: DashboardCODAEPage,
     exact: false
   },
   {
-    path: `/${CODAE}/${DETALHE_DASHBOARD_DRE}`,
+    path: `/${constants.CODAE}/${constants.DETALHE_DASHBOARD_DRE}`,
     component: DashboardCODAEDetailDRE,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}/${RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
     component: AlteracaoDeCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
   }

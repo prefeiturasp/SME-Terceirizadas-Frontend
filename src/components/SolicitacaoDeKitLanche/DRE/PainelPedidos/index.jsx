@@ -15,7 +15,7 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { DRE } from "../../../../configs/RoutesConfig";
+import { DRE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
