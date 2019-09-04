@@ -8,13 +8,14 @@ import {
   CardPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
 } from "./helper";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -106,8 +107,8 @@ class PainelPedidos extends Component {
                     }
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={TERCEIRIZADA}
                   />
                 </div>
               </div>
@@ -118,8 +119,8 @@ class PainelPedidos extends Component {
                     titulo={"Pedidos no prazo limite"}
                     tipoDeCard={"on-limit"}
                     pedidos={pedidosNoPrazoLimite}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={TERCEIRIZADA}
                   />
                 </div>
               </div>
@@ -130,8 +131,8 @@ class PainelPedidos extends Component {
                     titulo={"Pedidos no prazo regular"}
                     tipoDeCard={"regular"}
                     pedidos={pedidosNoPrazoRegular}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={TERCEIRIZADA}
                   />
                 </div>
               </div>
@@ -141,7 +142,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Solicitações Unificadas Autorizadas"}
+                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -153,7 +155,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
+                        "Histórico de Solicitações Unificadas Reprovadas"
                       }
                     />
                   </div>

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getTerceirizadaPedidosAprovados } from "../../../../services/solicitacaoUnificada.service";
 
 class Container extends Component {
   constructor(props) {
@@ -15,8 +14,8 @@ class Container extends Component {
   }
 
   componentDidMount() {
-    getCODAEPedidosDeInversoes(FiltroEnum.SEM_FILTRO).then(response => {
-      this.setState({ pedidosAprovados: response });
+    getTerceirizadaPedidosAprovados().then(response => {
+      this.setState({ pedidosAprovados: response.results });
     });
   }
 

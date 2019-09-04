@@ -153,7 +153,7 @@ export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-terceirizada/${filtroAplicado}/`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-terceirizadas/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -202,5 +202,35 @@ export const TerceirizadaAprovaPedidoDRE = uuid => {
     })
     .catch(error => {
       return error.json();
+    });
+};
+
+export const getTerceirizadaPedidosAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-aprovados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCODAEPedidosAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-aprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
     });
 };

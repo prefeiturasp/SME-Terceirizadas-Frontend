@@ -8,13 +8,14 @@ import {
   CardPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
 } from "./helper";
+import { CODAE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class PainelPedidos extends Component {
       let pedidosPrioritarios = filtraPrioritarios(response.results);
       let pedidosNoPrazoLimite = filtraNoLimite(response.results);
       let pedidosNoPrazoRegular = filtraRegular(response.results);
+      console.log(pedidosNoPrazoRegular);
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
@@ -107,7 +109,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
+                    parametroURL={CODAE}
                   />
                 </div>
               </div>
@@ -119,7 +121,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"on-limit"}
                     pedidos={pedidosNoPrazoLimite}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
+                    parametroURL={CODAE}
                   />
                 </div>
               </div>
@@ -131,7 +133,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"regular"}
                     pedidos={pedidosNoPrazoRegular}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
+                    parametroURL={CODAE}
                   />
                 </div>
               </div>
@@ -141,7 +143,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
