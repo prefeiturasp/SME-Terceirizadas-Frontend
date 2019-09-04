@@ -165,7 +165,7 @@ export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
 };
 
 export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/tomados_ciencia/`;
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/tomados-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "GET",

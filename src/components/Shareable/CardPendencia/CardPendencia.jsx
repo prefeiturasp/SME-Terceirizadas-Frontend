@@ -14,10 +14,12 @@ export const CardPendencia = props => {
   } = props;
   return (
     <div className="card card-pendency">
-      <div className="card-title">{cardTitle}{loading && <img
-                        src="/assets/image/ajax-loader.gif"
-                        alt="ajax-loader"
-                      />}</div>
+      <div className="card-title ajuste-icones">{cardTitle}{loading && (
+        <img
+        src="/assets/image/ajax-loader.gif"
+        alt="ajax-loader"
+      />
+      )}</div>
 
       <hr />
       <div className="row">
