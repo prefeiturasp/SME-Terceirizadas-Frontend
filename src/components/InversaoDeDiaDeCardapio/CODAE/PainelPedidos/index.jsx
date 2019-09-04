@@ -8,13 +8,14 @@ import {
   CardInversaoPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import { filtraPrioritarios } from "../../Terceirizada/PainelPedidos/helper";
 import {
   filtraNoLimite,
   filtraRegular
 } from "../../../SolicitacaoDeKitLanche/helper";
 import { formatarPedidos } from "./helper";
+import { CODAE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -62,7 +63,6 @@ class PainelPedidos extends Component {
     } = this.state;
     const {
       visaoPorCombo,
-      valorDoFiltro,
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
@@ -105,46 +105,43 @@ class PainelPedidos extends Component {
                     }
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={CODAE}
                   />
                 </div>
               </div>
 
-              {pedidosNoPrazoLimite && pedidosNoPrazoLimite.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardInversaoPendenciaAprovacao
-                      titulo={"Pedidos no prazo limite"}
-                      tipoDeCard={"on-limit"}
-                      pedidos={pedidosNoPrazoLimite}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"codae"}
-                    />
-                  </div>
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardInversaoPendenciaAprovacao
+                    titulo={"Pedidos no prazo limite"}
+                    tipoDeCard={"on-limit"}
+                    pedidos={pedidosNoPrazoLimite}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={CODAE}
+                  />
                 </div>
-              )}
+              </div>
 
-              {pedidosNoPrazoRegular.length > 0 && valorDoFiltro !== "hoje" && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardInversaoPendenciaAprovacao
-                      titulo={"Pedidos no prazo regular"}
-                      tipoDeCard={"regular"}
-                      pedidos={pedidosNoPrazoRegular}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"codae"}
-                    />
-                  </div>
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardInversaoPendenciaAprovacao
+                    titulo={"Pedidos no prazo regular"}
+                    tipoDeCard={"regular"}
+                    pedidos={pedidosNoPrazoRegular}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={CODAE}
+                  />
                 </div>
-              )}
+              </div>
               {pedidosAprovados.length > 0 && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Aprovadas"}
+                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>

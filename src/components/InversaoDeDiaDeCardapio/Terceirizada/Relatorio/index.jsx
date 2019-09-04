@@ -17,10 +17,7 @@ import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicita
 import "../style.scss";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import {
-  INVERSAO_CARDAPIO,
-  TERCEIRIZADA
-} from "../../../../configs/constants";
+import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
@@ -137,7 +134,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido #${
+            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
               InversaoCardapio.id_externo
             }`}</span>
             <div className="card mt-3">
@@ -153,7 +150,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {InversaoCardapio.id_externo}
+                        # {InversaoCardapio.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -212,21 +209,34 @@ class Relatorio extends Component {
                     </p>
                   </div>
                 </div>
-                {/* {this.renderDetalheInversao()} */}
-                <table className="table-periods">
-                  <tr>
-                    <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
-                  </tr>
-                </table>
+                <div className="row">
+                  <div className="col-3 report-label-value">
+                    <p>De:</p>
+                    <p className="value">{InversaoCardapio.data_de}</p>
+                  </div>
+                  <div className="col-3 report-label-value">
+                    <p>Para:</p>
+                    <p className="value">{InversaoCardapio.data_para}</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 report-label-value">
+                    <p>Motivo</p>
+                    <p
+                      className="value"
+                      dangerouslySetInnerHTML={{
+                        __html: InversaoCardapio.motivo
+                      }}
+                    />
+                  </div>
+                </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.descricao
+                        __html: InversaoCardapio.observacao
                       }}
                     />
                   </div>

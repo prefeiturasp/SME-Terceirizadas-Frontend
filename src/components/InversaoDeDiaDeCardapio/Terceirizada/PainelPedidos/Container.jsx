@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getTerceirizadaPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getTerceirizadaPedidosAprovados} from "../../../../services/inversaoDeDiaDeCardapio.service";
 import PainelPedidos from "../PainelPedidos";
 
 class Container extends Component {
@@ -15,16 +14,8 @@ class Container extends Component {
   }
 
   componentDidMount() {
-    let pedidosAprovadosRetornados = 0;
-    let pedidosAprovados = [];
-
-    getTerceirizadaPedidosDeInversoes(FiltroEnum.SEM_FILTRO).then(response => {
-      pedidosAprovadosRetornados += 1;
-      pedidosAprovados = pedidosAprovados.concat(response.results);
-      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 4;
-      if (todosPedidosAprovadosRetornados) {
-        this.setState({ pedidosAprovados, pedidosCarregados: true });
-      }
+    getTerceirizadaPedidosAprovados().then(response => {
+      this.setState({ pedidosAprovados: response.results });
     });
   }
 
