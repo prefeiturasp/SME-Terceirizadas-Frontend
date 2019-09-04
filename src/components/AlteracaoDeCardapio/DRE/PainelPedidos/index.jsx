@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
@@ -10,7 +10,8 @@ import {
   getDiretoriaRegionalPedidosNoPrazoLimite as limites,
   getDiretoriaRegionalPedidosNoPrazoRegular as regular
 } from "../../../../services/alteracaoDecardapio.service";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
+import { DRE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -106,7 +107,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Alteração de Cardápio - Pendente Aprovação
+                    Alteração de Cardápio - Pendente Validação
                   </div>
                 </div>
                 <div className="col-5">
@@ -135,6 +136,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
+                    parametroURL={DRE}
                   />
                 </div>
               </div>
@@ -146,6 +148,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -158,6 +161,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -168,7 +172,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Alterações de Cardápio Aprovadas"}
+                      parametroURL={DRE}
+                      titulo={"Histórico de Alterações de Cardápio Autorizadas"}
                     />
                   </div>
                 </div>

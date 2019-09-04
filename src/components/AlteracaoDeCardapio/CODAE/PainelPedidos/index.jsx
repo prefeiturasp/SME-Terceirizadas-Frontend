@@ -10,7 +10,8 @@ import {
   getCodaePedidosNoPrazoLimite as limites,
   getCodaePedidosNoPrazoRegular as regulares
 } from "../../../../services/alteracaoDecardapio.service";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
+import { CODAE } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -134,8 +135,8 @@ class PainelPedidos extends Component {
                     }
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"codae"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={CODAE}
                   />
                 </div>
               </div>
@@ -146,8 +147,8 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo limite"}
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"codae"}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -159,8 +160,8 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo regular"}
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"codae"}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -171,7 +172,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Alterações de Cardápio Aprovadas"}
+                      titulo={"Histórico de Alterações de Cardápio Autorizadas"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>

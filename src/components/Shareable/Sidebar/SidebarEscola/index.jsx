@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { ESCOLA, INCLUSAO_ALIMENTACAO, ALTERACAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, INVERSAO_CARDAPIO, SUSPENSAO_ALIMENTACAO } from "../../../../configs/constants";
+import {
+  ESCOLA,
+  INCLUSAO_ALIMENTACAO,
+  ALTERACAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  INVERSAO_CARDAPIO,
+  SUSPENSAO_ALIMENTACAO,
+  PAINEL_CONTROLE
+} from "../../../../configs/constants";
 
 export class SidebarEscola extends Component {
   constructor(props) {
@@ -37,6 +45,13 @@ export class SidebarEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${ESCOLA}/${PAINEL_CONTROLE}`}
+            >
+              Home
+            </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
