@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { DRE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
+import {
+  DRE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  PAINEL_CONTROLE
+} from "../../../../configs/constants";
 
 export class SidebarDRE extends Component {
   constructor(props) {
@@ -40,6 +44,13 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to={`/${DRE}/${PAINEL_CONTROLE}`}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/${DRE}/solicitacoes-autorizadas`}
             >
               Solicitações Autorizadas
@@ -52,18 +63,10 @@ export class SidebarDRE extends Component {
               Solicitações Pendentes <br />
               de Autorização
             </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
+            <NavLink activeClassName="active" className="collapse-item" to="#">
               Solicitações Recusadas
             </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
+            <NavLink activeClassName="active" className="collapse-item" to="#">
               Solicitações Canceladas
             </NavLink>
           </div>

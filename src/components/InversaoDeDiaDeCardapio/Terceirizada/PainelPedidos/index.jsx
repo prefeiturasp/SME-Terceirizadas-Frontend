@@ -8,7 +8,7 @@ import {
   CardInversaoPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
@@ -86,7 +86,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Inversão de dia de Cardápio - Pendente Validação
+                    Inversão de dia de Cardápio - Pendente Ciência
                   </div>
                 </div>
                 <div className="col-5">
@@ -114,8 +114,8 @@ class PainelPedidos extends Component {
                     }
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={`${TERCEIRIZADA}`}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={TERCEIRIZADA}
                   />
                 </div>
               </div>
@@ -126,8 +126,8 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo limite"}
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={`${TERCEIRIZADA}`}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -139,8 +139,8 @@ class PainelPedidos extends Component {
                       titulo={"Pedidos no prazo regular"}
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={`${TERCEIRIZADA}`}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -151,7 +151,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inversões de cardápio aprovadas"}
+                      titulo={"Histórico de Inversões de cardápio Autorizadas"}
+                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -162,9 +163,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Inversões de cardápio reprovadas"
-                      }
+                      titulo={"Histórico de Inversões de cardápio reprovadas"}
                     />
                   </div>
                 </div>
