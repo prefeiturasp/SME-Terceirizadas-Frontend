@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import { CODAE, SOLICITACOES } from "../../../configs/constants";
+import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import {
-  CardStatusDeSolicitacao,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
@@ -20,13 +18,13 @@ class DashboardCODAE extends Component {
     this.state = {
       collapsed: true,
       dre: false,
-      filtro: FILTRO.SEM_FILTRO
+      filtro: FILTRO.SEM_FILTRO,
+      solicitacoesAprovadasFiltradas: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
   onVencimentoPara(filtro) {
-    console.log("filtro selecionado", filtro);
     this.setState({ filtro });
   }
 
@@ -67,13 +65,17 @@ class DashboardCODAE extends Component {
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" />
+                  <input
+                    className="input-search"
+                    placeholder="Pesquisar"
+                    onChange={this.filterList}
+                  />
                   <i className="fas fa-search" />
                 </span>
               </div>
               <div>
                 <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
+                  Data: <span>{dataAtual()}</span>
                 </p>
               </div>
               <div className="row">
