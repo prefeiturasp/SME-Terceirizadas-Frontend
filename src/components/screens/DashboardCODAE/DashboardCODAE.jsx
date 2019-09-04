@@ -4,7 +4,10 @@ import { Field, reduxForm } from "redux-form";
 import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
@@ -19,7 +22,11 @@ class DashboardCODAE extends Component {
       collapsed: true,
       dre: false,
       filtro: FILTRO.SEM_FILTRO,
-      solicitacoesAprovadasFiltradas: []
+
+      solicitacoesAprovadasFiltradas: [],
+      solicitacoesPendentesAprovacaoFiltradas: [],
+      solicitacoesCanceladasFiltradas: [],
+      solicitacoesRevisaoFiltradas: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
@@ -34,7 +41,7 @@ class DashboardCODAE extends Component {
 
   render() {
     const {
-      enrolled,
+      totalAlunos,
       handleSubmit,
       solicitacoesAprovadas,
       solicitacoesPendentesAprovacao,
@@ -50,7 +57,7 @@ class DashboardCODAE extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={totalAlunos}
           >
             <Collapse isOpened={!collapsed}>
               <TabelaHistoricoLotesDREs lotes={lotes} />
