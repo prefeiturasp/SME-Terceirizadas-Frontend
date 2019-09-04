@@ -13,7 +13,10 @@ import {
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
 } from "../../../../services/suspensaoDeAlimentacao.service";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../../configs/constants";
+import {
+  SUSPENSAO_ALIMENTACAO,
+  TERCEIRIZADA
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
@@ -79,7 +82,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Suspensao de alimentação - Solicitação #${
+            <span className="page-title">{`Suspensao de alimentação - Solicitação # ${
               suspensaoAlimentacao.id_externo
             }`}</span>
             <div className="card mt-3">
@@ -91,7 +94,7 @@ class Relatorio extends Component {
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
-                        {suspensaoAlimentacao.id_externo}
+                        # {suspensaoAlimentacao.id_externo}
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
@@ -163,7 +166,10 @@ class Relatorio extends Component {
                       <div className="descricao-suspensao pt-2">
                         <div>{item.periodo_escolar.nome}</div>
                         <div className="tipos-alimentacoes">
-                          {stringSeparadaPorVirgulas(item.tipos_alimentacao, "nome")}
+                          {stringSeparadaPorVirgulas(
+                            item.tipos_alimentacao,
+                            "nome"
+                          )}
                         </div>
                         <div>{item.numero_alunos}</div>
                       </div>

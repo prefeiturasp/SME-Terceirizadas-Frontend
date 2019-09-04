@@ -8,7 +8,7 @@ import {
   CardPendenciaAprovacao,
   TIPO_CARD_ENUM
 } from "../../components/CardPendenciaAprovacao";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
@@ -114,7 +114,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Solicitação"}
-                    parametroURL={`${DRE}`}
+                    parametroURL={DRE}
                   />
                 </div>
               </div>
@@ -126,7 +126,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Solicitação"}
-                      parametroURL={`${DRE}`}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -139,7 +139,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Solicitação"}
-                      parametroURL={`${DRE}`}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -150,7 +150,8 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Solicitações de Kit Lanche aprovadas"}
+                      titulo={"Histórico de Solicitações de Kit Lanche Autorizadas"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>

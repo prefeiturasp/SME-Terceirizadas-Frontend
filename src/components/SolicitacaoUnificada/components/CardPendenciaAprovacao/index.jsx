@@ -18,9 +18,15 @@ export class CardPendenciaAprovacao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: []
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.pedidos.length !== this.state.pedidosFiltrados.length) {
+      this.setState({ pedidosFiltrados: this.props.pedidos });
+    }
   }
 
   filtrarPedidos(event) {
@@ -117,28 +123,29 @@ export class CardPendenciaAprovacao extends Component {
                 </tr>
               </thead>
               <tbody>
-                {pedidosFiltrados.map((pedido, key) => {
-                  return (
-                    <Link
-                      to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
-                        pedido.uuid
-                      }`}
-                    >
-                      <tr className="row">
-                        <td className="col-3">{pedido.id_externo}</td>
-                        <td className="col-3">
-                          {pedido.escolas_quantidades[0].escola.lote.nome}
-                        </td>
-                        <td className="col-3">
-                          {pedido.diretoria_regional.nome}
-                        </td>
-                        <td className="col-3">
-                          {pedido.solicitacao_kit_lanche.data}
-                        </td>
-                      </tr>
-                    </Link>
-                  );
-                })}
+                {pedidosFiltrados.length > 0 &&
+                  pedidosFiltrados.map((pedido, key) => {
+                    return (
+                      <Link
+                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
+                          pedido.uuid
+                        }`}
+                      >
+                        <tr className="row">
+                          <td className="col-3">{pedido.id_externo}</td>
+                          <td className="col-3">
+                            {pedido.escolas_quantidades[0].escola.lote.nome}
+                          </td>
+                          <td className="col-3">
+                            {pedido.diretoria_regional.nome}
+                          </td>
+                          <td className="col-3">
+                            {pedido.solicitacao_kit_lanche.data}
+                          </td>
+                        </tr>
+                      </Link>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
