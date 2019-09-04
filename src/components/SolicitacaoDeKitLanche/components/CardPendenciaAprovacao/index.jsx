@@ -21,7 +21,12 @@ export class CardPendenciaAprovacao extends Component {
       pedidosFiltrados: this.props.pedidos
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+  }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.pedidos.length !== prevProps.pedidos.length) {
+      this.setState({ pedidosFiltrados: this.props.pedidos });
+    }
   }
 
   filtrarPedidos(event) {
@@ -30,6 +35,7 @@ export class CardPendenciaAprovacao extends Component {
     pedidosFiltrados = pedidosFiltrados.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
+        item.id_externo.toLowerCase().includes(palavraAFiltrar) ||
         item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.escola.codigo_eol.includes(palavraAFiltrar)
       );
@@ -38,8 +44,14 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
-    const { collapsed } = this.state;
+    const {
+      pedidos,
+      titulo,
+      tipoDeCard,
+      ultimaColunaLabel,
+      parametroURL
+    } = this.props;
+    const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
@@ -112,21 +124,23 @@ export class CardPendenciaAprovacao extends Component {
                 </tr>
               </thead>
               <tbody>
-                {pedidos.map((pedido, key) => {
-
-                  return (
-                    <Link
-                      to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${pedido.uuid}`}
-                    >
-                      <tr>
-                        <td>{pedido.id_externo}</td>
-                        <td>{pedido.escola.codigo_eol}</td>
-                        <td>{pedido.escola.nome}</td>
-                        <td>{pedido.solicitacao_kit_lanche.data}</td>
-                      </tr>
-                    </Link>
-                  );
-                })}
+                {pedidosFiltrados.length > 0 &&
+                  pedidosFiltrados.map((pedido, key) => {
+                    return (
+                      <Link
+                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${
+                          pedido.uuid
+                        }`}
+                      >
+                        <tr>
+                          <td>{pedido.id_externo}</td>
+                          <td>{pedido.escola.codigo_eol}</td>
+                          <td>{pedido.escola.nome}</td>
+                          <td>{pedido.solicitacao_kit_lanche.data}</td>
+                        </tr>
+                      </Link>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
