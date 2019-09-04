@@ -185,13 +185,12 @@ export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
 
 export const getSuspensaoDeAlimentacaoCODAE = filtro_aplicado => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/pedidos-codae/${filtro_aplicado}/`;
-  let status = 0;
+
   return fetch(url, {
     method: "GET",
     headers: authToken
   })
     .then(res => {
-      status = res.status;
       return res.json();
     })
     .catch(error => {
