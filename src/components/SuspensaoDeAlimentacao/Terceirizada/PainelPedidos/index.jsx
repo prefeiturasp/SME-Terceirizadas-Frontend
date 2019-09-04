@@ -11,6 +11,7 @@ import {
 } from "../../../../services/suspensaoDeAlimentacao.service.js";
 import CardHistorico from "./CardHistorico";
 import { formatarPedidos } from "./helper";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class PainelPedidos extends Component {
               <div className="row">
                 <div className="col-7">
                   <div className="page-title">
-                    Suspensão de Alimentação - Pendente Validação
+                    Suspensão de Alimentação - Pendente Tomar Ciência
                   </div>
                 </div>
                 <div className="col-5" />
@@ -76,11 +77,11 @@ class PainelPedidos extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos para dar ciencia"}
+                    titulo={"Pedidos para tomar ciência"}
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={todasSolicitacoes}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"terceirizada"}
+                    ultimaColunaLabel={"Data"}
+                    parametroURL={TERCEIRIZADA}
                   />
                 </div>
               </div>

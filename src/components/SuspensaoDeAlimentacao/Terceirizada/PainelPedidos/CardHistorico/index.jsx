@@ -10,7 +10,10 @@ import BaseButton, {
 import { Link } from "react-router-dom";
 import { obtemDataSolicitacao } from "../helper";
 import "./style.scss";
-import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "../../../../../configs/constants";
+import {
+  TERCEIRIZADA,
+  SUSPENSAO_ALIMENTACAO
+} from "../../../../../configs/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -97,62 +100,45 @@ export class CardHistorico extends Component {
                 </div>
               </div>
               <div className="pb-3" />
-              <table className="table">
+              <table className="table table-historic w-100">
                 <thead>
-                  <tr>
-                    <th>ID do Pedido</th>
-                    <th>Escola</th>
-                    <th>{ultimaColunaLabel}</th>
+                  <tr className="row">
+                    <th className="col-4">ID do Pedido</th>
+                    <th className="col-4">Escola</th>
+                    <th className="col-4">{ultimaColunaLabel}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <tr>
-                          <td className="td-check">
-                            <label
-                              htmlFor={`check_${key}`}
-                              className="checkbox-label"
-                            >
-                              <Field
-                                component={"input"}
-                                type="checkbox"
-                                name={`check_${key}`}
-                              />
-                              <span
-                                onClick={() => this.onCheckClicked(key)}
-                                className="checkbox-custom"
-                              />
-                            </label>
-                            <Link
-                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
-                                pedido.uuid
-                              }`}
-                            >
+                        <Link
+                          to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
+                            pedido.uuid
+                          }`}
+                        >
+                          <tr className="row">
+                            <td className="td-check col-4">
+                              <label
+                                htmlFor={`check_${key}`}
+                                className="checkbox-label"
+                              >
+                                <Field
+                                  component={"input"}
+                                  type="checkbox"
+                                  name={`check_${key}`}
+                                />
+                                <span
+                                  onClick={() => this.onCheckClicked(key)}
+                                  className="checkbox-custom"
+                                />
+                              </label>
                               {pedido.id_externo}
-                            </Link>
-                          </td>
-
-                          <td>
-                            <Link
-                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
-                                pedido.uuid
-                              }`}
-                            >
-                              {pedido.escola.nome}
-                            </Link>
-                          </td>
-                          <td>
-                            <Link
-                              to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
-                                pedido.uuid
-                              }`}
-                            >
-                              {obtemDataSolicitacao(pedido)}
-                            </Link>
-                          </td>
-                        </tr>
+                            </td>
+                            <td className="col-4">{pedido.escola.nome}</td>
+                            <td className="col-4">{obtemDataSolicitacao(pedido)}</td>
+                          </tr>
+                        </Link>
                       );
                     })}
                 </tbody>
