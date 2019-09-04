@@ -60,6 +60,7 @@ class DashboardDREContainer extends Component {
       meusDados,
       loadingAutorizadas: false,
       loadingPendentes: false,
+      enrolled: meusDados.diretorias_regionais[0].quantidade_alunos
     });
   }
 
