@@ -108,11 +108,11 @@ export class CardInversaoPendenciaAprovacao extends Component {
             </div>
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr>
-                  <th>Código do Pedido</th>
-                  <th>Código EOL</th>
-                  <th>Nome da Escola</th>
-                  <th>Data da Solicitação</th>
+                <tr className="row">
+                  <th className="col-2">Código do Pedido</th>
+                  <th className="col-2">Código EOL</th>
+                  <th className="col-4">Nome da Escola</th>
+                  <th className="col-4">Data da Solicitação</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,11 +123,11 @@ export class CardInversaoPendenciaAprovacao extends Component {
                         solicitacao.uuid
                       }`}
                     >
-                      <tr>
-                        <td>{solicitacao.id_externo}</td>
-                        <td>{solicitacao.escola.codigo_eol}</td>
-                        <td>{solicitacao.escola.nome}</td>
-                        <td>{solicitacao.criado_em}</td>
+                      <tr className="row">
+                        <td className="col-2">{solicitacao.id_externo}</td>
+                        <td className="col-2">{solicitacao.escola.codigo_eol}</td>
+                        <td className="col-4">{solicitacao.escola.nome}</td>
+                        <td className="col-4">{solicitacao.criado_em}</td>
                       </tr>
                     </Link>
                   );

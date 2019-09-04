@@ -57,3 +57,13 @@
     }
   }
 }
+
+.ajuste-icones{
+  display: flex;
+  justify-content: space-between;
+  margin-right: 0.5em;
+
+  img{
+    height: 1em;
+  }
+}

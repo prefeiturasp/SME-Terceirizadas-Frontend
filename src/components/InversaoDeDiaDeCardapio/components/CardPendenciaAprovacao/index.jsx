@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
+import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import "./style.scss";
-import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
