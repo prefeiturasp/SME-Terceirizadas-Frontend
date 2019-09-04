@@ -33,7 +33,9 @@ class DashboardCODAEContainer extends Component {
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
       solicitacoesRevisao,
-      lotes
+      lotes,
+
+      loadingPainelSolicitacoes: false
     });
   }
 
@@ -46,6 +48,7 @@ class DashboardCODAEContainer extends Component {
       solicitacoesRevisao: [],
       totalAlunos: 0,
       lotes: [],
+      loadingPainelSolicitacoes: true,
       vencimentoPara: [
         {
           nome: VENCIMENTO.SEM_FILTRO,

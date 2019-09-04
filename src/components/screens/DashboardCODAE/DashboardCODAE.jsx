@@ -4,10 +4,7 @@ import { Field, reduxForm } from "redux-form";
 import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import {
-  CardStatusDeSolicitacao,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
@@ -26,7 +23,16 @@ class DashboardCODAE extends Component {
       solicitacoesAprovadasFiltradas: [],
       solicitacoesPendentesAprovacaoFiltradas: [],
       solicitacoesCanceladasFiltradas: [],
-      solicitacoesRevisaoFiltradas: []
+      solicitacoesRevisaoFiltradas: [],
+
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true,
+
+      loadingPainelSolicitacoes: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
@@ -39,6 +45,17 @@ class DashboardCODAE extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.loadingPainelSolicitacoes !==
+      this.props.loadingPainelSolicitacoes
+    ) {
+      this.setState({
+        loadingPainelSolicitacoes: this.props.loadingPainelSolicitacoes
+      });
+    }
+  }
+
   render() {
     const {
       totalAlunos,
@@ -49,7 +66,7 @@ class DashboardCODAE extends Component {
       vencimentoPara,
       lotes
     } = this.props;
-    const { collapsed, loading } = this.state;
+    const { collapsed, loadingPainelSolicitacoes } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -89,21 +106,21 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    loading={loading}
                     cardType={CARD_TYPE_ENUM.APROVADO}
                     solicitations={solicitacoesAprovadas}
                     icon={"fa-check"}
                     href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
-                    loading={loading}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
                     href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
               </div>
@@ -111,21 +128,21 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
-                    loading={loading}
                     cardType={CARD_TYPE_ENUM.CANCELADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Solicitação recusada"}
-                    loading={loading}
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
               </div>
