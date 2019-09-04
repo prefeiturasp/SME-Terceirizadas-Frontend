@@ -391,7 +391,6 @@ class EditaisContratos extends Component {
       atualizacao,
       uuid
     } = this.state;
-    console.log(contratos_relacionados)
     return (
       <section className="cadastro pt-3">
         {this.renderRedirect()}
