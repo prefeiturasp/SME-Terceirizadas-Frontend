@@ -68,6 +68,14 @@ class DashboardDRE extends Component {
   }
 
   async carregaResumosPendencias(filtroPendencias) {
+    this.setState({
+      loadingAlteracaoCardapio : true,
+      loadingInclusoesAlimentacao : true,
+      loadingInversoesCardapio : true,
+      loadingKitLanche : true,
+      loadingSuspensaoAlimentacao : true,
+      loadingSolicitacoesUnificadas : true
+    });
     const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
       minhaDRE,
