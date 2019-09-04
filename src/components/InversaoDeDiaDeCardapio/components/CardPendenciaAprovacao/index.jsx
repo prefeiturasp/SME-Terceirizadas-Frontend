@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
+import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import "./style.scss";
-import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
@@ -118,8 +118,6 @@ export class CardInversaoPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
-                  const dataMaisProxima =
-                    pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
                       to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
@@ -130,7 +128,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial || dataMaisProxima}</td>
+                        <td>{pedido.data}</td>
                       </tr>
                     </Link>
                   );
