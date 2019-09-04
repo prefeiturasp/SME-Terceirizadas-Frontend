@@ -391,7 +391,7 @@ class EditaisContratos extends Component {
       atualizacao,
       uuid
     } = this.state;
-    console.log(contratos_relacionados);
+    console.log(contratos_relacionados)
     return (
       <section className="cadastro pt-3">
         {this.renderRedirect()}
@@ -477,9 +477,9 @@ class EditaisContratos extends Component {
                   )}
                   <BaseButton
                     label={"Salvar"}
-                    onClick={handleSubmit(values =>
-                      this.salvaFormulario(values)
-                    )}
+                    onClick={event => {
+                      this.salvaFormulario()
+                    }}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
                     style={ButtonStyle.Primary}

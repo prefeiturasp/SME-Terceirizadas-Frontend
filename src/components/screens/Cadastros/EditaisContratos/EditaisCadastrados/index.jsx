@@ -128,27 +128,25 @@ class EditaisCadastrados extends Component {
                                           {contrato.lotes.map(lote => {
                                             return (<Fragment><span className="nome-unidade">{lote.nome}</span><br/></Fragment>)
                                           })}
-                                          
+
                                         </div>
                                         <div>
                                           DRE: <br/>
                                           {contrato.diretorias_regionais.map(dre => {
                                             return (<Fragment><span className="nome-unidade">{dre.nome}</span><br/></Fragment>)
                                           })}
-                                          
+
                                         </div>
                                       </div>
 
                                       <div className="contrato-detalhe">
                                         <div>
                                           Empresa: <br/>
-                                          {contrato.terceirizadas.map(terceirizada => {
-                                            return (<Fragment><span className="nome-unidade">{terceirizada.nome_fantasia}</span><br/></Fragment>)
-                                          })}
-                                          
+                                          <span className="nome-unidade">{contrato.terceirizada.nome_fantasia}</span><br/>
+
                                         </div>
                                         <div>
-                                          
+
                                         </div>
                                       </div>
                                       <div className="divisao" />

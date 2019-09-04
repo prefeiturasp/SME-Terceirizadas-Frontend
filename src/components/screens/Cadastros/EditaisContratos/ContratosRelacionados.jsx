@@ -179,36 +179,26 @@ class ContratosRelacionados extends Component {
       this.state.formVigenciaContratos.length === 1 &&
       !this.state.atualizado
     ) {
-      const {contratos_relacionados, indice} = this.props;
+      const { contratos_relacionados, indice } = this.props;
 
       let vigencias = contratos_relacionados[indice].vigencias;
 
-      let lotesSelecionados = contratos_relacionados[
-        indice
-      ].lotes;
-      let lotesNomesSelecionados = contratos_relacionados[
-        indice
-      ].lotes_nomes;
+      let lotesSelecionados = contratos_relacionados[indice].lotes;
+      let lotesNomesSelecionados = contratos_relacionados[indice].lotes_nomes;
 
-      let diretoriasSelecionadas = contratos_relacionados[
-        indice
-      ].dres;
-      let diretoriasNomesSelecionadas = contratos_relacionados[
-        indice
-      ].dres_nomes;
+      let diretoriasSelecionadas = contratos_relacionados[indice].dres;
+      let diretoriasNomesSelecionadas =
+        contratos_relacionados[indice].dres_nomes;
 
-      let empresasSelecionadas = contratos_relacionados[
-        indice
-      ].empresas;
-      let empresasNomesSelecionados = contratos_relacionados[
-        indice
-      ].empresas_nomes;
+      let empresasSelecionadas = contratos_relacionados[indice].empresas;
+      let empresasNomesSelecionados =
+        contratos_relacionados[indice].empresas_nomes;
 
       vigencias.forEach((vigencia, indice) => {
-        if(indice !== 0){
-          this.nomeFormAtual()
+        if (indice !== 0) {
+          this.nomeFormAtual();
         }
-      })
+      });
 
       this.setState({
         atualizado: true,
@@ -220,10 +210,7 @@ class ContratosRelacionados extends Component {
         empresasSelecionadas,
         empresasNomesSelecionados
       });
-      
-     
     }
-
   }
 
   renderExcluirNoUltimo(indiceDoForm) {
@@ -532,16 +519,9 @@ class ContratosRelacionados extends Component {
                         <label className="label-selected-unities">
                           Empresas selecionadas
                         </label>
-                        {empresasNomesSelecionados.map((empresa, indice) => {
-                          return (
-                            <div
-                              className="value-selected-unities"
-                              key={indice}
-                            >
-                              {empresa}
-                            </div>
-                          );
-                        })}
+                        <div className="value-selected-unities" key={indice}>
+                          {empresasNomesSelecionados}
+                        </div>
                       </div>
                     </div>
                   )}
