@@ -1,22 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import {
-  ALTERACAO_CARDAPIO,
-  CODAE,
-  INCLUSAO_ALIMENTACAO,
-  INVERSAO_CARDAPIO,
-  SOLICITACAO_KIT_LANCHE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
-} from "../../../configs/constants";
-import {
-  getResumoPendenciasAlteracaoCardapio,
-  getResumoPendenciasInclusaoAlimentacao,
-  getResumoPendenciasInversoesCardapio,
-  getResumoPendenciasKitLancheAvulso,
-  getResumoPendenciasKitLancheUnificado,
-  getResumoPendenciasSuspensaoCardapio
-} from "../../../services/painelCODAE.service";
+import { ALTERACAO_CARDAPIO, CODAE, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, SOLICITACAO_KIT_LANCHE_UNIFICADA, SUSPENSAO_ALIMENTACAO } from "../../../configs/constants";
+import { getResumoPendenciasAlteracaoCardapio, getResumoPendenciasInclusaoAlimentacao, getResumoPendenciasInversoesCardapio, getResumoPendenciasKitLancheAvulso, getResumoPendenciasKitLancheUnificado, getResumoPendenciasSuspensaoCardapio } from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 const ESTADO_INICIAL = {
   resumoPendenciasInversoesCardapio: {
@@ -53,7 +38,13 @@ const ESTADO_INICIAL = {
     total: 0,
     informados: 0,
     ciencia: 0
-  }
+  },
+  loadingUnificado: true,
+  loadingKitLancheAvulso: true,
+  loadingInversao: true,
+  loadingSuspensao: true,
+  loadingAlteracao: true,
+  loadingInclusao: true
 };
 class VisaoGeral extends Component {
   constructor(props) {
@@ -77,21 +68,27 @@ class VisaoGeral extends Component {
     const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio(
       filtro
     );
+    this.setState({ loadingInversao: false });
     const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao(
       filtro
     );
+    this.setState({ loadingInclusao: false });
     const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso(
       filtro
     );
+    this.setState({ loadingKitLancheAvulso: false });
     const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado(
       filtro
     );
+    this.setState({ loadingUnificado: false });
     const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio(
       filtro
     );
+    this.setState({ loadingAlteracao: false });
     const resumoSuspensoesCardapio = await getResumoPendenciasSuspensaoCardapio(
       filtro
     );
+    this.setState({ loadingSuspensao: false });
     this.setState({
       resumoPendenciasInversoesCardapio,
       resumoPendenciasInclusaoAlimentacao,
@@ -109,7 +106,14 @@ class VisaoGeral extends Component {
       resumoPendenciasKitLancheAvulsa,
       resumoPendenciasKitLancheUnificado,
       resumoPendenciasAlteracaoCardapio,
-      resumoSuspensoesCardapio
+      resumoSuspensoesCardapio,
+
+      loadingUnificado,
+      loadingKitLancheAvulso,
+      loadingInversao,
+      loadingSuspensao,
+      loadingAlteracao,
+      loadingInclusao
     } = this.state;
     return (
       <div>
@@ -122,6 +126,7 @@ class VisaoGeral extends Component {
                 priorityOrders={resumoPendenciasKitLancheUnificado.prioritario}
                 onLimitOrders={resumoPendenciasKitLancheUnificado.limite}
                 regularOrders={resumoPendenciasKitLancheUnificado.regular}
+                loading={loadingUnificado}
               />
             </Link>
           </div>
@@ -133,6 +138,7 @@ class VisaoGeral extends Component {
                 priorityOrders={resumoPendenciasInversoesCardapio.prioritario}
                 onLimitOrders={resumoPendenciasInversoesCardapio.limite}
                 regularOrders={resumoPendenciasInversoesCardapio.regular}
+                loading={loadingInversao}
               />
             </Link>
           </div>
@@ -146,6 +152,7 @@ class VisaoGeral extends Component {
                 priorityOrders={resumoPendenciasInclusaoAlimentacao.prioritario}
                 onLimitOrders={resumoPendenciasInclusaoAlimentacao.limite}
                 regularOrders={resumoPendenciasInclusaoAlimentacao.regular}
+                loading={loadingInclusao}
               />
             </Link>
           </div>
@@ -157,6 +164,7 @@ class VisaoGeral extends Component {
                 priorityOrders={resumoPendenciasKitLancheAvulsa.prioritario}
                 onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}
                 regularOrders={resumoPendenciasKitLancheAvulsa.regular}
+                loading={loadingKitLancheAvulso}
               />
             </Link>
           </div>
@@ -170,6 +178,7 @@ class VisaoGeral extends Component {
                 priorityOrders={resumoPendenciasAlteracaoCardapio.prioritario}
                 onLimitOrders={resumoPendenciasAlteracaoCardapio.limite}
                 regularOrders={resumoPendenciasAlteracaoCardapio.regular}
+                loading={loadingAlteracao}
               />
             </Link>
           </div>
@@ -180,6 +189,7 @@ class VisaoGeral extends Component {
                 totalOfOrders={resumoSuspensoesCardapio.total}
                 priorityOrders={resumoSuspensoesCardapio.informados}
                 priorityOrdersOnly={true}
+                loading={loadingSuspensao}
               />
             </Link>
           </div>
