@@ -156,21 +156,27 @@ class ContratosRelacionados extends Component {
       }
     }
     if (
-      this.state.lotesSelecionados.length > 0 ||
-      this.state.diretoriasSelecionadas.length > 0 ||
-      this.state.empresasSelecionadas.length > 0
+      this.state.lotesSelecionados !== null &&
+      this.state.diretoriasSelecionadas &&
+      this.state.empresasSelecionadas !== null
     ) {
-      if (this.props.reseta === true) {
-        this.setState({
-          lotesSelecionados: [],
-          lotesNomesSelecionados: [],
-          diretoriasSelecionadas: [],
-          diretoriasNomesSelecionadas: [],
-          empresasSelecionadas: [],
-          empresasNomesSelecionados: []
-        });
+      if (
+        this.state.lotesSelecionados.length > 0 ||
+        this.state.diretoriasSelecionadas.length > 0 ||
+        this.state.empresasSelecionadas.length > 0
+      ) {
+        if (this.props.reseta === true) {
+          this.setState({
+            lotesSelecionados: [],
+            lotesNomesSelecionados: [],
+            diretoriasSelecionadas: [],
+            diretoriasNomesSelecionadas: [],
+            empresasSelecionadas: [],
+            empresasNomesSelecionados: []
+          });
 
-        this.props.setaResetFormChild();
+          this.props.setaResetFormChild();
+        }
       }
     }
 
@@ -184,15 +190,29 @@ class ContratosRelacionados extends Component {
       let vigencias = contratos_relacionados[indice].vigencias;
 
       let lotesSelecionados = contratos_relacionados[indice].lotes;
-      let lotesNomesSelecionados = contratos_relacionados[indice].lotes_nomes;
 
-      let diretoriasSelecionadas = contratos_relacionados[indice].dres;
+      let lotesNomesSelecionados =
+        contratos_relacionados[indice].lotes_nomes !== null
+          ? contratos_relacionados[indice].lotes_nomes
+          : [];
+
+      let diretoriasSelecionadas =
+        contratos_relacionados[indice].dres !== null
+          ? contratos_relacionados[indice].dres
+          : [];
+
       let diretoriasNomesSelecionadas =
         contratos_relacionados[indice].dres_nomes;
 
-      let empresasSelecionadas = contratos_relacionados[indice].empresas;
+      let empresasSelecionadas =
+        contratos_relacionados[indice].empresas !== null
+          ? contratos_relacionados[indice].empresas
+          : [];
+
       let empresasNomesSelecionados =
-        contratos_relacionados[indice].empresas_nomes;
+        contratos_relacionados[indice].empresas_nomes !== null
+          ? contratos_relacionados[indice].empresas_nomes
+          : [];
 
       vigencias.forEach((vigencia, indice) => {
         if (indice !== 0) {
@@ -387,7 +407,9 @@ class ContratosRelacionados extends Component {
                         <Field
                           component={StatefulMultiSelect}
                           name={".lotes"}
-                          selected={lotesSelecionados}
+                          selected={
+                            lotesSelecionados !== null ? lotesSelecionados : []
+                          }
                           options={lotes}
                           valueRenderer={renderizarLabelLote}
                           onSelectedChanged={values => {
@@ -416,7 +438,11 @@ class ContratosRelacionados extends Component {
                         <Field
                           component={StatefulMultiSelect}
                           name={".dres"}
-                          selected={diretoriasSelecionadas}
+                          selected={
+                            diretoriasSelecionadas !== null
+                              ? diretoriasSelecionadas
+                              : []
+                          }
                           options={diretoriasRegionais}
                           valueRenderer={renderizarLabelDiretoria}
                           onSelectedChanged={values => {
@@ -491,7 +517,11 @@ class ContratosRelacionados extends Component {
                       <Field
                         component={StatefulMultiSelect}
                         name={".empresas"}
-                        selected={empresasSelecionadas}
+                        selected={
+                          empresasSelecionadas !== null
+                            ? empresasSelecionadas
+                            : []
+                        }
                         options={empresas}
                         valueRenderer={renderizarLabelEmpresa}
                         onSelectedChanged={values => {

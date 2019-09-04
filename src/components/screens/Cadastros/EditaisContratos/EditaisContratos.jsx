@@ -122,7 +122,7 @@ class EditaisContratos extends Component {
             this.props.loadEdital(response.data);
           });
         } else {
-          this.props.reset('cadastroEditaisForm');
+          this.props.reset("cadastroEditaisForm");
         }
         this.setState({
           loading: false
@@ -151,6 +151,7 @@ class EditaisContratos extends Component {
   }
 
   adicionaContratosRelacionados() {
+    console.log('OPAAAAAAAAAAAAA')
     this.setState({
       contratos_relacionados: this.state.contratos_relacionados.concat([
         {
@@ -391,7 +392,6 @@ class EditaisContratos extends Component {
       atualizacao,
       uuid
     } = this.state;
-    console.log(contratos_relacionados)
     return (
       <section className="cadastro pt-3">
         {this.renderRedirect()}
@@ -478,7 +478,7 @@ class EditaisContratos extends Component {
                   <BaseButton
                     label={"Salvar"}
                     onClick={event => {
-                      this.salvaFormulario()
+                      this.salvaFormulario();
                     }}
                     className="ml-3"
                     type={ButtonType.SUBMIT}
