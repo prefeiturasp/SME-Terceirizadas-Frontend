@@ -15,7 +15,7 @@ export const TabelaHistoricoLotes = props => {
             return (
               <tr>
                 <td>{lote.nome}</td>
-                <td>{lote.tipo_de_gestao}</td>
+                <td>{lote.tipo_gestao.nome}</td>
               </tr>
             );
           })}

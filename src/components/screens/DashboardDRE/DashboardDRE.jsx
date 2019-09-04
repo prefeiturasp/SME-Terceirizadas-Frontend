@@ -145,6 +145,10 @@ class DashboardDRE extends Component {
     if (prevProps.loadingPendentes !== this.props.loadingPendentes){
       this.setState({loadingPendentes: this.props.loadingPendentes})
     }
+
+    if (prevProps.lotesDRE !== this.props.lotesDRE){
+      this.setState({lotesDRE: this.props.lotesDRE})
+    }
   }
 
   filterList(event) {
@@ -174,8 +178,6 @@ class DashboardDRE extends Component {
   }
 
   changeVisao(visao) {
-    console.log("visao", visao);
-
     this.setState({visao})
   }
 
@@ -192,7 +194,7 @@ class DashboardDRE extends Component {
 
     const {
       collapsed,
-      lotes,
+      lotesDRE,
       autorizadasListFiltered,
       pendentesListFiltered,
       resumoPendenciasDREAlteracoesDeCardapio,
@@ -222,7 +224,7 @@ class DashboardDRE extends Component {
             numeroAlunos={enrolled}
           >
             <Collapse isOpened={!collapsed}>
-              <TabelaHistoricoLotes lotes={lotes} />
+              <TabelaHistoricoLotes lotes={lotesDRE} />
             </Collapse>
           </CardMatriculados>
           <div className="card mt-3">
