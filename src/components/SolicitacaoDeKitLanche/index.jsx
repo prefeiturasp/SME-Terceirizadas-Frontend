@@ -200,6 +200,9 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   salvarOuEnviar(solicitacao_kit_lanche, values) {
+    if(values.status){
+      solicitacao_kit_lanche.status = values.status
+    }
     if (!values.uuid) {
       solicitarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
@@ -226,7 +229,9 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === "DRE_A_VALIDAR") {
               this.iniciarPedido(values.uuid);
             } else this.resetForm();
-          } else {
+          } else if(resp.data.tipo_error){
+            this.validaTipoMensagemError(resp.data)
+          }else {
             toastError("erro ao atualizar a solicitação");
           }
         })
