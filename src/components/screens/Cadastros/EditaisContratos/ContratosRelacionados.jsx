@@ -262,7 +262,6 @@ class ContratosRelacionados extends Component {
       adicionaNumeroContrato,
       excluirContratoRelacionado
     } = this.props;
-    console.log(lotesNomesSelecionados);
     return (
       <div>
         <div>
