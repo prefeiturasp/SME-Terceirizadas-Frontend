@@ -14,7 +14,7 @@ export class ModalCadastroEdital extends Component {
       objeto: requisicao_edital.resumo,
       contratos: requisicao_edital.contratos_relacionados.map(contrato => {
         return {
-          terceirizadas: contrato.empresas,
+          terceirizada: contrato.empresas[0],
           vigencias: contrato.vigencias,
           numero: contrato.numero_contrato,
           processo: contrato.processo_administrativo,
@@ -117,11 +117,7 @@ export class ModalCadastroEdital extends Component {
                             <div className="iteracao-elementos">
                               <span>Empresa:</span>
                               <div className="iteracao-elementos">
-                                {contrato.empresas_nomes.map(empresa => {
-                                  return (
-                                    <div className="elementos">{empresa}; </div>
-                                  );
-                                })}
+                                {contrato.empresas_nomes}
                               </div>
                             </div>
                           </div>

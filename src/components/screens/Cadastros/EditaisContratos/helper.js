@@ -116,17 +116,11 @@ export const montaContratoRelacionado = (
     return dre.nome;
   });
 
-  contratos_relacionados[indice_contrato].empresas = contrato.terceirizadas.map(
-    terceirizada => {
-      return terceirizada.uuid;
-    }
-  );
+  contratos_relacionados[indice_contrato].empresas = [contrato.terceirizada.uuid];
 
   contratos_relacionados[
     indice_contrato
-  ].empresas_nomes = contrato.terceirizadas.map(terceirizada => {
-    return terceirizada.nome_fantasia;
-  });
+  ].empresas_nomes = contrato.terceirizada.nome_fantasia;
   contratos_relacionados[indice_contrato].processo_administrativo =
     contrato.processo;
   contratos_relacionados[indice_contrato].numero_contrato = contrato.numero;
