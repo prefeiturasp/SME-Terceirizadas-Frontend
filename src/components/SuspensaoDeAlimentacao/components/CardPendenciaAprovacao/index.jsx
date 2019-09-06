@@ -41,7 +41,8 @@ export class CardInversaoPendenciaAprovacao extends Component {
       pedidos,
       titulo,
       tipoDeCard,
-      parametroURL
+      parametroURL,
+      quantidadeTotal
     } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
@@ -50,7 +51,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
         <div className="row">
           <div className="col-2">
             <div className={"order-box " + tipoDeCard}>
-              <span className="number">{pedidos.length}</span>
+              <span className="number">{quantidadeTotal}</span>
               <span className="order">
                 {`${talvezPluralizar(
                   calcularNumeroDeEscolasUnicas(pedidos),
