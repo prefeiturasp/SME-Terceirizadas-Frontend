@@ -41,7 +41,8 @@ export class CardInversaoPendenciaAprovacao extends Component {
       pedidos,
       titulo,
       tipoDeCard,
-      parametroURL
+      parametroURL,
+      totalSOlicitacoes
     } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
@@ -50,7 +51,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
         <div className="row">
           <div className="col-2">
             <div className={"order-box " + tipoDeCard}>
-              <span className="number">{pedidos.length}</span>
+              <span className="number"> {totalSOlicitacoes}</span>
               <span className="order">
                 {`${talvezPluralizar(
                   calcularNumeroDeEscolasUnicas(pedidos),
@@ -116,7 +117,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                 </tr>
               </thead>
               <tbody>
-                {pedidosFiltrados.map((solicitacao) => {
+                {pedidosFiltrados.map(solicitacao => {
                   return (
                     <Link
                       to={`/${parametroURL}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
@@ -125,7 +126,9 @@ export class CardInversaoPendenciaAprovacao extends Component {
                     >
                       <tr className="row">
                         <td className="col-2">{solicitacao.id_externo}</td>
-                        <td className="col-2">{solicitacao.escola.codigo_eol}</td>
+                        <td className="col-2">
+                          {solicitacao.escola.codigo_eol}
+                        </td>
                         <td className="col-4">{solicitacao.escola.nome}</td>
                         <td className="col-4">{solicitacao.criado_em}</td>
                       </tr>

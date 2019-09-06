@@ -19,16 +19,20 @@ class PainelPedidos extends Component {
     this.state = {
       solicitacoesCarregadas: 0,
       todasSolicitacoes: [],
-      todasSolicitacoesTomadaCiencia: []
+      todasSolicitacoesTomadaCiencia: [],
+      totalSOlicitacoes: null
     };
   }
 
   filtrar() {
     let todasSolicitacoes = [];
+    let totalSOlicitacoes = null;
     this.setState({ solicitacoesCarregadas: 0 });
     getSuspensoesDeAlimentacaoInformadas().then(response => {
       todasSolicitacoes = response.results;
+      totalSOlicitacoes = response.count;
       this.setState({
+        totalSOlicitacoes,
         todasSolicitacoes,
         solicitacoesCarregadas: this.state.solicitacoesCarregadas + 1
       });
@@ -55,7 +59,8 @@ class PainelPedidos extends Component {
     const {
       solicitacoesCarregadas,
       todasSolicitacoes,
-      todasSolicitacoesTomadaCiencia
+      todasSolicitacoesTomadaCiencia,
+      totalSOlicitacoes
     } = this.state;
 
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
@@ -79,6 +84,7 @@ class PainelPedidos extends Component {
                   <CardInversaoPendenciaAprovacao
                     titulo={"Pedidos para tomar ciência"}
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
+                    totalSOlicitacoes={totalSOlicitacoes}
                     pedidos={todasSolicitacoes}
                     ultimaColunaLabel={"Data"}
                     parametroURL={TERCEIRIZADA}
@@ -89,7 +95,9 @@ class PainelPedidos extends Component {
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardHistorico
-                      pedidos={formatarPedidos(todasSolicitacoesTomadaCiencia)}
+                      pedidos={formatarPedidos(
+                        todasSolicitacoesTomadaCiencia
+                      )}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={
                         "Histórico de Suspensão de Alimentações Tomadas Ciência"
