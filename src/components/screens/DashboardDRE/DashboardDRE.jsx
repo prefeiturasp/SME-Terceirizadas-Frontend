@@ -22,7 +22,7 @@ import {
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { dataAtual } from "../../../helpers/utilities";
 import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
-
+import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service"
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
@@ -59,7 +59,8 @@ class DashboardDRE extends Component {
       loadingSuspensaoAlimentacao: true,
       loadingSolicitacoesUnificadas: true,
       lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
-      visao: "tipo_solicitacao"
+      visao: "tipo_solicitacao",
+      resumoPorLote: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.filterList = this.filterList.bind(this);
@@ -74,7 +75,8 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio : true,
       loadingKitLanche : true,
       loadingSuspensaoAlimentacao : true,
-      loadingSolicitacoesUnificadas : true
+      loadingSolicitacoesUnificadas : true,
+      loadingResumoLotes: true
     });
     const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
@@ -98,6 +100,9 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
+    let resumoPorLote = await getResumoPendenciasDREPorLote(minhaDRE, "sem_filtro")
+
+
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
@@ -106,12 +111,14 @@ class DashboardDRE extends Component {
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
+      resumoPorLote,
       loadingAlteracaoCardapio : !(resumoPendenciasDREAlteracoesDeCardapio),
       loadingInclusoesAlimentacao : !(resumoPendenciasDREInclusoesDeAlimentacao),
       loadingInversoesCardapio : !(resumoPendenciasDREInversaoDeDiaDeCardapio),
       loadingKitLanche : !(resumoPendenciasDREKitLanche),
       loadingSuspensaoAlimentacao : !(resumoPendenciasDRESuspensaoDeAlimentacao),
-      loadingSolicitacoesUnificadas : !(resumoPendenciasDRESolicitacoesUnificadas)
+      loadingSolicitacoesUnificadas : !(resumoPendenciasDRESolicitacoesUnificadas),
+      loadingResumoLotes: false
     });
   }
 
@@ -148,6 +155,7 @@ class DashboardDRE extends Component {
 
     if (prevProps.lotesDRE !== this.props.lotesDRE){
       this.setState({lotesDRE: this.props.lotesDRE})
+
     }
   }
 
@@ -210,7 +218,9 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio,
       loadingSuspensaoAlimentacao,
       loadingKitLanche,
-      loadingSolicitacoesUnificadas
+      loadingSolicitacoesUnificadas,
+      resumoPorLote,
+      loadingResumoLotes,
 
     } = this.state;
 
@@ -471,17 +481,17 @@ class DashboardDRE extends Component {
               {/* Visão por Lote */}
               {this.state.visao === "lote" &&
               <div className="row pt-3">
-                  {this.state.lotes.map(
+                  {this.state.lotesDRE.map(
                     lote => {
                       return (
                         <div className="col-6">
                           <CardPendencia
-                            cardTitle={lote}
-                            totalOfOrders={100}
-                            priorityOrders={50}
-                            onLimitOrders={25}
-                            regularOrders={25}
-                            loading={false}
+                            cardTitle={lote.nome}
+                            totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
+                            priorityOrders={resumoPorLote[lote.nome]["PRIORITARIOS"]}
+                            onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
+                            regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
+                            loading={loadingResumoLotes}
                           />
                         </div>
                       )
