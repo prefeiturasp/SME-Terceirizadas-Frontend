@@ -67,7 +67,10 @@ export const getSolicitacoesAutorizadasPelaDRE = dreUuid => {
     });
 };
 
-export const getSolicitacoesPendentesParaDRE = (dreUuid, filtro="sem_filtro") => {
+export const getSolicitacoesPendentesParaDRE = (
+  dreUuid,
+  filtro = "sem_filtro"
+) => {
   const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
 
   const OBJ_REQUEST = {
@@ -263,9 +266,18 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   const solicitacoes = await getCODAEPedidosSolicitacoesUnificadas(filtro);
 
   if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results, filtro="solicitacao_kit_lanche");
-    pedidosLimite = filtraNoLimite(solicitacoes.results, filtro="solicitacao_kit_lanche");
-    pedidosRegular = filtraRegular(solicitacoes.results, filtro="solicitacao_kit_lanche");
+    pedidosPrioritarios = filtraPrioritarios(
+      solicitacoes.results,
+      (filtro = "solicitacao_kit_lanche")
+    );
+    pedidosLimite = filtraNoLimite(
+      solicitacoes.results,
+      (filtro = "solicitacao_kit_lanche")
+    );
+    pedidosRegular = filtraRegular(
+      solicitacoes.results,
+      (filtro = "solicitacao_kit_lanche")
+    );
   }
 
   resposta.limite = pedidosLimite.length;
@@ -277,31 +289,25 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
 };
 
 export const getResumoPendenciasDREPorLote = async (
+  dree_uuid,
   filtro = "sem_filtro"
 ) => {
-  let resposta = {
-    total: 0,
-    prioritario: 0,
-    limite: 0,
-    regular: 0
+  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
+    dree_uuid,
+    filtro
+  )).results;
+
+  const reducer = (resumoPorLote, corrente) => {
+    if (!resumoPorLote[corrente.lote]) {
+      resumoPorLote[corrente.lote] = {}
+    }
+    resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[corrente.lote][corrente.prioridade] ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1): 1;
+    resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote]["TOTAL"] ? (resumoPorLote[corrente.lote]["TOTAL"] += 1): 1;
+    return resumoPorLote;
   };
 
-  let pedidosPrioritarios = [];
-  let pedidosLimite = [];
-  let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
+  let resumoPorLote = solicitacoes.reduce(reducer, {});
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
-
-  resposta.limite = pedidosLimite.length;
-  resposta.prioritario = pedidosPrioritarios.length;
-  resposta.regular = pedidosRegular.length;
-  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
-
-  return resposta;
+  return resumoPorLote;
 };
