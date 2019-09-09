@@ -117,7 +117,7 @@ export class CardHistorico extends Component {
                             pedido.uuid
                           }`}
                         >
-                          <tr className="row">
+                          <tr className="row" indice={key}>
                             <td className="td-check col-4">
                               <label
                                 htmlFor={`check_${key}`}
