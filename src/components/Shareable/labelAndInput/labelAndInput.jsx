@@ -187,6 +187,14 @@ export class LabelAndDate extends Component {
     this._calendar.setFocus();
   };
 
+  dataSelecionada(data) {
+    if (data.length !== 0) {
+      return moment(data, "DD/MM/YYYY")["_d"];
+    } else {
+      return null;
+    }
+  }
+
   render() {
     const {
       input,
@@ -239,6 +247,7 @@ export class LabelAndDate extends Component {
               minDate={minDate}
               maxDate={maxDate}
               disabled={disabled}
+              selected={this.dataSelecionada(input.value)}
               className="form-control"
               ref={c => (this._calendar = c)}
               onChange={this.handleChange}
