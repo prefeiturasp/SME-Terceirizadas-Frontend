@@ -292,6 +292,7 @@ export const getResumoPendenciasDREPorLote = async (
   dree_uuid,
   filtro = "sem_filtro"
 ) => {
+  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
   const solicitacoes = (await getSolicitacoesPendentesParaDRE(
     dree_uuid,
     filtro
@@ -301,8 +302,10 @@ export const getResumoPendenciasDREPorLote = async (
     if (!resumoPorLote[corrente.lote]) {
       resumoPorLote[corrente.lote] = {}
     }
-    resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[corrente.lote][corrente.prioridade] ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1): 1;
-    resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote]["TOTAL"] ? (resumoPorLote[corrente.lote]["TOTAL"] += 1): 1;
+    if (corrente.prioridade !== "VENCIDO") {
+      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[corrente.lote][corrente.prioridade] ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1): 1;
+      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote]["TOTAL"] ? (resumoPorLote[corrente.lote]["TOTAL"] += 1): 1;
+    }
     return resumoPorLote;
   };
 

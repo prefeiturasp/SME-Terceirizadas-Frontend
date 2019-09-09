@@ -100,8 +100,7 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
-    let resumoPorLote = await getResumoPendenciasDREPorLote(minhaDRE, "sem_filtro")
-
+    let resumoPorLote = await getResumoPendenciasDREPorLote(minhaDRE, filtroPendencias)
 
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
@@ -488,7 +487,7 @@ class DashboardDRE extends Component {
                           <CardPendencia
                             cardTitle={lote.nome}
                             totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
-                            priorityOrders={resumoPorLote[lote.nome]["PRIORITARIOS"]}
+                            priorityOrders={resumoPorLote[lote.nome]["PRIORITARIO"]}
                             onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
                             regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
                             loading={loadingResumoLotes}
