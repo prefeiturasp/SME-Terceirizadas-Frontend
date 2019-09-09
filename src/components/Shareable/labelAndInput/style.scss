@@ -64,7 +64,8 @@ div.react-datepicker-wrapper {
 }
 
 .fa-calendar-alt {
-  z-index: 1;
+  z-index: 0;
+  cursor: text;
   padding-top: 12px;
   color: $green;
   position: relative;

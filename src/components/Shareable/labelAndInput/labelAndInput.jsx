@@ -182,7 +182,10 @@ export class LabelAndDate extends Component {
     );
   }
 
-  openDatepicker = () => this._calendar.setOpen(true);
+  openDatepicker = () => {
+    this._calendar.setOpen(true);
+    this._calendar.setFocus();
+  };
 
   render() {
     const {
@@ -244,7 +247,10 @@ export class LabelAndDate extends Component {
               name={name}
             />
             <If isVisible={hasIcon}>
-              <i onClick={this.openDatepicker} className="fas fa-calendar-alt" />
+              <i
+                onClick={this.openDatepicker}
+                className="fas fa-calendar-alt"
+              />
             </If>
           </div>
         </div>
