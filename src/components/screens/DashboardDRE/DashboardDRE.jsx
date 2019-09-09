@@ -58,7 +58,7 @@ class DashboardDRE extends Component {
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
       loadingSolicitacoesUnificadas: true,
-      lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
+      //lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
       visao: "tipo_solicitacao",
       resumoPorLote: []
     };
