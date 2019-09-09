@@ -29,6 +29,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
     pedidosFiltrados = pedidosFiltrados.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
+        item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.escola.codigo_eol.includes(palavraAFiltrar)
       );
