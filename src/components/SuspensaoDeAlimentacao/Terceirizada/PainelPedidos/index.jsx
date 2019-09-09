@@ -19,20 +19,16 @@ class PainelPedidos extends Component {
     this.state = {
       solicitacoesCarregadas: 0,
       todasSolicitacoes: [],
-      todasSolicitacoesTomadaCiencia: [],
-      totalSOlicitacoes: null
+      todasSolicitacoesTomadaCiencia: []
     };
   }
 
   filtrar() {
     let todasSolicitacoes = [];
-    let totalSOlicitacoes = null;
     this.setState({ solicitacoesCarregadas: 0 });
     getSuspensoesDeAlimentacaoInformadas().then(response => {
-      todasSolicitacoes = response.results;
-      totalSOlicitacoes = response.count;
+      todasSolicitacoes = response;
       this.setState({
-        totalSOlicitacoes,
         todasSolicitacoes,
         solicitacoesCarregadas: this.state.solicitacoesCarregadas + 1
       });
@@ -59,8 +55,7 @@ class PainelPedidos extends Component {
     const {
       solicitacoesCarregadas,
       todasSolicitacoes,
-      todasSolicitacoesTomadaCiencia,
-      totalSOlicitacoes
+      todasSolicitacoesTomadaCiencia
     } = this.state;
 
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
@@ -84,7 +79,7 @@ class PainelPedidos extends Component {
                   <CardInversaoPendenciaAprovacao
                     titulo={"Pedidos para tomar ciência"}
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
-                    totalSOlicitacoes={totalSOlicitacoes}
+                    totalSOlicitacoes={todasSolicitacoes}
                     pedidos={todasSolicitacoes}
                     ultimaColunaLabel={"Data"}
                     parametroURL={TERCEIRIZADA}
