@@ -1,5 +1,13 @@
+@import "../../styles/variables.scss";
+
 label {
   margin-bottom: 0 !important;
+}
+
+input::placeholder:not(.input-search) {
+  color: $placeholder !important;
+  text-align: left;
+  font-size: 12px;
 }
 
 input::placeholder {
@@ -13,19 +21,23 @@ textarea {
 .card-body {
   padding: 2rem !important;
 }
-
-input.input-search {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 0.5px solid #a4a4a4;
-  color: #a8a8a8;
-  text-align: right !important;
-  font-style: italic;
-  &::placeholder {
-    text-align: right;
-    color: #a8a8a8;
-    padding-right: 5px;
+.dashboard-card-title {
+  input.input-search {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 0.5px solid $grayLight;
+    color: $grayLight;
+    text-align: right !important;
+    font-style: italic;
+    &::placeholder {
+      text-align: right;
+      color: $grayLight;
+      padding-right: 5px;
+    }
+  }
+  i.fa-search {
+    font-size: 20px;
   }
 }
 
@@ -38,7 +50,7 @@ input.input-search {
 }
 
 .dashboard-card-title {
-  color: #035d96;
+  color: $blue;
   i {
     color: #334d6e;
     padding-right: 15px;
@@ -80,25 +92,29 @@ div.caption-choices {
     padding-right: 30px;
     &:nth-child(1) {
       i {
-        color: #5ec430;
+        color: $greenPanel;
       }
     }
     &:nth-child(2) {
       i {
-        color: #eb8002;
+        color: $orange;
       }
     }
     &:nth-child(3) {
       i {
-        color: #c9251b;
+        color: $red;
       }
     }
     &:nth-child(4) {
       i {
-        color: #000000;
+        color: $black;
       }
     }
   }
+}
+
+.col-form-label {
+  color: $gray !important;
 }
 
 .badge-sme {
@@ -185,18 +201,23 @@ div.caption-choices {
   max-width: 90% !important;
 }
 
+.c-pointer {
+  cursor: pointer;
+}
+
 .checkbox-label {
+  color: $gray;
   input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     &:checked {
       ~ .checkbox-custom {
-        background-color: #fff;
+        background-color: $blueCheckAndRadio;
         border-radius: 5px;
         transform: rotate(0deg) scale(1);
         opacity: 1;
-        border: 1px solid #686868;
+        border: 1px solid $blueCheckAndRadio;
         &:after {
           transform: rotate(45deg) scale(1);
           opacity: 1;
@@ -204,7 +225,7 @@ div.caption-choices {
           top: 2px;
           width: 6px;
           height: 12px;
-          border: solid #686868;
+          border: solid white;
           border-width: 0 2px 2px 0;
           background-color: transparent;
           border-radius: 0;
@@ -220,7 +241,7 @@ div.caption-choices {
     width: 20px;
     background-color: #fff;
     border-radius: 3px;
-    border: 1px solid #686868;
+    border: 1px solid $gray;
     cursor: pointer;
     &:after {
       position: absolute;
@@ -230,10 +251,13 @@ div.caption-choices {
       height: 0px;
       width: 0px;
       border-radius: 5px;
-      border: solid #009bff;
+      border: solid $blueCheckAndRadio;
       border-width: 0 3px 3px 0;
       transform: rotate(0deg) scale(0);
       opacity: 1;
+    }
+    &.radio {
+      border-radius: 15px;
     }
   }
 }
@@ -249,16 +273,33 @@ div.caption-choices {
     border: none;
   }
   &.btn-primary {
-    background-color: #035d96;
+    background-color: $blue;
     &:hover {
-      background-color: #035d96;
+      background-color: $blue;
     }
   }
   &.btn-outline-primary {
-    color: #035d96;
+    color: $blue;
     &:hover {
       background-color: white;
-      color: #035d96;
+      color: $blue;
+    }
+  }
+  &.btn-success {
+    border-color: $green;
+    background-color: $green;
+    &:hover {
+      border-color: $green;
+      background-color: $green;
+    }
+  }
+  &.btn-outline-success {
+    color: $green;
+    border-color: $green;
+    &:hover {
+      border-color: $green;
+      background-color: white;
+      color: $green;
     }
   }
 }
@@ -266,7 +307,7 @@ div.caption-choices {
 .icon-draft-card {
   span {
     i {
-      color: #035d96;
+      color: $green;
       cursor: pointer;
       padding: 0 10px;
     }
@@ -312,5 +353,20 @@ div.caption-choices {
       bottom: -7px;
       height: 3px;
     }
+  }
+}
+
+.table-historic {
+  th {
+    font-weight: normal;
+    font-size: 14px;
+    color: #686868;
+  }
+  td {
+    font-weight: bold;
+    font-size: 15px;
+    color: #353535;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 0;
   }
 }

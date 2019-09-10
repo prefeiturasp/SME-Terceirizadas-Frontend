@@ -1,4 +1,5 @@
 import moment from "moment";
+import "moment/locale/pt-br";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -98,3 +99,24 @@ export const stringSeparadaPorVirgulas = (obj, campo) => {
   });
   return array.join(", ");
 };
+
+export const dataAtual = () => {
+  moment.locale("pt-br");
+  return moment().format("LL");
+};
+
+export const dataAtualDDMMYYYY = () => {
+  moment.locale("pt-br");
+  return moment().format("L");
+};
+
+export const talvezPluralizar = (contador, substantivo, sufixo = "s") => {
+  return `${substantivo}${contador !== 1 ? sufixo : ""}`;
+};
+
+export const getDataObj = data => {
+  return moment(
+    data,
+    "DD/MM/YYYY"
+  )["_d"];
+}

@@ -37,8 +37,9 @@ class LotesCadastrados extends Component {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.dre.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.tipo_de_gestao.toLowerCase().search(palavraAFiltrar) !== -1
+        item.iniciais.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.tipo_gestao.nome.toLowerCase().search(palavraAFiltrar) !== -1
       );
     });
     this.setState({ lotesFiltrados });
@@ -139,7 +140,7 @@ class LotesCadastrados extends Component {
                           return (
                             <tr key={indice} className="relationed-companies">
                               <td className="pt-0 pb-0 blueish" colSpan="4">
-                                {`${escola.codigo_eol} - ${escola.nome}`}
+                                {`${escola.codigo_eol} - ${escola.nome} - ${escola.lote}`}
                               </td>
                             </tr>
                           );

@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import {
-  getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
-} from "../../services/inclusaoDeAlimentacao.service";
+import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getMotivosInclusaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { meusDados } from "../../services/perfil.service";
-import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
 import { formatarPeriodos } from "./helper";
 import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacao from ".";

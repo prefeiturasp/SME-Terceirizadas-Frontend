@@ -7,7 +7,7 @@ const authToken = {
 };
 
 export const meusDados = () => {
-  const url = `${API_URL}/usuarios/meus-dados`;
+  const url = `${API_URL}/usuarios/meus-dados/`;
   return fetch(url, {
     method: "GET",
     headers: authToken

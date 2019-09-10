@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
-import { getWorkingDays as getDiasUteis } from "../../services/workingDays.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
 import { dataParaUTC } from "../../helpers/utilities";
 import InversaoDeDiaDeCardapio from ".";
 

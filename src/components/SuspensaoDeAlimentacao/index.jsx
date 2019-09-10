@@ -11,8 +11,7 @@ import {
 } from "../../services/suspensaoDeAlimentacao.service";
 import {
   geradorUUID,
-  formatarParaMultiselect,
-  checaSeDataEstaEntre2e5DiasUteis
+  formatarParaMultiselect
 } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
@@ -26,7 +25,6 @@ import {
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
@@ -39,7 +37,6 @@ class FoodSuspensionEditor extends Component {
       suspensoesDeAlimentacaoList: [],
       status: "SEM STATUS",
       title: "Nova Suspensão de Alimentação",
-      showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       dias_razoes: [
         {
@@ -59,8 +56,6 @@ class FoodSuspensionEditor extends Component {
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.addDay = this.addDay.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
     this.refresh = this.refresh.bind(this);
     this.titleRef = React.createRef();
   }
@@ -79,9 +74,7 @@ class FoodSuspensionEditor extends Component {
     this.setState({ dias_razoes });
   }
 
-  closeModal(e) {
-    this.setState({ ...this.state, showModal: false });
-  }
+
 
   addDay() {
     this.setState({
@@ -96,9 +89,7 @@ class FoodSuspensionEditor extends Component {
     });
   }
 
-  showModal() {
-    this.setState({ ...this.state, showModal: true });
-  }
+
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
@@ -144,7 +135,6 @@ class FoodSuspensionEditor extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova Suspensão de Alimentação",
-      showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       dias_razoes: [
         {
@@ -162,17 +152,7 @@ class FoodSuspensionEditor extends Component {
     });
   }
 
-  onDiaChanged(event) {
-    if (
-      checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
-        this.props.proximos_dois_dias_uteis,
-        this.props.proximos_cinco_dias_uteis
-      )
-    ) {
-      this.showModal();
-    }
-  }
+
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = [];
@@ -321,7 +301,7 @@ class FoodSuspensionEditor extends Component {
         values.dias_razoes[idx][`outro_motivo${idx}`];
     });
     values.escola = this.props.meusDados.escolas[0].uuid;
-    const error = validateSubmit(values, this.state);
+    const error = validateSubmit(values, this.props.meusDados);
     values.quantidades_por_periodo = values.suspensoes;
     values.suspensoes_alimentacao = values.dias_razoes;
     const status = values.status;
@@ -365,7 +345,6 @@ class FoodSuspensionEditor extends Component {
         );
       }
 
-      this.closeModal();
     } else {
       toastError(error);
     }
@@ -390,8 +369,7 @@ class FoodSuspensionEditor extends Component {
       title,
       options,
       suspensoesDeAlimentacaoList,
-      dias_razoes,
-      showModal
+      dias_razoes
     } = this.state;
     let checkMap = {
       MANHA: suspensoes_MANHA && suspensoes_MANHA.check,
@@ -450,7 +428,6 @@ class FoodSuspensionEditor extends Component {
                             component={LabelAndDate}
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
-                            onBlur={event => this.onDiaChanged(event)}
                             onChange={value =>
                               this.handleField(`data${key}`, value, key)
                             }
@@ -626,10 +603,6 @@ class FoodSuspensionEditor extends Component {
                 </div>
               </div>
             </div>
-            <ModalDataPrioritaria
-              showModal={showModal}
-              closeModal={this.closeModal}
-            />
           </form>
         )}
       </div>

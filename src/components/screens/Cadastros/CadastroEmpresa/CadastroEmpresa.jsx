@@ -1,25 +1,15 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Field, formValueSelector, reduxForm, FieldArray } from "redux-form";
+import { Field, reduxForm, FormSection } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import {
-  required
-} from "../../../../helpers/fieldValidators";
+import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
-import {
-  transformaObjetos,
-  fieldCnpj,
-  fieldCep,
-  fieldTel
-} from "./helper";
+import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
 import { toastSuccess } from "../../../Shareable/dialogs";
-import { ContatosEmpresa } from "./ContatosEmpresa";
-import { ContatosTerceirizada } from "./ContatosTerceirizada";
-import { EditalInput } from "./EditalInputForm";
+import TelefoneOuCelular from "./InputTelefone";
 
 class CadastroEmpresa extends Component {
   constructor(props) {
@@ -27,8 +17,101 @@ class CadastroEmpresa extends Component {
     this.state = {
       lotes: "",
       lotesSelecionados: [],
-      formValido: false
+      formValido: false,
+      contatosEmpresaForm: ["contatoEmpresa_0"],
+      contatosTerceirizadaForm: ["contatoTerceirizada_0"],
+      editaisContratosForm: ["editalContrato_0"],
+
+      contatosEmpresa: [
+        {
+          telefone: null,
+          email: null
+        }
+      ],
+
+      contatosNutricionista: [
+        {
+          telefone: null,
+          responsavel: null,
+          contato: null,
+          email: null
+        }
+      ],
+
+      telefoneRepresentante: null
     };
+    this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
+    this.setaContatoRepresentante = this.setaContatoRepresentante.bind(this);
+    this.setaContatosNutricionista = this.setaContatosNutricionista.bind(this);
+  }
+
+  nomeFormContatoEmpresa() {
+    const indiceDoFormAtual = `contatoEmpresa_${
+      this.state.contatosEmpresaForm.length
+    }`;
+    let contatosEmpresaForm = this.state.contatosEmpresaForm;
+    contatosEmpresaForm.push(indiceDoFormAtual);
+    this.setState({ contatosEmpresaForm });
+  }
+
+  nomeFormContatoTerceirizada() {
+    const indiceDoFormAtual = `contatoTerceirizada_${
+      this.state.contatosTerceirizadaForm.length
+    }`;
+    let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
+    contatosTerceirizadaForm.push(indiceDoFormAtual);
+    this.setState({ contatosTerceirizadaForm });
+  }
+
+  nomeFormContatoEdital() {
+    const indiceDoFormAtual = `editalContrato_${
+      this.state.editaisContratosForm.length
+    }`;
+    let editaisContratosForm = this.state.editaisContratosForm;
+    editaisContratosForm.push(indiceDoFormAtual);
+    this.setState({ editaisContratosForm });
+  }
+
+  setaContatosEmpresa(input, event, indice) {
+    let contatosEmpresa = this.state.contatosEmpresa;
+    contatosEmpresa[indice][input] = event;
+    this.setState({ contatosEmpresa });
+  }
+
+  setaContatosNutricionista(input, event, indice) {
+    let contatosNutricionista = this.state.contatosNutricionista;
+    contatosNutricionista[indice][input] = event;
+    this.setState({ contatosNutricionista });
+  }
+
+  setaContatoRepresentante(event) {
+    let telefoneRepresentante = this.state.telefoneRepresentante;
+    telefoneRepresentante = event;
+    this.setState({ telefoneRepresentante });
+  }
+
+  adicionaContatoEmpresa() {
+    this.setState({
+      contatosEmpresa: this.state.contatosEmpresa.concat([
+        {
+          telefone: null,
+          email: null
+        }
+      ])
+    });
+  }
+
+  adicionaContatoNutricionista() {
+    this.setState({
+      contatosNutricionista: this.state.contatosNutricionista.concat([
+        {
+          telefone: null,
+          responsavel: null,
+          contato: null,
+          email: null
+        }
+      ])
+    });
   }
 
   componentDidMount() {
@@ -38,9 +121,9 @@ class CadastroEmpresa extends Component {
         this.setState({ lotes });
       })
       .catch(error => {
-        console.log(error)
-      })    
-  };
+        console.log(error);
+      });
+  }
 
   renderizarLabelLote(selected, options) {
     if (selected.length === 0) {
@@ -78,17 +161,25 @@ class CadastroEmpresa extends Component {
     this.props.change("contrato", "");
   }
 
-  salvaFormulario() {
-    this.resetForm();
-    this.setState({ lotesSelecionados: [] });
+  salvaFormulario(values) {
+    console.log(values);
+    //this.resetForm();
+    // this.setState({ lotesSelecionados: [] });
     toastSuccess("Empresa adicionada com sucesso!");
   }
 
   render() {
     const { handleSubmit } = this.props;
+    const {
+      contatosEmpresaForm,
+      contatosTerceirizadaForm,
+      editaisContratosForm,
+      lotes,
+      lotesSelecionados
+    } = this.state;
     return (
       <div className="cadastro pt-3">
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="card">
             <div>
               <div className="card-body">
@@ -161,10 +252,62 @@ class CadastroEmpresa extends Component {
                   </div>
                 </div>
 
-                <FieldArray
-                  name="contatos-empresa"
-                  component={ContatosEmpresa}
-                />
+                <div className="container-fields pt-3">
+                  <div className="fields">
+                    {contatosEmpresaForm.map(
+                      (contatoEmpresa, indiceEmpresa) => {
+                        return (
+                          <FormSection
+                            nomeForm={`contatoEmpresa_${indiceEmpresa}`}
+                            name={contatoEmpresa}
+                          >
+                            <div className="fields-set pt-2">
+                              <div>
+                                <label className="label">
+                                  <span>* </span>Telefone
+                                </label>
+                                <TelefoneOuCelular
+                                  setaContatosEmpresa={this.setaContatosEmpresa}
+                                  indice={indiceEmpresa}
+                                  cenario="contatoEmpresa"
+                                />
+                              </div>
+                              <div>
+                                <label className="label">
+                                  <span>* </span>E-mail
+                                </label>
+                                <Field
+                                  name={`email_empresa_${indiceEmpresa}`}
+                                  component={LabelAndInput}
+                                  validate={required}
+                                  onChange={event =>
+                                    this.setaContatosEmpresa(
+                                      "email",
+                                      event.target.value,
+                                      indiceEmpresa
+                                    )
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </FormSection>
+                        );
+                      }
+                    )}
+                  </div>
+                  <div className="button-field">
+                    <button
+                      type="button"
+                      className="btn btn-outline-info"
+                      onClick={() => {
+                        this.nomeFormContatoEmpresa();
+                        this.adicionaContatoEmpresa();
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <hr className="linha-form" />
@@ -184,11 +327,9 @@ class CadastroEmpresa extends Component {
                     </div>
                     <div className="col-5">
                       <label className="label">Telefone</label>
-                      <Field
-                        component={LabelAndInput}
-                        name="telefone_representante_legal"
-                        {...fieldTel}
-                        validate={required}
+                      <TelefoneOuCelular
+                        setaContatoRepresentante={this.setaContatoRepresentante}
+                        cenario="contatoRepresentante"
                       />
                     </div>
                   </div>
@@ -211,10 +352,101 @@ class CadastroEmpresa extends Component {
 
               <div>
                 <div className="card-body">
-                  <FieldArray
-                    name="contatos-terceirizada"
-                    component={ContatosTerceirizada}
-                  />
+                  <div className="container-fields">
+                    <div className="fields">
+                      {contatosTerceirizadaForm.map(
+                        (contatoTerceirizada, indiceTerceirizada) => {
+                          return (
+                            <FormSection
+                              nomeForm={`contatoTerceirizada_${indiceTerceirizada}`}
+                              name={contatoTerceirizada}
+                            >
+                              <div className="form-section-terceirizada">
+                                <div className="section-nutri-crn pt-3">
+                                  <div>
+                                    <label className="label">
+                                      <span>* </span>Nutricionista Responsável
+                                      Técnico
+                                    </label>
+                                    <Field
+                                      name={`nutricionista_nome_${indiceTerceirizada}`}
+                                      component={LabelAndInput}
+                                      validate={required}
+                                      onChange={event =>
+                                        this.setaContatosNutricionista(
+                                          "responsavel",
+                                          event.target.value,
+                                          indiceTerceirizada
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="label">
+                                      <span>* </span>CRN
+                                    </label>
+                                    <Field
+                                      name={`nutricionista_crn_${indiceTerceirizada}`}
+                                      component={LabelAndInput}
+                                      onChange={event =>
+                                        this.setaContatosNutricionista(
+                                          "contato",
+                                          event.target.value,
+                                          indiceTerceirizada
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                                <div className="section-nutri-contato pt-2">
+                                  <div>
+                                    <label className="label">
+                                      <span>* </span>Telefone/Celular Técnico
+                                    </label>
+                                    <TelefoneOuCelular
+                                      setaContatosNutricionista={
+                                        this.setaContatosNutricionista
+                                      }
+                                      indice={indiceTerceirizada}
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="label">
+                                      <span>* </span>Email
+                                    </label>
+                                    <Field
+                                      name={`email_terceirizada_${indiceTerceirizada}`}
+                                      component={LabelAndInput}
+                                      validate={required}
+                                      onChange={event =>
+                                        this.setaContatosNutricionista(
+                                          "email",
+                                          event.target.value,
+                                          indiceTerceirizada
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </FormSection>
+                          );
+                        }
+                      )}
+                    </div>
+                    <div className="button-field">
+                      <button
+                        type="button"
+                        className="btn btn-outline-info"
+                        onClick={() => {
+                          this.nomeFormContatoTerceirizada();
+                          this.adicionaContatoNutricionista();
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -222,11 +454,52 @@ class CadastroEmpresa extends Component {
 
               <div>
                 <div className="card-body">
-
-
-                  <FieldArray name="edital" component={EditalInput} />
-
-
+                  <div className="container-fields">
+                    <div className="fields">
+                      {editaisContratosForm.map(
+                        (editalContrato, indiceContratos) => {
+                          return (
+                            <FormSection
+                              nomeForm={`editaisEContratos_${indiceContratos}`}
+                              name={editalContrato}
+                            >
+                              <div className="fields-set-edital">
+                                <div>
+                                  <label className="label">
+                                    <span>* </span>Edital de Pregão n°
+                                  </label>
+                                  <Field
+                                    name={`edital_${indiceContratos}`}
+                                    component={LabelAndInput}
+                                    validate={required}
+                                  />
+                                </div>
+                                <div>
+                                  <label className="label">
+                                    <span>* </span>Contrato n°
+                                  </label>
+                                  <Field
+                                    name={`contrato_${indiceContratos}`}
+                                    component={LabelAndInput}
+                                    validate={required}
+                                  />
+                                </div>
+                              </div>
+                            </FormSection>
+                          );
+                        }
+                      )}
+                    </div>
+                    <div className="button-field">
+                      <button
+                        type="button"
+                        className="btn btn-outline-info"
+                        onClick={() => this.nomeFormContatoEdital()}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
 
                   <div className="row pt-3">
                     <div className="col-12">
@@ -236,8 +509,8 @@ class CadastroEmpresa extends Component {
                         <Field
                           component={StatefulMultiSelect}
                           name="lotes"
-                          selected={this.state.lotesSelecionados}
-                          options={this.state.lotes}
+                          selected={lotesSelecionados}
+                          options={lotes}
                           valueRenderer={this.renderizarLabelLote}
                           onSelectedChanged={value =>
                             this.lidarComSelecionados(value)
@@ -288,7 +561,9 @@ class CadastroEmpresa extends Component {
                       />
                       <BaseButton
                         label={"Salvar"}
-                        onClick={handleSubmit(values => this.salvaFormulario())}
+                        onClick={handleSubmit(values =>
+                          this.salvaFormulario(values)
+                        )}
                         className="ml-3"
                         type={ButtonType.SUBMIT}
                         style={ButtonStyle.Primary}
@@ -309,29 +584,4 @@ const CadastroEmpresaForm = reduxForm({
   form: "cadastroEmpresaForm"
 })(CadastroEmpresa);
 
-const selector = formValueSelector("cadastroEmpresaForm");
-
-const mapStateToProps = state => {
-  return {
-    resumo: {
-      razão_social: selector(state, "razão_social"),
-      cnpj: selector(state, "cnpj"),
-      nome_fantasia: selector(state, "nome_fantasia"),
-      endereco: selector(state, "endereco"),
-      cep: selector(state, "cep"),
-      telefone_empresa: selector(state, "telefone_empresa"),
-      email_empresa: selector(state, "email_empresa"),
-      representante_legal: selector(state, "representante_legal"),
-      contato: selector(state, "contato"),
-      nutricionista: selector(state, "nutricionista"),
-      crn: selector(state, "crn"),
-      telefone_nutricionista: selector(state, "telefone_nutricionista"),
-      email_nutricionista: selector(state, "email_nutricionista"),
-      edital: selector(state, "edital"),
-      contrato: selector(state, "contrato"),
-      lotes: selector(state, "lotes")
-    }
-  };
-};
-
-export default connect(mapStateToProps)(CadastroEmpresaForm);
+export default CadastroEmpresaForm;

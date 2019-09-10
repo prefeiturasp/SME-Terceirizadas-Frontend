@@ -1,5 +1,12 @@
+@import "../../../styles/variables.scss";
+
 div.react-datepicker-wrapper {
   margin-right: -30px;
+}
+
+.col-form-label {
+  font-weight: 600 !important;
+  font-size: 14px !important;
 }
 
 .input-group {
@@ -10,7 +17,9 @@ div.react-datepicker-wrapper {
     }
     display: -webkit-inline-box;
     .input-group-prepend {
-      margin-top: 2px;
+      @media only screen and (max-width: 1650px) {
+        margin-top: 2px;
+      }
       .input-group-text {
         display: block;
         text-align: center;
@@ -29,7 +38,9 @@ div.react-datepicker-wrapper {
       border: none;
     }
     .input-group-prepend {
-      margin-top: 1px;
+      @media only screen and (max-width: 1650px) {
+        margin-top: 1px;
+      }
       .input-group-text {
         display: block;
         min-width: 140px;
@@ -52,10 +63,11 @@ div.react-datepicker-wrapper {
   }
 }
 
-.fa-calendar {
-  z-index: 1;
+.fa-calendar-alt {
+  z-index: 0;
+  cursor: text;
   padding-top: 12px;
-  color: #a8a8a8;
+  color: $green;
   position: relative;
 }
 
@@ -95,4 +107,8 @@ div.react-datepicker-wrapper {
 .wrapper-class {
   display: flex;
   flex-direction: column-reverse;
+}
+
+.react-datepicker__close-icon{
+  display: none;
 }

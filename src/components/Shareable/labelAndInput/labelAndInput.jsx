@@ -28,7 +28,9 @@ export const LabelAndInput = props => {
     type,
     meta,
     disabled,
-    classNameInput
+    classNameInput,
+    hasIcon,
+    max
   } = props;
   return (
     <Grid cols={cols}>
@@ -37,17 +39,23 @@ export const LabelAndInput = props => {
           {label}
         </label>
       )}
-      <input
-        {...input}
-        className={`form-control ${classNameInput}`}
-        disabled={disabled}
-        name={name}
-        id={name}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        type={type}
-        min={min}
-      />
+      <div className="d-flex">
+        <input
+          {...input}
+          className={`form-control ${classNameInput}`}
+          disabled={disabled}
+          name={name}
+          id={name}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          type={type}
+          min={min}
+          maxlength={max}
+        />
+        <If isVisible={hasIcon}>
+          <i className="fas fa-pen" />
+        </If>
+      </div>
       <If isVisible={meta}>
         <ErrorAlert meta={meta} />
       </If>
@@ -71,7 +79,9 @@ export class LabelAndCombo extends Component {
 
   handleChange(event) {
     const value = event.target.value;
-    this.props.input.onChange(value);
+    this.props.input
+      ? this.props.input.onChange(value)
+      : this.props.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
 
@@ -172,7 +182,18 @@ export class LabelAndDate extends Component {
     );
   }
 
-  openDatepicker = () => this._calendar.setOpen(true);
+  openDatepicker = () => {
+    this._calendar.setOpen(true);
+    this._calendar.setFocus();
+  };
+
+  dataSelecionada(data) {
+    if (data.length !== 0) {
+      return moment(data, "DD/MM/YYYY")["_d"];
+    } else {
+      return null;
+    }
+  }
 
   render() {
     const {
@@ -194,9 +215,11 @@ export class LabelAndDate extends Component {
     } = this.props;
     return (
       <Grid cols={cols}>
-        {label &&<label htmlFor={name} className={"col-form-label"}>
-          {label}
-        </label>}
+        {label && (
+          <label htmlFor={name} className={"col-form-label"}>
+            {label}
+          </label>
+        )}
         <div>
           <div
             className={
@@ -224,6 +247,7 @@ export class LabelAndDate extends Component {
               minDate={minDate}
               maxDate={maxDate}
               disabled={disabled}
+              selected={this.dataSelecionada(input.value)}
               className="form-control"
               ref={c => (this._calendar = c)}
               onChange={this.handleChange}
@@ -232,7 +256,10 @@ export class LabelAndDate extends Component {
               name={name}
             />
             <If isVisible={hasIcon}>
-              <i onClick={this.openDatepicker} className="fa fa-calendar" />
+              <i
+                onClick={this.openDatepicker}
+                className="fas fa-calendar-alt"
+              />
             </If>
           </div>
         </div>
@@ -371,8 +398,7 @@ export class LabelAndTextArea extends Component {
       </Grid>
     );
   }
-};
-
+}
 
 export const LabelAndTextAreaCustom = props => {
   const {
@@ -386,7 +412,7 @@ export const LabelAndTextAreaCustom = props => {
     type,
     meta,
     disabled,
-    classNameInput,
+    classNameInput
   } = props;
   return (
     <Grid cols={cols}>

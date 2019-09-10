@@ -1,29 +1,41 @@
-.card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: #fff !important;
-  border-bottom: 1px solid #e3e6f0;
-  color: #035d96;
-  font-weight: bold;
-  letter-spacing: 0.01em;
-  height: 4em;
-}
-.select-all {
-  .checkbox-label {
-    margin-left: 20px;
-    padding-top: 8px;
-    padding-left: 20px;
-  }
-  .checkbox-custom {
-    margin-left: 20px;
-  }
-}
+@import "../../../styles/variables.scss";
 
-.td-check {
-  .checkbox-label, .checkbox-custom {
-    top: unset;
-    position: relative;
-    padding-right: 20px;
-    margin-right: -20px;
+.card-history {
+  .card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #fff !important;
+    border-bottom: 1px solid #e3e6f0;
+    color: #035d96;
+    font-weight: bold;
+    letter-spacing: 0.01em;
+    height: 4em;
+    font-size: 13px;
+  }
+  .select-all {
+    .checkbox-label {
+      margin-left: 20px;
+      padding-top: 8px;
+      padding-left: 20px;
+      font-size: 14px;
+    }
+    .checkbox-custom {
+      margin-left: 20px;
+    }
+  }
+  table.table {
+    th {
+      font-weight: 400;
+      color: $gray;
+      font-size: 14px;
+    }
+  }
+  .td-check {
+    .checkbox-label,
+    .checkbox-custom {
+      top: unset;
+      position: relative;
+      padding-right: 20px;
+    }
   }
 }

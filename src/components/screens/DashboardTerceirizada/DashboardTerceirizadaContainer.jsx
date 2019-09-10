@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import DashboardTerceirizada from "./DashboardTerceirizada";
 
+import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service"
+
 class DashboardTerceirizadaContainer extends Component {
   constructor(props) {
     super(props);
@@ -49,8 +51,16 @@ class DashboardTerceirizadaContainer extends Component {
           label: "Lote",
           value: "lote"
         }
-      ]
+      ],
+      quantidade_suspensoes: null
     };
+  }
+
+  componentDidMount(){
+    getSuspensoesDeAlimentacaoInformadas().then(response => {
+      let quantidade_suspensoes = response.count
+      this.setState({ quantidade_suspensoes })
+    })
   }
 
   render() {

@@ -2,18 +2,27 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import {
+  ALTERACAO_CARDAPIO,
+  INCLUSAO_ALIMENTACAO,
+  TERCEIRIZADA,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO
+} from "../../../configs/constants";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
-import IconePD from "../../Shareable/Icones/IconePD";
-import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
-import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
+import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
+import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconePD from "../../Shareable/Icones/IconePD";
+import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
+import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
+import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -40,7 +49,13 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, solicitations, vision_by } = this.props;
+    const {
+      enrolled,
+      handleSubmit,
+      solicitations,
+      vision_by,
+      quantidade_suspensoes
+    } = this.props;
     const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>
@@ -80,7 +95,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-pending"}
                     solicitations={solicitations}
                     icon={"fa-exclamation-triangle"}
-                    href={"/terceirizada/solicitacoes"}
+                    href={`${TERCEIRIZADA}/solicitacoes`}
                   />
                 </div>
                 <div className="col-6">
@@ -89,7 +104,7 @@ class DashboardTerceirizada extends Component {
                     cardType={"card-cancelled"}
                     solicitations={solicitations}
                     icon={"fa-times-circle"}
-                    href={"/terceirizada/solicitacoes"}
+                    href={`/${TERCEIRIZADA}/solicitacoes`}
                   />
                 </div>
               </div>
@@ -202,36 +217,42 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Inclusão de Refeição"}
-                      totalOfOrders={16}
-                      priorityOrders={8}
-                      onLimitOrders={2}
-                      regularOrders={6}
-                    />
+                    <Link to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`}>
+                      <CardPendencia
+                        cardTitle={"Inclusão de Alimentação"}
+                        totalOfOrders={16}
+                        priorityOrders={8}
+                        onLimitOrders={2}
+                        regularOrders={6}
+                      />
+                    </Link>
                   </div>
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Alteração de Dias de Cardápio"}
-                      totalOfOrders={50}
-                      priorityOrders={2}
-                      onLimitOrders={18}
-                      regularOrders={30}
-                    />
+                    <Link to={`/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`}>
+                      <CardPendencia
+                        cardTitle={"Inversão de dias de cardápio"}
+                        totalOfOrders={50}
+                        priorityOrders={2}
+                        onLimitOrders={18}
+                        regularOrders={30}
+                      />
+                    </Link>
                   </div>
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Alteração de Cardápio"}
-                      totalOfOrders={20}
-                      priorityOrders={5}
-                      onLimitOrders={10}
-                      regularOrders={10}
-                    />
+                    <Link to={`/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`}>
+                      <CardPendencia
+                        cardTitle={"Alteração de Cardápio"}
+                        totalOfOrders={20}
+                        priorityOrders={5}
+                        onLimitOrders={10}
+                        regularOrders={10}
+                      />
+                    </Link>
                   </div>
                   <div className="col-6">
-                    <Link to="/terceirizada/kits-lanche">
+                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                       <CardPendencia
                         cardTitle={"Kit Lanche"}
                         totalOfOrders={120}
@@ -244,22 +265,25 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Pedido Unificado"}
-                      totalOfOrders={2}
-                      priorityOrders={1}
-                      onLimitOrders={0}
-                      regularOrders={1}
-                    />
+                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+                      <CardPendencia
+                        cardTitle={"Solicitação Unificada"}
+                        totalOfOrders={2}
+                        priorityOrders={1}
+                        onLimitOrders={0}
+                        regularOrders={1}
+                      />
+                    </Link>
                   </div>
                   <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Suspensão de Refeição"}
-                      totalOfOrders={47}
-                      priorityOrders={10}
-                      onLimitOrders={7}
-                      regularOrders={30}
-                    />
+                    <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
+                      <CardPendencia
+                        cardTitle={"Suspensão de Alimentação"}
+                        totalOfOrders={quantidade_suspensoes}
+                        priorityOrders={quantidade_suspensoes}
+                        priorityOrdersOnly={true}
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>

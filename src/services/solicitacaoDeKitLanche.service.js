@@ -105,7 +105,7 @@ export const removeKitLanche = async uuid => {
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${uuid}`, OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -119,10 +119,10 @@ export const removeKitLanche = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio_de_pedido`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
-    method: "GET",
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {
@@ -144,7 +144,7 @@ export const getSolicitacoesKitLancheApi = async () => {
   };
 
   return await fetch(
-    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes`,
+    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes/`,
     OBJ_REQUEST
   )
     .then(response => {
@@ -183,5 +183,231 @@ export const kitLanches = async () => {
     })
     .catch(erro => {
       return erro;
+    });
+};
+
+export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosDeKitLancheAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-reprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosDeKitLanche = filtroAplicado => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-codae/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosDeKitLancheAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosDeKitLancheReprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-reprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDrePedidosDeKitLancheAprovados = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-dre/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getPedidosDeKitLancheAprovadosTerceirizada = () => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-terceirizadas/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+
+export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-terceirizadas/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDetalheKitLancheAvulsa = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/diretoria-regional-aprova-pedido/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH"
+  };
+  let status = 0;
+  return fetch(url, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const aprovaDeKitLancheAvulsoCodae = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/codae-aprova-pedido/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH"
+  };
+  let status = 0;
+  return fetch(url, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const aprovaDeKitLancheAvulsoTerceirizadas = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/terceirizada-toma-ciencia/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH"
+  };
+  let status = 0;
+  return fetch(url, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
     });
 };

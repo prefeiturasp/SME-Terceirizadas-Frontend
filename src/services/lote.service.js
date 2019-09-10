@@ -52,7 +52,7 @@ export const excluirLote = async uuid => {
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(`${API_URL}/lotes/${uuid}`, OBJ_REQUEST)
+  return await fetch(`${API_URL}/lotes/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -65,7 +65,7 @@ export const excluirLote = async uuid => {
     });
 };
 export const getLote = uuid => {
-  const url = `${API_URL}/lotes/${uuid}`;
+  const url = `${API_URL}/lotes/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -77,6 +77,26 @@ export const getLote = uuid => {
     })
     .then(data => {
       return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getLotes = payload => {
+  const url = `${API_URL}/lotes/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { ...data, status: status };
     })
     .catch(error => {
       return error.json();

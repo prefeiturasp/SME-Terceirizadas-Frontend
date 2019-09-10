@@ -1,0 +1,61 @@
+//Agradecimentos a: http://dsgov.estaleiro.serpro.gov.br/ds/componentes/breadcrumb
+
+@import "../../../styles/variables.scss";
+
+.breadcrumb-row {
+  margin-top: -1.5rem;
+  .br-breadcrumb {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    .home a {
+      color: $blackSubtle;
+      &:hover,
+      &:focus {
+        color: $blue;
+        text-decoration: none;
+      }
+    }
+    li {
+      color: $blackSubtle;
+      display: inline;
+      font-size: 10px;
+      font-weight: 500;
+      a {
+        color: $blackSubtle;
+        font-weight: 500;
+        text-decoration: none;
+        &:hover {
+          color: inherit;
+          text-decoration: underline;
+        }
+      }
+    }
+    .is-active {
+      color: #2670e8;
+      font-weight: 600;
+      a {
+        color: #2670e8;
+        font-weight: 600;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .br-breadcrumb li + li::before {
+    color: #9e9d9d;
+    font-weight: 900;
+    content: "\f138";
+    font-family: "Font Awesome 5 Free";
+    font-size: 12px;
+    padding: 0 12px;
+  }
+
+  .contrast {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    color: $blackSubtle;
+  }
+}

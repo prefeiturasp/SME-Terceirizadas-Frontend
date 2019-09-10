@@ -19,6 +19,8 @@ export const getLotes = async () => {
   });
 };
 
+
+
 export const getDiretoriaregional = () => {
   const url = `${API_URL}/diretorias-regionais/`;
   let status = 0;
@@ -38,8 +40,27 @@ export const getDiretoriaregional = () => {
     });
 };
 
-export const getDiretoriaregionalCombo = () => {
-  const url = `${API_URL}/diretorias-regionais-combo/`;
+export const getDiretoriaregionalDetalhe = (uuid) => {
+  const url = `${API_URL}/diretorias-regionais/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    headers: authToken,
+    method: "GET"
+  })
+    .then(response => {
+      status = response.status;
+      return response.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getDiretoriaregionalSimplissima = () => {
+  const url = `${API_URL}/diretorias-regionais-simplissima/`;
   let status = 0;
   return fetch(url, {
     headers: authToken,

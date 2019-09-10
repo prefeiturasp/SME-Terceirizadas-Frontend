@@ -29,7 +29,7 @@ import {
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
-import { validateSubmit } from "./ValidacaoFormulario";
+import { validateSubmit } from "./validacao";
 
 class AlteracaoCardapio extends Component {
   constructor(props) {
@@ -266,7 +266,7 @@ class AlteracaoCardapio extends Component {
     values.escola = this.props.meusDados.escolas[0].uuid;
     const status = values.status;
     delete values.status;
-    const error = validateSubmit(values, this.state);
+    const error = validateSubmit(values, this.props.meusDados);
     if (!error) {
       if (!values.uuid) {
         createAlteracaoCardapio(JSON.stringify(values)).then(

@@ -162,6 +162,9 @@ export class SolicitacaoDeKitLanche extends Component {
   onSubmit(values) {
     values.escola = this.props.meusDados.escolas[0].uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
+    if(values.confirmar){
+      solicitacao_kit_lanche.confirmar = values.confirmar
+    }
     validateTourRequestForm(values);
     this.salvarOuEnviar(solicitacao_kit_lanche, values);
     this.handleConfirmation();
@@ -183,16 +186,35 @@ export class SolicitacaoDeKitLanche extends Component {
     );
   }
 
+  validaTipoMensagemError = response =>{
+    const tipoError = response.tipo_error[0]
+    const messageModal = response.details[0]
+    if(tipoError === '2'){
+      this.setState({
+        modalConfirmation : true,
+        modalMessage: messageModal
+      })
+    }else if(tipoError === '1'){
+      toastError(messageModal);
+    }
+  }
+
   salvarOuEnviar(solicitacao_kit_lanche, values) {
+    if(values.status){
+      solicitacao_kit_lanche.status = values.status
+    }
     if (!values.uuid) {
       solicitarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
           if (resp.status === HTTP_STATUS.CREATED) {
             toastSuccess("Solicitação de Kit Lanche salva com sucesso!");
             if (values.status === "DRE_A_VALIDAR") {
-              this.iniciarPedido(values.uuid);
+              this.iniciarPedido(resp.data.uuid);
             } else this.resetForm();
-          } else {
+          }else if(resp.data.tipo_error){
+            this.validaTipoMensagemError(resp.data)
+          }
+           else {
             toastError("Erro ao salvar Solicitação de Kit Lanche");
           }
         })
@@ -207,7 +229,9 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === "DRE_A_VALIDAR") {
               this.iniciarPedido(values.uuid);
             } else this.resetForm();
-          } else {
+          } else if(resp.data.tipo_error){
+            this.validaTipoMensagemError(resp.data)
+          }else {
             toastError("erro ao atualizar a solicitação");
           }
         })
@@ -337,6 +361,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     name
                   )
                 }
+                mostrarExplicacao
               />
 
               <hr className="mt-4 mb-4 w-100" />
@@ -351,7 +376,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 />
               )}
 
-              <div className="form-group pt-3">
+              <div className="form-group mt-2 pt-3">
                 <label className="font-weight-bold">
                   {"Número total kits:"}
                 </label>
@@ -387,7 +412,10 @@ export class SolicitacaoDeKitLanche extends Component {
                 <Button
                   label={this.state.salvarAtualizarLbl}
                   disabled={pristine || submitting}
-                  onClick={handleSubmit(values => this.onSubmit(values))}
+                  onClick={handleSubmit(values => this.onSubmit({
+                    ...values,
+                    status: "RASCUNHO"
+                  }))}
                   className="ml-3"
                   type={ButtonType.SUBMIT}
                   style={ButtonStyle.OutlinePrimary}
@@ -421,7 +449,7 @@ export class SolicitacaoDeKitLanche extends Component {
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
-                          status: "Enviar solicitação",
+                          status: "DRE_A_VALIDAR",
                           salvo_em: new Date(),
                           confirmar: true
                         })

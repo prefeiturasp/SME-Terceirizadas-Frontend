@@ -1,9 +1,27 @@
-import React from 'react'
-import EmpresasCadastradas from '../../components/screens/Cadastros/CadastroEmpresa/EmpresasCadastradas';
-import Page from '../../components/Shareable/Page/Page';
+import React from "react";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
+import EmpresasCadastradas from "../../components/screens/Cadastros/CadastroEmpresa/EmpresasCadastradas";
+import Page from "../../components/Shareable/Page/Page";
 
-export default props => (
-  <Page titulo="Empresas Cadastradas" tituloRastro="Terceirizadas">
+const atual = {
+  href: "/configuracoes/cadastros/empresas-cadastradas",
+  titulo: "Empresas Cadastradas"
+};
+
+const anteriores = [
+  {
+    href: "/configuracoes/cadastros",
+    titulo: "Cadastros"
+  },
+  {
+    href: "/configuracoes/cadastros/empresa",
+    titulo: "Empresa"
+  }
+];
+
+export default () => (
+  <Page titulo={atual.titulo}>
+    <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <EmpresasCadastradas />
   </Page>
-)
+);

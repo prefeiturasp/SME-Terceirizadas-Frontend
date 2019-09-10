@@ -34,7 +34,7 @@ import { Rascunhos } from "./Rascunhos";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
-import { validateSubmit } from "./UnifiedSolicitationValidation";
+import { validateSubmit } from "./validacao";
 import { formatarSubmissao, extrairKitsLanche } from "./helper";
 
 export const HORAS_ENUM = {
@@ -63,6 +63,7 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: 0,
       collapsed: true,
       initialValues: false,
+      outroMotivo: false,
       lotes: [
         {
           nome: "7A IP I IPIRANGA",
@@ -156,7 +157,10 @@ class SolicitacaoUnificada extends Component {
       status: "RASCUNHO",
       title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.solicitacaoUnificada.id_externo
+      id: param.solicitacaoUnificada.id_externo,
+      outroMotivo:
+        param.solicitacaoUnificada.outro_motivo !== null &&
+        param.solicitacaoUnificada.outro_motivo !== ""
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -167,7 +171,7 @@ class SolicitacaoUnificada extends Component {
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-            this.refresh();
+            this.resetForm();
           } else {
             toastError("Houve um erro ao excluir o rascunho");
           }
@@ -176,6 +180,15 @@ class SolicitacaoUnificada extends Component {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
+    }
+  }
+
+  onMotivoChanged(value) {
+    const motivo = this.props.motivos.find(motivo => motivo.uuid === value);
+    const outroMotivo = motivo.nome.includes("Outro");
+    this.setState({ outroMotivo });
+    if (!outroMotivo) {
+      this.props.change("outro_motivo", "");
     }
   }
 
@@ -188,6 +201,7 @@ class SolicitacaoUnificada extends Component {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
     let escolas = this.props.escolas;
+
     escolas.forEach(function(escola) {
       escola["burger_active"] = false;
       escola["limit_of_meal_kits"] = 0;
@@ -214,6 +228,7 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: 0,
       choicesTotal: 0,
       studentsTotal: 0,
+      outroMotivo: false,
       initialValues: true
     });
     this.refresh();
@@ -550,7 +565,6 @@ class SolicitacaoUnificada extends Component {
       proximos_dois_dias_uteis,
       motivos,
       multipleOrder,
-      motivo,
       max_alunos,
       prosseguir
     } = this.props;
@@ -569,10 +583,11 @@ class SolicitacaoUnificada extends Component {
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,
-      collapsed
+      collapsed,
+      outroMotivo
     } = this.state;
     return (
-      <div>
+      <div className="unified-solicitation">
         {loading ? (
           <div>Carregando...</div>
         ) : (
@@ -622,12 +637,12 @@ class SolicitacaoUnificada extends Component {
                       validate={required}
                     />
                   </div>
-                  <div className="form-group col-8">
+                  <div className="form-group col-9">
                     <Field
                       component={LabelAndCombo}
                       name="motivo"
+                      onChange={value => this.onMotivoChanged(value)}
                       label="Motivo"
-                      onChange={value => this.props.change("motivo", value)}
                       options={motivos}
                       validate={required}
                     />
@@ -635,14 +650,11 @@ class SolicitacaoUnificada extends Component {
                 </div>
                 <div className="row">
                   <div className="form-group col-8 offset-3">
-                    {motivo === "Outro" && (
+                    {outroMotivo && (
                       <Field
                         component={LabelAndInput}
                         label="Qual o motivo?"
-                        onChange={value =>
-                          this.props.change("qual_motivo", value)
-                        }
-                        name="qual_motivo"
+                        name="outro_motivo"
                         className="form-control"
                         validate={required}
                       />
@@ -661,6 +673,18 @@ class SolicitacaoUnificada extends Component {
                     />
                   </div>
                 </div>
+                <hr />
+                <div className="row">
+                  <div className="col-12 pl-0 pr-0 pb-3">
+                    <Field
+                      component={LabelAndInput}
+                      label="Unidades Escolares"
+                      placeholder="Pesquisar"
+                      onChange={this.filterList}
+                      className="form-control"
+                    />
+                  </div>
+                </div>
                 <div
                   ref={this.pedidoMultiploRef}
                   className="col-md-12 pt-2 pb-2"
@@ -675,7 +699,6 @@ class SolicitacaoUnificada extends Component {
                     <span
                       onClick={() => this.handleMultipleOrder()}
                       className="checkbox-custom"
-                      style={{ borderRadius: "15px" }}
                     />{" "}
                     Realizar pedido múltiplo
                   </label>
@@ -731,12 +754,6 @@ class SolicitacaoUnificada extends Component {
                     />
                   )}
                 </Collapse>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Pesquisar"
-                  onChange={this.filterList}
-                />
                 <span ref={this.escolasRef} />
                 <div scrollTop={100} ref="escolas" className="schools-group">
                   {schoolsFiltered.length === 0 && (
@@ -752,7 +769,11 @@ class SolicitacaoUnificada extends Component {
                     schoolsFiltered.map((school, key) => {
                       return (
                         <FormSection name={`school_${school.codigo_eol}`}>
-                          <div>
+                          <div
+                            className={`${school.checked &&
+                              !school.burger_active &&
+                              "school-checked"}`}
+                          >
                             <div
                               className="school-container col-md-12 mr-4"
                               style={
@@ -830,7 +851,7 @@ class SolicitacaoUnificada extends Component {
                                           event
                                         )
                                       }
-                                      label="Número de alunos participantes"
+                                      label="Nº de alunos participantes"
                                       validate={
                                         school.checked &&
                                         !multipleOrder && [required]
@@ -954,14 +975,14 @@ class SolicitacaoUnificada extends Component {
                   <BaseButton
                     label="Cancelar"
                     onClick={event => this.cancelForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={ButtonStyle.OutlineSuccess}
                   />
                   <BaseButton
                     label={"Salvar Rascunho"}
                     onClick={handleSubmit(values => this.handleSubmit(values))}
                     className="ml-3"
                     type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={ButtonStyle.OutlineSuccess}
                   />
                   <BaseButton
                     label="Enviar Solicitação"
@@ -969,7 +990,7 @@ class SolicitacaoUnificada extends Component {
                     onClick={handleSubmit(values =>
                       this.handleSubmit({ ...values, status: "DRE_A_VALIDAR" })
                     )}
-                    style={ButtonStyle.Primary}
+                    style={ButtonStyle.Success}
                     className="ml-3"
                   />
                 </div>

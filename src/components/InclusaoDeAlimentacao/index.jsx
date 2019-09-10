@@ -9,7 +9,8 @@ import {
   geradorUUID,
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
-  formatarParaMultiselect
+  formatarParaMultiselect,
+  getDataObj
 } from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
@@ -19,15 +20,17 @@ import { Field, FormSection, reduxForm } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
-  criarInclusaoDeAlimentacaoContinua,
   criarInclusaoDeAlimentacaoNormal,
-  atualizarInclusaoDeAlimentacaoContinua,
   atualizarInclusaoDeAlimentacaoNormal,
-  getInclusoesContinuasSalvas,
   getInclusoesNormaisSalvas,
-  inicioPedidoContinua,
   inicioPedidoNormal
-} from "../../services/inclusaoDeAlimentacao.service";
+} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  criarInclusaoDeAlimentacaoContinua,
+  atualizarInclusaoDeAlimentacaoContinua,
+  getInclusoesContinuasSalvas
+} from "../../services/inclusaoDeAlimentacaoContinua.service";
+import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
@@ -106,16 +109,17 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       inclusoes
     });
-    if (field === "data") {
-      if (
-        checaSeDataEstaEntre2e5DiasUteis(
-          value,
-          this.props.proximos_dois_dias_uteis,
-          this.props.proximos_cinco_dias_uteis
-        )
-      ) {
-        this.showModal();
-      }
+  }
+
+  onDataChanged(value) {
+    if (
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        this.props.proximos_dois_dias_uteis,
+        this.props.proximos_cinco_dias_uteis
+      )
+    ) {
+      this.showModal();
     }
   }
 
@@ -277,7 +281,8 @@ class InclusaoDeAlimentacao extends Component {
           inclusao_formatada["data"] = inclusao.data;
           inclusao_formatada["motivo"] = inclusao.motivo.uuid;
           inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
-          inclusao_formatada["outroMotivo"] = inclusao.outro_motivo !== null;
+          inclusao_formatada["outroMotivo"] =
+            inclusao.outro_motivo !== null && inclusao.outro_motivo !== "";
           return inclusao_formatada;
         });
     this.setState({
@@ -464,7 +469,7 @@ class InclusaoDeAlimentacao extends Component {
     values.quantidades_periodo = this.state.periodos;
     const ehInclusaoContinua =
       values.inclusoes[0].data_inicial && values.inclusoes[0].data_final;
-    const error = validarSubmissao(values, this.state);
+    const error = validarSubmissao(values, this.props.meusDados);
     if (!error) {
       if (ehInclusaoContinua) {
         this.fluxoSolicitacaoContinua(values);
@@ -541,6 +546,9 @@ class InclusaoDeAlimentacao extends Component {
                               onChange={value =>
                                 this.handleField("data", value, dia_motivo.id)
                               }
+                              onBlur={event =>
+                                this.onDataChanged(event.target.value)
+                              }
                               minDate={proximos_dois_dias_uteis}
                               label="Dia"
                               validate={required}
@@ -604,9 +612,13 @@ class InclusaoDeAlimentacao extends Component {
                                   dia_motivo.id
                                 )
                               }
+                              onBlur={event =>
+                                this.onDataChanged(event.target.value)
+                              }
                               name="data_inicial"
                               label="De"
                               validate={required}
+                              minDate={proximos_dois_dias_uteis}
                             />
                           </div>
                           <div className="form-group col-sm-3">
@@ -619,6 +631,8 @@ class InclusaoDeAlimentacao extends Component {
                                   dia_motivo.id
                                 )
                               }
+                              minDate={getDataObj(inclusoes[0].data_inicial)}
+                              disabled={!inclusoes[0].data_inicial}
                               name="data_final"
                               label="Até"
                               validate={required}

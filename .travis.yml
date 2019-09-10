@@ -4,14 +4,21 @@ node_js:
 cache:
   directories:
     - node_modules
+
+before_script:
+  - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
+
 script:
   - npm test
   - docker build -t marcelomaia/terceirizadas_frontend .
   - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend
   - docker ps -a
 
+after_script:
+  - bash utility/telegram_notification.sh
+
 deploy:
   provider: script
-  script: bash ./deploy_dockerhub.sh
+  script: bash utility/deploy_dockerhub.sh
   on:
     all_branches: true

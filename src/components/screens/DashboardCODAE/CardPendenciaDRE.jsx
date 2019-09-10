@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./style.scss";
 import { Link } from "react-router-dom";
+import { DETALHE_DASHBOARD_DRE, CODAE } from "../../../configs/constants";
 
 export const CardPendenciaDRE = props => {
   const { totalPedidos, nomeDre } = props;
@@ -9,9 +10,10 @@ export const CardPendenciaDRE = props => {
     <div className="card card-pendency">
       <Link
         to={{
-          pathname: "/codae/detalhe-dashboard-dre",
+          pathname: `/${CODAE}/${DETALHE_DASHBOARD_DRE}`,
           state: { dre: true }
-        }}>
+        }}
+      >
         <div className="row">
           <div className="col-4 pt-3">
             <div className="order-box">

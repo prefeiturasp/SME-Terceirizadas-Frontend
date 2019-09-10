@@ -1,0 +1,39 @@
+.title-message {
+  font-weight: bold;
+  color: #686868;
+  font-size: 14px;
+}
+
+table.table-periods {
+  margin-top: 20px;
+  tr {
+    color: #686868;
+    margin-top: 20px;
+    font-size: 14px;
+    th {
+      font-weight: normal;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+    td {
+      font-weight: bold;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+  }
+}
+
+
+.descricao-suspensao{
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+  font-size: 14px;
+  color: #686868;
+
+  .tipos-alimentacoes{
+    display: flex;
+    flex-direction: row;
+  }
+}

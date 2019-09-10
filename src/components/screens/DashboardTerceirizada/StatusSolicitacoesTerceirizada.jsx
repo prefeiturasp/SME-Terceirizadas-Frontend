@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../DashboardEscola/InputSearch";
+import { InputSearch } from "../../Shareable/InputSearch";
+import { TERCEIRIZADA, PAINEL_CONTROLE } from "../../../configs/constants";
 const solicitacoes = [
   {
     text: "12083 - 7A IP I - Solicitação Unificada",
@@ -38,7 +39,7 @@ export default class StatusSolicitacoesTerceirizada extends Component {
       <div className="card mt-3">
         <div className="card-body">
           <div className="pr-3">
-            <InputSearch voltarLink="/terceirizada/painel-de-controle" />
+            <InputSearch voltarLink={`/${TERCEIRIZADA}/${PAINEL_CONTROLE}`} />
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo

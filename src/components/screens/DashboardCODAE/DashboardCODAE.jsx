@@ -1,46 +1,72 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
+import { CODAE, SOLICITACOES } from "../../../configs/constants";
+import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../../Shareable/style.scss";
+import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import VisaoGeral from "./VisaoGeral";
-import VisaoPorDRE from "./VisaoPorDRE";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
+import { FILTRO } from "./const";
+import VisaoGeral from "./VisaoGeral";
+import VisaoPorDRE from "./VisaoPorDRE";
 
 class DashboardCODAE extends Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true,
-      dre: false
+      dre: false,
+      filtro: FILTRO.SEM_FILTRO,
+
+      solicitacoesAprovadasFiltradas: [],
+      solicitacoesPendentesAprovacaoFiltradas: [],
+      solicitacoesCanceladasFiltradas: [],
+      solicitacoesRevisaoFiltradas: [],
+
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true,
+
+      loadingPainelSolicitacoes: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
 
-  handleField(value) {
-    if (value === "dre") {
-      this.setState({ dre: true });
-    } else {
-      this.setState({ dre: false });
-    }
+  onVencimentoPara(filtro) {
+    this.setState({ filtro });
   }
 
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.loadingPainelSolicitacoes !==
+      this.props.loadingPainelSolicitacoes
+    ) {
+      this.setState({
+        loadingPainelSolicitacoes: this.props.loadingPainelSolicitacoes
+      });
+    }
+  }
+
   render() {
     const {
-      enrolled,
+      totalAlunos,
       handleSubmit,
-      solicitations,
-      vision_by,
+      solicitacoesAprovadas,
+      solicitacoesPendentesAprovacao,
+      solicitacoesCanceladas,
+      vencimentoPara,
       lotes
     } = this.props;
-    const { collapsed } = this.state;
+    const { collapsed, loadingPainelSolicitacoes } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -48,7 +74,7 @@ class DashboardCODAE extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={totalAlunos}
           >
             <Collapse isOpened={!collapsed}>
               <TabelaHistoricoLotesDREs lotes={lotes} />
@@ -63,32 +89,38 @@ class DashboardCODAE extends Component {
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" />
+                  <input
+                    className="input-search"
+                    placeholder="Pesquisar"
+                    onChange={this.filterList}
+                  />
                   <i className="fas fa-search" />
                 </span>
               </div>
               <div>
                 <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
+                  Data: <span>{dataAtual()}</span>
                 </p>
               </div>
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.APROVADO}
+                    solicitations={solicitacoesAprovadas}
                     icon={"fa-check"}
-                    href={"/codae/solicitacoes"}
+                    href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
-                    cardType={"card-pending"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
-                    href={"/codae/solicitacoes"}
+                    href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
               </div>
@@ -96,10 +128,21 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={solicitations}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
-                    href={"/codae/solicitacoes"}
+                    href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Solicitação recusada"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesCanceladas}
+                    icon={"fa-times-circle"}
+                    href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
                   />
                 </div>
               </div>
@@ -133,9 +176,9 @@ class DashboardCODAE extends Component {
                 <span className="float-right">
                   <Field
                     component={LabelAndCombo}
-                    onChange={value => this.handleField(value)}
-                    placeholder={"Visão por"}
-                    options={vision_by}
+                    onChange={filtro => this.onVencimentoPara(filtro)}
+                    placeholder={"Vencimento para"}
+                    options={vencimentoPara}
                   />
                 </span>
               </div>
@@ -144,7 +187,7 @@ class DashboardCODAE extends Component {
               {this.state.dre ? (
                 <VisaoPorDRE {...this.props} />
               ) : (
-                <VisaoGeral />
+                <VisaoGeral filtro={this.state.filtro} />
               )}
             </div>
           </div>
