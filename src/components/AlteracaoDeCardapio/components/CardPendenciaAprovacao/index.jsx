@@ -23,6 +23,7 @@ export class CardPendenciaAprovacao extends Component {
     pedidosFiltrados = pedidosFiltrados.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
+        item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.escola.codigo_eol.includes(palavraAFiltrar)
       );
@@ -31,7 +32,13 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
+    const {
+      pedidos,
+      titulo,
+      tipoDeCard,
+      ultimaColunaLabel,
+      parametroURL
+    } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -109,8 +116,8 @@ export class CardPendenciaAprovacao extends Component {
                   return (
                     <Link
                       to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
-                        pedido.uuid}`
-                      }
+                        pedido.uuid
+                      }`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>
