@@ -31,7 +31,7 @@ import {
   getInclusoesContinuasSalvas
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
 import {
@@ -43,6 +43,8 @@ import {
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
 import { validarSubmissao } from "./validacao";
+import Botao from "../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants"
 import "./style.scss";
 
 class InclusaoDeAlimentacao extends Component {
@@ -748,32 +750,32 @@ class InclusaoDeAlimentacao extends Component {
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label="Cancelar"
+                  <Botao
+                    texto="Cancelar"
                     onClick={event => this.resetForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
-                  <BaseButton
-                    label={this.state.salvarAtualizarLbl}
+                  <Botao
+                    texto={this.state.salvarAtualizarLbl}
                     onClick={handleSubmit(values =>
                       this.onSubmit({
                         ...values
                       })
                     )}
                     className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.OutlinePrimary}
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
-                  <BaseButton
-                    label="Enviar Solicitação"
-                    type={ButtonType.SUBMIT}
+                  <Botao
+                    texto="Enviar Solicitação"
+                    type={BUTTON_TYPE.SUBMIT}
                     onClick={handleSubmit(values =>
                       this.onSubmit({
                         ...values,
                         status: "DRE_A_VALIDAR"
                       })
                     )}
-                    style={ButtonStyle.Primary}
+                    style={BUTTON_STYLE.GREEN}
                     className="ml-3"
                   />
                 </div>
