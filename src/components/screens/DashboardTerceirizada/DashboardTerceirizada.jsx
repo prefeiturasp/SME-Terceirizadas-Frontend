@@ -110,18 +110,12 @@ class DashboardTerceirizada extends Component {
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
-                <span>
-                  <i className="fas fa-check" />
-                  Solicitação Autorizada
-                </span>
+                <span />
                 <span>
                   <i className="fas fa-exclamation-triangle" />
                   Solicitação Pendente Aprovação
                 </span>
-                <span>
-                  <i className="fas fa-ban" />
-                  Solicitação Recusada
-                </span>
+                <span />
                 <span>
                   <i className="fas fa-times-circle" />
                   Solicitação Cancelada
@@ -265,7 +259,9 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+                    <Link
+                      to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
+                    >
                       <CardPendencia
                         cardTitle={"Solicitação Unificada"}
                         totalOfOrders={2}
