@@ -3,14 +3,30 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import {
+  required,
+  textAreaRequired,
+  deveSerNoAnoCorrente
+} from "../../helpers/fieldValidators";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  dateDelta
+} from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
-import { atualizarInversaoDeDiaDeCardapio, criarInversaoDeDiaDeCardapio, getInversoesDeDiaDeCardapio, inicioPedido, removerInversaoDeDiaDeCardapio } from "../../services/inversaoDeDiaDeCardapio.service";
+import {
+  atualizarInversaoDeDiaDeCardapio,
+  criarInversaoDeDiaDeCardapio,
+  getInversoesDeDiaDeCardapio,
+  inicioPedido,
+  removerInversaoDeDiaDeCardapio
+} from "../../services/inversaoDeDiaDeCardapio.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
-import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
+import {
+  LabelAndDate,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
@@ -216,9 +232,10 @@ export class InversaoDeDiaDeCardapio extends Component {
                       name="data_de"
                       label="Referência"
                       textoLabel="Cardápio dia"
-                      validate={required}
+                      validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={dateDelta(60)}
                     />
                   </div>
                   <div className="col-md-12 col-lg-2 for-span">
@@ -231,10 +248,11 @@ export class InversaoDeDiaDeCardapio extends Component {
                       name="data_para"
                       label="Aplicar em"
                       textoLabel="Cardápio dia"
-                      validate={required}
+                      validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
                       activeCalendar
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={dateDelta(60)}
                     />
                   </div>
                 </div>

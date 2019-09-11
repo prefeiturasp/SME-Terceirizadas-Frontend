@@ -1,5 +1,12 @@
+import moment from "moment";
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
+
+export const deveSerNoAnoCorrente = value => {
+  const dataSelecionada = moment(value, "DD/MM/YYYY").years();
+  const dataAtual = moment().years();
+  return dataSelecionada === dataAtual ? undefined : "Deve ser no mesmo ano";
+};
 
 export const diasAntecedencia = value => {
   return value !== undefined ? undefined : "Campo obrigatório";
