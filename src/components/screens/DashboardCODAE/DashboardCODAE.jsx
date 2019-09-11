@@ -4,7 +4,10 @@ import { Field, reduxForm } from "redux-form";
 import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
@@ -105,16 +108,6 @@ class DashboardCODAE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.APROVADO}
-                    solicitations={solicitacoesAprovadas}
-                    icon={"fa-check"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
-                    loading={loadingPainelSolicitacoes}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
@@ -123,12 +116,22 @@ class DashboardCODAE extends Component {
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.APROVADO}
+                    solicitations={solicitacoesAprovadas}
+                    icon={"fa-check"}
+                    href={`/${CODAE}/${SOLICITACOES}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
               </div>
               <div className="row pt-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    cardTitle={"Solicitação recusada"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES}`}
@@ -137,8 +140,8 @@ class DashboardCODAE extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Solicitação recusada"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES}`}
