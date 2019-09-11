@@ -6,6 +6,7 @@ import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { InputText } from "../Shareable/Input/InputText";
 import {
   LabelAndDate,
   LabelAndInput,
@@ -162,8 +163,8 @@ export class SolicitacaoDeKitLanche extends Component {
   onSubmit(values) {
     values.escola = this.props.meusDados.escolas[0].uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
-    if(values.confirmar){
-      solicitacao_kit_lanche.confirmar = values.confirmar
+    if (values.confirmar) {
+      solicitacao_kit_lanche.confirmar = values.confirmar;
     }
     validateTourRequestForm(values);
     this.salvarOuEnviar(solicitacao_kit_lanche, values);
@@ -186,22 +187,22 @@ export class SolicitacaoDeKitLanche extends Component {
     );
   }
 
-  validaTipoMensagemError = response =>{
-    const tipoError = response.tipo_error[0]
-    const messageModal = response.details[0]
-    if(tipoError === '2'){
+  validaTipoMensagemError = response => {
+    const tipoError = response.tipo_error[0];
+    const messageModal = response.details[0];
+    if (tipoError === "2") {
       this.setState({
-        modalConfirmation : true,
+        modalConfirmation: true,
         modalMessage: messageModal
-      })
-    }else if(tipoError === '1'){
+      });
+    } else if (tipoError === "1") {
       toastError(messageModal);
     }
-  }
+  };
 
   salvarOuEnviar(solicitacao_kit_lanche, values) {
-    if(values.status){
-      solicitacao_kit_lanche.status = values.status
+    if (values.status) {
+      solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
       solicitarKitLanche(solicitacao_kit_lanche)
@@ -211,10 +212,9 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === "DRE_A_VALIDAR") {
               this.iniciarPedido(resp.data.uuid);
             } else this.resetForm();
-          }else if(resp.data.tipo_error){
-            this.validaTipoMensagemError(resp.data)
-          }
-           else {
+          } else if (resp.data.tipo_error) {
+            this.validaTipoMensagemError(resp.data);
+          } else {
             toastError("Erro ao salvar Solicitação de Kit Lanche");
           }
         })
@@ -229,9 +229,9 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === "DRE_A_VALIDAR") {
               this.iniciarPedido(values.uuid);
             } else this.resetForm();
-          } else if(resp.data.tipo_error){
-            this.validaTipoMensagemError(resp.data)
-          }else {
+          } else if (resp.data.tipo_error) {
+            this.validaTipoMensagemError(resp.data);
+          } else {
             toastError("erro ao atualizar a solicitação");
           }
         })
@@ -329,12 +329,15 @@ export class SolicitacaoDeKitLanche extends Component {
                   onBlur={event => this.validaDiasUteis(event)}
                   minDate={proximos_dois_dias_uteis}
                 />
-                <Field
-                  component={LabelAndInput}
-                  cols="8 8 8 8"
-                  label="Local do passeio"
-                  name="local"
-                />
+                <div className="col-8">
+                  <Field
+                    component={InputText}
+                    label="Local do passeio"
+                    name="local"
+                    required
+                    validate={[required]}
+                  />
+                </div>
               </div>
               <div className="form-group row">
                 <Field
@@ -412,10 +415,12 @@ export class SolicitacaoDeKitLanche extends Component {
                 <Button
                   label={this.state.salvarAtualizarLbl}
                   disabled={pristine || submitting}
-                  onClick={handleSubmit(values => this.onSubmit({
-                    ...values,
-                    status: "RASCUNHO"
-                  }))}
+                  onClick={handleSubmit(values =>
+                    this.onSubmit({
+                      ...values,
+                      status: "RASCUNHO"
+                    })
+                  )}
                   className="ml-3"
                   type={ButtonType.SUBMIT}
                   style={ButtonStyle.OutlinePrimary}

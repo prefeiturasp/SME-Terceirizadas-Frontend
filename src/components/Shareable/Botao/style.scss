@@ -1,0 +1,79 @@
+@import "../../../styles/variables.scss";
+
+button.general-button {
+  border-radius: 3px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: bold;
+  height: 38px;
+  padding: 0 12px;
+  text-align: center;
+  i {
+    padding-right: 8px;
+  }
+  &.blue-button {
+    background-color: $blueButtonFont;
+    border: none;
+    color: $white;
+    i {
+      color: $white;
+    }
+    &:hover {
+      background-color: $blueButtonBackground;
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+  &.blue-button-outline {
+    color: $blueButtonFont;
+    border-color: $blueButtonFont;
+    background-color: transparent;
+    i {
+      color: $blueButtonFont;
+    }
+    &:hover {
+      background-color: $blueButtonBackground;
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+  &.green-button {
+    background-color: $green;
+    border: none;
+    color: $white;
+    i {
+      color: $white;
+    }
+    &:hover {
+      background-color: $greenButtonHover;
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+  &.green-button-outline {
+    color: $green;
+    border: 1px solid $green;
+    background-color: transparent;
+    i {
+      color: $green;
+    }
+    &:hover {
+      color: $white;
+      background-color: $greenButtonHover;
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+}
