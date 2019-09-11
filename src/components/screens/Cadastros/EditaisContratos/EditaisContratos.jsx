@@ -151,7 +151,7 @@ class EditaisContratos extends Component {
   }
 
   adicionaContratosRelacionados() {
-    console.log('OPAAAAAAAAAAAAA')
+    console.log("OPAAAAAAAAAAAAA");
     this.setState({
       contratos_relacionados: this.state.contratos_relacionados.concat([
         {

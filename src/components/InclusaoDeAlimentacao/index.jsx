@@ -17,7 +17,7 @@ import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
+import { required, minValue } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   criarInclusaoDeAlimentacaoNormal,
@@ -51,6 +51,7 @@ class InclusaoDeAlimentacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      validacaoPeriodos: [],
       loading: true,
       periodos: [],
       rascunhosInclusaoDeAlimentacao: [],
@@ -242,6 +243,15 @@ class InclusaoDeAlimentacao extends Component {
 
   carregarRascunho(param) {
     const inclusaoDeAlimentacao = param.inclusaoDeAlimentacao;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    inclusaoDeAlimentacao.quantidades_periodo.forEach(qtd_periodo => {
+      validacaoPeriodos.forEach((periodo, indice) => {
+        if (qtd_periodo.periodo_escolar.nome === periodo.turno) {
+          validacaoPeriodos[indice].checado = true;
+        }
+      });
+    });
+    this.setState({ validacaoPeriodos });
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(inclusaoDeAlimentacao);
     let { periodos } = this.state;
@@ -298,12 +308,44 @@ class InclusaoDeAlimentacao extends Component {
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
+  resetaCampoQuantidadeAlunos(periodo) {
+    this.props.change(
+      `quantidades_periodo_${periodo.nome}.numero_alunos`,
+      null
+    );
+  }
+
+  adicionaIndiceNoValidacaoPeriodos(periodos) {
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    periodos.forEach(periodo => {
+      validacaoPeriodos.push({
+        checado: periodo.checked,
+        turno: periodo.nome
+      });
+    });
+  }
+
+  atualizaIndiceNoValidacaoPeriodos(indice, periodo) {
+    let periodos = this.state.periodos;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    if (validacaoPeriodos[indice].checado === false) {
+      validacaoPeriodos[indice].checado = true;
+    } else {
+      validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
+    }
+
+    this.setState({ validacaoPeriodos, periodos });
+  }
+
   componentDidMount() {
     this.refresh();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
+      this.adicionaIndiceNoValidacaoPeriodos(this.props.periodos);
       this.setState({
         periodos: this.props.periodos
       });
@@ -498,7 +540,8 @@ class InclusaoDeAlimentacao extends Component {
       inclusoes,
       periodos,
       showModal,
-      loading
+      loading,
+      validacaoPeriodos
     } = this.state;
     const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     return (
@@ -671,14 +714,14 @@ class InclusaoDeAlimentacao extends Component {
                   <div className="col-6">Tipo de Alimentação</div>
                   <div className="col-3">Nº de Alunos</div>
                 </div>
-                {periodos.map((periodo, key) => {
+                {periodos.map((periodo, indice) => {
                   return (
                     <FormSection name={`quantidades_periodo_${periodo.nome}`}>
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
                         <div className="form-check col-md-3 mr-4 ml-4">
                           <div
-                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
+                            className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field
@@ -687,7 +730,13 @@ class InclusaoDeAlimentacao extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() => this.onCheckChanged(periodo)}
+                                onClick={() => {
+                                  this.onCheckChanged(periodo);
+                                  this.atualizaIndiceNoValidacaoPeriodos(
+                                    indice,
+                                    periodo
+                                  );
+                                }}
                                 className="checkbox-custom"
                               />{" "}
                               {periodo.nome}
@@ -697,9 +746,9 @@ class InclusaoDeAlimentacao extends Component {
                         <div className="form-group col-md-5 mr-5">
                           <div
                             className={
-                              true
-                                ? "multiselect-wrapper-enabled"
-                                : "multiselect-wrapper-disabled"
+                              !validacaoPeriodos[indice].checado
+                                ? "multiselect-wrapper-disabled"
+                                : "multiselect-wrapper-enabled"
                             }
                           >
                             <Field
@@ -728,12 +777,14 @@ class InclusaoDeAlimentacao extends Component {
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
-                            disabled={false}
+                            disabled={
+                              !validacaoPeriodos[indice].checado ? true : false
+                            }
                             type="number"
-                            name="numero_alunos"
+                            name={`numero_alunos`}
                             min="0"
                             className="form-control"
-                            validate={periodo.checked ? required : null}
+                            validate={[minValue(1)]}
                           />
                         </div>
                       </div>
