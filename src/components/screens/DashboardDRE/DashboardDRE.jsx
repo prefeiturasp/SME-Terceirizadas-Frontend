@@ -21,8 +21,14 @@ import {
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { dataAtual } from "../../../helpers/utilities";
-import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
-import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service"
+import {
+  DRE,
+  ALTERACAO_CARDAPIO,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE
+} from "../../../configs/constants";
+import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service";
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
@@ -70,12 +76,12 @@ class DashboardDRE extends Component {
 
   async carregaResumosPendencias(filtroPendencias) {
     this.setState({
-      loadingAlteracaoCardapio : true,
-      loadingInclusoesAlimentacao : true,
-      loadingInversoesCardapio : true,
-      loadingKitLanche : true,
-      loadingSuspensaoAlimentacao : true,
-      loadingSolicitacoesUnificadas : true,
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true,
       loadingResumoLotes: true
     });
     const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
@@ -100,7 +106,10 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
-    let resumoPorLote = await getResumoPendenciasDREPorLote(minhaDRE, filtroPendencias)
+    let resumoPorLote = await getResumoPendenciasDREPorLote(
+      minhaDRE,
+      filtroPendencias
+    );
 
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
@@ -111,12 +120,12 @@ class DashboardDRE extends Component {
       resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
       resumoPorLote,
-      loadingAlteracaoCardapio : !(resumoPendenciasDREAlteracoesDeCardapio),
-      loadingInclusoesAlimentacao : !(resumoPendenciasDREInclusoesDeAlimentacao),
-      loadingInversoesCardapio : !(resumoPendenciasDREInversaoDeDiaDeCardapio),
-      loadingKitLanche : !(resumoPendenciasDREKitLanche),
-      loadingSuspensaoAlimentacao : !(resumoPendenciasDRESuspensaoDeAlimentacao),
-      loadingSolicitacoesUnificadas : !(resumoPendenciasDRESolicitacoesUnificadas),
+      loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
+      loadingInclusoesAlimentacao: !resumoPendenciasDREInclusoesDeAlimentacao,
+      loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
+      loadingKitLanche: !resumoPendenciasDREKitLanche,
+      loadingSuspensaoAlimentacao: !resumoPendenciasDRESuspensaoDeAlimentacao,
+      loadingSolicitacoesUnificadas: !resumoPendenciasDRESolicitacoesUnificadas,
       loadingResumoLotes: false
     });
   }
@@ -144,17 +153,16 @@ class DashboardDRE extends Component {
         pendentesList: this.props.pendentesList
       });
 
-    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas){
-      this.setState({loadingAutorizadas: this.props.loadingAutorizadas})
-    };
-
-    if (prevProps.loadingPendentes !== this.props.loadingPendentes){
-      this.setState({loadingPendentes: this.props.loadingPendentes})
+    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas) {
+      this.setState({ loadingAutorizadas: this.props.loadingAutorizadas });
     }
 
-    if (prevProps.lotesDRE !== this.props.lotesDRE){
-      this.setState({lotesDRE: this.props.lotesDRE})
+    if (prevProps.loadingPendentes !== this.props.loadingPendentes) {
+      this.setState({ loadingPendentes: this.props.loadingPendentes });
+    }
 
+    if (prevProps.lotesDRE !== this.props.lotesDRE) {
+      this.setState({ lotesDRE: this.props.lotesDRE });
     }
   }
 
@@ -185,9 +193,8 @@ class DashboardDRE extends Component {
   }
 
   changeVisao(visao) {
-    this.setState({visao})
+    this.setState({ visao });
   }
-
 
   render() {
     const {
@@ -219,8 +226,7 @@ class DashboardDRE extends Component {
       loadingKitLanche,
       loadingSolicitacoesUnificadas,
       resumoPorLote,
-      loadingResumoLotes,
-
+      loadingResumoLotes
     } = this.state;
 
     return (
@@ -276,16 +282,6 @@ class DashboardDRE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
-                    solicitations={autorizadasListFiltered}
-                    icon={"fa-check"}
-                    href={"/dre/solicitacoes-autorizadas"}
-                    loading={loadingAutorizadas}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
                     cardType={"card-pending"}
                     solicitations={pendentesListFiltered}
@@ -294,28 +290,41 @@ class DashboardDRE extends Component {
                     loading={loadingPendentes}
                   />
                 </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={"card-authorized"}
+                    solicitations={autorizadasListFiltered}
+                    icon={"fa-check"}
+                    href={"/dre/solicitacoes-autorizadas"}
+                    loading={loadingAutorizadas}
+                  />
+                </div>
               </div>
               <div className="row pt-3">
-                {recusadasList.length > 0 && <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Recusadas"}
-                    cardType={"card-denied"}
-                    solicitations={recusadasList}
-                    icon={"fa-ban"}
-                    href={"/dre/solicitacoes-recusadas"}
-                  />
-                </div>}
+                {recusadasList.length > 0 && (
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Recusadas"}
+                      cardType={"card-denied"}
+                      solicitations={recusadasList}
+                      icon={"fa-ban"}
+                      href={"/dre/solicitacoes-recusadas"}
+                    />
+                  </div>
+                )}
 
-                {canceladasList.length > 0  && <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={canceladasList}
-                    icon={"fa-times-circle"}
-                    href={"/dre/solicitacoes-canceladas"}
-                  />
-                </div>}
-
+                {canceladasList.length > 0 && (
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={"card-cancelled"}
+                      solicitations={canceladasList}
+                      icon={"fa-times-circle"}
+                      href={"/dre/solicitacoes-canceladas"}
+                    />
+                  </div>
+                )}
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
@@ -363,141 +372,151 @@ class DashboardDRE extends Component {
                 </div>
               </div>
               {/* Visão por Tipo de Solicitação */}
-              {this.state.visao === "tipo_solicitacao" &&
-              <div>
-                <div className="pt-3" />
-                <div className="row">
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
+              {this.state.visao === "tipo_solicitacao" && (
+                <div>
+                  <div className="pt-3" />
+                  <div className="row">
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
+                        <CardPendencia
+                          cardTitle={"Inclusão de Alimentação"}
+                          totalOfOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.regular
+                          }
+                          loading={loadingInclusoesAlimentacao}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${INVERSAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Inversão de Dia de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.regular
+                          }
+                          loading={loadingInversoesCardapio}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${ALTERACAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Alteração de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.regular
+                          }
+                          loading={loadingAlteracaoCardapio}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
+                        <CardPendencia
+                          cardTitle={"Kit Lanche"}
+                          totalOfOrders={resumoPendenciasDREKitLanche.total}
+                          priorityOrders={
+                            resumoPendenciasDREKitLanche.prioritario
+                          }
+                          onLimitOrders={resumoPendenciasDREKitLanche.limite}
+                          regularOrders={resumoPendenciasDREKitLanche.regular}
+                          loading={loadingKitLanche}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
                       <CardPendencia
-                        cardTitle={"Inclusão de Alimentação"}
+                        cardTitle={"Pedido Unificado"}
                         totalOfOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.total
+                          resumoPendenciasDRESolicitacoesUnificadas.total
                         }
                         priorityOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.prioritario
+                          resumoPendenciasDRESolicitacoesUnificadas.prioritario
                         }
                         onLimitOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.limite
+                          resumoPendenciasDRESolicitacoesUnificadas.limite
                         }
                         regularOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.regular
+                          resumoPendenciasDRESolicitacoesUnificadas.regular
                         }
-                        loading={loadingInclusoesAlimentacao}
+                        loading={loadingSolicitacoesUnificadas}
                       />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${INVERSAO_CARDAPIO}`}>
+                    </div>
+                    <div className="col-6">
                       <CardPendencia
-                        cardTitle={"Inversão de Dia de Cardápio"}
+                        priorityOrdersOnly={true}
+                        cardTitle={"Suspensão de Refeição"}
                         totalOfOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.total
+                          resumoPendenciasDRESuspensaoDeAlimentacao.total
                         }
                         priorityOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.prioritario
+                          resumoPendenciasDRESuspensaoDeAlimentacao.prioritario
                         }
                         onLimitOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.limite
+                          resumoPendenciasDRESuspensaoDeAlimentacao.limite
                         }
                         regularOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.regular
+                          resumoPendenciasDRESuspensaoDeAlimentacao.regular
                         }
-                        loading={loadingInversoesCardapio}
+                        loading={loadingSuspensaoAlimentacao}
                       />
-                    </Link>
+                    </div>
                   </div>
                 </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${ALTERACAO_CARDAPIO}`}>
-                      <CardPendencia
-                        cardTitle={"Alteração de Cardápio"}
-                        totalOfOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.regular
-                        }
-                        loading={loadingAlteracaoCardapio}
-                      />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
-                      <CardPendencia
-                        cardTitle={"Kit Lanche"}
-                        totalOfOrders={resumoPendenciasDREKitLanche.total}
-                        priorityOrders={resumoPendenciasDREKitLanche.prioritario}
-                        onLimitOrders={resumoPendenciasDREKitLanche.limite}
-                        regularOrders={resumoPendenciasDREKitLanche.regular}
-                        loading={loadingKitLanche}
-                      />
-                    </Link>
-                  </div>
-                </div>
-                <div className="row pt-3">
-                <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Pedido Unificado"}
-                    totalOfOrders={resumoPendenciasDRESolicitacoesUnificadas.total}
-                    priorityOrders={resumoPendenciasDRESolicitacoesUnificadas.prioritario}
-                    onLimitOrders={resumoPendenciasDRESolicitacoesUnificadas.limite}
-                    regularOrders={resumoPendenciasDRESolicitacoesUnificadas.regular}
-                    loading={loadingSolicitacoesUnificadas}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardPendencia
-                    priorityOrdersOnly={true}
-                    cardTitle={"Suspensão de Refeição"}
-                    totalOfOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.total
-                    }
-                    priorityOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.prioritario
-                    }
-                    onLimitOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.limite
-                    }
-                    regularOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.regular
-                    }
-                    loading={loadingSuspensaoAlimentacao}
-                  />
-                </div>
-              </div>
-              </div>
-              }
+              )}
               {/* /Tipo de Solicitação */}
 
               {/* Visão por Lote */}
-              {this.state.visao === "lote" &&
-              <div className="row pt-3">
-                  {this.state.lotesDRE.map(
-                    lote => {
-                      return (
-                        <div className="col-6">
-                          <CardPendencia
-                            cardTitle={lote.nome}
-                            totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
-                            priorityOrders={resumoPorLote[lote.nome]["PRIORITARIO"]}
-                            onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
-                            regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
-                            loading={loadingResumoLotes}
-                          />
-                        </div>
-                      )
-                    }
-                  )}
-              </div>
-              }
+              {this.state.visao === "lote" && (
+                <div className="row pt-3">
+                  {this.state.lotesDRE.map(lote => {
+                    return (
+                      <div className="col-6">
+                        <CardPendencia
+                          cardTitle={lote.nome}
+                          totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
+                          priorityOrders={
+                            resumoPorLote[lote.nome]["PRIORITARIO"]
+                          }
+                          onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
+                          regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
+                          loading={loadingResumoLotes}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               {/* /Lotes */}
             </div>
           </div>
@@ -523,6 +542,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps
-)(DashboardDREForm);
+export default connect(mapStateToProps)(DashboardDREForm);
