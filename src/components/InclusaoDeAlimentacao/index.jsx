@@ -243,6 +243,15 @@ class InclusaoDeAlimentacao extends Component {
 
   carregarRascunho(param) {
     const inclusaoDeAlimentacao = param.inclusaoDeAlimentacao;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    inclusaoDeAlimentacao.quantidades_periodo.forEach(qtd_periodo => {
+      validacaoPeriodos.forEach((periodo, indice) => {
+        if (qtd_periodo.periodo_escolar.nome === periodo.turno) {
+          validacaoPeriodos[indice].checado = true;
+        }
+      });
+    });
+    this.setState({ validacaoPeriodos });
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(inclusaoDeAlimentacao);
     let { periodos } = this.state;
@@ -299,25 +308,35 @@ class InclusaoDeAlimentacao extends Component {
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
+  resetaCampoQuantidadeAlunos(periodo) {
+    this.props.change(
+      `quantidades_periodo_${periodo.nome}.numero_alunos`,
+      null
+    );
+  }
+
   adicionaIndiceNoValidacaoPeriodos(periodos) {
     let validacaoPeriodos = this.state.validacaoPeriodos;
-    periodos.forEach((periodo, indicePeriodo) => {
+    periodos.forEach(periodo => {
       validacaoPeriodos.push({
-        nomeField: `quantidade_aluno_${indicePeriodo}`,
-        checado: periodo.checked
+        checado: periodo.checked,
+        turno: periodo.nome
       });
     });
   }
 
-  atualizaIndiceNoValidacaoPeriodos(indice) {
+  atualizaIndiceNoValidacaoPeriodos(indice, periodo) {
+    let periodos = this.state.periodos;
     let validacaoPeriodos = this.state.validacaoPeriodos;
     if (validacaoPeriodos[indice].checado === false) {
       validacaoPeriodos[indice].checado = true;
     } else {
       validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
     }
 
-    this.setState({ validacaoPeriodos });
+    this.setState({ validacaoPeriodos, periodos });
   }
 
   componentDidMount() {
@@ -714,7 +733,8 @@ class InclusaoDeAlimentacao extends Component {
                                 onClick={() => {
                                   this.onCheckChanged(periodo);
                                   this.atualizaIndiceNoValidacaoPeriodos(
-                                    indice
+                                    indice,
+                                    periodo
                                   );
                                 }}
                                 className="checkbox-custom"
@@ -726,9 +746,9 @@ class InclusaoDeAlimentacao extends Component {
                         <div className="form-group col-md-5 mr-5">
                           <div
                             className={
-                              true
-                                ? "multiselect-wrapper-enabled"
-                                : "multiselect-wrapper-disabled"
+                              !validacaoPeriodos[indice].checado
+                                ? "multiselect-wrapper-disabled"
+                                : "multiselect-wrapper-enabled"
                             }
                           >
                             <Field
@@ -761,7 +781,7 @@ class InclusaoDeAlimentacao extends Component {
                               !validacaoPeriodos[indice].checado ? true : false
                             }
                             type="number"
-                            name="numero_alunos"
+                            name={`numero_alunos`}
                             min="0"
                             className="form-control"
                             validate={[minValue(1)]}
