@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { InputErroMensagem } from "../InputErroMensagem";
 import "../style.scss";
 
 export const InputText = props => {
@@ -33,16 +34,8 @@ export const InputText = props => {
         required={required}
         type="text"
       />
-      <div className="help-text">
-        {helpText}
-        {meta.touched &&
-          ((meta.error && (
-            <div className="error-message">{meta.error}</div>
-          )) ||
-            (meta.warning && (
-              <div className="warning-message">{meta.warning}</div>
-            )))}
-      </div>
+      <div className="help-text">{helpText}</div>
+      <InputErroMensagem meta={meta} />
     </div>
   );
 };

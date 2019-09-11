@@ -7,8 +7,12 @@ div.input {
     color: $gray;
   }
   input {
+    color: $blackInput;
     height: 38px;
     font-weight: normal;
+    &:focus {
+      color: $blackInput;
+    }
     &::placeholder {
       color: $grayPlaceholder;
     }
@@ -22,10 +26,5 @@ div.input {
   }
   div.help-text {
     color: $grayPlaceholder;
-    padding-top: 5px;
-    font-size: 12px;
-    div.error-message {
-      color: $red;
-    }
   }
 }
