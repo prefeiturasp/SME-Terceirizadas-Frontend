@@ -1,10 +1,15 @@
-import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import { required, minValue } from "../../helpers/fieldValidators";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { minValue, required } from "../../helpers/fieldValidators";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect
+} from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
   createAlteracaoCardapio,
@@ -13,10 +18,6 @@ import {
   getAlteracoesCardapioList,
   updateAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
-import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  formatarParaMultiselect
-} from "../../helpers/utilities";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
@@ -272,12 +273,13 @@ class AlteracaoCardapio extends Component {
         createAlteracaoCardapio(JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Alteração de Cardápio salva com sucesso");
-              this.refresh();
-              if (status === "DRE_A_VALIDAR") {
+              if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaAlteracaoCardapio(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Alteração de Cardápio salva com sucesso");
               }
+              this.refresh();
             } else {
               toastError(res.error);
             }
@@ -290,12 +292,13 @@ class AlteracaoCardapio extends Component {
         updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Alteração de Cardápio salva com sucesso");
               this.refresh();
-              if (status === "DRE_A_VALIDAR") {
+              if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
+              } else {
+                toastSuccess("Alteração de Cardápio salva com sucesso");
               }
+              this.refresh();
             } else {
               toastError(res.error);
             }
@@ -541,7 +544,7 @@ class AlteracaoCardapio extends Component {
                     onClick={handleSubmit(values =>
                       this.onSubmit({
                         ...values,
-                        status: "DRE_A_VALIDAR"
+                        status: STATUS_DRE_A_VALIDAR
                       })
                     )}
                     style={ButtonStyle.Primary}
