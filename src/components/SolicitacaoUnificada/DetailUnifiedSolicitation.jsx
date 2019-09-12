@@ -3,7 +3,7 @@ import { FluxoDeStatus } from "../Shareable/FluxoDeStatus";
 import { RowTableSchool } from "./RowTableSchool";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { ModalRecusarSolicitacao } from "../Shareable/ModalRecusarSolicitacao";
-import { toastSuccess } from "../Shareable/dialogs";
+import { toastSuccess } from "../Shareable/Toast/dialogs";
 
 class DetailUnifiedSolicitation extends Component {
   constructor(props) {

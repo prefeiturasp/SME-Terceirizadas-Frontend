@@ -24,7 +24,7 @@ import {
   registroAtualizaKitLanche,
   inicioPedido
 } from "../../services/solicitacaoDeKitLanche.service";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import BaseButton from "../Shareable/button";

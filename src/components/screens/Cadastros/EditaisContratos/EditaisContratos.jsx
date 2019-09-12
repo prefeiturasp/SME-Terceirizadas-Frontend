@@ -27,7 +27,7 @@ import {
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
-import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { Redirect } from "react-router-dom";
 
 class EditaisContratos extends Component {

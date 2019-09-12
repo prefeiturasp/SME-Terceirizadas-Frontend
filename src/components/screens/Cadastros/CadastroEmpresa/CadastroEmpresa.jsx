@@ -8,7 +8,7 @@ import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
 import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
-import { toastSuccess } from "../../../Shareable/dialogs";
+import { toastSuccess } from "../../../Shareable/Toast/dialogs";
 import TelefoneOuCelular from "./InputTelefone";
 
 class CadastroEmpresa extends Component {

@@ -19,7 +19,7 @@ import {
 } from "../../helpers/utilities";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import {
   LabelAndCombo,
   LabelAndDate,

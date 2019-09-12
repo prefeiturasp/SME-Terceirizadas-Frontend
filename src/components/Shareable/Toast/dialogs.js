@@ -1,4 +1,5 @@
 import { Slide, toast } from "react-toastify";
+import "./style.scss";
 
 let baseConfig = {
   position: "top-center",

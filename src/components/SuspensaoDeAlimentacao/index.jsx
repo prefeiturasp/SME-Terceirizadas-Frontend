@@ -26,7 +26,7 @@ import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 
 class FoodSuspensionEditor extends Component {

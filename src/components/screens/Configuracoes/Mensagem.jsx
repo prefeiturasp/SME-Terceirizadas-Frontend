@@ -9,7 +9,7 @@ import {
   getTemplatesMensagem
 } from "../../../services/configuracoesMensagens";
 import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import { toastError, toastSuccess } from "../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import {
   LabelAndCombo,
   LabelAndInput,

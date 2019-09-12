@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadLote } from "../../../../reducers/lote.reducer";

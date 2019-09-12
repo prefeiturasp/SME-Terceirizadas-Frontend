@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Select } from "../Shareable/Select";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { required, minValue, textAreaRequired } from "../../helpers/fieldValidators";
+import { required, minValue } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   criarInclusaoDeAlimentacaoNormal,
@@ -34,7 +34,7 @@ import {
 import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import {
   LabelAndDate,
   LabelAndInput
@@ -802,8 +802,6 @@ class InclusaoDeAlimentacao extends Component {
                     component={TextAreaWYSIWYG}
                     label="Observações"
                     name="descricao"
-                    required
-                    validate={textAreaRequired}
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
