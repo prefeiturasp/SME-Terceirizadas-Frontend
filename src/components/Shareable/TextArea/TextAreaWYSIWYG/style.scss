@@ -1,0 +1,48 @@
+@import "../../../../styles/variables.scss";
+
+.DraftEditor-root {
+  color: $blackInput;
+  overflow-y: hidden;
+  z-index: 0;
+}
+
+.rdw-editor-toolbar {
+  border: none;
+}
+
+.variables {
+  display: inline-flex;
+  padding-left: 10px;
+  div {
+    margin: 0 5px;
+    color: #686868;
+    font-size: 11px;
+    border: 1px solid #27ae60;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    &.used {
+      background: #f8f5f5;
+      color: #a8a8a8;
+      border: 1px solid #dadada;
+    }
+  }
+}
+
+.wrapper-class {
+  display: flex;
+  height: 110px;
+  overflow-y: hidden;
+  flex-direction: column-reverse;
+  &:focus {
+    background-color: #fff;
+    border-color: #bac8f3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+  }
+  &.border-red:not(:focus) {
+    box-shadow: none;
+    border: 1px solid $red;
+  }
+}

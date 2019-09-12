@@ -13,8 +13,7 @@ export const TextArea = props => {
     meta,
     name,
     placeholder,
-    required,
-    type
+    required
   } = props;
   return (
     <div className="textarea">
@@ -33,7 +32,6 @@ export const TextArea = props => {
         name={name}
         placeholder={placeholder}
         required={required}
-        type={type}
       />
       <div className="help-text">{helpText}</div>
       <InputErroMensagem meta={meta} />
@@ -42,9 +40,25 @@ export const TextArea = props => {
 };
 
 TextArea.propTypes = {
-  name: PropTypes.string
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  helpText: PropTypes.string,
+  input: PropTypes.object,
+  label: PropTypes.string,
+  meta: PropTypes.object,
+  name: PropTypes.string,
+  placeholder: PropTypes.string,
+  required: PropTypes.bool
 };
 
 TextArea.defaultProps = {
-  classNameInput: ""
+  className: "",
+  disabled: false,
+  helpText: "",
+  input: {},
+  label: "",
+  meta: {},
+  name: "",
+  placeholder: "",
+  required: false
 };

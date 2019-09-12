@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Select } from "../Shareable/Select";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { required, minValue } from "../../helpers/fieldValidators";
+import { required, minValue, textAreaRequired } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   criarInclusaoDeAlimentacaoNormal,
@@ -37,8 +37,7 @@ import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
 import {
   LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
+  LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
@@ -46,6 +45,7 @@ import { validarSubmissao } from "./validacao";
 import Botao from "../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
 import "./style.scss";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
@@ -797,12 +797,13 @@ class InclusaoDeAlimentacao extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group">
+                <div className="form-group pb-5">
                   <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
+                    component={TextAreaWYSIWYG}
                     label="Observações"
                     name="descricao"
+                    required
+                    validate={textAreaRequired}
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
