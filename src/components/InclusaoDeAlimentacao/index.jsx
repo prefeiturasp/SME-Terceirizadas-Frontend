@@ -39,6 +39,7 @@ import {
   LabelAndDate,
   LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
+import { InputComData } from "../Shareable/DatePicker";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
 import { validarSubmissao } from "./validacao";
@@ -586,7 +587,7 @@ class InclusaoDeAlimentacao extends Component {
                         {!ehMotivoContinuo && (
                           <div className="form-group col-sm-3">
                             <Field
-                              component={LabelAndDate}
+                              component={InputComData}
                               name="data"
                               onChange={value =>
                                 this.handleField("data", value, dia_motivo.id)
@@ -596,6 +597,7 @@ class InclusaoDeAlimentacao extends Component {
                               }
                               minDate={proximos_dois_dias_uteis}
                               label="Dia"
+                              required
                               validate={required}
                             />
                           </div>

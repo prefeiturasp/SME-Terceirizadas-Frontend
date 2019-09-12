@@ -605,7 +605,7 @@ class SolicitacaoUnificada extends Component {
                 <TabelaHistoricoLotes lotes={lotes} />
               </Collapse>
             </CardMatriculados>
-            {unifiedSolicitationList.length > 0 && (
+            {unifiedSolicitationList && unifiedSolicitationList.length > 0 && (
               <div className="mt-3">
                 <span className="page-title">Rascunhos</span>
                 <Rascunhos
