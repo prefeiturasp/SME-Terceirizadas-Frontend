@@ -322,12 +322,19 @@ div.caption-choices {
   background-color: #e9ecef !important;
 }
 
-.multiselect-wrapper-disabled
-  .dropdown
-  .dropdown-heading
-  .dropdown-heading-value
-  span {
-  color: #5d515b !important;
+.dropdown .dropdown-heading .dropdown-heading-value span {
+  color: $blackInput !important;
+  font-size: 14px;
+}
+
+.dropdown-content .select-panel .select-list label:not([aria-selected="true"]).select-item{
+  color: $blackInput !important;
+  font-size: 14px;
+}
+
+.dropdown-content .select-panel .select-item:not([aria-selected="true"]){
+  color: $blackInput !important;
+  font-size: 14px;
 }
 
 // react-burgers
