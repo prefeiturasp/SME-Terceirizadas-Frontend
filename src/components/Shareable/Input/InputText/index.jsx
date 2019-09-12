@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { InputErroMensagem } from "../InputErroMensagem";
+import { HelpText } from "../../../Shareable/HelpText";
 import "../style.scss";
 
 export const InputText = props => {
@@ -18,11 +19,12 @@ export const InputText = props => {
   } = props;
   return (
     <div className="input">
-      {label && (
+      {label && [
+        required && <span className="required-asterisk">*</span>,
         <label htmlFor={name} className={`col-form-label ${labelClassName}`}>
           {label}
         </label>
-      )}
+      ]}
       <input
         {...input}
         className={`form-control ${className} ${meta.touched &&
@@ -34,7 +36,7 @@ export const InputText = props => {
         required={required}
         type="text"
       />
-      <div className="help-text">{helpText}</div>
+      <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>
   );

@@ -1,5 +1,6 @@
 import React from "react";
-import { LabelAndInput, LabelAndTextAreaCustom } from "../../../Shareable/labelAndInput/labelAndInput";
+import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
+import { TextArea } from "../../../Shareable/TextArea/TextArea";
 import { Field } from "redux-form";
 import { required } from "../../../../helpers/fieldValidators";
 
@@ -41,7 +42,6 @@ export const SectionFormEdital = props => {
           </label>
           <Field
             component={LabelAndInput}
-            className="form-control"
             name="processo_administrativo"
             validate={required}
             onChange={event => adicionaFieldsFormEdital(`numero_processo`, event.target.value)}
@@ -49,15 +49,13 @@ export const SectionFormEdital = props => {
           />
         </div>
       </div>
-      <div className="input-unico">
-        <div className="text-area">
-          <label className="label">
-            <span>* </span>Objeto resumido
-          </label>
+      <div className="row">
+        <div className="col-12 pb-5">
           <Field
-            component={LabelAndTextAreaCustom}
-            className="form-control"
+            component={TextArea}
+            label={"Objeto resumido"}
             name="resumo_objeto"
+            required
             validate={required}
             onChange={event => adicionaFieldsFormEdital(`resumo`, event.target.value)}
           />
