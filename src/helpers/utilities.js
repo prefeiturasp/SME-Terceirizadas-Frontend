@@ -44,7 +44,7 @@ export const dataPrioritaria = (
 };
 
 export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: null }].concat(lista);
+  return [{ nome: "Selecione", uuid: "" }].concat(lista);
 };
 
 export const formatarParaMultiselect = lista => {

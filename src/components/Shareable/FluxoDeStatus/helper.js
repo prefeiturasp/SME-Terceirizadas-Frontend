@@ -46,8 +46,6 @@ export const fluxoPartindoDRE = [
   }
 ];
 
-
-
 export const fluxoInformativoPartindoEscola = [
   {
     titulo: "Solicitação Realizada",
@@ -72,12 +70,34 @@ export const tipoDeStatus = status => {
     case "CODAE aprovou":
     case "Terceirizada tomou ciência":
       return "aprovado";
+    case "Escola cancelou":
     case "CODAE cancelou pedido":
     case "DRE cancelou pedido":
       return "cancelado";
     case "DRE reprovou":
+    case "CODAE reprovou":
       return "reprovado";
     default:
       return "";
   }
+};
+
+export const tipoDeStatusClasse = status => {
+  return tipoDeStatus(status.status_evento_explicacao) === "aprovado"
+    ? "active"
+    : tipoDeStatus(status.status_evento_explicacao) === "reprovado"
+    ? "disapproved"
+    : tipoDeStatus(status.status_evento_explicacao) === "cancelado"
+    ? "cancelled"
+    : "pending";
+};
+
+export const existeAlgumStatusFimDeFluxo = logs => {
+  return (
+    logs.findIndex(
+      log =>
+        log.status_evento_explicacao.includes("reprov") ||
+        log.status_evento_explicacao.includes("cancel")
+    ) === -1
+  );
 };
