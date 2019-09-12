@@ -9,10 +9,7 @@ import {
   updateSuspensaoDeAlimentacao,
   enviarSuspensaoDeAlimentacao
 } from "../../services/suspensaoDeAlimentacao.service";
-import {
-  geradorUUID,
-  formatarParaMultiselect
-} from "../../helpers/utilities";
+import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -23,7 +20,7 @@ import {
   LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { required } from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/dialogs";
@@ -74,8 +71,6 @@ class FoodSuspensionEditor extends Component {
     this.setState({ dias_razoes });
   }
 
-
-
   addDay() {
     this.setState({
       dias_razoes: this.state.dias_razoes.concat([
@@ -88,8 +83,6 @@ class FoodSuspensionEditor extends Component {
       ])
     });
   }
-
-
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
@@ -151,8 +144,6 @@ class FoodSuspensionEditor extends Component {
       }
     });
   }
-
-
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = [];
@@ -344,7 +335,6 @@ class FoodSuspensionEditor extends Component {
           }
         );
       }
-
     } else {
       toastError(error);
     }
@@ -556,7 +546,12 @@ class FoodSuspensionEditor extends Component {
                             name="numero_de_alunos"
                             min="0"
                             className="form-control"
-                            validate={checkMap[period.nome] ? required : null}
+                            validate={
+                              checkMap[period.nome] && [
+                                required,
+                                naoPodeSerZero
+                              ]
+                            }
                           />
                         </div>
                       </div>

@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { maxValue, required } from "../../helpers/fieldValidators";
+import {
+  maxValue,
+  required,
+  naoPodeSerZero
+} from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper";
 import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
@@ -348,7 +352,8 @@ export class SolicitacaoDeKitLanche extends Component {
                   label="Número de alunos participantes"
                   validate={[
                     required,
-                    maxValue(meusDados.escolas[0].quantidade_alunos)
+                    maxValue(meusDados.escolas[0].quantidade_alunos),
+                    naoPodeSerZero
                   ]}
                 />
               </div>
