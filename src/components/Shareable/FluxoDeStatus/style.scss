@@ -8,19 +8,21 @@
 }
 
 .progressbar-titles {
+  color: $grayPlaceholder;
+  display: inline-flex;
+  font-size: 9px;
+  font-weight: bold;
   list-style-type: none;
+  margin-bottom: 0;
   text-align: center;
   width: 100%;
-  display: inline-flex;
-  margin-bottom: 0;
-  font-size: 9px;
   li {
     width: 33.3%;
   }
 }
 
-.fluxos{
-  display:flex;
+.fluxos {
+  display: flex;
   justify-content: space-around;
 }
 
@@ -44,8 +46,14 @@
         color: #fff;
         border-color: $green !important;
       }
-      + li:after {
+      + li.active:after {
         background-color: $green !important;
+      }
+      + li.disapproved:after {
+        background-color: $red !important;
+      }
+      + li.cancelled:after {
+        background-color: $black !important;
       }
     }
     &:first-child:after {
@@ -57,10 +65,19 @@
       height: 30px;
       line-height: 30px;
       display: block;
+      font-weight: 900;
       text-align: center;
       margin: 0 auto 10px auto;
       border-radius: 50%;
       background-color: #a4a4a4;
+    }
+    &.pending {
+      &:before {
+        color: $white;
+        content: "\f04d";
+        font-family: "Font Awesome 5 Free";
+        font-size: 10px;
+      }
     }
     &:after {
       content: "";

@@ -1,14 +1,17 @@
 import React from "react";
 import {
+  existeAlgumStatusFimDeFluxo,
   fluxoPartindoEscola,
   fluxoPartindoDRE,
-  tipoDeStatus,
-  fluxoInformativoPartindoEscola
+  fluxoInformativoPartindoEscola,
+  tipoDeStatusClasse
 } from "./helper";
 import "./style.scss";
 
 export const FluxoDeStatus = props => {
   const { listaDeStatus, tipoDeFluxo } = props;
+  const fluxoNaoFinalizado =
+    listaDeStatus && existeAlgumStatusFimDeFluxo(listaDeStatus);
   const fluxo =
     tipoDeFluxo === "informativo"
       ? fluxoInformativoPartindoEscola
@@ -33,18 +36,13 @@ export const FluxoDeStatus = props => {
               return (
                 <li
                   key={key}
-                  className={
-                    tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                    "aprovado"
-                      ? "active"
-                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                        "reprovado"
-                      ? "disapproved"
-                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                        "cancelado"
-                      ? "cancelled"
+                  className={`${
+                    tipoDeStatusClasse(novoStatus) !== "pending"
+                      ? tipoDeStatusClasse(novoStatus)
+                      : fluxoNaoFinalizado
+                      ? "pending"
                       : ""
-                  }
+                  }`}
                   style={{ width: 100 / fluxo.length + "%" }}
                 >
                   {novoStatus.criado_em}

@@ -16,6 +16,7 @@ import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Select } from "../Shareable/Select";
 import { Field, FormSection, reduxForm } from "redux-form";
 import { required, minValue } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
@@ -35,7 +36,6 @@ import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/dialogs";
 import {
-  LabelAndCombo,
   LabelAndDate,
   LabelAndInput,
   LabelAndTextArea
@@ -44,7 +44,7 @@ import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
 import { validarSubmissao } from "./validacao";
 import Botao from "../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants"
+import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
 import "./style.scss";
 
 class InclusaoDeAlimentacao extends Component {
@@ -602,11 +602,15 @@ class InclusaoDeAlimentacao extends Component {
                         )}
                         <div className="form-group col-sm-8 p-0">
                           <Field
-                            component={LabelAndCombo}
+                            component={Select}
                             name="motivo"
                             label="Motivo"
-                            onChange={value =>
-                              this.handleField("motivo", value, dia_motivo.id)
+                            onChange={event =>
+                              this.handleField(
+                                "motivo",
+                                event.target.value,
+                                dia_motivo.id
+                              )
                             }
                             options={
                               inclusoes.length > 1
@@ -615,6 +619,7 @@ class InclusaoDeAlimentacao extends Component {
                                     motivos_continuos
                                   )
                             }
+                            required
                             validate={required}
                           />
                         </div>
