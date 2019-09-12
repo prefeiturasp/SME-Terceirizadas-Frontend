@@ -431,7 +431,6 @@ class AlteracaoCardapio extends Component {
                   </tr>
                 </table>
                 {periodos.map((period, key) => {
-                  console.log(period);
                   this.props.change(
                     `substituicoes_${period.nome}.periodo`,
                     period.uuid
