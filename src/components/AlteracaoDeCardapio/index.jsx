@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import { required, minValue } from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
@@ -431,6 +431,7 @@ class AlteracaoCardapio extends Component {
                   </tr>
                 </table>
                 {periodos.map((period, key) => {
+                  console.log(period);
                   this.props.change(
                     `substituicoes_${period.nome}.periodo`,
                     period.uuid
@@ -503,7 +504,12 @@ class AlteracaoCardapio extends Component {
                             name="numero_de_alunos"
                             min="0"
                             className="form-control"
-                            validate={[minValue(1)]}
+                            validate={
+                              checkMap[period.nome] && [
+                                required,
+                                naoPodeSerZero
+                              ]
+                            }
                           />
                         </div>
                       </div>
