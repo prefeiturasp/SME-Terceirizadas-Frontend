@@ -1,36 +1,19 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import {
-  createSuspensaoDeAlimentacao,
-  deleteSuspensaoDeAlimentacao,
-  getSuspensoesDeAlimentacaoSalvas,
-  updateSuspensaoDeAlimentacao,
-  enviarSuspensaoDeAlimentacao
-} from "../../services/suspensaoDeAlimentacao.service";
-import {
-  geradorUUID,
-  formatarParaMultiselect
-} from "../../helpers/utilities";
-import { validateSubmit } from "./validacao";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndCombo,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
-import CardMatriculados from "../Shareable/CardMatriculados";
-import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { formatarParaMultiselect, geradorUUID } from "../../helpers/utilities";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
-
-class FoodSuspensionEditor extends Component {
-  constructor(props) {
+import { createSuspensaoDeAlimentacao, deleteSuspensaoDeAlimentacao, enviarSuspensaoDeAlimentacao, getSuspensoesDeAlimentacaoSalvas, updateSuspensaoDeAlimentacao } from "../../services/suspensaoDeAlimentacao.service";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { LabelAndCombo, LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
+import { Rascunhos } from "./Rascunhos";
+import { validateSubmit } from "./validacao";
     super(props);
     this.state = {
       loading: true,
@@ -74,8 +57,6 @@ class FoodSuspensionEditor extends Component {
     this.setState({ dias_razoes });
   }
 
-
-
   addDay() {
     this.setState({
       dias_razoes: this.state.dias_razoes.concat([
@@ -88,8 +69,6 @@ class FoodSuspensionEditor extends Component {
       ])
     });
   }
-
-
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
@@ -151,8 +130,6 @@ class FoodSuspensionEditor extends Component {
       }
     });
   }
-
-
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = [];
@@ -311,11 +288,12 @@ class FoodSuspensionEditor extends Component {
         createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
               toastError(res.error);
@@ -329,11 +307,12 @@ class FoodSuspensionEditor extends Component {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               }
             } else {
               toastError(res.error);
@@ -344,7 +323,6 @@ class FoodSuspensionEditor extends Component {
           }
         );
       }
-
     } else {
       toastError(error);
     }
