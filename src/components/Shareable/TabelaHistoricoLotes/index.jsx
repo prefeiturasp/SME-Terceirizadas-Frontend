@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./style.scss";
 
 export const TabelaHistoricoLotes = props => {
@@ -14,7 +15,9 @@ export const TabelaHistoricoLotes = props => {
           props.lotes.map(lote => {
             return (
               <tr>
-                <td>{lote.nome}</td>
+                <td>
+                  <Link to={"#"}>{lote.nome}</Link>
+                </td>
                 <td>{lote && lote.tipo_gestao && lote.tipo_gestao.nome}</td>
               </tr>
             );

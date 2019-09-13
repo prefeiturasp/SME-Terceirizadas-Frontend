@@ -1,4 +1,14 @@
-.title-color {
-  color: #353535;
+@import "../../../styles/variables.scss";
+
+.card-shortcut-to-form {
+  font-size: 14px;
+  .card-body {
+    .card-title {
+      color: $blackInput;
+    }
+    p {
+      color: $gray;
+    }
+  }
 }
 

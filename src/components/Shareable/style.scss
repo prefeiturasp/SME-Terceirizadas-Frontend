@@ -21,8 +21,10 @@ textarea {
 .card-body {
   padding: 2rem !important;
 }
+
 .dashboard-card-title {
   input.input-search {
+    font-size: 14px;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -35,6 +37,9 @@ textarea {
       color: $grayLight;
       padding-right: 5px;
     }
+  }
+  .color-black {
+    color: $blackInput;
   }
   i.fa-search {
     font-size: 20px;
@@ -69,10 +74,8 @@ textarea {
 }
 
 .current-date {
-  font-size: 13px;
-  span {
-    color: #4c5862;
-  }
+  font-size: 10px;
+  color: $grayPlaceholder;
 }
 
 p.caption {
@@ -270,12 +273,15 @@ div.caption-choices {
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-list label:not([aria-selected="true"]).select-item{
+.dropdown-content
+  .select-panel
+  .select-list
+  label:not([aria-selected="true"]).select-item {
   color: $blackInput !important;
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-item:not([aria-selected="true"]){
+.dropdown-content .select-panel .select-item:not([aria-selected="true"]) {
   color: $blackInput !important;
   font-size: 14px;
 }

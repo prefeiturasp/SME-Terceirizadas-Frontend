@@ -13,6 +13,7 @@ export const Select = props => {
     label,
     meta,
     name,
+    naoDesabilitarPrimeiraOpcao,
     onChange,
     options,
     required
@@ -28,7 +29,7 @@ export const Select = props => {
       ]}
       <select
         {...input}
-        className={`form-control ${className} ${meta.touched &&
+        className={`form-control ${className} ${meta && meta.touched &&
           meta.error &&
           "invalid-field"}`}
         disabled={disabled}
@@ -42,7 +43,7 @@ export const Select = props => {
               key={key}
               value={e.uuid}
               selected={key === 0}
-              disabled={e.disabled || key === 0}
+              disabled={e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)}
             >
               {e.nome}
             </option>
@@ -68,6 +69,7 @@ Select.propTypes = {
   name: PropTypes.string
 };
 Select.defaultProps = {
+  naoDesabilitarPrimeiraOpcao: false,
   options: [{ nome: "Selecione", uuid: "" }],
   disabled: false
 };
