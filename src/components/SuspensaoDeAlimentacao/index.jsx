@@ -1,3 +1,4 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -11,7 +12,6 @@ import {
 } from "../../services/suspensaoDeAlimentacao.service";
 import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
   LabelAndDate,
@@ -21,10 +21,10 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 
 class FoodSuspensionEditor extends Component {
   constructor(props) {
@@ -302,11 +302,12 @@ class FoodSuspensionEditor extends Component {
         createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
               toastError(res.error);
@@ -320,11 +321,12 @@ class FoodSuspensionEditor extends Component {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               }
             } else {
               toastError(res.error);

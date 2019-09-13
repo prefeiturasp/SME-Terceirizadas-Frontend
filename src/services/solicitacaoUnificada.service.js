@@ -70,7 +70,7 @@ export const solicitacoesUnificadasSalvas = async () => {
     headers: authToken,
     method: "GET"
   };
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/minhas_solicitacoes/`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/minhas-solicitacoes/`;
   return await fetch(url, OBJ_REQUEST)
     .then(response => {
       return response.json();

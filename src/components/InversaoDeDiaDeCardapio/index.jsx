@@ -27,6 +27,7 @@ import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/label
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -156,10 +157,12 @@ export class InversaoDeDiaDeCardapio extends Component {
       criarInversaoDeDiaDeCardapio(values)
         .then(response => {
           if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(response.data.uuid);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
+              this.resetForm();
+            }
           } else {
             var keys = Object.keys(response.data);
             keys.forEach(function(key) {
@@ -174,10 +177,14 @@ export class InversaoDeDiaDeCardapio extends Component {
       atualizarInversaoDeDiaDeCardapio(values.uuid, values)
         .then(response => {
           if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(response.data.uuid);
-            } else this.resetForm();
+            } else {
+              toastSuccess(
+                "Inversão de dia de Cardápio atualizado com sucesso!"
+              );
+              this.resetForm();
+            }
           } else {
             var keys = Object.keys(response.data);
             keys.forEach(function(key) {
@@ -292,7 +299,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
-                          status: "DRE_A_VALIDAR"
+                          status: STATUS_DRE_A_VALIDAR
                         })
                       )}
                       style={ButtonStyle.Primary}

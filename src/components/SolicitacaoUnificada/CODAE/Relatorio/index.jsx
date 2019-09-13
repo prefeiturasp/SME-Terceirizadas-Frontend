@@ -173,12 +173,7 @@ class Relatorio extends Component {
 
             <div className="descricao-evento">
               <div className="direita">
-                <div className="descricao-container">
-                  <div className="descricao-titulo">Motivo</div>
-                  <div className="descricao-texto">
-                    {solicitacaoUnificada.motivo.nome}
-                  </div>
-                </div>
+                <div className="descricao-container" />
                 <div className="descricao-container">
                   <div className="descricao-titulo">Local do passeio</div>
                   <div className="descricao-texto">
@@ -246,7 +241,7 @@ class Relatorio extends Component {
                 />
               </div>
             </div>
-            {solicitacaoUnificada.status === statusEnum.CODAE_A_VALIDAR && (
+            {solicitacaoUnificada.status === statusEnum.CODAE_A_AUTORIZAR && (
               <div className="botoes-acao">
                 <BaseButton
                   label={"Negar Solicitação"}

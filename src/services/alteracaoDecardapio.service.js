@@ -187,6 +187,23 @@ export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
     });
 };
 
+// TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
+export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-diretoria-regional/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+
 export const DREConfirmaAlteracaoCardapio = uuid => {
   const url = `${API_URL}/alteracoes-cardapio/${uuid}/diretoria-regional-aprova/`;
   let status = 0;

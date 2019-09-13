@@ -135,7 +135,8 @@ export class CardHistorico extends Component {
                               {pedido.id_externo}
                             </td>
                             <td className="col-3">
-                              {pedido.escolas_quantidades[0].escola.lote.nome}
+                              {pedido.escolas_quantidades[0] &&
+                                pedido.escolas_quantidades[0].escola.lote.nome}
                             </td>
                             <td className="col-3">
                               {pedido.diretoria_regional.nome}

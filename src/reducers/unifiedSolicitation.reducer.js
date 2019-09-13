@@ -1,4 +1,7 @@
-import { extrairKitsLanche, extrairTempoPasseio } from "../components/SolicitacaoUnificada/helper";
+import {
+  extrairKitsLanche,
+  extrairTempoPasseio
+} from "../components/SolicitacaoUnificada/helper";
 
 const LOAD_UNIFIED_SOLICITATION = "LOAD_UNIFIED_SOLICITATION";
 
@@ -9,7 +12,6 @@ export default function reducer(state = {}, action) {
       //TODO: ver um jeito de não precisar converter tantos dados
       if (action.data != null) {
         action.data.data = action.data.solicitacao_kit_lanche.data;
-        action.data.motivo = action.data.motivo.uuid;
         action.data.descricao = action.data.solicitacao_kit_lanche.descricao;
         if (action.data.lista_kit_lanche_igual) {
           action.data.kit_lanche = extrairKitsLanche(

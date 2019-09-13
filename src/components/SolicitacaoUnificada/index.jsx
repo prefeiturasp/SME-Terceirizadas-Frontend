@@ -366,14 +366,9 @@ class SolicitacaoUnificada extends Component {
         schoolsFiltered: this.props.escolas
       });
     }
-    const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
+    const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
-    if (
-      motivos !== [] &&
-      meusDados !== null &&
-      proximos_dois_dias_uteis !== null &&
-      loading
-    ) {
+    if (meusDados !== null && proximos_dois_dias_uteis !== null && loading) {
       this.setState({
         loading: false
       });
@@ -508,10 +503,12 @@ class SolicitacaoUnificada extends Component {
         ).then(
           res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Solicitação Unificada salva com sucesso!");
               if (values.status === "DRE_A_VALIDAR") {
                 this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
+              } else {
+                toastSuccess("Solicitação Unificada salva com sucesso!");
+                this.resetForm();
+              }
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
@@ -527,10 +524,12 @@ class SolicitacaoUnificada extends Component {
         ).then(
           res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Solicitação Unificada atualizada com sucesso!");
               if (values.status === "DRE_A_VALIDAR") {
                 this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
+              } else {
+                toastSuccess("Solicitação Unificada atualizada com sucesso!");
+                this.resetForm();
+              }
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
@@ -567,7 +566,6 @@ class SolicitacaoUnificada extends Component {
       handleSubmit,
       meusDados,
       proximos_dois_dias_uteis,
-      motivos,
       multipleOrder,
       max_alunos,
       prosseguir
@@ -641,32 +639,7 @@ class SolicitacaoUnificada extends Component {
                       validate={required}
                     />
                   </div>
-                  <div className="form-group col-9">
-                    <Field
-                      component={LabelAndCombo}
-                      name="motivo"
-                      onChange={value => this.onMotivoChanged(value)}
-                      label="Motivo"
-                      options={motivos}
-                      validate={required}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="form-group col-8 offset-3">
-                    {outroMotivo && (
-                      <Field
-                        component={LabelAndInput}
-                        label="Qual o motivo?"
-                        name="outro_motivo"
-                        className="form-control"
-                        validate={required}
-                      />
-                    )}
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 pl-0 pr-0 pb-3">
+                  <div className="col-9 pl-0 pr-0 pb-3">
                     <Field
                       component={LabelAndInput}
                       label="Local do evento"
@@ -677,6 +650,8 @@ class SolicitacaoUnificada extends Component {
                     />
                   </div>
                 </div>
+                <div className="row" />
+                <div className="row" />
                 <hr />
                 <div className="row">
                   <div className="col-12 pl-0 pr-0 pb-3">

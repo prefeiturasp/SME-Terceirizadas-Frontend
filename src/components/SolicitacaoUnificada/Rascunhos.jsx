@@ -49,7 +49,6 @@ export class Rascunhos extends Component {
                 : solicitacaoUnificada.escolas_quantidades.length +
                   " escola - "}
               {solicitacaoUnificada.solicitacao_kit_lanche.data} -{" "}
-              {solicitacaoUnificada.motivo.nome}
             </p>
           </div>
         </div>
