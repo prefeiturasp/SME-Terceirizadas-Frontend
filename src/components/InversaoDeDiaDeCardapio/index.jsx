@@ -22,11 +22,8 @@ import {
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
-import {
-  LabelAndDate,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";

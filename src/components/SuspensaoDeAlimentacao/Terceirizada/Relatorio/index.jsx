@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import "../style.scss";
 import { corDaMensagem } from "./helper";

@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import "./style.scss";
 import { InputErroMensagem } from "../Input/InputErroMensagem";
+import { HelpText } from "../../Shareable/HelpText";
 
 export const Select = props => {
   const {
@@ -48,7 +49,7 @@ export const Select = props => {
           );
         })}
       </select>
-      <div className="help-text">{helpText}</div>
+      <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>
   );

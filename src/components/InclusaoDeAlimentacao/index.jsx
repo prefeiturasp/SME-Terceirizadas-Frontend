@@ -34,18 +34,19 @@ import {
 import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import {
   LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
+  LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
+import { InputComData } from "../Shareable/DatePicker";
 import Weekly from "../Shareable/Weekly/Weekly";
 import { Rascunhos } from "./Rascunhos";
 import { validarSubmissao } from "./validacao";
 import Botao from "../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
 import "./style.scss";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
@@ -586,7 +587,7 @@ class InclusaoDeAlimentacao extends Component {
                         {!ehMotivoContinuo && (
                           <div className="form-group col-sm-3">
                             <Field
-                              component={LabelAndDate}
+                              component={InputComData}
                               name="data"
                               onChange={value =>
                                 this.handleField("data", value, dia_motivo.id)
@@ -596,6 +597,7 @@ class InclusaoDeAlimentacao extends Component {
                               }
                               minDate={proximos_dois_dias_uteis}
                               label="Dia"
+                              required
                               validate={required}
                             />
                           </div>
@@ -802,10 +804,9 @@ class InclusaoDeAlimentacao extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group">
+                <div className="form-group pb-5">
                   <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
+                    component={TextAreaWYSIWYG}
                     label="Observações"
                     name="descricao"
                   />

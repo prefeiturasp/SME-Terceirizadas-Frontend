@@ -36,7 +36,7 @@ import {
 } from "../../services/solicitacaoUnificada.service";
 import { Rascunhos } from "./Rascunhos";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./validacao";
 import { formatarSubmissao, extrairKitsLanche } from "./helper";

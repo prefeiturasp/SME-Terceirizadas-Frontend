@@ -1,19 +1,15 @@
 @import "../../../styles/variables.scss";
 
-div.input {
+div.textarea {
   font-size: 14px;
+  height: 110px;
   span.required-asterisk {
     color: $red;
     padding-right: 5px;
   }
-  label {
-    font-weight: 500;
-    color: $gray;
-  }
-  input {
+  textarea {
+    font-size: 14px;
     color: $blackInput;
-    height: 38px;
-    font-weight: normal;
     &:focus {
       color: $blackInput;
     }

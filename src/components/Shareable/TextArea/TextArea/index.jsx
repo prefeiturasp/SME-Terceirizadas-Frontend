@@ -1,31 +1,29 @@
-import PropTypes from "prop-types";
 import React from "react";
-import { InputErroMensagem } from "../InputErroMensagem";
-import { HelpText } from "../../../Shareable/HelpText";
+import PropTypes from "prop-types";
+import InputErroMensagem from "../../Input/InputErroMensagem";
 import "../style.scss";
 
-export const InputText = props => {
+export const TextArea = props => {
   const {
     className,
     disabled,
     helpText,
     input,
     label,
-    labelClassName,
     meta,
     name,
     placeholder,
     required
   } = props;
   return (
-    <div className="input">
+    <div className="textarea">
       {label && [
         required && <span className="required-asterisk">*</span>,
-        <label htmlFor={name} className={`col-form-label ${labelClassName}`}>
+        <label htmlFor={name} className="col-form-label">
           {label}
         </label>
       ]}
-      <input
+      <textarea
         {...input}
         className={`form-control ${className} ${meta.touched &&
           meta.error &&
@@ -34,38 +32,33 @@ export const InputText = props => {
         name={name}
         placeholder={placeholder}
         required={required}
-        type="text"
       />
-      <HelpText helpText={helpText} />
+      <div className="help-text">{helpText}</div>
       <InputErroMensagem meta={meta} />
     </div>
   );
 };
 
-InputText.propTypes = {
+TextArea.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   helpText: PropTypes.string,
   input: PropTypes.object,
   label: PropTypes.string,
-  labelClassName: PropTypes.string,
   meta: PropTypes.object,
   name: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool
 };
 
-InputText.defaultProps = {
+TextArea.defaultProps = {
   className: "",
   disabled: false,
   helpText: "",
   input: {},
   label: "",
-  labelClassName: "",
   meta: {},
   name: "",
   placeholder: "",
   required: false
 };
-
-export default InputText;
