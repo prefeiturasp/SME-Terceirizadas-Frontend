@@ -14,6 +14,9 @@ import { toastError, toastSuccess } from "../Shareable/dialogs";
 import { LabelAndCombo, LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { Rascunhos } from "./Rascunhos";
 import { validateSubmit } from "./validacao";
+
+class FoodSuspensionEditor extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       loading: true,
