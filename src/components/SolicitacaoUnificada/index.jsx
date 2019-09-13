@@ -508,10 +508,12 @@ class SolicitacaoUnificada extends Component {
         ).then(
           res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Solicitação Unificada salva com sucesso!");
               if (values.status === "DRE_A_VALIDAR") {
                 this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
+              } else {
+                toastSuccess("Solicitação Unificada salva com sucesso!");
+                this.resetForm();
+              }
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
@@ -527,10 +529,12 @@ class SolicitacaoUnificada extends Component {
         ).then(
           res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Solicitação Unificada atualizada com sucesso!");
               if (values.status === "DRE_A_VALIDAR") {
                 this.iniciarPedido(res.data.uuid);
-              } else this.resetForm();
+              } else {
+                toastSuccess("Solicitação Unificada atualizada com sucesso!");
+                this.resetForm();
+              }
             } else {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
