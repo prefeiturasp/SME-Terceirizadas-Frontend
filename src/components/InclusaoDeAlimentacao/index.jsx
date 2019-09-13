@@ -1,15 +1,16 @@
-import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Field, FormSection, reduxForm } from "redux-form";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { minValue, required } from "../../helpers/fieldValidators";
 import {
-  formatarSubmissaoSolicitacaoNormal,
-  formatarSubmissaoSolicitacaoContinua,
-  extrairTiposALimentacao
-} from "./helper";
-import {
-  geradorUUID,
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect,
+  geradorUUID,
   getDataObj
 } from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
@@ -21,17 +22,19 @@ import { Field, FormSection, reduxForm } from "redux-form";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
-  criarInclusaoDeAlimentacaoNormal,
   atualizarInclusaoDeAlimentacaoNormal,
+  criarInclusaoDeAlimentacaoNormal,
   getInclusoesNormaisSalvas,
   inicioPedidoNormal
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
-  criarInclusaoDeAlimentacaoContinua,
   atualizarInclusaoDeAlimentacaoContinua,
-  getInclusoesContinuasSalvas
+  criarInclusaoDeAlimentacaoContinua,
+  getInclusoesContinuasSalvas,
+  inicioPedidoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
+import Botao from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
@@ -40,8 +43,15 @@ import {
   LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
 import { InputComData } from "../Shareable/DatePicker";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import Weekly from "../Shareable/Weekly/Weekly";
+import {
+  extrairTiposALimentacao,
+  formatarSubmissaoSolicitacaoContinua,
+  formatarSubmissaoSolicitacaoNormal
+} from "./helper";
 import { Rascunhos } from "./Rascunhos";
+import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import Botao from "../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
@@ -403,6 +413,7 @@ class InclusaoDeAlimentacao extends Component {
     inicioPedidoEndpointCorreto(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
+          //AQUIIIIIIIIII
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
@@ -424,10 +435,12 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Rascunho salvo com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho salvo com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
@@ -446,10 +459,12 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
-            toastSuccess("Rascunho atualizado com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho atualizado com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
@@ -471,10 +486,12 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Rascunho salvo com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho salvo com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
@@ -493,10 +510,12 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
-            toastSuccess("Rascunho atualizado com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho atualizado com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
@@ -834,7 +853,7 @@ class InclusaoDeAlimentacao extends Component {
                     onClick={handleSubmit(values =>
                       this.onSubmit({
                         ...values,
-                        status: "DRE_A_VALIDAR"
+                        status: STATUS_DRE_A_VALIDAR
                       })
                     )}
                     style={BUTTON_STYLE.GREEN}

@@ -1,5 +1,6 @@
-import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
+import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
@@ -7,18 +8,19 @@ import {
   required,
   naoPodeSerZero
 } from "../../helpers/fieldValidators";
-import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper";
-import Button, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { maxValue, required } from "../../helpers/fieldValidators";
+import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import { getSolicitacoesKitLancheApi, inicioPedido, registroAtualizaKitLanche, removeKitLanche, solicitarKitLanche } from "../../services/solicitacaoDeKitLanche.service";
+import { ButtonStyle, ButtonType, default as BaseButton, default as Button } from "../Shareable/button";
+import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
 import { InputText } from "../Shareable/Input/InputText";
-import {
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput/labelAndInput";
-import { Grid } from "../Shareable/responsiveBs4";
-import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
 import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
+import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
+import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { Rascunhos } from "./Rascunhos";
 import {
@@ -31,9 +33,9 @@ import {
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import BaseButton from "../Shareable/button";
-import CardMatriculados from "../Shareable/CardMatriculados";
+import { Grid } from "../Shareable/responsiveBs4";
 import { montaObjetoRequisicao } from "./helper";
+import { Rascunhos } from "./Rascunhos";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -212,10 +214,12 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitarKitLanche(solicitacao_kit_lanche)
         .then(resp => {
           if (resp.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Solicitação de Kit Lanche salva com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(resp.data.uuid);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Solicitação de Kit Lanche salva com sucesso!");
+              this.resetForm();
+            }
           } else if (resp.data.tipo_error) {
             this.validaTipoMensagemError(resp.data);
           } else {
@@ -229,10 +233,12 @@ export class SolicitacaoDeKitLanche extends Component {
       registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid)
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {
-            toastSuccess("Solicitação de Kit Lanche atualizada com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(values.uuid);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Solicitação de Kit Lanche atualizada com sucesso!");
+              this.resetForm();
+            }
           } else if (resp.data.tipo_error) {
             this.validaTipoMensagemError(resp.data);
           } else {
@@ -437,7 +443,7 @@ export class SolicitacaoDeKitLanche extends Component {
                   onClick={handleSubmit(values =>
                     this.onSubmit({
                       ...values,
-                      status: "DRE_A_VALIDAR"
+                      status: STATUS_DRE_A_VALIDAR
                     })
                   )}
                   style={ButtonStyle.Primary}
@@ -459,7 +465,7 @@ export class SolicitacaoDeKitLanche extends Component {
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
-                          status: "DRE_A_VALIDAR",
+                          status: STATUS_DRE_A_VALIDAR,
                           salvo_em: new Date(),
                           confirmar: true
                         })

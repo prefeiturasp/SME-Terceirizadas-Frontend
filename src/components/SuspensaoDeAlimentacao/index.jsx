@@ -1,3 +1,4 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -21,10 +22,19 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { required } from "../../helpers/fieldValidators";
+import { formatarParaMultiselect, geradorUUID } from "../../helpers/utilities";
+import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
+import { createSuspensaoDeAlimentacao, deleteSuspensaoDeAlimentacao, enviarSuspensaoDeAlimentacao, getSuspensoesDeAlimentacaoSalvas, updateSuspensaoDeAlimentacao } from "../../services/suspensaoDeAlimentacao.service";
+import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
+import { toastError, toastSuccess } from "../Shareable/dialogs";
+import { LabelAndCombo, LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
+import { validateSubmit } from "./validacao";
 
 class FoodSuspensionEditor extends Component {
   constructor(props) {
@@ -302,11 +312,12 @@ class FoodSuspensionEditor extends Component {
         createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
               toastError(res.error);
@@ -320,11 +331,12 @@ class FoodSuspensionEditor extends Component {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               this.refresh();
               if (status === "A_VALIDAR") {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               }
             } else {
               toastError(res.error);
