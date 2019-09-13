@@ -8,6 +8,7 @@ export const InputText = props => {
   const {
     className,
     disabled,
+    esconderAsterisco,
     helpText,
     input,
     label,
@@ -15,12 +16,13 @@ export const InputText = props => {
     meta,
     name,
     placeholder,
-    required
+    required,
+    type
   } = props;
   return (
     <div className="input">
       {label && [
-        required && <span className="required-asterisk">*</span>,
+        required && !esconderAsterisco && <span className="required-asterisk">*</span>,
         <label htmlFor={name} className={`col-form-label ${labelClassName}`}>
           {label}
         </label>
@@ -34,7 +36,7 @@ export const InputText = props => {
         name={name}
         placeholder={placeholder}
         required={required}
-        type="text"
+        type={type}
       />
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
@@ -45,6 +47,7 @@ export const InputText = props => {
 InputText.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  esconderAsterisco: PropTypes.bool,
   helpText: PropTypes.string,
   input: PropTypes.object,
   label: PropTypes.string,
@@ -52,12 +55,14 @@ InputText.propTypes = {
   meta: PropTypes.object,
   name: PropTypes.string,
   placeholder: PropTypes.string,
-  required: PropTypes.bool
+  required: PropTypes.bool,
+  type: PropTypes.string
 };
 
 InputText.defaultProps = {
   className: "",
   disabled: false,
+  esconderAsterisco: false,
   helpText: "",
   input: {},
   label: "",
@@ -65,7 +70,8 @@ InputText.defaultProps = {
   meta: {},
   name: "",
   placeholder: "",
-  required: false
+  required: false,
+  type: "text",
 };
 
 export default InputText;
