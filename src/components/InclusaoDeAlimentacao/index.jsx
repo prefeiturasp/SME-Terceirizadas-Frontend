@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Select } from "../Shareable/Select";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { required, minValue } from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   criarInclusaoDeAlimentacaoNormal,
@@ -791,7 +791,12 @@ class InclusaoDeAlimentacao extends Component {
                             name={`numero_alunos`}
                             min="0"
                             className="form-control"
-                            validate={[minValue(1)]}
+                            validate={
+                              validacaoPeriodos[indice].checado && [
+                                required,
+                                naoPodeSerZero
+                              ]
+                            }
                           />
                         </div>
                       </div>

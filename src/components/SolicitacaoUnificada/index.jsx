@@ -14,7 +14,11 @@ import { Grid } from "../Shareable/responsiveBs4";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-import { required, maxValue } from "../../helpers/fieldValidators";
+import {
+  required,
+  maxValue,
+  naoPodeSerZero
+} from "../../helpers/fieldValidators";
 import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
 import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -854,7 +858,10 @@ class SolicitacaoUnificada extends Component {
                                       label="Nº de alunos participantes"
                                       validate={
                                         school.checked &&
-                                        !multipleOrder && [required]
+                                        !multipleOrder && [
+                                          required,
+                                          naoPodeSerZero
+                                        ]
                                       }
                                     />
                                   </div>
