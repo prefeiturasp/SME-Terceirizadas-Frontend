@@ -5,9 +5,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { minValue, required } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect

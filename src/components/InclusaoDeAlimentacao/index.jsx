@@ -5,7 +5,11 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { minValue, required } from "../../helpers/fieldValidators";
+import {
+  minValue,
+  required,
+  naoPodeSerZero
+} from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -13,13 +17,8 @@ import {
   geradorUUID,
   getDataObj
 } from "../../helpers/utilities";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import { Select } from "../Shareable/Select";
-import { Field, FormSection, reduxForm } from "redux-form";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
   atualizarInclusaoDeAlimentacaoNormal,
@@ -43,7 +42,6 @@ import {
   LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
 import { InputComData } from "../Shareable/DatePicker";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import Weekly from "../Shareable/Weekly/Weekly";
 import {
   extrairTiposALimentacao,
@@ -53,8 +51,6 @@ import {
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
-import Botao from "../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 

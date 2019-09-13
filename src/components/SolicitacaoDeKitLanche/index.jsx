@@ -10,32 +10,35 @@ import {
 } from "../../helpers/fieldValidators";
 import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { maxValue, required } from "../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
-import { getSolicitacoesKitLancheApi, inicioPedido, registroAtualizaKitLanche, removeKitLanche, solicitarKitLanche } from "../../services/solicitacaoDeKitLanche.service";
-import { ButtonStyle, ButtonType, default as BaseButton, default as Button } from "../Shareable/button";
+import {
+  getSolicitacoesKitLancheApi,
+  inicioPedido,
+  registroAtualizaKitLanche,
+  removeKitLanche,
+  solicitarKitLanche
+} from "../../services/solicitacaoDeKitLanche.service";
+import {
+  ButtonStyle,
+  ButtonType,
+  default as BaseButton,
+  default as Button
+} from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
 import { InputText } from "../Shareable/Input/InputText";
 import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
-import { LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
-import { Rascunhos } from "./Rascunhos";
 import {
-  removeKitLanche,
-  solicitarKitLanche,
-  getSolicitacoesKitLancheApi,
-  registroAtualizaKitLanche,
-  inicioPedido
-} from "../../services/solicitacaoDeKitLanche.service";
-import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import { Modal } from "react-bootstrap";
+  LabelAndDate,
+  LabelAndInput,
+  LabelAndTextArea
+} from "../Shareable/labelAndInput/labelAndInput";
+import { Rascunhos } from "./Rascunhos";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Grid } from "../Shareable/responsiveBs4";
 import { montaObjetoRequisicao } from "./helper";
-import { Rascunhos } from "./Rascunhos";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },

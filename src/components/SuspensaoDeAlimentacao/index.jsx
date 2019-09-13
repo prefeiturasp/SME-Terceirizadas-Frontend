@@ -12,7 +12,6 @@ import {
 } from "../../services/suspensaoDeAlimentacao.service";
 import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import {
   LabelAndDate,
@@ -22,19 +21,10 @@ import {
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
-import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
-import { formatarParaMultiselect, geradorUUID } from "../../helpers/utilities";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
-import { createSuspensaoDeAlimentacao, deleteSuspensaoDeAlimentacao, enviarSuspensaoDeAlimentacao, getSuspensoesDeAlimentacaoSalvas, updateSuspensaoDeAlimentacao } from "../../services/suspensaoDeAlimentacao.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
-import { LabelAndCombo, LabelAndDate, LabelAndInput, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
-import { validateSubmit } from "./validacao";
 
 class FoodSuspensionEditor extends Component {
   constructor(props) {
