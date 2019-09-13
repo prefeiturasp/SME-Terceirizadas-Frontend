@@ -12,7 +12,6 @@ class SolicitacaoUnificadaContainer extends Component {
       meusDados: null,
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null,
-      motivos: [],
       escolas: []
     };
   }
@@ -36,10 +35,6 @@ class SolicitacaoUnificadaContainer extends Component {
         meusDados: response,
         escolas
       });
-    });
-
-    motivosSolicitacaoUnificada().then(response => {
-      this.setState({ motivos: agregarDefault(response.results) });
     });
 
     getDiasUteis().then(response => {
