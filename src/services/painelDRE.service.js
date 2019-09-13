@@ -1,8 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREAlteracaoCardapioPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREAlteracaoCardapioLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREAlteracaoCardapioRegular
+  getDiretoriaRegionalPedidosDeAlteracaoCardapio
 } from "./alteracaoDecardapio.service";
 
 import {
@@ -112,15 +110,33 @@ const getResumoPendenciasDRE = async ({
 };
 
 export const getResumoPendenciasDREAlteracoesDeCardapio = async (
-  dreUuid,
   filtro = "sem_filtro"
 ) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREAlteracaoCardapioLimite,
-    getSolicitacoesPrioritario: getDREAlteracaoCardapioPrioritario,
-    getSolicitacoesRegular: getDREAlteracaoCardapioRegular
-  });
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
 };
 
 const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
