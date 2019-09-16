@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { formValueSelector, reduxForm } from "redux-form";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
 import {
@@ -6,8 +8,9 @@ import {
   getSolicitacoesPendentesParaDRE
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import { CardListarSolicitacoes } from "../../Shareable/CardListarSolicitacoes";
 
-export default class StatusSolicitacoes extends Component {
+export class StatusSolicitacoes extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,15 +24,24 @@ export default class StatusSolicitacoes extends Component {
       showPendentes: this.props.showPendentes
     };
     this.filterList = this.filterList.bind(this);
+    this.selecionarTodos = this.selecionarTodos.bind(this);
+    this.onCheckClicked = this.onCheckClicked.bind(this);
   }
 
   async componentDidMount() {
-
     const meusDados = await getMeusDados();
 
-    const autorizadas = !this.state.showAutorizadas ? [] : await getSolicitacoesAutorizadasPelaDRE(meusDados.diretorias_regionais[0].uuid);
+    const autorizadas = !this.state.showAutorizadas
+      ? []
+      : await getSolicitacoesAutorizadasPelaDRE(
+          meusDados.diretorias_regionais[0].uuid
+        );
 
-    const pendentes = !this.state.showPendentes ? [] : await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid);
+    const pendentes = !this.state.showPendentes
+      ? []
+      : await getSolicitacoesPendentesParaDRE(
+          meusDados.diretorias_regionais[0].uuid
+        );
 
     this.setState({
       autorizadasList: autorizadas.results,
@@ -39,17 +51,28 @@ export default class StatusSolicitacoes extends Component {
     });
   }
 
+  selecionarTodos(solicitacoes) {
+    solicitacoes.forEach((_, key) => {
+      this.props.change(`check_${key}`, !this.props.selecionar_todos);
+    });
+    this.props.change("selecionar_todos", !this.props.selecionar_todos);
+  }
+
+  onCheckClicked(solicitacoes, key) {
+    solicitacoes[key].checked = !solicitacoes[key].checked;
+    this.props.change(`check_${key}`, solicitacoes[key].checked);
+    //this.setState({ solicitacoes });
+  }
+
   filterList(event) {
-    const {showAutorizadas, showPendentes} = this.state
+    const { showAutorizadas, showPendentes } = this.state;
     if (event === undefined) event = { target: { value: "" } };
 
     if (showAutorizadas) {
       let autorizadasListFiltered = this.state.autorizadasList;
       autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
         const wordToFilter = event.target.value.toLowerCase();
-        return (
-          item.text.toLowerCase().search(wordToFilter) !== -1
-        );
+        return item.text.toLowerCase().search(wordToFilter) !== -1;
       });
       this.setState({ autorizadasListFiltered });
     }
@@ -58,16 +81,19 @@ export default class StatusSolicitacoes extends Component {
       let pendentesListFiltered = this.state.pendentesList;
       pendentesListFiltered = pendentesListFiltered.filter(function(item) {
         const wordToFilter = event.target.value.toLowerCase();
-        return (
-          item.text.toLowerCase().search(wordToFilter) !== -1
-        );
+        return item.text.toLowerCase().search(wordToFilter) !== -1;
       });
       this.setState({ pendentesListFiltered });
     }
   }
 
   render() {
-    const {autorizadasListFiltered, pendentesListFiltered, recusadasList, canceladasList,} = this.state;
+    const {
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      recusadasList,
+      canceladasList
+    } = this.state;
 
     return (
       <div className="card mt-3">
@@ -80,11 +106,13 @@ export default class StatusSolicitacoes extends Component {
           </div>
           <div className="pb-3" />
           {autorizadasListFiltered && autorizadasListFiltered.length > 0 && (
-            <CardStatusDeSolicitacaoLargo
+            <CardListarSolicitacoes
               titulo={"Aprovadas"}
               solicitacoes={autorizadasListFiltered}
               tipo={"card-authorized"}
               icone={"fa-check"}
+              selecionarTodos={this.selecionarTodos}
+              onCheckClicked={this.onCheckClicked}
             />
           )}
 
@@ -114,9 +142,22 @@ export default class StatusSolicitacoes extends Component {
               icone={"fa-times-circle"}
             />
           )}
-
         </div>
       </div>
     );
   }
 }
+
+const StatusSolicitacoesForm = reduxForm({
+  form: "statusSolicitacoesForm",
+  enableReinitialize: true
+})(StatusSolicitacoes);
+
+const selector = formValueSelector("statusSolicitacoesForm");
+const mapStateToProps = state => {
+  return {
+    selecionar_todos: selector(state, "selecionar_todos")
+  };
+};
+
+export default connect(mapStateToProps)(StatusSolicitacoesForm);

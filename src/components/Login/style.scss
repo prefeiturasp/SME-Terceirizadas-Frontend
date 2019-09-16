@@ -61,6 +61,9 @@ a.hyperlink {
       font-size: 12px;
       color: $blue;
     }
+    span.text-terms {
+      padding-left: 2rem;
+    }
     .logo-prefeitura {
       text-align: center;
       @media screen and (max-height: 610px)  {
