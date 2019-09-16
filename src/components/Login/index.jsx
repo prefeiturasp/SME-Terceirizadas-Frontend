@@ -32,7 +32,7 @@ export class Login extends Component {
   };
 
   renderLogin() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div className="form">
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
@@ -65,6 +65,7 @@ export class Login extends Component {
             className="col-12"
             style={BUTTON_STYLE.GREEN}
             texto="Acessar"
+            disabled={pristine || submitting}
             type={BUTTON_TYPE.SUBMIT}
           />
           <Link

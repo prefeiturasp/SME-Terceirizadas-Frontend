@@ -190,7 +190,6 @@ class DashboardDRE extends Component {
   }
 
   changeFiltroPendencias(filtro) {
-    console.log(filtro);
     this.carregaResumosPendencias(filtro);
   }
 
