@@ -4,15 +4,11 @@ import {
 } from "./alteracaoDecardapio.service";
 
 import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREInclusaoAlimentacaoAvulsaPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREInclusaoAlimentacaoAvulsaLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREInclusaoAlimentacaoAvulsaRegular
+  getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa
 } from "./inclusaoDeAlimentacaoAvulsa.service";
 
 import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREInclusaoAlimentacaoContinuaPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREInclusaoAlimentacaoContinuaLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREInclusaoAlimentacaoContinuaRegular
+  getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua
 } from "./inclusaoDeAlimentacaoContinua.service";
 
 import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
@@ -139,27 +135,66 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   return resposta;
 };
 
-const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   filtro = "sem_filtro"
 ) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREInclusaoAlimentacaoAvulsaLimite,
-    getSolicitacoesPrioritario: getDREInclusaoAlimentacaoAvulsaPrioritario,
-    getSolicitacoesRegular: getDREInclusaoAlimentacaoAvulsaRegular
-  });
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
 };
 
-const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
+export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   filtro = "sem_filtro"
 ) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREInclusaoAlimentacaoContinuaLimite,
-    getSolicitacoesPrioritario: getDREInclusaoAlimentacaoContinuaPrioritario,
-    getSolicitacoesRegular: getDREInclusaoAlimentacaoContinuaRegular
-  });
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
 };
+
 
 export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
   dreUuid,
