@@ -12,10 +12,10 @@ import {
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
+import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -110,7 +110,7 @@ class Relatorio extends Component {
     return (
       <div>
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
-        <ModalRecusarSolicitacao
+        <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
         />

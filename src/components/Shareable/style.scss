@@ -327,12 +327,15 @@ div.caption-choices {
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-list label:not([aria-selected="true"]).select-item{
+.dropdown-content
+  .select-panel
+  .select-list
+  label:not([aria-selected="true"]).select-item {
   color: $blackInput !important;
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-item:not([aria-selected="true"]){
+.dropdown-content .select-panel .select-item:not([aria-selected="true"]) {
   color: $blackInput !important;
   font-size: 14px;
 }
@@ -367,4 +370,9 @@ div.caption-choices {
     border-bottom: 1px solid #c0c0c0;
     padding: 10px 0;
   }
+}
+.red-label {
+  font-size: 14px;
+  line-height: 16px;
+  color: $redAlert;
 }
