@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { LabelAndInput } from "../Shareable/labelAndInput/labelAndInput";
+import { required } from "../../helpers/fieldValidators";
+import { Botao } from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { Checkbox } from "../Shareable/Checkbox";
+import { Field, reduxForm } from "redux-form";
+import { InputText } from "../Shareable/Input/InputText";
+import { Link } from "react-router-dom";
 import "./style.scss";
-import "../Shareable/style.scss";
 
 export class Login extends Component {
   constructor(props) {
@@ -35,148 +37,165 @@ export class Login extends Component {
       <div className="form">
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
           <Field
-            component={LabelAndInput}
-            placeholder={"nome@sme.prefeitura.sp.gov.br"}
+            component={InputText}
+            esconderAsterisco
             label="E-mail"
             name="email"
+            placeholder={"nome@sme.prefeitura.sp.gov.br"}
+            required
             type="email"
-            cols="12 12 12 12"
             validate={[required]}
           />
-          <div className="form-group">
-            <Field
-              component={LabelAndInput}
-              placeholder={"******"}
-              label="Senha"
-              type="password"
-              name="password"
-              cols="12 12 12 12"
-              validate={required}
-            />
-            <p className="mt-2">
-              <a href="#teste" className="text-primary">
-                Esqueci minha senha
-              </a>
-            </p>
-          </div>
-          <BaseButton
-            type={ButtonType.SUBMIT}
-            style={ButtonStyle.Success}
-            label="Acessar"
-            disabled={pristine || submitting}
-            className="btn-block"
+          <Field
+            component={InputText}
+            esconderAsterisco
+            label="Senha"
+            name="password"
+            placeholder={"******"}
+            required
+            type="password"
+            validate={required}
           />
-          <p
+          <p className="mt-2">
+            <Link className="hyperlink" to="#">
+              Esqueci minha senha
+            </Link>
+          </p>
+          <Botao
+            className="col-12"
+            style={BUTTON_STYLE.GREEN}
+            texto="Acessar"
+            disabled={pristine || submitting}
+            type={BUTTON_TYPE.SUBMIT}
+          />
+          <Link
+            className="hyperlink text-center mt-3 d-block"
             onClick={() => this.setState({ mostrarCadastro: true })}
-            className="text-center text-primary c-pointer mt-3"
+            to="#"
           >
             Ainda não sou cadastrado
-          </p>
+          </Link>
         </form>
       </div>
     );
   }
 
   renderCadastro() {
-    const { handleSubmit, pristine, submitting } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <div className="form">
         <form onSubmit={handleSubmit(this.handleSubmit)}>
           <div className="row">
-            <Field
-              component={LabelAndInput}
-              placeholder={"nome@sme.prefeitura.sp.gov.br"}
-              label="E-mail"
-              name="email"
-              type="email"
-              cols="12 12 12 12"
-              validate={[required]}
-            />
+            <div className="col-12">
+              <Field
+                component={InputText}
+                placeholder={"nome@sme.prefeitura.sp.gov.br"}
+                label="E-mail"
+                name="email"
+                required
+                type="email"
+                validate={[required]}
+              />
+            </div>
           </div>
           <div className="row">
-            <Field
-              component={LabelAndInput}
-              placeholder={"Digite seu nome"}
-              label="Nome"
-              name="nome"
-              type="text"
-              cols="6 6 6 6"
-              validate={[required]}
-            />
-            <Field
-              component={LabelAndInput}
-              placeholder={"Digite seu sobrenome"}
-              label="Sobrenome"
-              name="sobrenome"
-              type="text"
-              cols="6 6 6 6"
-              validate={[required]}
-            />
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Nome"
+                name="nome"
+                placeholder={"Digite seu nome"}
+                required
+                type="text"
+                validate={[required]}
+              />
+            </div>
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Sobrenome"
+                name="sobrenome"
+                placeholder={"Digite seu sobrenome"}
+                required
+                type="text"
+                validate={[required]}
+              />
+            </div>
           </div>
           <div className="row">
-            <Field
-              component={LabelAndInput}
-              placeholder={"Digite o RF"}
-              label="Nº RF"
-              name="rf"
-              type="text"
-              cols="6 6 6 6"
-              validate={[required]}
-            />
-            <Field
-              component={LabelAndInput}
-              placeholder={"Digite o vínculo da função"}
-              label="Nº Vínculo"
-              name="vinculo"
-              type="text"
-              cols="6 6 6 6"
-              validate={[required]}
-            />
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Nº RF"
+                name="rf"
+                placeholder={"Digite o RF"}
+                required
+                type="text"
+                validate={[required]}
+              />
+            </div>
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Nº Vínculo"
+                name="vinculo"
+                placeholder={"Digite o vínculo da função"}
+                required
+                type="text"
+                validate={[required]}
+              />
+            </div>
           </div>
           <div className="row">
-            <Field
-              component={LabelAndInput}
-              placeholder={"******"}
-              label="Senha"
-              type="password"
-              name="senha"
-              cols="6 6 6 6"
-              validate={required}
-            />
-            <Field
-              component={LabelAndInput}
-              placeholder={"******"}
-              label="Confirme sua senha"
-              type="password"
-              name="confirmar_senha"
-              cols="6 6 6 6"
-              validate={required}
-            />
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Senha"
+                name="senha"
+                placeholder={"******"}
+                required
+                type="password"
+                validate={required}
+              />
+            </div>
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Confirme sua senha"
+                name="confirmar_senha"
+                placeholder={"******"}
+                required
+                type="password"
+                validate={required}
+              />
+            </div>
           </div>
           <p className="terms my-auto pt-2">Termos de uso</p>
-          <div className="col-12 pl-4 pt-2 pb-2">
-            <label htmlFor="check" className="checkbox-label">
-              <Field component={"input"} type="checkbox" name="termos" />
-              <span
+          <div className="row pl-3">
+            <div className="col-8 pl-4 pt-2">
+              <Field
+                component={Checkbox}
+                name="termos"
                 onClick={() => this.onTermosClicked()}
-                className="checkbox-custom"
-              />{" "}
-              Li e concordo com os termos de uso
-            </label>
-            <span
-              onClick={() => this.setState({ mostrarCadastro: false })}
-              className="text-primary c-pointer float-right"
-            >
-              Voltar
-            </span>
+                texto="Li e concordo com os termos de uso"
+              />
+            </div>
+            <div className="col-4">
+              <Link
+                className="hyperlink text-right mt-3 d-block"
+                onClick={() => this.setState({ mostrarCadastro: false })}
+                to="#"
+              >
+                Voltar
+              </Link>
+            </div>
           </div>
           <div className="pt-2">
-            <BaseButton
-              type={ButtonType.SUBMIT}
-              style={ButtonStyle.Success}
-              label="Cadastrar"
-              disabled={pristine || submitting}
-              className="btn-block"
+            <Botao
+              type={BUTTON_TYPE.SUBMIT}
+              style={BUTTON_STYLE.GREEN}
+              texto="Cadastrar"
+              className="col-12"
             />
           </div>
         </form>

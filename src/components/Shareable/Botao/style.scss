@@ -35,6 +35,7 @@ button.general-button {
       color: $blueButtonFont;
     }
     &:hover {
+      color: $white;
       background-color: $blueButtonBackground;
     }
     &:disabled {

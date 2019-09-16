@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Collapse } from "react-collapse";
 import { connect } from "react-redux";
+import { formValueSelector, Field, reduxForm } from "redux-form";
+import { Botao } from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
+import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
-import { Field, formValueSelector, reduxForm } from "redux-form";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
+import { Select } from "../../Shareable/Select";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";
@@ -242,17 +243,17 @@ class DashboardDRE extends Component {
               <TabelaHistoricoLotes lotes={lotesDRE} />
             </Collapse>
           </CardMatriculados>
-          <div className="card mt-3">
+          <div className="card card-shortcut-to-form mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold title-color">
+              <div className="card-title font-weight-bold">
                 Faça uma Solicitação Unificada
               </div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
               <Link to="/dre/solicitacao-unificada">
-                <BaseButton
-                  label="Solicitação Unificada"
-                  type={ButtonType.BUTTON}
-                  style={ButtonStyle.OutlinePrimary}
+                <Botao
+                  texto="Solicitação Unificada"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
                 />
               </Link>
             </div>
@@ -260,11 +261,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <span>
-                  <i className="fas fa-thumbtack" />
-                  Painel de Status de Solicitações
-                  <i className="fas fa-pen" />
-                </span>
+                <Link to="#">Painel de Status de Solicitações</Link>
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -351,20 +348,21 @@ class DashboardDRE extends Component {
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
                 <div className="row">
-                  <div className="col-3 mt-3">
-                    <i className="fas fa-lock" />
-                    Pendências
-                  </div>
+                  <div className="col-3 mt-3 color-black">Pendências</div>
                   <div className="offset-3 col-3 text-right my-auto">
-                    <LabelAndCombo
-                      onChange={this.changeFiltroPendencias}
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.changeFiltroPendencias(event.target.value)
+                      }
                       placeholder={"Filtro por"}
                       options={filtro_por}
                     />
                   </div>
                   <div className="col-3 text-right my-auto">
-                    <LabelAndCombo
-                      onChange={this.changeVisao}
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event => this.changeVisao(event.target.value)}
                       placeholder={"Visão por"}
                       options={vision_by}
                     />

@@ -21,8 +21,10 @@ textarea {
 .card-body {
   padding: 2rem !important;
 }
+
 .dashboard-card-title {
   input.input-search {
+    font-size: 14px;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -36,8 +38,69 @@ textarea {
       padding-right: 5px;
     }
   }
+  .color-black {
+    color: $blackInput;
+  }
   i.fa-search {
     font-size: 20px;
+  }
+}
+
+.checkbox-label {
+  color: $gray;
+  font-size: 14px;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    &:checked {
+      ~ .checkbox-custom {
+        background-color: $blueCheckAndRadio;
+        border-radius: 5px;
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+        border: 1px solid $blueCheckAndRadio;
+        &:after {
+          transform: rotate(45deg) scale(1);
+          opacity: 1;
+          left: 7px;
+          top: 2px;
+          width: 6px;
+          height: 12px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          background-color: transparent;
+          border-radius: 0;
+        }
+      }
+    }
+  }
+  .checkbox-custom {
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid $gray;
+    cursor: pointer;
+    &:after {
+      position: absolute;
+      content: "";
+      left: 12px;
+      top: 12px;
+      height: 0px;
+      width: 0px;
+      border-radius: 5px;
+      border: solid $blueCheckAndRadio;
+      border-width: 0 3px 3px 0;
+      transform: rotate(0deg) scale(0);
+      opacity: 1;
+    }
+    &.radio {
+      border-radius: 15px;
+    }
   }
 }
 
@@ -69,10 +132,8 @@ textarea {
 }
 
 .current-date {
-  font-size: 13px;
-  span {
-    color: #4c5862;
-  }
+  font-size: 10px;
+  color: $grayPlaceholder;
 }
 
 p.caption {
@@ -205,63 +266,6 @@ div.caption-choices {
   cursor: pointer;
 }
 
-.checkbox-label {
-  color: $gray;
-  input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    &:checked {
-      ~ .checkbox-custom {
-        background-color: $blueCheckAndRadio;
-        border-radius: 5px;
-        transform: rotate(0deg) scale(1);
-        opacity: 1;
-        border: 1px solid $blueCheckAndRadio;
-        &:after {
-          transform: rotate(45deg) scale(1);
-          opacity: 1;
-          left: 7px;
-          top: 2px;
-          width: 6px;
-          height: 12px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          background-color: transparent;
-          border-radius: 0;
-        }
-      }
-    }
-  }
-  .checkbox-custom {
-    position: absolute;
-    top: 10px;
-    left: 0px;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border-radius: 3px;
-    border: 1px solid $gray;
-    cursor: pointer;
-    &:after {
-      position: absolute;
-      content: "";
-      left: 12px;
-      top: 12px;
-      height: 0px;
-      width: 0px;
-      border-radius: 5px;
-      border: solid $blueCheckAndRadio;
-      border-width: 0 3px 3px 0;
-      transform: rotate(0deg) scale(0);
-      opacity: 1;
-    }
-    &.radio {
-      border-radius: 15px;
-    }
-  }
-}
-
 .btn-styled {
   font-weight: bold !important;
   font-size: 14px !important;
@@ -327,12 +331,15 @@ div.caption-choices {
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-list label:not([aria-selected="true"]).select-item{
+.dropdown-content
+  .select-panel
+  .select-list
+  label:not([aria-selected="true"]).select-item {
   color: $blackInput !important;
   font-size: 14px;
 }
 
-.dropdown-content .select-panel .select-item:not([aria-selected="true"]){
+.dropdown-content .select-panel .select-item:not([aria-selected="true"]) {
   color: $blackInput !important;
   font-size: 14px;
 }

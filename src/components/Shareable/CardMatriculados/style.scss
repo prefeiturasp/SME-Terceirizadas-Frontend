@@ -1,9 +1,11 @@
+@import "../../../styles/variables.scss";
+
 .card-body {
   &.card-enrolled {
     padding: 15px 35px !important;
     .title {
       font-size: 14px;
-      color: #686868;
+      color: $blackInput;
       .col-5 {
         margin-left: inherit;
       }
@@ -14,7 +16,7 @@
       justify-content: center;
       color: #686868;
       background-color: #e8e8e8;
-      border: 1px solid #a8a8a8;
+      border: 1px solid $grayLight;
       border-radius: 4px;
       padding: 10px 30px;
     }

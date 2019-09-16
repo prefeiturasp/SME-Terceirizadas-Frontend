@@ -21,9 +21,10 @@ export const CardStatusDeSolicitacao = props => {
         {loading && (
           <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
         )}
+        <span className="float-right my-auto">Data/Hora</span>
       </div>
       <hr />
-      {solicitations.slice(0, 3).map((solicitation, key) => {
+      {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
           <p className="data">
             {solicitation.text}
