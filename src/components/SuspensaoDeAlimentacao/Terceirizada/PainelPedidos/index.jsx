@@ -77,7 +77,7 @@ class PainelPedidos extends Component {
               <div className="row pt-3">
                 <div className="col-12">
                   <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos para tomar ciência"}
+                    titulo={"Solicitações para tomar ciência"}
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     totalSOlicitacoes={todasSolicitacoes}
                     pedidos={todasSolicitacoes}
