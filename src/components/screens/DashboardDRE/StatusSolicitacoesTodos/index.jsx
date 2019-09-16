@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../../Shareable/InputSearch";
+import { CardStatusDeSolicitacaoLargo } from "../../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
+import { InputSearch } from "../../../Shareable/InputSearch";
 import {
   getSolicitacoesAutorizadasPelaDRE,
   getSolicitacoesPendentesParaDRE
-} from "../../../services/painelDRE.service";
-import { meusDados as getMeusDados } from "../../../services/perfil.service";
-import { CardListarSolicitacoes } from "../../Shareable/CardListarSolicitacoes";
+} from "../../../../services/painelDRE.service";
+import { meusDados as getMeusDados } from "../../../../services/perfil.service";
 
-export class StatusSolicitacoes extends Component {
+export class StatusSolicitacoesTodos extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,11 +101,12 @@ export class StatusSolicitacoes extends Component {
             <InputSearch
               voltarLink="/dre/painel-de-controle"
               filterList={this.filterList}
+              esconderImprimir
             />
           </div>
           <div className="pb-3" />
           {autorizadasListFiltered && autorizadasListFiltered.length > 0 && (
-            <CardListarSolicitacoes
+            <CardStatusDeSolicitacaoLargo
               titulo={"Autorizadas"}
               solicitacoes={autorizadasListFiltered}
               tipo={"card-authorized"}
@@ -117,7 +117,7 @@ export class StatusSolicitacoes extends Component {
           )}
 
           {pendentesListFiltered && pendentesListFiltered.length > 0 && (
-            <CardListarSolicitacoes
+            <CardStatusDeSolicitacaoLargo
               titulo={"Pendente Aprovação"}
               solicitacoes={pendentesListFiltered}
               tipo={"card-pending"}
@@ -153,7 +153,7 @@ export class StatusSolicitacoes extends Component {
 const StatusSolicitacoesForm = reduxForm({
   form: "statusSolicitacoesForm",
   enableReinitialize: true
-})(StatusSolicitacoes);
+})(StatusSolicitacoesTodos);
 
 const selector = formValueSelector("statusSolicitacoesForm");
 const mapStateToProps = state => {

@@ -25,11 +25,13 @@ export const InputSearch = props => (
             type={BUTTON_TYPE.BUTTON}
           />
         </NavLink>
-        <Botao
-          icon={BUTTON_ICON.PRINT}
-          style={BUTTON_STYLE.BLUE}
-          type={BUTTON_TYPE.BUTTON}
-        />
+        {!props.esconderImprimir && (
+          <Botao
+            icon={BUTTON_ICON.PRINT}
+            style={BUTTON_STYLE.BLUE}
+            type={BUTTON_TYPE.BUTTON}
+          />
+        )}
       </div>
     </div>
   </div>

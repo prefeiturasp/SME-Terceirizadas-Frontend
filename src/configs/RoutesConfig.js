@@ -1,4 +1,5 @@
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
+import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import { Login } from "../components/Login";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
@@ -107,12 +108,17 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.DRE}/${constants.SOLICITACOES}`,
+    component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
+    exact: false
+  },
+  {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
     exact: false
   },
   {
-    path: `/${constants.DRE}/solicitacoes-pendentes`,
+    path: `/${constants.DRE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesDREPage,
     exact: false
   },
