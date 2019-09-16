@@ -44,8 +44,9 @@ export class CardPendenciaAprovacao extends Component {
               <span className="order">
                 {`${talvezPluralizar(
                   calcularNumeroDeEscolasUnicas(pedidos),
-                  "pedido"
+                  ''
                 )}`}
+                {pedidos.length === 1 ? 'solicitação' : 'solicitações'}
               </span>
             </div>
           </div>
