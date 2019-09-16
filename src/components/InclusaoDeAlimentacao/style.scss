@@ -36,3 +36,33 @@ h3 {
     background-color: #e4f1ff;
   }
 }
+
+section {
+  margin: 0.5em 0 1.5em 0;
+  grid-row-gap: 2em;
+
+  .grid_principal {
+    display: grid !important;
+    grid-template-columns: 69% 29%;
+    grid-column-gap: 2%;
+  }
+
+  .grid-motivo-continuo{
+    display: grid !important;
+    grid-template-columns: 28% 28% 38%;
+    grid-column-gap: 2%;
+  }
+
+  .display{
+    display: none;
+  }
+
+  .grid-outro-motivo {
+    display: grid;
+    grid-template-columns: 60% 40%;
+
+    div{
+      padding: 0 !important;
+    }
+  }
+}
