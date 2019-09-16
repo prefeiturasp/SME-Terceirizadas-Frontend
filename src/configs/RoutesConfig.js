@@ -92,6 +92,13 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.ESCOLA}/xxx/${
+      constants.RELATORIO
+    }`,
+    component: solicitacaoKitLanchePaginas.RelatorioEscola,
+    exact: true
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: InversaoDeDiaDeCardapioPage,
     exact: false
