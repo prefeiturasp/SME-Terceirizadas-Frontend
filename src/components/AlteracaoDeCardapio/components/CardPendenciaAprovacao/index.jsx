@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
-import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
+import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
 export class CardPendenciaAprovacao extends Component {
   constructor(props) {
@@ -32,13 +32,7 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const {
-      pedidos,
-      titulo,
-      tipoDeCard,
-      ultimaColunaLabel,
-      parametroURL
-    } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -48,10 +42,8 @@ export class CardPendenciaAprovacao extends Component {
             <div className={"order-box " + tipoDeCard}>
               <span className="number">{pedidos.length}</span>
               <span className="order">
-                {`${talvezPluralizar(
-                  calcularNumeroDeEscolasUnicas(pedidos),
-                  "pedido"
-                )}`}
+
+                {pedidos.length === 1 ? 'solicitação' : 'solicitações'}
               </span>
             </div>
           </div>
@@ -113,17 +105,20 @@ export class CardPendenciaAprovacao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
+                  const dataMaisProxima =
+                    pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
-                      to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
+                      to={`/${parametroURL}/${INCLUSAO_ALIMENTACAO}/relatorio?uuid=${
                         pedido.uuid
-                      }`}
+                      }&ehInclusaoContinua=${pedido.data_inicial !==
+                        undefined}`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial}</td>
+                        <td>{pedido.data_inicial || dataMaisProxima}</td>
                       </tr>
                     </Link>
                   );
