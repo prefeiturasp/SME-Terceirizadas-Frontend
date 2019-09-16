@@ -27,7 +27,8 @@ import {
   ALTERACAO_CARDAPIO,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
-  SOLICITACAO_KIT_LANCHE
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACOES
 } from "../../../configs/constants";
 import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service";
 class DashboardDRE extends Component {
@@ -261,7 +262,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <Link to="#">Painel de Status de Solicitações</Link>
+                <Link to={`/${DRE}/${SOLICITACOES}`}>Painel de Status de Solicitações</Link>
                 <span className="float-right">
                   <input
                     className="input-search"
