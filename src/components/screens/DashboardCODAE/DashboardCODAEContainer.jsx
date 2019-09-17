@@ -10,6 +10,7 @@ import {
 import { FILTRO, VENCIMENTO } from "./const";
 import DashboardCODAE from "./DashboardCODAE";
 import { ajustarFormaLotes, ajustarFormatoLog } from "./helper";
+import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
@@ -26,6 +27,11 @@ class DashboardCODAEContainer extends Component {
     solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
     let lotes = await getLotes();
     lotes = ajustarFormaLotes(lotes.results);
+
+    getSuspensoesDeAlimentacaoInformadas().then(response => {
+      let quantidade_suspensoes = response.length
+      this.setState({ quantidade_suspensoes })
+    })
 
     this.setState({
       totalAlunos,
@@ -47,6 +53,7 @@ class DashboardCODAEContainer extends Component {
       solicitacoesCanceladas: [],
       solicitacoesRevisao: [],
       totalAlunos: 0,
+      quantidade_suspensoes: null,
       lotes: [],
       loadingPainelSolicitacoes: true,
       vencimentoPara: [

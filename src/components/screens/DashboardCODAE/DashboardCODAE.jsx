@@ -67,7 +67,8 @@ class DashboardCODAE extends Component {
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
       vencimentoPara,
-      lotes
+      lotes,
+      quantidade_suspensoes
     } = this.props;
     const { collapsed, loadingPainelSolicitacoes } = this.state;
     return (
@@ -190,7 +191,7 @@ class DashboardCODAE extends Component {
               {this.state.dre ? (
                 <VisaoPorDRE {...this.props} />
               ) : (
-                <VisaoGeral filtro={this.state.filtro} />
+                <VisaoGeral filtro={this.state.filtro} quantidade_suspensoes={quantidade_suspensoes} />
               )}
             </div>
           </div>

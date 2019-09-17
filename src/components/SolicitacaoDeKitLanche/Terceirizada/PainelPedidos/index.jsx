@@ -108,7 +108,7 @@ class PainelPedidos extends Component {
                 <div className="col-12">
                   <CardPendenciaAprovacao
                     titulo={
-                      "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
+                      "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                     }
                     tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
                     pedidos={pedidosPrioritarios}
@@ -121,7 +121,7 @@ class PainelPedidos extends Component {
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenciaAprovacao
-                      titulo={"Pedidos no prazo limite"}
+                      titulo={"Solicitações no prazo limite"}
                       tipoDeCard={TIPO_CARD_ENUM.LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Solicitação"}
@@ -134,7 +134,7 @@ class PainelPedidos extends Component {
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenciaAprovacao
-                      titulo={"Pedidos no prazo regular"}
+                      titulo={"Solicitações no prazo regular"}
                       tipoDeCard={TIPO_CARD_ENUM.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Solicitação"}

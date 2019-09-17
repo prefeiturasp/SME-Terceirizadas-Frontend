@@ -60,10 +60,7 @@ export class CardPendenciaAprovacao extends Component {
             <div className={"order-box " + tipoDeCard}>
               <span className="number">{pedidos.length}</span>
               <span className="order">
-                {`${talvezPluralizar(
-                  calcularNumeroDeDREsUnicas(pedidos),
-                  "pedido"
-                )}`}
+                {pedidos.length === 1 ? "solicitação" : "solicitações"}
               </span>
             </div>
           </div>

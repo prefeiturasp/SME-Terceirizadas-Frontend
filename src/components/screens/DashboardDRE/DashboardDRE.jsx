@@ -205,7 +205,8 @@ class DashboardDRE extends Component {
       vision_by,
       canceladasList,
       recusadasList,
-      filtro_por
+      filtro_por,
+      quantidade_suspensoes
     } = this.props;
 
     const {
@@ -475,18 +476,8 @@ class DashboardDRE extends Component {
                       <CardPendencia
                         priorityOrdersOnly={true}
                         cardTitle={"Suspensão de Refeição"}
-                        totalOfOrders={
-                          resumoPendenciasDRESuspensaoDeAlimentacao.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDRESuspensaoDeAlimentacao.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDRESuspensaoDeAlimentacao.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDRESuspensaoDeAlimentacao.regular
-                        }
+                        totalOfOrders={quantidade_suspensoes}
+                        priorityOrders={quantidade_suspensoes}
                         loading={loadingSuspensaoAlimentacao}
                       />
                     </div>

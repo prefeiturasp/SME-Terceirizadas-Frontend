@@ -595,17 +595,40 @@ class InclusaoDeAlimentacao extends Component {
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão
                 </div>
-                {inclusoes.map((dia_motivo, key) => {
+                {inclusoes.map((diaMotivo, indice) => {
                   return (
-                    <FormSection name={`inclusoes_${dia_motivo.id}`}>
-                      <div className="form-row">
-                        {!ehMotivoContinuo && (
-                          <div className="form-group col-sm-3">
+                    <FormSection name={`inclusoes_${diaMotivo.id}`}>
+                      <section>
+                        <div className="grid_principal">
+                          <div>
+                            <Field
+                              component={Select}
+                              name="motivo"
+                              label="Motivo"
+                              onChange={event =>
+                                this.handleField(
+                                  "motivo",
+                                  event.target.value,
+                                  diaMotivo.id
+                                )
+                              }
+                              options={
+                                inclusoes.length > 1
+                                  ? agregarDefault(motivos_simples)
+                                  : agregarDefault(motivos_simples).concat(
+                                      motivos_continuos
+                                    )
+                              }
+                              required
+                              validate={required}
+                            />
+                          </div>
+                          {!ehMotivoContinuo && ehMotivoContinuo !== null && (
                             <Field
                               component={InputComData}
                               name="data"
                               onChange={value =>
-                                this.handleField("data", value, dia_motivo.id)
+                                this.handleField("data", value, diaMotivo.id)
                               }
                               onBlur={event =>
                                 this.onDataChanged(event.target.value)
@@ -615,41 +638,10 @@ class InclusaoDeAlimentacao extends Component {
                               required
                               validate={required}
                             />
-                          </div>
-                        )}
-                        <div className="form-group col-sm-8 p-0">
-                          <Field
-                            component={Select}
-                            name="motivo"
-                            label="Motivo"
-                            onChange={event =>
-                              this.handleField(
-                                "motivo",
-                                event.target.value,
-                                dia_motivo.id
-                              )
-                            }
-                            options={
-                              inclusoes.length > 1
-                                ? agregarDefault(motivos_simples)
-                                : agregarDefault(motivos_simples).concat(
-                                    motivos_continuos
-                                  )
-                            }
-                            required
-                            validate={required}
-                          />
+                          )}
                         </div>
-                      </div>
-                      {dia_motivo.outroMotivo && (
-                        <div className="form-row">
-                          <div
-                            className={
-                              !dia_motivo.motivoContinuo
-                                ? "form-group col-sm-8 offset-sm-3"
-                                : "form-group col-sm-8 p-0"
-                            }
-                          >
+                        {diaMotivo.outroMotivo && (
+                          <div className="grid-outro-motivo pb-2">
                             <Field
                               component={LabelAndInput}
                               label="Qual o motivo?"
@@ -657,26 +649,29 @@ class InclusaoDeAlimentacao extends Component {
                                 this.handleField(
                                   "outro_motivo",
                                   event,
-                                  dia_motivo.id
+                                  diaMotivo.id
                                 )
                               }
                               name="outro_motivo"
-                              className="form-control"
                               validate={required}
                             />
                           </div>
-                        </div>
-                      )}
-                      {ehMotivoContinuo && (
-                        <div className="form-row">
-                          <div className="form-group col-sm-3">
+                        )}
+                        <div
+                          className={
+                            ehMotivoContinuo
+                              ? "grid-motivo-continuo"
+                              : "display"
+                          }
+                        >
+                          <div>
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
                                 this.handleField(
                                   "data_inicial",
                                   value,
-                                  dia_motivo.id
+                                  diaMotivo.id
                                 )
                               }
                               onBlur={event =>
@@ -688,14 +683,14 @@ class InclusaoDeAlimentacao extends Component {
                               minDate={proximos_dois_dias_uteis}
                             />
                           </div>
-                          <div className="form-group col-sm-3">
+                          <div>
                             <Field
                               component={LabelAndDate}
                               onChange={value =>
                                 this.handleField(
                                   "data_final",
                                   value,
-                                  dia_motivo.id
+                                  diaMotivo.id
                                 )
                               }
                               minDate={getDataObj(inclusoes[0].data_inicial)}
@@ -705,21 +700,23 @@ class InclusaoDeAlimentacao extends Component {
                               validate={required}
                             />
                           </div>
-                          <Field
-                            component={Weekly}
-                            name="dias_semana"
-                            onChange={value =>
-                              this.handleField(
-                                "dias_semana",
-                                value,
-                                dia_motivo.id
-                              )
-                            }
-                            classNameArgs="form-group col-sm-4"
-                            label="Repetir"
-                          />
+                          <div>
+                            <Field
+                              component={Weekly}
+                              name="dias_semana"
+                              onChange={value =>
+                                this.handleField(
+                                  "dias_semana",
+                                  value,
+                                  diaMotivo.id
+                                )
+                              }
+                              classNameArgs="form-group col-sm-4"
+                              label="Repetir"
+                            />
+                          </div>
                         </div>
-                      )}
+                      </section>
                     </FormSection>
                   );
                 })}
