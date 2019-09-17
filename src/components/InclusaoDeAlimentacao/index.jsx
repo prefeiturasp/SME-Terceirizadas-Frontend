@@ -1,9 +1,10 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
+import { InputText } from "../Shareable/Input/InputText";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   minValue,
@@ -32,15 +33,11 @@ import {
   getInclusoesContinuasSalvas,
   inicioPedidoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import Botao from "../Shareable/Botao";
+import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import BaseButton, { ButtonStyle } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-import {
-  LabelAndDate,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
+import { LabelAndInput } from "../Shareable/labelAndInput/labelAndInput";
 import { InputComData } from "../Shareable/DatePicker";
 import Weekly from "../Shareable/Weekly/Weekly";
 import {
@@ -285,7 +282,9 @@ class InclusaoDeAlimentacao extends Component {
           {
             id: 0,
             motivo: inclusaoDeAlimentacao.motivo.uuid,
-            outroMotivo: inclusaoDeAlimentacao.outro_motivo !== null,
+            outroMotivo:
+              inclusaoDeAlimentacao.outro_motivo !== null &&
+              inclusaoDeAlimentacao.outro_motivo !== "",
             motivoContinuo:
               inclusaoDeAlimentacao.data_inicial &&
               inclusaoDeAlimentacao.data_final,
@@ -588,9 +587,9 @@ class InclusaoDeAlimentacao extends Component {
               </div>
             )}
             <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <h3 className="font-weight-bold">{title}</h3>
+              <p className="page-title font-weight-bold">{title}</p>
             </div>
-            <div className="card mt-3">
+            <div className="card food-inclusion mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão
@@ -643,7 +642,7 @@ class InclusaoDeAlimentacao extends Component {
                         {diaMotivo.outroMotivo && (
                           <div className="grid-outro-motivo pb-2">
                             <Field
-                              component={LabelAndInput}
+                              component={InputText}
                               label="Qual o motivo?"
                               onChange={event =>
                                 this.handleField(
@@ -653,20 +652,15 @@ class InclusaoDeAlimentacao extends Component {
                                 )
                               }
                               name="outro_motivo"
+                              required
                               validate={required}
                             />
                           </div>
                         )}
-                        <div
-                          className={
-                            ehMotivoContinuo
-                              ? "grid-motivo-continuo"
-                              : "display"
-                          }
-                        >
-                          <div>
+                        {ehMotivoContinuo && (
+                          <div className={"grid-motivo-continuo"}>
                             <Field
-                              component={LabelAndDate}
+                              component={InputComData}
                               onChange={value =>
                                 this.handleField(
                                   "data_inicial",
@@ -679,66 +673,70 @@ class InclusaoDeAlimentacao extends Component {
                               }
                               name="data_inicial"
                               label="De"
+                              required
                               validate={required}
                               minDate={proximos_dois_dias_uteis}
                             />
+                            <div>
+                              <Field
+                                component={InputComData}
+                                onChange={value =>
+                                  this.handleField(
+                                    "data_final",
+                                    value,
+                                    diaMotivo.id
+                                  )
+                                }
+                                minDate={getDataObj(inclusoes[0].data_inicial)}
+                                disabled={!inclusoes[0].data_inicial}
+                                name="data_final"
+                                label="Até"
+                                required
+                                validate={required}
+                              />
+                            </div>
+                            <div>
+                              <Field
+                                component={Weekly}
+                                name="dias_semana"
+                                onChange={value =>
+                                  this.handleField(
+                                    "dias_semana",
+                                    value,
+                                    diaMotivo.id
+                                  )
+                                }
+                                required
+                                className="form-group col-sm-4"
+                                label="Repetir"
+                              />
+                            </div>
                           </div>
-                          <div>
-                            <Field
-                              component={LabelAndDate}
-                              onChange={value =>
-                                this.handleField(
-                                  "data_final",
-                                  value,
-                                  diaMotivo.id
-                                )
-                              }
-                              minDate={getDataObj(inclusoes[0].data_inicial)}
-                              disabled={!inclusoes[0].data_inicial}
-                              name="data_final"
-                              label="Até"
-                              validate={required}
-                            />
-                          </div>
-                          <div>
-                            <Field
-                              component={Weekly}
-                              name="dias_semana"
-                              onChange={value =>
-                                this.handleField(
-                                  "dias_semana",
-                                  value,
-                                  diaMotivo.id
-                                )
-                              }
-                              classNameArgs="form-group col-sm-4"
-                              label="Repetir"
-                            />
-                          </div>
-                        </div>
+                        )}
                       </section>
                     </FormSection>
                   );
                 })}
                 {!ehMotivoContinuo && (
-                  <BaseButton
-                    label="Adicionar dia"
+                  <Botao
                     className="col-sm-3"
+                    texto="Adicionar dia"
                     onClick={() => this.adicionarDia()}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
                   />
                 )}
                 <div className="row table-titles">
                   <div className="col-3">Período</div>
-                  <div className="col-6">Tipo de Alimentação</div>
-                  <div className="col-3">Nº de Alunos</div>
+                  <div className="col-6 type-food">Tipo de Alimentação</div>
+                  <div className="col-3 n-students">Nº de Alunos</div>
                 </div>
                 {periodos.map((periodo, indice) => {
                   return (
                     <FormSection name={`quantidades_periodo_${periodo.nome}`}>
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
-                        <div className="form-check col-md-3 mr-4 ml-4">
+                        <div className="form-check col-md-3 mr-4">
                           <div
                             className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
                           >
@@ -792,7 +790,7 @@ class InclusaoDeAlimentacao extends Component {
                         </div>
                         <div className="form-group col-md-2">
                           <Field
-                            component={LabelAndInput}
+                            component={InputText}
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
@@ -803,6 +801,7 @@ class InclusaoDeAlimentacao extends Component {
                             name={`numero_alunos`}
                             min="0"
                             className="form-control"
+                            required={validacaoPeriodos[indice].checado}
                             validate={
                               validacaoPeriodos[indice].checado && [
                                 required,
