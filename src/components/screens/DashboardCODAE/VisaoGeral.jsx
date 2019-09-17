@@ -115,6 +115,7 @@ class VisaoGeral extends Component {
       loadingAlteracao,
       loadingInclusao
     } = this.state;
+    const { quantidade_suspensoes } = this.props;
     return (
       <div>
         <div className="row">
@@ -186,8 +187,8 @@ class VisaoGeral extends Component {
             <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
               <CardPendencia
                 cardTitle={"Suspensão de Refeição"}
-                totalOfOrders={resumoSuspensoesCardapio.total}
-                priorityOrders={resumoSuspensoesCardapio.informados}
+                totalOfOrders={quantidade_suspensoes}
+                priorityOrders={quantidade_suspensoes}
                 priorityOrdersOnly={true}
                 loading={loadingSuspensao}
               />
