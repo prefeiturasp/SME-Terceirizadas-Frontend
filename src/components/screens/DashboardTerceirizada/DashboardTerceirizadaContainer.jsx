@@ -58,7 +58,7 @@ class DashboardTerceirizadaContainer extends Component {
 
   componentDidMount(){
     getSuspensoesDeAlimentacaoInformadas().then(response => {
-      let quantidade_suspensoes = response.count
+      let quantidade_suspensoes = response.length
       this.setState({ quantidade_suspensoes })
     })
   }

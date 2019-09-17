@@ -56,6 +56,7 @@ class DashboardTerceirizada extends Component {
       vision_by,
       quantidade_suspensoes
     } = this.props;
+    console.log(quantidade_suspensoes)
     const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>

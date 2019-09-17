@@ -3,6 +3,7 @@ import DashboardDRE from "./DashboardDRE";
 import { getSolicitacoesAutorizadasPelaDRE, getSolicitacoesPendentesParaDRE } from "../../../services/painelDRE.service";
 import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service"
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 
 class DashboardDREContainer extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class DashboardDREContainer extends Component {
       loadingPendentes: true,
       solicitations: [],
       lotesDRE: [],
+      quantidade_suspensoes: null,
       vision_by: [
         {
           nome: "Tipo de Solicitação",
@@ -56,6 +58,12 @@ class DashboardDREContainer extends Component {
     const pendentes = await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid)
     const minhaDRE = await getDiretoriaregionalDetalhe(meusDados.diretorias_regionais[0].uuid)
     const lotesDRE = (await minhaDRE).data.lotes
+
+
+    getSuspensoesDeAlimentacaoInformadas().then(response => {
+      let quantidade_suspensoes = response.length
+      this.setState({ quantidade_suspensoes })
+    })
 
     this.setState({
       autorizadasList:autorizadas.results,
