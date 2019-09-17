@@ -6,7 +6,6 @@ import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
-  minValue,
   required,
   naoPodeSerZero
 } from "../../helpers/fieldValidators";

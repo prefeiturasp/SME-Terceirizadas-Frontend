@@ -6,7 +6,6 @@ import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
 import {
   LabelAndDate,
   LabelAndTextArea,
-  LabelAndCombo,
   LabelAndInput
 } from "../Shareable/labelAndInput/labelAndInput";
 import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
@@ -586,7 +585,6 @@ class SolicitacaoUnificada extends Component {
       schoolsTotal,
       unifiedSolicitationList,
       collapsed,
-      outroMotivo
     } = this.state;
     return (
       <div className="unified-solicitation">

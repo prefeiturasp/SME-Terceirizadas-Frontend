@@ -80,30 +80,7 @@ export const getSolicitacoesPendentesParaDRE = (
     });
 };
 
-const getResumoPendenciasDRE = async ({
-  filtro,
-  getSolicitacoesLimite,
-  getSolicitacoesPrioritario,
-  getSolicitacoesRegular
-}) => {
-  let resposta = {
-    total: 0,
-    prioritario: 0,
-    limite: 0,
-    regular: 0
-  };
 
-  const pedidosLimite = await getSolicitacoesLimite(filtro);
-  const pedidosPrioritarios = await getSolicitacoesPrioritario(filtro);
-  const pedidosRegular = await getSolicitacoesRegular(filtro);
-
-  resposta.limite = pedidosLimite ? pedidosLimite.count : 0;
-  resposta.prioritario = pedidosPrioritarios ? pedidosPrioritarios.count : 0;
-  resposta.regular = pedidosRegular ? pedidosRegular.count : 0;
-  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
-
-  return resposta;
-};
 
 export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   filtro = "sem_filtro"

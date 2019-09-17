@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
-import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoUnificada from ".";
 
 class SolicitacaoUnificadaContainer extends Component {
