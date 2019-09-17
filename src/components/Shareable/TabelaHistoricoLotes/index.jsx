@@ -16,7 +16,9 @@ export const TabelaHistoricoLotes = props => {
             return (
               <tr>
                 <td>
-                  <Link to={"#"}>{lote.nome}</Link>
+                  <Link to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}>
+                    {lote.nome}
+                  </Link>
                 </td>
                 <td>{lote && lote.tipo_gestao && lote.tipo_gestao.nome}</td>
               </tr>

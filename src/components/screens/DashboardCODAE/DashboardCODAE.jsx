@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
+import { Link } from "react-router-dom";
 import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -14,6 +15,7 @@ import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
 import { FILTRO } from "./const";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
+import Select from "../../Shareable/Select";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -87,11 +89,9 @@ class DashboardCODAE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <span>
-                  <i className="fas fa-thumbtack" />
+                <Link to={`/${CODAE}/${SOLICITACOES}`}>
                   Painel de Status de Solicitações
-                  <i className="fas fa-pen" />
-                </span>
+                </Link>
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -171,27 +171,40 @@ class DashboardCODAE extends Component {
               </div>
             </div>
           </div>
-
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <i className="fas fa-lock" />
-                Pendências
-                <span className="float-right">
-                  <Field
-                    component={LabelAndCombo}
-                    onChange={filtro => this.onVencimentoPara(filtro)}
-                    placeholder={"Vencimento para"}
-                    options={vencimentoPara}
-                  />
-                </span>
+                <div className="row">
+                  <div className="col-3 mt-3 color-black">Pendências</div>
+                  <div className="offset-3 col-3 text-right my-auto">
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.onVencimentoPara(event.target.value)
+                      }
+                      placeholder={"Vencimento para"}
+                      options={vencimentoPara}
+                    />
+                  </div>
+                  <div className="col-3 text-right my-auto">
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event => this.changeVisao(event.target.value)}
+                      placeholder={"Visão por"}
+                      options={vencimentoPara}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="pt-3" />
 
               {this.state.dre ? (
                 <VisaoPorDRE {...this.props} />
               ) : (
-                <VisaoGeral filtro={this.state.filtro} quantidade_suspensoes={quantidade_suspensoes} />
+                <VisaoGeral
+                  filtro={this.state.filtro}
+                  quantidade_suspensoes={quantidade_suspensoes}
+                />
               )}
             </div>
           </div>
