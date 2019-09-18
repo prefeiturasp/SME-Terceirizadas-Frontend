@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
-import { Collapse } from "react-collapse";
-import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
+import { Collapse } from "react-collapse";
+import { Link } from "react-router-dom";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import "./style.scss";
 import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
@@ -32,21 +32,23 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
+    const {
+      pedidos,
+      titulo,
+      tipoDeCard,
+      ultimaColunaLabel,
+      parametroURL
+    } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
-      <div className="card card-pendency-approval">
+      <div className="card card-pendency-approval food-inclusion">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
         <div className="row">
           <div className="col-2">
             <div className={"order-box " + tipoDeCard}>
               <span className="number">{pedidos.length}</span>
               <span className="order">
-                {`${talvezPluralizar(
-                  calcularNumeroDeEscolasUnicas(pedidos),
-                  ''
-                )}`}
-                {pedidos.length === 1 ? 'solicitação' : 'solicitações'}
+                {pedidos.length === 1 ? "solicitação" : "solicitações"}
               </span>
             </div>
           </div>
@@ -73,15 +75,9 @@ export class CardPendenciaAprovacao extends Component {
           )}
           <div className="col-1">
             {pedidos.length > 0 && (
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={18}
-                padding={0}
-                lineHeight={3}
-                lineSpacing={3}
-                className="float-right"
-                active={!collapsed}
+                ativo={!collapsed}
               />
             )}
           </div>

@@ -10,7 +10,7 @@ const atual = {
 };
 
 export const StatusSolicitacoesTotalPage = () => (
-  <Page titulo={atual.titulo}>
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <StatusSolicitacoesTodos showPendentes showAutorizadas />
   </Page>

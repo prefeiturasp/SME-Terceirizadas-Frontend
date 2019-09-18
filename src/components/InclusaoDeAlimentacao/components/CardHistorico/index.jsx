@@ -2,24 +2,24 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Stand } from "react-burgers";
-import { Link } from "react-router-dom";
-import BaseButton, {
-  ButtonStyle,
-  ButtonType
-} from "../../../Shareable/button";
+import { Redirect } from "react-router-dom";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
+import { INCLUSAO_ALIMENTACAO, RELATORIO } from "../../../../configs/constants";
+import Botao from "../../../Shareable/Botao";
 import {
-  INCLUSAO_ALIMENTACAO,
-  RELATORIO
-} from "../../../../configs/constants";
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 
 export class CardHistorico extends Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true,
+      redirect: false,
       pedidos: []
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
@@ -47,8 +47,32 @@ export class CardHistorico extends Component {
     });
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
+
+  setRedirect() {
+    this.setState({ redirect: true });
+  }
+
+  redirectTo(pedido) {
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={`/${
+            this.props.parametroURL
+          }/${INCLUSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
+            pedido.uuid
+          }&ehInclusaoContinua=${pedido.data_inicial !== undefined}`}
+        />
+      );
+    }
+  }
+
   render() {
-    const { titulo, ultimaColunaLabel, handleSubmit, parametroURL } = this.props;
+    const {
+      titulo,
+      ultimaColunaLabel,
+      handleSubmit,
+      parametroURL
+    } = this.props;
     const { collapsed, pedidos } = this.state;
     return (
       <div className="card mt-3">
@@ -59,13 +83,9 @@ export class CardHistorico extends Component {
               {titulo}
             </div>
             <div className="pl-5 col-1">
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={30}
-                padding={0}
-                lineSpacing={5}
-                active={!collapsed}
+                ativo={!collapsed}
               />
             </div>
           </div>
@@ -74,8 +94,11 @@ export class CardHistorico extends Component {
           <div className="card-body">
             <form onSubmit={handleSubmit}>
               <div className="row">
-                <div className="col-12 select-all">
-                  <label htmlFor="selecionar_todos" className="checkbox-label">
+                <div className="col-12 select-all historic">
+                  <label
+                    htmlFor="selecionar_todos"
+                    className="checkbox-label small"
+                  >
                     <Field
                       component={"input"}
                       type="checkbox"
@@ -83,20 +106,17 @@ export class CardHistorico extends Component {
                     />
                     <span
                       onClick={() => this.selecionarTodos()}
-                      className="checkbox-custom"
+                      className="checkbox-custom small"
                     />
                     Selecionar todos
                   </label>
-                  <div className="float-right">
-                    <BaseButton
-                      label="Imprimir"
-                      icon="print"
-                      type={ButtonType.BUTTON}
-                      title="Imprimir solicitações selecionadas"
-                      onClick={this.handleClickSubmit}
-                      style={ButtonStyle.OutlinePrimary}
-                    />
-                  </div>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    titulo="imprimir"
+                    style={BUTTON_STYLE.BLUE}
+                    icon={BUTTON_ICON.PRINT}
+                    className="float-right"
+                  />
                 </div>
               </div>
               <div className="pb-3" />
@@ -112,42 +132,45 @@ export class CardHistorico extends Component {
                   {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <Link
-                          to={`/${parametroURL}/${INCLUSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
-                            pedido.uuid
-                          }&ehInclusaoContinua=${pedido.data_inicial !== undefined}`}
-                        >
-                          <tr className="row">
-                            <td className="td-check col-4">
-                              <label
-                                htmlFor={`check_${key}`}
-                                className="checkbox-label"
-                              >
-                                <Field
-                                  component={"input"}
-                                  type="checkbox"
-                                  name={`check_${key}`}
-                                />
-                                <span
-                                  onClick={() => this.onCheckClicked(key)}
-                                  className="checkbox-custom"
-                                />
-                              </label>
+                        <tr className="row c-pointer">
+                          {this.redirectTo(pedido)}
+                          <td className="td-check col-4">
+                            <label
+                              htmlFor={`check_${key}`}
+                              className="checkbox-label small report-line"
+                            >
+                              <Field
+                                component={"input"}
+                                type="checkbox"
+                                name={`check_${key}`}
+                              />
+                              <span
+                                onClick={() => this.onCheckClicked(key)}
+                                className="checkbox-custom small report-line"
+                              />
+                            </label>
+                            <span onClick={() => this.setRedirect()}>
                               {pedido.id_externo}
-                            </td>
-                            <td className="col-4">{pedido.escola.nome}</td>
-                            <td className="col-4">
-                              {pedido.data_inicial
-                                ? `${pedido.data_inicial} a ${
-                                    pedido.data_final
-                                  }`
-                                : stringSeparadaPorVirgulas(
-                                    pedido.inclusoes,
-                                    "data"
-                                  )}
-                            </td>
-                          </tr>
-                        </Link>
+                            </span>
+                          </td>
+                          <td
+                            onClick={() => this.setRedirect()}
+                            className="col-4"
+                          >
+                            {pedido.escola.nome}
+                          </td>
+                          <td
+                            onClick={() => this.setRedirect()}
+                            className="col-4"
+                          >
+                            {pedido.data_inicial
+                              ? `${pedido.data_inicial} a ${pedido.data_final}`
+                              : stringSeparadaPorVirgulas(
+                                  pedido.inclusoes,
+                                  "data"
+                                )}
+                          </td>
+                        </tr>
                       );
                     })}
                 </tbody>
