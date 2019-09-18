@@ -3,26 +3,20 @@ import moment from "moment";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
+import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
+import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  CODAEAprovaPedidoDRE,
-  getSolicitacaoUnificada
-} from "../../../../services/solicitacaoUnificada.service";
 import { meusDados } from "../../../../services/perfil.service";
+import { CODAEAprovaPedidoDRE, getSolicitacaoUnificada } from "../../../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import "../style.scss";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+// import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
-import TabelaKits from "./TabelaKits";
 import "./style.scss";
-import {
-  CODAE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
-} from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import TabelaKits from "./TabelaKits";
 
 class Relatorio extends Component {
   constructor(props) {

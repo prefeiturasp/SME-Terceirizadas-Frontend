@@ -7,6 +7,9 @@ export {
   RelatorioPage as RelatorioDRE
 } from "../../pages/DRE/SolicitacaoDeKitLanche/RelatorioPage";
 
+export {
+  RelatorioPage as RelatorioDREUnificada
+} from "../../pages/DRE/SolicitacaoUnificada/RelatorioPage";
 // CODAE
 
 export {
