@@ -1,8 +1,8 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
+import { FLUXO, PEDIDOS } from "./contants";
 
 export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
-
 export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa`;
 
 const authToken = {
@@ -35,7 +35,7 @@ export const solicitarKitLanche = async values => {
     method: "POST",
     body: JSON.stringify(values)
   };
-  return await fetch(`${API_URL}/solicitacoes-kit-lanche-avulsa/`, OBJ_REQUEST)
+  return await fetch(`${URL_SOLICITACOES_AVULSAS}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -65,21 +65,6 @@ export const registroAtualizaKitLanche = (payload, uuid) => {
     })
     .catch(error => {
       return error.json();
-    });
-};
-
-export const solicitarKitsLanche = async values => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "POST",
-    body: JSON.stringify({ ids: values })
-  };
-  return await fetch(`${URL_SOLICITAR}/solicitacoes/`, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => {
-      console.log("Salvar Kit Lanche: ", error);
     });
 };
 
@@ -119,7 +104,7 @@ export const removeKitLanche = async uuid => {
 };
 
 export const inicioPedido = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/inicio-pedido/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -144,7 +129,7 @@ export const getSolicitacoesKitLancheApi = async () => {
   };
 
   return await fetch(
-    `${URL_SOLICITACOES_AVULSAS}/minhas-solicitacoes/`,
+    `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.MEUS}/`,
     OBJ_REQUEST
   )
     .then(response => {
@@ -187,7 +172,7 @@ export const kitLanches = async () => {
 };
 
 export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-codae/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -202,7 +187,7 @@ export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-diretoria-regional/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.DRE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -217,7 +202,8 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosDeKitLancheAprovados = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-diretoria-regional/`;
+  //TODO TIRAR
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -232,7 +218,8 @@ export const getDiretoriaRegionalPedidosDeKitLancheAprovados = () => {
 };
 
 export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-reprovados-diretoria-regional/`;
+  //TODO: TIRAR
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -247,7 +234,7 @@ export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
 };
 
 export const getCodaePedidosDeKitLanche = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-codae/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -262,7 +249,8 @@ export const getCodaePedidosDeKitLanche = filtroAplicado => {
 };
 
 export const getCodaePedidosDeKitLancheAprovados = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-codae/`;
+  //TODO: tirar
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -277,7 +265,8 @@ export const getCodaePedidosDeKitLancheAprovados = () => {
 };
 
 export const getCodaePedidosDeKitLancheReprovados = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-reprovados-codae/`;
+  //TODO: tirar
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -292,7 +281,8 @@ export const getCodaePedidosDeKitLancheReprovados = () => {
 };
 
 export const getDrePedidosDeKitLancheAprovados = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-dre/`;
+  //TODO: tirar
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-dre/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -307,7 +297,8 @@ export const getDrePedidosDeKitLancheAprovados = () => {
 };
 
 export const getPedidosDeKitLancheAprovadosTerceirizada = () => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-aprovados-terceirizadas/`;
+  //TODO tirar
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-terceirizadas/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -321,9 +312,10 @@ export const getPedidosDeKitLancheAprovadosTerceirizada = () => {
     });
 };
 
-
 export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/pedidos-terceirizadas/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -338,7 +330,7 @@ export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
 };
 
 export const getDetalheKitLancheAvulsa = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -353,7 +345,7 @@ export const getDetalheKitLancheAvulsa = uuid => {
 };
 
 export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/diretoria-regional-aprova-pedido/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH"
@@ -373,7 +365,7 @@ export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
 };
 
 export const aprovaDeKitLancheAvulsoCodae = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/codae-aprova-pedido/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH"
@@ -393,7 +385,9 @@ export const aprovaDeKitLancheAvulsoCodae = uuid => {
 };
 
 export const aprovaDeKitLancheAvulsoTerceirizadas = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/terceirizada-toma-ciencia/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${
+    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
+  }/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH"
