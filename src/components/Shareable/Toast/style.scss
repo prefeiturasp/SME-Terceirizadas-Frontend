@@ -1,5 +1,9 @@
 @import "../../../styles/variables.scss";
 
+* {
+  font-family: Roboto;
+}
+
 .Toastify__toast-container--top-center {
   font-weight: 500;
   font-family: Roboto;
