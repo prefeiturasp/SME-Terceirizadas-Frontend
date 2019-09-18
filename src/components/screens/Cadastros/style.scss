@@ -498,13 +498,17 @@ section {
   margin-top: 1em;
 }
 
+* {
+  font-family: Roboto;
+}
+
 .modal-cadastro-edital {
   margin: 0 1em;
   display: grid;
 
   header {
     color: #686868;
-    font-family: Roboto;
+    font-family: Roboto !important;
     font-size: 14px;
     font-weight: bold;
   }
@@ -515,7 +519,7 @@ section {
     font-size: 14px;
 
     span {
-      font-family: Roboto;
+      font-family: Roboto !important;
       font-weight: normal;
       font-size: 14px;
       line-height: 1.29;
