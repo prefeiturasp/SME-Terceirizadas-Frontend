@@ -18,6 +18,7 @@ import {
 import CardHistorico from "../../components/CardHistorico";
 import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -164,10 +165,10 @@ class PainelPedidos extends Component {
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
-                      tipoDeCard={"priority"}
+                      tipoDeCard={TIPODECARD.PRIORITY}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"codae"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -176,10 +177,10 @@ class PainelPedidos extends Component {
                     <div className="col-12">
                       <CardPendenciaAprovacao
                         titulo={"Solicitações no prazo limite"}
-                        tipoDeCard={"on-limit"}
+                        tipoDeCard={TIPODECARD.ON_LIMIT}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={"codae"}
+                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -189,10 +190,10 @@ class PainelPedidos extends Component {
                     <div className="col-12">
                       <CardPendenciaAprovacao
                         titulo={"Solicitações no prazo regular"}
-                        tipoDeCard={"regular"}
+                        tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={"codae"}
+                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -206,7 +207,7 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }
-                        parametroURL={`${CODAE}`}
+                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -217,7 +218,7 @@ class PainelPedidos extends Component {
                       <CardHistorico
                         pedidos={formatarPedidos(pedidosReprovados)}
                         ultimaColunaLabel={"Data(s)"}
-                        parametroURL={`${CODAE}`}
+                        parametroURL={CODAE}
                         titulo={
                           "Histórico de Inclusões de Alimentação Reprovadas"
                         }
