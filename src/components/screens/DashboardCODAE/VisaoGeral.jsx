@@ -1,7 +1,22 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { ALTERACAO_CARDAPIO, CODAE, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE, SOLICITACAO_KIT_LANCHE_UNIFICADA, SUSPENSAO_ALIMENTACAO } from "../../../configs/constants";
-import { getResumoPendenciasAlteracaoCardapio, getResumoPendenciasInclusaoAlimentacao, getResumoPendenciasInversoesCardapio, getResumoPendenciasKitLancheAvulso, getResumoPendenciasKitLancheUnificado, getResumoPendenciasSuspensaoCardapio } from "../../../services/painelCODAE.service";
+import {
+  ALTERACAO_CARDAPIO,
+  CODAE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
+} from "../../../configs/constants";
+import {
+  getResumoPendenciasAlteracaoCardapio,
+  getResumoPendenciasInclusaoAlimentacao,
+  getResumoPendenciasInversoesCardapio,
+  getResumoPendenciasKitLancheAvulso,
+  getResumoPendenciasKitLancheUnificado,
+  getResumoPendenciasSuspensaoCardapio
+} from "../../../services/painelCODAE.service";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 const ESTADO_INICIAL = {
   resumoPendenciasInversoesCardapio: {
@@ -106,7 +121,6 @@ class VisaoGeral extends Component {
       resumoPendenciasKitLancheAvulsa,
       resumoPendenciasKitLancheUnificado,
       resumoPendenciasAlteracaoCardapio,
-      resumoSuspensoesCardapio,
 
       loadingUnificado,
       loadingKitLancheAvulso,

@@ -7,7 +7,6 @@ import { Field, FormSection, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
-  minValue,
   required,
   naoPodeSerZero
 } from "../../helpers/fieldValidators";

@@ -217,7 +217,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
-      resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESolicitacoesUnificadas,
       loadingAutorizadas,
