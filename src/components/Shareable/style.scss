@@ -371,8 +371,24 @@ div.caption-choices {
     padding: 10px 0;
   }
 }
-.red-label {
+.label {
   font-size: 14px;
   line-height: 16px;
-  color: $redAlert;
+  &--red {
+    @extend .label;
+    color: $redAlert;
+  }
+  &--gray {
+    @extend .label;
+    color: $gray;
+  }
+}
+
+.margin-fix {
+  p {
+    margin: 0 0 0.2em 0 !important;
+  }
+  b {
+    margin: 0 0 0.2em 0 !important;
+  }
 }
