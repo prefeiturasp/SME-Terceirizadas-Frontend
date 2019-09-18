@@ -1,5 +1,19 @@
 @import "../../styles/variables.scss";
 
+nav,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+input {
+  font-family: Roboto !important;
+}
+
 .unified-solicitation {
   .schools-group {
     height: 520px;
@@ -80,7 +94,7 @@ table.report-table {
       border-radius: 4px;
       display: grid;
       grid-row: 50% 50%;
-      font-family: Roboto;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: bold;
       font-size: 1em;
@@ -100,8 +114,7 @@ table.report-table {
       height: 17px;
       left: 555px;
       top: 192px;
-
-      font-family: Roboto;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: normal;
       font-size: 13px;
@@ -122,7 +135,7 @@ table.report-table {
 
       .solicitante,
       .lote {
-        font-family: Roboto;
+        font-family: Roboto !important;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
@@ -134,7 +147,7 @@ table.report-table {
 
       .prop-solicitante,
       .prop-lote {
-        font-family: Roboto;
+        font-family: Roboto !important;
         font-style: normal;
         font-weight: bold;
         font-size: 15px;
@@ -174,16 +187,16 @@ table.report-table {
     }
 
     .descricao-titulo {
-      color: #686868;
-      font-family: Roboto;
+      //color: #686868;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
       line-height: 16px;
     }
     .descricao-texto {
-      color: #686868;
-      font-family: Roboto;
+      //color: #686868;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: bold;
       font-size: 14px;
@@ -193,8 +206,8 @@ table.report-table {
 
   .header-tabela {
     background: #333333;
-    color: #fff;
-    font-family: Roboto;
+    //color: #fff;
+    font-family: Roboto !important;
     font-style: normal;
     font-weight: bold;
     font-size: 0.875em;
@@ -247,16 +260,16 @@ table.report-table {
     }
 
     .descricao-titulo {
-      color: #686868;
-      font-family: Roboto;
+      //color: #686868;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
       line-height: 16px;
     }
     .descricao-texto {
-      color: #686868;
-      font-family: Roboto;
+      //color: #686868;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: bold;
       font-size: 14px;
@@ -265,8 +278,8 @@ table.report-table {
     }
 
     .descricao-observacao {
-      color: #686868;
-      font-family: Roboto;
+      //color: #686868;
+      font-family: Roboto !important;
       font-style: normal;
       font-weight: bold;
       font-size: 14px;
