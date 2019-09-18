@@ -21,7 +21,8 @@
   letter-spacing: 0.01em;
   height: 4em;
 }
-.c-pointer {
+
+tr.c-pointer {
   cursor: pointer;
   &:hover {
     border-bottom: 1px solid $blue;

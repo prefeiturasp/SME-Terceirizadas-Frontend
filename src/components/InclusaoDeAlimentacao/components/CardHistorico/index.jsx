@@ -70,8 +70,7 @@ export class CardHistorico extends Component {
     const {
       titulo,
       ultimaColunaLabel,
-      handleSubmit,
-      parametroURL
+      handleSubmit
     } = this.props;
     const { collapsed, pedidos } = this.state;
     return (
