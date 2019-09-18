@@ -1,25 +1,19 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
-import {
-  ESCOLA,
-  SOLICITACAO_KIT_LANCHE,
-  PAINEL_CONTROLE
-} from "../../../../configs/constants";
+import { formValueSelector, reduxForm } from "redux-form";
+import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import {
-  aprovaDeKitLancheAvulsoDiretoriaRegional,
-  getDetalheKitLancheAvulsa
-} from "../../../../services/solicitacaoDeKitLanche.service";
+import { aprovaDeKitLancheAvulsoDiretoriaRegional, getDetalheKitLancheAvulsa } from "../../../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -108,15 +102,18 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      uuid
     } = this.state;
+    const { justificativa } = this.props;
     return (
       <div>
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
-          uuid={this.state.uuid}
+          uuid={uuid}
+          justificativa={justificativa}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -282,9 +279,18 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "solicitacaoKitLancheRelatorio";
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);

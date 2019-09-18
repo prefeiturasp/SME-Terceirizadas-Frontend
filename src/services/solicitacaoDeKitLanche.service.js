@@ -364,24 +364,22 @@ export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
     });
 };
 
-export const cancelaKitLancheAvulsoEscola = uuid => {
+export const cancelaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "PATCH"
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
   };
   let status = 0;
-  return fetch(url, OBJ_REQUEST)
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { ...data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const aprovaDeKitLancheAvulsoCodae = uuid => {

@@ -8,12 +8,27 @@ import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export class ModalCancelarSolicitacao extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      justificativa: ""
+    };
+  }
+
   async cancelarSolicitacaoDaEscola(uuid) {
-    const resp = await cancelaKitLancheAvulsoEscola(uuid);
+    const { justificativa } = this.state;
+    const resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
+    console.log(this.state.justificativa);
     if (resp.status !== HTTP_STATUS.OK) {
       toastError(resp.detail);
     } else {
       toastSuccess("Solicitação cancelada com sucesso!");
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.justificativa !== this.props.justificativa) {
+      this.setState({ justificativa: this.props.justificativa });
     }
   }
   render() {
@@ -43,7 +58,7 @@ export class ModalCancelarSolicitacao extends Component {
                 component={LabelAndTextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
-                name="obs"
+                name="justificativa"
               />
             </div>
           </div>
