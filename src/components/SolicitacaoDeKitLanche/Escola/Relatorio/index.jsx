@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { ESCOLA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import {
+  ESCOLA,
+  SOLICITACAO_KIT_LANCHE,
+  PAINEL_CONTROLE
+} from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -40,7 +44,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`} />;
+      return <Redirect to={`/${ESCOLA}/${PAINEL_CONTROLE}`} />;
     }
   };
 
@@ -112,6 +116,7 @@ class Relatorio extends Component {
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={this.state.uuid}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -187,18 +192,6 @@ class Relatorio extends Component {
                         solicitacaoKitLanche.escola.alunos_total}
                     </span>
                   </div>
-                  {/* <div className="report-students-div col-3">
-                    <span>Nº de alunos matutino</span>
-                    <span>{escola.matutino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos vespertino</span>
-                    <span>{escola.vespertino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos nortuno</span>
-                    <span>{escola.noturno}</span>
-                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">

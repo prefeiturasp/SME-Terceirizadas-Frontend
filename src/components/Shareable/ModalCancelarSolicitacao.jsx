@@ -1,12 +1,23 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
+import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export class ModalCancelarSolicitacao extends Component {
+  async cancelarSolicitacaoDaEscola(uuid) {
+    const resp = await cancelaKitLancheAvulsoEscola(uuid);
+    if (resp.status !== HTTP_STATUS.OK) {
+      toastError(resp.detail);
+    } else {
+      toastSuccess("Solicitação cancelada com sucesso!");
+    }
+  }
   render() {
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, uuid } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -48,7 +59,9 @@ export class ModalCancelarSolicitacao extends Component {
           <BaseButton
             label="Sim"
             type={ButtonType.BUTTON}
-            onClick={closeModal}
+            onClick={() => {
+              this.cancelarSolicitacaoDaEscola(uuid);
+            }}
             style={ButtonStyle.Primary}
             className="ml-3"
           />

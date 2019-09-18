@@ -364,6 +364,26 @@ export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
     });
 };
 
+export const cancelaKitLancheAvulsoEscola = uuid => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH"
+  };
+  let status = 0;
+  return fetch(url, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { ...data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const aprovaDeKitLancheAvulsoCodae = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
