@@ -103,7 +103,8 @@ class Relatorio extends Component {
       solicitacaoKitLanche,
       showModal,
       prazoDoPedidoMensagem,
-      uuid
+      uuid,
+      meusDados
     } = this.state;
     const { justificativa } = this.props;
     return (
@@ -114,6 +115,8 @@ class Relatorio extends Component {
           showModal={showModal}
           uuid={uuid}
           justificativa={justificativa}
+          meusDados={meusDados}
+          solicitacaoKitLanche={solicitacaoKitLanche}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
