@@ -37,6 +37,9 @@ button.general-button {
     &:hover {
       color: $white;
       background-color: $blueButtonBackground;
+      i {
+        color: $white;
+      }
     }
     &:disabled {
       background-color: transparent;
@@ -70,6 +73,9 @@ button.general-button {
     &:hover {
       color: $white;
       background-color: $greenButtonHover;
+      i {
+        color: $white;
+      }
     }
     &:disabled {
       background-color: transparent;

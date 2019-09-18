@@ -1,5 +1,9 @@
 @import "../../styles/variables.scss";
 
+.font-10 {
+  font-size: 10px;
+}
+
 label {
   margin-bottom: 0 !important;
 }
@@ -241,14 +245,15 @@ div.caption-choices {
 .report-label-value {
   margin-top: 20px;
   font-size: 14px;
-  color: #686868;
+  color: $gray;
   .value {
     font-weight: bold;
+    color: $blackInput;
   }
   .value-important {
     font-weight: bold;
     font-size: 15px;
-    color: #353535;
+    color: $blackInput;
   }
 }
 

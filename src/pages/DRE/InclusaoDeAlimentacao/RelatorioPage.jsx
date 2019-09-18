@@ -18,7 +18,7 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page>
+  <Page >
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <Relatorio />
   </Page>
