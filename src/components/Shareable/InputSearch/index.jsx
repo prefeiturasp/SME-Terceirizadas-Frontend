@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { Botao } from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../Botao/constants";
 import "./style.scss";
@@ -16,15 +15,6 @@ export const InputSearch = props => (
         <i class="fas fa-search" />
       </span>
       <div className="float-right">
-        <NavLink to={props.voltarLink || "/"}>
-          <Botao
-            className="mr-3"
-            icon={BUTTON_ICON.ARROW_LEFT}
-            style={BUTTON_STYLE.BLUE}
-            texto="Voltar"
-            type={BUTTON_TYPE.BUTTON}
-          />
-        </NavLink>
         {!props.esconderImprimir && (
           <Botao
             icon={BUTTON_ICON.PRINT}

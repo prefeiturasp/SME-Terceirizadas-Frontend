@@ -28,8 +28,6 @@ import {
 } from "../../../../helpers/utilities";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-import "../style.scss";
-import "./style.scss";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -205,6 +203,7 @@ class Relatorio extends Component {
             <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
               <Botao
                 texto="voltar"
+                titulo="voltar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.BLUE}
                 icon={BUTTON_ICON.ARROW_LEFT}
@@ -221,9 +220,9 @@ class Relatorio extends Component {
                   >
                     {prazoDoPedidoMensagem}
                     <Botao
-                      texto="imprimir"
                       type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      titulo="imprimir"
+                      style={BUTTON_STYLE.BLUE}
                       icon={BUTTON_ICON.PRINT}
                       className="float-right"
                     />

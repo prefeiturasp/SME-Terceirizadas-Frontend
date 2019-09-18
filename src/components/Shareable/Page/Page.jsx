@@ -56,6 +56,7 @@ export default class Page extends Component {
                 <Link to={voltarPara}>
                   <Botao
                     texto="voltar"
+                    titulo="voltar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.BLUE}
                     icon={BUTTON_ICON.ARROW_LEFT}

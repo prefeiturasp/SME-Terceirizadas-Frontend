@@ -374,12 +374,12 @@ div.caption-choices {
   th {
     font-weight: normal;
     font-size: 14px;
-    color: #686868;
+    color: $gray;
   }
   td {
     font-weight: bold;
-    font-size: 15px;
-    color: #353535;
+    font-size: 14px;
+    color: $blackInput;
     border-bottom: 1px solid #c0c0c0;
     padding: 10px 0;
   }

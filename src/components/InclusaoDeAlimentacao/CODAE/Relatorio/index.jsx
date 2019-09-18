@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
@@ -19,10 +19,14 @@ import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-import "../style.scss";
-import "./style.scss";
 import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -182,7 +186,7 @@ class Relatorio extends Component {
       meusDados
     } = this.state;
     return (
-      <div>
+      <div className="report food-inclusion">
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
@@ -195,6 +199,15 @@ class Relatorio extends Component {
             <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
               inclusaoDeAlimentacao.id_externo
             }`}</span>
+            <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
+              <Botao
+                texto="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
@@ -204,6 +217,12 @@ class Relatorio extends Component {
                     )}`}
                   >
                     {prazoDoPedidoMensagem}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
+                    />
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -324,20 +343,20 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {inclusaoDeAlimentacao.status === statusEnum.DRE_APROVADO && (
+                {inclusaoDeAlimentacao.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Negar Solicitação"}
+                    <Botao
+                      texto={"Negar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Autorizar Solicitação"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Autorizar Solicitação"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>
