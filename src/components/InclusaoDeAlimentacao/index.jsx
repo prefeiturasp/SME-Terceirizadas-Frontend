@@ -36,7 +36,6 @@ import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-import { LabelAndInput } from "../Shareable/labelAndInput/labelAndInput";
 import { InputComData } from "../Shareable/DatePicker";
 import Weekly from "../Shareable/Weekly/Weekly";
 import {
@@ -558,6 +557,7 @@ class InclusaoDeAlimentacao extends Component {
       validacaoPeriodos
     } = this.state;
     const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
+    const dataInicialContinua = inclusoes[0].data_inicial;
     return (
       <div>
         {loading ? (
@@ -686,8 +686,8 @@ class InclusaoDeAlimentacao extends Component {
                                     diaMotivo.id
                                   )
                                 }
-                                minDate={getDataObj(inclusoes[0].data_inicial)}
-                                disabled={!inclusoes[0].data_inicial}
+                                minDate={getDataObj(dataInicialContinua)}
+                                disabled={!dataInicialContinua}
                                 name="data_final"
                                 label="Até"
                                 required
