@@ -1,12 +1,38 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
+import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export class ModalCancelarSolicitacao extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      justificativa: ""
+    };
+  }
+
+  async cancelarSolicitacaoDaEscola(uuid) {
+    const { justificativa } = this.state;
+    const resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
+    if (resp.status === HTTP_STATUS.OK) {
+      this.props.closeModal();
+      toastSuccess("Solicitação cancelada com sucesso!");
+    } else {
+      toastError(resp.detail);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.justificativa !== this.props.justificativa) {
+      this.setState({ justificativa: this.props.justificativa });
+    }
+  }
   render() {
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, uuid, solicitacaoKitLanche } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -22,17 +48,20 @@ export class ModalCancelarSolicitacao extends Component {
             </div>
             <div className="col-12 label--gray margin-fix">
               <b>Resumo</b>
-              <p>Resumo Solicitação Unificada nº 12083 - 7A IP I</p>
-              <p>Solicitante: Dre Ipiranga</p>
-              <p>Data: 27/04/2019</p>
-              <p>Quantidade de Alimentações: 203</p>
+              <p>{`Solicitação nº #${solicitacaoKitLanche &&
+                solicitacaoKitLanche.id_externo}`}</p>
+              <p>{`Solicitante: AGUARDANDO DEFINIÇÃO DE PERFIL`}</p>
+              <p>{`Data: ${solicitacaoKitLanche &&
+                solicitacaoKitLanche.data}`}</p>
+              <p>{`Quantidade de Alimentações: ${solicitacaoKitLanche &&
+                solicitacaoKitLanche.quantidade_alimentacoes}`}</p>
             </div>
             <div className="form-group col-12">
               <Field
                 component={LabelAndTextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
-                name="obs"
+                name="justificativa"
               />
             </div>
           </div>
@@ -48,7 +77,9 @@ export class ModalCancelarSolicitacao extends Component {
           <BaseButton
             label="Sim"
             type={ButtonType.BUTTON}
-            onClick={closeModal}
+            onClick={() => {
+              this.cancelarSolicitacaoDaEscola(uuid);
+            }}
             style={ButtonStyle.Primary}
             className="ml-3"
           />

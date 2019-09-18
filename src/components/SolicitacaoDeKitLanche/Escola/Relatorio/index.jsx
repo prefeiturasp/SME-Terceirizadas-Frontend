@@ -1,21 +1,19 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
-import { ESCOLA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import { formValueSelector, reduxForm } from "redux-form";
+import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import {
-  aprovaDeKitLancheAvulsoDiretoriaRegional,
-  getDetalheKitLancheAvulsa
-} from "../../../../services/solicitacaoDeKitLanche.service";
+import { aprovaDeKitLancheAvulsoDiretoriaRegional, getDetalheKitLancheAvulsa } from "../../../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -40,7 +38,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`} />;
+      return <Redirect to={`/${ESCOLA}/${PAINEL_CONTROLE}`} />;
     }
   };
 
@@ -81,7 +79,6 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
   }
 
   handleSubmit() {
@@ -105,14 +102,21 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      uuid,
+      meusDados
     } = this.state;
+    const { justificativa } = this.props;
     return (
       <div>
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          meusDados={meusDados}
+          solicitacaoKitLanche={solicitacaoKitLanche}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -188,18 +192,6 @@ class Relatorio extends Component {
                         solicitacaoKitLanche.escola.alunos_total}
                     </span>
                   </div>
-                  {/* <div className="report-students-div col-3">
-                    <span>Nº de alunos matutino</span>
-                    <span>{escola.matutino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos vespertino</span>
-                    <span>{escola.vespertino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos nortuno</span>
-                    <span>{escola.noturno}</span>
-                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
@@ -290,9 +282,18 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "solicitacaoKitLancheRelatorio";
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);
