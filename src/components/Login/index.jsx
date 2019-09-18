@@ -171,9 +171,10 @@ export class Login extends Component {
             </div>
           </div>
           <p className="terms my-auto pt-2">Termos de uso</p>
-          <div className="row pl-3">
-            <div className="col-8 pl-4 pt-2">
+          <div className="row">
+            <div className="col-8 pt-2">
               <Field
+                classNameTexto={"text-terms"}
                 component={Checkbox}
                 name="termos"
                 onClick={() => this.onTermosClicked()}

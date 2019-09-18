@@ -6,7 +6,7 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/dre/solicitacoes-autorizadas",
-  titulo: "Painel de Status de Solicitações"
+  titulo: "Solicitações Autorizadas"
 };
 
 export default props => (

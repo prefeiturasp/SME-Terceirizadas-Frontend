@@ -53,6 +53,7 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
+import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
 
 const routesConfig = [
@@ -114,12 +115,17 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.DRE}/${constants.SOLICITACOES}`,
+    component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
+    exact: false
+  },
+  {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
     exact: false
   },
   {
-    path: `/${constants.DRE}/solicitacoes-pendentes`,
+    path: `/${constants.DRE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesDREPage,
     exact: false
   },

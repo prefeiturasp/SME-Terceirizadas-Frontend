@@ -14,6 +14,7 @@ export const InputText = props => {
     label,
     labelClassName,
     meta,
+    min,
     name,
     placeholder,
     required,
@@ -33,6 +34,7 @@ export const InputText = props => {
           meta.error &&
           "invalid-field"}`}
         disabled={disabled}
+        min={min}
         name={name}
         placeholder={placeholder}
         required={required}

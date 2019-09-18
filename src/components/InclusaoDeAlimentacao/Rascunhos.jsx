@@ -20,7 +20,7 @@ export class Rascunhos extends Component {
         const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
         let backgroundColor = "#DADADA";
         return (
-          <div className="bg-white border rounded mt-1">
+          <div className="draft bg-white border rounded mt-1">
             <div className="mt-2">
               <label className="bold ml-3">
                 {`Inclusão de Alimentação # ${id_externo}`}

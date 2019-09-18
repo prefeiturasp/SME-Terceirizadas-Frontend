@@ -77,8 +77,8 @@ textarea {
   }
   .checkbox-custom {
     position: absolute;
-    top: 10px;
-    left: 0px;
+    top: 0px;
+    left: -30px;
     height: 20px;
     width: 20px;
     background-color: #fff;
@@ -318,12 +318,16 @@ div.caption-choices {
   }
 }
 
+.draft {
+  font-size: 14px;
+}
+
 // ----------- Libraries ---------------
 
 // @khanacademy/react-multi-select
 .multiselect-wrapper-disabled .dropdown-heading {
   pointer-events: none;
-  background-color: #e9ecef !important;
+  background-color: $grayDisabled !important;
 }
 
 .dropdown .dropdown-heading .dropdown-heading-value span {

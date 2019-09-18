@@ -1,0 +1,1 @@
+const QUANTIDADE_POR_PAGINA = 100;
