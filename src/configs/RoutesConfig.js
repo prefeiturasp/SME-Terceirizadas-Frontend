@@ -1,5 +1,3 @@
-import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
-import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import { Login } from "../components/Login";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
@@ -16,6 +14,8 @@ import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/Inclusao
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
+import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
+import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
 import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
@@ -29,10 +29,6 @@ import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimen
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
 import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapio/RelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
-import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
-import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/RelatorioPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
@@ -50,11 +46,15 @@ import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceir
 import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/RelatorioPage";
+import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
+import SolicitacaoUnificadaRelatorioTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/RelatorioPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-
 import * as constants from "./constants";
+import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
+import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
+
 
 const routesConfig = [
   {
@@ -86,6 +86,13 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
     component: AlteracaoDeCardapioPage,
     exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${
+      constants.RELATORIO
+    }`,
+    component: solicitacaoKitLanchePaginas.RelatorioEscola,
+    exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,

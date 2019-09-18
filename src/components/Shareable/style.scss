@@ -379,3 +379,24 @@ div.caption-choices {
     padding: 10px 0;
   }
 }
+.label {
+  font-size: 14px;
+  line-height: 16px;
+  &--red {
+    @extend .label;
+    color: $redAlert;
+  }
+  &--gray {
+    @extend .label;
+    color: $gray;
+  }
+}
+
+.margin-fix {
+  p {
+    margin: 0 0 0.2em 0 !important;
+  }
+  b {
+    margin: 0 0 0.2em 0 !important;
+  }
+}

@@ -26,10 +26,12 @@ export const CardStatusDeSolicitacao = props => {
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
-          <p className="data">
-            {solicitation.text}
-            <span className="float-right">{solicitation.date}</span>
-          </p>
+          <NavLink to={solicitation.link}>
+            <p className="data">
+              {solicitation.text}
+              <span className="float-right">{solicitation.date}</span>
+            </p>
+          </NavLink>
         );
       })}
       {solicitations.length > 3 && (

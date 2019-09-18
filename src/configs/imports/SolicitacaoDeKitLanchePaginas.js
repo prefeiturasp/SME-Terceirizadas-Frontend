@@ -24,3 +24,9 @@ export {
 export {
   RelatorioPage as RelatorioTerceirizada
 } from "../../pages/Terceirizada/SolicitacaoDeKitLanche/RelatorioPage";
+
+// Escola
+
+export {
+  RelatorioPage as RelatorioEscola
+} from "../../pages/Escola/SolicitacaoDeKitLanche/RelatorioPage";
