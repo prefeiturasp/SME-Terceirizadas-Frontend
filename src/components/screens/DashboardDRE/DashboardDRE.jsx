@@ -283,7 +283,7 @@ class DashboardDRE extends Component {
                     cardType={"card-pending"}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
-                    href={"/dre/solicitacoes-pendentes"}
+                    href={`/${DRE}/solicitacoes-pendentes`}
                     loading={loadingPendentes}
                   />
                 </div>

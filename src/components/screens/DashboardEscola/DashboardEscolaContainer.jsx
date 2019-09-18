@@ -8,19 +8,23 @@ export default class DashboardEscolaContainer extends Component {
       autorizadas: [
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "11:19"
+          date: "11:19",
+          link: "/dre/painel-de-controle"
         },
         {
           text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-          date: "Qua 11:07"
+          date: "Qua 11:07",
+          link: "/dre/painel-de-controle"
         },
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
+          date: "Qua 10:07",
+          link: "/dre/painel-de-controle"
         },
         {
           text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
+          date: "Qua 10:07",
+          link: "/dre/painel-de-controle"
         }
       ],
       theadList: [
