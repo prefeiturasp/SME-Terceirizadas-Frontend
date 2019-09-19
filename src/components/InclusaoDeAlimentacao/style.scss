@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 
-.card.food-inclusion {
+.card.solicitation {
   .card-title {
     color: $blackInput;
   }
@@ -10,9 +10,6 @@
     color: $gray;
     .type-food {
       padding-left: 20px;
-    }
-    .n-students {
-      padding-left: 7px;
     }
     div {
       padding: 15px 0;
