@@ -3,12 +3,22 @@ import moment from "moment";
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
+import {
+  CODAE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
+import {
+  ModalCancelarSolicitacao,
+  ORIGEM_SOLICITACAO
+} from "../../../Shareable/ModalCancelarSolicitacao";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import { CODAEAprovaPedidoDRE, getSolicitacaoUnificada } from "../../../../services/solicitacaoUnificada.service";
+import {
+  CODAEAprovaPedidoDRE,
+  getSolicitacaoUnificada
+} from "../../../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
@@ -113,12 +123,17 @@ class Relatorio extends Component {
   }
 
   render() {
-    const { showModal, solicitacaoUnificada } = this.state;
+    const { showModal, solicitacaoUnificada, uuid, meusDados } = this.state;
     return (
       <div className="card mt-3">
-        <ModalRecusarSolicitacao
+        <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={"xxxx"}
+          meusDados={meusDados}
+          origemSolicitacao={ORIGEM_SOLICITACAO.DRE}
+          solicitacaoKitLanche={solicitacaoUnificada}
         />
         {!solicitacaoUnificada ? (
           <span>Carregando...</span>
@@ -234,24 +249,15 @@ class Relatorio extends Component {
                 />
               </div>
             </div>
-            {solicitacaoUnificada.status === statusEnum.CODAE_A_AUTORIZAR && (
-              <div className="botoes-acao">
-                <BaseButton
-                  label={"Negar Solicitação"}
-                  className="ml-3"
-                  onClick={() => this.showModal()}
-                  type={ButtonType.BUTTON}
-                  style={ButtonStyle.OutlineSuccess}
-                />
-                <BaseButton
-                  label="Autorizar Solicitação"
-                  type={ButtonType.SUBMIT}
-                  onClick={() => this.handleSubmit()}
-                  style={ButtonStyle.Success}
-                  className="ml-3"
-                />
-              </div>
-            )}
+            <div className="botoes-acao">
+              <BaseButton
+                label="Cancelar"
+                type={ButtonType.SUBMIT}
+                onClick={() => this.showModal()}
+                style={ButtonStyle.Success}
+                className="ml-3"
+              />
+            </div>
           </div>
         )}
       </div>
