@@ -111,7 +111,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORITY}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={"dre"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -123,7 +123,7 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.ON_LIMIT}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={"dre"}
+                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -136,7 +136,7 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={"dre"}
+                        parametroURL={DRE}
                       />
                     </div>
                   </div>
