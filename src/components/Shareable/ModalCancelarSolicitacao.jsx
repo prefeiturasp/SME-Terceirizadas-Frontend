@@ -3,10 +3,15 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
+import { cancelaKitLancheUnificadoDre } from "../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 
+export const ORIGEM_SOLICITACAO = {
+  ESCOLA: 0,
+  DRE: 1
+};
 export class ModalCancelarSolicitacao extends Component {
   constructor(props) {
     super(props);
@@ -15,9 +20,14 @@ export class ModalCancelarSolicitacao extends Component {
     };
   }
 
-  async cancelarSolicitacaoDaEscola(uuid) {
+  async cancelarSolicitacaoDaEscola(uuid, origemSolicitacao) {
     const { justificativa } = this.state;
-    const resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
+    let resp = "";
+    if (origemSolicitacao === ORIGEM_SOLICITACAO.DRE) {
+      resp = await cancelaKitLancheUnificadoDre(uuid, justificativa);
+    } else {
+      resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
+    }
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação cancelada com sucesso!");
@@ -32,7 +42,13 @@ export class ModalCancelarSolicitacao extends Component {
     }
   }
   render() {
-    const { showModal, closeModal, uuid, solicitacaoKitLanche } = this.props;
+    const {
+      showModal,
+      closeModal,
+      uuid,
+      solicitacaoKitLanche,
+      origemSolicitacao
+    } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -78,7 +94,7 @@ export class ModalCancelarSolicitacao extends Component {
             label="Sim"
             type={ButtonType.BUTTON}
             onClick={() => {
-              this.cancelarSolicitacaoDaEscola(uuid);
+              this.cancelarSolicitacaoDaEscola(uuid, origemSolicitacao);
             }}
             style={ButtonStyle.Primary}
             className="ml-3"

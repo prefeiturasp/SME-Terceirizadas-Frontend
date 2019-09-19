@@ -166,6 +166,13 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
+      constants.RELATORIO
+    }`,
+    component: solicitacaoKitLanchePaginas.RelatorioDREUnificada,
+    exact: true
+  },
+  {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: SolicitacaoUnificadaPage,
     exact: false

@@ -1,28 +1,22 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { formValueSelector, reduxForm } from "redux-form";
+import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  CODAEAprovaPedidoDRE,
-  getSolicitacaoUnificada
-} from "../../../../services/solicitacaoUnificada.service";
 import { meusDados } from "../../../../services/perfil.service";
+import { CODAEAprovaPedidoDRE, getSolicitacaoUnificada } from "../../../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import "../style.scss";
+import { ModalCancelarSolicitacao, ORIGEM_SOLICITACAO } from "../../../Shareable/ModalCancelarSolicitacao";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+// import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
-import TabelaKits from "./TabelaKits";
 import "./style.scss";
-import {
-  CODAE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
-} from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import TabelaKits from "./TabelaKits";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -119,12 +113,18 @@ class Relatorio extends Component {
   }
 
   render() {
-    const { showModal, solicitacaoUnificada } = this.state;
+    const { showModal, solicitacaoUnificada, uuid, meusDados } = this.state;
+    const { justificativa } = this.props;
     return (
       <div className="card mt-3">
-        <ModalRecusarSolicitacao
+        <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          meusDados={meusDados}
+          origemSolicitacao={ORIGEM_SOLICITACAO.DRE}
+          solicitacaoKitLanche={solicitacaoUnificada}
         />
         {!solicitacaoUnificada ? (
           <span>Carregando...</span>
@@ -152,7 +152,7 @@ class Relatorio extends Component {
                     }`}</div>
                     <div className="prop-lote">
                       {
-                        "#TODO: como a solicitação é unificada pode ter mais de um lote, aqui deve suportar mais de um lote"
+                        "# TODO: ajustar o serializer para trazer o lote de forma mais amigavel"
                       }
                     </div>
                   </div>
@@ -240,33 +240,34 @@ class Relatorio extends Component {
                 />
               </div>
             </div>
-            {solicitacaoUnificada.status === statusEnum.CODAE_A_AUTORIZAR && (
-              <div className="botoes-acao">
-                <BaseButton
-                  label={"Negar Solicitação"}
-                  className="ml-3"
-                  onClick={() => this.showModal()}
-                  type={ButtonType.BUTTON}
-                  style={ButtonStyle.OutlineSuccess}
-                />
-                <BaseButton
-                  label="Autorizar Solicitação"
-                  type={ButtonType.SUBMIT}
-                  onClick={() => this.handleSubmit()}
-                  style={ButtonStyle.Success}
-                  className="ml-3"
-                />
-              </div>
-            )}
+            <div className="botoes-acao">
+              <BaseButton
+                label="Cancelar"
+                type={ButtonType.SUBMIT}
+                onClick={() => this.showModal()}
+                style={ButtonStyle.Success}
+                className="ml-3"
+              />
+            </div>
           </div>
         )}
       </div>
     );
   }
 }
+const formName = "unifiedSolicitationFilledForm";
+
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);

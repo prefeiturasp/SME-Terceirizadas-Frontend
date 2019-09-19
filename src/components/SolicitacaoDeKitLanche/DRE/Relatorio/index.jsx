@@ -63,7 +63,7 @@ class Relatorio extends Component {
       if (uuid) {
         getDetalheKitLancheAvulsa(uuid).then(response => {
           const solicitacaoKitLanche = response;
-          const data = solicitacaoKitLanche.solicitacao_kit_lanche.data;
+          const data = solicitacaoKitLanche.data;
           this.setState({
             solicitacaoKitLanche,
             uuid,

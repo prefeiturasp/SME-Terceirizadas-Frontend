@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
+import { FLUXO } from "./contants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -233,4 +234,24 @@ export const getCODAEPedidosAprovados = () => {
     .catch(error => {
       console.log(error);
     });
+};
+
+export const cancelaKitLancheUnificadoDre = async (uuid, justificativa) => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/${
+    FLUXO.DRE_CANCELA
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };

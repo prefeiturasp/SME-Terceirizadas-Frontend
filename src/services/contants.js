@@ -3,7 +3,8 @@ export const FLUXO = {
   CODAE_AUTORIZA: "codae-aprova-pedido",
   TERCEIRIZADA_TOMA_CIENCIA: "terceirizada-toma-ciencia",
   DRE_VALIDA: "diretoria-regional-aprova-pedido",
-  ESCOLA_CANCELA: "escola-cancela-pedido-48h-antes"
+  ESCOLA_CANCELA: "escola-cancela-pedido-48h-antes",
+  DRE_CANCELA: "diretoria-regional-cancela"
 };
 
 export const PEDIDOS = {
