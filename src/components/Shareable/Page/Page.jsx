@@ -50,7 +50,7 @@ export default class Page extends Component {
               "toggled"} d-flex flex-column p-4 mt-5`}
           >
             {children.length ? children[0] : children}
-            <span className="page-title">
+            <h1 className="page-title">
               {titulo}
               {botaoVoltar && (
                 <Link to={voltarPara}>
@@ -64,7 +64,7 @@ export default class Page extends Component {
                   />
                 </Link>
               )}
-            </span>
+            </h1>
             {children[1]}
           </div>
         </div>
