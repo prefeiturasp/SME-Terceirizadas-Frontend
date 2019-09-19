@@ -585,7 +585,7 @@ class InclusaoDeAlimentacao extends Component {
             <div ref={this.titleRef} className="mt-2 page-title">
               {title}
             </div>
-            <div className="card food-inclusion mt-2">
+            <div className="card solicitation mt-2">
               <div className="card-body">
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão
@@ -790,9 +790,7 @@ class InclusaoDeAlimentacao extends Component {
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
-                            disabled={
-                              !validacaoPeriodos[indice].checado ? true : false
-                            }
+                            disabled={!validacaoPeriodos[indice].checado}
                             type="number"
                             name={`numero_alunos`}
                             min="0"
@@ -819,34 +817,36 @@ class InclusaoDeAlimentacao extends Component {
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
-                  <Botao
-                    texto="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  <Botao
-                    texto={this.state.salvarAtualizarLbl}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values
-                      })
-                    )}
-                    className="ml-3"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  <Botao
-                    texto="Enviar Solicitação"
-                    type={BUTTON_TYPE.SUBMIT}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values,
-                        status: STATUS_DRE_A_VALIDAR
-                      })
-                    )}
-                    style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
-                  />
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={event => this.resetForm(event)}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values
+                        })
+                      )}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar Solicitação"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values,
+                          status: STATUS_DRE_A_VALIDAR
+                        })
+                      )}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

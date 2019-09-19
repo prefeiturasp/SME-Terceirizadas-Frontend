@@ -33,7 +33,7 @@ export class Rascunhos extends Component {
               </span>
             </div>
             <div className="icon-draft-card float-right">
-              Salvo em: {inclusaoDeAlimentacao.created_at}
+              Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
                 onClick={p =>
                   this.removerRascunho(id_externo, uuid, ehInclusaoContinua)
@@ -58,9 +58,7 @@ export class Rascunhos extends Component {
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final
                     })`
-                  : `${
-                      inclusaoDeAlimentacao.inclusoes.length
-                    } dia(s)`}
+                  : `${inclusaoDeAlimentacao.inclusoes.length} dia(s)`}
               </p>
             </div>
           </div>

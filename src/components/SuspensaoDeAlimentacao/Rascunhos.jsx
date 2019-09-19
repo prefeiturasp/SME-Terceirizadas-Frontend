@@ -24,7 +24,7 @@ export class Rascunhos extends Component {
         let backgroundColor =
           suspensaoDeAlimentacao.status === "SALVO" ? "#82B7E8" : "#DADADA";
         return (
-          <div className="bg-white border rounded mt-3">
+          <div className="bg-white draft border rounded mt-1 p-2">
             <div className="mt-2">
               <label className="bold ml-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
               <span
@@ -35,7 +35,7 @@ export class Rascunhos extends Component {
               </span>
             </div>
             <div className="icon-draft-card float-right">
-              Salvo em: {suspensaoDeAlimentacao.criado_em}
+              Criado em: {suspensaoDeAlimentacao.criado_em}
               <span onClick={() => OnDeleteButtonClicked(id_externo, uuid)}>
                 <i className="fas fa-trash" />
               </span>
