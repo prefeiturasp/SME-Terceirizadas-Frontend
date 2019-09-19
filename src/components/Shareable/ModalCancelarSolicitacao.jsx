@@ -23,10 +23,10 @@ export class ModalCancelarSolicitacao extends Component {
   async cancelarSolicitacaoDaEscola(uuid, origemSolicitacao) {
     const { justificativa } = this.state;
     let resp = "";
-    if (origemSolicitacao === ORIGEM_SOLICITACAO.ESCOLA) {
-      resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
+    if (origemSolicitacao === ORIGEM_SOLICITACAO.DRE) {
+      resp = await cancelaKitLancheUnificadoDre(uuid, justificativa);
     } else {
-      resp = await cancelaKitLancheUnificadoDre(uuid, "xxxxxxxxxxxxxxxx");
+      resp = await cancelaKitLancheAvulsoEscola(uuid, justificativa);
     }
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();

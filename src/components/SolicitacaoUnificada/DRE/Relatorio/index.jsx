@@ -1,27 +1,17 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
-import {
-  CODAE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
-} from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { formValueSelector, reduxForm } from "redux-form";
+import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import {
-  ModalCancelarSolicitacao,
-  ORIGEM_SOLICITACAO
-} from "../../../Shareable/ModalCancelarSolicitacao";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import {
-  CODAEAprovaPedidoDRE,
-  getSolicitacaoUnificada
-} from "../../../../services/solicitacaoUnificada.service";
+import { CODAEAprovaPedidoDRE, getSolicitacaoUnificada } from "../../../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import { ModalCancelarSolicitacao, ORIGEM_SOLICITACAO } from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 // import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
@@ -124,13 +114,14 @@ class Relatorio extends Component {
 
   render() {
     const { showModal, solicitacaoUnificada, uuid, meusDados } = this.state;
+    const { justificativa } = this.props;
     return (
       <div className="card mt-3">
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
           uuid={uuid}
-          justificativa={"xxxx"}
+          justificativa={justificativa}
           meusDados={meusDados}
           origemSolicitacao={ORIGEM_SOLICITACAO.DRE}
           solicitacaoKitLanche={solicitacaoUnificada}
@@ -161,7 +152,7 @@ class Relatorio extends Component {
                     }`}</div>
                     <div className="prop-lote">
                       {
-                        "#TODO: como a solicitação é unificada pode ter mais de um lote, aqui deve suportar mais de um lote"
+                        "# TODO: ajustar o serializer para trazer o lote de forma mais amigavel"
                       }
                     </div>
                   </div>
@@ -264,9 +255,19 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "unifiedSolicitationFilledForm";
+
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);

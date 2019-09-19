@@ -10,10 +10,11 @@ import { meusDados } from "../../../../services/perfil.service";
 import { aprovaDeKitLancheAvulsoDiretoriaRegional, getDetalheKitLancheAvulsa } from "../../../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalCancelarSolicitacao } from "../../../Shareable/ModalCancelarSolicitacao";
+import { ModalCancelarSolicitacao, ORIGEM_SOLICITACAO } from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
+
 
 class Relatorio extends Component {
   constructor(props) {
@@ -115,6 +116,7 @@ class Relatorio extends Component {
           showModal={showModal}
           uuid={uuid}
           justificativa={justificativa}
+          origemSolicitacao={ORIGEM_SOLICITACAO.ESCOLA}
           meusDados={meusDados}
           solicitacaoKitLanche={solicitacaoKitLanche}
         />
