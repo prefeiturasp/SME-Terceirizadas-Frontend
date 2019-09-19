@@ -38,7 +38,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       rascunhosInversoes: [],
       status: "SEM STATUS",
       title: "Nova Solicitação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       segundoDiaUtil: "",
       showModal: false,
       loading: true
@@ -73,7 +73,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.props.loadInversaoDeDiaDeCardapio(null);
     this.setState({
       status: "SEM STATUS",
-      title: "Nova solicitação",
+      title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar"
     });
     this.refresh();
@@ -234,7 +234,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             <div className="card inversao-dia-cardapio border rounded mt-2">
               <div className="card-body">
                 <label className="card-title font-weight-bold">
-                  Descrição da Alteração
+                  Descrição da Inversão
                 </label>
                 <div className="row w-100 pt-3">
                   <div className="col-md-12 col-lg-5">
@@ -281,7 +281,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                   </div>
                 </div>
                 <div className="row mt-5">
-                  <div className="col-12 mt-2">
+                  <div className="col-12 mt-2 pb-5">
                     <Field
                       component={TextAreaWYSIWYG}
                       label="Observação"
@@ -289,7 +289,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                 </div>
-                <div className="row text-right mt-5">
+                <div className="row text-right mt-4">
                   <div className="col-12 mt-2">
                     <Botao
                       texto="Cancelar"
