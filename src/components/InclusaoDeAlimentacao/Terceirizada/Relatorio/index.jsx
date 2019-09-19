@@ -282,7 +282,9 @@ class Relatorio extends Component {
                 <hr />
                 {inclusaoDeAlimentacao.logs && (
                   <div className="row">
-                    <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
+                    <FluxoDeStatus
+                      listaDeStatus={inclusaoDeAlimentacao.logs}
+                    />
                   </div>
                 )}
                 <hr />

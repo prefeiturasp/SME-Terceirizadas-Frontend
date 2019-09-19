@@ -7,11 +7,11 @@ import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
-  titulo: "Inversões de dia de Cardápio"
+  titulo: "Inversão de dia de Cardápio - Pendente Ciência"
 };
 
 export default () => (
-  <Page>
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />
   </Page>

@@ -187,7 +187,7 @@ class Relatorio extends Component {
       meusDados
     } = this.state;
     return (
-      <div className="report food-inclusion">
+      <div className="report">
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}

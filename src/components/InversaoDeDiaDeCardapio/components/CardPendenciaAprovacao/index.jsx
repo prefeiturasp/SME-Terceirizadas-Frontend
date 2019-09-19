@@ -1,17 +1,11 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import "./style.scss";
-
-export const TIPO_CARD_ENUM = {
-  LIMITE: "on-limit",
-  REGULAR: "regular",
-  PRIORIDADE: "priority"
-};
 
 export class CardInversaoPendenciaAprovacao extends Component {
   constructor(props) {
@@ -53,7 +47,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
     } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
-      <div className="card card-pendency-approval">
+      <div className="card card-pendency-approval food-inversion">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
         <div className="row">
           <div className="col-2">
@@ -87,15 +81,9 @@ export class CardInversaoPendenciaAprovacao extends Component {
           )}
           <div className="col-1">
             {pedidos.length > 0 && (
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={18}
-                padding={0}
-                lineHeight={3}
-                lineSpacing={3}
-                className="float-right"
-                active={!collapsed}
+                ativo={!collapsed}
               />
             )}
           </div>
