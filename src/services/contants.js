@@ -1,3 +1,5 @@
+import authService from "./auth";
+
 export const FLUXO = {
   INICIO_PEDIDO: "inicio-pedido",
   CODAE_AUTORIZA: "codae-aprova-pedido",
@@ -12,4 +14,15 @@ export const PEDIDOS = {
   CODAE: "pedidos-codae",
   DRE: "pedidos-diretoria-regional",
   MEUS: "minhas-solicitacoes"
+};
+
+export const SOLICITACOES = {
+  AUTORIZADOS: "autorizados",
+  PENDENTES: "pendentes-aprovacao",
+  NEGADOS: "negados"
+};
+
+export const AUTH_TOKEN = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
 };

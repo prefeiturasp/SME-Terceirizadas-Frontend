@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import { getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
 import DashboardEscola from "./DashboardEscola";
+import { ajustarFormatoLog } from "./helper";
 
 export default class DashboardEscolaContainer extends Component {
   constructor(props, context) {
@@ -7,24 +9,9 @@ export default class DashboardEscolaContainer extends Component {
     this.state = {
       autorizadas: [
         {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "11:19",
-          link: "/dre/painel-de-controle"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-          date: "Qua 11:07",
-          link: "/dre/painel-de-controle"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07",
-          link: "/dre/painel-de-controle"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07",
-          link: "/dre/painel-de-controle"
+          text: "...",
+          date: "...",
+          link: "..."
         }
       ],
       theadList: [
@@ -66,6 +53,15 @@ export default class DashboardEscolaContainer extends Component {
       ]
     };
   }
+
+  async componentDidMount() {
+    const pendentes = await getSolicitacoesPendentesEscola(
+      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
+    );
+    const autorizadas = ajustarFormatoLog(pendentes.results);
+    this.setState({ autorizadas });
+  }
+
   render() {
     const { autorizadas, theadList, trs } = this.state;
     return (

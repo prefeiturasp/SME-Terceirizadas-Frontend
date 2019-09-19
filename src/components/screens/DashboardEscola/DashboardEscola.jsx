@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
-import { Field, reduxForm } from "redux-form";
-import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Collapse } from "react-collapse";
+import { Field, reduxForm } from "redux-form";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
-import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import CardAtalho from "./CardAtalho";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
+import CardLegendas from "../../Shareable/CardLegendas";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
+import CardAtalho from "./CardAtalho";
 import "./style.scss";
 
 export class DashboardEscola extends Component {
@@ -86,7 +86,7 @@ export class DashboardEscola extends Component {
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Autorizadas"}
-                cardType={"card-authorized"}
+                cardType={CARD_TYPE_ENUM.APROVADO}
                 solicitations={autorizadas}
                 icon={"fa-check"}
                 href={"/escola/status-solicitacoes"}
