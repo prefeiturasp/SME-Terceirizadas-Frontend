@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   CardInversaoPendenciaAprovacao,
   TIPO_CARD_ENUM
@@ -9,9 +9,11 @@ import {
   getSuspensoesDeAlimentacaoInformadas,
   getSuspensaoDeAlimentacaoTomadaCiencia
 } from "../../../../services/suspensaoDeAlimentacao.service.js";
-import CardHistorico from "./CardHistorico";
+import CardHistorico from "../../components/CardHistorico";
 import { formatarPedidos } from "./helper";
 import { TERCEIRIZADA } from "../../../../configs/constants";
+import Select from "../../../Shareable/Select";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -57,7 +59,7 @@ class PainelPedidos extends Component {
       todasSolicitacoes,
       todasSolicitacoesTomadaCiencia
     } = this.state;
-
+    const { visaoPorCombo } = this.props;
     const todosOsPedidosForamCarregados = solicitacoesCarregadas;
     return (
       <div>
@@ -65,42 +67,52 @@ class PainelPedidos extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <div>
-              <div className="row">
-                <div className="col-7">
-                  <div className="page-title">
-                    Suspensão de Alimentação - Pendente Tomar Ciência
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-3 font-10 my-auto">
+                    Data: {dataAtualDDMMYYYY()}
                   </div>
-                </div>
-                <div className="col-5" />
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={"Solicitações para tomar ciência"}
-                    tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
-                    totalSOlicitacoes={todasSolicitacoes}
-                    pedidos={todasSolicitacoes}
-                    ultimaColunaLabel={"Data"}
-                    parametroURL={TERCEIRIZADA}
-                  />
-                </div>
-              </div>
-              {todasSolicitacoesTomadaCiencia.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(
-                        todasSolicitacoesTomadaCiencia
-                      )}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Suspensão de Alimentações Tomadas Ciência"
+                  <div className="offset-6 col-3 text-right">
+                    <Field
+                      component={Select}
+                      name="visao_por"
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.onFiltroSelected(event.target.value)
                       }
+                      placeholder={"Filtro por"}
+                      options={visaoPorCombo}
                     />
                   </div>
                 </div>
-              )}
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardInversaoPendenciaAprovacao
+                      tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
+                      totalSOlicitacoes={todasSolicitacoes}
+                      pedidos={todasSolicitacoes}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
+                    />
+                  </div>
+                </div>
+                {todasSolicitacoesTomadaCiencia.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(
+                          todasSolicitacoesTomadaCiencia
+                        )}
+                        ultimaColunaLabel={"Data(s)"}
+                        titulo={
+                          "Histórico de Suspensão de Alimentações Tomadas Ciência"
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </form>
         )}
