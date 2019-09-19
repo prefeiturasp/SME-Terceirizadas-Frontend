@@ -12,17 +12,17 @@ export class Rascunhos extends Component {
         const { uuid, id_externo } = inversaoDeDiaDeCardapio;
         let backgroundColor = "#DADADA";
         return (
-          <div className="card border rounded mt-3 p-2">
+          <div className="card draft border rounded p-2">
             <div className="mt-2 row">
               <div className="col-sm">
                 <label className="bold ml-3">
-                  Alteração de Dia de cardápio {`# ${id_externo}`}
+                  Alteração de dia de Cardápio {`# ${id_externo}`}
                 </label>
                 <span
                   className="ml-3 p-1 border rounded"
                   style={{ background: backgroundColor }}
                 >
-                  {"SALVO"}
+                  {"RASCUNHO"}
                 </span>
               </div>
             </div>

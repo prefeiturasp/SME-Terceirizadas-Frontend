@@ -6,10 +6,7 @@ import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import {
-  required,
-  naoPodeSerZero
-} from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -58,7 +55,7 @@ class InclusaoDeAlimentacao extends Component {
       periodos: [],
       rascunhosInclusaoDeAlimentacao: [],
       status: "SEM STATUS",
-      title: "Nova Inclusão de Alimentação",
+      title: "Nova Solicitação",
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -585,10 +582,10 @@ class InclusaoDeAlimentacao extends Component {
                 />
               </div>
             )}
-            <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <p className="page-title font-weight-bold">{title}</p>
+            <div ref={this.titleRef} className="mt-2 page-title">
+              {title}
             </div>
-            <div className="card food-inclusion mt-3">
+            <div className="card food-inclusion mt-2">
               <div className="card-body">
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão

@@ -20,14 +20,16 @@ import {
   inicioPedido,
   removerInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { InputComData } from "../Shareable/DatePicker";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import Botao from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -35,7 +37,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.state = {
       rascunhosInversoes: [],
       status: "SEM STATUS",
-      title: "Nova solicitação",
+      title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar",
       segundoDiaUtil: "",
       showModal: false,
@@ -199,7 +201,7 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   render() {
-    const { showModal, loading } = this.state;
+    const { showModal, loading, rascunhosInversoes } = this.state;
     const {
       handleSubmit,
       pristine,
@@ -217,25 +219,31 @@ export class InversaoDeDiaDeCardapio extends Component {
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos || 0}
             />
-            <Rascunhos
-              rascunhosInversoes={this.state.rascunhosInversoes}
-              removerRascunho={this.removerRascunho}
-              resetForm={event => this.resetForm(event)}
-              carregarRascunho={params => this.carregarRascunho(params)}
-            />
-            <div className="mt-3 page-title">{this.state.title}</div>
-            <div className="card border rounded mt-2">
+            {rascunhosInversoes.length > 0 && (
+              <div className="mt-3">
+                <span className="page-title">Rascunhos</span>
+                <Rascunhos
+                  rascunhosInversoes={rascunhosInversoes}
+                  removerRascunho={this.removerRascunho}
+                  resetForm={event => this.resetForm(event)}
+                  carregarRascunho={params => this.carregarRascunho(params)}
+                />
+              </div>
+            )}
+            <div className="mt-2 page-title">{this.state.title}</div>
+            <div className="card inversao-dia-cardapio border rounded mt-2">
               <div className="card-body">
-                <label className="font-weight-bold">
+                <label className="card-title font-weight-bold">
                   Descrição da Alteração
                 </label>
-                <div className="row w-100 pb-3">
+                <div className="row w-100 pt-3">
                   <div className="col-md-12 col-lg-5">
                     <Field
-                      component={LabelAndDate}
+                      component={InputComData}
                       name="data_de"
                       label="Referência"
                       textoLabel="Cardápio dia"
+                      required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
                       minDate={proximos_dois_dias_uteis}
@@ -243,15 +251,16 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                   <div className="col-md-12 col-lg-2 for-span">
-                    <span className="font-weight-bold pr-3">para</span>
+                    <span className="pr-3">para</span>
                     <i class="fas fa-arrow-right" />
                   </div>
                   <div className="col-md-12 col-lg-5">
                     <Field
-                      component={LabelAndDate}
+                      component={InputComData}
                       name="data_para"
                       label="Aplicar em"
                       textoLabel="Cardápio dia"
+                      required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
                       activeCalendar
@@ -260,49 +269,54 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                 </div>
-                <div className="row form-group">
-                  <Field
-                    component={LabelAndTextArea}
-                    label="Motivo"
-                    name="motivo"
-                    validate={[textAreaRequired]}
-                  />
-                </div>
-                <div className="row form-group">
-                  <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
-                    label="Observação"
-                    name="observacao"
-                  />
-                </div>
-                <div className="row form-group text-right mt-4">
+                <div className="row">
                   <div className="col-12">
-                    <BaseButton
-                      label="Cancelar"
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Motivo"
+                      name="motivo"
+                      required
+                      validate={[textAreaRequired]}
+                    />
+                  </div>
+                </div>
+                <div className="row mt-5">
+                  <div className="col-12 mt-2">
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Observação"
+                      name="observacao"
+                    />
+                  </div>
+                </div>
+                <div className="row text-right mt-5">
+                  <div className="col-12 mt-2">
+                    <Botao
+                      texto="Cancelar"
                       onClick={event => this.resetForm(event)}
                       disabled={pristine || submitting}
-                      style={ButtonStyle.OutlinePrimary}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_TYPE.SUBMIT}
                     />
-                    <BaseButton
-                      label={this.state.salvarAtualizarLbl}
-                      disabled={pristine || submitting}
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      disabled={submitting}
                       onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
-                      type={ButtonType.SUBMIT}
-                      style={ButtonStyle.OutlinePrimary}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_TYPE.SUBMIT}
                     />
-                    <BaseButton
-                      label="Enviar Solicitação"
-                      disabled={pristine || submitting}
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Enviar Solicitação"
+                      disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
                           status: STATUS_DRE_A_VALIDAR
                         })
                       )}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
+                      type={BUTTON_TYPE.SUBMIT}
                       className="ml-3"
                     />
                   </div>
