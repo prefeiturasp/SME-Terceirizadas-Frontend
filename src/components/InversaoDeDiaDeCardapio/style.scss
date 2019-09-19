@@ -1,7 +1,36 @@
-.react-datepicker-wrapper, .react-datepicker__input-container {
-    width: 98%;
-}
+@import "../../styles/variables.scss";
 
-.for-span {
-  margin-top: 45px;
+.card.inversao-dia-cardapio {
+  .card-title {
+    color: $blackInput;
+  }
+
+  .input-group {
+    .input-group-text {
+      height: 35px;
+      margin-top: 2px;
+      font-size: 14px;
+    }
+    &:not(.active-calendar) {
+      .input-group-text {
+        color: $gray;
+      }
+    }
+    &.active-calendar {
+      .input-group-text {
+        height: 37px;
+      }
+    }
+  }
+
+  .react-datepicker-wrapper,
+  .react-datepicker__input-container {
+    width: 98%;
+  }
+
+  .for-span {
+    font-size: 14px;
+    color: $blackInput;
+    margin-top: 45px;
+  }
 }
