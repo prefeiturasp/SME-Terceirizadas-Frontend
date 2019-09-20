@@ -77,6 +77,7 @@ export default class DashboardEscolaContainer extends Component {
     };
   }
 
+
   async componentDidMount() {
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
@@ -95,6 +96,7 @@ export default class DashboardEscolaContainer extends Component {
     canceladas = ajustarFormatoLog(canceladas.results);
     this.setState({ autorizadas, pendentes, negadas, canceladas });
   }
+
 
   render() {
     const { autorizadas, pendentes, negadas, theadList, trs } = this.state;
