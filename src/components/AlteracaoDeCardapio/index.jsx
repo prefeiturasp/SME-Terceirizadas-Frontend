@@ -314,6 +314,12 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  onKeyPress(event) {
+    if (event.which === 13) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -354,7 +360,7 @@ class AlteracaoCardapio extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit} onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}
