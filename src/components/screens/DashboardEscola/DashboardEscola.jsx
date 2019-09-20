@@ -6,7 +6,10 @@ import CardBody from "../../Shareable/CardBody";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
@@ -26,7 +29,14 @@ export class DashboardEscola extends Component {
 
   render() {
     const { collapsed } = this.state;
-    const { numeroAlunos, autorizadas, theadList, trs } = this.props;
+    const {
+      numeroAlunos,
+      autorizadas,
+      pendentes,
+      negadas,
+      theadList,
+      trs
+    } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -96,7 +106,7 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Pendente Aprovação"}
                 cardType={"card-pending"}
-                solicitations={autorizadas}
+                solicitations={pendentes}
                 icon={"fa-exclamation-triangle"}
                 href={"/escola/status-solicitacoes"}
               />
@@ -107,7 +117,7 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Recusadas"}
                 cardType={"card-denied"}
-                solicitations={autorizadas}
+                solicitations={negadas}
                 icon={"fa-ban"}
                 href={"/escola/status-solicitacoes"}
               />
