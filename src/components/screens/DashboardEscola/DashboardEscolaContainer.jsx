@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import {
   getSolicitacoesAutorizadasEscola,
+  getSolicitacoesCanceladasEscola,
   getSolicitacoesNegadasEscola,
-  getSolicitacoesPendentesEscola,
-  getSolicitacoesCanceladasEscola
+  getSolicitacoesPendentesEscola
 } from "../../../services/painelEscola.service";
 import { ajustarFormatoLog } from "../helper";
 import DashboardEscola from "./DashboardEscola";
+import { meusDados } from "../../../services/perfil.service";
 
 export default class DashboardEscolaContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      meusDados: {},
       autorizadas: [
         {
           text: "...",
@@ -81,20 +83,16 @@ export default class DashboardEscolaContainer extends Component {
   }
 
   async componentDidMount() {
-    let pendentes = await getSolicitacoesPendentesEscola(
-      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-    );
-    let autorizadas = await getSolicitacoesAutorizadasEscola(
-      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-    );
+    const dadosMeus = await meusDados();
+    //TODO aguardando definicao de perfil
+    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
 
-    let negadas = await getSolicitacoesNegadasEscola(
-      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-    );
+    let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
+    let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
 
-    let canceladas = await getSolicitacoesCanceladasEscola(
-      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-    );
+    let negadas = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
+
+    let canceladas = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
 
     autorizadas = ajustarFormatoLog(autorizadas.results);
     pendentes = ajustarFormatoLog(pendentes.results);

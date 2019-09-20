@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
 import { getSolicitacoesAutorizadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
@@ -30,24 +31,23 @@ export default class StatusSolicitacoes extends Component {
     let tipoCard = "";
     let icone = "";
     let titulo = "";
+    const dadosMeus = await meusDados();
+    //TODO aguardando definicao de perfil
+    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
 
     switch (this.props.tipoStatus) {
       case STATUS.AUTORIZADAS:
         tipoCard = CARD_TYPE_ENUM.APROVADO;
         icone = "fa-check";
         titulo = "Autorizadas";
-        solicitacoes = await getSolicitacoesAutorizadasEscola(
-          "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-        );
+        solicitacoes = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
         break;
 
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = "fa-exclamation-triangle";
         titulo = "Pendentes";
-        solicitacoes = await getSolicitacoesPendentesEscola(
-          "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-        );
+        solicitacoes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
         break;
 
       default:
