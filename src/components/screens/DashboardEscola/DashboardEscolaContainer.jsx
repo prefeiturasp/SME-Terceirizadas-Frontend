@@ -54,13 +54,13 @@ export default class DashboardEscolaContainer extends Component {
     };
   }
 
-  async componentDidMount() {
-    const pendentes = await getSolicitacoesPendentesEscola(
-      "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-    );
-    const autorizadas = ajustarFormatoLog(pendentes.results);
-    this.setState({ autorizadas });
-  }
+  // async componentDidMount() {
+  //   const pendentes = await getSolicitacoesPendentesEscola(
+  //     "b9a36370-2fdd-44ab-8a33-a22b6921236f"
+  //   );
+  //   const autorizadas = ajustarFormatoLog(pendentes.results);
+  //   this.setState({ autorizadas });
+  // }
 
   render() {
     const { autorizadas, theadList, trs } = this.state;
