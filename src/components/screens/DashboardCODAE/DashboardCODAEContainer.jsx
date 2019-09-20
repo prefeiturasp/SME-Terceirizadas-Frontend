@@ -7,9 +7,9 @@ import {
   getSolicitacoesPendentesAprovacaoCodae,
   getSolicitacoesRevisaoAprovacaoCodae
 } from "../../../services/painelCODAE.service";
-import { FILTRO, VENCIMENTO } from "./const";
+import { FILTRO, VENCIMENTO } from "../const";
 import DashboardCODAE from "./DashboardCODAE";
-import { ajustarFormaLotes, ajustarFormatoLog } from "./helper";
+import { ajustarFormaLotes, ajustarFormatoLog } from "../helper";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 
 class DashboardCODAEContainer extends Component {
@@ -29,9 +29,9 @@ class DashboardCODAEContainer extends Component {
     lotes = ajustarFormaLotes(lotes.results);
 
     getSuspensoesDeAlimentacaoInformadas().then(response => {
-      let quantidade_suspensoes = response.length
-      this.setState({ quantidade_suspensoes })
-    })
+      let quantidade_suspensoes = response.length;
+      this.setState({ quantidade_suspensoes });
+    });
 
     this.setState({
       totalAlunos,

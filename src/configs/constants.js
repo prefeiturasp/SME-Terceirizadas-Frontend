@@ -11,7 +11,10 @@ export const TERCEIRIZADA = "terceirizada";
 export const DRE = "dre";
 export const ESCOLA = "escola";
 
+export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
+export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
+export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 
 export const RELATORIO = "relatorio";
