@@ -18,14 +18,17 @@ export class CardPendenciaAprovacao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: []
+      pedidosFiltrados: [],
+      filtrado: false
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.pedidos.length !== this.state.pedidosFiltrados.length) {
-      this.setState({ pedidosFiltrados: this.props.pedidos });
+  componentDidUpdate(prevProps, nextProps) {
+    if (this.props.pedidos.length !== nextProps.pedidosFiltrados.length) {
+      if (this.state.filtrado === false) {
+        this.setState({ pedidosFiltrados: this.props.pedidos });
+      }
     }
   }
 
@@ -36,11 +39,12 @@ export class CardPendenciaAprovacao extends Component {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.escola.codigo_eol.includes(palavraAFiltrar)
+        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !==
+          -1
+        //item.lote.nome.includes(palavraAFiltrar)
       );
     });
-    this.setState({ pedidosFiltrados });
+    this.setState({ pedidosFiltrados, filtrado: true });
   }
 
   render() {
