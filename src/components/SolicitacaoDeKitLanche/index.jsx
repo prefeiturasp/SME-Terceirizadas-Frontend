@@ -39,6 +39,7 @@ import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Grid } from "../Shareable/responsiveBs4";
 import { montaObjetoRequisicao } from "./helper";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { PedidoKitLanche } from "../Shareable/PedidoKitLanche";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
@@ -366,6 +367,11 @@ export class SolicitacaoDeKitLanche extends Component {
                   ]}
                 />
               </div>
+              <hr />
+              <PedidoKitLanche
+                nameTempoPasseio="tempo_passeio2"
+                mostrarExplicacao
+              />
               <hr />
 
               <SelecionaTempoPasseio

@@ -23,7 +23,7 @@ import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
 import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
-import { kitLanches } from "../../services/solicitacaoDeKitLanche.service";
+import { getKitLanches } from "../../services/solicitacaoDeKitLanche.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {
@@ -241,7 +241,7 @@ class SolicitacaoUnificada extends Component {
     this.props.change("schools_total", 0);
     this.props.change("kits_total", 0);
 
-    kitLanches()
+    getKitLanches()
       .then(response => {
         this.setState({
           enumKits: extrairKitsLanchesParaCards(response)

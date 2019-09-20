@@ -1,0 +1,101 @@
+@import "../../../../../styles/variables.scss";
+
+div.card.meal-kit {
+  @media screen and (min-width: 991px) and (max-width: 1200px) {
+    height: 245px;
+    width: 155px;
+  }
+  min-height: 190px;
+  max-width: 218px;
+  background-color: $grayCard;
+  border: 1px solid $gray;
+  .card-body {
+    padding: 0 !important;
+    .card-title {
+      padding: 6px 20px;
+      display: flex;
+      justify-content: space-between;
+      color: $blue;
+      font-size: 14px;
+      font-weight: bold;
+      border-bottom: 1px solid $grayInputBackground;
+      margin-bottom: 0;
+    }
+    .item-meal-kit {
+      padding: 6px 20px;
+      color: $gray;
+      font-size: 13px;
+      &:not(:last-child) {
+        border-bottom: 1px solid $grayInputBackground;
+      }
+    }
+  }
+}
+
+/* Customize the label (the container-checkbox) */
+.container-checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: $white;
+  border: 1px solid $grayPlaceholder;
+  border-radius: 4px;
+}
+
+/* On mouse-over, add a grey background color */
+.container-checkbox:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container-checkbox input:checked ~ .checkmark {
+  background-color: $blueCheckAndRadio;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container-checkbox .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
