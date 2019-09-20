@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
-import { getSolicitacoesAutorizadasEscola } from "../../../services/painelEscola.service";
+import { getSolicitacoesAutorizadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
 import CardLegendas from "../../Shareable/CardLegendas";
+import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
 import { ajustarFormatoLog } from "../helper";
@@ -17,23 +18,48 @@ export default class StatusSolicitacoes extends Component {
           date: "...",
           link: "..."
         }
-      ]
+      ],
+      titulo: "...",
+      tipoCard: "...",
+      icone: "..."
     };
   }
 
   async componentDidMount() {
     let solicitacoes = "";
-    if (this.props.tipoStatus === STATUS.AUTORIZADAS) {
-      solicitacoes = await getSolicitacoesAutorizadasEscola(
-        "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-      );
+    let tipoCard = "";
+    let icone = "";
+    let titulo = "";
+
+    switch (this.props.tipoStatus) {
+      case STATUS.AUTORIZADAS:
+        tipoCard = CARD_TYPE_ENUM.APROVADO;
+        icone = "fa-check";
+        titulo = "Autorizadas";
+        solicitacoes = await getSolicitacoesAutorizadasEscola(
+          "b9a36370-2fdd-44ab-8a33-a22b6921236f"
+        );
+        break;
+
+      case STATUS.PENDENTES:
+        tipoCard = CARD_TYPE_ENUM.PENDENTE;
+        icone = "fa-exclamation-triangle";
+        titulo = "Pendentes";
+        solicitacoes = await getSolicitacoesPendentesEscola(
+          "b9a36370-2fdd-44ab-8a33-a22b6921236f"
+        );
+        break;
+
+      default:
+        break;
     }
+
     solicitacoes = ajustarFormatoLog(solicitacoes.results);
-    this.setState({ solicitacoes });
+    this.setState({ solicitacoes, tipoCard, icone, titulo });
   }
 
   render() {
-    const { solicitacoes } = this.state;
+    const { solicitacoes, titulo, tipoCard, icone } = this.state;
     return (
       <div className="card mt-3">
         <div className="card-body">
@@ -42,10 +68,10 @@ export default class StatusSolicitacoes extends Component {
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Autorizadas"}
+            titulo={titulo}
             solicitacoes={solicitacoes}
-            tipo={"card-authorized"}
-            icone={"fa-check"}
+            tipo={tipoCard}
+            icone={icone}
           />
           <CardLegendas />
         </div>
