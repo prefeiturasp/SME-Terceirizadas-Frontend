@@ -31,6 +31,8 @@ import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapi
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
+import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
+import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -55,7 +57,6 @@ import * as constants from "./constants";
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
-
 const routesConfig = [
   {
     path: "/",
@@ -70,6 +71,16 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.PAINEL_CONTROLE}`,
     component: DashboardEscolaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
+    component: StatusSolicitacoesAutorizadasEscolaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesEscolaPage,
     exact: false
   },
   {
