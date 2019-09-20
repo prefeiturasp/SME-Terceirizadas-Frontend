@@ -1,13 +1,8 @@
 import React, { Component } from "react";
-import {
-  getSolicitacoesAutorizadasEscola,
-  getSolicitacoesCanceladasEscola,
-  getSolicitacoesNegadasEscola,
-  getSolicitacoesPendentesEscola
-} from "../../../services/painelEscola.service";
+import { getSolicitacoesAutorizadasEscola, getSolicitacoesCanceladasEscola, getSolicitacoesNegadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import { meusDados } from "../../../services/perfil.service";
 import { ajustarFormatoLog } from "../helper";
 import DashboardEscola from "./DashboardEscola";
-import { meusDados } from "../../../services/perfil.service";
 
 export default class DashboardEscolaContainer extends Component {
   constructor(props, context) {
