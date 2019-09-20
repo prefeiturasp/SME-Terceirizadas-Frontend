@@ -5,7 +5,7 @@ import "./style.scss";
 export class CardKit extends Component {
   render() {
     const { nome, itens, uuid } = this.props.kitLanche;
-    const { checked, onCardChange } = this.props;
+    const { checked, onCardChange, nameKitsLanche } = this.props;
     return (
       <div className="card meal-kit">
         <div className="card-body">
@@ -17,7 +17,7 @@ export class CardKit extends Component {
                 component={"input"}
                 onChange={() => onCardChange(uuid)}
                 type="checkbox"
-                name={uuid}
+                name={nameKitsLanche}
               />
               <span className="checkmark" />
             </label>

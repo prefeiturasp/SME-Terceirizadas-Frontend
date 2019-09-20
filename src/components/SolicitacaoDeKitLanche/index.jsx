@@ -41,17 +41,13 @@ import { montaObjetoRequisicao } from "./helper";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { PedidoKitLanche } from "../Shareable/PedidoKitLanche";
 
-export const HORAS_ENUM = {
-  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
-  _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
-  _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
-};
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
       qtd_kit_lanche: 0,
+      kitsChecked: [],
       initialValues: false,
       radioChanged: false,
       rascunhosSolicitacoesKitLanche: [],
@@ -63,13 +59,13 @@ export class SolicitacaoDeKitLanche extends Component {
       modalMessage: "",
       botaoConfirma: true
     };
-    this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.setInitialValues = this.setInitialValues.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.updateKitsChecked = this.updateKitsChecked.bind(this);
   }
 
   OnDeleteButtonClicked(id_externo, uuid) {
@@ -109,16 +105,15 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.props.change(
       "tempo_passeio",
-      solicitacaoKitLanche.solicitacao_kit_lanche.tempo_passeio
-    );
-    this.props.change(
-      "kit_lanche",
-      extrairKitsLanche(solicitacaoKitLanche.solicitacao_kit_lanche.kits)
+      solicitacaoKitLanche.solicitacao_kit_lanche.tempo_passeio.toString()
     );
     this.setState({
       status: solicitacaoKitLanche.status,
       title: `Solicitação # ${solicitacaoKitLanche.id_externo}`,
-      salvarAtualizarLbl: "Atualizar"
+      salvarAtualizarLbl: "Atualizar",
+      kitsChecked: extrairKitsLanche(
+        solicitacaoKitLanche.solicitacao_kit_lanche.kits
+      )
     });
   }
 
@@ -171,6 +166,7 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
+    values.kit_lanche = this.state.kitsChecked;
     values.escola = this.props.meusDados.escolas[0].uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     if (values.confirmar) {
@@ -277,20 +273,9 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({ modalConfirmation: false });
   }
 
-  setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
-    const parser = {
-      "4h": HORAS_ENUM._4.qtd_kits,
-      "5_7h": HORAS_ENUM._5a7.qtd_kits,
-      "8h": HORAS_ENUM._8.qtd_kits
-    };
-
-    let newQuantity = parser[event];
-    this.setState({
-      ...this.state,
-      qtd_kit_lanche: newQuantity,
-      radioChanged: event !== previousValue
-    });
-  };
+  updateKitsChecked(kitsChecked) {
+    this.setState({ kitsChecked });
+  }
 
   render() {
     const {
@@ -298,7 +283,6 @@ export class SolicitacaoDeKitLanche extends Component {
       pristine,
       submitting,
       meusDados,
-      enumKits,
       proximos_dois_dias_uteis
     } = this.props;
     const {
@@ -308,8 +292,7 @@ export class SolicitacaoDeKitLanche extends Component {
       modalConfirmation,
       botaoConfirma,
       loading,
-      qtd_kit_lanche,
-      initialValues
+      kitsChecked
     } = this.state;
     return (
       <div>
@@ -367,38 +350,13 @@ export class SolicitacaoDeKitLanche extends Component {
                   ]}
                 />
               </div>
-              <hr />
               <PedidoKitLanche
-                nameTempoPasseio="tempo_passeio2"
+                nameTempoPasseio="tempo_passeio"
+                nameKitsLanche="kit_lanche"
+                updateKitsChecked={this.updateKitsChecked}
+                kitsChecked={kitsChecked}
                 mostrarExplicacao
               />
-              <hr />
-
-              <SelecionaTempoPasseio
-                className="mt-3"
-                onChange={(event, newValue, previousValue, name) =>
-                  this.setNumeroDeKitLanches(
-                    event,
-                    newValue,
-                    previousValue,
-                    name
-                  )
-                }
-                mostrarExplicacao
-              />
-
-              <hr className="mt-4 mb-4 w-100" />
-
-              {enumKits && (
-                <SelecionaKitLancheBox
-                  className="mt-3"
-                  choicesNumberLimit={qtd_kit_lanche}
-                  initialValues={initialValues}
-                  setInitialValues={this.setInitialValues}
-                  kits={enumKits}
-                />
-              )}
-
               <div className="form-group mt-2 pt-3">
                 <label className="font-weight-bold">
                   {"Número total kits:"}

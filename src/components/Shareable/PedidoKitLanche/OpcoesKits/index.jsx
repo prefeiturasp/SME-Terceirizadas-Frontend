@@ -21,6 +21,15 @@ export class OpcoesKits extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.kitsChecked && prevProps.kitsChecked.length === 0 &&
+      this.props.kitsChecked && this.props.kitsChecked.length > 0
+    ) {
+      this.setState({ kitsChecked: this.props.kitsChecked });
+    }
+  }
+
   onCardChange(uuid) {
     let kitsChecked = this.state.kitsChecked;
     if (!kitsChecked.includes(uuid)) {
@@ -29,6 +38,7 @@ export class OpcoesKits extends Component {
       kitsChecked.splice(kitsChecked.indexOf(uuid), 1);
     }
     this.setState({ kitsChecked });
+    this.props.updateKitsChecked(kitsChecked);
   }
 
   render() {
@@ -45,6 +55,7 @@ export class OpcoesKits extends Component {
                     onCardChange={this.onCardChange}
                     kitLanche={kitLanche}
                     checked={kitsChecked.includes(kitLanche.uuid)}
+                    {...this.props}
                   />
                 </div>
               );
