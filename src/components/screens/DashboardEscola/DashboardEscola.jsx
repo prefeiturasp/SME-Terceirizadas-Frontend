@@ -13,6 +13,13 @@ import {
 import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_CANCELADAS
+} from "../../../configs/constants";
 
 export class DashboardEscola extends Component {
   constructor(props) {
@@ -99,7 +106,7 @@ export class DashboardEscola extends Component {
                 cardType={CARD_TYPE_ENUM.APROVADO}
                 solicitations={autorizadas}
                 icon={"fa-check"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
             </div>
             <div className="col-6">
@@ -108,7 +115,7 @@ export class DashboardEscola extends Component {
                 cardType={"card-pending"}
                 solicitations={pendentes}
                 icon={"fa-exclamation-triangle"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
               />
             </div>
           </div>
@@ -119,7 +126,7 @@ export class DashboardEscola extends Component {
                 cardType={"card-denied"}
                 solicitations={negadas}
                 icon={"fa-ban"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               />
             </div>
             <div className="col-6">
@@ -128,7 +135,7 @@ export class DashboardEscola extends Component {
                 cardType={"card-cancelled"}
                 solicitations={autorizadas}
                 icon={"fa-times-circle"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />
             </div>
           </div>

@@ -31,13 +31,12 @@ import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapi
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
-import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
-import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
 import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
+import { default as StatusSolicitacoesAutorizadasEscolaPage, default as StatusSolicitacoesPendentesEscolaPage } from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import Home from "../pages/Home";

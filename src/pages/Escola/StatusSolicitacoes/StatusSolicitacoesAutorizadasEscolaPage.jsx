@@ -4,6 +4,7 @@ import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "../../../configs/constants";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
+import { STATUS } from "../../../components/screens/DashboardEscola/const";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`,
@@ -13,6 +14,6 @@ const atual = {
 export default props => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
-    <StatusSolicitacoes showAutorizadas={true} />
+    <StatusSolicitacoes tipoStatus={STATUS.AUTORIZADAS} />
   </Page>
 );
