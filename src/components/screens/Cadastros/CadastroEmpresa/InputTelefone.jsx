@@ -52,10 +52,16 @@ class TelefoneOuCelular extends Component {
       setaContatoRepresentante,
       setaContatosNutricionista,
       indice,
-      cenario
+      cenario,
+      name,
+      id,
+      input
     } = this.props;
     return (
       <MaskedInput
+        {...input}
+        name={name}
+        id={id}
         mask={valor => this.verificaCampo(valor)}
         className="form-control"
         guide={false}
