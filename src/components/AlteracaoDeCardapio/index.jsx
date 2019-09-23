@@ -32,7 +32,7 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 
-const ENTER = 13;
+const ENTER = 13;""
 
 class AlteracaoCardapio extends Component {
   constructor(props) {
