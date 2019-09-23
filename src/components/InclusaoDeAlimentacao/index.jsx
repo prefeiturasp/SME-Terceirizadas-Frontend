@@ -46,6 +46,8 @@ import { validarSubmissao } from "./validacao";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
+
+const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
     super(props);
@@ -536,6 +538,12 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -560,7 +568,7 @@ class InclusaoDeAlimentacao extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit} onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={
