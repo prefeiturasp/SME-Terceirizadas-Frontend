@@ -32,6 +32,8 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 
+const ENTER = 13;
+
 class AlteracaoCardapio extends Component {
   constructor(props) {
     super(props);
@@ -314,6 +316,12 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -354,7 +362,7 @@ class AlteracaoCardapio extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit} onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}

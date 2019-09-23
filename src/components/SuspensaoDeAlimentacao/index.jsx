@@ -26,6 +26,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 
+const ENTER = 13;
 class FoodSuspensionEditor extends Component {
   constructor(props) {
     super(props);
@@ -338,7 +339,7 @@ class FoodSuspensionEditor extends Component {
   }
 
   onKeyPress(event) {
-    if (event.which === 13) {
+    if (event.which === ENTER) {
       event.preventDefault();
     }
   }
