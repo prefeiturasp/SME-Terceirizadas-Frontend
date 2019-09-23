@@ -27,8 +27,6 @@ import {
 } from "../Shareable/button";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { InputText } from "../Shareable/Input/InputText";
-import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
-import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
 import {
   LabelAndDate,
   LabelAndInput,
@@ -125,7 +123,8 @@ export class SolicitacaoDeKitLanche extends Component {
       title: "Nova solicitação",
       salvarAtualizarLbl: "Salvar",
       qtd_kit_lanche: 0,
-      initialValues: true
+      initialValues: true,
+      kitsChecked: []
     });
     this.refresh();
   }
@@ -468,12 +467,10 @@ SolicitacaoDeKitLanche = reduxForm({
 })(SolicitacaoDeKitLanche);
 
 const selector = formValueSelector("tourRequest");
+const mapStateToProps = state => {
+  return {
+    tempo_passeio: selector(state, "tempo_passeio")
+  };
+};
 
-SolicitacaoDeKitLanche = connect(state => {
-  const nro_alunos = selector(state, "quantidade_alunos");
-  const kit_lanche = selector(state, "kit_lanche") || [];
-
-  return { qtd_total: kit_lanche.length * nro_alunos };
-})(SolicitacaoDeKitLanche);
-
-export default SolicitacaoDeKitLanche;
+export default connect(mapStateToProps)(SolicitacaoDeKitLanche);

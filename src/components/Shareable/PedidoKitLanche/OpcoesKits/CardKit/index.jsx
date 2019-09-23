@@ -5,9 +5,27 @@ import "./style.scss";
 export class CardKit extends Component {
   render() {
     const { nome, itens, uuid } = this.props.kitLanche;
-    const { checked, onCardChange, nameKitsLanche } = this.props;
+    const {
+      checked,
+      kitsChecked,
+      onCardChange,
+      nameKitsLanche,
+      tempoPasseio
+    } = this.props;
+    const disabled =
+      (!checked &&
+        kitsChecked.length !== 0 &&
+        !kitsChecked.includes(uuid) &&
+        parseInt(tempoPasseio) === kitsChecked.length - 1) ||
+      tempoPasseio === "2" ||
+      (tempoPasseio === "" &&
+        (kitsChecked.length === 0 || !kitsChecked.includes(uuid)));
     return (
-      <div className="card meal-kit">
+      <div
+        className={`card meal-kit
+        ${checked && "checked"}
+        ${disabled && tempoPasseio !== "2" && "disabled"}`}
+      >
         <div className="card-body">
           <div className="card-title">
             <span>{nome}</span>
@@ -15,6 +33,7 @@ export class CardKit extends Component {
               <Field
                 checked={checked}
                 component={"input"}
+                disabled={disabled}
                 onChange={() => onCardChange(uuid)}
                 type="checkbox"
                 name={nameKitsLanche}

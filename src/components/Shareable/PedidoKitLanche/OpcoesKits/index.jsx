@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { CardKit } from "./CardKit";
 import { getKitLanches } from "../../../../services/solicitacaoDeKitLanche.service";
+import { extrairKitsLanche } from "./helper";
 import "./style.scss";
 
 export class OpcoesKits extends Component {
@@ -22,9 +23,23 @@ export class OpcoesKits extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.kitsChecked && prevProps.kitsChecked.length === 0 &&
-      this.props.kitsChecked && this.props.kitsChecked.length > 0
+    if (this.props.tempoPasseio === "2" && prevProps.tempoPasseio !== "2") {
+      this.setState({ kitsChecked: extrairKitsLanche(this.state.kitsLanche) });
+      this.props.updateKitsChecked(extrairKitsLanche(this.state.kitsLanche));
+    } else if (
+      this.props.tempoPasseio !== "2" &&
+      prevProps.tempoPasseio === "2"
+    ) {
+      this.setState({ kitsChecked: [] });
+    } else if (
+      this.props.tempoPasseio === "0" &&
+      (prevProps.tempoPasseio === "1" || prevProps.tempoPasseio === "")
+    ) {
+      this.setState({ kitsChecked: [] });
+    } else if (
+      prevProps.kitsChecked &&
+      this.props.kitsChecked &&
+      this.props.kitsChecked.length !== prevProps.kitsChecked.length
     ) {
       this.setState({ kitsChecked: this.props.kitsChecked });
     }
@@ -54,6 +69,7 @@ export class OpcoesKits extends Component {
                   <CardKit
                     onCardChange={this.onCardChange}
                     kitLanche={kitLanche}
+                    kitsChecked={kitsChecked}
                     checked={kitsChecked.includes(kitLanche.uuid)}
                     {...this.props}
                   />

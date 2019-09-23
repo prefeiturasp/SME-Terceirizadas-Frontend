@@ -9,6 +9,14 @@ div.card.meal-kit {
   max-width: 218px;
   background-color: $grayCard;
   border: 1px solid $gray;
+  &.checked {
+    border: 2px solid $green;
+    min-height: 188px;
+    max-width: 216px;
+  }
+  &.disabled {
+    opacity: 0.5;
+  }
   .card-body {
     padding: 0 !important;
     .card-title {

@@ -4,7 +4,7 @@ import "./style.scss";
 
 export class TempoPasseio extends Component {
   render() {
-    const { mostrarExplicacao, nameTempoPasseio } = this.props;
+    const { mostrarExplicacao, nameTempoPasseio, onTempoPasseioChanged } = this.props;
     return (
       <div className="tour-time">
         <p className="label">Tempo previsto do passeio</p>
@@ -13,6 +13,7 @@ export class TempoPasseio extends Component {
             até 4 horas (1 kit)
             <Field
               component={"input"}
+              onChange={onTempoPasseioChanged}
               type="radio"
               value="0"
               name={nameTempoPasseio}
@@ -23,6 +24,7 @@ export class TempoPasseio extends Component {
             de 5 a 7 horas (2 kits)
             <Field
               component={"input"}
+              onChange={onTempoPasseioChanged}
               type="radio"
               value="1"
               name={nameTempoPasseio}
@@ -33,6 +35,7 @@ export class TempoPasseio extends Component {
             8 horas ou mais (3 kits)
             <Field
               component={"input"}
+              onChange={onTempoPasseioChanged}
               type="radio"
               value="2"
               name={nameTempoPasseio}
