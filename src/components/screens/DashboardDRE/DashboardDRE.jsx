@@ -28,7 +28,11 @@ import {
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
-  SOLICITACOES
+  SOLICITACOES,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
 import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service";
 class DashboardDRE extends Component {
@@ -284,7 +288,7 @@ class DashboardDRE extends Component {
                     cardType={"card-pending"}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
-                    href={`/${DRE}/solicitacoes-pendentes`}
+                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                     loading={loadingPendentes}
                   />
                 </div>
@@ -294,7 +298,7 @@ class DashboardDRE extends Component {
                     cardType={"card-authorized"}
                     solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
-                    href={"/dre/solicitacoes-autorizadas"}
+                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
                     loading={loadingAutorizadas}
                   />
                 </div>
@@ -307,7 +311,7 @@ class DashboardDRE extends Component {
                       cardType={"card-denied"}
                       solicitations={recusadasList}
                       icon={"fa-ban"}
-                      href={"/dre/solicitacoes-recusadas"}
+                      href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
                     />
                   </div>
                 )}
@@ -319,7 +323,7 @@ class DashboardDRE extends Component {
                       cardType={"card-cancelled"}
                       solicitations={canceladasList}
                       icon={"fa-times-circle"}
-                      href={"/dre/solicitacoes-canceladas"}
+                      href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
                     />
                   </div>
                 )}

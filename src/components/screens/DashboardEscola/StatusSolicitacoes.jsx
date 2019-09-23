@@ -1,70 +1,77 @@
 import React, { Component } from "react";
-import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
+import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
+import { getSolicitacoesAutorizadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
+import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
-const solicitacoes = [
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "11:19"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-    date: "Qua 11:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  },
-  {
-    text: "12083 - 7A IP I - Solicitação Unificada",
-    date: "Qua 10:07"
-  }
-];
+import { ajustarFormatoLog } from "../helper";
+import { STATUS } from "./const";
 
 export default class StatusSolicitacoes extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      solicitacoes: [
+        {
+          text: "...",
+          date: "...",
+          link: "..."
+        }
+      ],
+      titulo: "...",
+      tipoCard: "...",
+      icone: "..."
+    };
+  }
+
+  async componentDidMount() {
+    let solicitacoes = "";
+    let tipoCard = "";
+    let icone = "";
+    let titulo = "";
+    const dadosMeus = await meusDados();
+    //TODO aguardando definicao de perfil
+    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
+
+    switch (this.props.tipoStatus) {
+      case STATUS.AUTORIZADAS:
+        tipoCard = CARD_TYPE_ENUM.APROVADO;
+        icone = "fa-check";
+        titulo = "Autorizadas";
+        solicitacoes = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
+        break;
+
+      case STATUS.PENDENTES:
+        tipoCard = CARD_TYPE_ENUM.PENDENTE;
+        icone = "fa-exclamation-triangle";
+        titulo = "Pendentes";
+        solicitacoes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
+        break;
+
+      default:
+        break;
+    }
+
+    solicitacoes = ajustarFormatoLog(solicitacoes.results);
+    this.setState({ solicitacoes, tipoCard, icone, titulo });
+  }
+
   render() {
+    const { solicitacoes, titulo, tipoCard, icone } = this.state;
     return (
       <div className="card mt-3">
         <div className="card-body">
           <div className="pr-3">
-            <InputSearch voltarLink="/escola/painel-de-controle" />
+            <InputSearch voltarLink={`/${ESCOLA}/${PAINEL_CONTROLE}`} />
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Autorizadas"}
+            titulo={titulo}
             solicitacoes={solicitacoes}
-            tipo={"card-authorized"}
-            icone={"fa-check"}
-          />
-          <CardStatusDeSolicitacaoLargo
-            titulo={"Pendente de Aprovação"}
-            solicitacoes={solicitacoes}
-            tipo={"card-pending"}
-            icone={"fa-exclamation-triangle"}
-          />
-          <CardStatusDeSolicitacaoLargo
-            titulo={"Recusadas"}
-            solicitacoes={solicitacoes}
-            tipo={"card-denied"}
-            icone={"fa-check"}
-          />
-          <CardStatusDeSolicitacaoLargo
-            titulo={"Canceladas"}
-            solicitacoes={solicitacoes}
-            tipo={"card-cancelled"}
-            icone={"fa-times-circle"}
+            tipo={tipoCard}
+            icone={icone}
           />
           <CardLegendas />
         </div>
