@@ -36,6 +36,8 @@ import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
 import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
+import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
+import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import Home from "../pages/Home";
@@ -55,7 +57,6 @@ import * as constants from "./constants";
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
-
 const routesConfig = [
   {
     path: "/",
@@ -70,6 +71,16 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.PAINEL_CONTROLE}`,
     component: DashboardEscolaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
+    component: StatusSolicitacoesAutorizadasEscolaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesEscolaPage,
     exact: false
   },
   {

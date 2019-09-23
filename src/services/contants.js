@@ -17,9 +17,10 @@ export const PEDIDOS = {
 };
 
 export const SOLICITACOES = {
-  AUTORIZADOS: "autorizados",
+  AUTORIZADOS: "aprovados",
   PENDENTES: "pendentes-aprovacao",
-  NEGADOS: "negados"
+  NEGADOS: "negados",
+  CANCELADOS: "cancelados"
 };
 
 export const AUTH_TOKEN = {

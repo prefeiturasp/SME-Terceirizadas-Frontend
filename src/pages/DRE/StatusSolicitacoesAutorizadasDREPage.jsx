@@ -3,15 +3,16 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import StatusSolicitacoes from "../../components/screens/DashboardDRE/StatusSolicitacoes";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "./constants";
+import { DRE, SOLICITACOES_AUTORIZADAS } from "../../configs/constants";
 
 const atual = {
-  href: "/dre/solicitacoes-autorizadas",
+  href: `/${DRE}/${SOLICITACOES_AUTORIZADAS}`,
   titulo: "Solicitações Autorizadas"
 };
 
 export default props => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
-    <StatusSolicitacoes showAutorizadas={true}/>
+    <StatusSolicitacoes showAutorizadas={true} />
   </Page>
 );
