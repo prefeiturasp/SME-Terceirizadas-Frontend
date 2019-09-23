@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { Select } from "../../Shareable/Select";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardStatusDeSolicitacao, { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";
@@ -266,7 +266,9 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <Link to={`/${DRE}/${SOLICITACOES}`}>Painel de Status de Solicitações</Link>
+                <Link to={`/${DRE}/${SOLICITACOES}`}>
+                  Painel de Status de Solicitações
+                </Link>
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -285,7 +287,7 @@ class DashboardDRE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Pendente Aprovação"}
-                    cardType={"card-pending"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
                     href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
@@ -295,7 +297,7 @@ class DashboardDRE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
+                    cardType={CARD_TYPE_ENUM.APROVADO}
                     solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
                     href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}

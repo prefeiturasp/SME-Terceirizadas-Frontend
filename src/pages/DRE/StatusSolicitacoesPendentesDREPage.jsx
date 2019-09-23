@@ -3,9 +3,10 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import StatusSolicitacoes from "../../components/screens/DashboardDRE/StatusSolicitacoes";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "./constants";
+import { DRE, SOLICITACOES_PENDENTES } from "../../configs/constants";
 
 const atual = {
-  href: "/dre/solicitacoes-pendentes",
+  href: `/${DRE}/${SOLICITACOES_PENDENTES}`,
   titulo: "Solicitações Pendentes"
 };
 

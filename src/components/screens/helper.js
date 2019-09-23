@@ -1,5 +1,6 @@
 import {
   ALTERACAO_CARDAPIO,
+  DRE,
   ESCOLA,
   INVERSAO_CARDAPIO,
   RELATORIO,
@@ -12,7 +13,25 @@ const INV_CARDAPIO = "INV_CARDAPIO";
 const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 
-export const ajustarFormatoLog = logs => {
+export const LOG_PARA = {
+  ESCOLA: 0,
+  DRE: 1,
+  CODAE: 3,
+  TERCEIRIZADA: 2
+};
+
+export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
+  let tipoRelatorio = "";
+  switch (visao) {
+    case LOG_PARA.ESCOLA:
+      tipoRelatorio = ESCOLA;
+      break;
+    case LOG_PARA.DRE:
+      tipoRelatorio = DRE;
+      break;
+    default:
+      break;
+  }
   return logs.map(log => {
     let solicitacao = "falta-implementar";
     switch (log.tipo_doc) {
@@ -35,11 +54,10 @@ export const ajustarFormatoLog = logs => {
     return {
       text: log.descricao,
       date: log.data_log,
-      link: `/${ESCOLA}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
+      link: `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
     };
   });
 };
-
 
 export const ajustarFormaLotes = lotes => {
   return lotes.map(lote => {

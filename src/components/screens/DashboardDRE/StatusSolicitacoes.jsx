@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
-import { InputSearch } from "../../Shareable/InputSearch";
+import { DRE, PAINEL_CONTROLE } from "../../../configs/constants";
 import {
-  getSolicitacoesAutorizadasPelaDRE,
-  getSolicitacoesPendentesParaDRE
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesPendentesDRE
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { CardListarSolicitacoes } from "../../Shareable/CardListarSolicitacoes";
+import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
+import { InputSearch } from "../../Shareable/InputSearch";
+import { ajustarFormatoLog, LOG_PARA } from "../helper";
 
 export class StatusSolicitacoes extends Component {
   constructor(props) {
@@ -30,24 +32,19 @@ export class StatusSolicitacoes extends Component {
 
   async componentDidMount() {
     const meusDados = await getMeusDados();
+    const dreUuid = meusDados.diretorias_regionais[0].uuid;
 
-    const autorizadas = !this.state.showAutorizadas
-      ? []
-      : await getSolicitacoesAutorizadasPelaDRE(
-          meusDados.diretorias_regionais[0].uuid
-        );
+    let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
+    let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
 
-    const pendentes = !this.state.showPendentes
-      ? []
-      : await getSolicitacoesPendentesParaDRE(
-          meusDados.diretorias_regionais[0].uuid
-        );
+    autorizadas = ajustarFormatoLog(autorizadas.results, LOG_PARA.DRE);
+    pendentes = ajustarFormatoLog(pendentes.results, LOG_PARA.DRE);
 
     this.setState({
-      autorizadasList: autorizadas.results,
-      autorizadasListFiltered: autorizadas.results,
-      pendentesList: pendentes.results,
-      pendentesListFiltered: pendentes.results
+      autorizadasList: autorizadas,
+      autorizadasListFiltered: autorizadas,
+      pendentesList: pendentes,
+      pendentesListFiltered: pendentes
     });
   }
 
@@ -100,13 +97,13 @@ export class StatusSolicitacoes extends Component {
         <div className="card-body">
           <div className="mr-4">
             <InputSearch
-              voltarLink="/dre/painel-de-controle"
+              voltarLink={`/${DRE}/${PAINEL_CONTROLE}`}
               filterList={this.filterList}
             />
           </div>
           <div className="pb-3" />
           {autorizadasListFiltered && autorizadasListFiltered.length > 0 && (
-            <CardListarSolicitacoes
+            <CardStatusDeSolicitacaoLargo
               titulo={"Autorizadas"}
               solicitacoes={autorizadasListFiltered}
               tipo={"card-authorized"}
