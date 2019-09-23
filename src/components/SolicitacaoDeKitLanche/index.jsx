@@ -32,6 +32,7 @@ import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { PedidoKitLanche } from "../Shareable/PedidoKitLanche";
 import "./style.scss";
 
+const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
@@ -274,6 +275,12 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({ kitsChecked });
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -296,7 +303,7 @@ export class SolicitacaoDeKitLanche extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form>
+          <form onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}
