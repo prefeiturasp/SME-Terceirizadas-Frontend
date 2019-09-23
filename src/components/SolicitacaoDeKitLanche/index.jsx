@@ -100,7 +100,7 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação # ${solicitacaoKitLanche.id_externo}`,
+      title: `Solicitação de Kit Lanche # ${solicitacaoKitLanche.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       kitsChecked: extrairKitsLanche(
         solicitacaoKitLanche.solicitacao_kit_lanche.kits
@@ -159,6 +159,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   onSubmit(values) {
     values.kit_lanche = this.state.kitsChecked;
+    values.quantidade_alunos = parseInt(values.quantidade_alunos);
     values.escola = this.props.meusDados.escolas[0].uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     if (values.confirmar) {
