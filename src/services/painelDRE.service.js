@@ -23,6 +23,7 @@ import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche
 import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import authService from "./auth";
+import { AUTH_TOKEN, SOLICITACOES } from "./contants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -79,8 +80,6 @@ export const getSolicitacoesPendentesParaDRE = (
       console.log(error);
     });
 };
-
-
 
 export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   filtro = "sem_filtro"
@@ -340,3 +339,32 @@ export const getResumoPendenciasDREPorLote = async (
 
   return resumoPorLote;
 };
+
+
+const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
+
+const retornoBase = async url => {
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesPendentesDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesAutorizadasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
