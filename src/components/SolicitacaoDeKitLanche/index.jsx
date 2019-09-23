@@ -45,6 +45,8 @@ export const HORAS_ENUM = {
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
+
+const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
@@ -291,6 +293,12 @@ export class SolicitacaoDeKitLanche extends Component {
     });
   };
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -315,7 +323,7 @@ export class SolicitacaoDeKitLanche extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form>
+          <form onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}
