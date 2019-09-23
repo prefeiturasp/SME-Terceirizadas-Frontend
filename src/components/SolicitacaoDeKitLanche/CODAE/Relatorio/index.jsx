@@ -1,6 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
@@ -9,7 +9,6 @@ import {
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
@@ -19,6 +18,8 @@ import "./style.scss";
 import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem
     } = this.state;
     return (
-      <div>
+      <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
@@ -120,7 +121,16 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
+              Solicitação de Kit Lanche # {solicitacaoKitLanche.id_externo}
+              <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
+              <Botao
+                texto="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             </span>
             <div className="card mt-3">
               <div className="card-body">
@@ -131,6 +141,12 @@ class Relatorio extends Component {
                     )}`}
                   >
                     {prazoDoPedidoMensagem}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
+                    />
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -276,20 +292,20 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {solicitacaoKitLanche.status === statusEnum.DRE_APROVADO && (
+                {solicitacaoKitLanche.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Negar Solicitação"}
+                    <Botao
+                      texto={"Negar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Autorizar Solicitação"
-                      type={ButtonType.SUBMIT}
-                      onClick={() => this.handleSubmit({})}
-                      style={ButtonStyle.Primary}
+                    <Botao
+                      texto="Autorizar Solicitação"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

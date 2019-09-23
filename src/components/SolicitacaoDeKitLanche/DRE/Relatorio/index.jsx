@@ -1,6 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
@@ -9,7 +9,6 @@ import {
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
@@ -19,6 +18,12 @@ import "./style.scss";
 import { DRE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -111,7 +116,7 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem
     } = this.state;
     return (
-      <div>
+      <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
@@ -122,6 +127,16 @@ class Relatorio extends Component {
             <span className="page-title">
               Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
             </span>
+            <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
+              <Botao
+                texto="voltar"
+                titulo="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
@@ -131,6 +146,13 @@ class Relatorio extends Component {
                     )}`}
                   >
                     {prazoDoPedidoMensagem}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      titulo="imprimir"
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
+                    />
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -278,18 +300,18 @@ class Relatorio extends Component {
                 </div>
                 {solicitacaoKitLanche.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Recusar Solicitação"}
+                    <Botao
+                      texto={"Não Validar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Validar Solicitação"
-                      type={ButtonType.SUBMIT}
-                      onClick={() => this.handleSubmit({})}
-                      style={ButtonStyle.Primary}
+                    <Botao
+                      texto="Validar Solicitação"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

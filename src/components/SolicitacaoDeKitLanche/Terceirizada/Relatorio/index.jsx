@@ -1,6 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
@@ -9,16 +9,24 @@ import {
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-import { TERCEIRIZADA, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import {
+  TERCEIRIZADA,
+  SOLICITACAO_KIT_LANCHE
+} from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -92,14 +100,20 @@ class Relatorio extends Component {
     aprovaDeKitLancheAvulsoTerceirizadas(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Ciência de Solicitação de Kit Lanche enviada com sucesso!");
+          toastSuccess(
+            "Ciência de Solicitação de Kit Lanche enviada com sucesso!"
+          );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao tomar ciência da Solicitação de Kit Lanche");
+          toastError(
+            "Houve um erro ao tomar ciência da Solicitação de Kit Lanche"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao tomar ciência da Solicitação de Kit Lanche");
+        toastError(
+          "Houve um erro ao tomar ciência da Solicitação de Kit Lanche"
+        );
       }
     );
   }
@@ -111,7 +125,7 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem
     } = this.state;
     return (
-      <div>
+      <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalRecusarSolicitacao
           closeModal={this.closeModal}
@@ -120,7 +134,17 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
+              Solicitação de Kit Lanche # {solicitacaoKitLanche.id_externo}
+              <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
+                <Botao
+                  texto="voltar"
+                  type={BUTTON_TYPE.BUTTON}
+                  titulo="voltar"
+                  style={BUTTON_STYLE.BLUE}
+                  icon={BUTTON_ICON.ARROW_LEFT}
+                  className="float-right"
+                />
+              </Link>
             </span>
             <div className="card mt-3">
               <div className="card-body">
@@ -131,6 +155,13 @@ class Relatorio extends Component {
                     )}`}
                   >
                     {prazoDoPedidoMensagem}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      titulo="imprimir"
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
+                    />
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -276,20 +307,21 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {solicitacaoKitLanche.status === statusEnum.CODAE_APROVADO && (
+                {solicitacaoKitLanche.status ===
+                  statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Recusar Solicitação"}
+                    <Botao
+                      texto={"Recusar Solicitação"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Ciência"
-                      type={ButtonType.SUBMIT}
-                      onClick={() => this.handleSubmit({})}
-                      style={ButtonStyle.Primary}
+                    <Botao
+                      texto="Ciente"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={() => this.handleSubmit()}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>
