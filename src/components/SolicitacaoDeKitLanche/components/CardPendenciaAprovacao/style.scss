@@ -1,4 +1,6 @@
-.card-pendency-approval {
+@import "../../../../styles/variables.scss";
+
+.card-pendency-approval.meal-kit-solicitation {
   padding: 16px 44px;
   border: 1px solid #dadada;
   box-sizing: border-box;
@@ -8,13 +10,13 @@
     font-weight: bold;
     font-size: 18px;
     &.priority {
-      color: #c9251b;
+      color: $red;
     }
     &.on-limit {
-      color: #e1a303;
+      color: $orange;
     }
     &.regular {
-      color: #5ec530;
+      color: $greenPanel;
     }
   }
   .order-box {
@@ -25,13 +27,13 @@
     box-sizing: border-box;
     border-radius: 4px;
     &.priority {
-      background: #c9251b;
+      background: $red;
     }
     &.on-limit {
-      background: #e1a303;
+      background: $orange;
     }
     &.regular {
-      background: #5ec530;
+      background: $greenPanel;
     }
     span {
       font-weight: bold;
@@ -43,14 +45,15 @@
       font-size: 14px;
       text-transform: uppercase;
     }
-    .order-lines {
-      .text {
-        font-size: 14px;
-        color: #353535;
-      }
+  }
+  .order-lines {
+    .text {
+      font-size: 14px;
+      color: $blackInput;
     }
   }
 }
+
 
 .orders-table {
   width: 100%;

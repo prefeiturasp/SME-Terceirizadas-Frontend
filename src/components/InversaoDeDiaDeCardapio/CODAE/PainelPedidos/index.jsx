@@ -93,7 +93,7 @@ class PainelPedidos extends Component {
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
-                      tipoDeCard={TIPODECARD.PRIORITY}
+                      tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
                       parametroURL={CODAE}
@@ -105,7 +105,7 @@ class PainelPedidos extends Component {
                   <div className="col-12">
                     <CardInversaoPendenciaAprovacao
                       titulo={"Solicitações no prazo limite"}
-                      tipoDeCard={TIPODECARD.ON_LIMIT}
+                      tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
                       parametroURL={CODAE}
