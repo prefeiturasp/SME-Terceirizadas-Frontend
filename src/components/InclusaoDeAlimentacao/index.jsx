@@ -46,6 +46,8 @@ import { validarSubmissao } from "./validacao";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
+
+const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
     super(props);
@@ -537,7 +539,7 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   onKeyPress(event) {
-    if (event.which === 13) {
+    if (event.which === ENTER) {
       event.preventDefault();
     }
   }

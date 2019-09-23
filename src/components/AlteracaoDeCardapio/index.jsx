@@ -32,6 +32,7 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 
+const ENTER = 13;
 class AlteracaoCardapio extends Component {
   constructor(props) {
     super(props);
@@ -315,7 +316,7 @@ class AlteracaoCardapio extends Component {
   }
 
   onKeyPress(event) {
-    if (event.which === 13) {
+    if (event.which === ENTER) {
       event.preventDefault();
     }
   }
