@@ -11,6 +11,7 @@ import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
 import { toastSuccess } from "../../../Shareable/Toast/dialogs";
 import TelefoneOuCelular from "./InputTelefone";
 
+const ENTER = 13;
 class CadastroEmpresa extends Component {
   constructor(props) {
     super(props);
@@ -162,10 +163,15 @@ class CadastroEmpresa extends Component {
   }
 
   salvaFormulario(values) {
-    console.log(values);
     //this.resetForm();
     // this.setState({ lotesSelecionados: [] });
     toastSuccess("Empresa adicionada com sucesso!");
+  }
+
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
   }
 
   render() {
@@ -179,7 +185,7 @@ class CadastroEmpresa extends Component {
     } = this.state;
     return (
       <div className="cadastro pt-3">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
           <div className="card">
             <div>
               <div className="card-body">
