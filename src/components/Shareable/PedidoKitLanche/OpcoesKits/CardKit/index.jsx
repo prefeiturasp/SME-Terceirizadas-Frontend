@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import { TEMPO_PASSEIO } from "../../../../../constants/kitLanche.constants";
 import "./style.scss";
 
 export class CardKit extends Component {
@@ -9,7 +10,7 @@ export class CardKit extends Component {
       checked,
       kitsChecked,
       onCardChange,
-      nameKitsLanche,
+      nomeKitsLanche,
       tempoPasseio
     } = this.props;
     const disabled =
@@ -17,7 +18,7 @@ export class CardKit extends Component {
         kitsChecked.length !== 0 &&
         !kitsChecked.includes(uuid) &&
         parseInt(tempoPasseio) === kitsChecked.length - 1) ||
-      tempoPasseio === "2" ||
+      tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS ||
       (tempoPasseio === "" &&
         (kitsChecked.length === 0 || !kitsChecked.includes(uuid)));
     return (
@@ -36,7 +37,7 @@ export class CardKit extends Component {
                 disabled={disabled}
                 onChange={() => onCardChange(uuid)}
                 type="checkbox"
-                name={nameKitsLanche}
+                name={nomeKitsLanche}
               />
               <span className="checkmark" />
             </label>

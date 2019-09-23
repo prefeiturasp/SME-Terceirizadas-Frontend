@@ -360,7 +360,7 @@ export class SolicitacaoDeKitLanche extends Component {
               </div>
               <PedidoKitLanche
                 nameTempoPasseio="tempo_passeio"
-                nameKitsLanche="kit_lanche"
+                nomeKitsLanche="kit_lanche"
                 updateKitsChecked={this.updateKitsChecked}
                 kitsChecked={kitsChecked}
                 mostrarExplicacao

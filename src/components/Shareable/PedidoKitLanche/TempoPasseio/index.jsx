@@ -6,7 +6,6 @@ import InputErroMensagem from "../../Input/InputErroMensagem";
 export class TempoPasseio extends Component {
   render() {
     const { mostrarExplicacao, nameTempoPasseio, onTempoPasseioChanged, meta } = this.props;
-    console.log(meta);
     return (
       <div className="tour-time">
         <p className="label">Tempo previsto do passeio</p>

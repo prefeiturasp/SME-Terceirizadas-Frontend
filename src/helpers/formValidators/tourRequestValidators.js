@@ -3,7 +3,6 @@ import { SubmissionError } from "redux-form";
 //TODO: colocar validadores asyncronos com request no backend?
 
 export const validateTourRequestForm = values => {
-  console.log(values);
   switch (values.tempo_passeio) {
     case undefined:
         throw new SubmissionError({
