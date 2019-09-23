@@ -1,5 +1,5 @@
 export const TIPODECARD = {
-  PRIORITY: "priority",
-  ON_LIMIT: "on-limit",
+  PRIORIDADE: "priority",
+  NO_LIMITE: "on-limit",
   REGULAR: "regular"
 }

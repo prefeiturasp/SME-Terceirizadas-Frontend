@@ -156,7 +156,7 @@ export const getRefeicoesApi = async () => {
     });
 };
 
-export const kitLanches = async () => {
+export const getKitLanches = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

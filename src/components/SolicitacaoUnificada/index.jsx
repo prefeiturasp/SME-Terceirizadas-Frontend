@@ -23,7 +23,7 @@ import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
 import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
-import { kitLanches } from "../../services/solicitacaoDeKitLanche.service";
+import { getKitLanches } from "../../services/solicitacaoDeKitLanche.service";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {
@@ -45,6 +45,7 @@ export const HORAS_ENUM = {
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
+const ENTER = 13;
 
 class SolicitacaoUnificada extends Component {
   constructor(props) {
@@ -241,7 +242,7 @@ class SolicitacaoUnificada extends Component {
     this.props.change("schools_total", 0);
     this.props.change("kits_total", 0);
 
-    kitLanches()
+    getKitLanches()
       .then(response => {
         this.setState({
           enumKits: extrairKitsLanchesParaCards(response)
@@ -560,6 +561,12 @@ class SolicitacaoUnificada extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -584,14 +591,14 @@ class SolicitacaoUnificada extends Component {
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,
-      collapsed,
+      collapsed
     } = this.state;
     return (
       <div className="unified-solicitation">
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={handleSubmit(this.props.handleSubmit)}>
+          <form onSubmit={handleSubmit(this.props.handleSubmit)} onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               collapsed={collapsed}

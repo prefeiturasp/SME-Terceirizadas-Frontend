@@ -4,26 +4,31 @@ import { SubmissionError } from "redux-form";
 
 export const validateTourRequestForm = values => {
   switch (values.tempo_passeio) {
-    case "4h":
+    case undefined:
+        throw new SubmissionError({
+          kit_lanche: "Deve selecionar um tempo de passeio",
+          _error: "Submission failed!"
+        });
+    case "0":
       if (values.kit_lanche.length !== 1) {
         throw new SubmissionError({
-          kit_lanche: "Deve selecionar somente 1 para passeio de 4hs",
+          kit_lanche: "Deve selecionar 1 kit lanche para passeio de 4hs",
           _error: "Submission failed!"
         });
       }
       break;
-    case "5_7h":
+    case "1":
       if (values.kit_lanche.length !== 2) {
         throw new SubmissionError({
-          kit_lanche: "Deve selecionar 2 para passeio de 5 a 7hs",
+          kit_lanche: "Deve selecionar 2 kits lanche para passeio de 5 a 7hs",
           _error: "Submission failed!"
         });
       }
       break;
-    case "8h":
+    case "2":
       if (values.kit_lanche.length !== 3) {
         throw new SubmissionError({
-          kit_lanche: "Deve selecionar 3 para passeio de 8hs",
+          kit_lanche: "Deve selecionar 3 kits lanche para passeio de 8hs",
           _error: "Submission failed!"
         });
       }

@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import DashboardDRE from "./DashboardDRE";
-import { getSolicitacoesAutorizadasPelaDRE, getSolicitacoesPendentesParaDRE } from "../../../services/painelDRE.service";
-import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service"
+import {
+  getSolicitacoesAutorizadasPelaDRE,
+  getSolicitacoesPendentesParaDRE,
+  getSolicitacoesPendentesDRE,
+  getSolicitacoesAutorizadasDRE
+} from "../../../services/painelDRE.service";
+import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
+import { ajustarFormatoLog, ajustarFormaLotes } from "../helper";
 
 class DashboardDREContainer extends Component {
   constructor(props) {
@@ -13,11 +19,11 @@ class DashboardDREContainer extends Component {
       autorizadasList: [],
       pendentesList: [],
       recusadasList: [],
-      canceladasList:[],
+      canceladasList: [],
       autorizadasListFiltered: [],
       pendentesListFiltered: [],
       recusadasListFiltered: [],
-      canceladasListFiltered:[],
+      canceladasListFiltered: [],
       resumoPendenciasDREAlteracoesDeCardapio: {},
       meusDados: [],
       loadingAutorizadas: true,
@@ -53,23 +59,27 @@ class DashboardDREContainer extends Component {
   }
 
   async componentDidMount() {
-    const meusDados = await getMeusDados()
-    const autorizadas = await getSolicitacoesAutorizadasPelaDRE(meusDados.diretorias_regionais[0].uuid)
-    const pendentes = await getSolicitacoesPendentesParaDRE(meusDados.diretorias_regionais[0].uuid)
-    const minhaDRE = await getDiretoriaregionalDetalhe(meusDados.diretorias_regionais[0].uuid)
-    const lotesDRE = (await minhaDRE).data.lotes
+    const meusDados = await getMeusDados();
+    const dreUuid = meusDados.diretorias_regionais[0].uuid;
+    let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
+    let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
+    const minhaDRE = await getDiretoriaregionalDetalhe(dreUuid);
 
+    const lotesDRE = (await minhaDRE).data.lotes;
 
     getSuspensoesDeAlimentacaoInformadas().then(response => {
-      let quantidade_suspensoes = response.length
-      this.setState({ quantidade_suspensoes })
-    })
+      let quantidade_suspensoes = response.length;
+      this.setState({ quantidade_suspensoes });
+    });
+
+    autorizadas = ajustarFormatoLog(autorizadas.results);
+    pendentes = ajustarFormaLotes(pendentes.results);
 
     this.setState({
-      autorizadasList:autorizadas.results,
-      pendentesList:pendentes.results,
-      autorizadasListFiltered:autorizadas.results,
-      pendentesListFiltered:pendentes.results,
+      autorizadasList: autorizadas,
+      pendentesList: pendentes,
+      autorizadasListFiltered: autorizadas,
+      pendentesListFiltered: pendentes,
       meusDados,
       loadingAutorizadas: false,
       loadingPendentes: false,
