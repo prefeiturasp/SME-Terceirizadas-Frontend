@@ -145,26 +145,11 @@ class CadastroEmpresa extends Component {
 
   resetForm() {
     this.props.reset();
-    this.props.change("razão_social", "");
-    this.props.change("cnpj", "");
-    this.props.change("nome_fantasia", "");
-    this.props.change("endereco", "");
-    this.props.change("cep", "");
-    this.props.change("telefone_empresa", "");
-    this.props.change("email_empresa", "");
-    this.props.change("representante_legal", "");
-    this.props.change("contato", "");
-    this.props.change("nutricionista", "");
-    this.props.change("crn", "");
-    this.props.change("telefone_nutricionista", "");
-    this.props.change("email_nutricionista", "");
-    this.props.change("edital", "");
-    this.props.change("contrato", "");
   }
 
   salvaFormulario(values) {
-    //this.resetForm();
-    // this.setState({ lotesSelecionados: [] });
+    this.resetForm();
+    this.setState({ lotesSelecionados: [] });
     toastSuccess("Empresa adicionada com sucesso!");
   }
 
@@ -272,7 +257,10 @@ class CadastroEmpresa extends Component {
                                 <label className="label">
                                   <span>* </span>Telefone
                                 </label>
-                                <TelefoneOuCelular
+                                <Field
+                                  name={`telefone_empresa_${indiceEmpresa}`}
+                                  component={TelefoneOuCelular}
+                                  id={`telefone_empresa_${indiceEmpresa}`}
                                   setaContatosEmpresa={this.setaContatosEmpresa}
                                   indice={indiceEmpresa}
                                   cenario="contatoEmpresa"
@@ -333,7 +321,10 @@ class CadastroEmpresa extends Component {
                     </div>
                     <div className="col-5">
                       <label className="label">Telefone</label>
-                      <TelefoneOuCelular
+                      <Field
+                        name={`telefone_representante`}
+                        component={TelefoneOuCelular}
+                        id={`telefone_representante`}
                         setaContatoRepresentante={this.setaContatoRepresentante}
                         cenario="contatoRepresentante"
                       />
@@ -409,7 +400,11 @@ class CadastroEmpresa extends Component {
                                     <label className="label">
                                       <span>* </span>Telefone/Celular Técnico
                                     </label>
-                                    <TelefoneOuCelular
+
+                                    <Field
+                                      name={`telefone_terceirizada_${indiceTerceirizada}`}
+                                      component={TelefoneOuCelular}
+                                      id={`telefone_terceirizada_${indiceTerceirizada}`}
                                       setaContatosNutricionista={
                                         this.setaContatosNutricionista
                                       }
