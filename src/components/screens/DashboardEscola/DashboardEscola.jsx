@@ -6,10 +6,20 @@ import CardBody from "../../Shareable/CardBody";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import { CardStatusDeSolicitacao, CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_CANCELADAS
+} from "../../../configs/constants";
 
 export class DashboardEscola extends Component {
   constructor(props) {
@@ -26,7 +36,14 @@ export class DashboardEscola extends Component {
 
   render() {
     const { collapsed } = this.state;
-    const { numeroAlunos, autorizadas, theadList, trs } = this.props;
+    const {
+      numeroAlunos,
+      autorizadas,
+      pendentes,
+      negadas,
+      theadList,
+      trs
+    } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -89,16 +106,16 @@ export class DashboardEscola extends Component {
                 cardType={CARD_TYPE_ENUM.APROVADO}
                 solicitations={autorizadas}
                 icon={"fa-check"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Pendente Aprovação"}
                 cardType={"card-pending"}
-                solicitations={autorizadas}
+                solicitations={pendentes}
                 icon={"fa-exclamation-triangle"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
               />
             </div>
           </div>
@@ -107,9 +124,9 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Recusadas"}
                 cardType={"card-denied"}
-                solicitations={autorizadas}
+                solicitations={negadas}
                 icon={"fa-ban"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               />
             </div>
             <div className="col-6">
@@ -118,7 +135,7 @@ export class DashboardEscola extends Component {
                 cardType={"card-cancelled"}
                 solicitations={autorizadas}
                 icon={"fa-times-circle"}
-                href={"/escola/status-solicitacoes"}
+                href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />
             </div>
           </div>

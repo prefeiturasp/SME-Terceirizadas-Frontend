@@ -4,7 +4,7 @@ import {
   INVERSAO_CARDAPIO,
   RELATORIO,
   SOLICITACAO_KIT_LANCHE
-} from "../../../configs/constants";
+} from "../../configs/constants";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const INC_ALIMENTA = "INC_ALIMENTA";
@@ -36,6 +36,18 @@ export const ajustarFormatoLog = logs => {
       text: log.descricao,
       date: log.data_log,
       link: `/${ESCOLA}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
+    };
+  });
+};
+
+
+export const ajustarFormaLotes = lotes => {
+  return lotes.map(lote => {
+    return {
+      id: lote.uuid,
+      lote: lote.nome,
+      dre: lote.diretoria_regional && lote.diretoria_regional.nome,
+      tipo: lote.tipo_gestao && lote.tipo_gestao.nome
     };
   });
 };

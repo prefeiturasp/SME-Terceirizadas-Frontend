@@ -1,13 +1,36 @@
 import React, { Component } from "react";
-import { getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import { getSolicitacoesAutorizadasEscola, getSolicitacoesCanceladasEscola, getSolicitacoesNegadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import { meusDados } from "../../../services/perfil.service";
+import { ajustarFormatoLog } from "../helper";
 import DashboardEscola from "./DashboardEscola";
-import { ajustarFormatoLog } from "./helper";
 
 export default class DashboardEscolaContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      meusDados: {},
       autorizadas: [
+        {
+          text: "...",
+          date: "...",
+          link: "..."
+        }
+      ],
+      pendentes: [
+        {
+          text: "...",
+          date: "...",
+          link: "..."
+        }
+      ],
+      negadas: [
+        {
+          text: "...",
+          date: "...",
+          link: "..."
+        }
+      ],
+      canceladas: [
         {
           text: "...",
           date: "...",
@@ -54,21 +77,36 @@ export default class DashboardEscolaContainer extends Component {
     };
   }
 
-  // async componentDidMount() {
-  //   const pendentes = await getSolicitacoesPendentesEscola(
-  //     "b9a36370-2fdd-44ab-8a33-a22b6921236f"
-  //   );
-  //   const autorizadas = ajustarFormatoLog(pendentes.results);
-  //   this.setState({ autorizadas });
-  // }
+
+  async componentDidMount() {
+    const dadosMeus = await meusDados();
+    //TODO aguardando definicao de perfil
+    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
+
+    let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
+    let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
+
+    let negadas = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
+
+    let canceladas = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
+
+    autorizadas = ajustarFormatoLog(autorizadas.results);
+    pendentes = ajustarFormatoLog(pendentes.results);
+    negadas = ajustarFormatoLog(negadas.results);
+    canceladas = ajustarFormatoLog(canceladas.results);
+    this.setState({ autorizadas, pendentes, negadas, canceladas });
+  }
+
 
   render() {
-    const { autorizadas, theadList, trs } = this.state;
+    const { autorizadas, pendentes, negadas, theadList, trs } = this.state;
     return (
       <div>
         <DashboardEscola
           numeroAlunos={250}
           autorizadas={autorizadas}
+          pendentes={pendentes}
+          negadas={negadas}
           theadList={theadList}
           trs={trs}
         />

@@ -11,10 +11,10 @@ import {
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
-import { FILTRO } from "./const";
 import VisaoGeral from "./VisaoGeral";
 import VisaoPorDRE from "./VisaoPorDRE";
 import Select from "../../Shareable/Select";
+import { FILTRO } from "../const";
 
 class DashboardCODAE extends Component {
   constructor(props) {
