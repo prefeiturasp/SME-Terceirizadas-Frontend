@@ -303,7 +303,7 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       periodos,
       status: inclusaoDeAlimentacao.status,
-      title: `Inclusão de Cardápio # ${inclusaoDeAlimentacao.id_externo}`,
+      title: `Inclusão de Alimentação # ${inclusaoDeAlimentacao.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: inclusaoDeAlimentacao.id_externo,
       inclusoes

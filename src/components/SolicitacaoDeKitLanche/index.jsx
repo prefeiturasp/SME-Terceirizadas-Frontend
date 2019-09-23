@@ -12,6 +12,7 @@ import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper"
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import { InputComData } from "../Shareable/DatePicker";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,
@@ -19,32 +20,17 @@ import {
   removeKitLanche,
   solicitarKitLanche
 } from "../../services/solicitacaoDeKitLanche.service";
-import {
-  ButtonStyle,
-  ButtonType,
-  default as BaseButton,
-  default as Button
-} from "../Shareable/button";
+import { Botao } from "../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { InputText } from "../Shareable/Input/InputText";
-import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
-import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
-import {
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput/labelAndInput";
 import { Rascunhos } from "./Rascunhos";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { Grid } from "../Shareable/responsiveBs4";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { montaObjetoRequisicao } from "./helper";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-
-export const HORAS_ENUM = {
-  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
-  _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
-  _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
-};
+import { PedidoKitLanche } from "../Shareable/PedidoKitLanche";
+import "./style.scss";
 
 const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
@@ -53,24 +39,25 @@ export class SolicitacaoDeKitLanche extends Component {
     this.state = {
       loading: true,
       qtd_kit_lanche: 0,
+      kitsChecked: [],
       initialValues: false,
       radioChanged: false,
       rascunhosSolicitacoesKitLanche: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       showModal: false,
       modalConfirmation: false,
       modalMessage: "",
       botaoConfirma: true
     };
-    this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.validaDiasUteis = this.validaDiasUteis.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.setInitialValues = this.setInitialValues.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
+    this.updateKitsChecked = this.updateKitsChecked.bind(this);
   }
 
   OnDeleteButtonClicked(id_externo, uuid) {
@@ -110,16 +97,15 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.props.change(
       "tempo_passeio",
-      solicitacaoKitLanche.solicitacao_kit_lanche.tempo_passeio
-    );
-    this.props.change(
-      "kit_lanche",
-      extrairKitsLanche(solicitacaoKitLanche.solicitacao_kit_lanche.kits)
+      solicitacaoKitLanche.solicitacao_kit_lanche.tempo_passeio.toString()
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação # ${solicitacaoKitLanche.id_externo}`,
-      salvarAtualizarLbl: "Atualizar"
+      title: `Solicitação de Kit Lanche # ${solicitacaoKitLanche.id_externo}`,
+      salvarAtualizarLbl: "Atualizar",
+      kitsChecked: extrairKitsLanche(
+        solicitacaoKitLanche.solicitacao_kit_lanche.kits
+      )
     });
   }
 
@@ -129,9 +115,10 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       qtd_kit_lanche: 0,
-      initialValues: true
+      initialValues: true,
+      kitsChecked: []
     });
     this.refresh();
   }
@@ -172,14 +159,20 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
+    values.kit_lanche = this.state.kitsChecked;
+    values.quantidade_alunos = parseInt(values.quantidade_alunos);
     values.escola = this.props.meusDados.escolas[0].uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     if (values.confirmar) {
       solicitacao_kit_lanche.confirmar = values.confirmar;
     }
-    validateTourRequestForm(values);
-    this.salvarOuEnviar(solicitacao_kit_lanche, values);
-    this.handleConfirmation();
+    try {
+      validateTourRequestForm(values);
+      this.salvarOuEnviar(solicitacao_kit_lanche, values);
+      this.handleConfirmation();
+    } catch (SubmissionError) {
+      toastError(SubmissionError.errors.kit_lanche);
+    }
   }
 
   iniciarPedido(uuid) {
@@ -278,20 +271,9 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({ modalConfirmation: false });
   }
 
-  setNumeroDeKitLanches = (event, newValue, previousValue, name) => {
-    const parser = {
-      "4h": HORAS_ENUM._4.qtd_kits,
-      "5_7h": HORAS_ENUM._5a7.qtd_kits,
-      "8h": HORAS_ENUM._8.qtd_kits
-    };
-
-    let newQuantity = parser[event];
-    this.setState({
-      ...this.state,
-      qtd_kit_lanche: newQuantity,
-      radioChanged: event !== previousValue
-    });
-  };
+  updateKitsChecked(kitsChecked) {
+    this.setState({ kitsChecked });
+  }
 
   onKeyPress(event) {
     if (event.which === ENTER) {
@@ -305,7 +287,6 @@ export class SolicitacaoDeKitLanche extends Component {
       pristine,
       submitting,
       meusDados,
-      enumKits,
       proximos_dois_dias_uteis
     } = this.props;
     const {
@@ -315,8 +296,7 @@ export class SolicitacaoDeKitLanche extends Component {
       modalConfirmation,
       botaoConfirma,
       loading,
-      qtd_kit_lanche,
-      initialValues
+      kitsChecked
     } = this.state;
     return (
       <div>
@@ -341,16 +321,18 @@ export class SolicitacaoDeKitLanche extends Component {
             <h3 className="page-title">{this.state.title}</h3>
             <div className="card mt-3 p-5">
               <div className="form-group row">
-                <Field
-                  component={LabelAndDate}
-                  cols="4 4 4 4"
-                  hasIcon={true}
-                  label="Data do evento"
-                  name="evento_data"
-                  onBlur={event => this.validaDiasUteis(event)}
-                  minDate={proximos_dois_dias_uteis}
-                />
-                <div className="col-8">
+                <div className="col-3">
+                  <Field
+                    component={InputComData}
+                    label="Data do evento"
+                    name="evento_data"
+                    onBlur={event => this.validaDiasUteis(event)}
+                    minDate={proximos_dois_dias_uteis}
+                    required
+                    validate={required}
+                  />
+                </div>
+                <div className="col-9">
                   <Field
                     component={InputText}
                     label="Local do passeio"
@@ -361,105 +343,84 @@ export class SolicitacaoDeKitLanche extends Component {
                 </div>
               </div>
               <div className="form-group row">
-                <Field
-                  component={LabelAndInput}
-                  cols="4 4 4 4 "
-                  name="quantidade_alunos"
-                  type="number"
-                  label="Número de alunos participantes"
-                  validate={[
-                    required,
-                    maxValue(meusDados.escolas[0].quantidade_alunos),
-                    naoPodeSerZero
-                  ]}
-                />
+                <div className="col-3">
+                  <Field
+                    component={InputText}
+                    name="quantidade_alunos"
+                    type="number"
+                    label="Número de alunos"
+                    required
+                    validate={[
+                      required,
+                      maxValue(meusDados.escolas[0].quantidade_alunos),
+                      naoPodeSerZero
+                    ]}
+                  />
+                </div>
               </div>
-              <hr />
-
-              <SelecionaTempoPasseio
-                className="mt-3"
-                onChange={(event, newValue, previousValue, name) =>
-                  this.setNumeroDeKitLanches(
-                    event,
-                    newValue,
-                    previousValue,
-                    name
-                  )
-                }
+              <PedidoKitLanche
+                nameTempoPasseio="tempo_passeio"
+                nomeKitsLanche="kit_lanche"
+                updateKitsChecked={this.updateKitsChecked}
+                kitsChecked={kitsChecked}
                 mostrarExplicacao
+                validate={required}
               />
-
-              <hr className="mt-4 mb-4 w-100" />
-
-              {enumKits && (
-                <SelecionaKitLancheBox
-                  className="mt-3"
-                  choicesNumberLimit={qtd_kit_lanche}
-                  initialValues={initialValues}
-                  setInitialValues={this.setInitialValues}
-                  kits={enumKits}
-                />
-              )}
-
-              <div className="form-group mt-2 pt-3">
-                <label className="font-weight-bold">
-                  {"Número total kits:"}
-                </label>
-                <br />
-                <Grid
-                  cols="1 1 1 1"
-                  className="border rounded p-2"
-                  style={{
-                    background: "#E8E8E8"
-                  }}
-                >
-                  <span className="font-weight-bold d-flex justify-content-center">
-                    {this.props.qtd_total || 0}
+              <div className="kits-total form-group row mt-2 pt-3">
+                <div className="col-12">
+                  <label>{"Número total de kits:"}</label>
+                  <span className="font-weight-bold pl-2">
+                    {(this.props.quantidade_alunos &&
+                      parseInt(this.props.quantidade_alunos) *
+                        kitsChecked.length) ||
+                      0}
                   </span>
-                </Grid>
+                </div>
               </div>
-              <hr className="mt-3 mb-3 w-100" />
               <div className="form-group">
                 <Field
-                  component={LabelAndTextArea}
+                  component={TextAreaWYSIWYG}
                   label="Observações"
                   name="observacao"
                   placeholder="Campo opcional"
                 />
               </div>
-              <div align="right" className="form-group mt-4 mr-2">
-                <Button
-                  label="Cancelar"
-                  onClick={e => this.resetForm(e)}
-                  disabled={pristine || submitting}
-                  style={ButtonStyle.OutlinePrimary}
-                />
-                <Button
-                  label={this.state.salvarAtualizarLbl}
-                  disabled={pristine || submitting}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: "RASCUNHO"
-                    })
-                  )}
-                  className="ml-3"
-                  type={ButtonType.SUBMIT}
-                  style={ButtonStyle.OutlinePrimary}
-                />
-                <Button
-                  label="Enviar Solicitação"
-                  disabled={pristine || submitting}
-                  type={ButtonType.SUBMIT}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: STATUS_DRE_A_VALIDAR
-                    })
-                  )}
-                  style={ButtonStyle.Primary}
-                  className="ml-3"
-                />
+              <div className="row mt-5">
+                <div className="col-12 text-right">
+                  <Botao
+                    texto="Cancelar"
+                    onClick={e => this.resetForm(e)}
+                    disabled={pristine || submitting}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
+                  />
+                  <Botao
+                    texto={this.state.salvarAtualizarLbl}
+                    disabled={pristine || submitting}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values,
+                        status: "RASCUNHO"
+                      })
+                    )}
+                    className="ml-3"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                  <Botao
+                    texto="Enviar Solicitação"
+                    disabled={pristine || submitting}
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={handleSubmit(values =>
+                      this.onSubmit({
+                        ...values,
+                        status: STATUS_DRE_A_VALIDAR
+                      })
+                    )}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
+                  />
+                </div>
               </div>
               <Modal show={modalConfirmation} onHide={this.handleConfirmation}>
                 <Modal.Header closeButton>
@@ -470,9 +431,9 @@ export class SolicitacaoDeKitLanche extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                   {botaoConfirma && (
-                    <BaseButton
-                      label="CONFIRMAR MESMO ASSIM"
-                      type={ButtonType.BUTTON}
+                    <Botao
+                      texto="CONFIRMAR MESMO ASSIM"
+                      type={BUTTON_TYPE.BUTTON}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
@@ -481,15 +442,15 @@ export class SolicitacaoDeKitLanche extends Component {
                           confirmar: true
                         })
                       )}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.BLUE}
                       className="ml-3"
                     />
                   )}
-                  <BaseButton
-                    label="CANCELAR"
-                    type={ButtonType.BUTTON}
+                  <Botao
+                    texto="CANCELAR"
+                    type={BUTTON_TYPE.BUTTON}
                     onClick={this.handleConfirmation}
-                    style={ButtonStyle.Warning}
+                    style={BUTTON_STYLE.BLUE_OUTLINE}
                     className="ml-3"
                   />
                 </Modal.Footer>
@@ -512,12 +473,10 @@ SolicitacaoDeKitLanche = reduxForm({
 })(SolicitacaoDeKitLanche);
 
 const selector = formValueSelector("tourRequest");
-
-SolicitacaoDeKitLanche = connect(state => {
-  const nro_alunos = selector(state, "quantidade_alunos");
-  const kit_lanche = selector(state, "kit_lanche") || [];
-
-  return { qtd_total: kit_lanche.length * nro_alunos };
-})(SolicitacaoDeKitLanche);
-
-export default SolicitacaoDeKitLanche;
+const mapStateToProps = state => {
+  return {
+    tempo_passeio: selector(state, "tempo_passeio"),
+    quantidade_alunos: selector(state, "quantidade_alunos")
+  };
+};
+export default connect(mapStateToProps)(SolicitacaoDeKitLanche);
