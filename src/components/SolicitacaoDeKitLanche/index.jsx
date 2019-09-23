@@ -45,7 +45,7 @@ export class SolicitacaoDeKitLanche extends Component {
       rascunhosSolicitacoesKitLanche: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       showModal: false,
       modalConfirmation: false,
       modalMessage: "",
@@ -115,7 +115,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar",
+      salvarAtualizarLbl: "Salvar Rascunho",
       qtd_kit_lanche: 0,
       initialValues: true,
       kitsChecked: []
