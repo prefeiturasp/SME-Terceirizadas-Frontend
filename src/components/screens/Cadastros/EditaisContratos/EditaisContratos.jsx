@@ -30,6 +30,7 @@ import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { Redirect } from "react-router-dom";
 
+const ENTER = 13;
 class EditaisContratos extends Component {
   constructor(props) {
     super(props);
@@ -378,6 +379,12 @@ class EditaisContratos extends Component {
     this.setState({ reseta: false });
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const { handleSubmit } = this.props;
     const {
@@ -402,7 +409,7 @@ class EditaisContratos extends Component {
           onSubmit={this.onSubmit}
         />
         <div className="card">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
             <header className="header-form">
               <nav>Dados do Edital e contrato</nav>
               <Link to="/configuracoes/cadastros/editais-cadastrados">
