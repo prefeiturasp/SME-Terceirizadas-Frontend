@@ -238,20 +238,20 @@ class InclusaoDeAlimentacao extends Component {
       ],
       periodos
     });
-    this.retetaCamposQuantidadeAlunosETiposAlimentacao(this.props.periodos)
+    this.retetaCamposQuantidadeAlunosETiposAlimentacao(this.props.periodos);
     this.refresh();
   }
 
-  retetaCamposQuantidadeAlunosETiposAlimentacao(periodos){
+  retetaCamposQuantidadeAlunosETiposAlimentacao(periodos) {
     periodos.forEach((periodo, indice) => {
-      this.bloqueiaCamposQuantidadeAlunosReset(indice, periodo)
-    })
+      this.bloqueiaCamposQuantidadeAlunosReset(indice, periodo);
+    });
   }
 
-  bloqueiaCamposQuantidadeAlunosReset(indice, periodo){
+  bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
     let periodos = this.state.periodos;
     let validacaoPeriodos = this.state.validacaoPeriodos;
-    if (validacaoPeriodos[indice].checado === true){
+    if (validacaoPeriodos[indice].checado === true) {
       validacaoPeriodos[indice].checado = false;
       periodos[indice].tipos_alimentacao_selecionados = [];
       this.resetaCampoQuantidadeAlunos(periodo);
@@ -358,8 +358,6 @@ class InclusaoDeAlimentacao extends Component {
       });
     });
   }
-
-
 
   componentDidMount() {
     this.refresh();
