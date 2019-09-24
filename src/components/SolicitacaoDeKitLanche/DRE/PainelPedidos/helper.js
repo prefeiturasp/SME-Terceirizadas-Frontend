@@ -6,24 +6,30 @@ export const formatarPedidos = pedidos => {
   });
 };
 
-export const filtraPrioritarios = (pedidos, filtro=null) => {
+export const filtraPrioritarios = (pedidos, filtro = null) => {
   return pedidos.filter(pedido => {
-    const prioridade = filtro ? pedido[filtro]["prioridade"] : pedido["prioridade"]
+    const prioridade = filtro
+      ? pedido[filtro]["prioridade"]
+      : pedido["prioridade"];
 
     return prioridade === "PRIORITARIO";
   });
 };
 
-export const filtraNoLimite = (pedidos, filtro=null) => {
+export const filtraNoLimite = (pedidos, filtro = null) => {
   return pedidos.filter(pedido => {
-    const prioridade = filtro ? pedido[filtro]["prioridade"] : pedido["prioridade"]
+    const prioridade = filtro
+      ? pedido[filtro]["prioridade"]
+      : pedido["prioridade"];
 
     return prioridade === "LIMITE";
   });
 };
-export const filtraRegular = (pedidos, filtro=null) => {
+export const filtraRegular = (pedidos, filtro = null) => {
   return pedidos.filter(pedido => {
-    const prioridade = filtro ? pedido[filtro]["prioridade"] : pedido["prioridade"]
+    const prioridade = filtro
+      ? pedido[filtro]["prioridade"]
+      : pedido["prioridade"];
 
     return prioridade === "REGULAR";
   });

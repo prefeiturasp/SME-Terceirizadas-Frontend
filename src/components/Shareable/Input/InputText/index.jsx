@@ -23,7 +23,9 @@ export const InputText = props => {
   return (
     <div className="input">
       {label && [
-        required && !esconderAsterisco && <span className="required-asterisk">*</span>,
+        required && !esconderAsterisco && (
+          <span className="required-asterisk">*</span>
+        ),
         <label htmlFor={name} className={`col-form-label ${labelClassName}`}>
           {label}
         </label>
@@ -73,7 +75,7 @@ InputText.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "text",
+  type: "text"
 };
 
 export default InputText;

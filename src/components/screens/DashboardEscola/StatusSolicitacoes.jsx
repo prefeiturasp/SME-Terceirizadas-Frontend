@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
-import { getSolicitacoesAutorizadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import {
+  getSolicitacoesAutorizadasEscola,
+  getSolicitacoesPendentesEscola
+} from "../../../services/painelEscola.service";
 import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
 import { ajustarFormatoLog } from "../helper";
-import { STATUS } from "./const";
+import { STATUS } from "../const";
 
 export default class StatusSolicitacoes extends Component {
   constructor(props, context) {

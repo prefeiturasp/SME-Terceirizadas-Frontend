@@ -67,11 +67,7 @@ export class CardHistorico extends Component {
   }
 
   render() {
-    const {
-      titulo,
-      ultimaColunaLabel,
-      handleSubmit
-    } = this.props;
+    const { titulo, ultimaColunaLabel, handleSubmit } = this.props;
     const { collapsed, pedidos } = this.state;
     return (
       <div className="card mt-3">

@@ -64,11 +64,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    const {
-      visaoPorCombo,
-      pedidosAprovados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, pedidosAprovados, pedidosReprovados } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -142,7 +138,9 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Solicitações Unificadas Autorizadas"}
+                      titulo={
+                        "Histórico de Solicitações Unificadas Autorizadas"
+                      }
                       parametroURL={TERCEIRIZADA}
                     />
                   </div>
@@ -154,9 +152,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Solicitações Unificadas Reprovadas"
-                      }
+                      titulo={"Histórico de Solicitações Unificadas Reprovadas"}
                     />
                   </div>
                 </div>

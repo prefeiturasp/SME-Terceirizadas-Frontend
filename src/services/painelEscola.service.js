@@ -31,9 +31,7 @@ export const getSolicitacoesAutorizadasEscola = async escolaUuid => {
 };
 
 export const getSolicitacoesNegadasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${
-    SOLICITACOES.NEGADOS
-  }/${escolaUuid}/`;
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.NEGADOS}/${escolaUuid}/`;
   return retornoBase(url);
 };
 

@@ -4,16 +4,10 @@ import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
 import { Link } from "react-router-dom";
-import BaseButton, {
-  ButtonStyle,
-  ButtonType
-} from "../../../Shareable/button";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
-import {
-  ALTERACAO_CARDAPIO,
-  RELATORIO
-} from "../../../../configs/constants";
+import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {

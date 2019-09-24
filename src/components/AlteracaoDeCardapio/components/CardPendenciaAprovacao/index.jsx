@@ -32,7 +32,13 @@ export class CardPendenciaAprovacao extends Component {
   }
 
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel, parametroURL } = this.props;
+    const {
+      pedidos,
+      titulo,
+      tipoDeCard,
+      ultimaColunaLabel,
+      parametroURL
+    } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -42,8 +48,7 @@ export class CardPendenciaAprovacao extends Component {
             <div className={"order-box " + tipoDeCard}>
               <span className="number">{pedidos.length}</span>
               <span className="order">
-
-                {pedidos.length === 1 ? 'solicitação' : 'solicitações'}
+                {pedidos.length === 1 ? "solicitação" : "solicitações"}
               </span>
             </div>
           </div>

@@ -4,7 +4,7 @@ import { Field, reduxForm } from "redux-form";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 
 class DetalhePendenciaPorDRE extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       vision_by: [
@@ -29,7 +29,7 @@ class DetalhePendenciaPorDRE extends Component {
           uuid: "lote"
         }
       ]
-    }
+    };
   }
 
   handleField() {
@@ -37,7 +37,7 @@ class DetalhePendenciaPorDRE extends Component {
   }
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     return (
       <div>
         <div>

@@ -21,7 +21,12 @@ export class ModalRecusarSolicitacao extends Component {
                 name="razao"
                 label="Motivo"
                 onChange={value => this.props.change("razao", value)}
-                options={[{value: 'Fora do prazo', label: 'Fora do prazo/em desacordo com o contrato'}]}
+                options={[
+                  {
+                    value: "Fora do prazo",
+                    label: "Fora do prazo/em desacordo com o contrato"
+                  }
+                ]}
                 validate={required}
               />
             </div>

@@ -65,11 +65,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    const {
-      visaoPorCombo,
-      pedidosAprovados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, pedidosAprovados, pedidosReprovados } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -143,7 +139,9 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                      titulo={
+                        "Histórico de Inclusões de Alimentação Autorizadas"
+                      }
                       parametroURL={CODAE}
                     />
                   </div>

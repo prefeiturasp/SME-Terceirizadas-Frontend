@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCodaePedidosDeKitLancheReprovados, getCodaePedidosDeKitLancheAprovados } from "../../../../services/solicitacaoDeKitLanche.service";
+import {
+  getCodaePedidosDeKitLancheReprovados,
+  getCodaePedidosDeKitLancheAprovados
+} from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
@@ -18,15 +21,14 @@ class Container extends Component {
     let pedidosAprovados = [];
 
     getCodaePedidosDeKitLancheAprovados().then(response => {
-      pedidosAprovados = response.results
-      this.setState({pedidosAprovados})
-    })
+      pedidosAprovados = response.results;
+      this.setState({ pedidosAprovados });
+    });
 
     getCodaePedidosDeKitLancheReprovados().then(response => {
-      pedidosReprovados = response.results
-      this.setState({pedidosReprovados})
-    })
-
+      pedidosReprovados = response.results;
+      this.setState({ pedidosReprovados });
+    });
   }
 
   render() {

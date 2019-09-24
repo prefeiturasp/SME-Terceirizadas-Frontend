@@ -1,16 +1,3 @@
-export const formatarTempoPasseio = value => {
-  switch (value) {
-    case "8h":
-    case 2:
-      return 2;
-    case "5_7h":
-    case 1:
-      return 1;
-    default:
-      return 0;
-  }
-};
-
 export const extrairKitsLanche = kits => {
   let listaKits = [];
   kits.forEach(element => {
@@ -19,21 +6,8 @@ export const extrairKitsLanche = kits => {
   return listaKits;
 };
 
-export const extrairTempoPasseio = tempoPasseio => {
-  switch (tempoPasseio) {
-    case 2:
-      return "8h";
-    case 1:
-      return "5_7h";
-    default:
-      return "4h";
-  }
-};
-
 export const formatarSubmissao = values => {
   let dataFormatada = {};
-  dataFormatada.motivo = values.motivo;
-  dataFormatada.outro_motivo = values.outro_motivo;
   dataFormatada.local = values.local;
   dataFormatada.diretoria_regional = values.diretoria_regional;
   dataFormatada.lista_kit_lanche_igual = values.lista_kit_lanche_igual || false;
@@ -45,7 +19,7 @@ export const formatarSubmissao = values => {
     data: values.data,
     descricao: values.descricao,
     tempo_passeio: dataFormatada.lista_kit_lanche_igual
-      ? formatarTempoPasseio(values.tempo_passeio)
+      ? values.tempo_passeio
       : null
   };
   dataFormatada.escolas_quantidades = [];
@@ -54,11 +28,11 @@ export const formatarSubmissao = values => {
       dataFormatada.escolas_quantidades.push({
         tempo_passeio: values.lista_kit_lanche_igual
           ? null
-          : formatarTempoPasseio(escola.tempo_passeio),
+          : escola.tempo_passeio,
         quantidade_alunos: values.lista_kit_lanche_igual
           ? escola.quantidade_alunos
           : escola.nro_alunos,
-        kits: values.lista_kit_lanche_igual ? [] : escola.kit_lanche,
+        kits: values.lista_kit_lanche_igual ? [] : escola.kitsChecked,
         escola: escola.uuid
       });
     }

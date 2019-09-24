@@ -16,11 +16,15 @@ export class OpcoesKits extends Component {
   }
 
   componentDidMount() {
-    getKitLanches().then(response => {
-      this.setState({
-        kitsLanche: response.results
+    if (!this.props.kitsLanche) {
+      getKitLanches().then(response => {
+        this.setState({
+          kitsLanche: response.results
+        });
       });
-    });
+    } else {
+      this.setState({ kitsLanche: this.props.kitsLanche });
+    }
   }
 
   componentDidUpdate(prevProps) {

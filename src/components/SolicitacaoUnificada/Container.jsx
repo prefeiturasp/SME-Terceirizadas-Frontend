@@ -29,6 +29,7 @@ class SolicitacaoUnificadaContainer extends Component {
         escola["tempo_passeio"] = null;
         escola["kit_lanche"] = null;
         escola["checked"] = false;
+        escola["kitsChecked"] = [];
       });
       this.setState({
         meusDados: response,

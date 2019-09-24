@@ -4,9 +4,7 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getDiretoriaRegionalPedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
-import {
-  CardPendenciaAprovacao
-} from "../../components/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
