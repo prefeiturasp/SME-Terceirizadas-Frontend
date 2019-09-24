@@ -26,7 +26,9 @@ export class CardKit extends Component {
       <div
         className={`card meal-kit
         ${checked && "checked"}
-        ${disabled && tempoPasseio !== "2" && "disabled"}
+        ${disabled &&
+          tempoPasseio !== TEMPO_PASSEIO.OITO_HORAS_OU_MAIS &&
+          "disabled"}
         ${esconderDetalhamentoKits && "minor-height"}`}
       >
         <div className="card-body">
@@ -44,9 +46,10 @@ export class CardKit extends Component {
               <span className="checkmark" />
             </label>
           </div>
-          {!esconderDetalhamentoKits && itens.map(item => {
-            return <div className={`item-meal-kit`}>{item.nome}</div>;
-          })}
+          {!esconderDetalhamentoKits &&
+            itens.map(item => {
+              return <div className={`item-meal-kit`}>{item.nome}</div>;
+            })}
         </div>
       </div>
     );
