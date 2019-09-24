@@ -24,8 +24,8 @@ export const TabelaKits = props => {
       <div>
         {escola_quantidade.quantidade_alunos *
           (solicitacaoUnificada.solicitacao_kit_lanche.kits.length > 0
-          ? solicitacaoUnificada.solicitacao_kit_lanche.kits.length
-          : escola_quantidade.kits.length)}{" "}
+            ? solicitacaoUnificada.solicitacao_kit_lanche.kits.length
+            : escola_quantidade.kits.length)}{" "}
         Kits
       </div>
     </div>

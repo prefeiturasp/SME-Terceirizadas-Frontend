@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { DRE, PAINEL_CONTROLE } from "../../../configs/constants";
-import { getSolicitacoesAutorizadasDRE, getSolicitacoesPendentesDRE } from "../../../services/painelDRE.service";
+import {
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesPendentesDRE
+} from "../../../services/painelDRE.service";
 import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";

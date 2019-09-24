@@ -1,15 +1,15 @@
-import { alertConstants } from '../constants/alert.constants'
+import { alertConstants } from "../constants/alert.constants";
 
-export default alert = (state = {}, action) => {
+export default (alert = (state = {}, action) => {
   switch (action.type) {
     case alertConstants.SUCCESS:
       return {
-        type: 'alert-success',
+        type: "alert-success",
         message: action.message
       };
     case alertConstants.ERROR:
       return {
-        type: 'alert-danger',
+        type: "alert-danger",
         message: action.message
       };
     case alertConstants.CLEAR:
@@ -17,4 +17,4 @@ export default alert = (state = {}, action) => {
     default:
       return state;
   }
-};
+});

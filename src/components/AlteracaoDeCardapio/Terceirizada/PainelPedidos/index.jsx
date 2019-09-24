@@ -184,9 +184,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Alterações de Cardápio Reprovadas"
-                      }
+                      titulo={"Histórico de Alterações de Cardápio Reprovadas"}
                     />
                   </div>
                 </div>

@@ -2,4 +2,4 @@ export const TEMPO_PASSEIO = {
   QUATRO_HORAS: "0",
   CINCO_A_SETE_HORAS: "1",
   OITO_HORAS_OU_MAIS: "2"
-}
+};

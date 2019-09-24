@@ -29,7 +29,8 @@ export const Select = props => {
       ]}
       <select
         {...input}
-        className={`form-control ${className} ${meta && meta.touched &&
+        className={`form-control ${className} ${meta &&
+          meta.touched &&
           meta.error &&
           "invalid-field"}`}
         disabled={disabled}
@@ -43,7 +44,9 @@ export const Select = props => {
               key={key}
               value={e.uuid}
               selected={key === 0}
-              disabled={e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)}
+              disabled={
+                e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
+              }
             >
               {e.nome}
             </option>

@@ -115,8 +115,5 @@ export const talvezPluralizar = (contador, substantivo, sufixo = "s") => {
 };
 
 export const getDataObj = data => {
-  return moment(
-    data,
-    "DD/MM/YYYY"
-  )["_d"];
-}
+  return moment(data, "DD/MM/YYYY")["_d"];
+};

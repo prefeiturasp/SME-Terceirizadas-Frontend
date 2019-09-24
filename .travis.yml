@@ -10,6 +10,7 @@ before_script:
 
 script:
   - npm test
+  - ./node_modules/.bin/prettier  --check "src/**/*.{js,jsx}"
   - docker build -t marcelomaia/terceirizadas_frontend .
   - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend
   - docker ps -a

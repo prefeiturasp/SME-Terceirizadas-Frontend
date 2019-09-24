@@ -237,7 +237,6 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
     });
 };
 
-
 export const getCODAEPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {

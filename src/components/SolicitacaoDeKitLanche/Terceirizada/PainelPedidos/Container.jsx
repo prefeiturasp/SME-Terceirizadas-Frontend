@@ -8,17 +8,17 @@ class Container extends Component {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      pedidosAprovados: [],
+      pedidosAprovados: []
     };
   }
-  
+
   componentDidMount() {
     let pedidosAprovados = [];
 
     getPedidosDeKitLancheAprovadosTerceirizada().then(response => {
-      pedidosAprovados = response.results
-      this.setState({pedidosAprovados})
-    })
+      pedidosAprovados = response.results;
+      this.setState({ pedidosAprovados });
+    });
   }
 
   render() {

@@ -73,7 +73,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
               </div>
             </div>
           )}
-         <div className="col-1">
+          <div className="col-1">
             {pedidos.length > 0 && (
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}

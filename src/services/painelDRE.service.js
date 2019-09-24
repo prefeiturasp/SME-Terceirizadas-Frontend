@@ -1,15 +1,9 @@
 import { API_URL } from "../constants/config.constants";
-import {
-  getDiretoriaRegionalPedidosDeAlteracaoCardapio
-} from "./alteracaoDecardapio.service";
+import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 
-import {
-  getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa
-} from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 
-import {
-  getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua
-} from "./inclusaoDeAlimentacaoContinua.service";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
 
 import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import {
@@ -95,7 +89,9 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro);
+  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(
+    filtro
+  );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -125,7 +121,9 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(filtro);
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+    filtro
+  );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -155,7 +153,9 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(filtro);
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(
+    filtro
+  );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -170,7 +170,6 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
 
   return resposta;
 };
-
 
 export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
   dreUuid,
@@ -325,21 +324,27 @@ export const getResumoPendenciasDREPorLote = async (
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {}
+      resumoPorLote[corrente.lote] = {};
     }
     if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[corrente.lote][corrente.prioridade] ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1): 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote]["TOTAL"] ? (resumoPorLote[corrente.lote]["TOTAL"] += 1): 1;
+      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
+        corrente.lote
+      ][corrente.prioridade]
+        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
+        : 1;
+      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
+        "TOTAL"
+      ]
+        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
+        : 1;
     }
     return resumoPorLote;
   };
-
 
   let resumoPorLote = solicitacoes.reduce(reducer, {});
 
   return resumoPorLote;
 };
-
 
 const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
 
@@ -367,4 +372,3 @@ export const getSolicitacoesAutorizadasDRE = async dreUuid => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
   return retornoBase(url);
 };
-

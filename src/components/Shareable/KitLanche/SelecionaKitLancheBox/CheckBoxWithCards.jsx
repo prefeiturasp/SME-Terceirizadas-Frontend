@@ -29,7 +29,10 @@ export class Cards extends Component {
     } else {
       // atualiza o state pra vazio e limpa o estado interno...
       // se todos estão marcados então limpa.
-      if ((state.checkedList.length === state.all.length) || nextProps.initialValues) {
+      if (
+        state.checkedList.length === state.all.length ||
+        nextProps.initialValues
+      ) {
         onBlur([]);
         onChange([]);
         nextProps.setInitialValues();

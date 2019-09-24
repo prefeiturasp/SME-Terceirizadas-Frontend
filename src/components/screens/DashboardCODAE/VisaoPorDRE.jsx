@@ -15,11 +15,11 @@ class VisaoPorDRE extends Component {
         {dres.map((dre, key) => {
           return (
             <div className="card-dre" key={key}>
-                <CardPendenciaDRE
-                  totalPedidos={dre.pedidos}
-                  nomeDre={dre.nome}
-                  dre={dre}
-                />
+              <CardPendenciaDRE
+                totalPedidos={dre.pedidos}
+                nomeDre={dre.nome}
+                dre={dre}
+              />
             </div>
           );
         })}

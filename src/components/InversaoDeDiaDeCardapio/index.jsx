@@ -85,7 +85,9 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.props.loadInversaoDeDiaDeCardapio(inversaoDeDiaDeCardapio);
     this.setState({
       status: inversaoDeDiaDeCardapio.status,
-      title: `Inversão de dia de Cardápio # ${inversaoDeDiaDeCardapio.id_externo}`,
+      title: `Inversão de dia de Cardápio # ${
+        inversaoDeDiaDeCardapio.id_externo
+      }`,
       salvarAtualizarLbl: "Atualizar"
     });
   }

@@ -20,7 +20,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
 
   componentDidUpdate(prevProps, nextProps) {
     if (this.props.pedidos.length !== nextProps.pedidosFiltrados.length) {
-      if(this.state.filtrado === false){
+      if (this.state.filtrado === false) {
         this.setState({ pedidosFiltrados: this.props.pedidos });
       }
     }

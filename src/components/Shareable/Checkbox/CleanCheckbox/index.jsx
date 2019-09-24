@@ -7,7 +7,8 @@ export const CleanCheckbox = props => {
     <div className="clean-checkbox-component">
       <label htmlFor="check" className="checkbox-label">
         <input component={"input"} type="checkbox" name={name} />
-        <span onClick={onClick} className="checkbox-custom" /> {texto || props.children}
+        <span onClick={onClick} className="checkbox-custom" />{" "}
+        {texto || props.children}
       </label>
     </div>
   );
