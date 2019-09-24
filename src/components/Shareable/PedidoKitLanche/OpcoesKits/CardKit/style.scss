@@ -7,6 +7,12 @@ div.card.meal-kit {
   }
   min-height: 190px;
   max-width: 218px;
+  &.minor-height {
+    min-height: auto;
+    &.checked {
+      min-height: auto;
+    }
+  }
   background-color: $grayCard;
   border: 1px solid $gray;
   &.checked {

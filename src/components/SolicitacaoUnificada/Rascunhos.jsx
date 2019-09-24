@@ -11,7 +11,7 @@ export class Rascunhos extends Component {
       const { id_externo, uuid } = solicitacaoUnificada;
       let backgroundColor = "#DADADA";
       return (
-        <div className="bg-white border rounded mt-3">
+        <div className="draft bg-white border rounded mt-3">
           <div className="mt-2">
             <label className="bold ml-3">
               Solicitação Unificada {`# ${id_externo}`}
@@ -20,7 +20,7 @@ export class Rascunhos extends Component {
               className="ml-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
-              SALVO
+              RASCUNHO
             </span>
           </div>
           <div className="icon-draft-card float-right">

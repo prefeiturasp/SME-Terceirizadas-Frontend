@@ -45,7 +45,7 @@ export const formatarSubmissao = values => {
     data: values.data,
     descricao: values.descricao,
     tempo_passeio: dataFormatada.lista_kit_lanche_igual
-      ? formatarTempoPasseio(values.tempo_passeio)
+      ? values.tempo_passeio
       : null
   };
   dataFormatada.escolas_quantidades = [];
@@ -54,7 +54,7 @@ export const formatarSubmissao = values => {
       dataFormatada.escolas_quantidades.push({
         tempo_passeio: values.lista_kit_lanche_igual
           ? null
-          : formatarTempoPasseio(escola.tempo_passeio),
+          : escola.tempo_passeio,
         quantidade_alunos: values.lista_kit_lanche_igual
           ? escola.quantidade_alunos
           : escola.nro_alunos,

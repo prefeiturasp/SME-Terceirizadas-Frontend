@@ -3,21 +3,16 @@ import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import { Botao } from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { InputComData } from "../Shareable/DatePicker";
+import { InputText } from "../Shareable/Input/InputText";
 import { Grid } from "../Shareable/responsiveBs4";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-import {
-  required,
-  maxValue,
-  naoPodeSerZero
-} from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
 import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -39,6 +34,7 @@ import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./validacao";
 import { formatarSubmissao, extrairKitsLanche } from "./helper";
+import PedidoKitLanche from "../Shareable/PedidoKitLanche";
 
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
@@ -53,7 +49,7 @@ class SolicitacaoUnificada extends Component {
     this.state = {
       loading: true,
       status: "RASCUNHO",
-      title: "Nova Solicitação Unificada",
+      title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
       id: "",
       showModal: false,
@@ -68,6 +64,7 @@ class SolicitacaoUnificada extends Component {
       collapsed: true,
       initialValues: false,
       outroMotivo: false,
+      kitsChecked: [],
       lotes: [
         {
           nome: "7A IP I IPIRANGA",
@@ -78,7 +75,6 @@ class SolicitacaoUnificada extends Component {
           tipo_de_gestao: "TERC TOTAL"
         }
       ],
-      choicesTotal: 0,
       studentsTotal: 0,
       unifiedSolicitationList: []
     };
@@ -95,6 +91,7 @@ class SolicitacaoUnificada extends Component {
     this.escolasRef = React.createRef();
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.setInitialValues = this.setInitialValues.bind(this);
+    this.updateKitsChecked = this.updateKitsChecked.bind(this);
   }
 
   OnEditButtonClicked(param) {
@@ -150,8 +147,6 @@ class SolicitacaoUnificada extends Component {
     );
     this.setState({
       schoolsFiltered: schoolsFiltered,
-      choicesTotal:
-        param.solicitacaoUnificada.solicitacao_kit_lanche.kits.length,
       qtd_kit_lanche: param.solicitacaoUnificada.tempo_passeio
         ? parser[param.solicitacaoUnificada.tempo_passeio]
         : 0,
@@ -164,7 +159,12 @@ class SolicitacaoUnificada extends Component {
       id: param.solicitacaoUnificada.id_externo,
       outroMotivo:
         param.solicitacaoUnificada.outro_motivo !== null &&
-        param.solicitacaoUnificada.outro_motivo !== ""
+        param.solicitacaoUnificada.outro_motivo !== "",
+      kitsChecked: listaKitLancheIgual
+        ? extrairKitsLanche(
+            param.solicitacaoUnificada.solicitacao_kit_lanche.kits
+          )
+        : []
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -219,7 +219,7 @@ class SolicitacaoUnificada extends Component {
     });
     this.setState({
       status: "SEM STATUS",
-      title: "Nova Solicitação Unificada",
+      title: "Nova Solicitação",
       id: "",
       showModal: false,
       schoolExists: false,
@@ -230,7 +230,6 @@ class SolicitacaoUnificada extends Component {
       qtd_kit_lanche: 0,
       radioChanged: false,
       kitsTotal: 0,
-      choicesTotal: 0,
       studentsTotal: 0,
       outroMotivo: false,
       initialValues: true
@@ -282,6 +281,7 @@ class SolicitacaoUnificada extends Component {
   };
 
   handleMultipleOrder() {
+    console.log("OPAAA");
     this.props.change("lista_kit_lanche_igual", !this.props.multipleOrder);
     window.scrollTo(
       0,
@@ -495,6 +495,7 @@ class SolicitacaoUnificada extends Component {
     values.escolas = this.state.schoolsFiltered;
     values.diretoria_regional = this.props.meusDados.diretorias_regionais[0].uuid;
     values.kits_total = this.state.kitsTotal;
+    values.kit_lanche = this.state.kitsChecked;
     const error = validateSubmit(values, this.state);
     if (!error) {
       if (!values.uuid) {
@@ -567,13 +568,16 @@ class SolicitacaoUnificada extends Component {
     }
   }
 
+  updateKitsChecked(kitsChecked) {
+    this.setState({ kitsChecked });
+  }
+
   render() {
     const {
       handleSubmit,
       meusDados,
       proximos_dois_dias_uteis,
       multipleOrder,
-      max_alunos,
       prosseguir
     } = this.props;
     const {
@@ -581,24 +585,27 @@ class SolicitacaoUnificada extends Component {
       title,
       schoolExists,
       schoolsExistArray,
-      qtd_kit_lanche,
       showModal,
       schoolsFiltered,
       enumKits,
       lotes,
       kitsTotal,
-      choicesTotal,
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,
-      collapsed
+      collapsed,
+      kitsChecked,
+      salvarAtualizarLbl
     } = this.state;
     return (
       <div className="unified-solicitation">
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={handleSubmit(this.props.handleSubmit)} onKeyPress={this.onKeyPress}>
+          <form
+            onSubmit={handleSubmit(this.props.handleSubmit)}
+            onKeyPress={this.onKeyPress}
+          >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               collapsed={collapsed}
@@ -634,34 +641,33 @@ class SolicitacaoUnificada extends Component {
             <div className="card">
               <div className="card-body">
                 <div className="row">
-                  <div className="form-group col-3">
+                  <div className="col-3">
                     <Field
-                      component={LabelAndDate}
+                      component={InputComData}
                       name="data"
                       onBlur={event => this.handleDate(event)}
                       minDate={proximos_dois_dias_uteis}
                       label="Dia"
+                      required
                       validate={required}
                     />
                   </div>
-                  <div className="col-9 pl-0 pr-0 pb-3">
+                  <div className="col-9 pb-3">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Local do evento"
                       placeholder="Insira o local do evento"
                       name="local"
                       className="form-control"
+                      required
                       validate={required}
                     />
                   </div>
                 </div>
-                <div className="row" />
-                <div className="row" />
-                <hr />
                 <div className="row">
-                  <div className="col-12 pl-0 pr-0 pb-3">
+                  <div className="col-12 pb-3">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Unidades Escolares"
                       placeholder="Pesquisar"
                       onChange={this.filterList}
@@ -688,11 +694,10 @@ class SolicitacaoUnificada extends Component {
                   </label>
                 </div>
                 <Collapse isOpened={multipleOrder}>
-                  <div className="col-md-12">
-                    <div className="form-group row">
+                  <div className="form-group row">
+                    <div className="col-6">
                       <Field
-                        component={LabelAndInput}
-                        cols="6"
+                        component={InputText}
                         name="quantidade_max_alunos_por_escola"
                         onChange={event =>
                           this.props.change(
@@ -701,17 +706,21 @@ class SolicitacaoUnificada extends Component {
                           )
                         }
                         type="number"
-                        label="Número MÁXIMO de alunos participantes por escola"
-                        validate={
-                          multipleOrder === true && [
-                            required,
-                            maxValue(max_alunos)
-                          ]
-                        }
+                        label="Número máximo de alunos participantes por escola"
+                        required={multipleOrder === true}
+                        validate={multipleOrder === true && [required]}
                       />
                     </div>
                   </div>
-                  <SelecionaTempoPasseio
+                  <PedidoKitLanche
+                    nameTempoPasseio="tempo_passeio"
+                    nomeKitsLanche="kit_lanche"
+                    updateKitsChecked={this.updateKitsChecked}
+                    kitsChecked={kitsChecked}
+                    esconderDetalhamentoKits
+                    validate={required}
+                  />
+                  {/* <SelecionaTempoPasseio
                     className="mt-3"
                     validate={multipleOrder === true}
                     onChange={(event, newValue, previousValue, name) =>
@@ -736,7 +745,7 @@ class SolicitacaoUnificada extends Component {
                       showOptions={false}
                       kits={enumKits}
                     />
-                  )}
+                  )}*/}
                 </Collapse>
                 <span ref={this.escolasRef} />
                 <div scrollTop={100} ref="escolas" className="schools-group">
@@ -824,26 +833,27 @@ class SolicitacaoUnificada extends Component {
                               <Collapse isOpened={school.burger_active}>
                                 <div className="col-md-12">
                                   <div className="form-group row">
-                                    <Field
-                                      component={LabelAndInput}
-                                      cols="3 3 3 3"
-                                      name="nro_alunos"
-                                      type="number"
-                                      onChange={event =>
-                                        this.handleNumberOfStudents(
-                                          school,
-                                          event
-                                        )
-                                      }
-                                      label="Nº de alunos participantes"
-                                      validate={
-                                        school.checked &&
-                                        !multipleOrder && [
-                                          required,
-                                          naoPodeSerZero
-                                        ]
-                                      }
-                                    />
+                                    <div className="col-3">
+                                      <Field
+                                        component={InputText}
+                                        name="nro_alunos"
+                                        type="number"
+                                        onChange={event =>
+                                          this.handleNumberOfStudents(
+                                            school,
+                                            event
+                                          )
+                                        }
+                                        label="Nº de alunos participantes"
+                                        validate={
+                                          school.checked &&
+                                          !multipleOrder && [
+                                            required,
+                                            naoPodeSerZero
+                                          ]
+                                        }
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                                 <SelecionaTempoPasseio
@@ -917,15 +927,16 @@ class SolicitacaoUnificada extends Component {
                   <div style={{ display: "grid" }} className="float-right">
                     <label className="bold">Total de Kits</label>
                     <label>
-                      {multipleOrder ? choicesTotal * studentsTotal : kitsTotal}
+                      {multipleOrder
+                        ? kitsChecked.length * studentsTotal
+                        : kitsTotal}
                     </label>
                   </div>
                 </div>
                 <hr className="w-100" />
                 <div className="form-group">
                   <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
+                    component={TextAreaWYSIWYG}
                     label="Observações"
                     name="descricao"
                   />
@@ -958,28 +969,36 @@ class SolicitacaoUnificada extends Component {
                     </ul>
                   </div>
                 )}
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.cancelForm(event)}
-                    style={ButtonStyle.OutlineSuccess}
-                  />
-                  <BaseButton
-                    label={"Salvar Rascunho"}
-                    onClick={handleSubmit(values => this.handleSubmit(values))}
-                    className="ml-3"
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlineSuccess}
-                  />
-                  <BaseButton
-                    label="Enviar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={handleSubmit(values =>
-                      this.handleSubmit({ ...values, status: "DRE_A_VALIDAR" })
-                    )}
-                    style={ButtonStyle.Success}
-                    className="ml-3"
-                  />
+                <div className="form-group row text-right mt-5">
+                  <div className="col-12 mt-2">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={event => this.cancelForm(event)}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_TYPE.BUTTON}
+                    />
+                    <Botao
+                      texto={salvarAtualizarLbl}
+                      onClick={handleSubmit(values =>
+                        this.handleSubmit(values)
+                      )}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar Solicitação"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={handleSubmit(values =>
+                        this.handleSubmit({
+                          ...values,
+                          status: "DRE_A_VALIDAR"
+                        })
+                      )}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

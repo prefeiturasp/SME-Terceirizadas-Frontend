@@ -11,7 +11,8 @@ export class CardKit extends Component {
       kitsChecked,
       onCardChange,
       nomeKitsLanche,
-      tempoPasseio
+      tempoPasseio,
+      esconderDetalhamentoKits
     } = this.props;
     const disabled =
       (!checked &&
@@ -25,7 +26,8 @@ export class CardKit extends Component {
       <div
         className={`card meal-kit
         ${checked && "checked"}
-        ${disabled && tempoPasseio !== "2" && "disabled"}`}
+        ${disabled && tempoPasseio !== "2" && "disabled"}
+        ${esconderDetalhamentoKits && "minor-height"}`}
       >
         <div className="card-body">
           <div className="card-title">
@@ -42,8 +44,8 @@ export class CardKit extends Component {
               <span className="checkmark" />
             </label>
           </div>
-          {itens.map(item => {
-            return <div className="item-meal-kit">{item.nome}</div>;
+          {!esconderDetalhamentoKits && itens.map(item => {
+            return <div className={`item-meal-kit`}>{item.nome}</div>;
           })}
         </div>
       </div>
