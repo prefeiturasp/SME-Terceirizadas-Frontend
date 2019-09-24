@@ -4,6 +4,7 @@ import StatusSolicitacoes from "../../components/screens/DashboardDRE/StatusSoli
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "./constants";
 import { DRE, SOLICITACOES_PENDENTES } from "../../configs/constants";
+import { STATUS } from "../../components/screens/const";
 
 const atual = {
   href: `/${DRE}/${SOLICITACOES_PENDENTES}`,
@@ -13,6 +14,6 @@ const atual = {
 export default props => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
-    <StatusSolicitacoes showPendentes={true} />
+    <StatusSolicitacoes tipoStatus={STATUS.PENDENTES} />
   </Page>
 );
