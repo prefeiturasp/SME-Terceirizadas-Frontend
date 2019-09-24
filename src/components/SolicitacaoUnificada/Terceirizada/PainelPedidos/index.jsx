@@ -91,7 +91,7 @@ class PainelPedidos extends Component {
                       <Field
                         component={LabelAndCombo}
                         name="visao_por"
-                        onChange={value => this.onFiltroSelected(value)}
+                        onChange={value => this.onFiltroSelected(value)} 
                         placeholder={"Visão por dia"}
                         options={visaoPorCombo}
                       />

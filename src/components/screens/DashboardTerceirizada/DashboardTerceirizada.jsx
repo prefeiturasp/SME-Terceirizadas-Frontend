@@ -54,9 +54,9 @@ class DashboardTerceirizada extends Component {
       handleSubmit,
       solicitations,
       vision_by,
-      quantidade_suspensoes
+      quantidade_suspensoes,
+      unificadas
     } = this.props;
-    console.log(quantidade_suspensoes)
     const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
     return (
       <div>
@@ -265,10 +265,10 @@ class DashboardTerceirizada extends Component {
                     >
                       <CardPendencia
                         cardTitle={"Solicitação Unificada"}
-                        totalOfOrders={2}
-                        priorityOrders={1}
-                        onLimitOrders={0}
-                        regularOrders={1}
+                        totalOfOrders={unificadas.total}
+                        priorityOrders={unificadas.prioritaria.length}
+                        onLimitOrders={unificadas.limite.length}
+                        regularOrders={unificadas.regular.length}
                       />
                     </Link>
                   </div>
