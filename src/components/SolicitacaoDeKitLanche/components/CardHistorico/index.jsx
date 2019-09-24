@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Redirect } from "react-router-dom";
-import "./style.scss";
 import {
   SOLICITACAO_KIT_LANCHE,
   RELATORIO

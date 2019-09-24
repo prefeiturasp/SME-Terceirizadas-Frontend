@@ -10,11 +10,11 @@ import {
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
-  titulo: "Solicitações Unificadas"
+  titulo: "Solicitação Unificadas - Pendente Ciência"
 };
 
 export default () => (
-  <Page>
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />
   </Page>
