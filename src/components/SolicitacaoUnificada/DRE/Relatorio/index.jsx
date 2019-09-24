@@ -4,14 +4,23 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CODAE, SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
+import {
+  CODAE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA
+} from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import { CODAEAprovaPedidoDRE, getSolicitacaoUnificada } from "../../../../services/solicitacaoUnificada.service";
+import {
+  CODAEAprovaPedidoDRE,
+  getSolicitacaoUnificada
+} from "../../../../services/solicitacaoUnificada.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalCancelarSolicitacao, ORIGEM_SOLICITACAO } from "../../../Shareable/ModalCancelarSolicitacao";
+import {
+  ModalCancelarSolicitacao,
+  ORIGEM_SOLICITACAO
+} from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 // import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
@@ -92,7 +101,6 @@ class Relatorio extends Component {
 
   closeModal(e) {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação Unificada negada com sucesso!");
   }
 
   handleSubmit() {
