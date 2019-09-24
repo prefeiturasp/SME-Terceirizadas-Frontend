@@ -55,9 +55,7 @@ export class Rascunhos extends Component {
               <p>
                 {ehInclusaoContinua
                   ? `${inclusaoDeAlimentacao.motivo.nome} -
-                    (${inclusaoDeAlimentacao.data_inicial} - ${
-                      inclusaoDeAlimentacao.data_final
-                    })`
+                    (${inclusaoDeAlimentacao.data_inicial} - ${inclusaoDeAlimentacao.data_final})`
                   : `${inclusaoDeAlimentacao.inclusoes.length} dia(s)`}
               </p>
             </div>

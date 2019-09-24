@@ -68,14 +68,18 @@
     padding: 10px 0;
   }
   tr {
-    th:nth-child(1), td:nth-child(1), th:nth-child(2), td:nth-child(2){
-      padding-left:10px;
+    th:nth-child(1),
+    td:nth-child(1),
+    th:nth-child(2),
+    td:nth-child(2) {
+      padding-left: 10px;
       width: 20%;
     }
-    th:nth-child(3), td:nth-child(3){
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 39%;
     }
-    th:nth-child(4){
+    th:nth-child(4) {
       padding-left: 90px;
     }
     td:nth-child(4) {
@@ -83,7 +87,8 @@
       padding-right: 0px;
     }
   }
-  thead, tbody {
+  thead,
+  tbody {
     display: block;
   }
   tbody {
@@ -97,7 +102,7 @@
   &.inside-input {
     z-index: 1;
     padding-top: 12px;
-    color: #2881BB;
+    color: #2881bb;
     font-size: 20px;
     position: relative;
   }

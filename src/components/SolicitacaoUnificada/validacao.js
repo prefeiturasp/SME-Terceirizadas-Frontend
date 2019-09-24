@@ -16,9 +16,7 @@ export const validateSubmit = values => {
           parseInt(escola.total_alunos) <
           values[`school_${escola.codigo_eol}`].nro_alunos
         ) {
-          error = `Escola ${escola.nome} possui apenas ${
-            escola.total_alunos
-          } alunos`;
+          error = `Escola ${escola.nome} possui apenas ${escola.total_alunos} alunos`;
         }
       }
     }

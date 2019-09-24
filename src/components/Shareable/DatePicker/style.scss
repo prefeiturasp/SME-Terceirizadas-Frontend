@@ -5,10 +5,11 @@ div.datepicker {
     color: $red;
     padding-right: 5px;
   }
-  .react-datepicker__day--selected, .react-datepicker__day--keyboard-selected {
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
     background-color: $green;
   }
-  .react-datepicker__close-icon{
+  .react-datepicker__close-icon {
     display: none;
   }
   .fa-calendar-alt {
@@ -86,4 +87,3 @@ div.datepicker {
     }
   }
 }
-

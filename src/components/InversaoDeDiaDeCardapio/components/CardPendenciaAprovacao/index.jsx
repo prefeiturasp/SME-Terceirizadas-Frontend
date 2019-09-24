@@ -116,9 +116,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                   pedidosFiltrados.map((pedido, key) => {
                     return (
                       <Link
-                        to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
-                          pedido.uuid
-                        }`}
+                        to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
                       >
                         <tr className="row">
                           <td className="col-2">{pedido.id_externo}</td>

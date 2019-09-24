@@ -162,9 +162,7 @@ class Relatorio extends Component {
             <div className="col-4 report-label-value">
               <p>Data do evento</p>
               <p className="value">
-                {`${inclusaoDeAlimentacao.data_inicial} - ${
-                  inclusaoDeAlimentacao.data_final
-                }`}
+                {`${inclusaoDeAlimentacao.data_inicial} - ${inclusaoDeAlimentacao.data_final}`}
               </p>
             </div>
             <div className="col-4 report-label-value">
@@ -203,9 +201,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
-              inclusaoDeAlimentacao.id_externo
-            }`}</span>
+            <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${inclusaoDeAlimentacao.id_externo}`}</span>
             <Link to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`}>
               <Botao
                 texto="voltar"

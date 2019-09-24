@@ -24,9 +24,7 @@ export const getSolicitacoesPendentesEscola = async escolaUuid => {
 };
 
 export const getSolicitacoesAutorizadasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${
-    SOLICITACOES.AUTORIZADOS
-  }/${escolaUuid}/`;
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.AUTORIZADOS}/${escolaUuid}/`;
   return retornoBase(url);
 };
 
@@ -36,8 +34,6 @@ export const getSolicitacoesNegadasEscola = async escolaUuid => {
 };
 
 export const getSolicitacoesCanceladasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${
-    SOLICITACOES.CANCELADOS
-  }/${escolaUuid}/`;
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.CANCELADOS}/${escolaUuid}/`;
   return retornoBase(url);
 };

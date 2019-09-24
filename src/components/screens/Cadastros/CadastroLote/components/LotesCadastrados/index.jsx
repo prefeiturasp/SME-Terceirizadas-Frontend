@@ -97,9 +97,7 @@ class LotesCadastrados extends Component {
                           (lote.terceirizada !== null ||
                             lote.escolas.length > 0) && (
                             <NavLink
-                              to={`/configuracoes/cadastros/lote?uuid=${
-                                lote.uuid
-                              }`}
+                              to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}
                             >
                               <i className="fas fa-pen" />
                             </NavLink>
@@ -143,9 +141,7 @@ class LotesCadastrados extends Component {
                           return (
                             <tr key={indice} className="relationed-companies">
                               <td className="pt-0 pb-0 blueish" colSpan="4">
-                                {`${escola.codigo_eol} - ${escola.nome} - ${
-                                  escola.lote
-                                }`}
+                                {`${escola.codigo_eol} - ${escola.nome} - ${escola.lote}`}
                               </td>
                             </tr>
                           );

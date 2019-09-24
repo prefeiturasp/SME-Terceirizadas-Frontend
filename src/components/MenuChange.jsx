@@ -143,7 +143,7 @@ export class MenuChange extends Component {
   }
 }
 
-export default (MenuChange = reduxForm({
+export default MenuChange = reduxForm({
   form: "menuChange",
   destroyOnUnmount: false // para nao perder o estado
-})(MenuChange));
+})(MenuChange);
