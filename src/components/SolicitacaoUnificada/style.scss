@@ -200,7 +200,8 @@ table.report-table {
         .descricao-titulo {
           color: $gray;
         }
-        .descricao-texto, .descricao-observacao {
+        .descricao-texto,
+        .descricao-observacao {
           color: $blackInput;
           font-weight: bold;
         }
