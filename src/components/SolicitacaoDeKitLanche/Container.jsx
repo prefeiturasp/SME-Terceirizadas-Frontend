@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
-import { getRefeicoesApi } from "../../services/solicitacaoDeKitLanche.service";
-import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
 import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoDeKitLanche from ".";
 
@@ -21,12 +19,6 @@ class Container extends Component {
     meusDados().then(response => {
       this.setState({
         meusDados: response
-      });
-    });
-
-    getRefeicoesApi().then(response => {
-      this.setState({
-        enumKits: extrairKitsLanchesParaCards(response)
       });
     });
 

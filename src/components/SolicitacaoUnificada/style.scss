@@ -33,6 +33,23 @@ input {
       }
     }
   }
+  .number-students-per-school {
+    padding: 15px 0;
+    label {
+      font-size: 14px;
+      color: $gray;
+    }
+    .col-1 {
+      padding: 0;
+    }
+  }
+  .d-grid {
+    display: grid;
+    .default-label {
+      font-size: 14px;
+      color: $gray;
+    }
+  }
 }
 
 .school-container {
