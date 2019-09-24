@@ -12,8 +12,10 @@ export class PedidoKitLanche extends Component {
   }
 
   onTempoPasseioChanged(event) {
-    this.setState({ tempoPasseio: event.target.value });
-    this.props.onPasseioChanged && this.props.onPasseioChanged(event);
+    this.setState({
+      tempoPasseio: event.target.value,
+      meta: { touched: true }
+    });
   }
 
   render() {

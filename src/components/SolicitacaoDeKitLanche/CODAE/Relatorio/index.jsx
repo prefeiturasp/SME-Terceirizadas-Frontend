@@ -19,7 +19,11 @@ import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -123,14 +127,14 @@ class Relatorio extends Component {
             <span className="page-title">
               Solicitação de Kit Lanche # {solicitacaoKitLanche.id_externo}
               <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
-              <Botao
-                texto="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
+                <Botao
+                  texto="voltar"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE}
+                  icon={BUTTON_ICON.ARROW_LEFT}
+                  className="float-right"
+                />
+              </Link>
             </span>
             <div className="card mt-3">
               <div className="card-body">

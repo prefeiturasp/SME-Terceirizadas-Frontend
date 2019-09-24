@@ -4,16 +4,10 @@ import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
 import { Link } from "react-router-dom";
-import BaseButton, {
-  ButtonStyle,
-  ButtonType
-} from "../../../Shareable/button";
+import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
-import {
-  ALTERACAO_CARDAPIO,
-  RELATORIO
-} from "../../../../configs/constants";
+import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -119,9 +113,7 @@ export class CardHistorico extends Component {
                     pedidos.map((pedido, key) => {
                       return (
                         <Link
-                          to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
-                            pedido.uuid
-                          }`}
+                          to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
                         >
                           <tr className="row">
                             <td className="td-check col-4">
@@ -144,9 +136,7 @@ export class CardHistorico extends Component {
                             <td className="col-4">{pedido.escola.nome}</td>
                             <td className="col-4">
                               {pedido.data_inicial
-                                ? `${pedido.data_inicial} a ${
-                                    pedido.data_final
-                                  }`
+                                ? `${pedido.data_inicial} a ${pedido.data_final}`
                                 : stringSeparadaPorVirgulas(
                                     pedido.inclusoes,
                                     "data"

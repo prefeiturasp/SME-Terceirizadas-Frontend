@@ -1,4 +1,3 @@
-
 .card-logo {
   height: 218px;
   display: flex;
@@ -11,10 +10,10 @@
     cursor: initial;
   }
   &:not(.disabled):hover {
-    color: #2C98F0;
+    color: #2c98f0;
     svg {
       path {
-        stroke: #2C98F0;
+        stroke: #2c98f0;
       }
       &:disabled {
         path {

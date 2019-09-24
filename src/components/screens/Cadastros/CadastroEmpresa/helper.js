@@ -1,38 +1,37 @@
-import { createTextMask } from 'redux-form-input-masks';
+import { createTextMask } from "redux-form-input-masks";
 
 export function transformaObjetos(objetos, lista = [], obj = {}) {
   try {
     // eslint-disable-next-line array-callback-return
     objetos.results.map(objeto => {
-      obj.uuid = objeto['uuid'];
-      obj.label = objeto['nome']
-      obj.value = objeto['nome']
+      obj.uuid = objeto["uuid"];
+      obj.label = objeto["nome"];
+      obj.value = objeto["nome"];
       lista.push(obj);
-      obj = {}
-    })
+      obj = {};
+    });
   } catch (err) {
-    return lista
+    return lista;
   }
 
-  return lista
-};
-
+  return lista;
+}
 
 export const fieldCnpj = createTextMask({
-  pattern: '99.999.999/9999-99',
+  pattern: "99.999.999/9999-99",
   allowEmpty: false,
-  guide: false,
+  guide: false
 });
 
 export const fieldCep = createTextMask({
-  pattern: '99999-999',
+  pattern: "99999-999",
   allowEmpty: false,
-  guide: false,
+  guide: false
 });
 
 export const fieldTel = createTextMask({
-  pattern: '99 9999-9999',
-  guide: false,
+  pattern: "99 9999-9999",
+  guide: false
 });
 
 const retornaNutricionistas = nutricionistas => {
@@ -42,35 +41,35 @@ const retornaNutricionistas = nutricionistas => {
       crn: nutri.crn_numero,
       telefone: nutri.contatos[0].telefone,
       email: nutri.contatos[0].email
-    }
-  })
-  return listaNutricionistas
-}
+    };
+  });
+  return listaNutricionistas;
+};
 
 const retornaLotes = lotes => {
   const listaLotes = lotes.map(lote => {
     return {
       nome: lote.nome
-    }
-  })
-  return listaLotes
-}
+    };
+  });
+  return listaLotes;
+};
 
 const retornaEditalDeContrato = contrato => {
   return {
     edital: contrato.edital.numero,
     contrato: contrato.numero
-  }
-}
+  };
+};
 
 const retornaEditais = contratos => {
   const listaEditais = contratos.map(contrato => {
-    return retornaEditalDeContrato(contrato)
-  })
-  return listaEditais
-}
+    return retornaEditalDeContrato(contrato);
+  });
+  return listaEditais;
+};
 
-export const retornArrayTerceirizadas = (response) => {
+export const retornArrayTerceirizadas = response => {
   const listaTerceirizadas = response.map(resp => {
     return {
       codigo_empresa: resp.id_externo,
@@ -90,8 +89,7 @@ export const retornArrayTerceirizadas = (response) => {
       nutricionistas: retornaNutricionistas(resp.nutricionistas),
       editais: retornaEditais(resp.contratos),
       lotes: retornaLotes(resp.lotes)
-    }
-  })
-  return listaTerceirizadas
-
-}
+    };
+  });
+  return listaTerceirizadas;
+};

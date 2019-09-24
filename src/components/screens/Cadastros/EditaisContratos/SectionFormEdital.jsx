@@ -17,7 +17,9 @@ export const SectionFormEdital = props => {
             component={LabelAndInput}
             name="tipo_contratacao"
             validate={required}
-            onChange={event => adicionaFieldsFormEdital(`tipo_contratacao`, event.target.value)}
+            onChange={event =>
+              adicionaFieldsFormEdital(`tipo_contratacao`, event.target.value)
+            }
             max={50}
           />
         </div>
@@ -30,7 +32,9 @@ export const SectionFormEdital = props => {
             className="form-control"
             name="edital_numero"
             validate={required}
-            onChange={event => adicionaFieldsFormEdital(`numero`, event.target.value)}
+            onChange={event =>
+              adicionaFieldsFormEdital(`numero`, event.target.value)
+            }
             max={50}
           />
         </div>
@@ -44,7 +48,9 @@ export const SectionFormEdital = props => {
             component={LabelAndInput}
             name="processo_administrativo"
             validate={required}
-            onChange={event => adicionaFieldsFormEdital(`numero_processo`, event.target.value)}
+            onChange={event =>
+              adicionaFieldsFormEdital(`numero_processo`, event.target.value)
+            }
             max={50}
           />
         </div>
@@ -57,11 +63,12 @@ export const SectionFormEdital = props => {
             name="resumo_objeto"
             required
             validate={required}
-            onChange={event => adicionaFieldsFormEdital(`resumo`, event.target.value)}
+            onChange={event =>
+              adicionaFieldsFormEdital(`resumo`, event.target.value)
+            }
           />
         </div>
       </div>
     </article>
   );
 };
-

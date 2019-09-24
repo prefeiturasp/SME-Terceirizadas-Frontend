@@ -73,7 +73,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
               </div>
             </div>
           )}
-         <div className="col-1">
+          <div className="col-1">
             {pedidos.length > 0 && (
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
@@ -106,9 +106,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                 {pedidosFiltrados.map(solicitacao => {
                   return (
                     <Link
-                      to={`/${parametroURL}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
-                        solicitacao.uuid
-                      }`}
+                      to={`/${parametroURL}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${solicitacao.uuid}`}
                     >
                       <tr className="row">
                         <td className="col-2">{solicitacao.id_externo}</td>

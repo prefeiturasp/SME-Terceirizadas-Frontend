@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { getSolicitacoesAutorizadasEscola, getSolicitacoesCanceladasEscola, getSolicitacoesNegadasEscola, getSolicitacoesPendentesEscola } from "../../../services/painelEscola.service";
+import {
+  getSolicitacoesAutorizadasEscola,
+  getSolicitacoesCanceladasEscola,
+  getSolicitacoesNegadasEscola,
+  getSolicitacoesPendentesEscola
+} from "../../../services/painelEscola.service";
 import { meusDados } from "../../../services/perfil.service";
 import { ajustarFormatoLog } from "../helper";
 import DashboardEscola from "./DashboardEscola";
@@ -77,7 +82,6 @@ export default class DashboardEscolaContainer extends Component {
     };
   }
 
-
   async componentDidMount() {
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
@@ -96,7 +100,6 @@ export default class DashboardEscolaContainer extends Component {
     canceladas = ajustarFormatoLog(canceladas.results);
     this.setState({ autorizadas, pendentes, negadas, canceladas });
   }
-
 
   render() {
     const { autorizadas, pendentes, negadas, theadList, trs } = this.state;

@@ -7,5 +7,5 @@ export const formatarPedidos = pedidos => {
 };
 
 export const obtemDataSolicitacao = solicitacao => {
-    return solicitacao.logs[1].criado_em
-}
+  return solicitacao.logs[1].criado_em;
+};

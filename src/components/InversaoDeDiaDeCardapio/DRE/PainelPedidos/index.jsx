@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import {
-  CardInversaoPendenciaAprovacao,
-} from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import CardHistorico from "../../components/CardHistorico";
 import {

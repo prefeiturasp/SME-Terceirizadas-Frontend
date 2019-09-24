@@ -13,13 +13,13 @@ export default function reducer(state = {}, action) {
             [`processo_administrativo${indiceContrato}`]: contrato.processo,
             [`data_proposta${indiceContrato}`]: contrato.data_proposta,
             [`numero_contrato${indiceContrato}`]: contrato.numero
-          }
+          };
           contrato.vigencias.forEach((vigencia, indiceVigencia) => {
             secaoContrato[`secaoContrato${indiceVigencia}`] = {
               [`data_inicial${indiceVigencia}`]: vigencia.data_inicial,
               [`data_final${indiceVigencia}`]: vigencia.data_final
-            }
-          })
+            };
+          });
           action.data[`secaoEdital${indiceContrato}`] = secaoContrato;
         });
       }

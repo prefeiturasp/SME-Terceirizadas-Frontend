@@ -5,10 +5,10 @@ import { SubmissionError } from "redux-form";
 export const validateTourRequestForm = values => {
   switch (values.tempo_passeio) {
     case undefined:
-        throw new SubmissionError({
-          kit_lanche: "Deve selecionar um tempo de passeio",
-          _error: "Submission failed!"
-        });
+      throw new SubmissionError({
+        kit_lanche: "Deve selecionar um tempo de passeio",
+        _error: "Submission failed!"
+      });
     case "0":
       if (values.kit_lanche.length !== 1) {
         throw new SubmissionError({

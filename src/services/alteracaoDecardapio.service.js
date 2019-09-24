@@ -203,7 +203,6 @@ export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => 
     });
 };
 
-
 export const DREConfirmaAlteracaoCardapio = uuid => {
   const url = `${API_URL}/alteracoes-cardapio/${uuid}/diretoria-regional-aprova/`;
   let status = 0;

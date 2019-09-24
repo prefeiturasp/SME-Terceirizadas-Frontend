@@ -165,9 +165,7 @@ class FoodSuspensionEditor extends Component {
     this.props.loadFoodSuspension(param.suspensaoDeAlimentacao);
     this.setState({
       status: param.suspensaoDeAlimentacao.status,
-      title: `Suspensão de Alimentação # ${
-        param.suspensaoDeAlimentacao.id_externo
-      }`,
+      title: `Suspensão de Alimentação # ${param.suspensaoDeAlimentacao.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(
         param.suspensaoDeAlimentacao.suspensoes_alimentacao

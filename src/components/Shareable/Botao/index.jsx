@@ -4,7 +4,16 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "./constants";
 import "./style.scss";
 
 export const Botao = props => {
-  const { className, disabled, icon, onClick, style, titulo, texto, type } = props;
+  const {
+    className,
+    disabled,
+    icon,
+    onClick,
+    style,
+    titulo,
+    texto,
+    type
+  } = props;
   return (
     <button
       type={type}
@@ -13,7 +22,7 @@ export const Botao = props => {
       onClick={onClick}
       disabled={disabled}
     >
-      {icon && <i className={`${icon} ${texto && "text-and-icon"}`}></i>}
+      {icon && <i className={`${icon} ${texto && "text-and-icon"}`} />}
       {texto}
     </button>
   );

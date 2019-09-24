@@ -52,9 +52,7 @@ class EditaisCadastrados extends Component {
                         {edital.ativo && (
                           <NavLink
                             className="float-left"
-                            to={`/configuracoes/cadastros/editais-contratos?uuid=${
-                              edital.uuid
-                            }`}
+                            to={`/configuracoes/cadastros/editais-contratos?uuid=${edital.uuid}`}
                           >
                             <i className="fas fa-pen" />
                           </NavLink>
@@ -113,41 +111,59 @@ class EditaisCadastrados extends Component {
                                       </div>
                                       <div className="contrato-detalhe">
                                         <div>
-                                          Processo administrativo do contrato: <br/>
+                                          Processo administrativo do contrato:{" "}
+                                          <br />
                                           <span>{contrato.processo}</span>
                                         </div>
                                         <div>
-                                          Data da proposta: <br/>
+                                          Data da proposta: <br />
                                           <span>{contrato.data_proposta}</span>
                                         </div>
                                       </div>
 
                                       <div className="contrato-detalhe">
                                         <div>
-                                          Lote: <br/>
+                                          Lote: <br />
                                           {contrato.lotes.map(lote => {
-                                            return (<Fragment><span className="nome-unidade">{lote.nome}</span><br/></Fragment>)
+                                            return (
+                                              <Fragment>
+                                                <span className="nome-unidade">
+                                                  {lote.nome}
+                                                </span>
+                                                <br />
+                                              </Fragment>
+                                            );
                                           })}
-
                                         </div>
                                         <div>
-                                          DRE: <br/>
-                                          {contrato.diretorias_regionais.map(dre => {
-                                            return (<Fragment><span className="nome-unidade">{dre.nome}</span><br/></Fragment>)
-                                          })}
-
+                                          DRE: <br />
+                                          {contrato.diretorias_regionais.map(
+                                            dre => {
+                                              return (
+                                                <Fragment>
+                                                  <span className="nome-unidade">
+                                                    {dre.nome}
+                                                  </span>
+                                                  <br />
+                                                </Fragment>
+                                              );
+                                            }
+                                          )}
                                         </div>
                                       </div>
 
                                       <div className="contrato-detalhe">
                                         <div>
-                                          Empresa: <br/>
-                                          <span className="nome-unidade">{contrato.terceirizada.nome_fantasia}</span><br/>
-
+                                          Empresa: <br />
+                                          <span className="nome-unidade">
+                                            {
+                                              contrato.terceirizada
+                                                .nome_fantasia
+                                            }
+                                          </span>
+                                          <br />
                                         </div>
-                                        <div>
-
-                                        </div>
+                                        <div />
                                       </div>
                                       <div className="divisao" />
                                     </Fragment>

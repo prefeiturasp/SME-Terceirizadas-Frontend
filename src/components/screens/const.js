@@ -9,3 +9,9 @@ export const FILTRO = {
   DAQUI_A_7_DIAS: "daqui_a_7_dias",
   SEM_FILTRO: "sem_filtro"
 };
+
+export const STATUS = {
+  AUTORIZADAS: "AUTORIZADAS",
+  PENDENTES: "PENDENTES",
+  CANCELADAS: "CANCELADAS"
+};
