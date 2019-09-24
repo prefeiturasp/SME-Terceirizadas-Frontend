@@ -58,7 +58,7 @@ export const formatarSubmissao = values => {
         quantidade_alunos: values.lista_kit_lanche_igual
           ? escola.quantidade_alunos
           : escola.nro_alunos,
-        kits: values.lista_kit_lanche_igual ? [] : escola.kit_lanche,
+        kits: values.lista_kit_lanche_igual ? [] : escola.kitsChecked,
         escola: escola.uuid
       });
     }

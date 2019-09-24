@@ -33,7 +33,7 @@ export default function reducer(state = {}, action) {
               ? extrairKitsLanche(escola_quantidade.kits)
               : [],
             tempo_passeio: !action.data.lista_kit_lanche_igual
-              ? extrairTempoPasseio(escola_quantidade.tempo_passeio)
+              ? escola_quantidade.tempo_passeio.toString()
               : null
           };
         });

@@ -8,16 +8,11 @@ import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
-import { Grid } from "../Shareable/responsiveBs4";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Collapse } from "react-collapse";
-import { Stand } from "react-burgers";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
-import SelecionaTempoPasseio from "../Shareable/KitLanche/SelecionaTempoPasseio/SelecionaTempoPasseio";
-import SelecionaKitLancheBox from "../Shareable/KitLanche/SelecionaKitLancheBox/SelecionaKitLancheBox";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
-import { extrairKitsLanchesParaCards } from "../Shareable/KitLanche/helper";
 import { getKitLanches } from "../../services/solicitacaoDeKitLanche.service";
 import "../Shareable/style.scss";
 import "./style.scss";
@@ -35,12 +30,8 @@ import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.redu
 import { validateSubmit } from "./validacao";
 import { formatarSubmissao, extrairKitsLanche } from "./helper";
 import PedidoKitLanche from "../Shareable/PedidoKitLanche";
+import { ToggleExpandir } from "../Shareable/ToggleExpandir";
 
-export const HORAS_ENUM = {
-  _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 'kit'" },
-  _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
-  _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
-};
 const ENTER = 13;
 
 class SolicitacaoUnificada extends Component {
@@ -51,19 +42,14 @@ class SolicitacaoUnificada extends Component {
       status: "RASCUNHO",
       title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
-      id: "",
       showModal: false,
       schoolExists: false,
       schoolsExistArray: [],
       schoolsFiltered: [],
       schoolsTotal: 0,
-      qtd_kit_lanche: 0,
-      radioChanged: false,
-      enumKits: null,
+      kitsLanche: null,
       kitsTotal: 0,
       collapsed: true,
-      initialValues: false,
-      outroMotivo: false,
       kitsChecked: [],
       lotes: [
         {
@@ -83,14 +69,12 @@ class SolicitacaoUnificada extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
     this.filterList = this.filterList.bind(this);
-    this.setNumeroDeKitLanches = this.setNumeroDeKitLanches.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
     this.titleRef = React.createRef();
     this.pedidoMultiploRef = React.createRef();
     this.escolasRef = React.createRef();
     this.alterarCollapse = this.alterarCollapse.bind(this);
-    this.setInitialValues = this.setInitialValues.bind(this);
     this.updateKitsChecked = this.updateKitsChecked.bind(this);
   }
 
@@ -100,11 +84,6 @@ class SolicitacaoUnificada extends Component {
     const listaKitLancheIgual =
       param.solicitacaoUnificada.lista_kit_lanche_igual;
     let schoolsFiltered = this.state.schoolsFiltered;
-    const parser = {
-      "4h": HORAS_ENUM._4.qtd_kits,
-      "5_7h": HORAS_ENUM._5a7.qtd_kits,
-      "8h": HORAS_ENUM._8.qtd_kits
-    };
     let kitsTotal = 0;
     let studentsTotal = 0;
     let schoolsTotal = 0;
@@ -123,6 +102,9 @@ class SolicitacaoUnificada extends Component {
       schoolsFiltered[foundIndex].nro_alunos =
         escola_quantidade.quantidade_alunos;
       schoolsFiltered[foundIndex].kit_lanche = extrairKitsLanche(
+        escola_quantidade.kits
+      );
+      schoolsFiltered[foundIndex].kitsChecked = extrairKitsLanche(
         escola_quantidade.kits
       );
       schoolsFiltered[foundIndex].number_of_choices =
@@ -147,19 +129,12 @@ class SolicitacaoUnificada extends Component {
     );
     this.setState({
       schoolsFiltered: schoolsFiltered,
-      qtd_kit_lanche: param.solicitacaoUnificada.tempo_passeio
-        ? parser[param.solicitacaoUnificada.tempo_passeio]
-        : 0,
       kitsTotal: kitsTotal,
       studentsTotal: studentsTotal,
       schoolsTotal: schoolsTotal,
       status: "RASCUNHO",
       title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.solicitacaoUnificada.id_externo,
-      outroMotivo:
-        param.solicitacaoUnificada.outro_motivo !== null &&
-        param.solicitacaoUnificada.outro_motivo !== "",
       kitsChecked: listaKitLancheIgual
         ? extrairKitsLanche(
             param.solicitacaoUnificada.solicitacao_kit_lanche.kits
@@ -187,15 +162,6 @@ class SolicitacaoUnificada extends Component {
     }
   }
 
-  onMotivoChanged(value) {
-    const motivo = this.props.motivos.find(motivo => motivo.uuid === value);
-    const outroMotivo = motivo.nome.includes("Outro");
-    this.setState({ outroMotivo });
-    if (!outroMotivo) {
-      this.props.change("outro_motivo", "");
-    }
-  }
-
   cancelForm(event) {
     this.resetForm();
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
@@ -216,23 +182,19 @@ class SolicitacaoUnificada extends Component {
       escola["tempo_passeio"] = null;
       escola["kit_lanche"] = null;
       escola["checked"] = false;
+      escola["kitsChecked"] = [];
     });
     this.setState({
       status: "SEM STATUS",
       title: "Nova Solicitação",
-      id: "",
       showModal: false,
       schoolExists: false,
       schoolsExistArray: [],
       salvarAtualizarLbl: "Salvar Rascunho",
       schoolsFiltered: escolas,
       schoolsTotal: 0,
-      qtd_kit_lanche: 0,
-      radioChanged: false,
       kitsTotal: 0,
-      studentsTotal: 0,
-      outroMotivo: false,
-      initialValues: true
+      studentsTotal: 0
     });
     this.refresh();
   }
@@ -244,7 +206,7 @@ class SolicitacaoUnificada extends Component {
     getKitLanches()
       .then(response => {
         this.setState({
-          enumKits: extrairKitsLanchesParaCards(response)
+         kitsLanche: response.results
         });
       })
       .catch(error => {
@@ -254,34 +216,7 @@ class SolicitacaoUnificada extends Component {
     this.refresh();
   }
 
-  setNumeroDeKitLanches = (event, newValue, previousValue, name, school) => {
-    const parser = {
-      "4h": HORAS_ENUM._4.qtd_kits,
-      "5_7h": HORAS_ENUM._5a7.qtd_kits,
-      "8h": HORAS_ENUM._8.qtd_kits
-    };
-    let newQuantity = parser[event];
-    let qtd_kit_lanche = this.state.qtd_kit_lanche;
-    let schoolsFiltered = this.state.schoolsFiltered;
-    if (school) {
-      var foundIndex = this.state.schoolsFiltered.findIndex(
-        escola => escola.codigo_eol === school.codigo_eol
-      );
-      schoolsFiltered[foundIndex].limit_of_meal_kits = newQuantity;
-      schoolsFiltered[foundIndex].tempo_passeio = newValue;
-    } else {
-      qtd_kit_lanche = newQuantity;
-    }
-    this.setState({
-      ...this.state,
-      qtd_kit_lanche,
-      schoolsFiltered,
-      radioChanged: event !== previousValue
-    });
-  };
-
   handleMultipleOrder() {
-    console.log("OPAAA");
     this.props.change("lista_kit_lanche_igual", !this.props.multipleOrder);
     window.scrollTo(
       0,
@@ -289,21 +224,6 @@ class SolicitacaoUnificada extends Component {
         295 +
         120 * this.state.unifiedSolicitationList.length
     );
-  }
-
-  handleSelecionaKitLancheBox(school, value) {
-    var foundIndex = this.state.schoolsFiltered.findIndex(
-      escola => escola.codigo_eol === school.codigo_eol
-    );
-    var schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[foundIndex].number_of_choices = value.length;
-    schoolsFiltered[foundIndex].kit_lanche = value;
-    schoolsFiltered = this.setNumberOfMealKits(school);
-    this.setState({
-      ...this.state,
-      schoolsFiltered: schoolsFiltered
-    });
-    this.handleKitsTotal();
   }
 
   handleNumberOfStudents(school, event) {
@@ -418,7 +338,7 @@ class SolicitacaoUnificada extends Component {
     let schoolsTotal = 0;
     schoolsFiltered.forEach(function(school) {
       if (school.checked) {
-        kitsTotal += school.number_of_choices * school.nro_alunos;
+        kitsTotal += school.kitsChecked.length * school.nro_alunos;
         schoolsTotal += 1;
       }
     });
@@ -440,10 +360,6 @@ class SolicitacaoUnificada extends Component {
     )
       this.showModal();
     this.props.change("dia", value);
-  }
-
-  setInitialValues() {
-    this.setState({ initialValues: false });
   }
 
   changeBurger(school, key) {
@@ -572,6 +488,19 @@ class SolicitacaoUnificada extends Component {
     this.setState({ kitsChecked });
   }
 
+  updateEscolaKitsChecked(value, key) {
+    let schoolsFiltered = this.state.schoolsFiltered;
+    schoolsFiltered[key].kitsChecked = value;
+    this.setState({ schoolsFiltered });
+    this.handleKitsTotal();
+  }
+
+  updateEscolaTempoPasseio(value, key) {
+    let schoolsFiltered = this.state.schoolsFiltered;
+    schoolsFiltered[key].tempo_passeio = value;
+    this.setState({ schoolsFiltered });
+  }
+
   render() {
     const {
       handleSubmit,
@@ -582,12 +511,10 @@ class SolicitacaoUnificada extends Component {
     } = this.props;
     const {
       loading,
-      title,
       schoolExists,
       schoolsExistArray,
       showModal,
       schoolsFiltered,
-      enumKits,
       lotes,
       kitsTotal,
       studentsTotal,
@@ -595,7 +522,8 @@ class SolicitacaoUnificada extends Component {
       unifiedSolicitationList,
       collapsed,
       kitsChecked,
-      salvarAtualizarLbl
+      salvarAtualizarLbl,
+      kitsLanche
     } = this.state;
     return (
       <div className="unified-solicitation">
@@ -633,11 +561,9 @@ class SolicitacaoUnificada extends Component {
                 />
               </div>
             )}
-            <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <h3 className="font-weight-bold" style={{ color: "#353535" }}>
-                {title}
-              </h3>
-            </div>
+            <h3 ref={this.titleRef} className="page-title">
+              {this.state.title}
+            </h3>
             <div className="card">
               <div className="card-body">
                 <div className="row">
@@ -717,35 +643,10 @@ class SolicitacaoUnificada extends Component {
                     nomeKitsLanche="kit_lanche"
                     updateKitsChecked={this.updateKitsChecked}
                     kitsChecked={kitsChecked}
+                    kitsLanche={kitsLanche}
                     esconderDetalhamentoKits
                     validate={required}
                   />
-                  {/* <SelecionaTempoPasseio
-                    className="mt-3"
-                    validate={multipleOrder === true}
-                    onChange={(event, newValue, previousValue, name) =>
-                      this.setNumeroDeKitLanches(
-                        event,
-                        newValue,
-                        previousValue,
-                        name,
-                        null
-                      )
-                    }
-                  />
-                  {enumKits && (
-                    <SelecionaKitLancheBox
-                      className="mt-3"
-                      validate={multipleOrder === true}
-                      choicesNumberLimit={qtd_kit_lanche}
-                      setInitialValues={this.setInitialValues}
-                      onChange={value =>
-                        this.setState({ choicesTotal: value.length })
-                      }
-                      showOptions={false}
-                      kits={enumKits}
-                    />
-                  )}*/}
                 </Collapse>
                 <span ref={this.escolasRef} />
                 <div scrollTop={100} ref="escolas" className="schools-group">
@@ -795,16 +696,12 @@ class SolicitacaoUnificada extends Component {
                                   {school.codigo_eol + " - " + school.nome}
                                 </label>
                                 {!multipleOrder && (
-                                  <Stand
+                                  <ToggleExpandir
                                     onClick={() =>
                                       this.changeBurger(school, key)
                                     }
-                                    color={"#C8C8C8"}
-                                    width={30}
-                                    padding={0}
-                                    lineSpacing={5}
+                                    ativo={school.burger_active}
                                     className="float-right"
-                                    active={school.burger_active}
                                   />
                                 )}
                                 {multipleOrder && school.checked && (
@@ -831,83 +728,54 @@ class SolicitacaoUnificada extends Component {
                                 )}
                               </div>
                               <Collapse isOpened={school.burger_active}>
-                                <div className="col-md-12">
-                                  <div className="form-group row">
-                                    <div className="col-3">
-                                      <Field
-                                        component={InputText}
-                                        name="nro_alunos"
-                                        type="number"
-                                        onChange={event =>
-                                          this.handleNumberOfStudents(
-                                            school,
-                                            event
-                                          )
-                                        }
-                                        label="Nº de alunos participantes"
-                                        validate={
-                                          school.checked &&
-                                          !multipleOrder && [
-                                            required,
-                                            naoPodeSerZero
-                                          ]
-                                        }
-                                      />
-                                    </div>
+                                <div className="form-group row">
+                                  <div className="col-3">
+                                    <Field
+                                      component={InputText}
+                                      name="nro_alunos"
+                                      type="number"
+                                      onChange={event =>
+                                        this.handleNumberOfStudents(
+                                          school,
+                                          event
+                                        )
+                                      }
+                                      label="Nº de alunos participantes"
+                                      validate={
+                                        school.checked &&
+                                        !multipleOrder && [
+                                          required,
+                                          naoPodeSerZero
+                                        ]
+                                      }
+                                    />
                                   </div>
                                 </div>
-                                <SelecionaTempoPasseio
-                                  className="mt-3"
-                                  validate={school.checked && !multipleOrder}
-                                  onChange={(
-                                    event,
-                                    newValue,
-                                    previousValue,
-                                    name
-                                  ) =>
-                                    this.setNumeroDeKitLanches(
-                                      event,
-                                      newValue,
-                                      previousValue,
-                                      name,
-                                      school
+                                <PedidoKitLanche
+                                  nameTempoPasseio="tempo_passeio"
+                                  nomeKitsLanche="kit_lanche"
+                                  updateKitsChecked={value =>
+                                    this.updateEscolaKitsChecked(value, key)
+                                  }
+                                  onPasseioChanged={event =>
+                                    this.updateEscolaTempoPasseio(
+                                      event.target.value,
+                                      key
                                     )
                                   }
+                                  kitsChecked={school.kitsChecked}
+                                  kitsLanche={kitsLanche}
+                                  esconderDetalhamentoKits
+                                  validate={required}
                                 />
-                                {enumKits && (
-                                  <SelecionaKitLancheBox
-                                    kits={enumKits}
-                                    showOptions={false}
-                                    setInitialValues={this.setInitialValues}
-                                    validate={school.checked && !multipleOrder}
-                                    className="mt-3"
-                                    onChange={value =>
-                                      this.handleSelecionaKitLancheBox(
-                                        school,
-                                        value
-                                      )
-                                    }
-                                    choicesNumberLimit={
-                                      school.limit_of_meal_kits
-                                    }
-                                  />
-                                )}
-                                <div className="form-group">
-                                  <label className="bold">
-                                    {"Número total de kits dessa escola:"}
-                                  </label>
-                                  <br />
-                                  <Grid
-                                    cols="1 1 1 1"
-                                    className="border rounded p-2"
-                                    style={{
-                                      background: "#E8E8E8"
-                                    }}
-                                  >
-                                    <span className="bold d-flex justify-content-center">
-                                      {school.number_of_meal_kits || 0}
-                                    </span>
-                                  </Grid>
+                                <div className="row number-students-per-school">
+                                  <div className="col-12">
+                                    <label>
+                                      Número de kits dessa escola:{" "}
+                                      {school.kitsChecked.length *
+                                        school.nro_alunos}
+                                    </label>
+                                  </div>
                                 </div>
                               </Collapse>
                             </div>
@@ -916,21 +784,24 @@ class SolicitacaoUnificada extends Component {
                       );
                     })}
                 </div>
-                <div
-                  className="form-group"
-                  style={{ paddingTop: "30px", paddingBottom: "50px" }}
-                >
-                  <div style={{ display: "grid" }} className="float-left">
-                    <label className="bold">Total de Unidades Escolares</label>
-                    <label>{schoolsTotal || 0}</label>
-                  </div>
-                  <div style={{ display: "grid" }} className="float-right">
-                    <label className="bold">Total de Kits</label>
-                    <label>
-                      {multipleOrder
-                        ? kitsChecked.length * studentsTotal
-                        : kitsTotal}
-                    </label>
+                <div className="row form-group pt-4">
+                  <div className="col-12">
+                    <div className="d-grid float-left">
+                      <label className="default-label">
+                        Total de Unidades Escolares
+                      </label>
+                      <label className="default-label">
+                        {schoolsTotal || 0}
+                      </label>
+                    </div>
+                    <div className="d-grid float-right">
+                      <label className="default-label">Total de Kits</label>
+                      <label className="default-label">
+                        {multipleOrder
+                          ? kitsChecked.length * studentsTotal
+                          : kitsTotal}
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <hr className="w-100" />
@@ -1024,7 +895,6 @@ const mapStateToProps = state => {
     initialValues: state.unifiedSolicitation.data,
     multipleOrder: selector(state, "lista_kit_lanche_igual"),
     kitsTotal: selector(state, "kits_total"),
-    motivo: selector(state, "motivo"),
     max_alunos: selector(state, "quantidade_max_alunos_por_escola"),
     prosseguir: selector(state, "prosseguir")
   };
