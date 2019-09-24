@@ -3,10 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Relatorio from "../../../components/SolicitacaoDeKitLanche/Escola/Relatorio";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import {
-  SOLICITACAO_KIT_LANCHE,
-  ESCOLA
-} from "../../../configs/constants";
+import { SOLICITACAO_KIT_LANCHE, ESCOLA } from "../../../configs/constants";
 
 const atual = {
   href: "#",

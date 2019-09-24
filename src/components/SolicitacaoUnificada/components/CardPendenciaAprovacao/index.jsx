@@ -129,9 +129,7 @@ export class CardPendenciaAprovacao extends Component {
                   pedidosFiltrados.map((pedido, key) => {
                     return (
                       <Link
-                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
-                          pedido.uuid
-                        }`}
+                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${pedido.uuid}`}
                       >
                         <tr className="row">
                           <td className="col-3">{pedido.id_externo}</td>

@@ -12,20 +12,18 @@ export class ModalCancelarConfigEmail extends Component {
           <Modal.Title>Deseja cancelar o procedimento?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            As Informações não serão salvas
-          </div>
+          <div>As Informações não serão salvas</div>
         </Modal.Body>
         <Modal.Footer>
-        <Link to="/">
-          <BaseButton
-            label="Confirmar"
-            type={ButtonType.BUTTON}
-            onClick={closeModal}
-            style={ButtonStyle.Primary}
-            className="ml-3"
-          />
-        </Link>
+          <Link to="/">
+            <BaseButton
+              label="Confirmar"
+              type={ButtonType.BUTTON}
+              onClick={closeModal}
+              style={ButtonStyle.Primary}
+              className="ml-3"
+            />
+          </Link>
         </Modal.Footer>
       </Modal>
     );

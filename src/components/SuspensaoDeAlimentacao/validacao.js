@@ -51,6 +51,7 @@ export const validateSubmit = (values, meusDados) => {
     delete values["substituicoes_INTEGRAL"];
   }
 
-  if (values['suspensoes'].length === 0) return "Obrigatório ao menos um período"
+  if (values["suspensoes"].length === 0)
+    return "Obrigatório ao menos um período";
   return false;
 };

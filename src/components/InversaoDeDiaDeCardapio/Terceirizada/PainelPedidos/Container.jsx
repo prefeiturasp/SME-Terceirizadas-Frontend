@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getTerceirizadaPedidosAprovados} from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getTerceirizadaPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import PainelPedidos from "../PainelPedidos";
 
 class Container extends Component {

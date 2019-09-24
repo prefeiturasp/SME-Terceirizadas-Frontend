@@ -99,9 +99,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
     component: solicitacaoKitLanchePaginas.RelatorioEscola,
     exact: true
   },
@@ -141,9 +139,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioDREPage,
     exact: false
   },
@@ -153,9 +149,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
     component: InversaoDiaCardapioRelatorioDREPage,
     exact: false
   },
@@ -165,9 +159,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
     component: solicitacaoKitLanchePaginas.RelatorioDRE,
     exact: false
   },
@@ -177,9 +169,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${constants.RELATORIO}`,
     component: solicitacaoKitLanchePaginas.RelatorioDREUnificada,
     exact: true
   },
@@ -189,16 +179,12 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
   },
@@ -208,9 +194,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioCODAEPage,
     exact: false
   },
@@ -220,9 +204,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
     component: PainelPedidosInversaoDiaCardapioRelatorioCODAEPage,
     exact: false
   },
@@ -232,9 +214,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${constants.RELATORIO}`,
     component: SolicitacaoUnificadaRelatorioCODAEPage,
     exact: false
   },
@@ -244,9 +224,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
     component: PainelPedidosInversaoDiaCardapioRelatorioTerceirizadaPage,
     exact: false
   },
@@ -261,9 +239,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
@@ -278,9 +254,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
     exact: false
   },
@@ -290,9 +264,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
     component: solicitacaoKitLanchePaginas.RelatorioTerceirizada,
     exact: false
   },
@@ -302,23 +274,17 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${
-      constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
-    }/${constants.RELATORIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${constants.RELATORIO}`,
     component: SolicitacaoUnificadaRelatorioTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${
-      constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
@@ -388,9 +354,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
     component: solicitacaoKitLanchePaginas.RelatorioCODAE,
     exact: false
   },
@@ -410,9 +374,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
     component: AlteracaoDeCardapioRelatorioTerceirizadaPage,
     exact: false
   },

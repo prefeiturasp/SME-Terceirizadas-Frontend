@@ -4,7 +4,7 @@ import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "../../../configs/constants";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { STATUS } from "../../../components/screens/DashboardEscola/const";
+import { STATUS } from "../../../components/screens/const";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`,

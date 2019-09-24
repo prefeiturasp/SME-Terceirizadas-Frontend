@@ -96,4 +96,3 @@ export const getSubprefeituras = () => {
       return error.json();
     });
 };
-

@@ -19,24 +19,22 @@ export const retornaTempoPasseio = tempo_passeio => {
     return "1";
   }
   if (tempo_passeio === 2 || tempo_passeio === "8h") {
-    return "2"
-  }
-  else {
+    return "2";
+  } else {
     return "";
   }
 };
 
 export const retornaInputPasseio = tempo_passeio => {
   if (tempo_passeio === 0 || tempo_passeio === "4h") {
-      return "4h";
+    return "4h";
   }
   if (tempo_passeio === 1 || tempo_passeio === "5_7h") {
-      return "5_7h";
+    return "5_7h";
   }
   if (tempo_passeio === 2 || tempo_passeio === "8h") {
     return "8h";
-  }
-  else {
+  } else {
     return "";
   }
 };
@@ -48,7 +46,7 @@ export const extrairKitsLanchesParaCards = data => {
     objChild["value"] = value.uuid;
     objChild["label"] = value.nome;
     objChild["foodList"] = value.itens.map(objeto => {
-      return objeto.nome
+      return objeto.nome;
     });
     objRoot[`KIT${key + 1}`] = objChild;
   });

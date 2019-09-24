@@ -5,7 +5,12 @@ import InputErroMensagem from "../../Input/InputErroMensagem";
 
 export class TempoPasseio extends Component {
   render() {
-    const { mostrarExplicacao, nameTempoPasseio, onTempoPasseioChanged, meta } = this.props;
+    const {
+      mostrarExplicacao,
+      nameTempoPasseio,
+      onTempoPasseioChanged,
+      meta
+    } = this.props;
     return (
       <div className="tour-time">
         <p className="label">Tempo previsto do passeio</p>
@@ -57,8 +62,8 @@ export class TempoPasseio extends Component {
                   distintos entre os 3 modelos estabelecidos contratualmente;
                 </label>
                 <label>
-                  <b>8 horas ou mais:</b> 3 kits lanche/aluno: Será autorizado
-                  o fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
+                  <b>8 horas ou mais:</b> 3 kits lanche/aluno: Será autorizado o
+                  fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
                 </label>
               </div>
             </div>

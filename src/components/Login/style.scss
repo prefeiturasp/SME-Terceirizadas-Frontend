@@ -42,14 +42,14 @@ a.hyperlink {
     }
     .logo-sigpae {
       text-align: center;
-      @media screen and (max-height: 610px)  {
+      @media screen and (max-height: 610px) {
         padding-top: 2rem;
         img {
           height: auto;
           width: 300px;
         }
       }
-      @media screen and (min-height: 611px)  {
+      @media screen and (min-height: 611px) {
         padding-top: 5rem;
         img {
           height: 105px;
@@ -66,14 +66,14 @@ a.hyperlink {
     }
     .logo-prefeitura {
       text-align: center;
-      @media screen and (max-height: 610px)  {
+      @media screen and (max-height: 610px) {
         padding-top: 1rem;
         img {
           height: auto;
           width: 100px;
         }
       }
-      @media screen and (min-height: 611px)  {
+      @media screen and (min-height: 611px) {
         padding-top: 2rem;
         img {
           height: 65px;

@@ -89,9 +89,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
-              suspensaoAlimentacao.id_externo
-            }`}</span>
+            <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${suspensaoAlimentacao.id_externo}`}</span>
             <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
               <Botao
                 texto="voltar"

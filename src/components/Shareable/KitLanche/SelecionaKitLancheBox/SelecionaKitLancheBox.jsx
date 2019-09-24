@@ -3,15 +3,13 @@ import { Field } from "redux-form";
 import { requiredCheck } from "../../../../helpers/fieldValidators";
 import CheckboxWithCards from "./CheckBoxWithCards";
 
-
 export const HORAS_ENUM = {
   _4: { tempo: "4h", qtd_kits: 1, label: "até 4 horas - 1 kit" },
   _5a7: { tempo: "5_7h", qtd_kits: 2, label: "de 5 a 7 horas - 2 kits" },
   _8: { tempo: "8h", qtd_kits: 3, label: "8 horas ou mais - 3 kits" }
 };
 
-class  SelecionaKitLancheBox extends Component {
-
+class SelecionaKitLancheBox extends Component {
   render() {
     const KIT_ENUM = this.props.kits;
 
@@ -36,7 +34,6 @@ class  SelecionaKitLancheBox extends Component {
     let checkAll = kitOptions.length === this.props.choicesNumberLimit;
 
     return (
-
       <div className={this.props.className}>
         <h5 className="font-weight-bold">Selecione a opção desejada</h5>
         <Field
@@ -44,7 +41,9 @@ class  SelecionaKitLancheBox extends Component {
           label="Kit Lanche"
           component={CheckboxWithCards}
           options={kitOptions}
-          showOptions={this.props.showOptions !== undefined ? this.props.showOptions : true}
+          showOptions={
+            this.props.showOptions !== undefined ? this.props.showOptions : true
+          }
           choicesNumberLimit={this.props.choicesNumberLimit}
           initialValues={this.props.initialValues}
           setInitialValues={this.props.setInitialValues}
@@ -61,4 +60,4 @@ class  SelecionaKitLancheBox extends Component {
     );
   }
 }
-export default SelecionaKitLancheBox
+export default SelecionaKitLancheBox;

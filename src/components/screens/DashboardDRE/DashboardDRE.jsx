@@ -8,7 +8,9 @@ import { Link } from "react-router-dom";
 import { Select } from "../../Shareable/Select";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao, { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardStatusDeSolicitacao, {
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import "./style.scss";

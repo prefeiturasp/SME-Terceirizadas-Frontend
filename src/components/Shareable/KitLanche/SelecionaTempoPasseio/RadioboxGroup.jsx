@@ -8,7 +8,6 @@ export const field = ({ input, meta, options }) => {
   const { name, onChange, onBlur, onFocus } = input;
   const inputValue = retornaInputPasseio(input.value);
 
-
   const radioes = options.map(({ label, value }, index) => {
     const handleChange = event => {
       let selected = "";

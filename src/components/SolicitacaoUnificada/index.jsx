@@ -598,7 +598,10 @@ class SolicitacaoUnificada extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={handleSubmit(this.props.handleSubmit)} onKeyPress={this.onKeyPress}>
+          <form
+            onSubmit={handleSubmit(this.props.handleSubmit)}
+            onKeyPress={this.onKeyPress}
+          >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               collapsed={collapsed}

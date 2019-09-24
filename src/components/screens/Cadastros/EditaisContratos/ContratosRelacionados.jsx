@@ -76,9 +76,7 @@ class ContratosRelacionados extends Component {
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `vigenciaContrato_${
-      this.state.formVigenciaContratos.length
-    }`;
+    const indiceDoFormAtual = `vigenciaContrato_${this.state.formVigenciaContratos.length}`;
     let forms = this.state.formVigenciaContratos;
     forms.push(indiceDoFormAtual);
     this.setState({ forms });

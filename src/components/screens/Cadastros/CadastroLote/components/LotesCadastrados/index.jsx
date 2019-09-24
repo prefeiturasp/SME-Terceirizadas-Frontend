@@ -38,7 +38,8 @@ class LotesCadastrados extends Component {
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.iniciais.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !==
+          -1 ||
         item.tipo_gestao.nome.toLowerCase().search(palavraAFiltrar) !== -1
       );
     });

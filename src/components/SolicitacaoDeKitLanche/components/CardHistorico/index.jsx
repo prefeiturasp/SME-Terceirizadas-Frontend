@@ -58,9 +58,7 @@ export class CardHistorico extends Component {
     if (this.state.redirect) {
       return (
         <Redirect
-          to={`/${
-            this.props.parametroURL
-          }/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}?uuid=${pedido.uuid}`}
+          to={`/${this.props.parametroURL}/${SOLICITACAO_KIT_LANCHE}/${RELATORIO}?uuid=${pedido.uuid}`}
         />
       );
     }

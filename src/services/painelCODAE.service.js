@@ -1,4 +1,10 @@
-import { filtraCiencia, filtraInformados, filtraNoLimite, filtraPrioritarios, filtraRegular } from "../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+import {
+  filtraCiencia,
+  filtraInformados,
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
 import { API_URL } from "../constants/config.constants";
 import { getCODAEPedidosAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import authService from "./auth";

@@ -7,14 +7,19 @@ import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import { aprovaDeKitLancheAvulsoDiretoriaRegional, getDetalheKitLancheAvulsa } from "../../../../services/solicitacaoDeKitLanche.service";
+import {
+  aprovaDeKitLancheAvulsoDiretoriaRegional,
+  getDetalheKitLancheAvulsa
+} from "../../../../services/solicitacaoDeKitLanche.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalCancelarSolicitacao, ORIGEM_SOLICITACAO } from "../../../Shareable/ModalCancelarSolicitacao";
+import {
+  ModalCancelarSolicitacao,
+  ORIGEM_SOLICITACAO
+} from "../../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
-
 
 class Relatorio extends Component {
   constructor(props) {

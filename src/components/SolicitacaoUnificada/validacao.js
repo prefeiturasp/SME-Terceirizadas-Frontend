@@ -12,7 +12,10 @@ export const validateSubmit = values => {
           return `Escola ${escola.nome} possui apenas ${escola.total_alunos}`;
         }
       } else {
-        if (parseInt(escola.total_alunos) < values[`school_${escola.codigo_eol}`].nro_alunos) {
+        if (
+          parseInt(escola.total_alunos) <
+          values[`school_${escola.codigo_eol}`].nro_alunos
+        ) {
           error = `Escola ${escola.nome} possui apenas ${escola.total_alunos} alunos`;
         }
       }

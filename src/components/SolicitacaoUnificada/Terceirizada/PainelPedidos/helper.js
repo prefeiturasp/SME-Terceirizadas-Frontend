@@ -8,7 +8,7 @@ export const formatarPedidos = pedidos => {
 
 export const filtraPrioritarios = pedidos => {
   return pedidos.filter(pedido => {
-    console.log(pedido)
+    console.log(pedido);
     return pedido.solicitacao_kit_lanche.prioridade === "PRIORITARIO";
   });
 };

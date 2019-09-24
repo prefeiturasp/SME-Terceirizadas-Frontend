@@ -22,12 +22,12 @@ class Container extends Component {
 
     pedidosAprovadosNormais().then(response => {
       pedidosAprovados = response.results;
-      this.setState({ pedidosAprovados })
+      this.setState({ pedidosAprovados });
     });
 
     pedidosReprovadosNormais().then(response => {
       pedidosReprovados = response.results;
-      this.setState({ pedidosReprovados })
+      this.setState({ pedidosReprovados });
     });
   }
 
