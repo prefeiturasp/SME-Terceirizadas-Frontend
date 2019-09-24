@@ -1,17 +1,12 @@
-import {
-  ALTERACAO_CARDAPIO,
-  DRE,
-  ESCOLA,
-  INVERSAO_CARDAPIO,
-  RELATORIO,
-  SOLICITACAO_KIT_LANCHE
-} from "../../configs/constants";
+import { ALTERACAO_CARDAPIO, DRE, ESCOLA, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, RELATORIO, SOLICITACAO_KIT_LANCHE, SOLICITACAO_KIT_LANCHE_UNIFICADA, SUSPENSAO_ALIMENTACAO } from "../../configs/constants";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
 const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
+const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
+const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -46,6 +41,19 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
       case INV_CARDAPIO:
         solicitacao = INVERSAO_CARDAPIO;
         break;
+
+      case INC_ALIMENTA:
+        solicitacao = INCLUSAO_ALIMENTACAO;
+        break;
+
+      case SUSP_ALIMENTACAO:
+        solicitacao = SUSPENSAO_ALIMENTACAO;
+        break;
+      case KIT_LANCHE_UNIFICADA:
+        solicitacao = SOLICITACAO_KIT_LANCHE_UNIFICADA;
+        break;
+      case INC_ALIMENTA_CONTINUA:
+        solicitacao = INCLUSAO_ALIMENTACAO;
 
       default:
         solicitacao = "FALTA_IMPLEMENTAR";

@@ -4,8 +4,8 @@ import { formValueSelector, reduxForm } from "redux-form";
 import { CardStatusDeSolicitacaoLargo } from "../../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../../Shareable/InputSearch";
 import {
-  getSolicitacoesAutorizadasPelaDRE,
-  getSolicitacoesPendentesParaDRE
+  getSolicitacoesPendentesDRE,
+  getSolicitacoesAutorizadasDRE
 } from "../../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../../services/perfil.service";
 
@@ -29,18 +29,14 @@ export class StatusSolicitacoesTodos extends Component {
 
   async componentDidMount() {
     const meusDados = await getMeusDados();
-
+    const dreUUid = meusDados.diretorias_regionais[0].uuid;
     const autorizadas = !this.state.showAutorizadas
       ? []
-      : await getSolicitacoesAutorizadasPelaDRE(
-          meusDados.diretorias_regionais[0].uuid
-        );
+      : await getSolicitacoesAutorizadasDRE(dreUUid);
 
     const pendentes = !this.state.showPendentes
       ? []
-      : await getSolicitacoesPendentesParaDRE(
-          meusDados.diretorias_regionais[0].uuid
-        );
+      : await getSolicitacoesPendentesDRE(dreUUid);
 
     this.setState({
       autorizadasList: autorizadas.results,
