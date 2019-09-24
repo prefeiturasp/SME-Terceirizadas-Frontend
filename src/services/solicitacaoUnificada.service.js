@@ -139,7 +139,9 @@ export const getSolicitacaoUnificada = uuid => {
 };
 
 export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${
+    PEDIDOS.CODAE
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -154,7 +156,9 @@ export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -188,7 +192,9 @@ export const CODAEAprovaPedidoDRE = uuid => {
 };
 
 export const TerceirizadaAprovaPedidoDRE = uuid => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
+    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",

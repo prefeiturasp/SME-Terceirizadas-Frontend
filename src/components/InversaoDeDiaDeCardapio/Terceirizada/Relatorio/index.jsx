@@ -137,7 +137,9 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${InversaoCardapio.id_externo}`}</span>
+            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
+              InversaoCardapio.id_externo
+            }`}</span>
             <Link to={`/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`}>
               <Botao
                 texto="voltar"

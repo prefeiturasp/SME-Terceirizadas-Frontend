@@ -47,21 +47,27 @@ class CadastroEmpresa extends Component {
   }
 
   nomeFormContatoEmpresa() {
-    const indiceDoFormAtual = `contatoEmpresa_${this.state.contatosEmpresaForm.length}`;
+    const indiceDoFormAtual = `contatoEmpresa_${
+      this.state.contatosEmpresaForm.length
+    }`;
     let contatosEmpresaForm = this.state.contatosEmpresaForm;
     contatosEmpresaForm.push(indiceDoFormAtual);
     this.setState({ contatosEmpresaForm });
   }
 
   nomeFormContatoTerceirizada() {
-    const indiceDoFormAtual = `contatoTerceirizada_${this.state.contatosTerceirizadaForm.length}`;
+    const indiceDoFormAtual = `contatoTerceirizada_${
+      this.state.contatosTerceirizadaForm.length
+    }`;
     let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
     contatosTerceirizadaForm.push(indiceDoFormAtual);
     this.setState({ contatosTerceirizadaForm });
   }
 
   nomeFormContatoEdital() {
-    const indiceDoFormAtual = `editalContrato_${this.state.editaisContratosForm.length}`;
+    const indiceDoFormAtual = `editalContrato_${
+      this.state.editaisContratosForm.length
+    }`;
     let editaisContratosForm = this.state.editaisContratosForm;
     editaisContratosForm.push(indiceDoFormAtual);
     this.setState({ editaisContratosForm });

@@ -147,7 +147,9 @@ class Relatorio extends Component {
                     <div className="lote">Lote</div>
                   </div>
                   <div>
-                    <div className="prop-solicitante">{`DRE ${solicitacaoUnificada.diretoria_regional.nome}`}</div>
+                    <div className="prop-solicitante">{`DRE ${
+                      solicitacaoUnificada.diretoria_regional.nome
+                    }`}</div>
                     <div className="prop-lote">
                       {
                         "#TODO: como a solicitação é unificada pode ter mais de um lote, aqui deve suportar mais de um lote"
@@ -214,7 +216,9 @@ class Relatorio extends Component {
                   <div className="descricao-titulo">
                     N° total de Unidade Escolares beneficiadas
                   </div>
-                  <div className="descricao-texto">{`${solicitacaoUnificada.escolas_quantidades.length} Unidades Escolares`}</div>
+                  <div className="descricao-texto">{`${
+                    solicitacaoUnificada.escolas_quantidades.length
+                  } Unidades Escolares`}</div>
                 </div>
                 <div className="kits">
                   <div>

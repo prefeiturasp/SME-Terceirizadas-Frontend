@@ -112,7 +112,9 @@ export class CardHistorico extends Component {
                     pedidos.map((pedido, key) => {
                       return (
                         <Link
-                          to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${pedido.uuid}`}
+                          to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
+                            pedido.uuid
+                          }`}
                         >
                           <tr className="row">
                             <td className="td-check col-3">
