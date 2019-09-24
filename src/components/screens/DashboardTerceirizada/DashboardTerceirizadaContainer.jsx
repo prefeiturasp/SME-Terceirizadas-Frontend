@@ -84,8 +84,6 @@ class DashboardTerceirizadaContainer extends Component {
     });
   }
 
-
-
   componentDidMount() {
     getSuspensoesDeAlimentacaoInformadas().then(response => {
       let quantidade_suspensoes = response.length;

@@ -16,7 +16,6 @@ export const filtraRegular = pedidos => {
   });
 };
 
-
 export const filtrarTotalSolicitacoes = pedidos => {
-  return pedidos.length
-}
+  return pedidos.length;
+};
