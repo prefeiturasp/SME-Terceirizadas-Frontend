@@ -77,7 +77,9 @@ class DetailUnifiedSolicitation extends Component {
                   <div className="lote">Lote</div>
                 </div>
                 <div>
-                  <div className="prop-solicitante">{`DRE ${solicitation.diretoria_regional.nome}`}</div>
+                  <div className="prop-solicitante">{`DRE ${
+                    solicitation.diretoria_regional.nome
+                  }`}</div>
                   <div className="prop-lote">{solicitation.lote}</div>
                 </div>
               </div>
@@ -138,7 +140,9 @@ class DetailUnifiedSolicitation extends Component {
                 <div className="descricao-titulo">
                   N° total de Unidade Escolares beneficiadas
                 </div>
-                <div className="descricao-texto">{`${solicitation.escolas_quantidades.length} Unidades Escolares`}</div>
+                <div className="descricao-texto">{`${
+                  solicitation.escolas_quantidades.length
+                } Unidades Escolares`}</div>
               </div>
               <div className="kits">
                 <div>

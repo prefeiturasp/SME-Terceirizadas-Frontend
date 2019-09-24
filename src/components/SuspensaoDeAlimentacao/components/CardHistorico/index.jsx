@@ -60,7 +60,9 @@ export class CardHistorico extends Component {
     if (this.state.redirect) {
       return (
         <Redirect
-          to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/${RELATORIO}?uuid=${pedido.uuid}`}
+          to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
+            pedido.uuid
+          }`}
         />
       );
     }

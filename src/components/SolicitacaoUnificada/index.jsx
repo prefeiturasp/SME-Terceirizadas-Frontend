@@ -206,7 +206,7 @@ class SolicitacaoUnificada extends Component {
     getKitLanches()
       .then(response => {
         this.setState({
-         kitsLanche: response.results
+          kitsLanche: response.results
         });
       })
       .catch(error => {

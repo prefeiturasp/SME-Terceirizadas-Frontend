@@ -238,7 +238,39 @@ class InclusaoDeAlimentacao extends Component {
       ],
       periodos
     });
+    this.retetaCamposQuantidadeAlunosETiposAlimentacao(this.props.periodos);
     this.refresh();
+  }
+
+  retetaCamposQuantidadeAlunosETiposAlimentacao(periodos) {
+    periodos.forEach((periodo, indice) => {
+      this.bloqueiaCamposQuantidadeAlunosReset(indice, periodo);
+    });
+  }
+
+  bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
+    let periodos = this.state.periodos;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    if (validacaoPeriodos[indice].checado === true) {
+      validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
+    }
+    this.setState({ validacaoPeriodos, periodos });
+  }
+
+  atualizaIndiceNoValidacaoPeriodos(indice, periodo) {
+    let periodos = this.state.periodos;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    if (validacaoPeriodos[indice].checado === false) {
+      validacaoPeriodos[indice].checado = true;
+    } else {
+      validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
+    }
+
+    this.setState({ validacaoPeriodos, periodos });
   }
 
   carregarRascunho(param) {
@@ -325,20 +357,6 @@ class InclusaoDeAlimentacao extends Component {
         turno: periodo.nome
       });
     });
-  }
-
-  atualizaIndiceNoValidacaoPeriodos(indice, periodo) {
-    let periodos = this.state.periodos;
-    let validacaoPeriodos = this.state.validacaoPeriodos;
-    if (validacaoPeriodos[indice].checado === false) {
-      validacaoPeriodos[indice].checado = true;
-    } else {
-      validacaoPeriodos[indice].checado = false;
-      periodos[indice].tipos_alimentacao_selecionados = [];
-      this.resetaCampoQuantidadeAlunos(periodo);
-    }
-
-    this.setState({ validacaoPeriodos, periodos });
   }
 
   componentDidMount() {

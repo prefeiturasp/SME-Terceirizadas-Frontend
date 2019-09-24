@@ -313,7 +313,9 @@ export const getPedidosDeKitLancheAprovadosTerceirizada = () => {
 };
 
 export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -401,7 +403,9 @@ export const aprovaDeKitLancheAvulsoCodae = uuid => {
 };
 
 export const aprovaDeKitLancheAvulsoTerceirizadas = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${
+    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
+  }/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH"

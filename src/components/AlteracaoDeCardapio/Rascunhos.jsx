@@ -45,7 +45,9 @@ export class Rascunhos extends Component {
               alteracaoDeCardapio.data_final
                 ? `Dia: ${alteracaoDeCardapio.data_inicial ||
                     alteracaoDeCardapio.alterar_dia}`
-                : `De ${alteracaoDeCardapio.data_inicial} a ${alteracaoDeCardapio.data_final}`}
+                : `De ${alteracaoDeCardapio.data_inicial} a ${
+                    alteracaoDeCardapio.data_final
+                  }`}
             </p>
           </div>
         </div>

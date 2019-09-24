@@ -77,7 +77,9 @@ export const retornArrayTerceirizadas = response => {
       cnpj: resp.cnpj,
       status: resp.ativo ? "Ativa" : "Inativa",
       ativo: false,
-      endereco: `${resp.endereco.rua}, n°${resp.endereco.numero} - ${resp.endereco.bairro}`,
+      endereco: `${resp.endereco.rua}, n°${resp.endereco.numero} - ${
+        resp.endereco.bairro
+      }`,
       cep: resp.endereco.cep,
 
       telefone: resp.contatos[0].telefone,

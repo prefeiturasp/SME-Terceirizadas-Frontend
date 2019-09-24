@@ -113,7 +113,9 @@ export class CardHistorico extends Component {
                     pedidos.map((pedido, key) => {
                       return (
                         <Link
-                          to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
+                          to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
+                            pedido.uuid
+                          }`}
                         >
                           <tr className="row">
                             <td className="td-check col-4">
@@ -136,7 +138,9 @@ export class CardHistorico extends Component {
                             <td className="col-4">{pedido.escola.nome}</td>
                             <td className="col-4">
                               {pedido.data_inicial
-                                ? `${pedido.data_inicial} a ${pedido.data_final}`
+                                ? `${pedido.data_inicial} a ${
+                                    pedido.data_final
+                                  }`
                                 : stringSeparadaPorVirgulas(
                                     pedido.inclusoes,
                                     "data"

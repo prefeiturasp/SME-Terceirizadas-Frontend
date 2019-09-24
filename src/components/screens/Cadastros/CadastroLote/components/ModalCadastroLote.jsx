@@ -70,7 +70,9 @@ export class ModalCadastroLote extends Component {
             <div className="row pt-3">
               <div className="col-12">
                 <label className="label-selected-unities">
-                  {`( ${escolasSelecionadas.length} ) Unidades Específicas do Lote Selecionadas`}
+                  {`( ${
+                    escolasSelecionadas.length
+                  } ) Unidades Específicas do Lote Selecionadas`}
                 </label>
                 {escolasSelecionadas.map((escola, indice) => {
                   return (

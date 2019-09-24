@@ -227,7 +227,7 @@ class EmailConfiguration extends Component {
   }
 }
 
-export default EmailConfiguration = reduxForm({
+export default (EmailConfiguration = reduxForm({
   form: "emailConfiguration",
   destroyOnUnmount: false
-})(EmailConfiguration);
+})(EmailConfiguration));
