@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import DashboardDRE from "./DashboardDRE";
-import {
-  getSolicitacoesAutorizadasPelaDRE,
-  getSolicitacoesPendentesParaDRE,
-  getSolicitacoesPendentesDRE,
-  getSolicitacoesAutorizadasDRE
-} from "../../../services/painelDRE.service";
 import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service";
+import {
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesPendentesDRE
+} from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
-import { ajustarFormatoLog, ajustarFormaLotes } from "../helper";
+import { ajustarFormatoLog, LOG_PARA } from "../helper";
+import DashboardDRE from "./DashboardDRE";
 
 class DashboardDREContainer extends Component {
   constructor(props) {
@@ -72,9 +70,8 @@ class DashboardDREContainer extends Component {
       this.setState({ quantidade_suspensoes });
     });
 
-    autorizadas = ajustarFormatoLog(autorizadas.results);
-    pendentes = ajustarFormaLotes(pendentes.results);
-
+    autorizadas = ajustarFormatoLog(autorizadas.results, LOG_PARA.DRE);
+    pendentes = ajustarFormatoLog(pendentes.results, LOG_PARA.DRE);
     this.setState({
       autorizadasList: autorizadas,
       pendentesList: pendentes,
