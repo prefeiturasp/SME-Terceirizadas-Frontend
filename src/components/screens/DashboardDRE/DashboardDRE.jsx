@@ -223,8 +223,6 @@ class DashboardDRE extends Component {
       enrolled,
       handleSubmit,
       vision_by,
-      canceladasList,
-      recusadasList,
       filtro_por,
       quantidade_suspensoes
     } = this.props;

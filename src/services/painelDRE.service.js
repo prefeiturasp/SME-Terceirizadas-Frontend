@@ -1,5 +1,9 @@
 import { API_URL } from "../constants/config.constants";
-import { filtraNoLimite, filtraPrioritarios, filtraRegular } from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";

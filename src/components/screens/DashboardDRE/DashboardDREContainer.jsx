@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service";
-import { getSolicitacoesAutorizadasDRE, getSolicitacoesCanceladasDRE, getSolicitacoesPendentesDRE, getSolicitacoesRecusadasDRE } from "../../../services/painelDRE.service";
+import {
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesCanceladasDRE,
+  getSolicitacoesPendentesDRE,
+  getSolicitacoesRecusadasDRE
+} from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
