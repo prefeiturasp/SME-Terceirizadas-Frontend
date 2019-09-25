@@ -65,7 +65,6 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
         break;
-
       default:
         solicitacao = "FALTA_IMPLEMENTAR";
         break;
