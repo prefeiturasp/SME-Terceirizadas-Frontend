@@ -31,7 +31,9 @@ export const getSolicitacoesAprovadosCodae = async () => {
     const result = await fetch(url, OBJ_REQUEST);
     const json = await result.json();
     return json.results;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getSolicitacoesCanceladasCodae = async () => {
@@ -45,7 +47,9 @@ export const getSolicitacoesCanceladasCodae = async () => {
     const result = await fetch(url, OBJ_REQUEST);
     const json = await result.json();
     return json.results;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getSolicitacoesPendentesAprovacaoCodae = async () => {
@@ -59,7 +63,9 @@ export const getSolicitacoesPendentesAprovacaoCodae = async () => {
     const result = await fetch(url, OBJ_REQUEST);
     const json = await result.json();
     return json.results;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getSolicitacoesRevisaoAprovacaoCodae = async () => {
@@ -73,7 +79,9 @@ export const getSolicitacoesRevisaoAprovacaoCodae = async () => {
     const result = await fetch(url, OBJ_REQUEST);
     const json = await result.json();
     return json.results;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getResumoPendenciasInversoesCardapio = async (

@@ -5,7 +5,9 @@ import RoutesConfig from "./configs/RoutesConfig";
 import NotFoundPage from "./pages/NotFoundPage";
 import authService from "./services/auth";
 
-const PrivateRouter = ({ component: Component, ...rest }) => (
+const PrivateRouter = (
+  { component: Component, ...rest } // eslint-disable-line
+) => (
   <Route
     {...rest}
     render={props =>
@@ -13,7 +15,7 @@ const PrivateRouter = ({ component: Component, ...rest }) => (
         <Component {...props} />
       ) : (
         <Redirect
-          to={{ pathname: "/login", state: { from: props.location } }}
+          to={{ pathname: "/login", state: { from: props.location } }} // eslint-disable-line
         />
       )
     }

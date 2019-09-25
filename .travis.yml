@@ -10,7 +10,7 @@ before_script:
 
 script:
   - npm test
-  # - npm run-script eslint
+  - npm run-script eslint
   - npm run-script prettier
   - docker build -t marcelomaia/terceirizadas_frontend .
   - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend

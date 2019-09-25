@@ -6,7 +6,7 @@ import authService, {
 
 if (typeof localStorage === "undefined" || localStorage === null) {
   var LocalStorage = require("node-localstorage").LocalStorage;
-  localStorage = new LocalStorage("./scratch");
+  localStorage = new LocalStorage("./scratch"); // eslint-disable-line
 }
 
 const expiredToken =
