@@ -41,6 +41,7 @@ export class DashboardEscola extends Component {
       autorizadas,
       pendentes,
       negadas,
+      canceladas,
       theadList,
       trs
     } = this.props;
@@ -112,7 +113,7 @@ export class DashboardEscola extends Component {
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Pendente Aprovação"}
-                cardType={"card-pending"}
+                cardType={CARD_TYPE_ENUM.PENDENTE}
                 solicitations={pendentes}
                 icon={"fa-exclamation-triangle"}
                 href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
@@ -132,8 +133,8 @@ export class DashboardEscola extends Component {
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Canceladas"}
-                cardType={"card-cancelled"}
-                solicitations={autorizadas}
+                cardType={CARD_TYPE_ENUM.CANCELADO}
+                solicitations={canceladas}
                 icon={"fa-times-circle"}
                 href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />

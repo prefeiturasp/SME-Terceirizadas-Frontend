@@ -1,5 +1,6 @@
 import {
   ALTERACAO_CARDAPIO,
+  CODAE,
   DRE,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
@@ -33,6 +34,9 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
       break;
     case LOG_PARA.DRE:
       tipoRelatorio = DRE;
+      break;
+    case LOG_PARA.CODAE:
+      tipoRelatorio = CODAE;
       break;
     default:
       break;

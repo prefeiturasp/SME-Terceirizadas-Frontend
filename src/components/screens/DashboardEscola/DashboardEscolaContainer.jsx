@@ -102,7 +102,14 @@ export default class DashboardEscolaContainer extends Component {
   }
 
   render() {
-    const { autorizadas, pendentes, negadas, theadList, trs } = this.state;
+    const {
+      autorizadas,
+      pendentes,
+      negadas,
+      canceladas,
+      theadList,
+      trs
+    } = this.state;
     return (
       <div>
         <DashboardEscola
@@ -111,6 +118,7 @@ export default class DashboardEscolaContainer extends Component {
           pendentes={pendentes}
           negadas={negadas}
           theadList={theadList}
+          canceladas={canceladas}
           trs={trs}
         />
       </div>

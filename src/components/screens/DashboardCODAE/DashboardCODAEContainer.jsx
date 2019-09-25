@@ -9,7 +9,7 @@ import {
 } from "../../../services/painelCODAE.service";
 import { FILTRO, VENCIMENTO } from "../const";
 import DashboardCODAE from "./DashboardCODAE";
-import { ajustarFormaLotes, ajustarFormatoLog } from "../helper";
+import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 
 class DashboardCODAEContainer extends Component {
@@ -20,9 +20,13 @@ class DashboardCODAEContainer extends Component {
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
     let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
 
-    solicitacoesAprovadas = ajustarFormatoLog(solicitacoesAprovadas);
+    solicitacoesAprovadas = ajustarFormatoLog(
+      solicitacoesAprovadas,
+      LOG_PARA.CODAE
+    );
     solicitacoesPendentesAprovacao = ajustarFormatoLog(
-      solicitacoesPendentesAprovacao
+      solicitacoesPendentesAprovacao,
+      LOG_PARA.CODAE
     );
     solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
     let lotes = await getLotes();
