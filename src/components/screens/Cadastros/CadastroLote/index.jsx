@@ -4,15 +4,12 @@ import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadLote } from "../../../../reducers/lote.reducer";
+import { Select } from "../../../Shareable/Select";
+import { InputText } from "../../../Shareable/Input/InputText";
 import { Link, Redirect } from "react-router-dom";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { ModalCadastroLote } from "./components/ModalCadastroLote";
-import {
-  LabelAndCombo,
-  LabelAndInput
-} from "../../../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLote,
   criarLote,
@@ -23,6 +20,8 @@ import { renderizarLabelEscola, renderizarLabelSubprefeitura } from "./helper";
 import { extrairUUIDs } from "../../../../helpers/utilities";
 import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class CadastroLote extends Component {
   constructor(props) {
@@ -276,38 +275,37 @@ class CadastroLote extends Component {
         <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-body">
-              <div className="row">
-                <div className="col-12">
-                  <label className="font-weight-bold">Dados do Lote</label>
-                </div>
-              </div>
+              <div className="card-title font-weight-bold">Dados do Lote</div>
               <div className="row pt-3">
                 <div className="col-12">
                   <Link to="/configuracoes/cadastros/lotes-cadastrados">
-                    <BaseButton
-                      label="Consulta de lotes cadastrados"
-                      style={ButtonStyle.OutlinePrimary}
+                    <Botao
+                      texto="Consulta de lotes cadastrados"
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
                     />
                   </Link>
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-8">
-                  <label className="label">
-                    <span>* </span>DRE
-                  </label>
                   <Field
-                    component={LabelAndCombo}
+                    label="DRE"
+                    component={Select}
                     name="diretoria_regional"
-                    onChange={value => this.onDiretoriaRegionalSelected(value)}
+                    onChange={event =>
+                      this.onDiretoriaRegionalSelected(event.target.value)
+                    }
                     options={diretoriasRegionais}
+                    required
                     validate={required}
                   />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-8">
-                  <label className="label">Subprefeitura</label>
+                  <label className="label font-weight-normal pb-3">
+                    Subprefeitura
+                  </label>
                   {subprefeituras.length ? (
                     <Field
                       component={StatefulMultiSelect}
@@ -335,42 +333,44 @@ class CadastroLote extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Nome do Lote (Iniciais da DRE)
-                  </label>
                   <Field
-                    component={LabelAndInput}
+                    component={InputText}
+                    label="Nome do Lote (Iniciais da DRE)"
                     className="form-control"
                     name="iniciais"
+                    required
                     validate={required}
                   />
                 </div>
                 <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Nº do Lote
-                  </label>
                   <Field
-                    component={LabelAndInput}
+                    component={InputText}
+                    label="Nº do Lote"
                     className="form-control"
                     name="nome"
+                    required
                     validate={required}
                   />
                 </div>
                 <div className="col-4">
-                  <label className="label">
-                    <span>* </span>Tipo de Gestão
-                  </label>
                   <Field
-                    component={LabelAndCombo}
+                    component={Select}
+                    label="Tipo de Gestão"
                     name="tipo_gestao"
-                    onChange={value => this.onTipoGestaoSelected(value)}
+                    onChange={event =>
+                      this.onTipoGestaoSelected(event.target.value)
+                    }
                     options={tiposGestao}
+                    required
+                    validate={required}
                   />
                 </div>
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <label className="label">Unidades Específicas do Lote</label>
+                  <label className="label font-weight-normal pb-3">
+                    Unidades Específicas do Lote
+                  </label>
                   {escolas.length ? (
                     <Field
                       component={StatefulMultiSelect}
@@ -410,29 +410,30 @@ class CadastroLote extends Component {
                   </div>
                 </div>
               )}
-              <div style={{ marginTop: "100px" }} className="row float-right">
-                <div className="col-12">
+              <div className="row mt-5">
+                <div className="col-12 text-right">
                   {!uuid && (
-                    <BaseButton
-                      label="Cancelar"
+                    <Botao
+                      texto="Cancelar"
                       onClick={event => this.resetForm(event)}
-                      style={ButtonStyle.OutlinePrimary}
-                      noBorder
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_STYLE.BUTTON}
                     />
                   )}
                   {uuid && (
-                    <BaseButton
-                      label="Excluir"
+                    <Botao
+                      texto="Excluir"
                       onClick={this.excluirLote}
-                      style={ButtonStyle.OutlinePrimary}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_STYLE.BUTTON}
                     />
                   )}
-                  <BaseButton
-                    label={"Salvar"}
+                  <Botao
+                    texto={"Salvar"}
                     onClick={this.exibirModal}
                     className="ml-3"
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.Primary}
+                    type={BUTTON_STYLE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
                   />
                 </div>
               </div>

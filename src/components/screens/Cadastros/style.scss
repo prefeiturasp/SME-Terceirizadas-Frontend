@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .linked-card {
   a {
     color: #a8a8a8;
@@ -11,6 +13,13 @@
   .col-md-12,
   .col-lg-12 {
     padding: 0;
+  }
+  .card {
+    .card-body {
+      .card-title {
+        color: $blackInput;
+      }
+    }
   }
   ul.select-list {
     li {
@@ -84,8 +93,9 @@ table.cadastro {
   .input-search {
     width: 50%;
     padding-right: 10px;
+    border: none;
+    border-bottom: 1px solid $gray;
     &::placeholder {
-      padding-right: 10px;
       text-align: right;
     }
   }
@@ -114,14 +124,11 @@ table.cadastro {
     &:first-child {
       padding-left: 20px;
       width: 50%;
+      color: $blackInput;
       font-weight: bold;
     }
     &:nth-child(2) {
       width: 19%;
-    }
-
-    &:nth-child(4) {
-      text-align: center;
     }
   }
   tr.relationed-company-title {
@@ -129,7 +136,7 @@ table.cadastro {
     td {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       padding: 10px 0 0 0;
       border: none;
       &:first-child {
@@ -143,9 +150,12 @@ table.cadastro {
       background: #f2fbfe;
       font-weight: bold;
       font-size: 14px;
-      color: #353535;
+      color: $blackInput;
       border: none;
       padding: 10px 0;
+      &.link {
+        color: $blue;
+      }
       span {
         font-weight: 600;
         color: #707683;
@@ -187,6 +197,7 @@ table.cadastro-empresa {
   .input-search {
     width: 50%;
     padding-right: 10px;
+    border: none;
     &::placeholder {
       padding-right: 10px;
       text-align: right;
