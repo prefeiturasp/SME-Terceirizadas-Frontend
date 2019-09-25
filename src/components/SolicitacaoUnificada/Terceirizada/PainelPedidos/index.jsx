@@ -4,8 +4,7 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
 import {
-  CardPendenciaAprovacao,
-  TIPO_CARD_ENUM
+  CardPendenciaAprovacao
 } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "../../components/CardHistorico";
 import {
@@ -17,6 +16,7 @@ import {
 import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
+import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -97,7 +97,7 @@ class PainelPedidos extends Component {
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
-                      tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
+                      tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
                       parametroURL={TERCEIRIZADA}
@@ -109,7 +109,7 @@ class PainelPedidos extends Component {
                   <div className="col-12">
                     <CardPendenciaAprovacao
                       titulo={"Solicitações no prazo limite"}
-                      tipoDeCard={"on-limit"}
+                      tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
                       parametroURL={TERCEIRIZADA}
@@ -121,7 +121,7 @@ class PainelPedidos extends Component {
                   <div className="col-12">
                     <CardPendenciaAprovacao
                       titulo={"Solicitações no prazo regular"}
-                      tipoDeCard={"regular"}
+                      tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data"}
                       parametroURL={TERCEIRIZADA}

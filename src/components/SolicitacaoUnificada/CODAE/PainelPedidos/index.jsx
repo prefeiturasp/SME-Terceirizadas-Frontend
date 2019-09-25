@@ -3,10 +3,8 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getCODAEPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
-import {
-  CardPendenciaAprovacao,
-  TIPO_CARD_ENUM
-} from "../../components/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
@@ -97,7 +95,7 @@ class PainelPedidos extends Component {
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
-                      tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
+                      tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={CODAE}
@@ -109,7 +107,7 @@ class PainelPedidos extends Component {
                   <div className="col-12">
                     <CardPendenciaAprovacao
                       titulo={"Solicitações no prazo limite"}
-                      tipoDeCard={"on-limit"}
+                      tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={CODAE}
@@ -121,7 +119,7 @@ class PainelPedidos extends Component {
                   <div className="col-12">
                     <CardPendenciaAprovacao
                       titulo={"Solicitações no prazo regular"}
-                      tipoDeCard={"regular"}
+                      tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={CODAE}

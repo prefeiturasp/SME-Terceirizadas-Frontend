@@ -154,8 +154,7 @@ export class CardHistorico extends Component {
                             onClick={() => this.setRedirect()}
                             className="col-3"
                           >
-                            {pedido.escolas_quantidades[0] &&
-                              pedido.escolas_quantidades[0].escola.lote.nome}
+                            {pedido.lote}
                           </td>
                           <td
                             onClick={() => this.setRedirect()}
