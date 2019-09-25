@@ -135,9 +135,7 @@ export class SolicitacaoDeKitLanche extends Component {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
-      meusDados !== null &&
-      proximos_dois_dias_uteis !== null &&
-      loading;
+      meusDados !== null && proximos_dois_dias_uteis !== null && loading;
     if (dadosDaAPItotalmenteCarregados) {
       this.setState({
         loading: false
