@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .card-logo {
   height: 218px;
   display: flex;
@@ -7,19 +9,20 @@
   border-bottom: 6px solid !important;
   &.disabled {
     opacity: 0.5;
+    color: $green;
     cursor: initial;
   }
   &:not(.disabled):hover {
     color: #2c98f0;
+    background-color: $green;
+    border-bottom: $green !important;
     svg {
       path {
-        stroke: #2c98f0;
+        stroke: $white;
       }
-      &:disabled {
-        path {
-          stroke: brown;
-        }
-      }
+    }
+    .card-title {
+      color: $white;
     }
   }
   .icon-component {

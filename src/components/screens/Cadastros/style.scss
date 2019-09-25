@@ -2,7 +2,10 @@
 
 .linked-card {
   a {
-    color: #a8a8a8;
+    color: $green;
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 
@@ -23,22 +26,22 @@
   }
   ul.select-list {
     li {
-      background-color: #035d96;
+      background-color: $blue;
     }
   }
   label {
     &.label {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       span {
-        color: #c9251b;
+        color: $red;
       }
     }
     &.link {
       cursor: pointer;
       font-weight: bold;
-      color: #035d96;
+      color: $blue;
     }
     &.label-selected-unities {
       font-weight: normal;
@@ -56,7 +59,7 @@
 .modal-cadastro-lote {
   p {
     font-size: 14px;
-    color: #686868;
+    color: $gray;
     margin-bottom: 0;
     &:first-child {
       font-weight: bold;
@@ -104,7 +107,7 @@ table.cadastro {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -208,7 +211,7 @@ table.cadastro-empresa {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -255,7 +258,7 @@ table.cadastro-empresa {
     td {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       padding: 10px 0 0 0;
       border: none;
       &:first-child {
@@ -426,7 +429,7 @@ section {
     padding: 1.5em 32px 0 32px;
 
     nav {
-      color: #686868;
+      color: $gray;
     }
 
     .header-button {
@@ -434,7 +437,7 @@ section {
       width: 242px;
       height: 40px;
       border-radius: 4px;
-      border: solid 1px #035d96;
+      border: solid 1px $blue;
     }
   }
 
@@ -518,7 +521,7 @@ section {
   display: grid;
 
   header {
-    color: #686868;
+    color: $gray;
     font-family: Roboto !important;
     font-size: 14px;
     font-weight: bold;
@@ -557,7 +560,7 @@ table.cadastro-lote {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -639,7 +642,7 @@ table.cadastro-lote {
 
       .header {
         font-weight: bold;
-        color: #686868;
+        color: $gray;
       }
 
       .contrato-detalhe {
