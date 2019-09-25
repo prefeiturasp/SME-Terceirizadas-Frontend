@@ -5,7 +5,7 @@ const LOAD_ALTERACAO_CARDAPIO = "LOAD_ALTERACAO_CARDAPIO";
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALTERACAO_CARDAPIO:
-      if (action.data != null) {
+      if (action.data !== null) {
         if (action.data.data_inicial === action.data.data_final) {
           action.data.alterar_dia = action.data.data_final;
           action.data.data_inicial = null;

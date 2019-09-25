@@ -7,7 +7,7 @@ export default function reducer(state = {}, action) {
     case LOAD_UNIFIED_SOLICITATION:
       //Aplica o que vem do Backend no formulário do Frontend de Solicitação Unificada
       //TODO: ver um jeito de não precisar converter tantos dados
-      if (action.data != null) {
+      if (action.data !== null) {
         action.data.data = action.data.solicitacao_kit_lanche.data;
         action.data.descricao = action.data.solicitacao_kit_lanche.descricao;
         if (action.data.lista_kit_lanche_igual) {

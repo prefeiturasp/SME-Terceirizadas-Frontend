@@ -18,7 +18,7 @@
     "sourceType": "module"
   },
   "plugins": ["react", "import"],
-  "rules": {},
+  "rules": { "eqeqeq": "error", "yoda": "error" },
   "settings": {
     "react": {
       "version": "detect"

@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
-import {
-  CardPendenciaAprovacao
-} from "../../components/CardPendenciaAprovacao";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,

@@ -7,7 +7,7 @@ const LOAD_FOOD_INCLUSION = "LOAD_FOOD_INCLUSION";
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_INCLUSION:
-      if (action.data != null) {
+      if (action.data !== null) {
         action.data.quantidades_periodo.forEach(function(quantidade_periodo) {
           action.data[
             `quantidades_periodo_${quantidade_periodo.periodo_escolar.nome}`
