@@ -84,28 +84,6 @@ export class LabelAndCombo extends Component {
       : this.props.onChange(value);
     if (this.props.selectOnChange) this.props.selectOnChange(event);
   }
-
-  static propTypes = {
-    cols: PropTypes.string,
-    name: PropTypes.string,
-    selectOnChange: PropTypes.func,
-    readOnly: PropTypes.bool,
-    options: PropTypes.arrayOf(
-      PropTypes.shape({
-        value: PropTypes.string,
-        label: PropTypes.string,
-        disable: PropTypes.bool,
-        selected: PropTypes.bool
-      })
-    )
-  };
-  static defaultProps = {
-    options: [
-      { uuid: "...", nome: "op1", disable: false },
-      { uuid: "***", nome: "op2", selected: true }
-    ],
-    disabled: false
-  };
   render() {
     const { cols, name, label, input, meta, options, disabled } = this.props;
     return (
@@ -137,6 +115,28 @@ export class LabelAndCombo extends Component {
     );
   }
 }
+
+LabelAndCombo.propTypes = {
+  cols: PropTypes.string,
+  name: PropTypes.string,
+  selectOnChange: PropTypes.func,
+  readOnly: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string,
+      disable: PropTypes.bool,
+      selected: PropTypes.bool
+    })
+  )
+};
+LabelAndCombo.defaultProps = {
+  options: [
+    { uuid: "...", nome: "op1", disable: false },
+    { uuid: "***", nome: "op2", selected: true }
+  ],
+  disabled: false
+};
 
 export class LabelAndDate extends Component {
   // Thanks community :D

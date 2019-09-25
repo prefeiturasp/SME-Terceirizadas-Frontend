@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { TempoPasseio } from "./TempoPasseio";
 import { OpcoesKits } from "./OpcoesKits";
 
@@ -16,6 +17,7 @@ export class PedidoKitLanche extends Component {
       tempoPasseio: event.target.value,
       meta: { touched: true }
     });
+    this.props.onPasseioChanged && this.props.onPasseioChanged(event);
   }
 
   render() {
@@ -30,5 +32,13 @@ export class PedidoKitLanche extends Component {
     );
   }
 }
+
+PedidoKitLanche.propTypes = {
+  onPasseioChanged: PropTypes.func
+};
+
+PedidoKitLanche.defaultProps = {
+  onPasseioChanged: null
+};
 
 export default PedidoKitLanche;
