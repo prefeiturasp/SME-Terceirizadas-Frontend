@@ -5,7 +5,7 @@ import Page from "../../components/Shareable/Page/Page";
 
 const atual = {
   href: "/configuracoes/cadastros/lote",
-  titulo: "Lote"
+  titulo: "Cadastro de Lote"
 };
 
 const anteriores = [
@@ -16,7 +16,11 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page titulo={atual.titulo}>
+  <Page
+    titulo={atual.titulo}
+    botaoVoltar
+    voltarPara={"/configuracoes/cadastros"}
+  >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <Container />
   </Page>

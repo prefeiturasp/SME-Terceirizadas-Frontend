@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import EmpresaDoLote from "../EmpresaDoLote";
-import BaseButton, {
-  ButtonStyle,
-  ButtonType
-} from "../../../../../Shareable/button";
 import { NavLink } from "react-router-dom";
 import { getLotes } from "../../../../../../services/diretoriaRegional.service";
-import { Stand } from "react-burgers";
+import { ToggleExpandir } from "../../../../../Shareable/ToggleExpandir";
 import { adicionarParametroAtivo } from "./helper";
 import "../../../style.scss";
 
@@ -38,9 +34,11 @@ class LotesCadastrados extends Component {
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
         item.iniciais.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !==
-          -1 ||
-        item.tipo_gestao.nome.toLowerCase().search(palavraAFiltrar) !== -1
+        (item.diretoria_regional &&
+          item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !==
+            -1) ||
+        (item.tipo_gestao &&
+          item.tipo_gestao.nome.toLowerCase().search(palavraAFiltrar) !== -1)
       );
     });
     this.setState({ lotesFiltrados });
@@ -74,7 +72,7 @@ class LotesCadastrados extends Component {
                     <i className="fas fa-search" />
                   </th>
                 </tr>
-                {lotesFiltrados.map(lote => {
+                {lotesFiltrados.map((lote, key) => {
                   return [
                     <tr
                       className={
@@ -82,17 +80,22 @@ class LotesCadastrados extends Component {
                           ? "relationed-companies title"
                           : ""
                       }
+                      key={key}
                     >
                       <td>{`${lote.nome} ${lote.iniciais}`}</td>
-                      <td>{lote.diretoria_regional.nome}</td>
+                      <td>
+                        {lote.diretoria_regional &&
+                          lote.diretoria_regional.nome}
+                      </td>
                       <td
                         colSpan={
                           lote.terceirizada === null &&
+                          lote.escolas &&
                           lote.escolas.length === 0 &&
                           2
                         }
                       >
-                        {lote.tipo_gestao.nome}{" "}
+                        {lote.tipo_gestao && lote.tipo_gestao.nome}{" "}
                         {lote.ativo &&
                           (lote.terceirizada !== null ||
                             lote.escolas.length > 0) && (
@@ -108,13 +111,9 @@ class LotesCadastrados extends Component {
                       {(lote.terceirizada !== null ||
                         lote.escolas.length > 0) && (
                         <td>
-                          <Stand
+                          <ToggleExpandir
                             onClick={() => this.lidarComBurger(lote)}
-                            color={"#C8C8C8"}
-                            width={30}
-                            padding={0}
-                            lineSpacing={5}
-                            active={lote.ativo}
+                            ativo={lote.ativo}
                           />
                         </td>
                       )}
@@ -142,7 +141,7 @@ class LotesCadastrados extends Component {
                         lote.escolas.map((escola, indice) => {
                           return (
                             <tr key={indice} className="relationed-companies">
-                              <td className="pt-0 pb-0 blueish" colSpan="4">
+                              <td className="pt-0 pb-0 link" colSpan="4">
                                 {`${escola.codigo_eol} - ${escola.nome} - ${
                                   escola.lote
                                 }`}
@@ -154,18 +153,6 @@ class LotesCadastrados extends Component {
                   ];
                 })}
               </table>
-              <div className="row float-right pt-5 pb-5 pr-5">
-                <div className="col-4">
-                  <NavLink to={"/configuracoes/cadastros/lote"}>
-                    <BaseButton
-                      label="Voltar"
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
-                      icon={"arrow-left"}
-                    />
-                  </NavLink>
-                </div>
-              </div>
             </div>
           </div>
         )}

@@ -76,9 +76,9 @@ export class OpcoesKits extends Component {
         <p className="label">Selecione a opção desejada</p>
         <div className="row">
           {kitsLanche &&
-            kitsLanche.map(kitLanche => {
+            kitsLanche.map((kitLanche, key) => {
               return (
-                <div className="col-lg-4 col-md-12">
+                <div key={key} className="col-lg-4 col-md-12">
                   <CardKit
                     onCardChange={this.onCardChange}
                     kitLanche={kitLanche}
