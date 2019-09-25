@@ -114,11 +114,6 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
-    let resumoPorLote = await getResumoPendenciasDREPorLote(
-      minhaDRE,
-      filtroPendencias
-    );
-
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
@@ -127,7 +122,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
-      resumoPorLote,
       loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
       loadingInclusoesAlimentacao: !resumoPendenciasDREInclusoesDeAlimentacao,
       loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
@@ -498,7 +492,7 @@ class DashboardDRE extends Component {
                 <div className="row pt-3">
                   {this.state.lotesDRE.map(lote => {
                     return (
-                      <div className="col-6">
+                      <div className="col-6" key={lote.nome}>
                         <CardPendencia
                           cardTitle={lote.nome}
                           totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}

@@ -1,23 +1,18 @@
 import { API_URL } from "../constants/config.constants";
+import { filtraNoLimite, filtraPrioritarios, filtraRegular } from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
-import {
-  filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular
-} from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
+import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
+import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
+import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+
+
+
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -312,15 +307,9 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREPorLote = async (
-  dree_uuid,
-  filtro = "sem_filtro"
-) => {
+export const getResumoPendenciasDREPorLote = async dree_uuid => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
-    dree_uuid,
-    filtro
-  )).results;
+  const solicitacoes = (await getSolicitacoesPendentesDRE(dree_uuid)).results;
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
