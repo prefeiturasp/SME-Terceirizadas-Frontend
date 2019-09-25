@@ -5,7 +5,7 @@ const LOAD_FOOD_SUSPENSION = "LOAD_FOOD_SUSPENSION";
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_SUSPENSION:
-      if (action.data != null) {
+      if (action.data !== null) {
         action.data.suspensoes_alimentacao.forEach(function(dia_motivo) {
           const idx = action.data.suspensoes_alimentacao.findIndex(
             suspensao => suspensao.data === dia_motivo.data
