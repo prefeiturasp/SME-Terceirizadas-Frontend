@@ -99,7 +99,7 @@ table.report-table {
 
   .container-title {
     display: grid;
-    grid-template-columns: 20% auto 15%;
+    grid-template-columns: 20% auto 5%;
     grid-template-rows: auto;
 
     .identificador {
@@ -197,6 +197,14 @@ table.report-table {
     .esquerda {
       .descricao-container {
         margin-bottom: 1em;
+        .descricao-titulo {
+          color: $gray;
+        }
+        .descricao-texto,
+        .descricao-observacao {
+          color: $blackInput;
+          font-weight: bold;
+        }
       }
       div {
         margin: 0 0 0.5em 0;
@@ -278,6 +286,7 @@ table.report-table {
 
     .descricao-titulo {
       //color: #686868;
+      color: $gray;
       font-family: Roboto !important;
       font-style: normal;
       font-weight: normal;
@@ -286,6 +295,7 @@ table.report-table {
     }
     .descricao-texto {
       //color: #686868;
+      color: $blackInput;
       font-family: Roboto !important;
       font-style: normal;
       font-weight: bold;
