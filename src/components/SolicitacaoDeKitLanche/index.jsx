@@ -132,12 +132,11 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { meusDados, proximos_dois_dias_uteis, enumKits } = this.props;
+    const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
       meusDados !== null &&
       proximos_dois_dias_uteis !== null &&
-      enumKits !== null &&
       loading;
     if (dadosDaAPItotalmenteCarregados) {
       this.setState({
