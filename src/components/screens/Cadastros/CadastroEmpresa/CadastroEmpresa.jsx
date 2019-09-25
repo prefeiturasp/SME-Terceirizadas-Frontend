@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm, FormSection } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
 import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
 import { toastSuccess } from "../../../Shareable/Toast/dialogs";
 import TelefoneOuCelular from "./InputTelefone";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import { Botao } from "../../../Shareable/Botao";
+import { InputText } from "../../../Shareable/Input/InputText";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -174,92 +175,88 @@ class CadastroEmpresa extends Component {
           <div className="card">
             <div>
               <div className="card-body">
-                <div className="row">
-                  <div className="col-12">
-                    <label className="font-weight-bold">Dados da Empresa</label>
-                  </div>
+                <div className="card-title font-weight-bold">
+                  Dados da Empresa
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
                     <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                      <BaseButton
-                        label="Consulta de empresas cadastradas"
-                        style={ButtonStyle.OutlinePrimary}
+                      <Botao
+                        texto="Consulta de empresas cadastradas"
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
                       />
                     </Link>
                   </div>
                 </div>
                 <div className="row pt-3">
                   <div className="col-9">
-                    <label className="label">
-                      <span>* </span>Razão social
-                    </label>
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
+                      label="Razão social"
                       name="razão_social"
+                      required
                       validate={required}
                     />
                   </div>
                   <div className="col-3">
-                    <label className="label">
-                      <span>* </span>CNPJ
-                    </label>
                     <Field
-                      component={LabelAndInput}
-                      name="cnpj"
                       {...fieldCnpj}
+                      component={InputText}
+                      label="CNPJ"
+                      name="cnpj"
+                      required
                       validate={required}
                     />
                   </div>
                 </div>
                 <div className="row pt-3">
                   <div className="col-9">
-                    <label className="label">Nome Fantasia</label>
-                    <Field component={LabelAndInput} name="nome_fantasia" />
+                    <Field
+                      component={InputText}
+                      label="Nome Fantasia"
+                      name="nome_fantasia"
+                    />
                   </div>
                 </div>
 
                 <div className="row pt-3">
-                  <div className="col-10">
-                    <label className="label">
-                      <span>* </span>Endereço
-                    </label>
+                  <div className="col-9">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
+                      label="Endereço"
                       name="endereco"
+                      required
                       validate={required}
                     />
                   </div>
-                  <div className="col-2">
-                    <label className="label">
-                      <span>* </span>CEP
-                    </label>
+                  <div className="col-3">
                     <Field
-                      component={LabelAndInput}
-                      name="cep"
                       {...fieldCep}
+                      component={InputText}
+                      label="CEP"
+                      name="cep"
+                      required
                       validate={required}
                     />
                   </div>
                 </div>
 
-                <div className="container-fields pt-3">
-                  <div className="fields">
+                <div className="container-fields row">
+                  <div className="col-11">
                     {contatosEmpresaForm.map(
                       (contatoEmpresa, indiceEmpresa) => {
                         return (
                           <FormSection
                             nomeForm={`contatoEmpresa_${indiceEmpresa}`}
                             name={contatoEmpresa}
+                            key={indiceEmpresa}
                           >
-                            <div className="fields-set pt-2">
+                            <div className="fields-set">
                               <div>
-                                <label className="label">
-                                  <span>* </span>Telefone
-                                </label>
                                 <Field
                                   name={`telefone_empresa_${indiceEmpresa}`}
                                   component={TelefoneOuCelular}
+                                  label="Telefone"
                                   id={`telefone_empresa_${indiceEmpresa}`}
                                   setaContatosEmpresa={this.setaContatosEmpresa}
                                   indice={indiceEmpresa}
@@ -267,12 +264,11 @@ class CadastroEmpresa extends Component {
                                 />
                               </div>
                               <div>
-                                <label className="label">
-                                  <span>* </span>E-mail
-                                </label>
                                 <Field
                                   name={`email_empresa_${indiceEmpresa}`}
-                                  component={LabelAndInput}
+                                  component={InputText}
+                                  label="E-mail"
+                                  required
                                   validate={required}
                                   onChange={event =>
                                     this.setaContatosEmpresa(
@@ -289,17 +285,16 @@ class CadastroEmpresa extends Component {
                       }
                     )}
                   </div>
-                  <div className="button-field">
-                    <button
-                      type="button"
-                      className="btn btn-outline-info"
+                  <div className={`col-1 mt-auto mb-1`}>
+                    <Botao
+                      texto="+"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
                       onClick={() => {
                         this.nomeFormContatoEmpresa();
                         this.adicionaContatoEmpresa();
                       }}
-                    >
-                      +
-                    </button>
+                    />
                   </div>
                 </div>
               </div>
@@ -310,19 +305,18 @@ class CadastroEmpresa extends Component {
                 <div className="card-body">
                   <div className="row">
                     <div className="col-7">
-                      <label className="label">
-                        <span>* </span>Representante Legal
-                      </label>
                       <Field
-                        component={LabelAndInput}
+                        component={InputText}
+                        label="Representante Legal"
                         name="representante_legal"
+                        required
                         validate={required}
                       />
                     </div>
                     <div className="col-5">
-                      <label className="label">Telefone</label>
                       <Field
                         name={`telefone_representante`}
+                        label="Telefone"
                         component={TelefoneOuCelular}
                         id={`telefone_representante`}
                         setaContatoRepresentante={this.setaContatoRepresentante}
@@ -332,12 +326,11 @@ class CadastroEmpresa extends Component {
                   </div>
                   <div className="row pt-3">
                     <div className="col-7">
-                      <label className="label">
-                        <span>* </span>Email
-                      </label>
                       <Field
-                        component={LabelAndInput}
+                        component={InputText}
+                        label="E-mail"
                         name="email_representante_legal"
+                        required
                         validate={required}
                       />
                     </div>
@@ -357,17 +350,16 @@ class CadastroEmpresa extends Component {
                             <FormSection
                               nomeForm={`contatoTerceirizada_${indiceTerceirizada}`}
                               name={contatoTerceirizada}
+                              key={indiceTerceirizada}
                             >
                               <div className="form-section-terceirizada">
-                                <div className="section-nutri-crn pt-3">
+                                <div className="section-nutri-crn">
                                   <div>
-                                    <label className="label">
-                                      <span>* </span>Nutricionista Responsável
-                                      Técnico
-                                    </label>
                                     <Field
                                       name={`nutricionista_nome_${indiceTerceirizada}`}
-                                      component={LabelAndInput}
+                                      component={InputText}
+                                      label="Nutricionista Responsável Técnico"
+                                      required
                                       validate={required}
                                       onChange={event =>
                                         this.setaContatosNutricionista(
@@ -379,12 +371,10 @@ class CadastroEmpresa extends Component {
                                     />
                                   </div>
                                   <div>
-                                    <label className="label">
-                                      <span>* </span>CRN
-                                    </label>
                                     <Field
                                       name={`nutricionista_crn_${indiceTerceirizada}`}
-                                      component={LabelAndInput}
+                                      label="CRN"
+                                      component={InputText}
                                       onChange={event =>
                                         this.setaContatosNutricionista(
                                           "contato",
@@ -392,18 +382,17 @@ class CadastroEmpresa extends Component {
                                           indiceTerceirizada
                                         )
                                       }
+                                      required
+                                      validate={required}
                                     />
                                   </div>
                                 </div>
                                 <div className="section-nutri-contato pt-2">
                                   <div>
-                                    <label className="label">
-                                      <span>* </span>Telefone/Celular Técnico
-                                    </label>
-
                                     <Field
                                       name={`telefone_terceirizada_${indiceTerceirizada}`}
                                       component={TelefoneOuCelular}
+                                      label="Telefone/Celular Técnico"
                                       id={`telefone_terceirizada_${indiceTerceirizada}`}
                                       setaContatosNutricionista={
                                         this.setaContatosNutricionista
@@ -412,12 +401,11 @@ class CadastroEmpresa extends Component {
                                     />
                                   </div>
                                   <div>
-                                    <label className="label">
-                                      <span>* </span>Email
-                                    </label>
                                     <Field
                                       name={`email_terceirizada_${indiceTerceirizada}`}
-                                      component={LabelAndInput}
+                                      label="E-mail"
+                                      component={InputText}
+                                      required
                                       validate={required}
                                       onChange={event =>
                                         this.setaContatosNutricionista(
@@ -435,17 +423,16 @@ class CadastroEmpresa extends Component {
                         }
                       )}
                     </div>
-                    <div className="button-field">
-                      <button
-                        type="button"
-                        className="btn btn-outline-info"
+                    <div className={`col-1 mt-auto mb-1`}>
+                      <Botao
+                        texto="+"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
                         onClick={() => {
                           this.nomeFormContatoTerceirizada();
                           this.adicionaContatoNutricionista();
                         }}
-                      >
-                        +
-                      </button>
+                      />
                     </div>
                   </div>
                 </div>
@@ -463,25 +450,24 @@ class CadastroEmpresa extends Component {
                             <FormSection
                               nomeForm={`editaisEContratos_${indiceContratos}`}
                               name={editalContrato}
+                              key={indiceContratos}
                             >
                               <div className="fields-set-edital">
                                 <div>
-                                  <label className="label">
-                                    <span>* </span>Edital de Pregão n°
-                                  </label>
                                   <Field
+                                    label="Edital de Pregão n°"
                                     name={`edital_${indiceContratos}`}
-                                    component={LabelAndInput}
+                                    component={InputText}
+                                    required
                                     validate={required}
                                   />
                                 </div>
                                 <div>
-                                  <label className="label">
-                                    <span>* </span>Contrato n°
-                                  </label>
                                   <Field
+                                    label="Contrato n°"
                                     name={`contrato_${indiceContratos}`}
-                                    component={LabelAndInput}
+                                    component={InputText}
+                                    required
                                     validate={required}
                                   />
                                 </div>
@@ -491,20 +477,21 @@ class CadastroEmpresa extends Component {
                         }
                       )}
                     </div>
-                    <div className="button-field">
-                      <button
-                        type="button"
-                        className="btn btn-outline-info"
+                    <div className={`col-1 mt-auto mb-1`}>
+                      <Botao
+                        texto="+"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
                         onClick={() => this.nomeFormContatoEdital()}
-                      >
-                        +
-                      </button>
+                      />
                     </div>
                   </div>
 
                   <div className="row pt-3">
                     <div className="col-12">
-                      <label className="label">Lotes de atendimento</label>
+                      <label className="label font-weight-normal pb-3">
+                        Lotes de atendimento
+                      </label>
 
                       {this.state.lotes.length ? (
                         <Field
@@ -553,21 +540,22 @@ class CadastroEmpresa extends Component {
                     </div>
                   </div>
 
-                  <div className="button-container">
-                    <div className="button-submit">
-                      <BaseButton
-                        label="Cancelar"
+                  <div className="row mt-5">
+                    <div className="col-12 text-right">
+                      <Botao
+                        texto="Cancelar"
                         onClick={event => this.resetForm(event)}
-                        style={ButtonStyle.OutlinePrimary}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
-                      <BaseButton
-                        label={"Salvar"}
+                      <Botao
+                        texto={"Salvar"}
                         onClick={handleSubmit(values =>
                           this.salvaFormulario(values)
                         )}
                         className="ml-3"
-                        type={ButtonType.SUBMIT}
-                        style={ButtonStyle.Primary}
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
                       />
                     </div>
                   </div>

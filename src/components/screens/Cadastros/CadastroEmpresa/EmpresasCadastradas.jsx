@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
-import { Stand } from "react-burgers";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { getTerceirizada } from "../../../../services/terceirizada.service.js";
+import { Link } from "react-router-dom";
 import { retornArrayTerceirizadas } from "./helper.js";
 import "../style.scss";
 
@@ -49,21 +50,20 @@ class EmpresasCadastradas extends Component {
               </th>
             </tr>
 
-            {this.state.empresasFiltradas.map(empresa => {
+            {this.state.empresasFiltradas.map((empresa, key) => {
               return [
-                <tr className={empresa.ativo ? "detalhe-empresa" : ""}>
+                <tr
+                  key={key}
+                  className={empresa.ativo ? "detalhe-empresa" : ""}
+                >
                   <td>{empresa.codigo_empresa}</td>
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
                   <td>{empresa.status}</td>
                   <td className="btn-action">
-                    <Stand
+                    <ToggleExpandir
                       onClick={() => this.lidarComBurger(empresa)}
-                      color={"#C8C8C8"}
-                      width={30}
-                      padding={0}
-                      lineSpacing={5}
-                      active={empresa.ativo}
+                      ativo={empresa.ativo}
                     />
                   </td>
                 </tr>,
@@ -133,9 +133,9 @@ class EmpresasCadastradas extends Component {
 
                       <hr className="linha-detalhe" />
 
-                      {empresa.nutricionistas.map(nutri => {
+                      {empresa.nutricionistas.map((nutri, key) => {
                         return [
-                          <Fragment>
+                          <Fragment key={key}>
                             <div className="secao-representante pt-3">
                               <div className="nome-representante">
                                 <div>
@@ -181,9 +181,9 @@ class EmpresasCadastradas extends Component {
                         <hr className="linha-detalhe" />
                       )}
 
-                      {empresa.editais.map(edital => {
+                      {empresa.editais.map((edital, key) => {
                         return [
-                          <Fragment>
+                          <Fragment key={key}>
                             <div className="secao-representante pt-3">
                               <div className="nome-representante">
                                 <div>
@@ -220,8 +220,16 @@ class EmpresasCadastradas extends Component {
                         )}
                         {empresa.lotes.length > 0 && (
                           <ul>
-                            {empresa.lotes.map((lote, item) => (
-                              <li>{lote.nome}</li>
+                            {empresa.lotes.map((lote, key) => (
+                              <li key={key}>
+                                <Link
+                                  to={`/configuracoes/cadastros/lote?uuid=${
+                                    lote.uuid
+                                  }`}
+                                >
+                                  {lote.nome}
+                                </Link>
+                              </li>
                             ))}
                           </ul>
                         )}

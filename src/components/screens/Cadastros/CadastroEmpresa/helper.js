@@ -49,7 +49,8 @@ const retornaNutricionistas = nutricionistas => {
 const retornaLotes = lotes => {
   const listaLotes = lotes.map(lote => {
     return {
-      nome: lote.nome
+      nome: lote.nome,
+      uuid: lote.uuid
     };
   });
   return listaLotes;
