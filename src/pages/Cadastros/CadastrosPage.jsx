@@ -9,7 +9,7 @@ const atual = {
 };
 
 export default () => (
-  <Page titulo={atual.titulo}>
+  <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={"/"} atual={atual} />
     <Cadastros />
   </Page>

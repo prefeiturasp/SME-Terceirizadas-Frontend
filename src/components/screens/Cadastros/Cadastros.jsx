@@ -12,12 +12,21 @@ class Cadastros extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gestaoDeAlimentacao: false
+      gestaoDeAlimentacao: false,
+      hoverLotes: false,
+      hoverEmpresas: false,
+      hoverEdital: false
     };
+    this.cardEdital = React.createRef();
   }
 
   render() {
-    const { gestaoDeAlimentacao } = this.state;
+    const {
+      hoverEdital,
+      hoverEmpresas,
+      hoverLotes,
+      gestaoDeAlimentacao
+    } = this.state;
     return (
       <div>
         <div className="row mt-3">
@@ -36,26 +45,38 @@ class Cadastros extends Component {
               <IconeUnidadeEscolar />
             </CardLogo>
           </div>
-          <div className="linked-card col-4">
+          <div
+            onMouseEnter={() => this.setState({ hoverLotes: true })}
+            onMouseLeave={() => this.setState({ hoverLotes: false })}
+            className="linked-card col-4"
+          >
             <Link to="/configuracoes/cadastros/lote">
               <CardLogo titulo={"Cadastro de Lotes"}>
-                <IconeLote />
+                <IconeLote hover={hoverLotes} />
               </CardLogo>
             </Link>
           </div>
         </div>
         <div className="row mt-3">
-          <div className="linked-card col-4">
+          <div
+            onMouseEnter={() => this.setState({ hoverEmpresas: true })}
+            onMouseLeave={() => this.setState({ hoverEmpresas: false })}
+            className="linked-card col-4"
+          >
             <Link to="/configuracoes/cadastros/empresa">
               <CardLogo titulo={"Cadastro de Empresas"}>
-                <IconeEmpresa />
+                <IconeEmpresa hover={hoverEmpresas} />
               </CardLogo>
             </Link>
           </div>
-          <div className="linked-card col-4">
+          <div
+            onMouseEnter={() => this.setState({ hoverEdital: true })}
+            onMouseLeave={() => this.setState({ hoverEdital: false })}
+            className="linked-card col-4"
+          >
             <Link to="/configuracoes/cadastros/editais-contratos">
               <CardLogo titulo={"Cadastro de Editais e Contratos"}>
-                <IconeEdital />
+                <IconeEdital hover={hoverEdital} />
               </CardLogo>
             </Link>
           </div>
