@@ -213,7 +213,7 @@ export const TerceirizadaAprovaPedidoDRE = uuid => {
 };
 
 export const getTerceirizadaPedidosAprovados = () => {
-  //todo: RETIRAR
+  //todo RETIRAR
   const url = `${URL_SOLICITACAO_UNIFICADA}/pedidos-aprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,

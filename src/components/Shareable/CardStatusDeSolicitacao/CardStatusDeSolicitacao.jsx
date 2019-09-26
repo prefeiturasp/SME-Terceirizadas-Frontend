@@ -26,7 +26,7 @@ export const CardStatusDeSolicitacao = props => {
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
-          <NavLink to={solicitation.link}>
+          <NavLink to={solicitation.link} key={key}>
             <p className="data">
               {solicitation.text}
               <span className="float-right">{solicitation.date}</span>
