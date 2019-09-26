@@ -2,21 +2,26 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import CadastroEmpresa from "../../components/screens/Cadastros/CadastroEmpresa/CadastroEmpresa";
 import Page from "../../components/Shareable/Page/Page";
+import { CADASTROS, CONFIGURACOES, EMPRESA } from "../../configs/constants";
 
 const atual = {
-  href: "/configuracoes/cadastros/empresa",
+  href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`,
   titulo: "Cadastro de Empresa"
 };
 
 const anteriores = [
   {
-    href: "/configuracoes/cadastros",
+    href: `/${CONFIGURACOES}/${CADASTROS}`,
     titulo: "Cadastros"
   }
 ];
 
 export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara="/configuracoes/cadastros">
+  <Page
+    titulo={atual.titulo}
+    botaoVoltar
+    voltarPara={`/${CONFIGURACOES}/${CADASTROS}`}
+  >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <CadastroEmpresa />
   </Page>
