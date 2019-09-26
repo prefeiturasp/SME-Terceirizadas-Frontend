@@ -131,6 +131,8 @@ class CadastroLote extends Component {
             toastSuccess("Lote excluído com sucesso");
             this.setRedirect();
             this.resetForm();
+          } else if (res.status === HTTP_STATUS.UNAUTHORIZED) {
+            toastError(res.data.detail);
           } else {
             toastError("Houve um erro ao excluir o lote");
           }

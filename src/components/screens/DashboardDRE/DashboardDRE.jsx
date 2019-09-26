@@ -482,7 +482,7 @@ class DashboardDRE extends Component {
                     <div className="col-6">
                       <CardPendencia
                         priorityOrdersOnly={true}
-                        cardTitle={"Suspensão de Refeição"}
+                        cardTitle={"Suspensão de Alimentação"}
                         totalOfOrders={quantidade_suspensoes}
                         priorityOrders={quantidade_suspensoes}
                         loading={loadingSuspensaoAlimentacao}

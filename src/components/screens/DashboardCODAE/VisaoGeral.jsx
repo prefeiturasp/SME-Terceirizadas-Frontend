@@ -200,7 +200,7 @@ class VisaoGeral extends Component {
           <div className="col-6">
             <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
               <CardPendencia
-                cardTitle={"Suspensão de Refeição"}
+                cardTitle={"Suspensão de Alimentação"}
                 totalOfOrders={quantidade_suspensoes}
                 priorityOrders={quantidade_suspensoes}
                 priorityOrdersOnly={true}
