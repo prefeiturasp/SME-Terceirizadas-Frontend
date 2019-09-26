@@ -8,15 +8,14 @@ import {
   getTemplateMensagemDetalhe,
   getTemplatesMensagem
 } from "../../../services/configuracoesMensagens";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import {
-  LabelAndCombo,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../../Shareable/labelAndInput/labelAndInput";
 import { getOptions } from "./helper";
 import "./style.scss";
+import Select from "../../Shareable/Select";
+import InputText from "../../Shareable/Input/InputText";
+import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
+import Botao from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 
 class Mensagem extends Component {
   constructor(props) {
@@ -62,49 +61,56 @@ class Mensagem extends Component {
             <div className="card-body">
               <div className="row">
                 <div className="col-8">
-                  <label className="label">Tipo de email</label>
                   <Field
-                    component={LabelAndCombo}
+                    label="Tipo de E-mail"
+                    component={Select}
                     name="tipo_email"
-                    onChange={value => this.onTipoEmailComboChanged(value)}
+                    onChange={event =>
+                      this.onTipoEmailComboChanged(event.target.value)
+                    }
                     options={getOptions(this.state.templates)}
                     validate={required}
+                    required
                   />
                 </div>
               </div>
-              <div className="row pt-3">
+              <div className="row">
                 <div className="col-12">
-                  <label className="label">Assunto</label>
-                  <Field component={LabelAndInput} name="assunto" disabled />
+                  <Field
+                    label="Assunto"
+                    component={InputText}
+                    name="assunto"
+                    disabled
+                  />
                 </div>
               </div>
-              <div className="row pt-3">
+              <div className="row mb-5">
                 <div className="col-12">
-                  <label className="label">Template</label>
                   <Field
-                    component={LabelAndTextArea}
+                    label="Template"
+                    component={TextAreaWYSIWYG}
                     name="template_html"
                     temOpcoesCustomizadas
                   />
                 </div>
               </div>
-              <div className="row mt-4">
-                <div className="col-4" />
+              <div className="row pt-3 mt-5">
+                <div className="col-4 mt-4" />
                 <div className="col-8 text-right">
-                  <BaseButton
-                    label="Cancelar"
+                  <Botao
+                    texto="Cancelar"
                     onClick={() => this.props.reset()}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
-                  <BaseButton
-                    label={"Salvar"}
+                  <Botao
+                    texto={"Salvar"}
                     onClick={handleSubmit(values => {
                       this.onSubmit(values);
                     })}
                     className="ml-3"
                     disabled={!tipo_email || tipo_email === "Selecione"}
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.Primary}
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
                   />
                 </div>
               </div>
