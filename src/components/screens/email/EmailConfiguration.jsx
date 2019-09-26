@@ -6,16 +6,15 @@ import {
   setEmailConfiguration,
   testEmailConfiguration
 } from "../../../services/email";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import {
-  LabelAndCombo,
-  LabelAndInput
-} from "../../Shareable/labelAndInput/labelAndInput";
 import IsVisible from "../../Shareable/layout";
 import { generateOptions, SECURITY_OPTIONS } from "./helper";
 import { ModalCancelarConfigEmail } from "../../Shareable/ModalCancelarConfigEmail";
 import "./style.scss";
+import { InputText } from "../../Shareable/Input/InputText";
+import { Select } from "../../Shareable/Select";
+import { Botao } from "../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
 
 class EmailConfiguration extends Component {
   constructor(props) {
@@ -120,104 +119,116 @@ class EmailConfiguration extends Component {
         <form>
           <div className="border rounded p-3 card">
             <div className="form-group row">
-              <Field
-                component={LabelAndInput}
-                label="Usuário"
-                type="e-mail"
-                name="username"
-                validate={email}
-                placeholder="contato@sme.prefeitura.sp.gov.br"
-                cols="6 6 6 6"
-              />
-              <Field
-                component={LabelAndInput}
-                label="Senha"
-                type="password"
-                name="password"
-                validate={required}
-                cols="6 6 6 6"
-              />
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Usuário"
+                  type="e-mail"
+                  name="username"
+                  validate={email}
+                  required
+                  placeholder="contato@sme.prefeitura.sp.gov.br"
+                />
+              </div>
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Senha"
+                  type="password"
+                  name="password"
+                  placeholder="********"
+                  required
+                  validate={required}
+                />
+              </div>
             </div>
           </div>
           <div className="border rounded p-3 mt-3 card">
             <div className="form-group row">
-              <Field
-                component={LabelAndInput}
-                cols="6 6 6 6"
-                label="Remetente padrão"
-                name="from_email"
-                validate={email}
-                placeholder="contato@sme.prefeitura.sp.gov.br"
-              />
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Remetente padrão"
+                  name="from_email"
+                  validate={email}
+                  placeholder="contato@sme.prefeitura.sp.gov.br"
+                />
+              </div>
             </div>
             <div className="form-group row">
-              <Field
-                component={LabelAndInput}
-                cols="6 6 6 6"
-                label="Servidor SMTP"
-                validate={required}
-                placeholder="smtp.sme.prefeitura.sp.gov.br"
-                name="host"
-              />
-              <Field
-                component={LabelAndCombo}
-                cols="2 2 2 2"
-                options={generateOptions(["", "587", "465", "25"])}
-                label="Porta"
-                name="port"
-              />
-              <Field
-                component={LabelAndCombo}
-                cols="2 2 2 2"
-                options={generateOptions([
-                  "",
-                  SECURITY_OPTIONS.SSL,
-                  SECURITY_OPTIONS.TLS
-                ])}
-                label="Segurança"
-                name="security"
-              />
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Servidor SMTP"
+                  required
+                  validate={required}
+                  placeholder="smtp.sme.prefeitura.sp.gov.br"
+                  name="host"
+                />
+              </div>
+              <div className="col-2">
+                <Field
+                  component={Select}
+                  options={generateOptions(["", "587", "465", "25"])}
+                  label="Porta"
+                  name="port"
+                />
+              </div>
+              <div className="col-2">
+                <Field
+                  component={Select}
+                  options={generateOptions([
+                    "",
+                    SECURITY_OPTIONS.SSL,
+                    SECURITY_OPTIONS.TLS
+                  ])}
+                  label="Segurança"
+                  name="security"
+                />
+              </div>
             </div>
             <IsVisible isVisible={this.state.showTest}>
               <div className="form-group row">
-                <Field
-                  component={LabelAndInput}
-                  name="testEmail"
-                  cols="3 3 3 3"
-                  label="Insira um email pessoal para testar"
-                  validate={email}
-                  placeholder="seu-email@sme.com"
-                />
+                <div className="col-3">
+                  <Field
+                    component={InputText}
+                    name="testEmail"
+                    label="Insira um email pessoal para testar"
+                    validate={email}
+                    placeholder="seu-email@sme.com"
+                  />
+                </div>
               </div>
             </IsVisible>
 
             <div className="form-group button-botton-card">
-              <BaseButton
-                label="Cancelar"
-                type={ButtonType.BUTTON}
+              <Botao
+                texto="Cancelar"
+                type={BUTTON_TYPE.BUTTON}
                 className="mr-2"
-                style={ButtonStyle.OutlinePrimary}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={this.showModal}
               />
-              <BaseButton
-                label="Testar"
-                type={ButtonType.SUBMIT}
+              <Botao
+                texto="Testar"
+                type={BUTTON_TYPE.SUBMIT}
                 disabled={pristine || submitting}
-                style={ButtonStyle.OutlinePrimary}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={handleSubmit(values =>
                   this.onTestConfiguration(values.testEmail)
                 )}
               />
-              <BaseButton
-                label="Salvar"
-                type={ButtonType.SUBMIT}
+              <Botao
+                texto="Salvar"
+                type={BUTTON_TYPE.SUBMIT}
+                disabled={pristine || submitting}
                 className="ml-2"
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values
                   })
                 )}
-                style={ButtonStyle.Primary}
+                style={BUTTON_STYLE.GREEN}
               />
             </div>
           </div>
