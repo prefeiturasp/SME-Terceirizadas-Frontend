@@ -20,6 +20,13 @@ export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 export const RELATORIO = "relatorio";
 export const HISTORICO = "historico";
 export const SOLICITACOES = "solicitacoes";
+export const CONFIGURACOES = "configuracoes";
+
+export const CADASTROS = "cadastros";
+export const EMPRESA = "empresa";
+export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
+export const LOTE = "lote";
+export const LOTES_CADASTRADOS = "lotes-cadastrados";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
