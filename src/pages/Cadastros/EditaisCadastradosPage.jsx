@@ -2,25 +2,35 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import EditaisCadastrados from "../../components/screens/Cadastros/EditaisContratos/EditaisCadastrados";
 import Page from "../../components/Shareable/Page/Page";
+import {
+  CONFIGURACOES,
+  CADASTROS,
+  EDITAIS_CONTRATOS,
+  EDITAIS_CADASTRADOS
+} from "../../configs/constants";
 
 const atual = {
-  href: "/configuracoes/cadastros/editais-cadastrados",
+  href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
   titulo: "Editais e Contratos Cadastrados"
 };
 
 const anteriores = [
   {
-    href: "/configuracoes/cadastros",
+    href: `/${CONFIGURACOES}/${CADASTROS}`,
     titulo: "Cadastros"
   },
   {
-    href: "/configuracoes/cadastros/editais-contratos",
+    href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CONTRATOS}`,
     titulo: "Editais e Contratos"
   }
 ];
 
 export default () => (
-  <Page titulo={atual.titulo}>
+  <Page
+    titulo={atual.titulo}
+    botaoVoltar
+    voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CONTRATOS}`}
+  >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <EditaisCadastrados />
   </Page>

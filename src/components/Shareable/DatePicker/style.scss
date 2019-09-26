@@ -23,6 +23,7 @@ div.datepicker {
     margin-right: -30px;
     .react-datepicker__input-container {
       input {
+        height: 38px;
         font-size: 14px;
         color: $blackInput;
         &.invalid-field:not(:focus) {

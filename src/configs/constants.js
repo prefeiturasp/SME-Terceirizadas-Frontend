@@ -23,6 +23,8 @@ export const SOLICITACOES = "solicitacoes";
 export const CONFIGURACOES = "configuracoes";
 
 export const CADASTROS = "cadastros";
+export const EDITAIS_CONTRATOS = "editais-contratos";
+export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const LOTE = "lote";
