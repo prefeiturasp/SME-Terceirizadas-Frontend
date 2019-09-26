@@ -4,7 +4,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { loadEdital } from "../../../../reducers/edital.reducer";
 import { Link } from "react-router-dom";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import {
   getLotes,
   getDiretoriaregionalSimplissima
@@ -29,6 +28,13 @@ import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { Redirect } from "react-router-dom";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EDITAIS_CADASTRADOS
+} from "../../../../configs/constants";
 
 const ENTER = 13;
 class EditaisContratos extends Component {
@@ -408,94 +414,104 @@ class EditaisContratos extends Component {
           edital_contratos={edital_contratos}
           onSubmit={this.onSubmit}
         />
-        <div className="card">
-          <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
-            <header className="header-form">
-              <nav>Dados do Edital e contrato</nav>
-              <Link to="/configuracoes/cadastros/editais-cadastrados">
-                <BaseButton
-                  className="header-button"
-                  label="Consulta de lotes cadastrados"
-                  style={ButtonStyle.OutlinePrimary}
-                />
-              </Link>
-            </header>
-            <SectionFormEdital
-              adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
-            />
-            <hr />
-            <nav className="titulo">Contratos relacionados</nav>
-            {forms.map((formEdital, key) => {
-              return (
-                <FormSection
-                  component={ContratosRelacionados}
-                  lotes={lotes}
-                  name={`secaoEdital${key}`}
-                  nomeForm={formEdital}
-                  diretoriasRegionais={diretoriasRegionais}
-                  empresas={empresas}
-                  obtemDadosParaSubmit={this.obtemDadosParaSubmit}
-                  obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
-                  indice={key}
-                  adicionaVigenciaContrato={this.adicionaVigenciaContrato}
-                  adicionaNumeroContrato={this.adicionaNumeroContrato}
-                  adicionarNomesListagem={this.adicionarNomesListagem}
-                  excluirContratoRelacionado={this.excluirContratoRelacionado}
-                  reseta={reseta}
-                  setaResetFormChild={this.setaResetFormChild}
-                  contratos_relacionados={contratos_relacionados}
-                  atualizacao={atualizacao}
-                />
-              );
-            })}
-
-            <article className="card-body dados-editais">
-              <BaseButton
-                className="header-button"
-                label="+ Adicionar outro contrato relacionado"
-                style={ButtonStyle.OutlinePrimary}
-                onClick={() => {
-                  this.nomeFormAtual();
-                  this.adicionaContratosRelacionados();
-                }}
-              />
-            </article>
-
-            <footer className="card-body">
-              <div className="button-container">
-                <div className="button-submit">
-                  {!uuid ? (
-                    <BaseButton
-                      label="Cancelar"
-                      onClick={value => {
-                        this.resetForm(value);
-                      }}
-                      style={ButtonStyle.OutlinePrimary}
-                    />
-                  ) : (
-                    <BaseButton
-                      label="Excluir"
-                      onClick={event => {
-                        this.excluirEdital(uuid);
-                      }}
-                      style={ButtonStyle.OutlinePrimary}
-                      noBorder
-                    />
-                  )}
-                  <BaseButton
-                    label={"Salvar"}
-                    onClick={event => {
-                      this.salvaFormulario();
-                    }}
-                    className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.Primary}
-                  />
+        <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
+          <div className="card">
+            <div className="card-body p-0">
+              <header className="header-form">
+                <div className="card-title font-weight-bold">
+                  Dados do Edital e Contrato
                 </div>
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <Link
+                      to={`/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`}
+                    >
+                      <Botao
+                        texto="Consulta de editais e contratos cadastrados"
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </header>
+              <SectionFormEdital
+                adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
+              />
+              <hr />
+              <div className="card-body card-title font-weight-bold pt-0 pb-0">
+                Contratos Relacionados
               </div>
-            </footer>
-          </form>
-        </div>
+              {forms.map((formEdital, key) => {
+                return (
+                  <FormSection
+                    component={ContratosRelacionados}
+                    lotes={lotes}
+                    name={`secaoEdital${key}`}
+                    nomeForm={formEdital}
+                    diretoriasRegionais={diretoriasRegionais}
+                    empresas={empresas}
+                    obtemDadosParaSubmit={this.obtemDadosParaSubmit}
+                    obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
+                    indice={key}
+                    adicionaVigenciaContrato={this.adicionaVigenciaContrato}
+                    adicionaNumeroContrato={this.adicionaNumeroContrato}
+                    adicionarNomesListagem={this.adicionarNomesListagem}
+                    excluirContratoRelacionado={this.excluirContratoRelacionado}
+                    reseta={reseta}
+                    setaResetFormChild={this.setaResetFormChild}
+                    contratos_relacionados={contratos_relacionados}
+                    atualizacao={atualizacao}
+                  />
+                );
+              })}
+
+              <article className="card-body dados-editais">
+                <Botao
+                  className="header-button"
+                  texto="+ Adicionar outro contrato relacionado"
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  onClick={() => {
+                    this.nomeFormAtual();
+                    this.adicionaContratosRelacionados();
+                  }}
+                />
+              </article>
+
+              <footer>
+                <div className="card-body row">
+                  <div className="col-12 text-right">
+                    {!uuid ? (
+                      <Botao
+                        texto="Cancelar"
+                        onClick={value => {
+                          this.resetForm(value);
+                        }}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    ) : (
+                      <Botao
+                        texto="Excluir"
+                        onClick={event => {
+                          this.excluirEdital(uuid);
+                        }}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    )}
+                    <Botao
+                      texto={"Salvar"}
+                      onClick={event => {
+                        this.salvaFormulario();
+                      }}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                    />
+                  </div>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </form>
       </section>
     );
   }

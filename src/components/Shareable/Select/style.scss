@@ -14,6 +14,7 @@ div.select {
     background-position-x: 100%;
     background-position-y: 5px;
     font-size: 14px;
+    height: 38px;
     color: $blackInput;
     &:disabled {
       background-color: $grayDisabled;

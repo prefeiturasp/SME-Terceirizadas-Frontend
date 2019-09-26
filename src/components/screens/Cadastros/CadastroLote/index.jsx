@@ -22,6 +22,11 @@ import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import {
+  CONFIGURACOES,
+  CADASTROS,
+  LOTES_CADASTRADOS
+} from "../../../../configs/constants";
 
 class CadastroLote extends Component {
   constructor(props) {
@@ -111,7 +116,9 @@ class CadastroLote extends Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Redirect to="/configuracoes/cadastros/lotes-cadastrados" />;
+      return (
+        <Redirect to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`} />
+      );
     }
   };
 
@@ -280,7 +287,9 @@ class CadastroLote extends Component {
               <div className="card-title font-weight-bold">Dados do Lote</div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <Link to="/configuracoes/cadastros/lotes-cadastrados">
+                  <Link
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`}
+                  >
                     <Botao
                       texto="Consulta de lotes cadastrados"
                       style={BUTTON_STYLE.BLUE_OUTLINE}

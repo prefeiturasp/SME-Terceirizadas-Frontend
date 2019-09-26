@@ -1,8 +1,8 @@
 import React from "react";
-import { LabelAndInput } from "../../../Shareable/labelAndInput/labelAndInput";
 import { TextArea } from "../../../Shareable/TextArea/TextArea";
 import { Field } from "redux-form";
 import { required } from "../../../../helpers/fieldValidators";
+import { InputText } from "../../../Shareable/Input/InputText";
 
 export const SectionFormEdital = props => {
   const { adicionaFieldsFormEdital } = props;
@@ -10,12 +10,11 @@ export const SectionFormEdital = props => {
     <article className="card-body dados-editais">
       <div className="input-duplo">
         <div>
-          <label className="label">
-            <span>* </span>Tipos de contratação
-          </label>
           <Field
-            component={LabelAndInput}
+            component={InputText}
+            label="Tipos de contratação"
             name="tipo_contratacao"
+            required
             validate={required}
             onChange={event =>
               adicionaFieldsFormEdital(`tipo_contratacao`, event.target.value)
@@ -24,13 +23,12 @@ export const SectionFormEdital = props => {
           />
         </div>
         <div>
-          <label className="label">
-            <span>* </span>Edital n°
-          </label>
           <Field
-            component={LabelAndInput}
+            component={InputText}
             className="form-control"
+            label="Edital n°"
             name="edital_numero"
+            required
             validate={required}
             onChange={event =>
               adicionaFieldsFormEdital(`numero`, event.target.value)
@@ -41,12 +39,11 @@ export const SectionFormEdital = props => {
       </div>
       <div className="input-duplo">
         <div>
-          <label className="label">
-            <span>* </span>Processo administrativo n°
-          </label>
           <Field
-            component={LabelAndInput}
+            component={InputText}
+            label="Processo administrativo n°"
             name="processo_administrativo"
+            required
             validate={required}
             onChange={event =>
               adicionaFieldsFormEdital(`numero_processo`, event.target.value)
