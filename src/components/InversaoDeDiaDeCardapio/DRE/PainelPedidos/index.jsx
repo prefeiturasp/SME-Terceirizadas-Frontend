@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { DRE } from "../../../../configs/constants";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getDiretoriaRegionalPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import Select from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
+import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { DRE } from "../../../../configs/constants";
-import Select from "../../../Shareable/Select";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -23,7 +24,8 @@ class PainelPedidos extends Component {
       pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: []
+      pedidosNoPrazoRegular: [],
+      pedidosAprovados: []
     };
   }
 
@@ -47,6 +49,9 @@ class PainelPedidos extends Component {
 
   componentDidMount() {
     this.filtrar(FiltroEnum.SEM_FILTRO);
+    getDiretoriaRegionalPedidosAprovados().then(response => {
+      this.setState({ pedidosAprovados: response.results });
+    });
   }
 
   onFiltroSelected(value) {
@@ -65,14 +70,10 @@ class PainelPedidos extends Component {
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
+      pedidosAprovados
     } = this.state;
-    const {
-      visaoPorCombo,
-      valorDoFiltro,
-      pedidosAprovados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, valorDoFiltro, pedidosReprovados } = this.props;
 
     const todosOsPedidosForamCarregados = pedidosCarregados;
     return (
