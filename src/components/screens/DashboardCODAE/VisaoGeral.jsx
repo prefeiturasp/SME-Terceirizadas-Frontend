@@ -134,32 +134,6 @@ class VisaoGeral extends Component {
       <div>
         <div className="row">
           <div className="col-6">
-            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
-              <CardPendencia
-                cardTitle={"Pedido Unificado"}
-                totalOfOrders={resumoPendenciasKitLancheUnificado.total}
-                priorityOrders={resumoPendenciasKitLancheUnificado.prioritario}
-                onLimitOrders={resumoPendenciasKitLancheUnificado.limite}
-                regularOrders={resumoPendenciasKitLancheUnificado.regular}
-                loading={loadingUnificado}
-              />
-            </Link>
-          </div>
-          <div className="col-6">
-            <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
-              <CardPendencia
-                cardTitle={"Inversão de dias de cardápio"}
-                totalOfOrders={resumoPendenciasInversoesCardapio.total}
-                priorityOrders={resumoPendenciasInversoesCardapio.prioritario}
-                onLimitOrders={resumoPendenciasInversoesCardapio.limite}
-                regularOrders={resumoPendenciasInversoesCardapio.regular}
-                loading={loadingInversao}
-              />
-            </Link>
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-6">
             <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
               <CardPendencia
                 cardTitle={"Inclusão de alimentação"}
@@ -172,20 +146,6 @@ class VisaoGeral extends Component {
             </Link>
           </div>
           <div className="col-6">
-            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
-              <CardPendencia
-                cardTitle={"Kit Lanche"}
-                totalOfOrders={resumoPendenciasKitLancheAvulsa.total}
-                priorityOrders={resumoPendenciasKitLancheAvulsa.prioritario}
-                onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}
-                regularOrders={resumoPendenciasKitLancheAvulsa.regular}
-                loading={loadingKitLancheAvulso}
-              />
-            </Link>
-          </div>
-        </div>
-        <div className="row pt-3">
-          <div className="col-6">
             <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
               <CardPendencia
                 cardTitle={"Alteração de Cardápio"}
@@ -197,6 +157,34 @@ class VisaoGeral extends Component {
               />
             </Link>
           </div>
+        </div>
+        <div className="row pt-3">
+          <div className="col-6">
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
+              <CardPendencia
+                cardTitle={"Solicitação de Kit Lanche"}
+                totalOfOrders={resumoPendenciasKitLancheAvulsa.total}
+                priorityOrders={resumoPendenciasKitLancheAvulsa.prioritario}
+                onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}
+                regularOrders={resumoPendenciasKitLancheAvulsa.regular}
+                loading={loadingKitLancheAvulso}
+              />
+            </Link>
+          </div>
+          <div className="col-6">
+            <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
+              <CardPendencia
+                cardTitle={"Inversão de dia de Cardápio"}
+                totalOfOrders={resumoPendenciasInversoesCardapio.total}
+                priorityOrders={resumoPendenciasInversoesCardapio.prioritario}
+                onLimitOrders={resumoPendenciasInversoesCardapio.limite}
+                regularOrders={resumoPendenciasInversoesCardapio.regular}
+                loading={loadingInversao}
+              />
+            </Link>
+          </div>
+        </div>
+        <div className="row pt-3">
           <div className="col-6">
             <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
               <CardPendencia
@@ -205,6 +193,18 @@ class VisaoGeral extends Component {
                 priorityOrders={quantidade_suspensoes}
                 priorityOrdersOnly={true}
                 loading={loadingSuspensao}
+              />
+            </Link>
+          </div>
+          <div className="col-6">
+            <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+              <CardPendencia
+                cardTitle={"Solicitação Unificada"}
+                totalOfOrders={resumoPendenciasKitLancheUnificado.total}
+                priorityOrders={resumoPendenciasKitLancheUnificado.prioritario}
+                onLimitOrders={resumoPendenciasKitLancheUnificado.limite}
+                regularOrders={resumoPendenciasKitLancheUnificado.regular}
+                loading={loadingUnificado}
               />
             </Link>
           </div>

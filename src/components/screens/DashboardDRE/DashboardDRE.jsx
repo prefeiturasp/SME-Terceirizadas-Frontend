@@ -496,9 +496,9 @@ class DashboardDRE extends Component {
               {/* Visão por Lote */}
               {this.state.visao === "lote" && (
                 <div className="row pt-3">
-                  {this.state.lotesDRE.map(lote => {
-                    return (
-                      <div className="col-6">
+                  {this.state.lotesDRE.map((lote, key) => {
+                    return resumoPorLote[lote.nome] ? (
+                      <div key={key} className="col-6">
                         <CardPendencia
                           cardTitle={lote.nome}
                           totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
@@ -507,6 +507,17 @@ class DashboardDRE extends Component {
                           }
                           onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
                           regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
+                          loading={loadingResumoLotes}
+                        />
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={lote.nome}
+                          totalOfOrders={0}
+                          priorityOrders={0}
+                          onLimitOrders={0}
+                          regularOrders={0}
                           loading={loadingResumoLotes}
                         />
                       </div>

@@ -8,9 +8,10 @@ import {
   getSolicitacoesRevisaoAprovacaoCodae
 } from "../../../services/painelCODAE.service";
 import { FILTRO, VENCIMENTO } from "../const";
-import DashboardCODAE from "./DashboardCODAE";
+import DashboardCODAE from ".";
 import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
+import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
 
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
@@ -19,6 +20,7 @@ class DashboardCODAEContainer extends Component {
     let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae();
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
     let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
+    let diretoriasRegionais = await getDiretoriaregionalSimplissima();
 
     solicitacoesAprovadas = ajustarFormatoLog(
       solicitacoesAprovadas,
@@ -44,7 +46,7 @@ class DashboardCODAEContainer extends Component {
       solicitacoesCanceladas,
       solicitacoesRevisao,
       lotes,
-
+      diretoriasRegionais: diretoriasRegionais.data.results,
       loadingPainelSolicitacoes: false
     });
   }
@@ -60,6 +62,7 @@ class DashboardCODAEContainer extends Component {
       quantidade_suspensoes: null,
       lotes: [],
       loadingPainelSolicitacoes: true,
+      diretoriasRegionais: [],
       vencimentoPara: [
         {
           nome: VENCIMENTO.SEM_FILTRO,
@@ -72,6 +75,20 @@ class DashboardCODAEContainer extends Component {
         {
           nome: VENCIMENTO.MES,
           uuid: FILTRO.DAQUI_A_30_DIAS
+        }
+      ],
+      visaoPor: [
+        {
+          nome: "Tipo de solicitação",
+          uuid: "tipo_solicitacao"
+        },
+        {
+          nome: "DRE",
+          uuid: "dre"
+        },
+        {
+          nome: "Lote",
+          uuid: "lote"
         }
       ]
     };
