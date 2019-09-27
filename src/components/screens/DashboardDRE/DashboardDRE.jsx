@@ -371,6 +371,7 @@ class DashboardDRE extends Component {
                   <div className="col-3 text-right my-auto">
                     <Select
                       naoDesabilitarPrimeiraOpcao
+                      disabled={!this.state.lotesDRE}
                       onChange={event => this.changeVisao(event.target.value)}
                       placeholder={"Visão por"}
                       options={vision_by}
