@@ -47,8 +47,8 @@
     "eject": "react-scripts eject",
     "eslint": "eslint src/",
     "eslint2": "eslint './src/**/**/**/**/*.{jsx,js}'",
-    "prettier": "prettier  --check 'src/**/**/**/*.{jsx,js,scss,css}'",
-    "prettier-fix": "prettier  --write 'src/**/**/**/*.{jsx,js,scss,css}'"
+    "prettier": "prettier  --check 'src/**/**/**/*.{jsx,js,scss}'",
+    "prettier-fix": "prettier  --write 'src/**/**/**/*.{jsx,js,scss}'"
   },
   "eslintConfig": {
     "extends": "react-app"
