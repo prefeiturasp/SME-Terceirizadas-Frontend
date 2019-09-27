@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getDiretoriaRegionalPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class Container extends Component {
   constructor(props) {
@@ -11,12 +10,6 @@ class Container extends Component {
       pedidosAprovados: [],
       pedidosReprovados: []
     };
-  }
-
-  componentDidMount() {
-    getDiretoriaRegionalPedidosAprovados().then(response => {
-      this.setState({ pedidosAprovados: response.results });
-    });
   }
 
   render() {

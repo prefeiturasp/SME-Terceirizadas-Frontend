@@ -1,23 +1,19 @@
 import { API_URL } from "../constants/config.constants";
-import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
+import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
+import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
+import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -26,41 +22,6 @@ const authToken = {
 
 export const getPendentesAprovacaoList = () => {
   const url = `${API_URL}/dre-pendentes-aprovacao/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getSolicitacoesAutorizadasPelaDRE = dreUuid => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-autorizadas-por-mim/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getSolicitacoesPendentesParaDRE = (
-  dreUuid,
-  filtro = "sem_filtro"
-) => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -312,15 +273,9 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREPorLote = async (
-  dree_uuid,
-  filtro = "sem_filtro"
-) => {
+export const getResumoPendenciasDREPorLote = async dree_uuid => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
-    dree_uuid,
-    filtro
-  )).results;
+  const solicitacoes = (await getSolicitacoesPendentesDRE(dree_uuid)).results;
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
@@ -370,5 +325,15 @@ export const getSolicitacoesPendentesDRE = async dreUuid => {
 
 export const getSolicitacoesAutorizadasDRE = async dreUuid => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesCanceladasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesRecusadasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/${dreUuid}/`;
   return retornoBase(url);
 };

@@ -11,7 +11,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #035d96;
+  --blue: #4e73df;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -24,7 +24,7 @@
   --white: #fff;
   --gray: #858796;
   --gray-dark: #5a5c69;
-  --primary: #035d96;
+  --primary: #4e73df;
   --secondary: #858796;
   --success: #1cc88a;
   --info: #36b9cc;
@@ -37,8 +37,8 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family: Roboto !important;
-
+  --font-family-sans-serif: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 *,
@@ -49,7 +49,7 @@
 }
 
 html {
-  font-family: Roboto !important;
+  font-family: sans-serif;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -61,7 +61,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: Roboto !important;
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -161,7 +161,7 @@ sup {
 }
 
 a {
-  color: #035d96;
+  color: #4e73df;
   text-decoration: none;
   background-color: transparent;
 }
@@ -189,7 +189,7 @@ pre,
 code,
 kbd,
 samp {
-  font-family: Roboto !important;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 1em;
 }
 
@@ -249,7 +249,7 @@ select,
 optgroup,
 textarea {
   margin: 0;
-  font-family: Roboto !important;
+  font-family: inherit;
   font-size: inherit;
   line-height: inherit;
 }
@@ -2609,8 +2609,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .btn-primary:hover {
@@ -2626,8 +2626,8 @@ fieldset:disabled a.btn {
 
 .btn-primary.disabled, .btn-primary:disabled {
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
@@ -2896,14 +2896,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #035d96;
-  border-color: #035d96;
+  color: #4e73df;
+  border-color: #4e73df;
 }
 
 .btn-outline-primary:hover {
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .btn-outline-primary:focus, .btn-outline-primary.focus {
@@ -2912,15 +2912,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-  color: #035d96;
+  color: #4e73df;
   background-color: transparent;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-primary.dropdown-toggle {
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -3169,7 +3169,7 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: #035d96;
+  color: #4e73df;
   text-decoration: none;
 }
 
@@ -3473,7 +3473,7 @@ input[type="button"].btn-block {
 .dropdown-item.active, .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #035d96;
+  background-color: #4e73df;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -3861,8 +3861,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #035d96;
-  background-color: #035d96;
+  border-color: #4e73df;
+  background-color: #4e73df;
 }
 
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -3927,8 +3927,8 @@ input[type="button"].btn-block {
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before {
-  border-color: #035d96;
-  background-color: #035d96;
+  border-color: #4e73df;
+  background-color: #4e73df;
 }
 
 .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::after {
@@ -4161,7 +4161,7 @@ input[type="button"].btn-block {
   width: 1rem;
   height: 1rem;
   margin-top: -0.25rem;
-  background-color: #035d96;
+  background-color: #4e73df;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4196,7 +4196,7 @@ input[type="button"].btn-block {
 .custom-range::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background-color: #035d96;
+  background-color: #4e73df;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4234,7 +4234,7 @@ input[type="button"].btn-block {
   margin-top: 0;
   margin-right: 0.2rem;
   margin-left: 0.2rem;
-  background-color: #035d96;
+  background-color: #4e73df;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4384,7 +4384,7 @@ input[type="button"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #035d96;
+  background-color: #4e73df;
 }
 
 .nav-fill .nav-item {
@@ -5175,7 +5175,7 @@ input[type="button"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #035d96;
+  color: #4e73df;
   background-color: #fff;
   border: 1px solid #dddfeb;
 }
@@ -5209,8 +5209,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .page-item.disabled .page-link {
@@ -5297,7 +5297,7 @@ a.badge:hover, a.badge:focus {
 
 .badge-primary {
   color: #fff;
-  background-color: #035d96;
+  background-color: #4e73df;
 }
 
 a.badge-primary:hover, a.badge-primary:focus {
@@ -5625,7 +5625,7 @@ a.badge-dark:focus, a.badge-dark.focus {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #035d96;
+  background-color: #4e73df;
   -webkit-transition: width 0.6s ease;
   transition: width 0.6s ease;
 }
@@ -5728,8 +5728,8 @@ a.badge-dark:focus, a.badge-dark.focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #035d96;
-  border-color: #035d96;
+  background-color: #4e73df;
+  border-color: #4e73df;
 }
 
 .list-group-horizontal {
@@ -6330,7 +6330,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: Roboto !important;
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -6443,7 +6443,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: Roboto !important;
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -6908,7 +6908,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #035d96 !important;
+  background-color: #4e73df !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,
@@ -7036,7 +7036,7 @@ button.bg-dark:focus {
 }
 
 .border-primary {
-  border-color: #035d96 !important;
+  border-color: #4e73df !important;
 }
 
 .border-secondary {
@@ -10243,7 +10243,7 @@ button.bg-dark:focus {
 }
 
 .text-monospace {
-  font-family: Roboto !important;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }
 
 .text-justify {
@@ -10365,7 +10365,7 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #035d96 !important;
+  color: #4e73df !important;
 }
 
 a.text-primary:hover, a.text-primary:focus {
@@ -10573,7 +10573,7 @@ a:focus {
 }
 
 #wrapper #content-wrapper {
-  background-color: #f8f5f5;
+  background-color: #f8f9fc;
   width: 100%;
   overflow-x: hidden;
 }
@@ -10678,9 +10678,9 @@ a:focus {
 }
 
 .bg-gradient-primary {
-  background-color: #035d96;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #035d96), to(#224abe));
-  background-image: linear-gradient(180deg, #035d96 10%, #224abe 100%);
+  background-color: #4e73df;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(10%, #4e73df), to(#224abe));
+  background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
   background-size: cover;
 }
 
@@ -10812,7 +10812,7 @@ a:focus {
 }
 
 .border-left-primary {
-  border-left: 0.25rem solid #035d96 !important;
+  border-left: 0.25rem solid #4e73df !important;
 }
 
 .border-left-success {
@@ -10832,7 +10832,7 @@ a:focus {
 }
 
 .border-bottom-primary {
-  border-bottom: 0.25rem solid #035d96 !important;
+  border-bottom: 0.25rem solid #4e73df !important;
 }
 
 .border-bottom-success {
@@ -10887,13 +10887,13 @@ a:focus {
   vertical-align: 0;
   border: 0;
   font-weight: 900;
-  content: '\f078';
+  content: '\f105';
   font-family: 'Font Awesome 5 Free';
 }
 
 .sidebar .nav-item.dropdown.show .dropdown-toggle::after,
 .topbar .nav-item.dropdown.show .dropdown-toggle::after {
-  content: '\f077';
+  content: '\f107';
 }
 
 .sidebar .nav-item .nav-link,
@@ -10985,8 +10985,8 @@ a:focus {
 }
 
 .topbar .dropdown-list .dropdown-header {
-  background-color: #035d96;
-  border: 1px solid #035d96;
+  background-color: #4e73df;
+  border: 1px solid #4e73df;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   color: #fff;
@@ -11150,7 +11150,7 @@ a:focus {
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
-  color: #035d96;
+  color: #4e73df;
   font-weight: 700;
 }
 
@@ -11183,7 +11183,7 @@ a:focus {
 }
 
 .sidebar.toggled #sidebarToggle::after {
-  content: '\f078';
+  content: '\f105';
   font-family: 'Font Awesome 5 Free';
   margin-left: 0.25rem;
 }
@@ -11221,7 +11221,7 @@ a:focus {
 
 @media (min-width: 768px) {
   .sidebar {
-    width: 18rem !important;
+    width: 15rem !important;
   }
   .sidebar .nav-item .collapse {
     position: relative;
@@ -11249,6 +11249,7 @@ a:focus {
     display: block;
     width: 100%;
     text-align: left;
+    padding: 1rem;
     width: 14rem;
   }
   .sidebar .nav-item .nav-link i {
@@ -11265,13 +11266,12 @@ a:focus {
     float: right;
     vertical-align: 0;
     border: 0;
-    color: white !important;
     font-weight: 900;
-    content: '\f077';
+    content: '\f107';
     font-family: 'Font Awesome 5 Free';
   }
   .sidebar .nav-item .nav-link[data-toggle="collapse"].collapsed::after {
-    content: '\f078';
+    content: '\f105';
   }
   .sidebar .sidebar-brand .sidebar-brand-icon i {
     font-size: 2rem;
@@ -11539,7 +11539,7 @@ a:focus {
   padding-right: 1.725rem;
   line-height: 51px;
   font-weight: 900;
-  content: '\f077';
+  content: '\f107';
   font-family: 'Font Awesome 5 Free';
   color: #d1d3e2;
 }
@@ -11549,7 +11549,7 @@ a:focus {
 }
 
 .card .card-header[data-toggle="collapse"].collapsed::after {
-  content: '\f078';
+  content: '\f105';
 }
 
 .chart-area {
@@ -11983,7 +11983,7 @@ form.user .btn-user {
   content: attr(data-text);
   position: absolute;
   left: -2px;
-  text-shadow: 1px 0 #035d96;
+  text-shadow: 1px 0 #4e73df;
   top: 0;
   color: #5a5c69;
   background: #f8f9fc;
