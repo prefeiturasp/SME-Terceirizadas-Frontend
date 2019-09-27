@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
 import {
   getSolicitacoesAutorizadasEscola,
-  getSolicitacoesPendentesEscola
+  getSolicitacoesPendentesEscola,
+  getSolicitacoesCanceladasEscola,
+  getSolicitacoesNegadasEscola
 } from "../../../services/painelEscola.service";
 import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
-import { CARD_TYPE_ENUM } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { CardStatusDeSolicitacaoLargo } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacaoLargo";
 import { InputSearch } from "../../Shareable/InputSearch";
 import { ajustarFormatoLog } from "../helper";
@@ -39,16 +44,30 @@ export default class StatusSolicitacoes extends Component {
     const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
 
     switch (this.props.tipoStatus) {
+      case STATUS.RECUSADAS:
+        tipoCard = CARD_TYPE_ENUM.NEGADO;
+        icone = ICON_CARD_TYPE_ENUM.NEGADO;
+        titulo = "Recusadas";
+        solicitacoes = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
+        break;
+
+      case STATUS.CANCELADAS:
+        tipoCard = CARD_TYPE_ENUM.CANCELADO;
+        icone = ICON_CARD_TYPE_ENUM.CANCELADO;
+        titulo = "Canceladas";
+        solicitacoes = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
+        break;
+
       case STATUS.AUTORIZADAS:
         tipoCard = CARD_TYPE_ENUM.APROVADO;
-        icone = "fa-check";
+        icone = ICON_CARD_TYPE_ENUM.APROVADO;
         titulo = "Autorizadas";
         solicitacoes = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
         break;
 
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
-        icone = "fa-exclamation-triangle";
+        icone = ICON_CARD_TYPE_ENUM.PENDENTE;
         titulo = "Pendentes";
         solicitacoes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
         break;
