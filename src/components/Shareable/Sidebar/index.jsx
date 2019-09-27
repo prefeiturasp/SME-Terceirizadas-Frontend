@@ -32,25 +32,25 @@ export class Sidebar extends Component {
             <div className="testing-sidebar row">
               <div
                 onClick={() => this.setState({ perfil: "escola" })}
-                className="col-2"
+                className={`col-2 ${perfil == "escola" && "font-weight-bold"}`}
               >
                 Escola
               </div>
               <div
                 onClick={() => this.setState({ perfil: "dre" })}
-                className="col-2"
+                className={`col-2 ${perfil == "dre" && "font-weight-bold"}`}
               >
                 DRE
               </div>
               <div
                 onClick={() => this.setState({ perfil: "codae" })}
-                className="col-2"
+                className={`col-2 ${perfil == "codae" && "font-weight-bold"}`}
               >
                 CODAE
               </div>
               <div
                 onClick={() => this.setState({ perfil: "terceirizada" })}
-                className="col-2"
+                className={`col-2 ${perfil == "terceirizada" && "font-weight-bold"}`}
               >
                 Terceirizada
               </div>
@@ -84,6 +84,7 @@ export class Sidebar extends Component {
                   <span className="d-none d-lg-inline text-bold text-white small border border-light rounded-pill p-1">
                     {nome}
                   </span>
+                  <span>nome da DRE/Escola ou Terceirizada a qual pertence</span>
                 </div>
               )}
               <div className="profile">
