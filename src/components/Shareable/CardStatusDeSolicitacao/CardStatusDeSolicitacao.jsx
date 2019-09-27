@@ -9,6 +9,13 @@ export const CARD_TYPE_ENUM = {
   NEGADO: "card-denied"
 };
 
+export const ICON_CARD_TYPE_ENUM = {
+  CANCELADO: "fa-times-circle",
+  PENDENTE: "fa-exclamation-triangle",
+  APROVADO: "fa-check",
+  NEGADO: "fa-ban"
+};
+
 export const CardStatusDeSolicitacao = props => {
   const { cardTitle, cardType, solicitations, icon, href, loading } = props;
   return (
