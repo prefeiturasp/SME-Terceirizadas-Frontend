@@ -89,7 +89,7 @@ class DashboardCODAE extends Component {
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
                 <Link to={`/${CODAE}/${SOLICITACOES}`}>
-                  Painel de Status de Solicitações
+                  Acompanhamento de solicitações
                 </Link>
                 <span className="float-right">
                   <input
@@ -130,7 +130,7 @@ class DashboardCODAE extends Component {
               <div className="row pt-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Solicitação recusada"}
+                    cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}

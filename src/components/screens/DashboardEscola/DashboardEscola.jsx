@@ -97,7 +97,7 @@ export class DashboardEscola extends Component {
           </Collapse>
         </CardMatriculados>
         <CardBody
-          titulo={"Painel de Status de Solicitações"}
+          titulo={"Acompanhamento solicitações"}
           dataAtual={dataAtual()}
         >
           <div className="row">
@@ -123,7 +123,7 @@ export class DashboardEscola extends Component {
           <div className="row pt-3">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Recusadas"}
+                cardTitle={"Negadas"}
                 cardType={"card-denied"}
                 solicitations={negadas}
                 icon={"fa-ban"}
