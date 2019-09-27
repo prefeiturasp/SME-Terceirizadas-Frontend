@@ -26,7 +26,7 @@ export const SectionFormEdital = props => {
           <Field
             component={InputText}
             className="form-control"
-            label="Edital n°"
+            label="N ° edital"
             name="edital_numero"
             required
             validate={required}

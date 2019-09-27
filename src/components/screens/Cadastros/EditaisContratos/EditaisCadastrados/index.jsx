@@ -35,7 +35,7 @@ class EditaisCadastrados extends Component {
           <table className="cadastro-lote">
             <tr>
               <th>Tipos de contratação</th>
-              <th>Edital n°</th>
+              <th>N° edital</th>
               <th colSpan="3">Processo administrativo n°</th>
             </tr>
             {editais &&
