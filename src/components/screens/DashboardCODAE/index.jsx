@@ -12,9 +12,13 @@ import {
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
 import VisaoGeral from "./VisaoGeral";
-import VisaoPorDRE from "./VisaoPorDRE";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
+import {
+  getResumoPendenciasCODAEporDRE,
+  getResumoPendenciasCODAEporLote
+} from "../../../services/painelCODAE.service.js";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -23,6 +27,7 @@ class DashboardCODAE extends Component {
       collapsed: true,
       dre: false,
       filtro: FILTRO.SEM_FILTRO,
+      visao: "tipo_solicitacao",
 
       solicitacoesAprovadasFiltradas: [],
       solicitacoesPendentesAprovacaoFiltradas: [],
@@ -36,13 +41,34 @@ class DashboardCODAE extends Component {
       loadingSuspensaoAlimentacao: true,
       loadingSolicitacoesUnificadas: true,
 
-      loadingPainelSolicitacoes: true
+      loadingPainelSolicitacoes: true,
+
+      resumoPorDRE: [],
+      resumoPorLote: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.changeVisao = this.changeVisao.bind(this);
+  }
+
+  componentDidMount() {
+    this.carregaResumosPendencias("sem_filtro");
+  }
+
+  async carregaResumosPendencias(filtroPendencias) {
+    const resumoPorDRE = await getResumoPendenciasCODAEporDRE();
+    const resumoPorLote = await getResumoPendenciasCODAEporLote();
+    this.setState({
+      resumoPorDRE,
+      resumoPorLote
+    });
   }
 
   onVencimentoPara(filtro) {
     this.setState({ filtro });
+  }
+
+  changeVisao(visao) {
+    this.setState({ visao });
   }
 
   alterarCollapse() {
@@ -68,10 +94,17 @@ class DashboardCODAE extends Component {
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
       vencimentoPara,
+      diretoriasRegionais,
       lotes,
+      visaoPor,
       quantidade_suspensoes
     } = this.props;
-    const { collapsed, loadingPainelSolicitacoes } = this.state;
+    const {
+      collapsed,
+      loadingPainelSolicitacoes,
+      resumoPorDRE,
+      resumoPorLote
+    } = this.state;
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -190,16 +223,73 @@ class DashboardCODAE extends Component {
                       naoDesabilitarPrimeiraOpcao
                       onChange={event => this.changeVisao(event.target.value)}
                       placeholder={"Visão por"}
-                      options={vencimentoPara}
+                      options={visaoPor}
                     />
                   </div>
                 </div>
               </div>
               <div className="pt-3" />
-
-              {this.state.dre ? (
-                <VisaoPorDRE {...this.props} />
-              ) : (
+              {this.state.visao === "dre" && (
+                <div className="row pt-3">
+                  {diretoriasRegionais.map((dre, key) => {
+                    return resumoPorDRE[dre.nome] ? (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={dre.nome}
+                          totalOfOrders={resumoPorDRE[dre.nome]["TOTAL"]}
+                          priorityOrders={resumoPorDRE[dre.nome]["PRIORITARIO"]}
+                          onLimitOrders={resumoPorDRE[dre.nome]["LIMITE"]}
+                          regularOrders={resumoPorDRE[dre.nome]["REGULAR"]}
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={dre.nome}
+                          totalOfOrders={0}
+                          priorityOrders={0}
+                          onLimitOrders={0}
+                          regularOrders={0}
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {this.state.visao === "lote" && (
+                <div className="row pt-3">
+                  {lotes.map((lote, key) => {
+                    return resumoPorLote[lote.lote] ? (
+                      <div key={key} className="col-6 pb-3">
+                        <CardPendencia
+                          cardTitle={lote.lote}
+                          totalOfOrders={resumoPorLote[lote.lote]["TOTAL"]}
+                          priorityOrders={
+                            resumoPorLote[lote.lote]["PRIORITARIO"]
+                          }
+                          onLimitOrders={resumoPorLote[lote.lote]["LIMITE"]}
+                          regularOrders={resumoPorLote[lote.lote]["REGULAR"]}
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={lote.lote}
+                          totalOfOrders={0}
+                          priorityOrders={0}
+                          onLimitOrders={0}
+                          regularOrders={0}
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {this.state.visao === "tipo_solicitacao" && (
                 <VisaoGeral
                   filtro={this.state.filtro}
                   quantidade_suspensoes={quantidade_suspensoes}

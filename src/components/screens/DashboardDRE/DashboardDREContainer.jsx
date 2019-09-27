@@ -62,7 +62,6 @@ class DashboardDREContainer extends Component {
     let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
     let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
     const minhaDRE = await getDiretoriaregionalDetalhe(dreUuid);
-
     const lotesDRE = (await minhaDRE).data.lotes;
 
     getSuspensoesDeAlimentacaoInformadas().then(response => {
