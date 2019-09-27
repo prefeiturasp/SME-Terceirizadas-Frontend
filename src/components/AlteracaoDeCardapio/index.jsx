@@ -6,6 +6,8 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
+import { required } from "../../helpers/fieldValidators";
+import { LabelAndCombo } from "../Shareable/labelAndInput/labelAndInput";
 import { deleteAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { InputComData } from "../Shareable/DatePicker";
@@ -106,7 +108,12 @@ class AlteracaoCardapio extends Component {
 
   render() {
     const { loading, alteracaoCardapioList, title } = this.state;
-    const { handleSubmit, meusDados, proximos_dois_dias_uteis } = this.props;
+    const {
+      handleSubmit,
+      meusDados,
+      proximos_dois_dias_uteis,
+      motivos
+    } = this.props;
     return (
       <Fragment>
         {loading ? (
@@ -161,6 +168,71 @@ class AlteracaoCardapio extends Component {
                     label="Até"
                     disabled={this.props.alterar_dia}
                   />
+                </section>
+                <section className="section-form-motivo mt-3">
+                  <Field
+                    component={LabelAndCombo}
+                    name="motivo"
+                    label="Motivo"
+                    options={motivos}
+                    validate={required}
+                  />
+                </section>
+              </article>
+              <hr />
+              <article className="card-body">
+                <header className="descricao-periodos-alimentacao">
+                  <div>Período</div>
+                  <div>Alterar alimentação de:</div>
+                  <div>Para alimentação:</div>
+                  <div>N° de alunos</div>
+                </header>
+
+                <section className="item-periodo-alimentacao">
+                  <Fragment>
+                    <label htmlFor="check" className="checkbox-label">
+                      <Field component={"input"} type="checkbox" name="check" />
+                      <span
+                        // onClick={() =>
+                        //   this.props.change(
+                        //     `substituicoes_${period.nome}.check`,
+                        //     !checkMap[period.nome]
+                        //   )
+                        // }
+                        className="checkbox-custom"
+                      />
+                      <div className="teste">MANHÃ</div>
+                    </label>
+                  </Fragment>
+
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                </section>
+
+                <section className="item-periodo-alimentacao">
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                </section>
+                <section className="item-periodo-alimentacao">
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                </section>
+                <section className="item-periodo-alimentacao">
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                </section>
+                <section className="item-periodo-alimentacao">
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
+                  <div className="cor-teste">.</div>
                 </section>
               </article>
             </section>
