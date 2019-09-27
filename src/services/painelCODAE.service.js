@@ -273,7 +273,7 @@ export const getResumoPendenciasSuspensaoCardapio = async (
 
 export const getResumoPendenciasCODAEporDRE = async () => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesAprovacaoCodae());
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
 
   const reducer = (resumoPorDRE, corrente) => {
     if (!resumoPorDRE[corrente.dre_nome]) {
@@ -299,10 +299,9 @@ export const getResumoPendenciasCODAEporDRE = async () => {
   return resumoPorDRE;
 };
 
-
 export const getResumoPendenciasCODAEporLote = async () => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesAprovacaoCodae());
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
@@ -314,9 +313,9 @@ export const getResumoPendenciasCODAEporLote = async () => {
       ][corrente.prioridade]
         ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
         : 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[
-        corrente.lote
-      ]["TOTAL"]
+      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
+        "TOTAL"
+      ]
         ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
         : 1;
     }
