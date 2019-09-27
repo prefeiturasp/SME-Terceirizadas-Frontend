@@ -282,9 +282,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <Link to={`/${DRE}/${SOLICITACOES}`}>
-                  Painel de Status de Solicitações
-                </Link>
+                Painel de Status de Solicitações
                 <span className="float-right">
                   <input
                     className="input-search"

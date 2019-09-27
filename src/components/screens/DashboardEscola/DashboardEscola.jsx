@@ -26,9 +26,66 @@ export class DashboardEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      autorizadasListFiltered: [],
+      pendentesListFiltered: [],
+      negadasListFiltered: [],
+      canceladasListFiltered: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+    if (prevProps.autorizadas.length !== autorizadas.length)
+      this.setState({
+        autorizadasListFiltered: autorizadas
+      });
+
+    if (prevProps.pendentes.length !== pendentes.length)
+      this.setState({
+        pendentesListFiltered: pendentes
+      });
+
+    if (prevProps.negadas.length !== negadas.length)
+      this.setState({
+        negadasListFiltered: negadas
+      });
+    if (prevProps.canceladas.length !== canceladas.length)
+      this.setState({
+        canceladasListFiltered: canceladas
+      });
+  }
+
+  onPesquisaChanged(event) {
+    if (event === undefined) event = { target: { value: "" } };
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+
+    let pendentesListFiltered = pendentes;
+    let autorizadasListFiltered = autorizadas;
+    let negadasListFiltered = negadas;
+    let canceladasListFiltered = canceladas;
+
+    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
+    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
+    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+
+    this.setState({
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    });
+  }
+
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
   }
 
   alterarCollapse() {
@@ -36,16 +93,14 @@ export class DashboardEscola extends Component {
   }
 
   render() {
-    const { collapsed } = this.state;
     const {
-      numeroAlunos,
-      autorizadas,
-      pendentes,
-      negadas,
-      canceladas,
-      theadList,
-      trs
-    } = this.props;
+      collapsed,
+      pendentesListFiltered,
+      autorizadasListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    } = this.state;
+    const { numeroAlunos, theadList, trs } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -100,13 +155,14 @@ export class DashboardEscola extends Component {
         <CardBody
           titulo={"Painel de Status de Solicitações"}
           dataAtual={dataAtual()}
+          onChange={this.onPesquisaChanged}
         >
           <div className="row">
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Pendente Aprovação"}
                 cardType={CARD_TYPE_ENUM.PENDENTE}
-                solicitations={pendentes}
+                solicitations={pendentesListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.PENDENTE}
                 href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
               />
@@ -115,7 +171,7 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Autorizadas"}
                 cardType={CARD_TYPE_ENUM.APROVADO}
-                solicitations={autorizadas}
+                solicitations={autorizadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.APROVADO}
                 href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
@@ -126,7 +182,7 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Recusadas"}
                 cardType={CARD_TYPE_ENUM.NEGADO}
-                solicitations={negadas}
+                solicitations={negadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.NEGADO}
                 href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               />
@@ -135,7 +191,7 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Canceladas"}
                 cardType={CARD_TYPE_ENUM.CANCELADO}
-                solicitations={canceladas}
+                solicitations={canceladasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.CANCELADO}
                 href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />

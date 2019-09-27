@@ -1,6 +1,6 @@
 import React from "react";
 
-export default props => (
+const CardBody = props => (
   <div className="card mt-3">
     <div className="card-body">
       <div className="card-title font-weight-bold dashboard-card-title">
@@ -10,7 +10,13 @@ export default props => (
           <i className="fas fa-pen" />
         </span>
         <span className="float-right">
-          <input className="input-search" placeholder="Pesquisar" />
+          <input
+            className="input-search"
+            placeholder="Pesquisar"
+            onChange={e => {
+              props.onChange(e);
+            }}
+          />
           <i className="fas fa-search" />
         </span>
       </div>
@@ -23,3 +29,5 @@ export default props => (
     </div>
   </div>
 );
+
+export default CardBody;
