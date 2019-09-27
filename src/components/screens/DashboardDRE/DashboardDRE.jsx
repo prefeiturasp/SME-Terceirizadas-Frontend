@@ -1,42 +1,40 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { formValueSelector, Field, reduxForm } from "redux-form";
-import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { Collapse } from "react-collapse";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Select } from "../../Shareable/Select";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao, {
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../../Shareable/style.scss";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import "./style.scss";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import {
+  ALTERACAO_CARDAPIO,
+  DRE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_PENDENTES
+} from "../../../configs/constants";
+import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasDREAlteracoesDeCardapio,
   getResumoPendenciasDREInclusaoDeAlimentacao,
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
   getResumoPendenciasDREKitLanche,
-  getResumoPendenciasDRESuspensaoDeAlimentacao,
-  getResumoPendenciasDRESolicitacoesUnificadas
+  getResumoPendenciasDRESolicitacoesUnificadas,
+  getResumoPendenciasDRESuspensaoDeAlimentacao
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
-import { dataAtual } from "../../../helpers/utilities";
-import {
-  DRE,
-  ALTERACAO_CARDAPIO,
-  INCLUSAO_ALIMENTACAO,
-  INVERSAO_CARDAPIO,
-  SOLICITACAO_KIT_LANCHE,
-  SOLICITACOES,
-  SOLICITACOES_PENDENTES,
-  SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
-} from "../../../configs/constants";
-import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service";
+import { Botao } from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao, {
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { Select } from "../../Shareable/Select";
+import "../../Shareable/style.scss";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
+import "./style.scss";
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
@@ -45,6 +43,8 @@ class DashboardDRE extends Component {
       autorizadasListFiltered: [],
       pendentesList: [],
       pendentesListFiltered: [],
+      recusadasListFiltered: [],
+      canceladasListFiltered: [],
       collapsed: true,
       lotes: [
         {
@@ -114,11 +114,6 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
-    let resumoPorLote = await getResumoPendenciasDREPorLote(
-      minhaDRE,
-      filtroPendencias
-    );
-
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
@@ -127,7 +122,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
-      resumoPorLote,
       loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
       loadingInclusoesAlimentacao: !resumoPendenciasDREInclusoesDeAlimentacao,
       loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
@@ -159,6 +153,24 @@ class DashboardDRE extends Component {
       this.setState({
         pendentesListFiltered: this.props.pendentesListFiltered,
         pendentesList: this.props.pendentesList
+      });
+
+    if (
+      prevProps.recusadasListFiltered.length !==
+      this.props.recusadasListFiltered.length
+    )
+      this.setState({
+        recusadasListFiltered: this.props.recusadasListFiltered,
+        negadasList: this.props.negadasList
+      });
+
+    if (
+      prevProps.canceladasListFiltered.length !==
+      this.props.canceladasListFiltered.length
+    )
+      this.setState({
+        canceladasListFiltered: this.props.canceladasListFiltered,
+        negadasList: this.props.negadasList
       });
 
     if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas) {
@@ -209,8 +221,6 @@ class DashboardDRE extends Component {
       enrolled,
       handleSubmit,
       vision_by,
-      canceladasList,
-      recusadasList,
       filtro_por,
       quantidade_suspensoes
     } = this.props;
@@ -220,6 +230,8 @@ class DashboardDRE extends Component {
       lotesDRE,
       autorizadasListFiltered,
       pendentesListFiltered,
+      recusadasListFiltered,
+      canceladasListFiltered,
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
@@ -268,9 +280,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <Link to={`/${DRE}/${SOLICITACOES}`}>
-                  Painel de Status de Solicitações
-                </Link>
+                Painel de Status de Solicitações
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -307,30 +317,27 @@ class DashboardDRE extends Component {
                   />
                 </div>
               </div>
-              <div className="row pt-3">
-                {recusadasList.length > 0 && (
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Recusadas"}
-                      cardType={"card-denied"}
-                      solicitations={recusadasList}
-                      icon={"fa-ban"}
-                      href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
-                    />
-                  </div>
-                )}
-
-                {canceladasList.length > 0 && (
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Canceladas"}
-                      cardType={"card-cancelled"}
-                      solicitations={canceladasList}
-                      icon={"fa-times-circle"}
-                      href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-                    />
-                  </div>
-                )}
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Recusadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={recusadasListFiltered}
+                    icon={"fa-ban"}
+                    href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
+                    loading={loadingPendentes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={canceladasListFiltered}
+                    icon={"fa-times-circle"}
+                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                    loading={loadingAutorizadas}
+                  />
+                </div>
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">

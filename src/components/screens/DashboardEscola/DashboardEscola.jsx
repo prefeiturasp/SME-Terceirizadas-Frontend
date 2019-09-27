@@ -1,6 +1,13 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_PENDENTES
+} from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
@@ -8,26 +15,77 @@ import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import {
   CardStatusDeSolicitacao,
-  CARD_TYPE_ENUM
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
-import {
-  ESCOLA,
-  SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_PENDENTES,
-  SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
-} from "../../../configs/constants";
 
 export class DashboardEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      autorizadasListFiltered: [],
+      pendentesListFiltered: [],
+      negadasListFiltered: [],
+      canceladasListFiltered: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+    if (prevProps.autorizadas.length !== autorizadas.length)
+      this.setState({
+        autorizadasListFiltered: autorizadas
+      });
+
+    if (prevProps.pendentes.length !== pendentes.length)
+      this.setState({
+        pendentesListFiltered: pendentes
+      });
+
+    if (prevProps.negadas.length !== negadas.length)
+      this.setState({
+        negadasListFiltered: negadas
+      });
+    if (prevProps.canceladas.length !== canceladas.length)
+      this.setState({
+        canceladasListFiltered: canceladas
+      });
+  }
+
+  onPesquisaChanged(event) {
+    if (event === undefined) event = { target: { value: "" } };
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+
+    let pendentesListFiltered = pendentes;
+    let autorizadasListFiltered = autorizadas;
+    let negadasListFiltered = negadas;
+    let canceladasListFiltered = canceladas;
+
+    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
+    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
+    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+
+    this.setState({
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    });
+  }
+
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
   }
 
   alterarCollapse() {
@@ -35,16 +93,14 @@ export class DashboardEscola extends Component {
   }
 
   render() {
-    const { collapsed } = this.state;
     const {
-      numeroAlunos,
-      autorizadas,
-      pendentes,
-      negadas,
-      canceladas,
-      theadList,
-      trs
-    } = this.props;
+      collapsed,
+      pendentesListFiltered,
+      autorizadasListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    } = this.state;
+    const { numeroAlunos, theadList, trs } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -99,24 +155,25 @@ export class DashboardEscola extends Component {
         <CardBody
           titulo={"Painel de Status de Solicitações"}
           dataAtual={dataAtual()}
+          onChange={this.onPesquisaChanged}
         >
           <div className="row">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Autorizadas"}
-                cardType={CARD_TYPE_ENUM.APROVADO}
-                solicitations={autorizadas}
-                icon={"fa-check"}
-                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
+                cardTitle={"Pendente Aprovação"}
+                cardType={CARD_TYPE_ENUM.PENDENTE}
+                solicitations={pendentesListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.PENDENTE}
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
               />
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Pendente Aprovação"}
-                cardType={CARD_TYPE_ENUM.PENDENTE}
-                solicitations={pendentes}
-                icon={"fa-exclamation-triangle"}
-                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
+                cardTitle={"Autorizadas"}
+                cardType={CARD_TYPE_ENUM.APROVADO}
+                solicitations={autorizadasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.APROVADO}
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
             </div>
           </div>
@@ -124,9 +181,9 @@ export class DashboardEscola extends Component {
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Recusadas"}
-                cardType={"card-denied"}
-                solicitations={negadas}
-                icon={"fa-ban"}
+                cardType={CARD_TYPE_ENUM.NEGADO}
+                solicitations={negadasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.NEGADO}
                 href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               />
             </div>
@@ -134,8 +191,8 @@ export class DashboardEscola extends Component {
               <CardStatusDeSolicitacao
                 cardTitle={"Canceladas"}
                 cardType={CARD_TYPE_ENUM.CANCELADO}
-                solicitations={canceladas}
-                icon={"fa-times-circle"}
+                solicitations={canceladasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.CANCELADO}
                 href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />
             </div>

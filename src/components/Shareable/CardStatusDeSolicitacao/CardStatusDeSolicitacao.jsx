@@ -9,6 +9,13 @@ export const CARD_TYPE_ENUM = {
   NEGADO: "card-denied"
 };
 
+export const ICON_CARD_TYPE_ENUM = {
+  CANCELADO: "fa-times-circle",
+  PENDENTE: "fa-exclamation-triangle",
+  APROVADO: "fa-check",
+  NEGADO: "fa-ban"
+};
+
 export const CardStatusDeSolicitacao = props => {
   const { cardTitle, cardType, solicitations, icon, href, loading } = props;
   return (
@@ -26,7 +33,7 @@ export const CardStatusDeSolicitacao = props => {
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
-          <NavLink to={solicitation.link}>
+          <NavLink to={solicitation.link} key={key}>
             <p className="data">
               {solicitation.text}
               <span className="float-right">{solicitation.date}</span>
