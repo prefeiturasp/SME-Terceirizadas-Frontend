@@ -48,7 +48,11 @@ export class CardKit extends Component {
           </div>
           {!esconderDetalhamentoKits &&
             itens.map((item, key) => {
-              return <div key={key} className={`item-meal-kit`}>{item.nome}</div>;
+              return (
+                <div key={key} className={`item-meal-kit`}>
+                  {item.nome}
+                </div>
+              );
             })}
         </div>
       </div>

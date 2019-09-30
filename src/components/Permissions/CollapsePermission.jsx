@@ -52,7 +52,9 @@ class collapsePermission extends Component {
                 aria-controls={idProfile}
               >
                 <i
-                  className={open ? "fas fa-minus-circle" : "fas fa-plus-circle"}
+                  className={
+                    open ? "fas fa-minus-circle" : "fas fa-plus-circle"
+                  }
                 />
               </button>
             </div>

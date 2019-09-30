@@ -129,7 +129,7 @@ export class CardHistorico extends Component {
                   {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <tr className="row c-pointer" indice={key}>
+                        <tr key={key} className="row c-pointer" indice={key}>
                           {this.redirectTo(pedido)}
                           <td className="td-check col-4">
                             <label
