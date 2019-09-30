@@ -18,8 +18,8 @@ export const TextArea = props => {
   return (
     <div className="textarea">
       {label && [
-        required && <span className="required-asterisk">*</span>,
-        <label htmlFor={name} className="col-form-label">
+        required && <span key={1} className="required-asterisk">*</span>,
+        <label key={2} htmlFor={name} className="col-form-label">
           {label}
         </label>
       ]}

@@ -90,7 +90,7 @@ export class TextAreaWYSIWYG extends Component {
       <div className="textarea" id="react-wysiwyg">
         {label && [
           required && <span className="required-asterisk">*</span>,
-          <label htmlFor={name} className="col-form-label">
+          <label key={1} htmlFor={name} className="col-form-label">
             {label}
           </label>
         ]}
@@ -121,7 +121,7 @@ export class TextAreaWYSIWYG extends Component {
           }}
           toolbarCustomButtons={
             temOpcoesCustomizadas && [
-              <OpcoesCustomizadas
+              <OpcoesCustomizadas key={1}
                 editorState={editorState}
                 onChange={this.handleChange}
               />
