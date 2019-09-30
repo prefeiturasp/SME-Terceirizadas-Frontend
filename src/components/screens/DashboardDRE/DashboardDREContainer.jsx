@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { getDiretoriaregionalDetalhe } from "../../../services/diretoriaRegional.service";
 import {
   getSolicitacoesAutorizadasDRE,
-  getSolicitacoesPendentesDRE
+  getSolicitacoesCanceladasDRE,
+  getSolicitacoesPendentesDRE,
+  getSolicitacoesRecusadasDRE
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
@@ -61,8 +63,9 @@ class DashboardDREContainer extends Component {
     const dreUuid = meusDados.diretorias_regionais[0].uuid;
     let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
     let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
+    let recusadas = await getSolicitacoesRecusadasDRE(dreUuid);
+    let canceladas = await getSolicitacoesCanceladasDRE(dreUuid);
     const minhaDRE = await getDiretoriaregionalDetalhe(dreUuid);
-
     const lotesDRE = (await minhaDRE).data.lotes;
 
     getSuspensoesDeAlimentacaoInformadas().then(response => {
@@ -72,11 +75,20 @@ class DashboardDREContainer extends Component {
 
     autorizadas = ajustarFormatoLog(autorizadas.results, LOG_PARA.DRE);
     pendentes = ajustarFormatoLog(pendentes.results, LOG_PARA.DRE);
+    recusadas = ajustarFormatoLog(recusadas.results, LOG_PARA.DRE);
+    canceladas = ajustarFormatoLog(canceladas.results, LOG_PARA.DRE);
+
     this.setState({
       autorizadasList: autorizadas,
       pendentesList: pendentes,
+      recusadasList: recusadas,
+      canceladasList: canceladas,
+
       autorizadasListFiltered: autorizadas,
       pendentesListFiltered: pendentes,
+      recusadasListFiltered: recusadas,
+      canceladasListFiltered: canceladas,
+
       meusDados,
       loadingAutorizadas: false,
       loadingPendentes: false,

@@ -270,3 +270,59 @@ export const getResumoPendenciasSuspensaoCardapio = async (
 
   return resposta;
 };
+
+export const getResumoPendenciasCODAEporDRE = async () => {
+  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
+
+  const reducer = (resumoPorDRE, corrente) => {
+    if (!resumoPorDRE[corrente.dre_nome]) {
+      resumoPorDRE[corrente.dre_nome] = {};
+    }
+    if (corrente.prioridade !== "VENCIDO") {
+      resumoPorDRE[corrente.dre_nome][corrente.prioridade] = resumoPorDRE[
+        corrente.dre_nome
+      ][corrente.prioridade]
+        ? (resumoPorDRE[corrente.dre_nome][corrente.prioridade] += 1)
+        : 1;
+      resumoPorDRE[corrente.dre_nome]["TOTAL"] = resumoPorDRE[
+        corrente.dre_nome
+      ]["TOTAL"]
+        ? (resumoPorDRE[corrente.dre_nome]["TOTAL"] += 1)
+        : 1;
+    }
+    return resumoPorDRE;
+  };
+
+  let resumoPorDRE = solicitacoes.reduce(reducer, {});
+
+  return resumoPorDRE;
+};
+
+export const getResumoPendenciasCODAEporLote = async () => {
+  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
+
+  const reducer = (resumoPorLote, corrente) => {
+    if (!resumoPorLote[corrente.lote]) {
+      resumoPorLote[corrente.lote] = {};
+    }
+    if (corrente.prioridade !== "VENCIDO") {
+      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
+        corrente.lote
+      ][corrente.prioridade]
+        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
+        : 1;
+      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
+        "TOTAL"
+      ]
+        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
+        : 1;
+    }
+    return resumoPorLote;
+  };
+
+  let resumoPorLote = solicitacoes.reduce(reducer, {});
+
+  return resumoPorLote;
+};
