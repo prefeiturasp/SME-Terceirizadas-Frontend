@@ -5,8 +5,8 @@ import {
   ESCOLA,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_NEGADAS,
-  SOLICITACOES_PENDENTES
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
@@ -184,7 +184,7 @@ export class DashboardEscola extends Component {
                 cardType={CARD_TYPE_ENUM.NEGADO}
                 solicitations={negadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
+                href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
               />
             </div>
             <div className="col-6">
