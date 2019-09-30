@@ -76,7 +76,7 @@ class DashboardTerceirizada extends Component {
               <div className="card-title font-weight-bold dashboard-card-title">
                 <span>
                   <i className="fas fa-thumbtack" />
-                  Acompanhamento de solicitações 
+                  Acompanhamento de solicitações
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">

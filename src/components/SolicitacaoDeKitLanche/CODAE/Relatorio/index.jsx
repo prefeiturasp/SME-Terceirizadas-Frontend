@@ -95,14 +95,20 @@ class Relatorio extends Component {
     aprovaDeKitLancheAvulsoCodae(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de Kit Lanche Passeio autorizada com sucesso!");
+          toastSuccess(
+            "Solicitação de Kit Lanche Passeio autorizada com sucesso!"
+          );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio");
+          toastError(
+            "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio");
+        toastError(
+          "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
+        );
       }
     );
   }
@@ -123,7 +129,8 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Solicitação de Kit Lanche Passeio # {solicitacaoKitLanche.id_externo}
+              Solicitação de Kit Lanche Passeio #{" "}
+              {solicitacaoKitLanche.id_externo}
               <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
                 <Botao
                   texto="voltar"

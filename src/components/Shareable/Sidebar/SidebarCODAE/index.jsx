@@ -123,7 +123,8 @@ export class SidebarCODAE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit <br />Lanche Passeio
+                  Solicitação de Kit <br />
+                  Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"

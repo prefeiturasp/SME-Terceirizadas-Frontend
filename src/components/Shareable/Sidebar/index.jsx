@@ -17,7 +17,13 @@ export class Sidebar extends Component {
 
   render() {
     const { perfil } = this.state;
-    const { nome, toggle, toggled, registro_funcional, nome_instituicao } = this.props;
+    const {
+      nome,
+      toggle,
+      toggled,
+      registro_funcional,
+      nome_instituicao
+    } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -32,25 +38,26 @@ export class Sidebar extends Component {
             <div className="testing-sidebar row">
               <div
                 onClick={() => this.setState({ perfil: "escola" })}
-                className={`col-2 ${perfil == "escola" && "font-weight-bold"}`}
+                className={`col-2 ${perfil === "escola" && "font-weight-bold"}`}
               >
                 Escola
               </div>
               <div
                 onClick={() => this.setState({ perfil: "dre" })}
-                className={`col-2 ${perfil == "dre" && "font-weight-bold"}`}
+                className={`col-2 ${perfil === "dre" && "font-weight-bold"}`}
               >
                 DRE
               </div>
               <div
                 onClick={() => this.setState({ perfil: "codae" })}
-                className={`col-2 ${perfil == "codae" && "font-weight-bold"}`}
+                className={`col-2 ${perfil === "codae" && "font-weight-bold"}`}
               >
                 CODAE
               </div>
               <div
                 onClick={() => this.setState({ perfil: "terceirizada" })}
-                className={`col-2 ${perfil == "terceirizada" && "font-weight-bold"}`}
+                className={`col-2 ${perfil === "terceirizada" &&
+                  "font-weight-bold"}`}
               >
                 Terceirizada
               </div>
@@ -95,10 +102,9 @@ export class Sidebar extends Component {
           <div className="sidebar-wrapper">
             <div className="text-center mx-auto justify-content-center p-2">
               <span className="text-bold text-white small">
-                RF: {registro_funcional} <br/>
+                RF: {registro_funcional} <br />
                 {nome_instituicao}
               </span>
-
             </div>
           </div>
           <div className="sidebar-wrapper">

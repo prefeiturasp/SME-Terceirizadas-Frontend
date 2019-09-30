@@ -157,7 +157,8 @@ class DashboardCODAE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Aprovação                </span>
+                  Solicitação Aguardando Aprovação{" "}
+                </span>
                 <span>
                   <i className="fas fa-ban" />
                   Solicitação Negadas

@@ -29,7 +29,7 @@ export default class Page extends Component {
       this.setState({
         nome: meusDados.nome,
         nome_instituicao: meusDados.escolas[0].nome,
-        registro_funcional: meusDados.registro_funcional || "N/A",
+        registro_funcional: meusDados.registro_funcional || "N/A"
       });
     } else {
       this.setState({ nome: sessionStorage.getItem("nome") });
@@ -37,7 +37,13 @@ export default class Page extends Component {
   }
 
   render() {
-    const { nome, perfil, nome_instituicao, registro_funcional, toggled } = this.state;
+    const {
+      nome,
+      perfil,
+      nome_instituicao,
+      registro_funcional,
+      toggled
+    } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">

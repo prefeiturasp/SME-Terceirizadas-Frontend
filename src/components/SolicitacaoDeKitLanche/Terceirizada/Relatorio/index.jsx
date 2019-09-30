@@ -134,7 +134,8 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Solicitação de Kit Lanche Passeio # {solicitacaoKitLanche.id_externo}
+              Solicitação de Kit Lanche Passeio #{" "}
+              {solicitacaoKitLanche.id_externo}
               <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                 <Botao
                   texto="voltar"
