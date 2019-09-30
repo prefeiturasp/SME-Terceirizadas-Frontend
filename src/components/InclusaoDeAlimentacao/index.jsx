@@ -617,7 +617,10 @@ class InclusaoDeAlimentacao extends Component {
                 </div>
                 {inclusoes.map((diaMotivo, indice) => {
                   return (
-                    <FormSection key={indice} name={`inclusoes_${diaMotivo.id}`}>
+                    <FormSection
+                      key={indice}
+                      name={`inclusoes_${diaMotivo.id}`}
+                    >
                       <section>
                         <div className="grid_principal">
                           <div>
@@ -754,7 +757,10 @@ class InclusaoDeAlimentacao extends Component {
                 </div>
                 {periodos.map((periodo, indice) => {
                   return (
-                    <FormSection key={indice} name={`quantidades_periodo_${periodo.nome}`}>
+                    <FormSection
+                      key={indice}
+                      name={`quantidades_periodo_${periodo.nome}`}
+                    >
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
                         <div className="form-check col-md-3 mr-4">

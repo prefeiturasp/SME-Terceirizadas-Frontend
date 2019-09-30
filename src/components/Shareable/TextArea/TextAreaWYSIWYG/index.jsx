@@ -121,7 +121,8 @@ export class TextAreaWYSIWYG extends Component {
           }}
           toolbarCustomButtons={
             temOpcoesCustomizadas && [
-              <OpcoesCustomizadas key={1}
+              <OpcoesCustomizadas
+                key={1}
                 editorState={editorState}
                 onChange={this.handleChange}
               />

@@ -386,6 +386,7 @@ export class LabelAndTextArea extends Component {
           toolbarCustomButtons={
             temOpcoesCustomizadas && [
               <OpcoesCustomizadas
+                key={1}
                 editorState={editorState}
                 onChange={this.handleChange}
               />

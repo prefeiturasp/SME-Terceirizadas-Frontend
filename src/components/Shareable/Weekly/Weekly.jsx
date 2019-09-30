@@ -60,14 +60,15 @@ export default class Weekly extends Component {
       <div className={`weekly ${props.classNameArgs || ""}`}>
         {props.label && [
           props.required && <span className="required-asterisk">*</span>,
-          <label htmlFor={props.name} className="col-form-label">
+          <label key={1} htmlFor={props.name} className="col-form-label">
             {props.label}
           </label>
         ]}
         <div>
           {week.map((day, key) => {
             return (
-              <span key={key}
+              <span
+                key={key}
                 onClick={() => this.handleClick(day.value)}
                 className={
                   arrayToUse.includes(day.value)

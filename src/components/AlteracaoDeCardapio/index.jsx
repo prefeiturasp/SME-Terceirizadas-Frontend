@@ -448,7 +448,10 @@ class AlteracaoCardapio extends Component {
                   );
 
                   return (
-                    <FormSection name={`substituicoes_${period.nome}`}>
+                    <FormSection
+                      key={key}
+                      name={`substituicoes_${period.nome}`}
+                    >
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
                         <div className="form-check col-md-3 mr-4 ml-4">

@@ -6,7 +6,9 @@ export const EmpresaDoLote = props => {
   const { empresa, ativo } = props;
   if (empresa === undefined || !ativo) return <tr />;
   return [
-    <td key={1} className={"link"}>{empresa.nome_fantasia}</td>,
+    <td key={1} className={"link"}>
+      {empresa.nome_fantasia}
+    </td>,
     <td key={2} className={"blueish"}>
       <span>CNPJ: </span>
       {mascaraCNPJ(empresa.cnpj)}

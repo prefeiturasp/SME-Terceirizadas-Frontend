@@ -83,7 +83,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li  key={2} className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"

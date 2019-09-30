@@ -19,7 +19,7 @@ export class SidebarCODAE extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li  key={1} className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
