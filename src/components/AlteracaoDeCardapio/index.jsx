@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { Select } from "../Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
@@ -11,7 +13,10 @@ import { LabelAndCombo } from "../Shareable/labelAndInput/labelAndInput";
 import { deleteAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { InputComData } from "../Shareable/DatePicker";
-
+import { InputText } from "../Shareable/Input/InputText";
+import { montaPeriodoDeAlteracao } from "./helper";
+import { formatarParaMultiselect } from "../../helpers/utilities";
+import { agregarDefault } from "../../helpers/utilities";
 import "./style.scss";
 
 const ENTER = 13;
@@ -29,38 +34,19 @@ class AlteracaoCardapio extends Component {
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
 
-      options: {
-        MANHA: [],
-        TARDE: [],
-        NOITE: [],
-        INTEGRAL: []
-      }
+      substituicoesAlimentacao: []
     };
-  }
-
-  OnDeleteButtonClicked(id_externo, uuid) {
-    if (window.confirm("Deseja remover este rascunho?")) {
-      deleteAlteracaoCardapio(uuid).then(
-        statusCode => {
-          if (statusCode === HTTP_STATUS.NO_CONTENT) {
-            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-            this.refresh();
-          } else {
-            toastError("Houve um erro ao excluir o rascunho");
-          }
-        },
-        function(error) {
-          toastError("Houve um erro ao excluir o rascunho");
-        }
-      );
-    }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.setState({
-        periodos: this.props.periodos
+      let periodos = this.state.periodos;
+      let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
+      this.props.periodos.forEach((periodo, indice) => {
+        substituicoesAlimentacao.push({ substituicoes: null });
+        periodos.push(montaPeriodoDeAlteracao(periodo));
       });
+      this.setState({ periodos });
     }
     const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading, periodos } = this.state;
@@ -77,37 +63,51 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  resetForm(event) {
-    this.props.reset("alteracaoCardapio");
-    this.props.loadAlteracaoCardapio(null);
-    this.setState({
-      status: "SEM STATUS",
-      title: "Nova Alteração de Cardápio",
-      id: "",
-      showModal: false,
-      salvarAtualizarLbl: "Salvar Rascunho",
-      dias_razoes: [
-        {
-          id: Math.floor(Math.random() * (1000000 - 9999999)) + 1000000,
-          data: null,
-          motivo: null,
-          observacao: null,
-          data_inicial: null,
-          data_final: null,
-          weekdays: []
-        }
-      ],
-      options: {
-        MANHA: [],
-        TARDE: [],
-        NOITE: [],
-        INTEGRAL: []
-      }
-    });
+  resetAlteracao() {
+    console.log(this.props);
+    this.props.reset("values.substituicoes_MANHA.tipo_alimentacao_para");
   }
 
+  atualizaPeriodoCheck(input, indice) {
+    let periodos = this.state.periodos;
+    periodos[indice].checado = !periodos[indice].checado;
+    this.props.change(input, periodos[indice].checado);
+    this.setState({ periodos });
+  }
+
+  handleSelectedChanged = (selectedOptions, periodo) => {
+    let opcoesDe = this.state.opcoesDe;
+    opcoesDe[periodo.nome] = selectedOptions;
+    this.setState({
+      ...this.state,
+      opcoesDe: opcoesDe
+    });
+    this.props.change(
+      `substituicoes_${periodo.nome}.tipo_de_refeicao`,
+      selectedOptions
+    );
+  };
+
+  selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
+    let periodos = this.state.periodos;
+    const tiposAlimentacao = periodos[indice].tipos_alimentacao;
+    let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
+    tiposAlimentacao.forEach(tipoAlimentacao => {
+      if (tipoAlimentacao.uuid === alimentacaoUUID) {
+        substituicoesAlimentacao[indice].substituicoes =
+          tipoAlimentacao.substituicoes;
+      }
+    });
+    this.setState({ substituicoesAlimentacao });
+  };
+
   render() {
-    const { loading, alteracaoCardapioList, title } = this.state;
+    const {
+      loading,
+      alteracaoCardapioList,
+      periodos,
+      substituicoesAlimentacao
+    } = this.state;
     const {
       handleSubmit,
       meusDados,
@@ -188,52 +188,81 @@ class AlteracaoCardapio extends Component {
                   <div>N° de alunos</div>
                 </header>
 
-                <section className="item-periodo-alimentacao">
-                  <Fragment>
-                    <label htmlFor="check" className="checkbox-label">
-                      <Field component={"input"} type="checkbox" name="check" />
-                      <span
-                        // onClick={() =>
-                        //   this.props.change(
-                        //     `substituicoes_${period.nome}.check`,
-                        //     !checkMap[period.nome]
-                        //   )
-                        // }
-                        className="checkbox-custom"
+                {periodos.map((periodo, indice) => {
+                  this.props.change(
+                    `substituicoes_${periodo.nome}.periodo`,
+                    periodo.uuid
+                  );
+                  return (
+                    <FormSection
+                      name={`substituicoes_${periodo.nome}`}
+                      className="item-periodo-alimentacao"
+                      key={indice}
+                    >
+                      <Fragment>
+                        <label
+                          htmlFor="check"
+                          className="checkbox-label"
+                          style={{
+                            background: periodo.style.background,
+                            border: `1px solid ${periodo.style.borderColor}`
+                          }}
+                        >
+                          <Field
+                            component={"input"}
+                            type="checkbox"
+                            name="check"
+                          />
+                          <span
+                            onClick={() => {
+                              this.atualizaPeriodoCheck(
+                                `substituicoes_${periodo.nome}.check`,
+                                indice,
+                                periodo.nome
+                              );
+                              this.resetAlteracao();
+                            }}
+                            className="checkbox-custom"
+                          />
+                          <div className=""> {periodo.nome}</div>
+                        </label>
+                      </Fragment>
+
+                      <Field
+                        component={Select}
+                        name="tipo_alimentacao_de"
+                        options={agregarDefault(periodo.tipos_alimentacao)}
+                        disabled={!periodo.checado}
+                        onChange={event => {
+                          this.selectSubstituicoesAlimentacaoAPartirDe(
+                            event.target.value,
+                            indice
+                          );
+                        }}
                       />
-                      <div className="teste">MANHÃ</div>
-                    </label>
-                  </Fragment>
 
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                </section>
+                      <Field
+                        component={Select}
+                        name="tipo_alimentacao_para"
+                        disabled={!periodo.checado}
+                        options={agregarDefault(
+                          substituicoesAlimentacao[indice].substituicoes !==
+                            null
+                            ? substituicoesAlimentacao[indice].substituicoes
+                            : []
+                        )}
+                      />
 
-                <section className="item-periodo-alimentacao">
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                </section>
-                <section className="item-periodo-alimentacao">
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                </section>
-                <section className="item-periodo-alimentacao">
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                </section>
-                <section className="item-periodo-alimentacao">
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                  <div className="cor-teste">.</div>
-                </section>
+                      <Field
+                        component={InputText}
+                        type="number"
+                        name="numero_de_alunos"
+                        min="0"
+                        className="form-control"
+                      />
+                    </FormSection>
+                  );
+                })}
               </article>
             </section>
           </form>

@@ -4,16 +4,16 @@
   align-items: flex-end;
 }
 
-.cor-teste{
+.cor-teste {
   background-color: aquamarine;
 }
 
-.section-form-datas{
+.section-form-datas {
   display: grid;
   grid-template-columns: 22% 3% 22% 22% auto;
   grid-column-gap: 2%;
 
-  .opcao-data{
+  .opcao-data {
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -21,42 +21,49 @@
   }
 }
 
-.section-form-motivo{
+.section-form-motivo {
   display: grid;
   grid-template-columns: 94% auto;
   grid-column-gap: 2%;
 
-  div{
+  div {
     margin: 0;
-    padding: 0
+    padding: 0;
   }
 }
 
-.descricao-periodos-alimentacao{
+.descricao-periodos-alimentacao {
   display: grid;
   grid-template-columns: 27% 29% 29% auto;
   grid-column-gap: 2%;
   margin-bottom: 0.5em;
 
-  div{
+  div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
 }
 
-.item-periodo-alimentacao{
+.item-periodo-alimentacao {
   display: grid;
   grid-template-columns: 27% 29% 29% auto;
   grid-column-gap: 2%;
   margin-bottom: 0.5em;
 
-  .checkbox-custom{
-    left: 0 !important;
-  }
-}
+  .checkbox-label {
+    height: auto;
+    max-height: 39px;
+    border-radius: 4px;
 
-.teste{
-  position: absolute;
-  margin-left: 12%;
+    span {
+      left: 0;
+      margin: 0.5em;
+    }
+
+    div {
+      position: relative;
+      margin: 0.5em 0 0 3em;
+    }
+  }
 }
