@@ -26,14 +26,24 @@ export default class Page extends Component {
     if (!sessionStorage.getItem("meusDados")) {
       const meusDados = await getMeusDados();
       sessionStorage.setItem("nome", JSON.stringify(meusDados.nome));
-      this.setState({ nome: meusDados.nome });
+      this.setState({
+        nome: meusDados.nome,
+        nome_instituicao: meusDados.escolas[0].nome,
+        registro_funcional: meusDados.registro_funcional || "N/A"
+      });
     } else {
       this.setState({ nome: sessionStorage.getItem("nome") });
     }
   }
 
   render() {
-    const { nome, perfil, toggled } = this.state;
+    const {
+      nome,
+      perfil,
+      nome_instituicao,
+      registro_funcional,
+      toggled
+    } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">
@@ -43,6 +53,8 @@ export default class Page extends Component {
           perfil={perfil}
           toggle={this.toggle}
           toggled={toggled}
+          registro_funcional={registro_funcional}
+          nome_instituicao={nome_instituicao}
         />
         <div id="content-wrapper" className="pt-5">
           <div

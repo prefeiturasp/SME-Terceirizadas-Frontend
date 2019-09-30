@@ -97,14 +97,20 @@ class Relatorio extends Component {
     aprovaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de Kit Lanche validada com sucesso!");
+          toastSuccess(
+            "Solicitação de Kit Lanche Passeio validada com sucesso!"
+          );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
+          toastError(
+            "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
+        toastError(
+          "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
+        );
       }
     );
   }
@@ -125,7 +131,7 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
+              Kit Lanche Passeio Pedido # {solicitacaoKitLanche.id_externo}
             </span>
             <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
               <Botao

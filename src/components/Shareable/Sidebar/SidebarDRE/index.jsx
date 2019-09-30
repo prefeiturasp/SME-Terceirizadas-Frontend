@@ -53,21 +53,20 @@ export class SidebarDRE extends Component {
               className="collapse-item"
               to={`/${DRE}/solicitacoes-autorizadas`}
             >
-              Solicitações Autorizadas
+              Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${DRE}/solicitacoes-pendentes`}
             >
-              Solicitações Pendentes <br />
-              de Autorização
+              Aguardando aprovação
             </NavLink>
             <NavLink activeClassName="active" className="collapse-item" to="#">
-              Solicitações Recusadas
+              Negadas
             </NavLink>
             <NavLink activeClassName="active" className="collapse-item" to="#">
-              Solicitações Canceladas
+              Canceladas
             </NavLink>
           </div>
         </div>
@@ -81,7 +80,7 @@ export class SidebarDRE extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-edit" />
-          <span>Solicitações</span>
+          <span>Novas solicitações</span>
         </NavLink>
         <div
           id="collapseSolicitacoes"
@@ -148,14 +147,14 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação Unificada
+                  Unificada
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -203,7 +202,7 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"

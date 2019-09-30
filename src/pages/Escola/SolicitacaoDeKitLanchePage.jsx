@@ -6,7 +6,7 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/escola/solicitacao-de-kit-lanche",
-  titulo: "Solicitação de Kit Lanche"
+  titulo: "Solicitação de Kit Lanche Passeio"
 };
 
 export default props => (

@@ -48,7 +48,7 @@ export class ModalCadastroEdital extends Component {
                       {edital_contratos.tipo_contratacao}
                     </div>
                     <div>
-                      <span>Edital nº:</span> {edital_contratos.numero}
+                      <span>Nº do edital:</span> {edital_contratos.numero}
                     </div>
                     <div>
                       <span>Processo administrativo do contrato:</span>{" "}

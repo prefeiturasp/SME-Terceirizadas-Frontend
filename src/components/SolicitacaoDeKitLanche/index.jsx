@@ -45,7 +45,7 @@ export class SolicitacaoDeKitLanche extends Component {
       rascunhosSolicitacoesKitLanche: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho",
+      salvarAtualizarLbl: "Rascunho",
       showModal: false,
       modalConfirmation: false,
       modalMessage: "",
@@ -101,7 +101,9 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação de Kit Lanche # ${solicitacaoKitLanche.id_externo}`,
+      title: `Solicitação de Kit Lanche Passeio/Passeio # ${
+        solicitacaoKitLanche.id_externo
+      }`,
       salvarAtualizarLbl: "Atualizar",
       kitsChecked: extrairKitsLanche(
         solicitacaoKitLanche.solicitacao_kit_lanche.kits
@@ -115,7 +117,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho",
+      salvarAtualizarLbl: "Rascunho",
       qtd_kit_lanche: 0,
       initialValues: true,
       kitsChecked: []
@@ -176,14 +178,20 @@ export class SolicitacaoDeKitLanche extends Component {
     inicioPedido(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de Kit Lanche enviada com sucesso!");
+          toastSuccess(
+            "Solicitação de Kit Lanche Passeio enviada com sucesso!"
+          );
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Solicitação de Kit Lanche");
+          toastError(
+            "Houve um erro ao enviar a Solicitação de Kit Lanche Passeio"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao enviar a Solicitação de Kit Lanche");
+        toastError(
+          "Houve um erro ao enviar a Solicitação de Kit Lanche Passeio"
+        );
       }
     );
   }
@@ -212,13 +220,15 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(resp.data.uuid);
             } else {
-              toastSuccess("Solicitação de Kit Lanche salva com sucesso!");
+              toastSuccess(
+                "Solicitação de Kit Lanche Passeio salva com sucesso!"
+              );
               this.resetForm();
             }
           } else if (resp.data.tipo_error) {
             this.validaTipoMensagemError(resp.data);
           } else {
-            toastError("Erro ao salvar Solicitação de Kit Lanche");
+            toastError("Erro ao salvar Solicitação de Kit Lanche Passeio");
           }
         })
         .catch(error => {
@@ -231,7 +241,9 @@ export class SolicitacaoDeKitLanche extends Component {
             if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(values.uuid);
             } else {
-              toastSuccess("Solicitação de Kit Lanche atualizada com sucesso!");
+              toastSuccess(
+                "Solicitação de Kit Lanche Passeio atualizada com sucesso!"
+              );
               this.resetForm();
             }
           } else if (resp.data.tipo_error) {
@@ -321,7 +333,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 <div className="col-3">
                   <Field
                     component={InputComData}
-                    label="Data do evento"
+                    label="Data do passeio"
                     name="evento_data"
                     onBlur={event => this.validaDiasUteis(event)}
                     minDate={proximos_dois_dias_uteis}

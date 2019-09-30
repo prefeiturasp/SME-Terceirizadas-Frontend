@@ -287,7 +287,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                Painel de Status de Solicitações
+                Acompanhamento de solicitações
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -305,7 +305,7 @@ class DashboardDRE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Pendente Aprovação"}
+                    cardTitle={"Aguardando Aprovação"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
@@ -327,7 +327,7 @@ class DashboardDRE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Recusadas"}
+                    cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={recusadasListFiltered}
                     icon={"fa-ban"}
@@ -354,11 +354,11 @@ class DashboardDRE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Pendente Aprovação
+                  Solicitação Aguardando Aprovação{" "}
                 </span>
                 <span>
                   <i className="fas fa-ban" />
-                  Solicitação Recusada
+                  Solicitação Negada
                 </span>
                 <span>
                   <i className="fas fa-times-circle" />
@@ -463,7 +463,7 @@ class DashboardDRE extends Component {
                     <div className="col-6">
                       <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
                         <CardPendencia
-                          cardTitle={"Kit Lanche"}
+                          cardTitle={"Kit Lanche Passeio Pansseio"}
                           totalOfOrders={resumoPendenciasDREKitLanche.total}
                           priorityOrders={
                             resumoPendenciasDREKitLanche.prioritario

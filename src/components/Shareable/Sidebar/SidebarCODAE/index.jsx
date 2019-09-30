@@ -49,29 +49,28 @@ export class SidebarCODAE extends Component {
               className="collapse-item"
               to={`/${CODAE}/solicitacoes`}
             >
-              Solicitações Autorizadas
+              Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${CODAE}/solicitacoes`}
             >
-              Solicitações Pendentes <br />
-              de Autorização
+              Pendentes de Autorização
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${CODAE}/solicitacoes`}
             >
-              Solicitações Recusadas
+              Negadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${CODAE}/solicitacoes`}
             >
-              Solicitações Canceladas
+              Canceladas
             </NavLink>
           </div>
         </div>
@@ -124,7 +123,8 @@ export class SidebarCODAE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit <br />
+                  Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -179,7 +179,7 @@ export class SidebarCODAE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"

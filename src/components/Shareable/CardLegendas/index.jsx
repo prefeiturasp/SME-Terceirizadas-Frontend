@@ -10,7 +10,7 @@ export default () => (
       </span>
       <span className="mr-5">
         <i className="fas fa-exclamation-triangle" />
-        Solicitação Pendente Aprovação
+        Solicitação Aguardando Aprovação
       </span>
       <span className="mr-5">
         <i className="fas fa-ban" />

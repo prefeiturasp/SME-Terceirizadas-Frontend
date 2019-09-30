@@ -189,7 +189,7 @@ class Relatorio extends Component {
                 </div>
               </div>
               <div className="esquerda">
-                <div className="descricao-titulo">Data do evento</div>
+                <div className="descricao-titulo">Data do passeio</div>
                 <div className="descricao-observacao">
                   {solicitacaoUnificada.solicitacao_kit_lanche.data}
                 </div>

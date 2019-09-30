@@ -516,7 +516,6 @@ class SolicitacaoUnificada extends Component {
       showModal,
       schoolsFiltered,
       lotes,
-      kitsTotal,
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,
@@ -581,8 +580,8 @@ class SolicitacaoUnificada extends Component {
                   <div className="col-9 pb-3">
                     <Field
                       component={InputText}
-                      label="Local do evento"
-                      placeholder="Insira o local do evento"
+                      label="Local do passeio"
+                      placeholder="Insira o local do passeio"
                       name="local"
                       className="form-control"
                       required
@@ -616,7 +615,7 @@ class SolicitacaoUnificada extends Component {
                       onClick={() => this.handleMultipleOrder()}
                       className="checkbox-custom"
                     />{" "}
-                    Realizar pedido múltiplo
+                    Realizar para várias unidades escolares
                   </label>
                 </div>
                 <Collapse isOpened={multipleOrder}>
@@ -632,7 +631,7 @@ class SolicitacaoUnificada extends Component {
                           )
                         }
                         type="number"
-                        label="Número máximo de alunos participantes por escola"
+                        label="Número máximo de alunos por unidade educacional"
                         required={multipleOrder === true}
                         validate={multipleOrder === true && [required]}
                       />
@@ -743,7 +742,7 @@ class SolicitacaoUnificada extends Component {
                                           event
                                         )
                                       }
-                                      label="Nº de alunos participantes"
+                                      label="Nº padrão por unidade educacional"
                                       validate={
                                         school.checked &&
                                         !multipleOrder && [
@@ -795,14 +794,6 @@ class SolicitacaoUnificada extends Component {
                       </label>
                       <label className="default-label">
                         {schoolsTotal || 0}
-                      </label>
-                    </div>
-                    <div className="d-grid float-right">
-                      <label className="default-label">Total de Kits</label>
-                      <label className="default-label">
-                        {multipleOrder
-                          ? kitsChecked.length * studentsTotal
-                          : kitsTotal}
                       </label>
                     </div>
                   </div>

@@ -153,7 +153,7 @@ export class DashboardEscola extends Component {
           </Collapse>
         </CardMatriculados>
         <CardBody
-          titulo={"Painel de Status de Solicitações"}
+          titulo={"Acompanhamento solicitações"}
           dataAtual={dataAtual()}
           onChange={this.onPesquisaChanged}
         >
@@ -169,7 +169,7 @@ export class DashboardEscola extends Component {
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Autorizadas"}
+                cardTitle={"Aguardando Aprovação"}
                 cardType={CARD_TYPE_ENUM.APROVADO}
                 solicitations={autorizadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.APROVADO}
@@ -180,7 +180,7 @@ export class DashboardEscola extends Component {
           <div className="row pt-3">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Recusadas"}
+                cardTitle={"Negadas"}
                 cardType={CARD_TYPE_ENUM.NEGADO}
                 solicitations={negadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.NEGADO}
@@ -226,11 +226,11 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Solicitação de Kit Lanche"}
+              titulo={"Solicitação de Kit Lanche Passeio"}
               texto={
-                "Quando houver necessidade da solicitação de Kit Lanche para consumo durante " +
+                "Quando houver necessidade da solicitação de Kit Lanche Passeio para consumo durante " +
                 "o passeio externo (situações em que não há possibilidade de oferecer a " +
-                "alimentação na própria unidade como por exemplo Kit Lanche para visitar " +
+                "alimentação na própria unidade como por exemplo Kit Lanche Passeio para visitar " +
                 "o museu)"
               }
               textoLink={"Novo pedido"}
