@@ -13,6 +13,7 @@ export default class DashboardEscolaContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      numeroAlunos: 0,
       meusDados: {},
       autorizadas: [
         {
@@ -86,6 +87,7 @@ export default class DashboardEscolaContainer extends Component {
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
     const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
+    const numeroAlunos = dadosMeus.escolas[0].quantidade_alunos;
 
     let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
     let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
@@ -98,7 +100,13 @@ export default class DashboardEscolaContainer extends Component {
     pendentes = ajustarFormatoLog(pendentes.results);
     negadas = ajustarFormatoLog(negadas.results);
     canceladas = ajustarFormatoLog(canceladas.results);
-    this.setState({ autorizadas, pendentes, negadas, canceladas });
+    this.setState({
+      autorizadas,
+      pendentes,
+      negadas,
+      canceladas,
+      numeroAlunos
+    });
   }
 
   render() {
@@ -108,12 +116,13 @@ export default class DashboardEscolaContainer extends Component {
       negadas,
       canceladas,
       theadList,
-      trs
+      trs,
+      numeroAlunos
     } = this.state;
     return (
       <div>
         <DashboardEscola
-          numeroAlunos={250}
+          numeroAlunos={numeroAlunos}
           autorizadas={autorizadas}
           pendentes={pendentes}
           negadas={negadas}
