@@ -11,8 +11,8 @@ import {
   SOLICITACAO_KIT_LANCHE,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_NEGADAS,
-  SOLICITACOES_PENDENTES
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
@@ -331,7 +331,7 @@ class DashboardDRE extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={recusadasListFiltered}
                     icon={"fa-ban"}
-                    href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
+                    href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
                     loading={loadingPendentes}
                   />
                 </div>
