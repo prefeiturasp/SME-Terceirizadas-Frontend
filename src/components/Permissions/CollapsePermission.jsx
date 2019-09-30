@@ -74,6 +74,7 @@ class collapsePermission extends Component {
             {permissionList.map((value, key) => {
               return (
                 <li
+                  key={key}
                   className="list-group-item pl-5"
                   id={idProfile}
                   aria-labelledby={idProfile}

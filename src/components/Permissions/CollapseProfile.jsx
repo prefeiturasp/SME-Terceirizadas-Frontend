@@ -82,6 +82,7 @@ class CollapseProfile extends Component {
               {profileList.map((value, key) => {
                 return (
                   <CollapsePermission
+                    key={key}
                     labelProfile={value.role}
                     idProfile={key}
                     permissionList={this.PERMISSIONS}

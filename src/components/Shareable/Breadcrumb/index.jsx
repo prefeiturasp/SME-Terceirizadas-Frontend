@@ -16,9 +16,9 @@ export default class Breadcrumb extends Component {
             </li>
             {anteriores &&
               anteriores.length > 0 &&
-              anteriores.map(anterior => {
+              anteriores.map((anterior, key) => {
                 return (
-                  <li>
+                  <li key={key}>
                     <Link className="is-active" exact to={anterior.href}>
                       {anterior.titulo}
                     </Link>

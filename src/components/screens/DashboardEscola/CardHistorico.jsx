@@ -70,14 +70,18 @@ const CardHistorico = props => {
               <table className="table">
                 <thead>
                   <td />
-                  {thead.map(value => {
-                    return <td scope="row">{value}</td>;
+                  {thead.map((value, key) => {
+                    return (
+                      <td key={key} scope="row">
+                        {value}
+                      </td>
+                    );
                   })}
                 </thead>
                 <tbody>
                   {trs.map((value, key) => {
                     return (
-                      <tr>
+                      <tr key={key}>
                         <th scope="row">
                           <Field
                             component={"input"}

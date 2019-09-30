@@ -95,7 +95,7 @@ export class CardHistorico extends Component {
                   {pedidos &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td className="td-check">
                             <label
                               htmlFor={`check_${pedido.uuid}`}
