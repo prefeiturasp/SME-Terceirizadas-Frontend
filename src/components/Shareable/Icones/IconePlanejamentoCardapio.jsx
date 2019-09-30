@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconePlanejamentoCardapio = props => {
+export const IconePlanejamentoCardapio = () => {
   return (
     <svg
       width="86"
