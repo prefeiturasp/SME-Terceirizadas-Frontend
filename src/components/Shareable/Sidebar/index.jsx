@@ -17,7 +17,7 @@ export class Sidebar extends Component {
 
   render() {
     const { perfil } = this.state;
-    const { nome, toggle, toggled } = this.props;
+    const { nome, toggle, toggled, RF, nome_instituicao } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -84,13 +84,21 @@ export class Sidebar extends Component {
                   <span className="d-none d-lg-inline text-bold text-white small border border-light rounded-pill p-1">
                     {nome}
                   </span>
-                  <span>nome da DRE/Escola ou Terceirizada a qual pertence</span>
                 </div>
               )}
               <div className="profile">
                 <i className="fas fa-user-edit" />
                 <span>Perfil</span>
               </div>
+            </div>
+          </div>
+          <div className="sidebar-wrapper">
+            <div className="text-center mx-auto justify-content-center p-2">
+              <span className="text-bold text-white small">
+                RF: {RF} <br/>
+                {nome_instituicao}
+              </span>
+
             </div>
           </div>
           <div className="sidebar-wrapper">

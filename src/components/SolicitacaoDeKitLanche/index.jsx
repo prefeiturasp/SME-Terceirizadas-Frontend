@@ -45,7 +45,7 @@ export class SolicitacaoDeKitLanche extends Component {
       rascunhosSolicitacoesKitLanche: [],
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho",
+      salvarAtualizarLbl: "Rascunho",
       showModal: false,
       modalConfirmation: false,
       modalMessage: "",
@@ -101,7 +101,7 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação de Kit Lanche # ${solicitacaoKitLanche.id_externo}`,
+      title: `Solicitação de Kit Lanche/Passeio # ${solicitacaoKitLanche.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       kitsChecked: extrairKitsLanche(
         solicitacaoKitLanche.solicitacao_kit_lanche.kits
@@ -115,7 +115,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho",
+      salvarAtualizarLbl: "Rascunho",
       qtd_kit_lanche: 0,
       initialValues: true,
       kitsChecked: []
@@ -321,7 +321,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 <div className="col-3">
                   <Field
                     component={InputComData}
-                    label="Data do evento"
+                    label="Data do passeio"
                     name="evento_data"
                     onBlur={event => this.validaDiasUteis(event)}
                     minDate={proximos_dois_dias_uteis}
