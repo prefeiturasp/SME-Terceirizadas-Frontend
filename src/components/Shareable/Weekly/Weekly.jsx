@@ -65,9 +65,9 @@ export default class Weekly extends Component {
           </label>
         ]}
         <div>
-          {week.map(day => {
+          {week.map((day, key) => {
             return (
-              <span
+              <span key={key}
                 onClick={() => this.handleClick(day.value)}
                 className={
                   arrayToUse.includes(day.value)

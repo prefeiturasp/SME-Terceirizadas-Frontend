@@ -113,6 +113,7 @@ export class CardHistorico extends Component {
                     pedidos.map((pedido, key) => {
                       return (
                         <Link
+                          key={key}
                           to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
                             pedido.uuid
                           }`}

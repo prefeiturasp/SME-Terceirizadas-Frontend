@@ -50,7 +50,7 @@ export const LabelAndInput = props => {
           readOnly={readOnly}
           type={type}
           min={min}
-          maxlength={max}
+          maxLength={max}
         />
         <If isVisible={hasIcon}>
           <i className="fas fa-pen" />
