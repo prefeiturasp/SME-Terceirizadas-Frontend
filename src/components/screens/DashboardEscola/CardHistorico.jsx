@@ -30,7 +30,7 @@ const CardHistorico = props => {
     <div id="accordion">
       <div className="card mt-3">
         <div className="card-header" id="headingOne" style={styleHeader}>
-          <i class="fas fa-history mr-2" />
+          <i className="fas fa-history mr-2" />
           {titulo}
           <a
             className="btn btn-link float-right"
@@ -45,7 +45,7 @@ const CardHistorico = props => {
         </div>
         <div
           id="collapseOne"
-          class="collapse"
+          className="collapse"
           aria-labelledby="headingOne"
           data-parent="#accordion"
         >
@@ -63,7 +63,7 @@ const CardHistorico = props => {
                   title="Imprimir solicitações selecionadas"
                   className="btn btn-link"
                 >
-                  <i class="fas fa-print" />
+                  <i className="fas fa-print" />
                 </button>
               </div>
               <div className="pb-3" />

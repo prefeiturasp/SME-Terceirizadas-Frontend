@@ -167,7 +167,7 @@ class Relatorio extends Component {
                 </div>
               </div>
               <div className="impressora">
-                <i class="fas fa-print" />
+                <i className="fas fa-print" />
               </div>
             </div>
 
