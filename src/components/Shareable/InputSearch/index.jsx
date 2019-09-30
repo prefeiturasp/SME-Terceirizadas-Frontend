@@ -12,7 +12,7 @@ export const InputSearch = props => (
           placeholder="Pesquisar"
           onChange={props.filterList}
         />
-        <i class="fas fa-search" />
+        <i className="fas fa-search" />
       </span>
       <div className="float-right">
         {!props.esconderImprimir && (
