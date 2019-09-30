@@ -67,8 +67,6 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(response => {
-          console.log("response: ", response);
-
           const dataMaisProxima =
             response.inclusoes && response.inclusoes[0].data;
           this.setState({

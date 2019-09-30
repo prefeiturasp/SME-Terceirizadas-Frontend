@@ -24,8 +24,8 @@
     "yoda": "error",
     "react/prop-types": 0,
     "react/display-name": 0,
-    "no-unused-vars": "off",
-    "no-string-refs": "off"
+    "no-class-assign": "off", // TODO: investigar  essa regra.
+    "react/no-string-refs": "off" // TODO: investigar  essa regra.
   },
   "settings": {
     "react": {
