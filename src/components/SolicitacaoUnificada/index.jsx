@@ -545,10 +545,7 @@ class SolicitacaoUnificada extends Component {
               <Collapse isOpened={!collapsed}>
                 <TabelaHistoricoLotes lotes={lotes} />
               </Collapse>
-              <div className="col-12 beside-text mt-auto">
-                Caso seja necessário personalizar alguma informação clique na UE desejada
-              </div>
-            </CardMatriculados>
+            </CardMatriculados>  
             {unifiedSolicitationList && unifiedSolicitationList.length > 0 && (
               <div className="mt-3">
                 <span className="page-title">Rascunhos</span>
@@ -583,8 +580,8 @@ class SolicitacaoUnificada extends Component {
                   <div className="col-9 pb-3">
                     <Field
                       component={InputText}
-                      label="Local do evento"
-                      placeholder="Insira o local do evento"
+                      label="Local do passeio"
+                      placeholder="Insira o local do passeio"
                       name="local"
                       className="form-control"
                       required

@@ -7,7 +7,7 @@ import { SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
 
 const atual = {
   href: `${SOLICITACAO_KIT_LANCHE}`,
-  titulo: "Solicitações de Kit Lanche"
+  titulo: "Solicitações de Kit Lanche Passeio"
 };
 
 export const PainelPedidosPage = () => (

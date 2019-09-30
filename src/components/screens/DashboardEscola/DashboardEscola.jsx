@@ -112,7 +112,7 @@ export class DashboardEscola extends Component {
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Pendente Aprovação"}
+                cardTitle={"Aguardando Aprovação"}
                 cardType={CARD_TYPE_ENUM.PENDENTE}
                 solicitations={pendentes}
                 icon={"fa-exclamation-triangle"}
@@ -169,11 +169,11 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Solicitação de Kit Lanche"}
+              titulo={"Solicitação de Kit Lanche Passeio"}
               texto={
-                "Quando houver necessidade da solicitação de Kit Lanche para consumo durante " +
+                "Quando houver necessidade da solicitação de Kit Lanche Passeio para consumo durante " +
                 "o passeio externo (situações em que não há possibilidade de oferecer a " +
-                "alimentação na própria unidade como por exemplo Kit Lanche para visitar " +
+                "alimentação na própria unidade como por exemplo Kit Lanche Passeio para visitar " +
                 "o museu)"
               }
               textoLink={"Novo pedido"}

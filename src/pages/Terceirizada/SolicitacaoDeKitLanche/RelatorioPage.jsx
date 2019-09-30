@@ -16,7 +16,7 @@ const atual = {
 const anteriores = [
   {
     href: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`,
-    titulo: "Solicitações de Kit Lanche"
+    titulo: "Solicitações de Kit Lanche Passeio"
   }
 ];
 

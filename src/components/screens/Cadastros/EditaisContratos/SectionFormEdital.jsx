@@ -26,7 +26,7 @@ export const SectionFormEdital = props => {
           <Field
             component={InputText}
             className="form-control"
-            label="N ° edital"
+            label="N° do edital"
             name="edital_numero"
             required
             validate={required}
@@ -41,7 +41,7 @@ export const SectionFormEdital = props => {
         <div>
           <Field
             component={InputText}
-            label="Processo administrativo n°"
+            label="Nº do processo administrativo"
             name="processo_administrativo"
             required
             validate={required}

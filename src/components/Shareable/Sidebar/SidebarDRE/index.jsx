@@ -147,14 +147,14 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit <br /> Lanche Passeio
+                  Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação Unificada
+                  Unificada
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -202,7 +202,7 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"

@@ -35,8 +35,8 @@ class EditaisCadastrados extends Component {
           <table className="cadastro-lote">
             <tr>
               <th>Tipos de contratação</th>
-              <th>N° edital</th>
-              <th colSpan="3">Processo administrativo n°</th>
+              <th>N° do edital</th>
+              <th colSpan="3">Nº do processo administrativo</th>
             </tr>
             {editais &&
               editais.map((edital, key_edital) => {

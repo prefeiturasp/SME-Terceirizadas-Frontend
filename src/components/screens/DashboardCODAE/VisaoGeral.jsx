@@ -174,7 +174,7 @@ class VisaoGeral extends Component {
           <div className="col-6">
             <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
               <CardPendencia
-                cardTitle={"Kit Lanche"}
+                cardTitle={"Kit Lanche Passeio"}
                 totalOfOrders={resumoPendenciasKitLancheAvulsa.total}
                 priorityOrders={resumoPendenciasKitLancheAvulsa.prioritario}
                 onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}

@@ -101,18 +101,18 @@ class Relatorio extends Component {
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
-            "Ciência de Solicitação de Kit Lanche enviada com sucesso!"
+            "Ciência de Solicitação de Kit Lanche Passeio enviada com sucesso!"
           );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
-            "Houve um erro ao tomar ciência da Solicitação de Kit Lanche"
+            "Houve um erro ao tomar ciência da Solicitação de Kit Lanche Passeio"
           );
         }
       },
       function(error) {
         toastError(
-          "Houve um erro ao tomar ciência da Solicitação de Kit Lanche"
+          "Houve um erro ao tomar ciência da Solicitação de Kit Lanche Passeio"
         );
       }
     );
@@ -134,7 +134,7 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Solicitação de Kit Lanche # {solicitacaoKitLanche.id_externo}
+              Solicitação de Kit Lanche Passeio # {solicitacaoKitLanche.id_externo}
               <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                 <Botao
                   texto="voltar"

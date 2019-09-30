@@ -120,7 +120,7 @@ export class SidebarEscola extends Component {
               className="collapse-item"
               to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
             >
-              Kit lanche Passeio
+              Kit Lanche Passeio
             </NavLink>
             <NavLink
               activeClassName="active"
@@ -242,14 +242,14 @@ export class SidebarEscola extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit <br /> Lanche Passeio
+                  Kit Lanche
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação Unificada
+                  Unificada
                 </NavLink>
                 <NavLink
                   activeClassName="active"

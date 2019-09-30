@@ -20,7 +20,7 @@ export class Rascunhos extends Component {
           <div className="draft card border rounded mt-3 p-3" key={id_externo}>
             <div className="mt-2">
               <label className="bold ml-3">
-                {`Solicitação de Kit Lanche/Passeio # ${id_externo}`}
+                {`Solicitação de Kit Lanche Passeio/Passeio # ${id_externo}`}
               </label>
               <span
                 className="ml-3 p-1 border rounded"

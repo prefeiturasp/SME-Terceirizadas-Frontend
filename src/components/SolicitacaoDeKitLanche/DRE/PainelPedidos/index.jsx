@@ -145,7 +145,7 @@ class PainelPedidos extends Component {
                         pedidos={formatarPedidos(pedidosAprovados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
-                          "Histórico de Solicitações de Kit Lanche Autorizadas"
+                          "Histórico de Solicitações de Kit Lanche Passeio Autorizadas"
                         }
                         parametroURL={DRE}
                       />
@@ -159,7 +159,7 @@ class PainelPedidos extends Component {
                         pedidos={formatarPedidos(pedidosReprovados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
-                          "Histórico de Solicitações de Kit Lanche reprovadas"
+                          "Histórico de Solicitações de Kit Lanche Passeio reprovadas"
                         }
                       />
                     </div>
