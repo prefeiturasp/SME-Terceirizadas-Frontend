@@ -3,4 +3,3 @@ export const FILTRO_VISAO = {
   LOTE: "lote",
   DRE: "dre"
 };
-
