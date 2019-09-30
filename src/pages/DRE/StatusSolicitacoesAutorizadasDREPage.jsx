@@ -11,7 +11,7 @@ const atual = {
   titulo: "Solicitações Autorizadas"
 };
 
-export default props => (
+export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <StatusSolicitacoes tipoStatus={STATUS.AUTORIZADAS} />
