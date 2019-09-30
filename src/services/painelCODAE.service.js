@@ -52,8 +52,8 @@ export const getSolicitacoesCanceladasCodae = async () => {
   }
 };
 
-export const getSolicitacoesPendentesAprovacaoCodae = async () => {
-  const url = `${API_URL}/codae-solicitacoes/pendentes-aprovacao/`;
+export const getSolicitacoesPendentesAprovacaoCodae = async filtro => {
+  const url = `${API_URL}/codae-solicitacoes/pendentes-aprovacao/${filtro}`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -271,9 +271,9 @@ export const getResumoPendenciasSuspensaoCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasCODAEporDRE = async () => {
+export const getResumoPendenciasCODAEporDRE = async filtro => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae(filtro);
 
   const reducer = (resumoPorDRE, corrente) => {
     if (!resumoPorDRE[corrente.dre_nome]) {
@@ -299,9 +299,9 @@ export const getResumoPendenciasCODAEporDRE = async () => {
   return resumoPorDRE;
 };
 
-export const getResumoPendenciasCODAEporLote = async () => {
+export const getResumoPendenciasCODAEporLote = async filtro => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae();
+  const solicitacoes = await getSolicitacoesPendentesAprovacaoCodae(filtro);
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
