@@ -36,7 +36,7 @@ class collapsePermission extends Component {
               aria-expanded={open}
               aria-controls={idProfile}
             >
-              <i class="fas fa-clipboard-check justify-content-end" />{" "}
+              <i className="fas fa-clipboard-check justify-content-end" />{" "}
               {labelProfile}
             </button>
 
@@ -52,7 +52,7 @@ class collapsePermission extends Component {
                 aria-controls={idProfile}
               >
                 <i
-                  class={open ? "fas fa-minus-circle" : "fas fa-plus-circle"}
+                  className={open ? "fas fa-minus-circle" : "fas fa-plus-circle"}
                 />
               </button>
             </div>

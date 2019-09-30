@@ -254,7 +254,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                   </div>
                   <div className="col-md-12 col-lg-2 for-span">
                     <span className="pr-3">para</span>
-                    <i class="fas fa-arrow-right" />
+                    <i className="fas fa-arrow-right" />
                   </div>
                   <div className="col-md-12 col-lg-5">
                     <Field

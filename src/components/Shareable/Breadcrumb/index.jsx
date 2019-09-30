@@ -11,7 +11,7 @@ export default class Breadcrumb extends Component {
           <ul className="br-breadcrumb">
             <li>
               <Link className={`home ${atual && "is-active"}`} exact to={home}>
-                <i class="fas fa-home" />
+                <i className="fas fa-home" />
               </Link>
             </li>
             {anteriores &&

@@ -4,7 +4,7 @@ import "./style.scss";
 
 export default props => (
   <div className="card card-shortcut">
-    <div class="card-header">{props.titulo}</div>
+    <div className="card-header">{props.titulo}</div>
     <div className="card-body">
       <p className="card-text">{props.texto}</p>
     </div>
