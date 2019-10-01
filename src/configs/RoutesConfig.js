@@ -29,8 +29,10 @@ import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimen
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
 import InversaoDiaCardapioRelatorioDREPage from "../pages/DRE/InversaoDiaCardapio/RelatorioPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
-import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/StatusSolicitacoesAutorizadasDREPage";
-import StatusSolicitacoesPendentesDREPage from "../pages/DRE/StatusSolicitacoesPendentesDREPage";
+import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesAutorizadasDREPage";
+import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
+import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
+import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -150,6 +152,16 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesDREPage,
+    exact: false
+  },
+  {
+    path: `/${constants.DRE}/${constants.SOLICITACOES_RECUSADAS}`,
+    component: StatusSolicitacoesRecusadasDREPage,
+    exact: false
+  },
+  {
+    path: `/${constants.DRE}/${constants.SOLICITACOES_CANCELADAS}`,
+    component: StatusSolicitacoesCanceladasDREPage,
     exact: false
   },
   {

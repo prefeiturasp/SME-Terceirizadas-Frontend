@@ -1,6 +1,8 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import "./style.scss";
+import { caminhoURL } from "./helper";
+import { NavLink } from "react-router-dom";
+import { RELATORIO } from "../../../configs/constants";
 
 export const CardStatusDeSolicitacaoLargo = props => {
   const { titulo, tipo, solicitacoes, icone } = props;
@@ -14,10 +16,21 @@ export const CardStatusDeSolicitacaoLargo = props => {
       <div className="card-body card-body-sme overflow-auto">
         {solicitacoes.map((solicitacao, key) => {
           return (
-            <NavLink key={key} to={solicitacao.link}>
+            <NavLink
+              key={key}
+              to={
+                solicitacao.link ||
+                `${caminhoURL(solicitacao.tipo_doc)}/${RELATORIO}?uuid=${
+                  solicitacao.uuid
+                }&ehInclusaoContinua=${solicitacao.tipo_doc ===
+                  "INC_ALIMENTA_CONTINUA"}`
+              }
+            >
               <p className="data">
-                {solicitacao.text}
-                <span className="mr-3 float-right">{solicitacao.date}</span>
+                {solicitacao.descricao || solicitacao.text}
+                <span className="mr-3 float-right">
+                  {solicitacao.data_log || solicitacao.date}
+                </span>
               </p>
             </NavLink>
           );

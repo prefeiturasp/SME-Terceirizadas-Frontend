@@ -5,7 +5,9 @@ import { CardStatusDeSolicitacaoLargo } from "../../../Shareable/CardStatusDeSol
 import { InputSearch } from "../../../Shareable/InputSearch";
 import {
   getSolicitacoesPendentesDRE,
-  getSolicitacoesAutorizadasDRE
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesRecusadasDRE,
+  getSolicitacoesCanceladasDRE
 } from "../../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../../services/perfil.service";
 
@@ -18,9 +20,9 @@ export class StatusSolicitacoesTodos extends Component {
       pendentesList: [],
       pendentesListFiltered: [],
       recusadasList: [],
+      recusadasListFiltered: [],
       canceladasList: [],
-      showAutorizadas: this.props.showAutorizadas,
-      showPendentes: this.props.showPendentes
+      canceladasListFiltered: []
     };
     this.filterList = this.filterList.bind(this);
     this.selecionarTodos = this.selecionarTodos.bind(this);
@@ -30,19 +32,20 @@ export class StatusSolicitacoesTodos extends Component {
   async componentDidMount() {
     const meusDados = await getMeusDados();
     const dreUUid = meusDados.diretorias_regionais[0].uuid;
-    const autorizadas = !this.state.showAutorizadas
-      ? []
-      : await getSolicitacoesAutorizadasDRE(dreUUid);
-
-    const pendentes = !this.state.showPendentes
-      ? []
-      : await getSolicitacoesPendentesDRE(dreUUid);
+    const autorizadas = await getSolicitacoesAutorizadasDRE(dreUUid);
+    const pendentes = await getSolicitacoesPendentesDRE(dreUUid);
+    const recusadas = await getSolicitacoesRecusadasDRE(dreUUid);
+    const canceladas = await getSolicitacoesCanceladasDRE(dreUUid);
 
     this.setState({
       autorizadasList: autorizadas.results,
       autorizadasListFiltered: autorizadas.results,
       pendentesList: pendentes.results,
-      pendentesListFiltered: pendentes.results
+      pendentesListFiltered: pendentes.results,
+      recusadasList: recusadas.results,
+      recusadasListFiltered: recusadas.results,
+      canceladasList: canceladas.results,
+      canceladasListFiltered: canceladas.results
     });
   }
 
@@ -59,37 +62,41 @@ export class StatusSolicitacoesTodos extends Component {
     //this.setState({ solicitacoes });
   }
 
+  filtrar(lista, event) {
+    lista = lista.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.descricao.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return lista;
+  }
+
   filterList(event) {
-    const { showAutorizadas, showPendentes } = this.state;
     if (event === undefined) event = { target: { value: "" } };
 
-    if (showAutorizadas) {
-      let autorizadasListFiltered = this.state.autorizadasList;
-      autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
-        const wordToFilter = event.target.value.toLowerCase();
-        return item.text.toLowerCase().search(wordToFilter) !== -1;
-      });
-      this.setState({ autorizadasListFiltered });
-    }
+    let autorizadasListFiltered = this.state.autorizadasList;
+    autorizadasListFiltered = this.filtrar(autorizadasListFiltered, event);
+    this.setState({ autorizadasListFiltered });
 
-    if (showPendentes) {
-      let pendentesListFiltered = this.state.pendentesList;
-      pendentesListFiltered = pendentesListFiltered.filter(function(item) {
-        const wordToFilter = event.target.value.toLowerCase();
-        return item.text.toLowerCase().search(wordToFilter) !== -1;
-      });
-      this.setState({ pendentesListFiltered });
-    }
+    let pendentesListFiltered = this.state.pendentesList;
+    pendentesListFiltered = this.filtrar(pendentesListFiltered, event);
+    this.setState({ pendentesListFiltered });
+
+    let recusadasListFiltered = this.state.recusadasList;
+    recusadasListFiltered = this.filtrar(recusadasListFiltered, event);
+    this.setState({ recusadasListFiltered });
+
+    let canceladasListFiltered = this.state.canceladasList;
+    canceladasListFiltered = this.filtrar(canceladasListFiltered, event);
+    this.setState({ canceladasListFiltered });
   }
 
   render() {
     const {
       autorizadasListFiltered,
       pendentesListFiltered,
-      recusadasList,
-      canceladasList
+      recusadasListFiltered,
+      canceladasListFiltered
     } = this.state;
-
     return (
       <div className="card mt-3">
         <div className="card-body">
@@ -123,19 +130,19 @@ export class StatusSolicitacoesTodos extends Component {
             />
           )}
 
-          {recusadasList && recusadasList.length > 0 && (
+          {recusadasListFiltered && recusadasListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Recusadas"}
-              solicitacoes={recusadasList}
+              solicitacoes={recusadasListFiltered}
               tipo={"card-denied"}
               icone={"fa-check"}
             />
           )}
 
-          {canceladasList && canceladasList.length > 0 && (
+          {canceladasListFiltered && canceladasListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
               titulo={"Canceladas"}
-              solicitacoes={canceladasList}
+              solicitacoes={canceladasListFiltered}
               tipo={"card-cancelled"}
               icone={"fa-times-circle"}
             />

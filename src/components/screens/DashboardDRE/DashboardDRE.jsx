@@ -302,7 +302,7 @@ class DashboardDRE extends Component {
                   Data: <span>{dataAtual()}</span>
                 </p>
               </div>
-              <div className="row">
+              <div className="row mb-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Aguardando Aprovação"}
