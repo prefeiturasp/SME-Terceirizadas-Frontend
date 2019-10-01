@@ -96,7 +96,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.refresh();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =

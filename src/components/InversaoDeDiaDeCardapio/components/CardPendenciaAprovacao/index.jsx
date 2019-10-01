@@ -126,7 +126,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                           <td className="col-2">{pedido.escola.codigo_eol}</td>
                           <td className="col-3">{pedido.escola.nome}</td>
                           <td className="col-5">
-                            {pedido.data_de} -> {pedido.data_para}
+                            {pedido.data_de} -&gt; {pedido.data_para}
                           </td>
                         </tr>
                       </Link>

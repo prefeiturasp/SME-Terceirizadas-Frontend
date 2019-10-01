@@ -100,8 +100,7 @@ class EmailConfiguration extends Component {
         }
         this.setState({ showTest: true });
       })
-      .catch(resp => {
-        console.log("error", resp);
+      .catch(() => {
         this.setState({ showTest: false });
       });
   }

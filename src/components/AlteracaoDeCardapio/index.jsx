@@ -120,7 +120,7 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("alteracaoCardapio");
     this.props.loadAlteracaoCardapio(null);
     this.setState({

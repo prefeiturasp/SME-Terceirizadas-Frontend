@@ -111,7 +111,7 @@ export class SolicitacaoDeKitLanche extends Component {
     });
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset();
     this.props.change("obs", "");
     this.setState({
@@ -133,7 +133,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.refresh();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
@@ -230,9 +230,6 @@ export class SolicitacaoDeKitLanche extends Component {
           } else {
             toastError("Erro ao salvar Solicitação de Kit Lanche Passeio");
           }
-        })
-        .catch(error => {
-          toastError(error.details);
         });
     } else {
       registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid)
@@ -252,7 +249,7 @@ export class SolicitacaoDeKitLanche extends Component {
             toastError("erro ao atualizar a solicitação");
           }
         })
-        .catch(erro => {
+        .catch(() => {
           toastError("erro ao atualizar a solicitação");
         });
     }
@@ -262,9 +259,6 @@ export class SolicitacaoDeKitLanche extends Component {
     getSolicitacoesKitLancheApi()
       .then(resp => {
         this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
-      })
-      .catch(error => {
-        console.log(error);
       });
   }
 
