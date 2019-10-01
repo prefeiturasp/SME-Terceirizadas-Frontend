@@ -7,6 +7,7 @@ import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 import {
   ModalCancelarInversaoDiaCardapio,
   ORIGEM_SOLICITACAO
@@ -201,15 +202,17 @@ class Relatorio extends Component {
 
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Cancelar solicitação"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                </div>
+                {escolaPodeCancelar(solicitacaoInversaoDeDiaDeCardapio.status) && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Cancelar solicitação"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>
