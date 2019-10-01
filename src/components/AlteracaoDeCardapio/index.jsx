@@ -90,7 +90,7 @@ class AlteracaoCardapio extends Component {
       });
   }
 
-  resetForm(){
+  resetForm() {
     this.props.reset("alteracaoCardapio");
   }
 
@@ -109,13 +109,13 @@ class AlteracaoCardapio extends Component {
                 await this.enviaAlteracaoCardapio(response.data.uuid);
                 this.refresh();
               } else {
-                this.resetForm('alteracaoCardapio')
+                this.resetForm("alteracaoCardapio");
                 toastSuccess("Alteração de Cardápio salva com sucesso");
               }
             }
           })
           .catch(error => {
-            this.resetForm('alteracaoCardapio')
+            this.resetForm("alteracaoCardapio");
             this.refresh();
           });
       }

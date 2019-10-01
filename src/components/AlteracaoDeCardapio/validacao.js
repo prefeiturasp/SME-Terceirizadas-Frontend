@@ -37,7 +37,8 @@ export const validateSubmit = (values, meusDados) => {
     values["substituicoes"].push({
       periodo_escolar: values.substituicoes_INTEGRAL.periodo,
       tipo_alimentacao_de: values.substituicoes_INTEGRAL.tipo_alimentacao_de,
-      tipo_alimentacao_para: values.substituicoes_INTEGRAL.tipo_alimentacao_para,
+      tipo_alimentacao_para:
+        values.substituicoes_INTEGRAL.tipo_alimentacao_para,
       qtd_alunos: values.substituicoes_INTEGRAL.numero_de_alunos
     });
   }
