@@ -10,7 +10,6 @@ import {
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
-import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import {
@@ -100,7 +99,7 @@ export class DashboardEscola extends Component {
       negadasListFiltered,
       canceladasListFiltered
     } = this.state;
-    const { numeroAlunos, theadList, trs } = this.props;
+    const { numeroAlunos } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -263,11 +262,6 @@ export class DashboardEscola extends Component {
             />
           </div>
         </div>
-        <CardHistorico
-          thead={theadList}
-          trs={trs}
-          titulo={"Histórico de Alimentações solicitadas"}
-        />
       </div>
     );
   }
