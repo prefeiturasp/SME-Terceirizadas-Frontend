@@ -116,7 +116,7 @@ class FoodSuspensionEditor extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(null);
     this.setState({

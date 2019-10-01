@@ -332,7 +332,7 @@ export class LabelAndTextArea extends Component {
     }
   }
 
-  onBlur(event) {
+  onBlur() {
     const value = draftToHtml(
       convertToRaw(this.state.editorState.getCurrentContent())
     );

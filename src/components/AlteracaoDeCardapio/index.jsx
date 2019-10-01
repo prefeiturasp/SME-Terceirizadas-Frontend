@@ -74,7 +74,7 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 

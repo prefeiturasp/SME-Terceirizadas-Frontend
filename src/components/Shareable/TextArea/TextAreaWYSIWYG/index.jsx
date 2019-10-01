@@ -60,7 +60,7 @@ export class TextAreaWYSIWYG extends Component {
     }
   }
 
-  onBlur(event) {
+  onBlur() {
     this.setState({ talvezBordaVermelha: true });
     const value = draftToHtml(
       convertToRaw(this.state.editorState.getCurrentContent())

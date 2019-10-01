@@ -162,12 +162,12 @@ class SolicitacaoUnificada extends Component {
     }
   }
 
-  cancelForm(event) {
+  cancelForm() {
     this.resetForm();
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("unifiedSolicitation");
     this.props.loadUnifiedSolicitation(null);
     let escolas = this.props.escolas;
@@ -208,9 +208,6 @@ class SolicitacaoUnificada extends Component {
         this.setState({
           kitsLanche: response.results
         });
-      })
-      .catch(error => {
-        console.log(error);
       });
 
     this.refresh();
@@ -369,7 +366,7 @@ class SolicitacaoUnificada extends Component {
     window.scrollTo(0, this.escolasRef.current.offsetTop + 295);
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
   }
 

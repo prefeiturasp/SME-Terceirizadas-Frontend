@@ -151,7 +151,7 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 
@@ -209,7 +209,7 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(null);
     let periodos = this.state.periodos;
