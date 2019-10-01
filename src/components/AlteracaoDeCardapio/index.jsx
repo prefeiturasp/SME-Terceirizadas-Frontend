@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from "react";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Select } from "../Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
+import { Select } from "../Shareable/Select";
+import { Botao } from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { bindActionCreators } from "redux";
@@ -10,16 +11,23 @@ import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
 import { required } from "../../helpers/fieldValidators";
 import { LabelAndCombo } from "../Shareable/labelAndInput/labelAndInput";
-import { deleteAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
 import { montaPeriodoDeAlteracao } from "./helper";
-import { formatarParaMultiselect } from "../../helpers/utilities";
 import { agregarDefault } from "../../helpers/utilities";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import "./style.scss";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { validateSubmit } from "./validacao";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import {
+  createAlteracaoCardapio,
+  getAlteracoesCardapioList
+} from "../../services/alteracaoDecardapio.service";
 
-const ENTER = 13;
+//const ENTER = 13;
 
 class AlteracaoCardapio extends Component {
   constructor(props) {
@@ -36,13 +44,15 @@ class AlteracaoCardapio extends Component {
 
       substituicoesAlimentacao: []
     };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
       let periodos = this.state.periodos;
       let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
-      this.props.periodos.forEach((periodo, indice) => {
+      this.props.periodos.forEach(periodo => {
         substituicoesAlimentacao.push({ substituicoes: null });
         periodos.push(montaPeriodoDeAlteracao(periodo));
       });
@@ -63,13 +73,112 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  resetAlteracao() {
-    console.log(this.props);
-    this.props.reset("values.substituicoes_MANHA.tipo_alimentacao_para");
+  componentDidMount() {
+    this.refresh();
   }
 
-  atualizaPeriodoCheck(input, indice) {
+  refresh() {
+    getAlteracoesCardapioList()
+      .then(response => {
+        this.setState({
+          ...this.state,
+          alteracaoCardapioList: response.results
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  resetForm(){
+    this.props.reset("alteracaoCardapio");
+  }
+
+  onSubmit(values) {
+    values.escola = this.props.meusDados.escolas[0].uuid;
+    const status = values.status;
+    delete values.status;
+    const erros = validateSubmit(values, this.props.meusDados);
+    if (!erros) {
+      this.resetaTodoPeriodoCheck();
+      if (!values.uuid) {
+        createAlteracaoCardapio(JSON.stringify(values))
+          .then(async response => {
+            if (response.status === HTTP_STATUS.CREATED) {
+              if (status === STATUS_DRE_A_VALIDAR) {
+                await this.enviaAlteracaoCardapio(response.data.uuid);
+                this.refresh();
+              } else {
+                this.resetForm('alteracaoCardapio')
+                toastSuccess("Alteração de Cardápio salva com sucesso");
+              }
+            }
+          })
+          .catch(error => {
+            this.resetForm('alteracaoCardapio')
+            this.refresh();
+          });
+      }
+    }
+  }
+
+  showModal() {
+    this.setState({ ...this.state, showModal: true });
+  }
+
+  closeModal(e) {
+    this.setState({ ...this.state, showModal: false });
+  }
+
+  onAlterarDiaChanged(event) {
+    if (
+      checaSeDataEstaEntre2e5DiasUteis(
+        event.target.value,
+        this.props.proximos_dois_dias_uteis,
+        this.props.proximos_cinco_dias_uteis
+      )
+    ) {
+      this.showModal();
+    }
+  }
+
+  limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
+    if (periodo.checado) {
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+        null
+      );
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        null
+      );
+      this.props.change(`substituicoes_${periodoNome}.numero_de_alunos`, null);
+    }
+  }
+
+  resetAlteracaoDoPeriodo(uuidInput, periodoNome, indice) {
+    let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
+    if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        null
+      );
+    }
+  }
+
+  resetaTodoPeriodoCheck() {
     let periodos = this.state.periodos;
+    periodos.forEach(periodo => {
+      if (periodo.checado) {
+        periodo.checado = false;
+      }
+    });
+    this.setState({ periodos });
+  }
+
+  atualizaPeriodoCheck(input, indice, periodoNome) {
+    let periodos = this.state.periodos;
+    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
     periodos[indice].checado = !periodos[indice].checado;
     this.props.change(input, periodos[indice].checado);
     this.setState({ periodos });
@@ -96,6 +205,7 @@ class AlteracaoCardapio extends Component {
       if (tipoAlimentacao.uuid === alimentacaoUUID) {
         substituicoesAlimentacao[indice].substituicoes =
           tipoAlimentacao.substituicoes;
+        substituicoesAlimentacao[indice].uuidAlimentacao = alimentacaoUUID;
       }
     });
     this.setState({ substituicoesAlimentacao });
@@ -106,13 +216,16 @@ class AlteracaoCardapio extends Component {
       loading,
       alteracaoCardapioList,
       periodos,
-      substituicoesAlimentacao
+      substituicoesAlimentacao,
+      showModal
     } = this.state;
     const {
       handleSubmit,
       meusDados,
       proximos_dois_dias_uteis,
-      motivos
+      motivos,
+      pristine,
+      submitting
     } = this.props;
     return (
       <Fragment>
@@ -149,7 +262,7 @@ class AlteracaoCardapio extends Component {
                 <section className="section-form-datas mt-4">
                   <Field
                     component={InputComData}
-                    //onBlur={event => this.onAlterarDiaChanged(event)}
+                    onBlur={event => this.onAlterarDiaChanged(event)}
                     name="alterar_dia"
                     minDate={proximos_dois_dias_uteis}
                     label="Alterar dia"
@@ -214,14 +327,13 @@ class AlteracaoCardapio extends Component {
                             name="check"
                           />
                           <span
-                            onClick={() => {
+                            onClick={() =>
                               this.atualizaPeriodoCheck(
                                 `substituicoes_${periodo.nome}.check`,
                                 indice,
                                 periodo.nome
-                              );
-                              this.resetAlteracao();
-                            }}
+                              )
+                            }
                             className="checkbox-custom"
                           />
                           <div className=""> {periodo.nome}</div>
@@ -234,6 +346,11 @@ class AlteracaoCardapio extends Component {
                         options={agregarDefault(periodo.tipos_alimentacao)}
                         disabled={!periodo.checado}
                         onChange={event => {
+                          this.resetAlteracaoDoPeriodo(
+                            event.target.value,
+                            periodo.nome,
+                            indice
+                          );
                           this.selectSubstituicoesAlimentacaoAPartirDe(
                             event.target.value,
                             indice
@@ -255,6 +372,7 @@ class AlteracaoCardapio extends Component {
 
                       <Field
                         component={InputText}
+                        disabled={!periodo.checado}
                         type="number"
                         name="numero_de_alunos"
                         min="0"
@@ -264,7 +382,46 @@ class AlteracaoCardapio extends Component {
                   );
                 })}
               </article>
+              <hr />
+              <article className="card-body">
+                <Field
+                  component={TextAreaWYSIWYG}
+                  label="Observações"
+                  name="observacao"
+                />
+              </article>
+              <article className="card-body footer-button">
+                <Botao
+                  texto="Cancelar"
+                  onClick={event => this.resetForm(event)}
+                  disabled={pristine || submitting}
+                  style={BUTTON_STYLE.OutlinePrimary}
+                />
+                <Botao
+                  disabled={pristine || submitting}
+                  texto={this.state.salvarAtualizarLbl}
+                  onClick={handleSubmit(values => this.onSubmit(values))}
+                  type={BUTTON_TYPE.SUBMIT}
+                  style={BUTTON_STYLE.OutlinePrimary}
+                />
+                <Botao
+                  texto="Enviar Solicitação"
+                  disabled={pristine || submitting}
+                  type={BUTTON_TYPE.SUBMIT}
+                  onClick={handleSubmit(values =>
+                    this.onSubmit({
+                      ...values,
+                      status: STATUS_DRE_A_VALIDAR
+                    })
+                  )}
+                  style={BUTTON_STYLE.Primary}
+                />
+              </article>
             </section>
+            <ModalDataPrioritaria
+              showModal={showModal}
+              closeModal={this.closeModal}
+            />
           </form>
         )}
       </Fragment>
@@ -281,7 +438,10 @@ const selector = formValueSelector("alteracaoCardapio");
 
 const mapStateToProps = state => {
   return {
-    initialValues: state.alteracaoCardapio.data
+    initialValues: state.alteracaoCardapio.data,
+    data_inicial: selector(state, "data_inicial"),
+    data_final: selector(state, "data_final"),
+    alterar_dia: selector(state, "alterar_dia")
   };
 };
 
