@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
+import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -246,7 +247,11 @@ class Relatorio extends Component {
                     {solicitacaoKitLanche.solicitacao_kit_lanche &&
                       solicitacaoKitLanche.solicitacao_kit_lanche.kits.map(
                         (kit, key) => {
-                          return <p className="value">Modelo {kit.nome}</p>;
+                          return (
+                            <p key={key} className="value">
+                              Modelo {kit.nome}
+                            </p>
+                          );
                         }
                       )}
                   </div>
@@ -278,15 +283,17 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Cancelar pedido"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                </div>
+                {escolaPodeCancelar(solicitacaoKitLanche.status) && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Cancelar pedido"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

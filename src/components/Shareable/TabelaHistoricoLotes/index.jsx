@@ -12,9 +12,9 @@ export const TabelaHistoricoLotes = props => {
           <th>Tipo de Gestão</th>
         </tr>
         {props.lotes &&
-          props.lotes.map(lote => {
+          props.lotes.map((lote, key) => {
             return (
-              <tr>
+              <tr key={key}>
                 <td>
                   <Link to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}>
                     {lote.nome}

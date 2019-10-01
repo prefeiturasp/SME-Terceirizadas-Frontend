@@ -110,6 +110,7 @@ export class CardPendenciaAprovacao extends Component {
                     pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
+                      key={key}
                       to={`/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
                         pedido.uuid
                       }&ehInclusaoContinua=${pedido.data_inicial !==

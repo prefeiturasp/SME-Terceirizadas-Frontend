@@ -6,7 +6,7 @@ export const InputSearch = props => (
     <div>
       <div className="">
         <input className="input-search-solic" placeholder="Pesquisar" />
-        <i class="fas fa-search lupa" />
+        <i className="fas fa-search lupa" />
       </div>
     </div>
   </div>

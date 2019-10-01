@@ -140,9 +140,9 @@ class Relatorio extends Component {
             <th>Data</th>
             <th>Motivo</th>
           </tr>
-          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
+          {inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
             return (
-              <tr>
+              <tr key={key}>
                 <td>{inclusao.data}</td>
                 <td>{inclusao.motivo.nome}</td>
               </tr>
@@ -322,9 +322,9 @@ class Relatorio extends Component {
                     <th>Quantidade de Alunos</th>
                   </tr>
                   {inclusaoDeAlimentacao.quantidades_periodo.map(
-                    quantidade_por_periodo => {
+                    (quantidade_por_periodo, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td>
                             {quantidade_por_periodo.periodo_escolar &&
                               quantidade_por_periodo.periodo_escolar.nome}

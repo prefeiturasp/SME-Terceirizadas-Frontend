@@ -9,7 +9,7 @@ const atual = {
   titulo: "Inversão de dia de Cardápio"
 };
 
-export default props => (
+export default () => (
   <Page titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />

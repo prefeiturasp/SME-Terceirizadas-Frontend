@@ -269,7 +269,11 @@ class Relatorio extends Component {
                     {solicitacaoKitLanche.solicitacao_kit_lanche &&
                       solicitacaoKitLanche.solicitacao_kit_lanche.kits.map(
                         (kit, key) => {
-                          return <p className="value">Modelo {kit.nome}</p>;
+                          return (
+                            <p key={key} className="value">
+                              Modelo {kit.nome}
+                            </p>
+                          );
                         }
                       )}
                   </div>

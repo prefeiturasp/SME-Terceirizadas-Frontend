@@ -50,7 +50,7 @@ export const LabelAndInput = props => {
           readOnly={readOnly}
           type={type}
           min={min}
-          maxlength={max}
+          maxLength={max}
         />
         <If isVisible={hasIcon}>
           <i className="fas fa-pen" />
@@ -386,6 +386,7 @@ export class LabelAndTextArea extends Component {
           toolbarCustomButtons={
             temOpcoesCustomizadas && [
               <OpcoesCustomizadas
+                key={1}
                 editorState={editorState}
                 onChange={this.handleChange}
               />
