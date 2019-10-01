@@ -69,7 +69,7 @@ export default class StatusSolicitacoes extends Component {
     switch (this.props.tipoStatus) {
       case STATUS.AUTORIZADAS:
         tipoCard = CARD_TYPE_ENUM.APROVADO;
-        icone = <ICON_CARD_TYPE_ENUM className="APROVADO" />;
+        icone = ICON_CARD_TYPE_ENUM.APROVADO;
         titulo = "Autorizadas";
         solicitacoes = await getSolicitacoesAutorizadasDRE(dreUuid);
         break;

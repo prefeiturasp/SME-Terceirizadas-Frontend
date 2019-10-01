@@ -6,9 +6,9 @@ export const ToggleExpandir = props => {
   return (
     <span onClick={onClick} className={`toggle-expandir ${className}`}>
       {ativo ? (
-        <i class="fas fa-chevron-up" />
+        <i className="fas fa-chevron-up" />
       ) : (
-        <i class="fas fa-chevron-down" />
+        <i className="fas fa-chevron-down" />
       )}
     </span>
   );

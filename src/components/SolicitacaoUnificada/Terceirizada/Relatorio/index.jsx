@@ -216,9 +216,10 @@ class Relatorio extends Component {
 
                 <div>
                   {solicitacaoUnificada.escolas_quantidades.map(
-                    escola_quantidade => {
+                    (escola_quantidade, key) => {
                       return (
                         <TabelaKits
+                          key={key}
                           escola_quantidade={escola_quantidade}
                           solicitacaoUnificada={solicitacaoUnificada}
                         />

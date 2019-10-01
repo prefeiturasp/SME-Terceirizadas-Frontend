@@ -21,7 +21,8 @@ import {
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
   getResumoPendenciasDREKitLanche,
   getResumoPendenciasDRESolicitacoesUnificadas,
-  getResumoPendenciasDRESuspensaoDeAlimentacao
+  getResumoPendenciasDRESuspensaoDeAlimentacao,
+  getResumoPendenciasDREPorLote
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { Botao } from "../../Shareable/Botao";
@@ -114,6 +115,11 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
 
+    let resumoPorLote = await getResumoPendenciasDREPorLote(
+      minhaDRE,
+      filtroPendencias
+    );
+
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
@@ -122,6 +128,7 @@ class DashboardDRE extends Component {
       resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
+      resumoPorLote,
       loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
       loadingInclusoesAlimentacao: !resumoPendenciasDREInclusoesDeAlimentacao,
       loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
@@ -378,6 +385,7 @@ class DashboardDRE extends Component {
                   <div className="col-3 text-right my-auto">
                     <Select
                       naoDesabilitarPrimeiraOpcao
+                      disabled={!this.state.lotesDRE}
                       onChange={event => this.changeVisao(event.target.value)}
                       placeholder={"Visão por"}
                       options={vision_by}

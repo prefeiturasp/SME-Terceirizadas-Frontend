@@ -116,6 +116,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                   pedidosFiltrados.map((pedido, key) => {
                     return (
                       <Link
+                        key={key}
                         to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
                           pedido.uuid
                         }`}

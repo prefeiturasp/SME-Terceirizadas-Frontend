@@ -27,7 +27,7 @@ export class SidebarEscola extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -83,7 +83,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -139,7 +139,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={3} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -270,7 +270,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={4} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

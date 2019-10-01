@@ -13,9 +13,9 @@ export const TabelaHistoricoLotesDREs = props => {
           <th>DRE</th>
           <th className="pl-5">Tipo</th>
         </tr>
-        {lotes.map(function(lote) {
+        {lotes.map(function(lote, key) {
           return (
-            <tr>
+            <tr key={key}>
               <td>
                 <Link to={`/configuracoes/cadastros/lote?uuid=${lote.id}`}>
                   {lote.lote}

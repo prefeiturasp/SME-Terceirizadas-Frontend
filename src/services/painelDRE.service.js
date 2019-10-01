@@ -272,10 +272,31 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
 
   return resposta;
 };
+export const getSolicitacoesPendentesParaDRE = (
+  dreUuid,
+  filtro = "sem_filtro"
+) => {
+  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
 
-export const getResumoPendenciasDREPorLote = async dree_uuid => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesDRE(dree_uuid)).results;
+  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
+    dree_uuid,
+    filtro
+  )).results;
 
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {

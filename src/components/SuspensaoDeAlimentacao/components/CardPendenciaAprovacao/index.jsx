@@ -103,9 +103,10 @@ export class CardInversaoPendenciaAprovacao extends Component {
                 </tr>
               </thead>
               <tbody>
-                {pedidosFiltrados.map(solicitacao => {
+                {pedidosFiltrados.map((solicitacao, key) => {
                   return (
                     <Link
+                      key={key}
                       to={`/${parametroURL}/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
                         solicitacao.uuid
                       }`}

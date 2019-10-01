@@ -64,68 +64,76 @@ export class ModalCadastroEdital extends Component {
                 <article className="modal-cadastro-edital">
                   <header className="pb-3">Contratos relacionados</header>
 
-                  {edital_contratos.contratos_relacionados.map(contrato => {
-                    return (
-                      <Fragment>
-                        <section>
-                          <div className="detalhes">
-                            <div>
-                              <span>Contrato n°:</span>{" "}
-                              {contrato.numero_contrato}
-                            </div>
-                            <div className="vigencias">
-                              <span>Vigência: </span>
+                  {edital_contratos.contratos_relacionados.map(
+                    (contrato, key) => {
+                      return (
+                        <Fragment key={key}>
+                          <section>
+                            <div className="detalhes">
+                              <div>
+                                <span>Contrato n°:</span>{" "}
+                                {contrato.numero_contrato}
+                              </div>
+                              <div className="vigencias">
+                                <span>Vigência: </span>
+                                <div className="iteracao-elementos">
+                                  {contrato.vigencias.map((vigencia, key) => {
+                                    return (
+                                      <div key={key} className="elementos">
+                                        De {vigencia.data_inicial} até{" "}
+                                        {vigencia.data_final};
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <div>
+                                <span>
+                                  Processo administrativo do contrato:
+                                </span>{" "}
+                                {contrato.processo_administrativo}
+                              </div>
+                              <div>
+                                <span>Data da proposta:</span>{" "}
+                                {contrato.data_proposta}
+                              </div>
                               <div className="iteracao-elementos">
-                                {contrato.vigencias.map(vigencia => {
-                                  return (
-                                    <div className="elementos">
-                                      De {vigencia.data_inicial} até{" "}
-                                      {vigencia.data_final};
-                                    </div>
-                                  );
-                                })}
+                                <span>Lote:</span>
+                                <div className="iteracao-elementos">
+                                  {contrato.lotes_nomes.map((lote, key) => {
+                                    return (
+                                      <div key={key} className="elementos">
+                                        {lote};{" "}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <div className="iteracao-elementos">
+                                <span>DRE:</span>
+                                <div className="iteracao-elementos">
+                                  {contrato.dres_nomes.map((dre, key) => {
+                                    return (
+                                      <div key={key} className="elementos">
+                                        {dre};{" "}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <div className="iteracao-elementos">
+                                <span>Empresa:</span>
+                                <div className="iteracao-elementos">
+                                  {contrato.empresas_nomes}
+                                </div>
                               </div>
                             </div>
-                            <div>
-                              <span>Processo administrativo do contrato:</span>{" "}
-                              {contrato.processo_administrativo}
-                            </div>
-                            <div>
-                              <span>Data da proposta:</span>{" "}
-                              {contrato.data_proposta}
-                            </div>
-                            <div className="iteracao-elementos">
-                              <span>Lote:</span>
-                              <div className="iteracao-elementos">
-                                {contrato.lotes_nomes.map(lote => {
-                                  return (
-                                    <div className="elementos">{lote}; </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                            <div className="iteracao-elementos">
-                              <span>DRE:</span>
-                              <div className="iteracao-elementos">
-                                {contrato.dres_nomes.map(dre => {
-                                  return (
-                                    <div className="elementos">{dre}; </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                            <div className="iteracao-elementos">
-                              <span>Empresa:</span>
-                              <div className="iteracao-elementos">
-                                {contrato.empresas_nomes}
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                        <hr />
-                      </Fragment>
-                    );
-                  })}
+                          </section>
+                          <hr />
+                        </Fragment>
+                      );
+                    }
+                  )}
                 </article>
               </Fragment>
             )}

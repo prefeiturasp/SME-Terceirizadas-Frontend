@@ -19,7 +19,7 @@ export class SidebarTerceirizada extends Component {
   renderTerceirizada() {
     const { subMenu } = this.state;
     return [
-      <li className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -75,7 +75,7 @@ export class SidebarTerceirizada extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -206,7 +206,7 @@ export class SidebarTerceirizada extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={3} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

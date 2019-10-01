@@ -158,7 +158,6 @@ class EditaisContratos extends Component {
   }
 
   adicionaContratosRelacionados() {
-    console.log("OPAAAAAAAAAAAAA");
     this.setState({
       contratos_relacionados: this.state.contratos_relacionados.concat([
         {
@@ -444,6 +443,7 @@ class EditaisContratos extends Component {
               {forms.map((formEdital, key) => {
                 return (
                   <FormSection
+                    key={key}
                     component={ContratosRelacionados}
                     lotes={lotes}
                     name={`secaoEdital${key}`}
