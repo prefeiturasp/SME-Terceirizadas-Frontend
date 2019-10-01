@@ -403,6 +403,27 @@ export const cancelaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
+export const DREnaoValidarKitLancheAvulsoEscola = async (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const aprovaDeKitLancheAvulsoCodae = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
