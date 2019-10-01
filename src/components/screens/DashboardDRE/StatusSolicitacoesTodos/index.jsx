@@ -62,29 +62,32 @@ export class StatusSolicitacoesTodos extends Component {
     //this.setState({ solicitacoes });
   }
 
+  filtrar(lista, event) {
+    lista = lista.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.descricao.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return lista;
+  }
+
   filterList(event) {
     if (event === undefined) event = { target: { value: "" } };
 
     let autorizadasListFiltered = this.state.autorizadasList;
-    autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.descricao.toLowerCase().search(wordToFilter) !== -1;
-    });
+    autorizadasListFiltered = this.filtrar(autorizadasListFiltered, event);
     this.setState({ autorizadasListFiltered });
 
     let pendentesListFiltered = this.state.pendentesList;
-    pendentesListFiltered = pendentesListFiltered.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.descricao.toLowerCase().search(wordToFilter) !== -1;
-    });
+    pendentesListFiltered = this.filtrar(pendentesListFiltered, event);
     this.setState({ pendentesListFiltered });
 
     let recusadasListFiltered = this.state.recusadasList;
-    recusadasListFiltered = recusadasListFiltered.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.descricao.toLowerCase().search(wordToFilter) !== -1;
-    });
+    recusadasListFiltered = this.filtrar(recusadasListFiltered, event);
     this.setState({ recusadasListFiltered });
+
+    let canceladasListFiltered = this.state.canceladasList;
+    canceladasListFiltered = this.filtrar(canceladasListFiltered, event);
+    this.setState({ canceladasListFiltered });
   }
 
   render() {
