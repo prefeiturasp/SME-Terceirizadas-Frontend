@@ -67,8 +67,6 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(response => {
-          console.log("response: ", response);
-
           const dataMaisProxima =
             response.inclusoes && response.inclusoes[0].data;
           this.setState({
@@ -230,9 +228,9 @@ class Relatorio extends Component {
                     <th>Quantidade de Alunos</th>
                   </tr>
                   {alteracaoDeCardapio.substituicoes.map(
-                    quantidade_por_periodo => {
+                    (quantidade_por_periodo, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td>
                             {quantidade_por_periodo.periodo_escolar &&
                               quantidade_por_periodo.periodo_escolar.nome}

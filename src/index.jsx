@@ -20,6 +20,7 @@ toast.configure();
 
 // see https://github.com/zalmoxisus/redux-devtools-extension
 let devTools = undefined;
+//eslint-disable-next-line
 if (process.env.NODE_ENV === "development") {
   devTools =
     window.__REDUX_DEVTOOLS_EXTENSION__ &&

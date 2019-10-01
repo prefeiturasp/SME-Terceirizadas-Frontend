@@ -407,7 +407,10 @@ class FoodSuspensionEditor extends Component {
                 </div>
                 {dias_razoes.map((dia_motivo, key) => {
                   return (
-                    <FormSection name={`dias_razoes_${dia_motivo.data}`}>
+                    <FormSection
+                      key={key}
+                      name={`dias_razoes_${dia_motivo.data}`}
+                    >
                       <div className="form-row">
                         <div className="form-group col-sm-3">
                           <Field
@@ -483,7 +486,7 @@ class FoodSuspensionEditor extends Component {
                     period.uuid
                   );
                   return (
-                    <FormSection name={`suspensoes_${period.nome}`}>
+                    <FormSection key={key} name={`suspensoes_${period.nome}`}>
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
                         <div className="form-check col-md-3 mr-4">

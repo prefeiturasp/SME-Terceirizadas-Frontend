@@ -6,12 +6,14 @@ export const EmpresaDoLote = props => {
   const { empresa, ativo } = props;
   if (empresa === undefined || !ativo) return <tr />;
   return [
-    <td className={"link"}>{empresa.nome_fantasia}</td>,
-    <td className={"blueish"}>
+    <td key={1} className={"link"}>
+      {empresa.nome_fantasia}
+    </td>,
+    <td key={2} className={"blueish"}>
       <span>CNPJ: </span>
       {mascaraCNPJ(empresa.cnpj)}
     </td>,
-    <td className={"blueish"} colSpan="2">
+    <td key={3} className={"blueish"} colSpan="2">
       <span>Tel: </span>
       {mascaraTelefoneOuCelular(
         empresa.contatos[0].celular ||

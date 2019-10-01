@@ -85,7 +85,7 @@ class DetailUnifiedSolicitation extends Component {
               </div>
             </div>
             <div className="impressora">
-              <i class="fas fa-print" />
+              <i className="fas fa-print" />
             </div>
           </div>
 
@@ -124,9 +124,10 @@ class DetailUnifiedSolicitation extends Component {
           </div>
 
           <div>
-            {solicitation.escolas_quantidades.map(escola_quantidade => {
+            {solicitation.escolas_quantidades.map((escola_quantidade, key) => {
               return (
                 <RowTableSchool
+                  key={key}
                   escola_quantidade={escola_quantidade}
                   solicitation={solicitation}
                 />

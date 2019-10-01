@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconePD = props => {
+export const IconePD = () => {
   return (
     <svg
       width="89"

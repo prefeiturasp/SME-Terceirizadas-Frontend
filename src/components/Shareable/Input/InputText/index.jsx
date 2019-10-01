@@ -26,7 +26,11 @@ export const InputText = props => {
         required && !esconderAsterisco && (
           <span className="required-asterisk">*</span>
         ),
-        <label htmlFor={name} className={`col-form-label ${labelClassName}`}>
+        <label
+          key={1}
+          htmlFor={name}
+          className={`col-form-label ${labelClassName}`}
+        >
           {label}
         </label>
       ]}

@@ -1,6 +1,6 @@
 import React from "react";
-import "./style.scss";
 import { NavLink } from "react-router-dom";
+import "./style.scss";
 
 export const CardStatusDeSolicitacaoLargo = props => {
   const { titulo, tipo, solicitacoes, icone } = props;
@@ -12,9 +12,9 @@ export const CardStatusDeSolicitacaoLargo = props => {
       </div>
       <hr />
       <div className="card-body card-body-sme overflow-auto">
-        {solicitacoes.map(solicitacao => {
+        {solicitacoes.map((solicitacao, key) => {
           return (
-            <NavLink to={solicitacao.link}>
+            <NavLink key={key} to={solicitacao.link}>
               <p className="data">
                 {solicitacao.text}
                 <span className="mr-3 float-right">{solicitacao.date}</span>

@@ -9,7 +9,7 @@ export class Rascunhos extends Component {
       OnEditButtonClicked
     } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(
-      suspensaoDeAlimentacao => {
+      (suspensaoDeAlimentacao, key) => {
         suspensaoDeAlimentacao.suspensoes_alimentacao.forEach(value => {
           const idx = suspensaoDeAlimentacao.suspensoes_alimentacao.findIndex(
             value2 => value2.data === value.data
@@ -24,7 +24,7 @@ export class Rascunhos extends Component {
         let backgroundColor =
           suspensaoDeAlimentacao.status === "SALVO" ? "#82B7E8" : "#DADADA";
         return (
-          <div className="bg-white draft border rounded mt-1 p-2">
+          <div key={key} className="bg-white draft border rounded mt-1 p-2">
             <div className="mt-2">
               <label className="bold ml-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
               <span
