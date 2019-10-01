@@ -60,7 +60,6 @@ export class StatusSolicitacoes extends Component {
   onCheckClicked(solicitacoes, key) {
     solicitacoes[key].checked = !solicitacoes[key].checked;
     this.props.change(`check_${key}`, solicitacoes[key].checked);
-    //this.setState({ solicitacoes });
   }
 
   onPesquisarChanged(event) {
