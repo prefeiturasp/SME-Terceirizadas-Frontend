@@ -16,7 +16,6 @@ import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDi
 import PainelPedidosInversaoDiaCardapioRelatorioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/RelatorioPage";
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
 import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
-import StatusSolicitacoesCODAEPage from "../pages/CODAE/StatusSolicitacoesCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
@@ -33,6 +32,10 @@ import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/Stat
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
 import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
+import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
+import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
+import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
+import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -220,6 +223,26 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_AUTORIZADAS}`,
+    component: StatusSolicitacoesAutorizadasCODAEPage,
+    exact: false
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesCODAEPage,
+    exact: false
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_RECUSADAS}`,
+    component: StatusSolicitacoesRecusadasCODAEPage,
+    exact: false
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_CANCELADAS}`,
+    component: StatusSolicitacoesCanceladasCODAEPage,
+    exact: false
+  },
+  {
     path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${
       constants.RELATORIO
     }`,
@@ -404,11 +427,6 @@ const routesConfig = [
   {
     path: `/configuracoes`,
     component: ConfigEmailPage,
-    exact: false
-  },
-  {
-    path: `/${constants.CODAE}/${constants.SOLICITACOES}`,
-    component: StatusSolicitacoesCODAEPage,
     exact: false
   },
   {

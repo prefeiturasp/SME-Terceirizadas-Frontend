@@ -190,9 +190,7 @@ class DashboardCODAE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <Link to={`/${CODAE}/${SOLICITACOES}`}>
-                  Acompanhamento de solicitações
-                </Link>
+                Acompanhamento de solicitações
                 <span className="float-right">
                   <input
                     className="input-search"

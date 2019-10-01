@@ -1,21 +1,20 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { DRE, PAINEL_CONTROLE } from "../../../configs/constants";
+import { CODAE, PAINEL_CONTROLE } from "../../../configs/constants";
 import {
-  getSolicitacoesAutorizadasDRE,
-  getSolicitacoesCanceladasDRE,
-  getSolicitacoesPendentesDRE,
-  getSolicitacoesRecusadasDRE
-} from "../../../services/painelDRE.service";
-import { meusDados } from "../../../services/perfil.service";
+  getSolicitacoesAprovadosCodae,
+  getSolicitacoesPendentesAprovacaoCodae,
+  getSolicitacoesCanceladasCodae,
+  getSolicitacoesRevisaoAprovacaoCodae
+} from "../../../services/painelCODAE.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { InputSearch } from "../../Shareable/InputSearch";
-import { STATUS } from "../const";
+import { STATUS, FILTRO } from "../const";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 
@@ -81,43 +80,42 @@ export class StatusSolicitacoes extends Component {
     let tipoCard = "";
     let icone = "";
     let titulo = "";
-    const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const dreUuid = dadosMeus.diretorias_regionais[0].uuid;
 
     switch (this.props.tipoStatus) {
       case STATUS.AUTORIZADAS:
         tipoCard = CARD_TYPE_ENUM.APROVADO;
         icone = ICON_CARD_TYPE_ENUM.APROVADO;
         titulo = "Autorizadas";
-        solicitacoes = await getSolicitacoesAutorizadasDRE(dreUuid);
+        solicitacoes = await getSolicitacoesAprovadosCodae();
         break;
 
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
         titulo = "Pendentes";
-        solicitacoes = await getSolicitacoesPendentesDRE(dreUuid);
+        solicitacoes = await getSolicitacoesPendentesAprovacaoCodae(
+          FILTRO.SEM_FILTRO
+        );
         break;
 
       case STATUS.CANCELADAS:
         tipoCard = CARD_TYPE_ENUM.CANCELADO;
         icone = ICON_CARD_TYPE_ENUM.CANCELADO;
         titulo = "Canceladas";
-        solicitacoes = await getSolicitacoesCanceladasDRE(dreUuid);
+        solicitacoes = await getSolicitacoesCanceladasCodae();
         break;
 
       case STATUS.RECUSADAS:
         tipoCard = CARD_TYPE_ENUM.NEGADO;
         icone = ICON_CARD_TYPE_ENUM.NEGADO;
         titulo = "Recusadas";
-        solicitacoes = await getSolicitacoesRecusadasDRE(dreUuid);
+        solicitacoes = await getSolicitacoesRevisaoAprovacaoCodae();
         break;
       default:
         break;
     }
-
-    solicitacoes = ajustarFormatoLog(solicitacoes.results, LOG_PARA.DRE);
+    solicitacoes = ajustarFormatoLog(solicitacoes, LOG_PARA.CODAE);
     this.setState({
       solicitacoes,
       tipoCard,
@@ -135,7 +133,7 @@ export class StatusSolicitacoes extends Component {
           <div className="card-body">
             <div className="pr-3">
               <InputSearch
-                voltarLink={`/${DRE}/${PAINEL_CONTROLE}`}
+                voltarLink={`/${CODAE}/${PAINEL_CONTROLE}`}
                 filterList={this.onPesquisarChanged}
               />
             </div>
