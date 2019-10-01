@@ -214,23 +214,22 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
-      solicitarKitLanche(solicitacao_kit_lanche)
-        .then(resp => {
-          if (resp.status === HTTP_STATUS.CREATED) {
-            if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(resp.data.uuid);
-            } else {
-              toastSuccess(
-                "Solicitação de Kit Lanche Passeio salva com sucesso!"
-              );
-              this.resetForm();
-            }
-          } else if (resp.data.tipo_error) {
-            this.validaTipoMensagemError(resp.data);
+      solicitarKitLanche(solicitacao_kit_lanche).then(resp => {
+        if (resp.status === HTTP_STATUS.CREATED) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(resp.data.uuid);
           } else {
-            toastError("Erro ao salvar Solicitação de Kit Lanche Passeio");
+            toastSuccess(
+              "Solicitação de Kit Lanche Passeio salva com sucesso!"
+            );
+            this.resetForm();
           }
-        });
+        } else if (resp.data.tipo_error) {
+          this.validaTipoMensagemError(resp.data);
+        } else {
+          toastError("Erro ao salvar Solicitação de Kit Lanche Passeio");
+        }
+      });
     } else {
       registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid)
         .then(resp => {
@@ -256,10 +255,9 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   refresh() {
-    getSolicitacoesKitLancheApi()
-      .then(resp => {
-        this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
-      });
+    getSolicitacoesKitLancheApi().then(resp => {
+      this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
+    });
   }
 
   closeModal() {

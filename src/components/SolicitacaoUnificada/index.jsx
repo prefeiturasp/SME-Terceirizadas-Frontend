@@ -203,12 +203,11 @@ class SolicitacaoUnificada extends Component {
     this.props.change("schools_total", 0);
     this.props.change("kits_total", 0);
 
-    getKitLanches()
-      .then(response => {
-        this.setState({
-          kitsLanche: response.results
-        });
+    getKitLanches().then(response => {
+      this.setState({
+        kitsLanche: response.results
       });
+    });
 
     this.refresh();
   }
