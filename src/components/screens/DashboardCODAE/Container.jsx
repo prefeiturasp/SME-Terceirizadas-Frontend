@@ -17,7 +17,9 @@ class DashboardCODAEContainer extends Component {
   async componentDidMount() {
     const totalAlunos = await getTotalAlunos();
     let solicitacoesAprovadas = await getSolicitacoesAprovadosCodae();
-    let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae();
+    let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae(
+      FILTRO.SEM_FILTRO
+    );
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
     let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
     let diretoriasRegionais = await getDiretoriaregionalSimplissima();
@@ -46,8 +48,7 @@ class DashboardCODAEContainer extends Component {
       solicitacoesCanceladas,
       solicitacoesRevisao,
       lotes,
-      diretoriasRegionais: diretoriasRegionais.data.results,
-      loadingPainelSolicitacoes: false
+      diretoriasRegionais: diretoriasRegionais.data.results
     });
   }
 

@@ -114,7 +114,7 @@ export class StatusSolicitacoesTodos extends Component {
 
           {pendentesListFiltered && pendentesListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
-              titulo={"Pendente Aprovação"}
+              titulo={"Aguardando Aprovação"}
               solicitacoes={pendentesListFiltered}
               tipo={"card-pending"}
               icone={"fa-exclamation-triangle"}

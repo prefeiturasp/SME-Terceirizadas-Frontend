@@ -27,7 +27,7 @@ export class SidebarEscola extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -57,34 +57,33 @@ export class SidebarEscola extends Component {
               className="collapse-item"
               to={`/${ESCOLA}/status-solicitacoes`}
             >
-              Solicitações Autorizadas
+              Aguardando aprovação
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${ESCOLA}/status-solicitacoes`}
             >
-              Solicitações Pendentes <br />
-              de Autorização
+              Aguardando autorização
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${ESCOLA}/status-solicitacoes`}
             >
-              Solicitações Recusadas
+              Negadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${ESCOLA}/status-solicitacoes`}
             >
-              Solicitações Canceladas
+              Canceladas
             </NavLink>
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -93,7 +92,7 @@ export class SidebarEscola extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-edit" />
-          <span>Solicitações</span>
+          <span>Novas solicitações</span>
         </NavLink>
         <div
           id="collapseSolicitacoes"
@@ -121,7 +120,7 @@ export class SidebarEscola extends Component {
               className="collapse-item"
               to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
             >
-              Solicitação de Kit Lanche
+              Kit Lanche Passeio
             </NavLink>
             <NavLink
               activeClassName="active"
@@ -140,7 +139,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={3} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -188,7 +187,7 @@ export class SidebarEscola extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit <br /> Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -243,14 +242,14 @@ export class SidebarEscola extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Kit Lanche
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação Unificada
+                  Unificada
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -271,7 +270,7 @@ export class SidebarEscola extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={4} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

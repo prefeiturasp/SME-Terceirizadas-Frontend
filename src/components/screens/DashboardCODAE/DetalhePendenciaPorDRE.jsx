@@ -75,7 +75,7 @@ class DetalhePendenciaPorDRE extends Component {
               </div>
               <div className="col-6">
                 <CardPendencia
-                  cardTitle={"Kit Lanche"}
+                  cardTitle={"Kit Lanche Passeio"}
                   totalOfOrders={18}
                   priorityOrders={3}
                   onLimitOrders={5}

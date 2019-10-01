@@ -167,7 +167,7 @@ class Relatorio extends Component {
                 </div>
               </div>
               <div className="impressora">
-                <i class="fas fa-print" />
+                <i className="fas fa-print" />
               </div>
             </div>
 
@@ -189,7 +189,7 @@ class Relatorio extends Component {
                 </div>
               </div>
               <div className="esquerda">
-                <div className="descricao-titulo">Data do evento</div>
+                <div className="descricao-titulo">Data do passeio</div>
                 <div className="descricao-observacao">
                   {solicitacaoUnificada.solicitacao_kit_lanche.data}
                 </div>
@@ -207,9 +207,10 @@ class Relatorio extends Component {
 
             <div>
               {solicitacaoUnificada.escolas_quantidades.map(
-                escola_quantidade => {
+                (escola_quantidade, key) => {
                   return (
                     <TabelaKits
+                      key={key}
                       escola_quantidade={escola_quantidade}
                       solicitacaoUnificada={solicitacaoUnificada}
                     />

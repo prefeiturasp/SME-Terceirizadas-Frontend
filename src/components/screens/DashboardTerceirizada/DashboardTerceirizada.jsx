@@ -76,7 +76,7 @@ class DashboardTerceirizada extends Component {
               <div className="card-title font-weight-bold dashboard-card-title">
                 <span>
                   <i className="fas fa-thumbtack" />
-                  Painel de Status de Solicitações
+                  Acompanhamento de solicitações
                   <i className="fas fa-pen" />
                 </span>
                 <span className="float-right">
@@ -92,7 +92,7 @@ class DashboardTerceirizada extends Component {
               <div className="row pt-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Pendente Aprovação"}
+                    cardTitle={"Aguardando Aprovação"}
                     cardType={"card-pending"}
                     solicitations={solicitations}
                     icon={"fa-exclamation-triangle"}
@@ -114,7 +114,7 @@ class DashboardTerceirizada extends Component {
                 <span />
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Pendente Aprovação
+                  Solicitação Aguardando Aprovação
                 </span>
                 <span />
                 <span>
@@ -249,7 +249,7 @@ class DashboardTerceirizada extends Component {
                   <div className="col-6">
                     <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                       <CardPendencia
-                        cardTitle={"Kit Lanche"}
+                        cardTitle={"Kit Lanche Passeio"}
                         totalOfOrders={120}
                         priorityOrders={20}
                         onLimitOrders={40}

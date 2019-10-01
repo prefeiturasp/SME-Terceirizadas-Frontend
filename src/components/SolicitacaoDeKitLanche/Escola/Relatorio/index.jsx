@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
+import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -92,14 +93,20 @@ class Relatorio extends Component {
     aprovaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de Kit Lanche validada com sucesso!");
+          toastSuccess(
+            "Solicitação de Kit Lanche Passeio validada com sucesso!"
+          );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
+          toastError(
+            "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
+          );
         }
       },
       function(error) {
-        toastError("Houve um erro ao validar a Solicitação de Kit Lanche");
+        toastError(
+          "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
+        );
       }
     );
   }
@@ -128,7 +135,7 @@ class Relatorio extends Component {
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-              Kit Lanche Pedido # {solicitacaoKitLanche.id_externo}
+              Kit Lanche Passeio Pedido # {solicitacaoKitLanche.id_externo}
             </span>
             <div className="card mt-3">
               <div className="card-body">
@@ -240,7 +247,11 @@ class Relatorio extends Component {
                     {solicitacaoKitLanche.solicitacao_kit_lanche &&
                       solicitacaoKitLanche.solicitacao_kit_lanche.kits.map(
                         (kit, key) => {
-                          return <p className="value">Modelo {kit.nome}</p>;
+                          return (
+                            <p key={key} className="value">
+                              Modelo {kit.nome}
+                            </p>
+                          );
                         }
                       )}
                   </div>
@@ -272,15 +283,17 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label={"Cancelar pedido"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={ButtonType.BUTTON}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                </div>
+                {escolaPodeCancelar(solicitacaoKitLanche.status) && (
+                  <div className="form-group row float-right mt-4">
+                    <BaseButton
+                      label={"Cancelar pedido"}
+                      className="ml-3"
+                      onClick={() => this.showModal()}
+                      type={ButtonType.BUTTON}
+                      style={ButtonStyle.OutlinePrimary}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </form>

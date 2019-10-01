@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
-import { CODAE, SOLICITACOES } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import {
@@ -11,35 +10,79 @@ import {
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "../../Shareable/style.scss";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
-import VisaoGeral from "./VisaoGeral";
+import {
+  ALTERACAO_CARDAPIO,
+  CODAE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACOES,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  SUSPENSAO_ALIMENTACAO
+} from "../../../configs/constants";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
 import {
+  getResumoPendenciasAlteracaoCardapio,
+  getResumoPendenciasInclusaoAlimentacao,
+  getResumoPendenciasInversoesCardapio,
+  getResumoPendenciasKitLancheAvulso,
+  getResumoPendenciasKitLancheUnificado,
+  getResumoPendenciasSuspensaoCardapio,
   getResumoPendenciasCODAEporDRE,
   getResumoPendenciasCODAEporLote
 } from "../../../services/painelCODAE.service.js";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import { FILTRO_VISAO } from "../../../constants/filtroVisao";
 
 class DashboardCODAE extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      resumoPendenciasInversoesCardapio: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasInclusaoAlimentacao: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasKitLancheAvulsa: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasKitLancheUnificado: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoPendenciasAlteracaoCardapio: {
+        total: 0,
+        limite: 0,
+        prioritario: 0,
+        regular: 0
+      },
+      resumoSuspensoesCardapio: {
+        total: 0,
+        informados: 0,
+        ciencia: 0
+      },
       collapsed: true,
       dre: false,
       filtro: FILTRO.SEM_FILTRO,
-      visao: "tipo_solicitacao",
+      visao: FILTRO_VISAO.TIPO_SOLICITACAO,
 
       solicitacoesAprovadasFiltradas: [],
       solicitacoesPendentesAprovacaoFiltradas: [],
       solicitacoesCanceladasFiltradas: [],
       solicitacoesRevisaoFiltradas: [],
-
-      loadingAlteracaoCardapio: true,
-      loadingInclusoesAlimentacao: true,
-      loadingInversoesCardapio: true,
-      loadingKitLanche: true,
-      loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
 
       loadingPainelSolicitacoes: true,
 
@@ -51,20 +94,52 @@ class DashboardCODAE extends Component {
   }
 
   componentDidMount() {
-    this.carregaResumosPendencias("sem_filtro");
+    this.carregaResumosPendencias(FILTRO.SEM_FILTRO);
   }
 
-  async carregaResumosPendencias(filtroPendencias) {
-    const resumoPorDRE = await getResumoPendenciasCODAEporDRE();
-    const resumoPorLote = await getResumoPendenciasCODAEporLote();
+  async carregaResumosPendencias(filtro) {
+    this.setState({
+      loadingPainelSolicitacoes: true
+    });
+    const resumoPendenciasInversoesCardapio = await getResumoPendenciasInversoesCardapio(
+      filtro
+    );
+    const resumoPendenciasInclusaoAlimentacao = await getResumoPendenciasInclusaoAlimentacao(
+      filtro
+    );
+    const resumoPendenciasKitLancheAvulsa = await getResumoPendenciasKitLancheAvulso(
+      filtro
+    );
+    const resumoPendenciasKitLancheUnificado = await getResumoPendenciasKitLancheUnificado(
+      filtro
+    );
+    const resumoPendenciasAlteracaoCardapio = await getResumoPendenciasAlteracaoCardapio(
+      filtro
+    );
+    const resumoSuspensoesCardapio = await getResumoPendenciasSuspensaoCardapio(
+      filtro
+    );
+    this.setState({
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasInclusaoAlimentacao,
+      resumoPendenciasKitLancheAvulsa,
+      resumoPendenciasKitLancheUnificado,
+      resumoPendenciasAlteracaoCardapio,
+      resumoSuspensoesCardapio
+    });
+    const resumoPorDRE = await getResumoPendenciasCODAEporDRE(filtro);
+    const resumoPorLote = await getResumoPendenciasCODAEporLote(filtro);
     this.setState({
       resumoPorDRE,
-      resumoPorLote
+      resumoPorLote,
+      filtro,
+      loadingPainelSolicitacoes: false
     });
   }
 
   onVencimentoPara(filtro) {
     this.setState({ filtro });
+    this.carregaResumosPendencias(filtro);
   }
 
   changeVisao(visao) {
@@ -73,17 +148,6 @@ class DashboardCODAE extends Component {
 
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.loadingPainelSolicitacoes !==
-      this.props.loadingPainelSolicitacoes
-    ) {
-      this.setState({
-        loadingPainelSolicitacoes: this.props.loadingPainelSolicitacoes
-      });
-    }
   }
 
   render() {
@@ -102,6 +166,11 @@ class DashboardCODAE extends Component {
     const {
       collapsed,
       loadingPainelSolicitacoes,
+      resumoPendenciasInclusaoAlimentacao,
+      resumoPendenciasAlteracaoCardapio,
+      resumoPendenciasKitLancheAvulsa,
+      resumoPendenciasInversoesCardapio,
+      resumoPendenciasKitLancheUnificado,
       resumoPorDRE,
       resumoPorLote
     } = this.state;
@@ -122,7 +191,7 @@ class DashboardCODAE extends Component {
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
                 <Link to={`/${CODAE}/${SOLICITACOES}`}>
-                  Painel de Status de Solicitações
+                  Acompanhamento de solicitações
                 </Link>
                 <span className="float-right">
                   <input
@@ -141,7 +210,7 @@ class DashboardCODAE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Pendente Aprovação"}
+                    cardTitle={"Aguardando Aprovação"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
@@ -163,7 +232,7 @@ class DashboardCODAE extends Component {
               <div className="row pt-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Solicitação recusada"}
+                    cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
@@ -190,11 +259,11 @@ class DashboardCODAE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Pendente Aprovação
+                  Solicitação Aguardando Aprovação{" "}
                 </span>
                 <span>
                   <i className="fas fa-ban" />
-                  Solicitação Recusada
+                  Solicitação Negadas
                 </span>
                 <span>
                   <i className="fas fa-times-circle" />
@@ -290,10 +359,123 @@ class DashboardCODAE extends Component {
                 </div>
               )}
               {this.state.visao === "tipo_solicitacao" && (
-                <VisaoGeral
-                  filtro={this.state.filtro}
-                  quantidade_suspensoes={quantidade_suspensoes}
-                />
+                <div>
+                  <div className="row">
+                    <div className="col-6">
+                      <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
+                        <CardPendencia
+                          cardTitle={"Inclusão de alimentação"}
+                          totalOfOrders={
+                            resumoPendenciasInclusaoAlimentacao.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasInclusaoAlimentacao.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasInclusaoAlimentacao.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasInclusaoAlimentacao.regular
+                          }
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Alteração de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasAlteracaoCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasAlteracaoCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasAlteracaoCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasAlteracaoCardapio.regular
+                          }
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE}`}>
+                        <CardPendencia
+                          cardTitle={"Solicitação de Kit Lanche"}
+                          totalOfOrders={resumoPendenciasKitLancheAvulsa.total}
+                          priorityOrders={
+                            resumoPendenciasKitLancheAvulsa.prioritario
+                          }
+                          onLimitOrders={resumoPendenciasKitLancheAvulsa.limite}
+                          regularOrders={
+                            resumoPendenciasKitLancheAvulsa.regular
+                          }
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Inversão de dia de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasInversoesCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasInversoesCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasInversoesCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasInversoesCardapio.regular
+                          }
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <Link to={`/${CODAE}/${SUSPENSAO_ALIMENTACAO}`}>
+                        <CardPendencia
+                          cardTitle={"Suspensão de Alimentação"}
+                          totalOfOrders={quantidade_suspensoes}
+                          priorityOrders={quantidade_suspensoes}
+                          priorityOrdersOnly={true}
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link
+                        to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
+                      >
+                        <CardPendencia
+                          cardTitle={"Solicitação Unificada"}
+                          totalOfOrders={
+                            resumoPendenciasKitLancheUnificado.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasKitLancheUnificado.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasKitLancheUnificado.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasKitLancheUnificado.regular
+                          }
+                          loading={loadingPainelSolicitacoes}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           </div>

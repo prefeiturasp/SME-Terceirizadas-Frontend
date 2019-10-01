@@ -30,7 +30,7 @@ export const field = ({
       height: "2em"
     };
     return (
-      <div className="form-check  form-check-inline">
+      <div key={index} className="form-check  form-check-inline">
         <input
           className="compare_items form-check-input"
           type="checkbox"

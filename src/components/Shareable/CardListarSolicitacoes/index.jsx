@@ -39,7 +39,7 @@ export class CardListarSolicitacoes extends Component {
           </Field>
           {solicitacoes.map((value, key) => {
             return (
-              <div className="row">
+              <div key={key} className="row">
                 <div className="col-9">
                   <Field
                     className="small"

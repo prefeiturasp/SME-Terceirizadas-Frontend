@@ -13,7 +13,7 @@ const atual = {
 const anteriores = [
   {
     href: `/${DRE}/${SOLICITACAO_KIT_LANCHE}`,
-    titulo: "Solicitações de Kit Lanche"
+    titulo: "Solicitações de Kit Lanche Passeio"
   }
 ];
 

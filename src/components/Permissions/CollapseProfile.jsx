@@ -7,7 +7,7 @@ class CollapseProfile extends Component {
   PERMISSIONS = [
     { id_: 1, name: "Suspender Alimentação" },
     { id_: 2, name: "Adicionar Alimentação" },
-    { id_: 3, name: "Solicitar Kit Lanche" },
+    { id_: 3, name: "Solicitar Kit Lanche Passeio" },
     { id_: 4, name: "Cadastro de Usuário" },
     { id_: 5, name: "Alterar alimetação" },
     { id_: 6, name: "Cadastro de unidade escolar" }
@@ -82,6 +82,7 @@ class CollapseProfile extends Component {
               {profileList.map((value, key) => {
                 return (
                   <CollapsePermission
+                    key={key}
                     labelProfile={value.role}
                     idProfile={key}
                     permissionList={this.PERMISSIONS}

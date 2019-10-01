@@ -6,10 +6,10 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/escola/solicitacao-de-kit-lanche",
-  titulo: "Solicitação de Kit Lanche"
+  titulo: "Solicitação de Kit Lanche Passeio"
 };
 
-export default props => (
+export default () => (
   <Page titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />

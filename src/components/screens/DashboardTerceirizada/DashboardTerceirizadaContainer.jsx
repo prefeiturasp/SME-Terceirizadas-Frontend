@@ -28,7 +28,7 @@ class DashboardTerceirizadaContainer extends Component {
           date: "11:19"
         },
         {
-          text: "12083 - 7A IP I - Solicitação de Kit Lanche",
+          text: "12083 - 7A IP I - Solicitação de Kit Lanche Passeio",
           date: "Qua 11:07"
         },
         {

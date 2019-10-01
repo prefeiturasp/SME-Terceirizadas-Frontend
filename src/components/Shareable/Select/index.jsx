@@ -23,7 +23,7 @@ export const Select = props => {
     <div className="select">
       {label && [
         required && <span className="required-asterisk">*</span>,
-        <label htmlFor={name} className="col-form-label">
+        <label key={1} htmlFor={name} className="col-form-label">
           {label}
         </label>
       ]}

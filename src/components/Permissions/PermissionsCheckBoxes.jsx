@@ -133,7 +133,7 @@ class PermissionsCheckBoxes extends Component {
                 aria-controls="meal-kit-feature-toggle"
                 aria-expanded={openMealKitFeature}
               >
-                Solicitação de Kit Lanche
+                Solicitação de Kit Lanche Passeio
               </button>
             </h5>
           </div>

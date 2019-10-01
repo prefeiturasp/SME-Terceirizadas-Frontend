@@ -15,12 +15,12 @@ export class Rascunhos extends Component {
   render() {
     const { rascunhosInclusaoDeAlimentacao, carregarRascunho } = this.props;
     const cardsInclusoes = rascunhosInclusaoDeAlimentacao.map(
-      inclusaoDeAlimentacao => {
+      (inclusaoDeAlimentacao, key) => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
         const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
         let backgroundColor = "#DADADA";
         return (
-          <div className="draft bg-white border rounded mt-1 p-2">
+          <div key={key} className="draft bg-white border rounded mt-1 p-2">
             <div className="mt-2">
               <label className="bold ml-3">
                 {`Inclusão de Alimentação # ${id_externo}`}
