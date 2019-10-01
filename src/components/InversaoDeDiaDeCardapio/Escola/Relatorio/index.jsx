@@ -203,7 +203,7 @@ class Relatorio extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <BaseButton
-                    label={"Cancelar pedido"}
+                    label={"Cancelar solicitação"}
                     className="ml-3"
                     onClick={() => this.showModal()}
                     type={ButtonType.BUTTON}
