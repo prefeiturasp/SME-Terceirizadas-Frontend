@@ -87,7 +87,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Alteração de Cardápio recusado com sucesso!");
   }
@@ -103,7 +103,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao aprovar a Alteração de Cardápio");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
     );

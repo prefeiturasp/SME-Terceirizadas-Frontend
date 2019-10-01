@@ -101,7 +101,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Solicitação de Alimentação recusada com sucesso!");
   }
@@ -123,7 +123,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao dar ciência para a Inclusão de Alimentação"
         );

@@ -99,7 +99,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Solicitação Unificada negada com sucesso!");
   }
@@ -115,7 +115,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao autorizar a Solicitação Unificada");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao autorizar a Solicitação Unificada");
       }
     );

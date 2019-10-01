@@ -35,7 +35,7 @@ class EmailConfiguration extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
   }
 
@@ -100,8 +100,7 @@ class EmailConfiguration extends Component {
         }
         this.setState({ showTest: true });
       })
-      .catch(resp => {
-        console.log("error", resp);
+      .catch(() => {
         this.setState({ showTest: false });
       });
   }

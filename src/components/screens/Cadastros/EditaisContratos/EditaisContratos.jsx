@@ -150,7 +150,7 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao excluir o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o edital");
         }
       );
@@ -212,7 +212,7 @@ class EditaisContratos extends Component {
     this.setState({ exibirModal: true });
   }
 
-  fecharModal(e) {
+  fecharModal() {
     this.setState({ exibirModal: false });
   }
 
@@ -228,7 +228,7 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao salvar o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar o edital");
         }
       );
@@ -243,14 +243,14 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao atualizar o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar o edital");
         }
       );
     }
   }
 
-  resetForm(value) {
+  resetForm() {
     [
       "tipo_contratacao",
       "edital_numero",
@@ -342,7 +342,7 @@ class EditaisContratos extends Component {
     });
   }
 
-  salvaFormulario(values) {
+  salvaFormulario() {
     const edital_contratos = this.state.edital;
     edital_contratos[
       "contratos_relacionados"
@@ -483,15 +483,15 @@ class EditaisContratos extends Component {
                     {!uuid ? (
                       <Botao
                         texto="Cancelar"
-                        onClick={value => {
-                          this.resetForm(value);
+                        onClick={() => {
+                          this.resetForm();
                         }}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     ) : (
                       <Botao
                         texto="Excluir"
-                        onClick={event => {
+                        onClick={() => {
                           this.excluirEdital(uuid);
                         }}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -499,7 +499,7 @@ class EditaisContratos extends Component {
                     )}
                     <Botao
                       texto={"Salvar"}
-                      onClick={event => {
+                      onClick={() => {
                         this.salvaFormulario();
                       }}
                       className="ml-3"

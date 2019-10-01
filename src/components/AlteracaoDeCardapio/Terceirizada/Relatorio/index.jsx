@@ -85,7 +85,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Alteração de Cardápio recusada!");
   }
@@ -104,7 +104,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError("ouve um erro ao dar ciência sobre Alteração de Cardápio");
       }
     );

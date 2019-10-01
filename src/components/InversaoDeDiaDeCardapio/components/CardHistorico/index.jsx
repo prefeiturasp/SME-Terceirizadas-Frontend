@@ -38,7 +38,7 @@ export class CardHistorico extends Component {
   }
 
   // TODO: chamar "imprimir" quando tiver endpoint definido
-  handleClickSubmit = e => {};
+  handleClickSubmit = () => {};
 
   selecionarTodos() {
     this.props.pedidos.forEach((_, key) => {
@@ -157,7 +157,7 @@ export class CardHistorico extends Component {
                             onClick={() => this.setRedirect()}
                             className="col-4"
                           >
-                            {pedido.data_de} -> {pedido.data_para}
+                            {pedido.data_de} -&gt; {pedido.data_para}
                           </td>
                         </tr>
                       );

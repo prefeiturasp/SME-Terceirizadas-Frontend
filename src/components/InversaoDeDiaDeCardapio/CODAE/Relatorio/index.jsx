@@ -94,7 +94,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Solicitação de Alimentação não autorizado com sucesso!");
   }
@@ -112,7 +112,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
       }
     );

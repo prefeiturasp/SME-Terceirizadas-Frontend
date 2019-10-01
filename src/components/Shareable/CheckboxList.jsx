@@ -39,7 +39,7 @@ export const CheckBoxListDefault = props => {
   return listPermissions;
 };
 
-export const CheckBoxListDashboard = props => {
+export const CheckBoxListDashboard = () => {
   const permissions = [
     "Visualização de Todos e/ou Parte dos Pedidos",
     `Filtragem dos Pedidos`,

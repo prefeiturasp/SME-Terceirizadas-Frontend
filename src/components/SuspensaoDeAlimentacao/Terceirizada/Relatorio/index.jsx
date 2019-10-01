@@ -74,7 +74,7 @@ class Relatorio extends Component {
           toastError("Erro ao tomar ciência de suspensão de alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Erro ao tomar ciência de suspensão de alimentação");
       }
     );

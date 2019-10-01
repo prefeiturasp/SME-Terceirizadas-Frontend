@@ -151,7 +151,7 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 
@@ -202,14 +202,14 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(null);
     let periodos = this.state.periodos;
@@ -407,12 +407,12 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function(error) {
+          function() {
             toastError("Erro ao carregar as inclusões salvas");
           }
         );
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
@@ -422,14 +422,13 @@ class InclusaoDeAlimentacao extends Component {
     inicioPedidoEndpointCorreto(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          //AQUIIIIIIIIII
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
           toastError("Houve um erro ao enviar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );
@@ -455,7 +454,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -479,7 +478,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );
@@ -506,7 +505,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -530,7 +529,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );
@@ -602,7 +601,7 @@ class InclusaoDeAlimentacao extends Component {
                     rascunhosInclusaoDeAlimentacao
                   }
                   removerRascunho={this.removerRascunho}
-                  resetForm={event => this.resetForm(event)}
+                  resetForm={() => this.resetForm()}
                   carregarRascunho={params => this.carregarRascunho(params)}
                 />
               </div>
@@ -851,7 +850,7 @@ class InclusaoDeAlimentacao extends Component {
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
-                      onClick={event => this.resetForm(event)}
+                      onClick={() => this.resetForm()}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao

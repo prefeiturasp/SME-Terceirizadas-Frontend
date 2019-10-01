@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-export const InputSearch = props => (
+export const InputSearch = () => (
   <div className="">
     <div>
       <div className="">

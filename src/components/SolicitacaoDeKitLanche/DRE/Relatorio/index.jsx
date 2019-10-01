@@ -12,7 +12,6 @@ import {
 import { meusDados } from "../../../../services/perfil.service";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
@@ -89,7 +88,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
   }
 
@@ -108,7 +107,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
         );

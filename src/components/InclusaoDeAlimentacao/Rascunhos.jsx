@@ -35,7 +35,7 @@ export class Rascunhos extends Component {
             <div className="icon-draft-card float-right">
               Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
-                onClick={p =>
+                onClick={() =>
                   this.removerRascunho(id_externo, uuid, ehInclusaoContinua)
                 }
               >
