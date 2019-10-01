@@ -1,27 +1,28 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { formValueSelector, reduxForm } from "redux-form";
+import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { meusDados } from "../../../../services/perfil.service";
 import {
   aprovaDeKitLancheAvulsoCodae,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
-import { meusDados } from "../../../../services/perfil.service";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import { prazoDoPedidoMensagem } from "./helper";
-import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
 import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 import Botao from "../../../Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { ModalNegarSolicitacao } from "../../../Shareable/ModalNegarSolicitacao";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import { prazoDoPedidoMensagem } from "./helper";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -87,7 +88,6 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação negada com sucesso!");
   }
 
   handleSubmit() {
@@ -117,14 +117,18 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      uuid
     } = this.state;
+    const { justificativa } = this.props;
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
-        <ModalRecusarSolicitacao
+        <ModalNegarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -216,18 +220,6 @@ class Relatorio extends Component {
                         solicitacaoKitLanche.escola.alunos_total}
                     </span>
                   </div>
-                  {/* <div className="report-students-div col-3">
-                    <span>Nº de alunos matutino</span>
-                    <span>{escola.matutino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos vespertino</span>
-                    <span>{escola.vespertino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos nortuno</span>
-                    <span>{escola.noturno}</span>
-                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
@@ -331,9 +323,19 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "kitLancheAvulsoRelatorioCodaeForm";
+
+const selector = formValueSelector(formName);
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);
