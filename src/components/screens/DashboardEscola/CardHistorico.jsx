@@ -21,7 +21,7 @@ const CardHistorico = props => {
     }
   };
 
-  const handleClickSubmit = e => {
+  const handleClickSubmit = () => {
     alert("it will be submited");
   };
 

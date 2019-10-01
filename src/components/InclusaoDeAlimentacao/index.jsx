@@ -209,7 +209,7 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(null);
     let periodos = this.state.periodos;
@@ -422,7 +422,6 @@ class InclusaoDeAlimentacao extends Component {
     inicioPedidoEndpointCorreto(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          //AQUIIIIIIIIII
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
@@ -602,7 +601,7 @@ class InclusaoDeAlimentacao extends Component {
                     rascunhosInclusaoDeAlimentacao
                   }
                   removerRascunho={this.removerRascunho}
-                  resetForm={event => this.resetForm(event)}
+                  resetForm={() => this.resetForm()}
                   carregarRascunho={params => this.carregarRascunho(params)}
                 />
               </div>
@@ -851,7 +850,7 @@ class InclusaoDeAlimentacao extends Component {
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
-                      onClick={event => this.resetForm(event)}
+                      onClick={() => this.resetForm()}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao

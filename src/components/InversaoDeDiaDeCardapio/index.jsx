@@ -68,7 +68,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("inversaoDeDiaDeCardapioForm");
     this.props.loadInversaoDeDiaDeCardapio(null);
     this.setState({
@@ -109,14 +109,10 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   refresh() {
-    getInversoesDeDiaDeCardapio()
-      .then(response => {
-        const rascunhosInversoes = response.results;
-        this.setState({ rascunhosInversoes });
-      })
-      .catch(error => {
-        console.log("ERROR AO TENTAR CARREGAR INVERSÕES SALVAS: ", error);
-      });
+    getInversoesDeDiaDeCardapio().then(response => {
+      const rascunhosInversoes = response.results;
+      this.setState({ rascunhosInversoes });
+    });
   }
 
   showModal() {
@@ -158,47 +154,37 @@ export class InversaoDeDiaDeCardapio extends Component {
   onSubmit(values) {
     values.escola = this.props.meusDados.escolas[0].uuid;
     if (!values.uuid) {
-      criarInversaoDeDiaDeCardapio(values)
-        .then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(response.data.uuid);
-            } else {
-              toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-              this.resetForm();
-            }
+      criarInversaoDeDiaDeCardapio(values).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
           } else {
-            var keys = Object.keys(response.data);
-            keys.forEach(function(key) {
-              toastError(response.data[key][0]);
-            });
+            toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
+            this.resetForm();
           }
-        })
-        .catch(error => {
-          console.log("ERRO AO TENTAR SALVAR: ", error);
-        });
+        } else {
+          var keys = Object.keys(response.data);
+          keys.forEach(function(key) {
+            toastError(response.data[key][0]);
+          });
+        }
+      });
     } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, values)
-        .then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(response.data.uuid);
-            } else {
-              toastSuccess(
-                "Inversão de dia de Cardápio atualizado com sucesso!"
-              );
-              this.resetForm();
-            }
+      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
           } else {
-            var keys = Object.keys(response.data);
-            keys.forEach(function(key) {
-              toastError(response.data[key][0]);
-            });
+            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
+            this.resetForm();
           }
-        })
-        .catch(error => {
-          console.log("ERRO AO TENTAR SALVAR: ", error);
-        });
+        } else {
+          var keys = Object.keys(response.data);
+          keys.forEach(function(key) {
+            toastError(response.data[key][0]);
+          });
+        }
+      });
     }
   }
 
@@ -227,7 +213,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 <Rascunhos
                   rascunhosInversoes={rascunhosInversoes}
                   removerRascunho={this.removerRascunho}
-                  resetForm={event => this.resetForm(event)}
+                  resetForm={() => this.resetForm()}
                   carregarRascunho={params => this.carregarRascunho(params)}
                 />
               </div>
