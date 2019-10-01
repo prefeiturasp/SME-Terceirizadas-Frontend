@@ -126,7 +126,7 @@ class CadastroLote extends Component {
     this.setState({ exibirModal: true });
   }
 
-  fecharModal(e) {
+  fecharModal() {
     this.setState({ exibirModal: false });
   }
 
@@ -192,7 +192,7 @@ class CadastroLote extends Component {
     this.setState({ escolasSelecionadas: values, escolasSelecionadasNomes });
   }
 
-  resetForm(event) {
+  resetForm() {
     ["nome", "iniciais", "diretoria_regional", "tipo_gestao"].forEach(
       element => {
         this.props.change(element, "");
@@ -426,7 +426,7 @@ class CadastroLote extends Component {
                   {!uuid && (
                     <Botao
                       texto="Cancelar"
-                      onClick={event => this.resetForm(event)}
+                      onClick={() => this.resetForm()}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_STYLE.BUTTON}
                     />
