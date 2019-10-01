@@ -76,7 +76,9 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
     return {
       text: log.descricao,
       date: log.data_log,
-      link: `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
+      link: `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${
+        log.uuid
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
     };
   });
 };

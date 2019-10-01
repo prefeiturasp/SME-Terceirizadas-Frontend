@@ -1,0 +1,19 @@
+import React from "react";
+import Breadcrumb from "../../../components/Shareable/Breadcrumb";
+import StatusSolicitacoes from "../../../components/screens/DashboardDRE/StatusSolicitacoes";
+import Page from "../../../components/Shareable/Page/Page";
+import { HOME } from "../constants";
+import { DRE, SOLICITACOES_RECUSADAS } from "../../../configs/constants";
+import { STATUS } from "../../../components/screens/const";
+
+const atual = {
+  href: `/${DRE}/${SOLICITACOES_RECUSADAS}`,
+  titulo: "Solicitações Negadas"
+};
+
+export default () => (
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Breadcrumb home={HOME} atual={atual} />
+    <StatusSolicitacoes tipoStatus={STATUS.RECUSADAS} />
+  </Page>
+);

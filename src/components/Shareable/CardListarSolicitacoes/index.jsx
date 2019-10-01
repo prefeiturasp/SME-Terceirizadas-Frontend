@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import { NavLink } from "react-router-dom";
 import { Checkbox } from "../Checkbox";
 import "./style.scss";
+import { RELATORIO } from "../../../configs/constants";
+import { caminhoURL } from "../CardStatusDeSolicitacao/helper";
 
 export class CardListarSolicitacoes extends Component {
   constructor(props) {
@@ -39,7 +42,7 @@ export class CardListarSolicitacoes extends Component {
           </Field>
           {solicitacoes.map((value, key) => {
             return (
-              <div className="row">
+              <div key={key} className="row">
                 <div className="col-9">
                   <Field
                     className="small"
@@ -47,7 +50,18 @@ export class CardListarSolicitacoes extends Component {
                     name={`check_${key}`}
                     onClick={() => onCheckClicked(solicitacoes, key)}
                   >
-                    <p className="data ml-4">{value.text}</p>
+                    <NavLink
+                      key={key}
+                      to={
+                        value.link ||
+                        `${caminhoURL(value.tipo_doc)}/${RELATORIO}?uuid=${
+                          value.uuid
+                        }&ehInclusaoContinua=${value.tipo_doc ===
+                          "INC_ALIMENTA_CONTINUA"}`
+                      }
+                    >
+                      <p className="data ml-4">{value.text}</p>
+                    </NavLink>
                   </Field>
                 </div>
                 <span className="date-time col-3 text-right">{value.date}</span>
