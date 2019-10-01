@@ -1,5 +1,3 @@
-
-
 // Escola
 
 export {

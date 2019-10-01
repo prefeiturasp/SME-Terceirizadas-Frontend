@@ -60,7 +60,6 @@ class Relatorio extends Component {
         });
       });
     }
-    
   }
 
   showModal() {
@@ -81,15 +80,11 @@ class Relatorio extends Component {
           );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            "Houve um erro ao validar a Inversão de Dia de Cardapio"
-          );
+          toastError("Houve um erro ao validar a Inversão de Dia de Cardapio");
         }
       },
       function(error) {
-        toastError(
-          "Houve um erro ao validar a Inversão de Dia de Cardapio"
-        );
+        toastError("Houve um erro ao validar a Inversão de Dia de Cardapio");
       }
     );
   }
@@ -112,12 +107,15 @@ class Relatorio extends Component {
           justificativa={justificativa}
           origemSolicitacao={ORIGEM_SOLICITACAO.ESCOLA}
           meusDados={meusDados}
-          solicitacaoInversaoDeDiaDeCardapio={solicitacaoInversaoDeDiaDeCardapio}
+          solicitacaoInversaoDeDiaDeCardapio={
+            solicitacaoInversaoDeDiaDeCardapio
+          }
         />
         {solicitacaoInversaoDeDiaDeCardapio && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
-            Alteracao de Cardapio # {solicitacaoInversaoDeDiaDeCardapio.id_externo}
+              Alteracao de Cardapio #{" "}
+              {solicitacaoInversaoDeDiaDeCardapio.id_externo}
             </span>
             <div className="card mt-3">
               <div className="card-body">
@@ -147,8 +145,10 @@ class Relatorio extends Component {
                     <p>DRE</p>
                     <p className="value-important">
                       {solicitacaoInversaoDeDiaDeCardapio.escola &&
-                        solicitacaoInversaoDeDiaDeCardapio.escola.diretoria_regional &&
-                        solicitacaoInversaoDeDiaDeCardapio.escola.diretoria_regional.nome}
+                        solicitacaoInversaoDeDiaDeCardapio.escola
+                          .diretoria_regional &&
+                        solicitacaoInversaoDeDiaDeCardapio.escola
+                          .diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
@@ -164,13 +164,18 @@ class Relatorio extends Component {
                     <p className="value-important">
                       {solicitacaoInversaoDeDiaDeCardapio.escola &&
                         solicitacaoInversaoDeDiaDeCardapio.escola.tipo_gestao &&
-                        solicitacaoInversaoDeDiaDeCardapio.escola.tipo_gestao.nome}
+                        solicitacaoInversaoDeDiaDeCardapio.escola.tipo_gestao
+                          .nome}
                     </p>
                   </div>
                 </div>
                 <hr />
                 <div className="row">
-                  {<FluxoDeStatus listaDeStatus={solicitacaoInversaoDeDiaDeCardapio.logs} />}
+                  {
+                    <FluxoDeStatus
+                      listaDeStatus={solicitacaoInversaoDeDiaDeCardapio.logs}
+                    />
+                  }
                 </div>
                 <hr />
                 <div className="row">
@@ -178,7 +183,8 @@ class Relatorio extends Component {
                     <span>Nº de alunos matriculados total</span>
                     <span>
                       {solicitacaoInversaoDeDiaDeCardapio.escola &&
-                        solicitacaoInversaoDeDiaDeCardapio.escola.quantidade_alunos}
+                        solicitacaoInversaoDeDiaDeCardapio.escola
+                          .quantidade_alunos}
                     </span>
                   </div>
                 </div>
@@ -187,7 +193,7 @@ class Relatorio extends Component {
                     <p className="value">Descrição da Solicitação</p>
                   </div>
                 </div>
-                
+
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
@@ -199,10 +205,11 @@ class Relatorio extends Component {
                           solicitacaoInversaoDeDiaDeCardapio.motivo
                       }}
                     />
-
                   </div>
                 </div>
-                {escolaPodeCancelar(solicitacaoInversaoDeDiaDeCardapio.status) && (
+                {escolaPodeCancelar(
+                  solicitacaoInversaoDeDiaDeCardapio.status
+                ) && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
                       label={"Cancelar solicitação"}

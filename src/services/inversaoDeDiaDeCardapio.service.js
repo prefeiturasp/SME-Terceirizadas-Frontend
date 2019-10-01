@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import {FLUXO} from "./contants"
+import { FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -269,7 +269,9 @@ export const getTerceirizadaPedidosAprovados = () => {
 };
 
 export const cancelaInversaoDiaCardapioEscola = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.ESCOLA_CANCELA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",

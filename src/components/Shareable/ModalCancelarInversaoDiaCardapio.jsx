@@ -23,7 +23,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
   async cancelarSolicitacaoDaEscola(uuid, origemSolicitacao) {
     const { justificativa } = this.state;
     let resp = "";
- 
+
     resp = await cancelaInversaoDiaCardapioEscola(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
@@ -55,16 +55,14 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
           <div className="form-row">
             <div className="col-12">
               <p className="label--red">
-
-                {solicitacaoInversaoDeDiaDeCardapio && 
-                  solicitacaoInversaoDeDiaDeCardapio.status === statusEnum.CODAE_AUTORIZADO  ? (
-                  "Esta solicitação já foi autorizada pela CODAE. " 
-                ) : (
-                  "Esta solicitação está aguardando validação da DRE ou autorização da CODAE. " 
-                )}
+                {solicitacaoInversaoDeDiaDeCardapio &&
+                solicitacaoInversaoDeDiaDeCardapio.status ===
+                  statusEnum.CODAE_AUTORIZADO
+                  ? "Esta solicitação já foi autorizada pela CODAE. "
+                  : "Esta solicitação está aguardando validação da DRE ou autorização da CODAE. "}
                 Deseja seguir em frente com o cancelamento?
               </p>
-            </div>  
+            </div>
             <div className="col-12 label--gray margin-fix">
               <b>Resumo</b>
               <p>{`Solicitação nº #${solicitacaoInversaoDeDiaDeCardapio &&
@@ -75,7 +73,8 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
                 ${solicitacaoInversaoDeDiaDeCardapio &&
                   solicitacaoInversaoDeDiaDeCardapio.data_para}`}</p>
               <p>{`Quantidade de Alimentações: ${solicitacaoInversaoDeDiaDeCardapio &&
-                solicitacaoInversaoDeDiaDeCardapio.escola.quantidade_alunos}`}</p>
+                solicitacaoInversaoDeDiaDeCardapio.escola
+                  .quantidade_alunos}`}</p>
             </div>
             <div className="form-group col-12">
               <Field
