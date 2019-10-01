@@ -66,7 +66,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
   }
 
@@ -83,7 +83,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao validar a Inversão de Dia de Cardapio");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao validar a Inversão de Dia de Cardapio");
       }
     );

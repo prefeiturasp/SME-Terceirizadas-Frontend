@@ -20,7 +20,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
     };
   }
 
-  async cancelarSolicitacaoDaEscola(uuid, origemSolicitacao) {
+  async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
     let resp = "";
 
@@ -43,8 +43,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
       showModal,
       closeModal,
       uuid,
-      solicitacaoInversaoDeDiaDeCardapio,
-      origemSolicitacao
+      solicitacaoInversaoDeDiaDeCardapio
     } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
@@ -69,7 +68,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
                 solicitacaoInversaoDeDiaDeCardapio.id_externo}`}</p>
               <p>{`Solicitante: AGUARDANDO DEFINIÇÃO DE PERFIL`}</p>
               <p>{`Data: ${solicitacaoInversaoDeDiaDeCardapio &&
-                solicitacaoInversaoDeDiaDeCardapio.data_de} -> 
+                solicitacaoInversaoDeDiaDeCardapio.data_de} ->
                 ${solicitacaoInversaoDeDiaDeCardapio &&
                   solicitacaoInversaoDeDiaDeCardapio.data_para}`}</p>
               <p>{`Quantidade de Alimentações: ${solicitacaoInversaoDeDiaDeCardapio &&
@@ -98,7 +97,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
             label="Sim"
             type={ButtonType.BUTTON}
             onClick={() => {
-              this.cancelarSolicitacaoDaEscola(uuid, origemSolicitacao);
+              this.cancelarSolicitacaoDaEscola(uuid);
             }}
             style={ButtonStyle.Primary}
             className="ml-3"
