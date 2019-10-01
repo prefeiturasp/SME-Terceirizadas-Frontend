@@ -112,7 +112,7 @@ class Relatorio extends Component {
           toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
         }
       },
-      function(error) {
+      function() {
         toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
       }
     );

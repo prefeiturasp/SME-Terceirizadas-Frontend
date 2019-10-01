@@ -109,7 +109,7 @@ class FoodSuspensionEditor extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -252,7 +252,7 @@ class FoodSuspensionEditor extends Component {
           suspensoesDeAlimentacaoList: res.results
         });
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as suspensões salvas");
       }
     );
@@ -269,7 +269,7 @@ class FoodSuspensionEditor extends Component {
           toastError(res.error);
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Suspensão de Alimentação");
       }
     );
@@ -309,7 +309,7 @@ class FoodSuspensionEditor extends Component {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao salvar a Suspensão de Alimentação");
           }
         );
@@ -328,7 +328,7 @@ class FoodSuspensionEditor extends Component {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
           }
         );

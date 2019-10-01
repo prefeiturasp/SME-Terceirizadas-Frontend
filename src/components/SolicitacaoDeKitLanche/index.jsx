@@ -71,7 +71,7 @@ export class SolicitacaoDeKitLanche extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -188,7 +188,7 @@ export class SolicitacaoDeKitLanche extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao enviar a Solicitação de Kit Lanche Passeio"
         );

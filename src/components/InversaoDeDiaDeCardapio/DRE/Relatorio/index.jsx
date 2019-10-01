@@ -110,7 +110,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao validar a Inversão de dias de cardápio");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao validar a Inversão de dias de cardápio");
       }
     );

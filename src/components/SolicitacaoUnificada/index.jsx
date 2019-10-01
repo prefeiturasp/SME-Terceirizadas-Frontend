@@ -155,7 +155,7 @@ class SolicitacaoUnificada extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -385,7 +385,7 @@ class SolicitacaoUnificada extends Component {
           unifiedSolicitationList: res.results
         });
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
@@ -401,7 +401,7 @@ class SolicitacaoUnificada extends Component {
           toastError("Houve um erro ao enviar a solicitação unificada");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a solicitação unificada");
       }
     );
@@ -430,7 +430,7 @@ class SolicitacaoUnificada extends Component {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao salvar a solicitação unificada");
           }
         );
@@ -451,7 +451,7 @@ class SolicitacaoUnificada extends Component {
               toastError("Houve um erro ao salvar a solicitação unificada");
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao atualizar a solicitação unificada");
           }
         );

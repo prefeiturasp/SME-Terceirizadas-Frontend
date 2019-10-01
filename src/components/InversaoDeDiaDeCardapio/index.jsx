@@ -60,7 +60,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -149,7 +149,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           toastError("Houve um erro ao enviar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );

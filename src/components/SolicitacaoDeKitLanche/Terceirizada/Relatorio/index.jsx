@@ -110,7 +110,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao tomar ciência da Solicitação de Kit Lanche Passeio"
         );

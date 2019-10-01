@@ -114,7 +114,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao autorizar a Solicitação Unificada");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao autorizar a Solicitação Unificada");
       }
     );

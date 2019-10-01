@@ -119,7 +119,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao validar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao validar a Inclusão de Alimentação");
       }
     );

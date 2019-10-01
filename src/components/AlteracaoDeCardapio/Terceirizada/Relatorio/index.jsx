@@ -104,7 +104,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError("ouve um erro ao dar ciência sobre Alteração de Cardápio");
       }
     );

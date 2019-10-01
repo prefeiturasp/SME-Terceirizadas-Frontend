@@ -150,7 +150,7 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao excluir o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o edital");
         }
       );
@@ -228,7 +228,7 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao salvar o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar o edital");
         }
       );
@@ -243,7 +243,7 @@ class EditaisContratos extends Component {
             toastError("Houve um erro ao atualizar o edital");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar o edital");
         }
       );

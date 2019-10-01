@@ -144,7 +144,7 @@ class CadastroLote extends Component {
             toastError("Houve um erro ao excluir o lote");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o lote");
         }
       );
@@ -222,7 +222,7 @@ class CadastroLote extends Component {
             toastError("Houve um erro ao salvar o lote");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar o lote");
         }
       );
@@ -238,7 +238,7 @@ class CadastroLote extends Component {
             toastError("Houve um erro ao atualizar o lote");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar o lote");
         }
       );

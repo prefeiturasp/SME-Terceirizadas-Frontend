@@ -112,7 +112,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
       }
     );

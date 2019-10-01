@@ -202,7 +202,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -407,12 +407,12 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function(error) {
+          function() {
             toastError("Erro ao carregar as inclusões salvas");
           }
         );
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
@@ -429,7 +429,7 @@ class InclusaoDeAlimentacao extends Component {
           toastError("Houve um erro ao enviar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );
@@ -455,7 +455,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -479,7 +479,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );
@@ -506,7 +506,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -530,7 +530,7 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );

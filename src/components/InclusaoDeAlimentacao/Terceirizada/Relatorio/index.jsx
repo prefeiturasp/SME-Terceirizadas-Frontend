@@ -123,7 +123,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao dar ciência para a Inclusão de Alimentação"
         );

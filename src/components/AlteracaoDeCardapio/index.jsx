@@ -113,7 +113,7 @@ class AlteracaoCardapio extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -242,7 +242,7 @@ class AlteracaoCardapio extends Component {
           alteracaoCardapioList: res.results
         });
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as alterações de cardápio salvas");
       }
     );
@@ -259,7 +259,7 @@ class AlteracaoCardapio extends Component {
           toastError(res.error);
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
     );
@@ -286,7 +286,7 @@ class AlteracaoCardapio extends Component {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
         );
@@ -305,7 +305,7 @@ class AlteracaoCardapio extends Component {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao salvar a Alteração de Cardápio");
           }
         );
