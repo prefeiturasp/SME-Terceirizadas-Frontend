@@ -62,6 +62,7 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
+import * as inversaoDeDiaDeCardapioPaginas from "./imports/InversaoDeDiaDeCardapioPaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
 const routesConfig = [
@@ -126,6 +127,13 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: SolicitacaoDeKitLanchePage,
     exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
+    component: inversaoDeDiaDeCardapioPaginas.RelatorioEscola,
+    exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,

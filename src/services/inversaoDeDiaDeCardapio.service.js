@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -264,5 +265,26 @@ export const getTerceirizadaPedidosAprovados = () => {
     })
     .catch(error => {
       console.log(error);
+    });
+};
+
+export const cancelaInversaoDiaCardapioEscola = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.ESCOLA_CANCELA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
     });
 };
