@@ -24,15 +24,20 @@ class DashboardCODAEContainer extends Component {
     let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
     let diretoriasRegionais = await getDiretoriaregionalSimplissima();
 
-    solicitacoesAprovadas = ajustarFormatoLog(
-      solicitacoesAprovadas,
-      LOG_PARA.CODAE
-    );
-    solicitacoesPendentesAprovacao = ajustarFormatoLog(
-      solicitacoesPendentesAprovacao,
-      LOG_PARA.CODAE
-    );
-    solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
+    if (solicitacoesAprovadas.length)
+      solicitacoesAprovadas = ajustarFormatoLog(
+        solicitacoesAprovadas,
+        LOG_PARA.CODAE
+      );
+    if (solicitacoesPendentesAprovacao)
+      solicitacoesPendentesAprovacao = ajustarFormatoLog(
+        solicitacoesPendentesAprovacao,
+        LOG_PARA.CODAE
+      );
+
+    if (solicitacoesCanceladas.length)
+      solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
+
     let lotes = await getLotes();
     lotes = ajustarFormaLotes(lotes.results);
 
