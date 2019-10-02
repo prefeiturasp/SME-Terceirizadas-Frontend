@@ -37,6 +37,7 @@ export class DashboardEscola extends Component {
 
   componentDidUpdate(prevProps) {
     const { autorizadas, pendentes, negadas, canceladas } = this.props;
+
     if (prevProps.autorizadas.length !== autorizadas.length)
       this.setState({
         autorizadasListFiltered: autorizadas

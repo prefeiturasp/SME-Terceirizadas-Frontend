@@ -15,34 +15,10 @@ export default class DashboardEscolaContainer extends Component {
     this.state = {
       numeroAlunos: 0,
       meusDados: {},
-      autorizadas: [
-        {
-          text: "...",
-          date: "...",
-          link: "..."
-        }
-      ],
-      pendentes: [
-        {
-          text: "...",
-          date: "...",
-          link: "..."
-        }
-      ],
-      negadas: [
-        {
-          text: "...",
-          date: "...",
-          link: "..."
-        }
-      ],
-      canceladas: [
-        {
-          text: "...",
-          date: "...",
-          link: "..."
-        }
-      ],
+      autorizadas: [],
+      pendentes: [],
+      negadas: [],
+      canceladas: [],
       theadList: [
         "Nº Solicitação",
         "Escola",
