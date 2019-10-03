@@ -295,46 +295,49 @@ class FoodSuspensionEditor extends Component {
     delete values.status;
     if (!error) {
       if (!values.uuid) {
-        createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.CREATED) {
-              this.refresh();
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Suspensão de Alimentação salva com sucesso");
-              }
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
-          }
-        );
+        this.onCreateSuspensaoDeAlimentacao(values, status);
       } else {
-        updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              this.refresh();
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
-              }
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
-          }
-        );
+        this.onUpdateSuspensaoDeAlimentacao(values, status);
       }
     } else {
       toastError(error);
+    }
+  }
+
+  onUpdateSuspensaoDeAlimentacao(values, status) {
+    updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(async (res) => {
+      if (res.status === HTTP_STATUS.OK) {
+        this.handleCreateUpdateSuccess(status, res, true);
+      }
+      else {
+        toastError(res.error);
+      }
+    }, function () {
+      toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
+    });
+  }
+
+  onCreateSuspensaoDeAlimentacao(values, status) {
+    createSuspensaoDeAlimentacao(JSON.stringify(values)).then(async (res) => {
+      if (res.status === HTTP_STATUS.CREATED) {
+        await this.handleCreateUpdateSuccess(status, res, false);
+      }
+      else {
+        toastError(res.error);
+      }
+    }, function () {
+      toastError("Houve um erro ao salvar a Suspensão de Alimentação");
+    });
+  }
+
+  async handleCreateUpdateSuccess(status, res, update) {
+    this.refresh();
+    if (status === STATUS_DRE_A_VALIDAR) {
+      await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
+      this.refresh();
+    }
+    else {
+      toastSuccess(`Suspensão de Alimentação $${update ? 'salva' : 'atualizada'} com sucesso`);
     }
   }
 

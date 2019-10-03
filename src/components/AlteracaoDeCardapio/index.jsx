@@ -272,48 +272,51 @@ class AlteracaoCardapio extends Component {
     const error = validateSubmit(values, this.props.meusDados);
     if (!error) {
       if (!values.uuid) {
-        createAlteracaoCardapio(JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.CREATED) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-              }
-              this.refresh();
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
-        );
+        this.onCreateAlteracaoCardapio(values, status);
       } else {
-        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              this.refresh();
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-              }
-              this.refresh();
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
-        );
+        this.onUpdateAlteracaoCardapio(values, status);
       }
       this.closeModal();
     } else {
       toastError(error);
     }
+  }
+
+  onUpdateAlteracaoCardapio(values, status) {
+    updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(async (res) => {
+      if (res.status === HTTP_STATUS.OK) {
+        await this.handleCreateUpdateSuccess(status, res);
+      }
+      else {
+        toastError(res.error);
+      }
+    }, function () {
+      toastError("Houve um erro ao salvar a Alteração de Cardápio");
+    });
+  }
+
+  onCreateAlteracaoCardapio(values, status) {
+    createAlteracaoCardapio(JSON.stringify(values)).then(async (res) => {
+      if (res.status === HTTP_STATUS.CREATED) {
+        await this.handleCreateUpdateSuccess(status, res);
+      }
+      else {
+        toastError(res.error);
+      }
+    }, function () {
+      toastError("Houve um erro ao salvar a Alteração de Cardápio");
+    });
+  }
+
+  async handleCreateUpdateSuccess(status, res) {
+    if (status === STATUS_DRE_A_VALIDAR) {
+      await this.enviaAlteracaoCardapio(res.data.uuid);
+      this.refresh();
+    }
+    else {
+      toastSuccess("Alteração de Cardápio salva com sucesso");
+    }
+    this.refresh();
   }
 
   onKeyPress(event) {
