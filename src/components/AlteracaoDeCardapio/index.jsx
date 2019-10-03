@@ -267,44 +267,31 @@ class AlteracaoCardapio extends Component {
     const status = values.status;
     delete values.status;
     const error = validateSubmit(values, this.state);
+
     if (!error) {
-      if (!values.uuid) {
-        createAlteracaoCardapio(JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Alteração de Cardápio salva com sucesso");
+      const servico = values.uuid
+        ? updateAlteracaoCardapio(values.uuid, JSON.stringify(values))
+        : createAlteracaoCardapio(JSON.stringify(values));
+
+      servico.then(
+        async res => {
+          if (res.status === HTTP_STATUS.CREATED || res.status === HTTP_STATUS.OK) {
+            toastSuccess("Alteração de Cardápio salva com sucesso");
+            this.refresh();
+
+            if (status === "DRE_A_VALIDAR") {
+              await this.enviaAlteracaoCardapio(res.data.uuid);
               this.refresh();
-              if (status === "DRE_A_VALIDAR") {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              }
-            } else {
-              toastError(res.error);
             }
-          },
-          function(error) {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          } else {
+            toastError(res.error);
           }
-        );
-      } else {
-        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Alteração de Cardápio salva com sucesso");
-              this.refresh();
-              if (status === "DRE_A_VALIDAR") {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              }
-            } else {
-              toastError(res.error);
-            }
-          },
-          function(error) {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
-        );
-      }
+        },
+        error => {
+          toastError("Houve um erro ao salvar a Alteração de Cardápio");
+        }
+      );
+
       this.closeModal();
     } else {
       toastError(error);
