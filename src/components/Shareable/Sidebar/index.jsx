@@ -17,13 +17,13 @@ export class Sidebar extends Component {
 
   render() {
     const { perfil } = this.state;
+    const tipo_perfil = sessionStorage.getItem("tipo_perfil");
     const {
       nome,
       toggle,
       toggled,
       registro_funcional,
-      nome_instituicao,
-      tipo_perfil
+      nome_instituicao
     } = this.props;
     return (
       <div>
@@ -35,7 +35,7 @@ export class Sidebar extends Component {
         >
           <div className="sidebar-divider my-0" />
           {/* Somente para testar o sidebar enquanto ainda não há perfil/permissões */}
-          {!toggled && tipo_perfil === "admin" && (
+          {!toggled && tipo_perfil === `"admin"` && (
             <div className="testing-sidebar row">
               <div
                 onClick={() => this.setState({ perfil: "escola" })}
@@ -45,7 +45,8 @@ export class Sidebar extends Component {
               </div>
               <div
                 onClick={() => this.setState({ perfil: "diretoria_regional" })}
-                className={`col-2 ${perfil === "diretoria_regional" && "font-weight-bold"}`}
+                className={`col-2 ${perfil === "diretoria_regional" &&
+                  "font-weight-bold"}`}
               >
                 DRE
               </div>
@@ -108,12 +109,19 @@ export class Sidebar extends Component {
               </span>
             </div>
           </div>
-          {tipo_perfil !== "admin" ? (
+          {tipo_perfil !== `"admin"` ? (
             <div className="sidebar-wrapper">
-              {tipo_perfil === "codae" && <SidebarCODAE />}
-              {tipo_perfil === "diretoria_regional" && <SidebarDRE />}
-              {tipo_perfil === "escola" && <SidebarEscola />}
-              {tipo_perfil === "terceirizada" && <SidebarTerceirizada />}
+              {sessionStorage.getItem("tipo_perfil") === "codae" && (
+                <SidebarCODAE />
+              )}
+              {tipo_perfil ===
+                `"diretoria_regional"` && <SidebarDRE />}
+              {tipo_perfil === `"escola"` && (
+                <SidebarEscola />
+              )}
+              {tipo_perfil === `"terceirizada"` && (
+                <SidebarTerceirizada />
+              )}
             </div>
           ) : (
             <div className="sidebar-wrapper">

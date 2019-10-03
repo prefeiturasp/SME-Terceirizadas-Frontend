@@ -12,7 +12,6 @@ export default class Page extends Component {
     super(props);
     this.state = {
       nome: null,
-      tipo_perfil: null,
       toggled: false
     };
     this.toggle = this.toggle.bind(this);
@@ -29,8 +28,7 @@ export default class Page extends Component {
       this.setState({
         nome: meusDados.nome,
         nome_instituicao: meusDados.escolas[0] && meusDados.escolas[0].nome,
-        registro_funcional: meusDados.registro_funcional || "N/A",
-        tipo_perfil: meusDados.tipo_usuario
+        registro_funcional: meusDados.registro_funcional || "N/A"
       });
     } else {
       this.setState({ nome: sessionStorage.getItem("nome") });
@@ -40,7 +38,6 @@ export default class Page extends Component {
   render() {
     const {
       nome,
-      tipo_perfil,
       nome_instituicao,
       registro_funcional,
       toggled
@@ -51,7 +48,6 @@ export default class Page extends Component {
         <Header toggled={toggled} />
         <Sidebar
           nome={nome}
-          tipo_perfil={tipo_perfil}
           toggle={this.toggle}
           toggled={toggled}
           registro_funcional={registro_funcional}
