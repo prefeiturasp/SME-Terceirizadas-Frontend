@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -204,11 +205,31 @@ export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => 
 };
 
 export const DREConfirmaAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/diretoria-regional-aprova/`;
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.DRE_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const DRENegaAlteracaoCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
@@ -318,6 +339,26 @@ export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAENegaAlteracaoCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
