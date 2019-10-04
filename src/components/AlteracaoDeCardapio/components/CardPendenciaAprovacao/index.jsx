@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import "./style.scss";
-import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
+import { ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 
 export class CardPendenciaAprovacao extends Component {
   constructor(props) {
@@ -115,7 +115,7 @@ export class CardPendenciaAprovacao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={`/${parametroURL}/${INCLUSAO_ALIMENTACAO}/relatorio?uuid=${
+                      to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/relatorio?uuid=${
                         pedido.uuid
                       }&ehInclusaoContinua=${pedido.data_inicial !==
                         undefined}`}
