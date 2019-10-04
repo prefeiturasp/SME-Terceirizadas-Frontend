@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCODAEPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getCODAEPedidosAprovados, getCODAEPedidosReprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class Container extends Component {
   constructor(props) {
@@ -14,8 +14,17 @@ class Container extends Component {
   }
 
   componentDidMount() {
+    let pedidosAprovados;
+    let pedidosReprovados;
+
     getCODAEPedidosAprovados().then(response => {
-      this.setState({ pedidosAprovados: response.results });
+      pedidosAprovados = response.results;
+      this.setState({ pedidosAprovados });
+    });
+
+    getCODAEPedidosReprovados().then(response => {
+      pedidosReprovados = response.results;
+      this.setState({ pedidosReprovados });
     });
   }
 

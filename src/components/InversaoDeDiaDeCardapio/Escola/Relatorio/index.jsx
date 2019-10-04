@@ -1,4 +1,3 @@
-import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
@@ -9,12 +8,12 @@ import {
   getInversaoDeDiaDeCardapio
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+// import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import { ESCOLA, INVERSAO_CARDAPIO } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+// import { statusEnum } from "../../../../constants/statusEnum";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -241,7 +240,7 @@ class Relatorio extends Component {
                   </div>
                 </div>
 
-                  <div className="form-group row float-right mt-4">
+                  {/* <div className="form-group row float-right mt-4">
                     <Botao
                       texto={"Cancelar pedido"}
                       className="ml-3"
@@ -250,7 +249,7 @@ class Relatorio extends Component {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
 
-                  </div>
+                  </div> */}
 
               </div>
             </div>

@@ -185,6 +185,7 @@ class PainelPedidos extends Component {
                       pedidos={formatarPedidos(pedidosReprovados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={"Histórico de Alterações de Cardápio Reprovadas"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>

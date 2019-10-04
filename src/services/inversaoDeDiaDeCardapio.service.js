@@ -279,6 +279,22 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
     });
 };
 
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+
 export const getCODAEPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {
@@ -293,6 +309,22 @@ export const getCODAEPedidosAprovados = () => {
       console.log(error);
     });
 };
+
+export const getCODAEPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 
 export const getTerceirizadaPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-terceirizada/`;
