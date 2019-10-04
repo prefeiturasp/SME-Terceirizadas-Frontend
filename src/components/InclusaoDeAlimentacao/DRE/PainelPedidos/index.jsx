@@ -1,29 +1,25 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { Select } from "../../../Shareable/Select";
 import { connect } from "react-redux";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { formatarPedidos } from "./helper";
-import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosContinuo,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesContinuo,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesContinuo
-} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
-import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritariosAvulso,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limitesAvulso,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regularesAvulso
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import CardHistorico from "../../components/CardHistorico";
 import { DRE } from "../../../../configs/constants";
+import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "../../../InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+import { Select } from "../../../Shareable/Select";
+import CardHistorico from "../../components/CardHistorico";
+import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { formatarPedidos } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: []
@@ -31,61 +27,32 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
-    this.setState({ pedidosCarregados: 0 });
-    prioritariosContinuo(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    prioritariosAvulso(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limitesContinuo(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
-        pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limitesAvulso(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
-        pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesContinuo(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesAvulso(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
+    this.atualizarDadosDasInclusoes(filtro);
   }
 
-  componentDidMount() {
-    this.filtrar(FiltroEnum.SEM_FILTRO);
+  async componentDidMount() {
+    const filtro = FiltroEnum.SEM_FILTRO;
+    this.atualizarDadosDasInclusoes(filtro);
+  }
+
+  async atualizarDadosDasInclusoes(filtro) {
+    const inclusoesAvulsas = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+      filtro
+    );
+    const inclusoesContinuas = await getDREPedidosInclusaoContinuosPendentes(
+      filtro
+    );
+    const inclusoesMescladas = inclusoesAvulsas.results.concat(
+      inclusoesContinuas.results
+    );
+    const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
+    const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
+    const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);
+    this.setState({
+      pedidosPrioritarios,
+      pedidosNoPrazoLimite,
+      pedidosNoPrazoRegular
+    });
   }
 
   onFiltroSelected(value) {
@@ -99,29 +66,8 @@ class PainelPedidos extends Component {
     }
   }
 
-  filtrarHoje() {
-    let pedidosPrioritarios = [];
-    this.setState({ pedidosCarregados: 4 });
-    prioritariosContinuo(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    prioritariosAvulso(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-  }
-
   render() {
     const {
-      pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
@@ -132,102 +78,97 @@ class PainelPedidos extends Component {
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
-    const todosOsPedidosForamCarregados = pedidosCarregados === 6;
     return (
       <div>
-        {!todosOsPedidosForamCarregados ? (
-          <div>Carregando...</div>
-        ) : (
-          <form onSubmit={this.props.handleSubmit}>
-            <div className="card mt-3">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-3 font-10 my-auto">
-                    Data: {dataAtualDDMMYYYY()}
-                  </div>
-                  <div className="offset-6 col-3 text-right">
-                    <Field
-                      component={Select}
-                      name="visao_por"
-                      naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.onFiltroSelected(event.target.value)
-                      }
-                      placeholder={"Filtro por"}
-                      options={visaoPorCombo}
-                    />
-                  </div>
+        <form onSubmit={this.props.handleSubmit}>
+          <div className="card mt-3">
+            <div className="card-body">
+              <div className="row">
+                <div className="col-3 font-10 my-auto">
+                  Data: {dataAtualDDMMYYYY()}
                 </div>
+                <div className="offset-6 col-3 text-right">
+                  <Field
+                    component={Select}
+                    name="visao_por"
+                    naoDesabilitarPrimeiraOpcao
+                    onChange={event =>
+                      this.onFiltroSelected(event.target.value)
+                    }
+                    placeholder={"Filtro por"}
+                    options={visaoPorCombo}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-12">
+                  <CardPendenciaAprovacao
+                    titulo={
+                      "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
+                    }
+                    tipoDeCard={"priority"}
+                    pedidos={pedidosPrioritarios}
+                    ultimaColunaLabel={"Data da Inclusão"}
+                    parametroURL={"dre"}
+                  />
+                </div>
+              </div>
+              {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenciaAprovacao
-                      titulo={
-                        "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
-                      }
-                      tipoDeCard={"priority"}
-                      pedidos={pedidosPrioritarios}
+                      titulo={"Solicitações no prazo limite"}
+                      tipoDeCard={"on-limit"}
+                      pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={"dre"}
                     />
                   </div>
                 </div>
-                {valorDoFiltro !== "hoje" && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardPendenciaAprovacao
-                        titulo={"Solicitações no prazo limite"}
-                        tipoDeCard={"on-limit"}
-                        pedidos={pedidosNoPrazoLimite}
-                        ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={"dre"}
-                      />
-                    </div>
+              )}
+              {valorDoFiltro !== "hoje" && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardPendenciaAprovacao
+                      titulo={"Solicitações no prazo regular"}
+                      tipoDeCard={"regular"}
+                      pedidos={pedidosNoPrazoRegular}
+                      ultimaColunaLabel={"Data da Inclusão"}
+                      parametroURL={"dre"}
+                    />
                   </div>
-                )}
-                {valorDoFiltro !== "hoje" && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardPendenciaAprovacao
-                        titulo={"Solicitações no prazo regular"}
-                        tipoDeCard={"regular"}
-                        pedidos={pedidosNoPrazoRegular}
-                        ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={"dre"}
-                      />
-                    </div>
+                </div>
+              )}
+              {pedidosAprovados.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardHistorico
+                      pedidos={formatarPedidos(pedidosAprovados)}
+                      ultimaColunaLabel={"Data(s)"}
+                      parametroURL={`${DRE}`}
+                      titulo={
+                        "Histórico de Inclusões de Alimentação Autorizadas"
+                      }
+                    />
                   </div>
-                )}
-                {pedidosAprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        parametroURL={`${DRE}`}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Autorizadas"
-                        }
-                      />
-                    </div>
+                </div>
+              )}
+              {pedidosReprovados.length > 0 && (
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardHistorico
+                      pedidos={formatarPedidos(pedidosReprovados)}
+                      ultimaColunaLabel={"Data(s)"}
+                      titulo={
+                        "Histórico de Inclusões de Alimentação Reprovadas"
+                      }
+                    />
                   </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Reprovadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-          </form>
-        )}
+          </div>
+        </form>
       </div>
     );
   }

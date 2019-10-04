@@ -1,13 +1,16 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
+import { PEDIDOS, FLUXO } from "./contants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
 };
 
+const URL_INCLUSAO_AVULSA = `${API_URL}/grupos-inclusao-alimentacao-normal`;
+
 export const getInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -22,7 +25,7 @@ export const getInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const criarInclusaoDeAlimentacaoNormal = payload => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/`;
+  const url = `${URL_INCLUSAO_AVULSA}/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
@@ -42,7 +45,7 @@ export const criarInclusaoDeAlimentacaoNormal = payload => {
 };
 
 export const atualizarInclusaoDeAlimentacaoNormal = (uuid, payload) => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "PUT",
@@ -67,10 +70,7 @@ export const removerInclusaoDeAlimentacaoNormal = async uuid => {
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(
-    `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/`,
-    OBJ_REQUEST
-  )
+  return await fetch(`${URL_INCLUSAO_AVULSA}/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -84,7 +84,7 @@ export const removerInclusaoDeAlimentacaoNormal = async uuid => {
 };
 
 export const getInclusoesNormaisSalvas = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/minhas-solicitacoes/`;
+  const url = `${URL_INCLUSAO_AVULSA}/minhas-solicitacoes/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -99,7 +99,7 @@ export const getInclusoesNormaisSalvas = () => {
 };
 
 export const inicioPedidoNormal = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/inicio-pedido/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -132,69 +132,25 @@ export const getMotivosInclusaoNormal = () => {
     });
 };
 
-export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
-export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-diretoria-regional/${filtroAplicado}/`;
+export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_AVULSA}/${PEDIDOS.DRE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-aprovados-diretoria-regional/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-aprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -209,7 +165,7 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
 };
 
 export const getDiretoriaRegionalPedidosReprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-reprovados-diretoria-regional/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -224,7 +180,7 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
 };
 
 export const getCodaePedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-prioritarios-codae/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-prioritarios-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -239,7 +195,7 @@ export const getCodaePedidosPrioritarios = filtroAplicado => {
 };
 
 export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-limite-codae/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-limite-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -254,7 +210,7 @@ export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-prazo-codae/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-prazo-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -269,7 +225,7 @@ export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
 };
 
 export const getCodaePedidosAprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-aprovados-codae/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -284,7 +240,7 @@ export const getCodaePedidosAprovados = () => {
 };
 
 export const getCodaePedidosReprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-reprovados-codae/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-reprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -299,7 +255,7 @@ export const getCodaePedidosReprovados = () => {
 };
 
 export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -314,7 +270,7 @@ export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -329,7 +285,7 @@ export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -344,7 +300,7 @@ export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-aprovados-terceirizada/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-aprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -359,7 +315,7 @@ export const getTerceirizadaPedidosAprovados = () => {
 };
 
 export const getTerceirizadaPedidosReprovados = () => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-reprovados-terceirizada/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -374,7 +330,7 @@ export const getTerceirizadaPedidosReprovados = () => {
 };
 
 export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/diretoria-regional-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/diretoria-regional-aprova-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -393,7 +349,7 @@ export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const CODAEConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/codae-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/codae-aprova-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -412,7 +368,7 @@ export const CODAEConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/terceirizada-toma-ciencia/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -431,7 +387,7 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const getCODAEPedidosInclusaoAvulsoPendentes = filtroAplicado => {
-  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/pedidos-codae/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_AVULSA}/pedidos-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
