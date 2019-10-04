@@ -114,14 +114,9 @@ export class Sidebar extends Component {
               {sessionStorage.getItem("tipo_perfil") === "codae" && (
                 <SidebarCODAE />
               )}
-              {tipo_perfil ===
-                `"diretoria_regional"` && <SidebarDRE />}
-              {tipo_perfil === `"escola"` && (
-                <SidebarEscola />
-              )}
-              {tipo_perfil === `"terceirizada"` && (
-                <SidebarTerceirizada />
-              )}
+              {tipo_perfil === `"diretoria_regional"` && <SidebarDRE />}
+              {tipo_perfil === `"escola"` && <SidebarEscola />}
+              {tipo_perfil === `"terceirizada"` && <SidebarTerceirizada />}
             </div>
           ) : (
             <div className="sidebar-wrapper">

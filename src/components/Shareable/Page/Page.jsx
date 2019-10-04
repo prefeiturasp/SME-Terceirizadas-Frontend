@@ -36,12 +36,7 @@ export default class Page extends Component {
   }
 
   render() {
-    const {
-      nome,
-      nome_instituicao,
-      registro_funcional,
-      toggled
-    } = this.state;
+    const { nome, nome_instituicao, registro_funcional, toggled } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">
