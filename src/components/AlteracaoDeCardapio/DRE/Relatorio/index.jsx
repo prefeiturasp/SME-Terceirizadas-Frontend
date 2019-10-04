@@ -142,6 +142,8 @@ class Relatorio extends Component {
           uuid={uuid}
           justificativa={justificativa}
           motivoCancelamento={motivo_cancelamento}
+          alteracaoDeCardapio={alteracaoDeCardapio}
+          setRedirect={this.setRedirect.bind(this)}
         />
         {this.renderizarRedirecionamentoParaPedidos()}
         {!alteracaoDeCardapio ? (

@@ -12,7 +12,7 @@ import {
 import { meusDados } from "../../../../services/perfil.service";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import { ModalNegarInversaoDiaCardapio } from "../../../Shareable/ModalNegarInversaoDiaCardapio";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import { DRE, INVERSAO_CARDAPIO } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
@@ -96,7 +96,6 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
   }
 
   handleSubmit() {
@@ -122,13 +121,18 @@ class Relatorio extends Component {
       InversaoCardapio,
       prazoDoPedidoMensagem,
       meusDados,
-      escolaDaInversao
+      escolaDaInversao,
+      uuid
     } = this.state;
+    const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div className="report">
-        <ModalRecusarSolicitacao
+        <ModalNegarInversaoDiaCardapio
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          motivoCancelamento={motivo_cancelamento}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
         {!InversaoCardapio ? (
@@ -286,8 +290,19 @@ class Relatorio extends Component {
   }
 }
 
+const formName = "relatorioInversaoDeDiaDeCardapioDRE";
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
+
+export default connect(mapStateToProps)(RelatorioForm);
