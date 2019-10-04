@@ -3,7 +3,6 @@ import { Link, NavLink } from "react-router-dom";
 import {
   DRE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  PAINEL_CONTROLE,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
@@ -48,7 +47,7 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${DRE}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>

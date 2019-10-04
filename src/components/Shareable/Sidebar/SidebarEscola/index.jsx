@@ -7,7 +7,6 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
-  PAINEL_CONTROLE,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
@@ -52,7 +51,7 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>

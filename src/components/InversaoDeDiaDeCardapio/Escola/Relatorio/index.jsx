@@ -1,7 +1,7 @@
 import moment from "moment";
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
+import { Link, Redirect } from "react-router-dom";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
@@ -44,7 +44,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`} />;
+      return <Redirect to={`/`} />;
     }
   };
 
