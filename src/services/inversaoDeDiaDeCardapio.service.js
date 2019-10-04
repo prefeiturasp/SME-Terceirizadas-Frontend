@@ -141,7 +141,9 @@ export const dreAprovaPedidoEscola = uuid => {
 };
 
 export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.DRE_NAO_VALIDA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -198,7 +200,6 @@ export const CODAENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
       return error.json();
     });
 };
-
 
 export const terceirizadaTomaCiencia = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/terceirizada-toma-ciencia/`;
@@ -294,7 +295,6 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
     });
 };
 
-
 export const getCODAEPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {
@@ -324,7 +324,6 @@ export const getCODAEPedidosReprovados = () => {
       console.log(error);
     });
 };
-
 
 export const getTerceirizadaPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-terceirizada/`;

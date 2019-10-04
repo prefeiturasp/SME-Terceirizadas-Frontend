@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCODAEPedidosAprovados, getCODAEPedidosReprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import {
+  getCODAEPedidosAprovados,
+  getCODAEPedidosReprovados
+} from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class Container extends Component {
   constructor(props) {

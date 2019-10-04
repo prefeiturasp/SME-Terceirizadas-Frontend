@@ -4,9 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import {
-  getInversaoDeDiaDeCardapio
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
 // import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
@@ -240,7 +238,7 @@ class Relatorio extends Component {
                   </div>
                 </div>
 
-                  {/* <div className="form-group row float-right mt-4">
+                {/* <div className="form-group row float-right mt-4">
                     <Botao
                       texto={"Cancelar pedido"}
                       className="ml-3"
@@ -250,7 +248,6 @@ class Relatorio extends Component {
                     />
 
                   </div> */}
-
               </div>
             </div>
           </form>

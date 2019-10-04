@@ -3,7 +3,7 @@ import moment from "moment";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { reduxForm, formValueSelector } from "redux-form";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
