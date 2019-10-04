@@ -3,7 +3,10 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
-import { DRENegaAlteracaoCardapio, CODAENegaAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
+import {
+  DRENegaAlteracaoCardapio,
+  CODAENegaAlteracaoCardapio
+} from "../../services/alteracaoDecardapio.service";
 import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { LabelAndCombo, LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
@@ -15,14 +18,15 @@ export class ModalNegarAlteracaoCardapio extends Component {
     this.state = { justificativa: "", motivoCancelamento: "" };
   }
 
-  async negarAlteracaoCardapio(uuid){
+  async negarAlteracaoCardapio(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
     const { alteracaoDeCardapio } = this.props;
 
-    const function_NegaAlteracaoCardapio = (
-      alteracaoDeCardapio && alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR ?
-      DRENegaAlteracaoCardapio : CODAENegaAlteracaoCardapio
-    )
+    const function_NegaAlteracaoCardapio =
+      alteracaoDeCardapio &&
+      alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR
+        ? DRENegaAlteracaoCardapio
+        : CODAENegaAlteracaoCardapio;
 
     const resp = await function_NegaAlteracaoCardapio(
       uuid,
@@ -35,7 +39,6 @@ export class ModalNegarAlteracaoCardapio extends Component {
     } else {
       toastError(resp.detail);
     }
-
   }
 
   componentDidUpdate(prevProps) {
