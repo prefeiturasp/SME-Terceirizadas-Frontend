@@ -147,6 +147,7 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Reprovadas"
                         }
+                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
