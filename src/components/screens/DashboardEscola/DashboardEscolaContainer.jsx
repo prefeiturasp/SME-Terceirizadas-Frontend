@@ -62,27 +62,29 @@ export default class DashboardEscolaContainer extends Component {
   async componentDidMount() {
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
-    const numeroAlunos = dadosMeus.escolas[0].quantidade_alunos;
+    const minhaEscolaUUID = dadosMeus.escolas[0] && dadosMeus.escolas[0].uuid;
+    const numeroAlunos =
+      dadosMeus.escolas[0] && dadosMeus.escolas[0].quantidade_alunos;
+    if (minhaEscolaUUID) {
+      let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
+      let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
 
-    let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
-    let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
+      let negadas = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
 
-    let negadas = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
+      let canceladas = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
 
-    let canceladas = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
-
-    autorizadas = ajustarFormatoLog(autorizadas.results);
-    pendentes = ajustarFormatoLog(pendentes.results);
-    negadas = ajustarFormatoLog(negadas.results);
-    canceladas = ajustarFormatoLog(canceladas.results);
-    this.setState({
-      autorizadas,
-      pendentes,
-      negadas,
-      canceladas,
-      numeroAlunos
-    });
+      autorizadas = ajustarFormatoLog(autorizadas.results);
+      pendentes = ajustarFormatoLog(pendentes.results);
+      negadas = ajustarFormatoLog(negadas.results);
+      canceladas = ajustarFormatoLog(canceladas.results);
+      this.setState({
+        autorizadas,
+        pendentes,
+        negadas,
+        canceladas,
+        numeroAlunos
+      });
+    }
   }
 
   render() {
