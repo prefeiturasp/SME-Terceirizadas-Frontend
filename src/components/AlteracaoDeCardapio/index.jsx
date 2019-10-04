@@ -10,7 +10,6 @@ import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
 import { required } from "../../helpers/fieldValidators";
-import { LabelAndCombo } from "../Shareable/labelAndInput/labelAndInput";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
@@ -21,10 +20,12 @@ import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { validateSubmit } from "./validacao";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import {
   createAlteracaoCardapio,
-  getAlteracoesCardapioList
+  getAlteracoesCardapioList,
+  updateAlteracaoCardapio,
+  deleteAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
 
 //const ENTER = 13;
@@ -38,14 +39,15 @@ class AlteracaoCardapio extends Component {
       alteracaoCardapioList: [],
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
-      id: "",
+      id: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-
-      substituicoesAlimentacao: []
+      substituicoesAlimentacao: [],
+      substituicoesEdit: []
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -53,6 +55,7 @@ class AlteracaoCardapio extends Component {
       let periodos = this.state.periodos;
       let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
       this.props.periodos.forEach(periodo => {
+        this.montaObjetoDeSubstituicoesEdit(periodo);
         substituicoesAlimentacao.push({ substituicoes: null });
         periodos.push(montaPeriodoDeAlteracao(periodo));
       });
@@ -77,6 +80,53 @@ class AlteracaoCardapio extends Component {
     this.refresh();
   }
 
+  montaObjetoDeSubstituicoesEdit = periodo => {
+    let substituicoesEdit = this.state.substituicoesEdit;
+    substituicoesEdit.push({
+      turno: periodo.nome,
+      substituicoes: []
+    });
+    this.setState({ substituicoesEdit });
+  };
+
+  retornaTurnoAlteracao = substituicao => {
+    let substituicoesEdit = this.state.substituicoesEdit;
+    substituicoesEdit.forEach(item => {
+      if (item.turno === substituicao.periodo_escolar.nome) {
+        item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes
+      }
+    });
+    this.setState({ substituicoesEdit })
+  };
+
+  retornaOpcoesAlteracao = (indice, param) => {
+    const substituicoesAlimentacao = this.state.substituicoesAlimentacao;
+    if (indice === undefined) {
+      param.substituicoes.forEach(substituicao => {
+        this.retornaTurnoAlteracao(substituicao);
+      });
+      return [];
+    } else {
+      const substituicoes =
+        substituicoesAlimentacao[indice].substituicoes !== null
+          ? substituicoesAlimentacao[indice].substituicoes
+          : [];
+      return substituicoes;
+    }
+  };
+
+  OnEditButtonClicked(param) {
+    this.props.reset("alteracaoCardapio");
+    this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
+    this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
+    this.setState({
+      status: param.alteracaoDeCardapio.status,
+      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
+      salvarAtualizarLbl: "Atualizar",
+      id: param.alteracaoDeCardapio.id_externo
+    });
+  }
+
   refresh() {
     getAlteracoesCardapioList()
       .then(response => {
@@ -92,6 +142,10 @@ class AlteracaoCardapio extends Component {
 
   resetForm() {
     this.props.reset("alteracaoCardapio");
+    this.props.change("alterar_dia", null);
+    this.props.change("data_inicial", null);
+    this.props.change("data_final", null);
+    this.props.change("motivo", null);
   }
 
   onSubmit(values) {
@@ -109,7 +163,6 @@ class AlteracaoCardapio extends Component {
                 await this.enviaAlteracaoCardapio(response.data.uuid);
                 this.refresh();
               } else {
-                this.resetForm("alteracaoCardapio");
                 toastSuccess("Alteração de Cardápio salva com sucesso");
               }
             }
@@ -118,6 +171,25 @@ class AlteracaoCardapio extends Component {
             this.resetForm("alteracaoCardapio");
             this.refresh();
           });
+      } else {
+        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.OK) {
+              this.refresh();
+              if (status === STATUS_DRE_A_VALIDAR) {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+              } else {
+                toastSuccess("Alteração de Cardápio salva com sucesso");
+              }
+              this.refresh();
+            } else {
+              toastError(res.error);
+            }
+          },
+          function() {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          }
+        );
       }
     }
   }
@@ -162,6 +234,24 @@ class AlteracaoCardapio extends Component {
       this.props.change(
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
         null
+      );
+    }
+  }
+
+  OnDeleteButtonClicked(id_externo, uuid) {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      deleteAlteracaoCardapio(uuid).then(
+        statusCode => {
+          if (statusCode === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function() {
+          toastError("Houve um erro ao excluir o rascunho");
+        }
       );
     }
   }
@@ -216,8 +306,8 @@ class AlteracaoCardapio extends Component {
       loading,
       alteracaoCardapioList,
       periodos,
-      substituicoesAlimentacao,
-      showModal
+      showModal,
+      substituicoesEdit
     } = this.state;
     const {
       handleSubmit,
@@ -284,7 +374,7 @@ class AlteracaoCardapio extends Component {
                 </section>
                 <section className="section-form-motivo mt-3">
                   <Field
-                    component={LabelAndCombo}
+                    component={Select}
                     name="motivo"
                     label="Motivo"
                     options={motivos}
@@ -363,10 +453,9 @@ class AlteracaoCardapio extends Component {
                         name="tipo_alimentacao_para"
                         disabled={!periodo.checado}
                         options={agregarDefault(
-                          substituicoesAlimentacao[indice].substituicoes !==
-                            null
-                            ? substituicoesAlimentacao[indice].substituicoes
-                            : []
+                          this.retornaOpcoesAlteracao(indice).length === 0
+                            ? substituicoesEdit[indice].substituicoes
+                            : this.retornaOpcoesAlteracao(indice)
                         )}
                       />
 
