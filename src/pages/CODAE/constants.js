@@ -1,1 +1,1 @@
-export const HOME = "/codae/painel-de-controle";
+export const HOME = "/";

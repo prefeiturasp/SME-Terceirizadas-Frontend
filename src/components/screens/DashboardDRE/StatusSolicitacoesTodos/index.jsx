@@ -102,7 +102,7 @@ export class StatusSolicitacoesTodos extends Component {
         <div className="card-body">
           <div className="mr-4">
             <InputSearch
-              voltarLink="/dre/painel-de-controle"
+              voltarLink="/"
               filterList={this.filterList}
               esconderImprimir
             />

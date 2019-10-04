@@ -111,9 +111,7 @@ export class Sidebar extends Component {
           </div>
           {tipo_perfil !== `"admin"` ? (
             <div className="sidebar-wrapper">
-              {sessionStorage.getItem("tipo_perfil") === "codae" && (
-                <SidebarCODAE />
-              )}
+              {tipo_perfil === `"codae"` && <SidebarCODAE />}
               {tipo_perfil === `"diretoria_regional"` && <SidebarDRE />}
               {tipo_perfil === `"escola"` && <SidebarEscola />}
               {tipo_perfil === `"terceirizada"` && <SidebarTerceirizada />}

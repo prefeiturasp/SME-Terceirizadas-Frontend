@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { TERCEIRIZADA, PAINEL_CONTROLE } from "../../../../configs/constants";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${TERCEIRIZADA}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>

@@ -1,1 +1,1 @@
-export const HOME = "/escola/painel-de-controle";
+export const HOME = "";

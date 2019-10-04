@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Home from "../../../pages/Home";
 import authService from "../../../services/auth";
 import "./style.scss";
 
@@ -12,7 +11,7 @@ export class Header extends Component {
         <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme fixed-top">
           <div className="container-fluid">
             <div className={`nav-bar ${toggled && "toggled"}`}>
-              <Link className="navbar-brand" exact to="/" component={Home}>
+              <Link className="navbar-brand" exact to="/">
                 <img src="/assets/image/logo-sigpae.png" alt="" />
               </Link>
             </div>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   CODAE,
-  PAINEL_CONTROLE,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
@@ -47,7 +46,7 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>

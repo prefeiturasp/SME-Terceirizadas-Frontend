@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { ESCOLA, PAINEL_CONTROLE } from "../../../../configs/constants";
 import { meusDados } from "../../../../services/perfil.service";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
@@ -40,7 +39,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${ESCOLA}/${PAINEL_CONTROLE}`} />;
+      return <Redirect to={`/`} />;
     }
   };
 

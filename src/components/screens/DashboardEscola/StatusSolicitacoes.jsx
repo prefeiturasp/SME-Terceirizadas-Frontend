@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { ESCOLA, PAINEL_CONTROLE } from "../../../configs/constants";
 import {
   getSolicitacoesAutorizadasEscola,
   getSolicitacoesCanceladasEscola,
@@ -133,7 +132,7 @@ export class StatusSolicitacoes extends Component {
         <div className="card-body">
           <div className="pr-3">
             <InputSearch
-              voltarLink={`/${ESCOLA}/${PAINEL_CONTROLE}`}
+              voltarLink={`/`}
               filterList={this.onPesquisarChanged}
             />
           </div>
