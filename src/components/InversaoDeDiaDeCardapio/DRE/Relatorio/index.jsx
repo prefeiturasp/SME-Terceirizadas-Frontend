@@ -2,7 +2,8 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { reduxForm, formValueSelector } from "redux-form";
+import { connect } from 'react-redux';
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
@@ -133,6 +134,8 @@ class Relatorio extends Component {
           uuid={uuid}
           justificativa={justificativa}
           motivoCancelamento={motivo_cancelamento}
+          inversaoDeDiaDeCardapio={InversaoCardapio}
+          setRedirect={this.setRedirect.bind(this)}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
         {!InversaoCardapio ? (
