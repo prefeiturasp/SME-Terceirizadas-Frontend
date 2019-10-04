@@ -93,10 +93,10 @@ class AlteracaoCardapio extends Component {
     let substituicoesEdit = this.state.substituicoesEdit;
     substituicoesEdit.forEach(item => {
       if (item.turno === substituicao.periodo_escolar.nome) {
-        item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes
+        item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes;
       }
     });
-    this.setState({ substituicoesEdit })
+    this.setState({ substituicoesEdit });
   };
 
   retornaOpcoesAlteracao = (indice, param) => {
