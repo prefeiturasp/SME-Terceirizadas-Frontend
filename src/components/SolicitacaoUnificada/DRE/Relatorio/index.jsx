@@ -159,9 +159,7 @@ class Relatorio extends Component {
                       solicitacaoUnificada.diretoria_regional.nome
                     }`}</div>
                     <div className="prop-lote">
-                      {
-                        "# TODO: ajustar o serializer para trazer o lote de forma mais amigavel"
-                      }
+                      {solicitacaoUnificada.lote_nome}
                     </div>
                   </div>
                 </div>

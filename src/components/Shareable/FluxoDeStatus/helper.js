@@ -6,19 +6,19 @@ export const fluxoPartindoEscola = [
     usuario: null
   },
   {
-    titulo: "DRE validou",
+    titulo: "DRE",
     status: "",
     criado_em: "",
     usuario: null
   },
   {
-    titulo: "CODAE autorizou",
+    titulo: "CODAE",
     status: "",
     criado_em: "",
     usuario: null
   },
   {
-    titulo: "Terceirizada tomou ciência",
+    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -33,13 +33,13 @@ export const fluxoPartindoDRE = [
     usuario: null
   },
   {
-    titulo: "CODAE autorizou",
+    titulo: "CODAE",
     status: "",
     criado_em: "",
     usuario: null
   },
   {
-    titulo: "Terceirizada tomou ciência",
+    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -54,7 +54,7 @@ export const fluxoInformativoPartindoEscola = [
     usuario: null
   },
   {
-    titulo: "Terceirizada tomou ciência",
+    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -71,11 +71,11 @@ export const tipoDeStatus = status => {
     case "Terceirizada tomou ciência":
       return "aprovado";
     case "Escola cancelou":
-    case "CODAE cancelou pedido":
-    case "DRE cancelou pedido":
+    case "DRE cancelou":
       return "cancelado";
-    case "DRE reprovou":
-    case "CODAE reprovou":
+    case "DRE não validou":
+    case "CODAE negou":
+    case "Terceirizada recusou":
       return "reprovado";
     default:
       return "";
@@ -96,7 +96,8 @@ export const existeAlgumStatusFimDeFluxo = logs => {
   return (
     logs.findIndex(
       log =>
-        log.status_evento_explicacao.includes("reprov") ||
+        log.status_evento_explicacao.includes("neg") ||
+        log.status_evento_explicacao.includes("não") ||
         log.status_evento_explicacao.includes("cancel")
     ) === -1
   );
