@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { PEDIDOS } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -197,3 +198,21 @@ export const getSuspensaoDeAlimentacaoCODAE = filtro_aplicado => {
       return error.json();
     });
 };
+
+export const getTerceirizadasSuspensoesDeAlimentacao = filtroAplicado => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+

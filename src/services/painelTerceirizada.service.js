@@ -13,7 +13,7 @@ import { getTerceirizadaPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.ser
 import { getTerceirizadasPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
 import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -231,10 +231,22 @@ export const getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao = async (
     limite: 0,
     regular: 0
   };
+    let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
 
-  const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
-  resposta.prioritario = solicitacoes.count;
-  resposta.total = resposta.prioritario;
+  const solicitacoes = await getTerceirizadasSuspensoesDeAlimentacao(filtro);
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
   return resposta;
 };
 
