@@ -166,7 +166,7 @@ class Relatorio extends Component {
                           solicitacaoUnificada.diretoria_regional.nome
                         }`}</div>
                         <div className="prop-lote">
-                          {solicitacaoUnificada.lote}
+                          {solicitacaoUnificada.lote_nome}
                         </div>
                       </div>
                     </div>

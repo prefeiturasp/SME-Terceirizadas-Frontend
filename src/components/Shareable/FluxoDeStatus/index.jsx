@@ -18,6 +18,7 @@ export const FluxoDeStatus = props => {
       : tipoDeFluxo === "partindoDRE"
       ? fluxoPartindoDRE
       : fluxoPartindoEscola;
+  const fluxoUtilizado = fluxo.length > listaDeStatus.length ? fluxo : listaDeStatus;
   return (
     <div className="w-100">
       <div className="row">
@@ -26,12 +27,18 @@ export const FluxoDeStatus = props => {
         </div>
         <div className="col-10">
           <ul className={`progressbar-titles fluxos`}>
-            {fluxo.map((status, key) => {
-              return <li key={key}>{status.titulo}</li>;
+            {fluxoUtilizado.map((status, key) => {
+              return (
+                <li key={key}>
+                  {listaDeStatus[key]
+                    ? listaDeStatus[key].status_evento_explicacao
+                    : status.titulo}
+                </li>
+              );
             })}
           </ul>
           <ul className="progressbar">
-            {fluxo.map((status, key) => {
+            {fluxoUtilizado.map((status, key) => {
               let novoStatus = listaDeStatus[key] || status;
               return (
                 <li
@@ -43,7 +50,7 @@ export const FluxoDeStatus = props => {
                       ? "pending"
                       : ""
                   }`}
-                  style={{ width: 100 / fluxo.length + "%" }}
+                  style={{ width: 100 / fluxoUtilizado.length + "%" }}
                 >
                   {novoStatus.criado_em}
                   <br />
