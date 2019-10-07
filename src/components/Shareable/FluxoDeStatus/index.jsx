@@ -18,7 +18,8 @@ export const FluxoDeStatus = props => {
       : tipoDeFluxo === "partindoDRE"
       ? fluxoPartindoDRE
       : fluxoPartindoEscola;
-  const fluxoUtilizado = fluxo.length > listaDeStatus.length ? fluxo : listaDeStatus;
+  const fluxoUtilizado =
+    fluxo.length > listaDeStatus.length ? fluxo : listaDeStatus;
   return (
     <div className="w-100">
       <div className="row">
