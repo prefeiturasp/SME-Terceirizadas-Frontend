@@ -144,7 +144,7 @@ class AlteracaoCardapio extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        toastError("Houve um erro ao carregar Rascunhos Salvos", error);
       });
   }
 
@@ -213,6 +213,7 @@ class AlteracaoCardapio extends Component {
             }
           })
           .catch(error => {
+            toastError(error);
             this.resetForm("alteracaoCardapio");
             this.refresh();
           });
@@ -243,7 +244,7 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 
@@ -523,10 +524,7 @@ class AlteracaoCardapio extends Component {
                         name="numero_de_alunos"
                         min="0"
                         className="form-control"
-                        validate={periodo.checado && [
-                          required,
-                          naoPodeSerZero
-                        ]}
+                        validate={periodo.checado && [required, naoPodeSerZero]}
                       />
                     </FormSection>
                   );
