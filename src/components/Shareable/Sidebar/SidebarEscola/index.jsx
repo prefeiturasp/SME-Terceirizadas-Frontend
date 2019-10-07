@@ -7,7 +7,10 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
-  PAINEL_CONTROLE
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
 
 export class SidebarEscola extends Component {
@@ -48,35 +51,35 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
             >
               Aguardando aprovação
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
             >
               Aguardando autorização
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
             >
               Negadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/status-solicitacoes`}
+              to={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
             >
               Canceladas
             </NavLink>

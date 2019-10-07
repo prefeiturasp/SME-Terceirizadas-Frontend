@@ -1,8 +1,9 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { formValueSelector, reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
+import { connect } from "react-redux";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
   aprovaDeKitLancheAvulsoDiretoriaRegional,
@@ -11,7 +12,6 @@ import {
 import { meusDados } from "../../../../services/perfil.service";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import "../style.scss";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
@@ -24,6 +24,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { ModalNaoValidarSolicitacao } from "../../../Shareable/ModalNaoValidarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -87,9 +88,8 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
   }
 
   handleSubmit() {
@@ -107,7 +107,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError(
           "Houve um erro ao validar a Solicitação de Kit Lanche Passeio"
         );
@@ -119,14 +119,22 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      uuid,
+      meusDados
     } = this.state;
+    const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
-        <ModalRecusarSolicitacao
+        <ModalNaoValidarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          motivoCancelamento={motivo_cancelamento}
+          meusDados={meusDados}
+          solicitacao={solicitacaoKitLanche}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -334,9 +342,19 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "relatorioKitLancheDre";
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);

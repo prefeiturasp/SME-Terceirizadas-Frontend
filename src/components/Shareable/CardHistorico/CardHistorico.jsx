@@ -15,7 +15,7 @@ export class CardHistorico extends Component {
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
 
-  handleClickSubmit = e => {
+  handleClickSubmit = () => {
     alert("it will be submited");
   };
 
@@ -62,7 +62,7 @@ export class CardHistorico extends Component {
                       name="selecionar_todos"
                     />
                     <span
-                      onClick={value => this.selecionarTodos()}
+                      onClick={() => this.selecionarTodos()}
                       className="checkbox-custom"
                     />
                     Selecionar todos

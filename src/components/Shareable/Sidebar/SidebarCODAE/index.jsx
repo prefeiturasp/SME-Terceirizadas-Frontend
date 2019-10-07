@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { CODAE, PAINEL_CONTROLE } from "../../../../configs/constants";
+import {
+  CODAE,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_CANCELADAS
+} from "../../../../configs/constants";
 
 export class SidebarCODAE extends Component {
   constructor(props) {
@@ -40,35 +46,35 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/solicitacoes`}
+              to={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
             >
               Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/solicitacoes`}
+              to={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
             >
               Pendentes de Autorização
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/solicitacoes`}
+              to={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
             >
               Negadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${CODAE}/solicitacoes`}
+              to={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
             >
               Canceladas
             </NavLink>

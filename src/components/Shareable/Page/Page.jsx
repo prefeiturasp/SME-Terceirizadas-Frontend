@@ -12,7 +12,6 @@ export default class Page extends Component {
     super(props);
     this.state = {
       nome: null,
-      perfil: "escola",
       toggled: false
     };
     this.toggle = this.toggle.bind(this);
@@ -28,7 +27,7 @@ export default class Page extends Component {
       sessionStorage.setItem("nome", JSON.stringify(meusDados.nome));
       this.setState({
         nome: meusDados.nome,
-        nome_instituicao: meusDados.escolas[0].nome,
+        nome_instituicao: meusDados.escolas[0] && meusDados.escolas[0].nome,
         registro_funcional: meusDados.registro_funcional || "N/A"
       });
     } else {
@@ -37,20 +36,13 @@ export default class Page extends Component {
   }
 
   render() {
-    const {
-      nome,
-      perfil,
-      nome_instituicao,
-      registro_funcional,
-      toggled
-    } = this.state;
+    const { nome, nome_instituicao, registro_funcional, toggled } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">
         <Header toggled={toggled} />
         <Sidebar
           nome={nome}
-          perfil={perfil}
           toggle={this.toggle}
           toggled={toggled}
           registro_funcional={registro_funcional}

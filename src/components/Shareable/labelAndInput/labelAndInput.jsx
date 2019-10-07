@@ -123,8 +123,8 @@ LabelAndCombo.propTypes = {
   readOnly: PropTypes.bool,
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
+      uuid: PropTypes.string,
+      nome: PropTypes.string,
       disable: PropTypes.bool,
       selected: PropTypes.bool
     })
@@ -332,7 +332,7 @@ export class LabelAndTextArea extends Component {
     }
   }
 
-  onBlur(event) {
+  onBlur() {
     const value = draftToHtml(
       convertToRaw(this.state.editorState.getCurrentContent())
     );

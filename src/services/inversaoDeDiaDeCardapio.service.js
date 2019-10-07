@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -139,12 +140,54 @@ export const dreAprovaPedidoEscola = uuid => {
     });
 };
 
+export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.DRE_NAO_VALIDA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const CODAEAprovaPedidoDRE = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-aprova-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
@@ -237,8 +280,38 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
     });
 };
 
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-diretoria-regional/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 export const getCODAEPedidosAprovados = () => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCODAEPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -264,5 +337,26 @@ export const getTerceirizadaPedidosAprovados = () => {
     })
     .catch(error => {
       console.log(error);
+    });
+};
+
+export const cancelaInversaoDiaCardapioEscola = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.ESCOLA_CANCELA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
     });
 };

@@ -138,7 +138,7 @@ class ContratosRelacionados extends Component {
     this.setState({ nomeDoFormAtual: this.props.nomeForm });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (
       this.props.reseta === true &&
       this.state.formVigenciaContratos.length > 1
@@ -487,7 +487,7 @@ class ContratosRelacionados extends Component {
                         <div className="pt-3">
                           <div>
                             <label className="label-selected-unities">
-                              DRE's selecionadas
+                              DREs selecionadas
                             </label>
                             {diretoriasNomesSelecionadas.map((dre, indice) => {
                               return (

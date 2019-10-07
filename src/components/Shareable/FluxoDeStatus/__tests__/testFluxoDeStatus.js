@@ -13,23 +13,11 @@ describe("Teste <FluxoDeStatus>", () => {
       usuario: { rf: "7972324", nome: "João da Silva" }
     },
     {
-      titulo: "Reprovado da DRE",
+      titulo: "DRE não validou",
       status: "reprovado",
-      status_evento_explicacao: "DRE reprovou",
+      status_evento_explicacao: "DRE não validou",
       criado_em: "25/04/2019 às 9:20",
       usuario: { rf: "7972324", nome: "João da Silva" }
-    },
-    {
-      titulo: "Cancelado pela CODAE",
-      status: "cancelado",
-      criado_em: "25/04/2019 às 9:20",
-      usuario: { rf: "7972324", nome: "João da Silva" }
-    },
-    {
-      titulo: "Visualizado pela Terceirizada",
-      status: null,
-      criado_em: null,
-      usuario: null
     }
   ];
 

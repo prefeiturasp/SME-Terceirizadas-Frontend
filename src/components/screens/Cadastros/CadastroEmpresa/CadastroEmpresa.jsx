@@ -117,14 +117,10 @@ class CadastroEmpresa extends Component {
   }
 
   componentDidMount() {
-    getLotes()
-      .then(response => {
-        let lotes = transformaObjetos(response);
-        this.setState({ lotes });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    getLotes().then(response => {
+      let lotes = transformaObjetos(response);
+      this.setState({ lotes });
+    });
   }
 
   renderizarLabelLote(selected, options) {
@@ -148,7 +144,7 @@ class CadastroEmpresa extends Component {
     this.props.reset();
   }
 
-  salvaFormulario(values) {
+  salvaFormulario() {
     this.resetForm();
     this.setState({ lotesSelecionados: [] });
     toastSuccess("Empresa adicionada com sucesso!");
@@ -550,9 +546,7 @@ class CadastroEmpresa extends Component {
                       />
                       <Botao
                         texto={"Salvar"}
-                        onClick={handleSubmit(values =>
-                          this.salvaFormulario(values)
-                        )}
+                        onClick={handleSubmit(() => this.salvaFormulario())}
                         className="ml-3"
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN}

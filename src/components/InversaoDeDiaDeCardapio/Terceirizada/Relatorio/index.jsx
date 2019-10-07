@@ -94,7 +94,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Inversão de dia de Cardápio recusado com sucesso!");
   }
@@ -112,7 +112,7 @@ class Relatorio extends Component {
           toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
         }
       },
-      function(error) {
+      function() {
         toastError("Erro ao tomar ciência de Inversão de dias de cardápio");
       }
     );

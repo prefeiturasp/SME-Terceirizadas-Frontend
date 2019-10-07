@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { reduxForm, formValueSelector } from "redux-form";
+import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
 import {
   getAlteracaoCardapio,
   DREConfirmaAlteracaoCardapio
@@ -87,9 +88,8 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Alteração de Cardápio recusado com sucesso!");
   }
 
   handleSubmit() {
@@ -103,7 +103,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao aprovar a Alteração de Cardápio");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
     );
@@ -130,13 +130,20 @@ class Relatorio extends Component {
       showModal,
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
-      meusDados
+      meusDados,
+      uuid
     } = this.state;
+    const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div>
-        <ModalRecusarSolicitacao
+        <ModalNegarAlteracaoCardapio
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          motivoCancelamento={motivo_cancelamento}
+          alteracaoDeCardapio={alteracaoDeCardapio}
+          setRedirect={this.setRedirect.bind(this)}
         />
         {this.renderizarRedirecionamentoParaPedidos()}
         {!alteracaoDeCardapio ? (
@@ -299,8 +306,19 @@ class Relatorio extends Component {
   }
 }
 
+const formName = "relatorioAlteracaoDeCardapioDre";
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
+
+export default connect(mapStateToProps)(RelatorioForm);

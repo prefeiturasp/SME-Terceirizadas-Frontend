@@ -187,7 +187,7 @@ class AlteracaoCardapio extends Component {
           toastError(res.error);
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Alteração de Cardápio");
       }
     );

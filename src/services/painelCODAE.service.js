@@ -53,7 +53,7 @@ export const getSolicitacoesCanceladasCodae = async () => {
 };
 
 export const getSolicitacoesPendentesAprovacaoCodae = async filtro => {
-  const url = `${API_URL}/codae-solicitacoes/pendentes-aprovacao/${filtro}`;
+  const url = `${API_URL}/codae-solicitacoes/pendentes-aprovacao/${filtro}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
