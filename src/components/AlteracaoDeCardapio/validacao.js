@@ -6,7 +6,8 @@ export const validateSubmit = (values, meusDados) => {
     totalAlunos += parseInt(values.substituicoes_MANHA.numero_de_alunos);
     values["substituicoes"].push({
       periodo_escolar: values.substituicoes_MANHA.periodo,
-      tipos_alimentacao: values.substituicoes_MANHA.tipo_de_refeicao,
+      tipo_alimentacao_de: values.substituicoes_MANHA.tipo_alimentacao_de,
+      tipo_alimentacao_para: values.substituicoes_MANHA.tipo_alimentacao_para,
       qtd_alunos: values.substituicoes_MANHA.numero_de_alunos
     });
   }
@@ -15,7 +16,8 @@ export const validateSubmit = (values, meusDados) => {
     totalAlunos += parseInt(values.substituicoes_TARDE.numero_de_alunos);
     values["substituicoes"].push({
       periodo_escolar: values.substituicoes_TARDE.periodo,
-      tipos_alimentacao: values.substituicoes_TARDE.tipo_de_refeicao,
+      tipo_alimentacao_de: values.substituicoes_TARDE.tipo_alimentacao_de,
+      tipo_alimentacao_para: values.substituicoes_TARDE.tipo_alimentacao_para,
       qtd_alunos: values.substituicoes_TARDE.numero_de_alunos
     });
   }
@@ -24,7 +26,8 @@ export const validateSubmit = (values, meusDados) => {
     totalAlunos += parseInt(values.substituicoes_NOITE.numero_de_alunos);
     values["substituicoes"].push({
       periodo_escolar: values.substituicoes_NOITE.periodo,
-      tipos_alimentacao: values.substituicoes_NOITE.tipo_de_refeicao,
+      tipo_alimentacao_de: values.substituicoes_NOITE.tipo_alimentacao_de,
+      tipo_alimentacao_para: values.substituicoes_NOITE.tipo_alimentacao_para,
       qtd_alunos: values.substituicoes_NOITE.numero_de_alunos
     });
   }
@@ -33,7 +36,9 @@ export const validateSubmit = (values, meusDados) => {
     totalAlunos += parseInt(values.substituicoes_INTEGRAL.numero_de_alunos);
     values["substituicoes"].push({
       periodo_escolar: values.substituicoes_INTEGRAL.periodo,
-      tipos_alimentacao: values.substituicoes_INTEGRAL.tipo_de_refeicao,
+      tipo_alimentacao_de: values.substituicoes_INTEGRAL.tipo_alimentacao_de,
+      tipo_alimentacao_para:
+        values.substituicoes_INTEGRAL.tipo_alimentacao_para,
       qtd_alunos: values.substituicoes_INTEGRAL.numero_de_alunos
     });
   }
