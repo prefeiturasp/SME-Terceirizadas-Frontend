@@ -480,3 +480,18 @@ export const getCODAEPedidosAlteracaoCardapio = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const getTerceirizadaPedidosDeAlteracaoCardapio = filtroAplicado => {
+  const url = `${API_URL}/alteracoes-cardapio/pedidos-terceirizadas/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
