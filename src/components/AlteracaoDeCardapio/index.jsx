@@ -9,7 +9,7 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
-import { required } from "../../helpers/fieldValidators";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
@@ -25,10 +25,11 @@ import {
   createAlteracaoCardapio,
   getAlteracoesCardapioList,
   updateAlteracaoCardapio,
-  deleteAlteracaoCardapio
+  deleteAlteracaoCardapio,
+  enviarAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
 
-//const ENTER = 13;
+const ENTER = 13;
 
 class AlteracaoCardapio extends Component {
   constructor(props) {
@@ -47,7 +48,9 @@ class AlteracaoCardapio extends Component {
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -84,19 +87,24 @@ class AlteracaoCardapio extends Component {
     let substituicoesEdit = this.state.substituicoesEdit;
     substituicoesEdit.push({
       turno: periodo.nome,
-      substituicoes: []
+      substituicoes: [],
+      checado: false
     });
     this.setState({ substituicoesEdit });
   };
 
   retornaTurnoAlteracao = substituicao => {
     let substituicoesEdit = this.state.substituicoesEdit;
-    substituicoesEdit.forEach(item => {
+    let periodos = this.state.periodos;
+    substituicoesEdit.forEach((item, indice) => {
       if (item.turno === substituicao.periodo_escolar.nome) {
         item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes;
       }
+      if (periodos[indice].nome === substituicao.periodo_escolar.nome) {
+        periodos[indice].checado = true;
+      }
     });
-    this.setState({ substituicoesEdit });
+    this.setState({ substituicoesEdit, periodos });
   };
 
   retornaOpcoesAlteracao = (indice, param) => {
@@ -141,11 +149,48 @@ class AlteracaoCardapio extends Component {
   }
 
   resetForm() {
-    this.props.reset("alteracaoCardapio");
+    let periodos = this.state.periodos;
+    this.props.loadAlteracaoCardapio(null);
     this.props.change("alterar_dia", null);
     this.props.change("data_inicial", null);
     this.props.change("data_final", null);
     this.props.change("motivo", null);
+    this.props.change("observacao", null);
+    periodos.forEach(periodo => {
+      this.props.change(`substituicoes_${periodo.nome}.check`, false);
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
+        null
+      );
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipo_alimentacao_de`,
+        null
+      );
+      this.props.change(`substituicoes_${periodo.nome}.numero_de_alunos`, null);
+    });
+    this.setState({
+      status: "SEM STATUS",
+      title: "Nova Alteração de Cardápio",
+      id: null,
+      showModal: false,
+      salvarAtualizarLbl: "Salvar Rascunho"
+    });
+    this.refresh();
+  }
+
+  enviaAlteracaoCardapio(uuid) {
+    enviarAlteracaoCardapio(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          toastSuccess("Alteração de Cardápio enviada com sucesso");
+        } else {
+          toastError(res.error);
+        }
+      },
+      function(error) {
+        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+      }
+    );
   }
 
   onSubmit(values) {
@@ -161,10 +206,10 @@ class AlteracaoCardapio extends Component {
             if (response.status === HTTP_STATUS.CREATED) {
               if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaAlteracaoCardapio(response.data.uuid);
-                this.refresh();
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
               }
+              this.resetForm();
             }
           })
           .catch(error => {
@@ -181,7 +226,7 @@ class AlteracaoCardapio extends Component {
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
               }
-              this.refresh();
+              this.resetForm();
             } else {
               toastError(res.error);
             }
@@ -301,6 +346,12 @@ class AlteracaoCardapio extends Component {
     this.setState({ substituicoesAlimentacao });
   };
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       loading,
@@ -322,7 +373,11 @@ class AlteracaoCardapio extends Component {
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form className="mt-3" onSubmit={handleSubmit}>
+          <form
+            className="mt-3"
+            onSubmit={handleSubmit}
+            onKeyPress={this.onKeyPress}
+          >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}
@@ -446,6 +501,7 @@ class AlteracaoCardapio extends Component {
                             indice
                           );
                         }}
+                        validate={periodo.checado && required}
                       />
 
                       <Field
@@ -457,6 +513,7 @@ class AlteracaoCardapio extends Component {
                             ? substituicoesEdit[indice].substituicoes
                             : this.retornaOpcoesAlteracao(indice)
                         )}
+                        validate={periodo.checado && required}
                       />
 
                       <Field
@@ -466,6 +523,10 @@ class AlteracaoCardapio extends Component {
                         name="numero_de_alunos"
                         min="0"
                         className="form-control"
+                        validate={periodo.checado && [
+                          required,
+                          naoPodeSerZero
+                        ]}
                       />
                     </FormSection>
                   );
@@ -530,7 +591,9 @@ const mapStateToProps = state => {
     initialValues: state.alteracaoCardapio.data,
     data_inicial: selector(state, "data_inicial"),
     data_final: selector(state, "data_final"),
-    alterar_dia: selector(state, "alterar_dia")
+    alterar_dia: selector(state, "alterar_dia"),
+    motivo: selector(state, "motivo"),
+    observacao: selector(state, "observacao")
   };
 };
 
