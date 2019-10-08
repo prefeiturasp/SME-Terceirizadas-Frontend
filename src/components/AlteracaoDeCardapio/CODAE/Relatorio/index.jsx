@@ -6,7 +6,6 @@ import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
 import {
   getAlteracaoCardapio,
@@ -226,8 +225,8 @@ class Relatorio extends Component {
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
+                    <th>Tipos de Alimentação de</th>
+                    <th>Tipos de Alimentação para</th>
                   </tr>
                   {alteracaoDeCardapio.substituicoes.map(
                     (quantidade_por_periodo, key) => {
@@ -238,12 +237,11 @@ class Relatorio extends Component {
                               quantidade_por_periodo.periodo_escolar.nome}
                           </td>
                           <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
+                            {quantidade_por_periodo.tipo_alimentacao_de.nome}
                           </td>
-                          <td>{quantidade_por_periodo.qtd_alunos}</td>
+                          <td>
+                            {quantidade_por_periodo.tipo_alimentacao_para.nome}
+                          </td>
                         </tr>
                       );
                     }
