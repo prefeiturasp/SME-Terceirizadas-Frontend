@@ -19,9 +19,7 @@ import {
 } from "../../../../helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
 import { escolaPodeCancelar } from "../../../../constants/statusEnum";
-import {
-  getInclusaoDeAlimentacaoAvulsa
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 
 class Relatorio extends Component {
