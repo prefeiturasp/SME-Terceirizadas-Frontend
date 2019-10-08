@@ -6,6 +6,7 @@ import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
 import { statusEnum } from "../../../../../constants/statusEnum";
 import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
 import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../../../../services/inclusaoDeAlimentacaoContinua.service";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -24,15 +25,72 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
 
   async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
+    const escolaCancelaInclusao = this.props.ehInclusaoContinua
+      ? escolaCancelaInclusaoDeAlimentacaoContinua
+      : escolaCancelaInclusaoDeAlimentacaoAvulsa;
     let resp = "";
-
-    resp = await escolaCancelaInclusaoDeAlimentacaoAvulsa(uuid, justificativa);
+    resp = await escolaCancelaInclusao(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação cancelada com sucesso!");
+      this.props.setRedirect();
     } else {
       toastError(resp.detail);
     }
+  }
+
+  renderParteAvulsa() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    return (
+      !ehInclusaoContinua && (
+        <table className="table-periods">
+          <tr>
+            <th>Data</th>
+            <th>Motivo</th>
+          </tr>
+          {inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
+            return (
+              <tr key={key}>
+                <td>{inclusao.data}</td>
+                <td>{inclusao.motivo.nome}</td>
+              </tr>
+            );
+          })}
+        </table>
+      )
+    );
+  }
+
+  renderParteContinua() {
+    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    return (
+      ehInclusaoContinua && (
+        <div>
+          <div className="row">
+            <div className="col-4 report-label-value">
+              <p>Data do evento</p>
+              <p className="value">
+                {`${inclusaoDeAlimentacao.data_inicial} - ${
+                  inclusaoDeAlimentacao.data_final
+                }`}
+              </p>
+            </div>
+            <div className="col-4 report-label-value">
+              <p>Dias da Semana</p>
+              <p className="value">
+                {inclusaoDeAlimentacao.dias_semana_explicacao}
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>Motivo</p>
+              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+            </div>
+          </div>
+        </div>
+      )
+    );
   }
 
   componentDidUpdate(prevProps) {
@@ -65,21 +123,8 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
               <p>{`Solicitação nº #${inclusaoDeAlimentacao &&
                 inclusaoDeAlimentacao.id_externo}`}</p>
               <p>{`Solicitante: AGUARDANDO DEFINIÇÃO DE PERFIL`}</p>
-              <table className="table-periods">
-                <tr>
-                  <th>Data</th>
-                  <th>Motivo</th>
-                </tr>
-                {inclusaoDeAlimentacao &&
-                  inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
-                    return (
-                      <tr key={key}>
-                        <td>{inclusao.data}</td>
-                        <td>{inclusao.motivo.nome}</td>
-                      </tr>
-                    );
-                  })}
-              </table>
+              {this.renderParteAvulsa()}
+              {this.renderParteContinua()}
               <table className="table-periods">
                 <tr>
                   <th>Período</th>
