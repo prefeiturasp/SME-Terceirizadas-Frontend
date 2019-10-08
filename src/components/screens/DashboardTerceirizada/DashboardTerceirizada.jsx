@@ -25,6 +25,9 @@ import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import { dataAtual } from "../../../helpers/utilities";
+import CardBody from "../../Shareable/CardBody";
+import CardLegendas from "../../Shareable/CardLegendas";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
@@ -34,16 +37,13 @@ import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoC
 import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
 import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
+import { ajustarFormatoLog, LOG_PARA } from "../helper";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      autorizadasList: [],
-      autorizadasListFiltered: [],
-      pendentesList: [],
       pendentesListFiltered: [],
-      recusadasListFiltered: [],
       canceladasListFiltered: [],
       collapsed: true,
       pendentesListSolicitacao: [],
@@ -68,10 +68,19 @@ class DashboardTerceirizada extends Component {
       loadingSolicitacoesUnificadas: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
   }
 
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
+  }
+
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
   }
 
   async carregaResumosPendencias(filtroPendencias, minhaTerceirizada) {
@@ -133,21 +142,37 @@ class DashboardTerceirizada extends Component {
       minhaTerceirizada
     );
 
-    getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(
-      pendentesListSolicitacao => {
-        this.setState({
-          pendentesListSolicitacao: pendentesListSolicitacao.results
-        });
-      }
-    );
+    getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(request => {
+      let pendentesListSolicitacao = ajustarFormatoLog(
+        request.results,
+        LOG_PARA.TERCEIRIZADA
+      );
+      this.setState({
+        pendentesListSolicitacao,
+        pendentesListFiltered: pendentesListSolicitacao
+      });
+    });
 
-    getSolicitacoesCanceladasTerceirizada(minhaTerceirizada).then(
-      canceladasListSolicitacao => {
-        this.setState({
-          canceladasListSolicitacao: canceladasListSolicitacao.results
-        });
-      }
-    );
+    getSolicitacoesCanceladasTerceirizada(minhaTerceirizada).then(request => {
+      let canceladasListSolicitacao = ajustarFormatoLog(
+        request.results,
+        LOG_PARA.TERCEIRIZADA
+      );
+      this.setState({
+        canceladasListSolicitacao,
+        canceladasListFiltered: canceladasListSolicitacao
+      });
+    });
+  }
+
+  onPesquisaChanged(event) {
+    if (event === undefined) event = { target: { value: "" } };
+    const { pendentesListSolicitacao, canceladasListSolicitacao } = this.state;
+
+    this.setState({
+      pendentesListFiltered: this.filtrarNome(pendentesListSolicitacao, event),
+      canceladasListFiltered: this.filtrarNome(canceladasListSolicitacao, event)
+    });
   }
 
   render() {
@@ -157,8 +182,8 @@ class DashboardTerceirizada extends Component {
       collapsed,
       lotesTerceirizada,
       gestaoDeAlimentacao,
-      pendentesListSolicitacao,
-      canceladasListSolicitacao,
+      pendentesListFiltered,
+      canceladasListFiltered,
 
       resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
@@ -187,59 +212,34 @@ class DashboardTerceirizada extends Component {
               <TabelaHistoricoLotes lotes={lotesTerceirizada} />
             </Collapse>
           </CardMatriculados>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                <span>
-                  <i className="fas fa-thumbtack" />
-                  Acompanhamento de solicitações
-                  <i className="fas fa-pen" />
-                </span>
-                <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" />
-                  <i className="fas fa-search" />
-                </span>
+          <CardBody
+            titulo={"Acompanhamento solicitações"}
+            dataAtual={dataAtual()}
+            onChange={this.onPesquisaChanged}
+          >
+            <div className="row">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Aguardando Aprovação"}
+                  cardType={"card-pending"}
+                  solicitations={pendentesListFiltered}
+                  icon={"fa-exclamation-triangle"}
+                  href={`${TERCEIRIZADA}/solicitacoes`}
+                />
               </div>
-              <div>
-                <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
-                </p>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Aprovação"}
-                    cardType={"card-pending"}
-                    solicitations={pendentesListSolicitacao}
-                    icon={"fa-exclamation-triangle"}
-                    href={`${TERCEIRIZADA}/solicitacoes`}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={canceladasListSolicitacao}
-                    icon={"fa-times-circle"}
-                    href={`/${TERCEIRIZADA}/solicitacoes`}
-                  />
-                </div>
-              </div>
-              <p className="caption">Legenda</p>
-              <div className="caption-choices">
-                <span />
-                <span>
-                  <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Aprovação
-                </span>
-                <span />
-                <span>
-                  <i className="fas fa-times-circle" />
-                  Solicitação Cancelada
-                </span>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Canceladas"}
+                  cardType={"card-cancelled"}
+                  solicitations={canceladasListFiltered}
+                  icon={"fa-times-circle"}
+                  href={`/${TERCEIRIZADA}/solicitacoes`}
+                />
               </div>
             </div>
-          </div>
+            <CardLegendas />
+          </CardBody>
+          <div className="card mt-3" />
           {!gestaoDeAlimentacao ? (
             <div>
               <div className="row mt-3">
