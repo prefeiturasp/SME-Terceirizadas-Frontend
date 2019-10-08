@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getAlteracaoCardapio,

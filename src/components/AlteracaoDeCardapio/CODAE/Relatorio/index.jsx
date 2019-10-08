@@ -6,7 +6,6 @@ import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
 import {
   getAlteracaoCardapio,
