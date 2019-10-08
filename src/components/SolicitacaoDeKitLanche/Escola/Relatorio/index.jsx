@@ -11,7 +11,6 @@ import {
   aprovaDeKitLancheAvulsoDiretoriaRegional,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   ModalCancelarSolicitacao,
@@ -20,6 +19,8 @@ import {
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -284,13 +285,14 @@ class Relatorio extends Component {
                 </div>
                 {escolaPodeCancelar(solicitacaoKitLanche.status) && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Cancelar pedido"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
-                    />
+                    <div className="col-12 text-right">
+                      <Botao
+                        texto={"Cancelar"}
+                        onClick={() => this.showModal()}
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
