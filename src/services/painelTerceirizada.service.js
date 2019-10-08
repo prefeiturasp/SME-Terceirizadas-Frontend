@@ -291,91 +291,21 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
   return resposta;
 };
-export const getSolicitacoesPendentesParaTerceirizada = (
-  uuid,
-  filtro = "sem_filtro"
-) => {
-  const url = `${API_URL}/terceirizadas/${uuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
 
 export const getResumoPendenciasTerceirizadaPorLote = async (
   Terceirizadae_uuid,
   filtro
 ) => {
-  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaTerceirizada(
-    Terceirizadae_uuid,
-    filtro
-  )).results;
 
-  const reducer = (resumoPorLote, corrente) => {
-    if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {};
-    }
-    if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
-        corrente.lote
-      ][corrente.prioridade]
-        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
-        : 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
-        "TOTAL"
-      ]
-        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
-        : 1;
-    }
-    return resumoPorLote;
-  };
-
-  let resumoPorLote = solicitacoes.reduce(reducer, {});
-
-  return resumoPorLote;
+  return [];
 };
 
 export const getResumoPendenciasTerceirizadaEscolas = async (
   Terceirizadae_uuid,
   filtro
 ) => {
-  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaTerceirizada(
-    Terceirizadae_uuid,
-    filtro
-  )).results;
 
-  const reducer = (resumoPorEscola, corrente) => {
-    if (!resumoPorEscola[corrente.escola]) {
-      resumoPorEscola[corrente.escola] = {};
-    }
-    if (corrente.prioridade !== "VENCIDO") {
-      resumoPorEscola[corrente.escola][corrente.prioridade] = resumoPorEscola[
-        corrente.escola
-      ][corrente.prioridade]
-        ? (resumoPorEscola[corrente.escola][corrente.prioridade] += 1)
-        : 1;
-      resumoPorEscola[corrente.escola]["TOTAL"] = resumoPorEscola[
-        corrente.escola
-      ]["TOTAL"]
-        ? (resumoPorEscola[corrente.escola]["TOTAL"] += 1)
-        : 1;
-    }
-    return resumoPorEscola;
-  };
-
-  let resumoPorEscola = solicitacoes.reduce(reducer, {});
-
-  return resumoPorEscola;
+  return [];
 };
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
@@ -402,13 +332,6 @@ export const getSolicitacoesPendentesTerceirizada = async TerceirizadaUuid => {
   return retornoBase(url);
 };
 
-export const getSolicitacoesAutorizadasTerceirizada = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.AUTORIZADOS
-  }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
-};
-
 export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.CANCELADOS
@@ -416,9 +339,3 @@ export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   return retornoBase(url);
 };
 
-export const getSolicitacoesRecusadasTerceirizada = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.NEGADOS
-  }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
-};

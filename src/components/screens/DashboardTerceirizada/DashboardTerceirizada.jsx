@@ -11,6 +11,19 @@ import {
   SUSPENSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO
 } from "../../../configs/constants";
+import {
+  getResumoPendenciasTerceirizadaAlteracoesDeCardapio,
+  getResumoPendenciasTerceirizadaInclusaoDeAlimentacao,
+  getResumoPendenciasTerceirizadaInversaoDeDiaDeCardapio,
+  getResumoPendenciasTerceirizadaKitLanche,
+  getResumoPendenciasTerceirizadaSolicitacoesUnificadas,
+  getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
+  getResumoPendenciasTerceirizadaPorLote,
+  getResumoPendenciasTerceirizadaEscolas,
+  getSolicitacoesPendentesTerceirizada,
+  getSolicitacoesCanceladasTerceirizada,
+} from "../../../services/painelTerceirizada.service";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
@@ -28,18 +41,37 @@ class DashboardTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      autorizadasList: [],
+      autorizadasListFiltered: [],
+      pendentesList: [],
+      pendentesListFiltered: [],
+      recusadasListFiltered: [],
+      canceladasListFiltered: [],
       collapsed: true,
-      lotes: [
-        {
-          nome: "7A IP I IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        },
-        {
-          nome: "7A IP II IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        }
-      ],
-      gestaoDeAlimentacao: false
+      pendentesListSolicitacao: [],
+      canceladasListSolicitacao: [],
+
+      gestaoDeAlimentacao: props.gestaoDeAlimentacao,
+      filtroPendencias: "sem_filtro",
+
+      resumoPendenciasTerceirizadaAlteracoesDeCardapio: {},
+      resumoPendenciasTerceirizadaInclusoesDeAlimentacao: {},
+      resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio: {},
+      resumoPendenciasTerceirizadaKitLanche: {},
+      resumoPendenciasTerceirizadaSuspensaoDeAlimentacao: {},
+      resumoPendenciasTerceirizadaSolicitacoesUnificadas: {},
+      resumoPendenciasTerceirizadaEscolas: {},
+      resumoPendenciasTerceirizadaLotes: {},
+      loadingAutorizadas: true,
+      loadingPendentes: true,
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true,
+      loadingEscolas: true,
+      loadingLotes: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
@@ -48,19 +80,125 @@ class DashboardTerceirizada extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
+  async carregaResumosPendencias(filtroPendencias, minhaTerceirizada) {
+    this.setState({
+      minhaTerceirizada,
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
+      loadingSolicitacoesUnificadas: true,
+      loadingEscolas: true,
+      loadingLotes: true
+    });
+    const resumoPendenciasTerceirizadaAlteracoesDeCardapio = await getResumoPendenciasTerceirizadaAlteracoesDeCardapio(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+    const resumoPendenciasTerceirizadaInclusoesDeAlimentacao = await getResumoPendenciasTerceirizadaInclusaoDeAlimentacao(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+    const resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio = await getResumoPendenciasTerceirizadaInversaoDeDiaDeCardapio(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+    const resumoPendenciasTerceirizadaKitLanche = await getResumoPendenciasTerceirizadaKitLanche(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+    const resumoPendenciasTerceirizadaSuspensaoDeAlimentacao = await getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+    const resumoPendenciasTerceirizadaSolicitacoesUnificadas = await getResumoPendenciasTerceirizadaSolicitacoesUnificadas(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+
+    let resumoPendenciasTerceirizadaLotes = await getResumoPendenciasTerceirizadaPorLote(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+
+    let resumoPendenciasTerceirizadaEscolas = await getResumoPendenciasTerceirizadaEscolas(
+      minhaTerceirizada,
+      filtroPendencias
+    );
+
+    this.setState({
+      resumoPendenciasTerceirizadaAlteracoesDeCardapio,
+      resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
+      resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio,
+      resumoPendenciasTerceirizadaKitLanche,
+      resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
+      resumoPendenciasTerceirizadaSolicitacoesUnificadas,
+      resumoPendenciasTerceirizadaEscolas,
+      resumoPendenciasTerceirizadaLotes,
+      filtroPendencias,
+      loadingAlteracaoCardapio: !resumoPendenciasTerceirizadaAlteracoesDeCardapio,
+      loadingInclusoesAlimentacao: !resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
+      loadingInversoesCardapio: !resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio,
+      loadingKitLanche: !resumoPendenciasTerceirizadaKitLanche,
+      loadingSuspensaoAlimentacao: !resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
+      loadingSolicitacoesUnificadas: !resumoPendenciasTerceirizadaSolicitacoesUnificadas,
+      loadingEscolas: !resumoPendenciasTerceirizadaEscolas,
+      loadingLotes: !resumoPendenciasTerceirizadaLotes
+    });
+  }
+
+  async componentDidMount() {
+    const minhaTerceirizada = (await getMeusDados()).terceirizadas[0].uuid;
+    this.carregaResumosPendencias(this.state.filtroPendencias, minhaTerceirizada);
+
+    getSolicitacoesPendentesTerceirizada(
+      minhaTerceirizada).then(pendentesListSolicitacao => {
+        this.setState({ pendentesListSolicitacao: pendentesListSolicitacao.results });
+      });
+
+    getSolicitacoesCanceladasTerceirizada(
+      minhaTerceirizada).then(canceladasListSolicitacao => {
+        this.setState({ canceladasListSolicitacao: canceladasListSolicitacao.results });
+      })
+
+  }
+
   render() {
     const {
       enrolled,
       handleSubmit,
-      solicitations,
       vision_by,
-      quantidade_suspensoes,
-      unificadas
     } = this.props;
-    const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
+
+    const {
+      collapsed,
+      lotesTerceirizada,
+      gestaoDeAlimentacao,
+      pendentesListSolicitacao,
+      canceladasListSolicitacao,
+
+      resumoPendenciasTerceirizadaAlteracoesDeCardapio,
+      resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
+      resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio,
+      resumoPendenciasTerceirizadaKitLanche,
+      resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
+      resumoPendenciasTerceirizadaSolicitacoesUnificadas,
+      resumoPendenciasTerceirizadaEscolas,
+      resumoPendenciasTerceirizadaLotes,
+      loadingAlteracaoCardapio,
+      loadingInclusoesAlimentacao,
+      loadingInversoesCardapio,
+      loadingKitLanche,
+      loadingSuspensaoAlimentacao,
+      loadingSolicitacoesUnificadas,
+      loadingEscolas,
+      loadingLotes
+    } = this.state;
+
     return (
       <div>
-        <form onSubmit={handleSubmit(handleSubmit)}>
+        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados
             collapsed={collapsed}
@@ -68,7 +206,7 @@ class DashboardTerceirizada extends Component {
             numeroAlunos={enrolled}
           >
             <Collapse isOpened={!collapsed}>
-              <TabelaHistoricoLotes lotes={lotes} />
+              <TabelaHistoricoLotes lotes={lotesTerceirizada} />
             </Collapse>
           </CardMatriculados>
           <div className="card mt-3">
@@ -94,7 +232,7 @@ class DashboardTerceirizada extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Aguardando Aprovação"}
                     cardType={"card-pending"}
-                    solicitations={solicitations}
+                    solicitations={pendentesListSolicitacao}
                     icon={"fa-exclamation-triangle"}
                     href={`${TERCEIRIZADA}/solicitacoes`}
                   />
@@ -103,7 +241,7 @@ class DashboardTerceirizada extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={"card-cancelled"}
-                    solicitations={solicitations}
+                    solicitations={canceladasListSolicitacao}
                     icon={"fa-times-circle"}
                     href={`/${TERCEIRIZADA}/solicitacoes`}
                   />
@@ -194,19 +332,27 @@ class DashboardTerceirizada extends Component {
                   <div className="col-6">
                     <CardPendencia
                       cardTitle={"Escolas"}
-                      totalOfOrders={16}
-                      priorityOrders={8}
-                      onLimitOrders={2}
-                      regularOrders={6}
+                      totalOfOrders={resumoPendenciasTerceirizadaEscolas.total}
+                      priorityOrders={
+                        resumoPendenciasTerceirizadaEscolas.prioritario
+                      }
+                      onLimitOrders={resumoPendenciasTerceirizadaEscolas.limite}
+                      regularOrders={
+                        resumoPendenciasTerceirizadaEscolas.regular
+                      }
+                      loading={loadingEscolas}
                     />
                   </div>
                   <div className="col-6">
                     <CardPendencia
                       cardTitle={"Lotes"}
-                      totalOfOrders={47}
-                      priorityOrders={10}
-                      onLimitOrders={7}
-                      regularOrders={30}
+                      totalOfOrders={resumoPendenciasTerceirizadaLotes.total}
+                      priorityOrders={
+                        resumoPendenciasTerceirizadaLotes.prioritario
+                      }
+                      onLimitOrders={resumoPendenciasTerceirizadaLotes.limite}
+                      regularOrders={resumoPendenciasTerceirizadaLotes.regular}
+                      loading={loadingLotes}
                     />
                   </div>
                 </div>
@@ -215,10 +361,19 @@ class DashboardTerceirizada extends Component {
                     <Link to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`}>
                       <CardPendencia
                         cardTitle={"Inclusão de Alimentação"}
-                        totalOfOrders={16}
-                        priorityOrders={8}
-                        onLimitOrders={2}
-                        regularOrders={6}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaInclusoesDeAlimentacao.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaInclusoesDeAlimentacao.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaInclusoesDeAlimentacao.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaInclusoesDeAlimentacao.regular
+                        }
+                        loading={loadingInclusoesAlimentacao}
                       />
                     </Link>
                   </div>
@@ -226,10 +381,19 @@ class DashboardTerceirizada extends Component {
                     <Link to={`/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`}>
                       <CardPendencia
                         cardTitle={"Inversão de dias de cardápio"}
-                        totalOfOrders={50}
-                        priorityOrders={2}
-                        onLimitOrders={18}
-                        regularOrders={30}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio.regular
+                        }
+                        loading={loadingInversoesCardapio}
                       />
                     </Link>
                   </div>
@@ -239,10 +403,19 @@ class DashboardTerceirizada extends Component {
                     <Link to={`/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`}>
                       <CardPendencia
                         cardTitle={"Alteração de Cardápio"}
-                        totalOfOrders={20}
-                        priorityOrders={5}
-                        onLimitOrders={10}
-                        regularOrders={10}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaAlteracoesDeCardapio.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaAlteracoesDeCardapio.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaAlteracoesDeCardapio.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaAlteracoesDeCardapio.regular
+                        }
+                        loading={loadingAlteracaoCardapio}
                       />
                     </Link>
                   </div>
@@ -250,10 +423,19 @@ class DashboardTerceirizada extends Component {
                     <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
                       <CardPendencia
                         cardTitle={"Kit Lanche Passeio"}
-                        totalOfOrders={120}
-                        priorityOrders={20}
-                        onLimitOrders={40}
-                        regularOrders={60}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaKitLanche.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaKitLanche.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaKitLanche.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaKitLanche.regular
+                        }
+                        loading={loadingKitLanche}
                       />
                     </Link>
                   </div>
@@ -264,11 +446,20 @@ class DashboardTerceirizada extends Component {
                       to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
                     >
                       <CardPendencia
-                        cardTitle={"Solicitação Unificada"}
-                        totalOfOrders={unificadas.total}
-                        priorityOrders={unificadas.prioritaria.length}
-                        onLimitOrders={unificadas.limite.length}
-                        regularOrders={unificadas.regular.length}
+                        cardTitle={"Pedido Unificado"}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaSolicitacoesUnificadas.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaSolicitacoesUnificadas.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaSolicitacoesUnificadas.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaSolicitacoesUnificadas.regular
+                        }
+                        loading={loadingSolicitacoesUnificadas}
                       />
                     </Link>
                   </div>
@@ -276,9 +467,19 @@ class DashboardTerceirizada extends Component {
                     <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
                       <CardPendencia
                         cardTitle={"Suspensão de Alimentação"}
-                        totalOfOrders={quantidade_suspensoes}
-                        priorityOrders={quantidade_suspensoes}
-                        priorityOrdersOnly={true}
+                        totalOfOrders={
+                          resumoPendenciasTerceirizadaSuspensaoDeAlimentacao.total
+                        }
+                        priorityOrders={
+                          resumoPendenciasTerceirizadaSuspensaoDeAlimentacao.prioritario
+                        }
+                        onLimitOrders={
+                          resumoPendenciasTerceirizadaSuspensaoDeAlimentacao.limite
+                        }
+                        regularOrders={
+                          resumoPendenciasTerceirizadaSuspensaoDeAlimentacao.regular
+                        }
+                        loading={loadingSuspensaoAlimentacao}
                       />
                     </Link>
                   </div>
