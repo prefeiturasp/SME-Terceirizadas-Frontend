@@ -23,7 +23,7 @@
 
 .section-form-motivo {
   display: grid;
-  grid-template-columns: 94% auto;
+  grid-template-columns: 100%;
   grid-column-gap: 2%;
 
   div {
@@ -34,7 +34,7 @@
 
 .descricao-periodos-alimentacao {
   display: grid;
-  grid-template-columns: 27% 29% 29% auto;
+  grid-template-columns: 30% 33% 33%;
   grid-column-gap: 2%;
   margin-bottom: 0.5em;
 
@@ -48,7 +48,7 @@
 
 .item-periodo-alimentacao {
   display: grid;
-  grid-template-columns: 27% 29% 29% auto;
+  grid-template-columns: 30% 33% 33%;
   grid-column-gap: 2%;
   margin-bottom: 0.5em;
 

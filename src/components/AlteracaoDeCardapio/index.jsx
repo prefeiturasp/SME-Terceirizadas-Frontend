@@ -9,10 +9,9 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import { required } from "../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
-import { InputText } from "../Shareable/Input/InputText";
 import { montaPeriodoDeAlteracao } from "./helper";
 import { agregarDefault } from "../../helpers/utilities";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
@@ -166,7 +165,6 @@ class AlteracaoCardapio extends Component {
         `substituicoes_${periodo.nome}.tipo_alimentacao_de`,
         null
       );
-      this.props.change(`substituicoes_${periodo.nome}.numero_de_alunos`, null);
     });
     this.setState({
       status: "SEM STATUS",
@@ -270,7 +268,6 @@ class AlteracaoCardapio extends Component {
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
         null
       );
-      this.props.change(`substituicoes_${periodoNome}.numero_de_alunos`, null);
     }
   }
 
@@ -444,7 +441,6 @@ class AlteracaoCardapio extends Component {
                   <div>Período</div>
                   <div>Alterar alimentação de:</div>
                   <div>Para alimentação:</div>
-                  <div>N° de alunos</div>
                 </header>
 
                 {periodos.map((periodo, indice) => {
@@ -515,16 +511,6 @@ class AlteracaoCardapio extends Component {
                             : this.retornaOpcoesAlteracao(indice)
                         )}
                         validate={periodo.checado && required}
-                      />
-
-                      <Field
-                        component={InputText}
-                        disabled={!periodo.checado}
-                        type="number"
-                        name="numero_de_alunos"
-                        min="0"
-                        className="form-control"
-                        validate={periodo.checado && [required, naoPodeSerZero]}
                       />
                     </FormSection>
                   );
