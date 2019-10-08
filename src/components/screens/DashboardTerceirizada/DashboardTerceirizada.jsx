@@ -18,10 +18,8 @@ import {
   getResumoPendenciasTerceirizadaKitLanche,
   getResumoPendenciasTerceirizadaSolicitacoesUnificadas,
   getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
-  getResumoPendenciasTerceirizadaPorLote,
-  getResumoPendenciasTerceirizadaEscolas,
   getSolicitacoesPendentesTerceirizada,
-  getSolicitacoesCanceladasTerceirizada,
+  getSolicitacoesCanceladasTerceirizada
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
@@ -60,8 +58,6 @@ class DashboardTerceirizada extends Component {
       resumoPendenciasTerceirizadaKitLanche: {},
       resumoPendenciasTerceirizadaSuspensaoDeAlimentacao: {},
       resumoPendenciasTerceirizadaSolicitacoesUnificadas: {},
-      resumoPendenciasTerceirizadaEscolas: {},
-      resumoPendenciasTerceirizadaLotes: {},
       loadingAutorizadas: true,
       loadingPendentes: true,
       loadingAlteracaoCardapio: true,
@@ -69,9 +65,7 @@ class DashboardTerceirizada extends Component {
       loadingInversoesCardapio: true,
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
-      loadingEscolas: true,
-      loadingLotes: true
+      loadingSolicitacoesUnificadas: true
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
   }
@@ -88,9 +82,7 @@ class DashboardTerceirizada extends Component {
       loadingInversoesCardapio: true,
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
-      loadingEscolas: true,
-      loadingLotes: true
+      loadingSolicitacoesUnificadas: true
     });
     const resumoPendenciasTerceirizadaAlteracoesDeCardapio = await getResumoPendenciasTerceirizadaAlteracoesDeCardapio(
       minhaTerceirizada,
@@ -117,16 +109,6 @@ class DashboardTerceirizada extends Component {
       filtroPendencias
     );
 
-    let resumoPendenciasTerceirizadaLotes = await getResumoPendenciasTerceirizadaPorLote(
-      minhaTerceirizada,
-      filtroPendencias
-    );
-
-    let resumoPendenciasTerceirizadaEscolas = await getResumoPendenciasTerceirizadaEscolas(
-      minhaTerceirizada,
-      filtroPendencias
-    );
-
     this.setState({
       resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
@@ -134,42 +116,42 @@ class DashboardTerceirizada extends Component {
       resumoPendenciasTerceirizadaKitLanche,
       resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
       resumoPendenciasTerceirizadaSolicitacoesUnificadas,
-      resumoPendenciasTerceirizadaEscolas,
-      resumoPendenciasTerceirizadaLotes,
       filtroPendencias,
       loadingAlteracaoCardapio: !resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       loadingInclusoesAlimentacao: !resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
       loadingInversoesCardapio: !resumoPendenciasTerceirizadaInversaoDeDiaDeCardapio,
       loadingKitLanche: !resumoPendenciasTerceirizadaKitLanche,
       loadingSuspensaoAlimentacao: !resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
-      loadingSolicitacoesUnificadas: !resumoPendenciasTerceirizadaSolicitacoesUnificadas,
-      loadingEscolas: !resumoPendenciasTerceirizadaEscolas,
-      loadingLotes: !resumoPendenciasTerceirizadaLotes
+      loadingSolicitacoesUnificadas: !resumoPendenciasTerceirizadaSolicitacoesUnificadas
     });
   }
 
   async componentDidMount() {
     const minhaTerceirizada = (await getMeusDados()).terceirizadas[0].uuid;
-    this.carregaResumosPendencias(this.state.filtroPendencias, minhaTerceirizada);
+    this.carregaResumosPendencias(
+      this.state.filtroPendencias,
+      minhaTerceirizada
+    );
 
-    getSolicitacoesPendentesTerceirizada(
-      minhaTerceirizada).then(pendentesListSolicitacao => {
-        this.setState({ pendentesListSolicitacao: pendentesListSolicitacao.results });
-      });
+    getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(
+      pendentesListSolicitacao => {
+        this.setState({
+          pendentesListSolicitacao: pendentesListSolicitacao.results
+        });
+      }
+    );
 
-    getSolicitacoesCanceladasTerceirizada(
-      minhaTerceirizada).then(canceladasListSolicitacao => {
-        this.setState({ canceladasListSolicitacao: canceladasListSolicitacao.results });
-      })
-
+    getSolicitacoesCanceladasTerceirizada(minhaTerceirizada).then(
+      canceladasListSolicitacao => {
+        this.setState({
+          canceladasListSolicitacao: canceladasListSolicitacao.results
+        });
+      }
+    );
   }
 
   render() {
-    const {
-      enrolled,
-      handleSubmit,
-      vision_by,
-    } = this.props;
+    const { enrolled, handleSubmit, vision_by } = this.props;
 
     const {
       collapsed,
@@ -184,16 +166,12 @@ class DashboardTerceirizada extends Component {
       resumoPendenciasTerceirizadaKitLanche,
       resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
       resumoPendenciasTerceirizadaSolicitacoesUnificadas,
-      resumoPendenciasTerceirizadaEscolas,
-      resumoPendenciasTerceirizadaLotes,
       loadingAlteracaoCardapio,
       loadingInclusoesAlimentacao,
       loadingInversoesCardapio,
       loadingKitLanche,
       loadingSuspensaoAlimentacao,
-      loadingSolicitacoesUnificadas,
-      loadingEscolas,
-      loadingLotes
+      loadingSolicitacoesUnificadas
     } = this.state;
 
     return (
@@ -328,34 +306,6 @@ class DashboardTerceirizada extends Component {
                   </div>
                 </div>
                 <div className="pt-3" />
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Escolas"}
-                      totalOfOrders={resumoPendenciasTerceirizadaEscolas.total}
-                      priorityOrders={
-                        resumoPendenciasTerceirizadaEscolas.prioritario
-                      }
-                      onLimitOrders={resumoPendenciasTerceirizadaEscolas.limite}
-                      regularOrders={
-                        resumoPendenciasTerceirizadaEscolas.regular
-                      }
-                      loading={loadingEscolas}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Lotes"}
-                      totalOfOrders={resumoPendenciasTerceirizadaLotes.total}
-                      priorityOrders={
-                        resumoPendenciasTerceirizadaLotes.prioritario
-                      }
-                      onLimitOrders={resumoPendenciasTerceirizadaLotes.limite}
-                      regularOrders={resumoPendenciasTerceirizadaLotes.regular}
-                      loading={loadingLotes}
-                    />
-                  </div>
-                </div>
                 <div className="row pt-3">
                   <div className="col-6">
                     <Link to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`}>

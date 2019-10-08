@@ -215,4 +215,3 @@ export const getTerceirizadasSuspensoesDeAlimentacao = filtroAplicado => {
       console.log(error);
     });
 };
-

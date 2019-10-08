@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import {
-  CardInversaoPendenciaAprovacao as CardPendenciaAprovacao
-} from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao as CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import {
   getTerceirizadasSuspensoesDeAlimentacao,
   getSuspensaoDeAlimentacaoTomadaCiencia
@@ -19,7 +17,6 @@ import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
-
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -52,10 +49,9 @@ class PainelPedidos extends Component {
 
     getSuspensaoDeAlimentacaoTomadaCiencia().then(response => {
       this.setState({
-        pedidosTomadaCiencia: response.data.results,
+        pedidosTomadaCiencia: response.data.results
       });
     });
-
   }
 
   onFiltroSelected(value) {
@@ -130,9 +126,7 @@ class PainelPedidos extends Component {
                   <div className="row pt-3">
                     <div className="col-12">
                       <CardHistorico
-                        pedidos={formatarPedidos(
-                          pedidosTomadaCiencia
-                        )}
+                        pedidos={formatarPedidos(pedidosTomadaCiencia)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
                           "Histórico de Suspensão de Alimentações Tomadas Ciência"

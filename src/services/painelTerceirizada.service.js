@@ -231,7 +231,7 @@ export const getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao = async (
     limite: 0,
     regular: 0
   };
-    let pedidosPrioritarios = [];
+  let pedidosPrioritarios = [];
   let pedidosLimite = [];
   let pedidosRegular = [];
 
@@ -292,22 +292,6 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasTerceirizadaPorLote = async (
-  Terceirizadae_uuid,
-  filtro
-) => {
-
-  return [];
-};
-
-export const getResumoPendenciasTerceirizadaEscolas = async (
-  Terceirizadae_uuid,
-  filtro
-) => {
-
-  return [];
-};
-
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
 const retornoBase = async url => {
@@ -338,4 +322,3 @@ export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };
-
