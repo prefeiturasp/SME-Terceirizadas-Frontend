@@ -1,16 +1,14 @@
-import moment from "moment";
-
-export const prazoDoPedidoMensagem = (
-  data,
-  proximos_dois_dias_uteis,
-  proximos_cinco_dias_uteis
-) => {
-  const dataObj = moment(data, "DD/MM/YYYY");
-  if (dataObj <= proximos_dois_dias_uteis)
-    return "Pedido próximo ao prazo de vencimento";
-  else if (proximos_dois_dias_uteis < dataObj < proximos_cinco_dias_uteis)
-    return "Pedido no prazo limite";
-  else return "Pedido no prazo regular";
+export const prazoDoPedidoMensagem = prioridade => {
+  switch (prioridade) {
+    case "REGULAR":
+      return "Pedido no prazo regular";
+    case "LIMITE":
+      return "Pedido no prazo limite";
+    case "PRIORITARIO":
+      return "Pedido próximo ao prazo de vencimento";
+    default:
+      return "";
+  }
 };
 
 export const corDaMensagem = mensagem => {

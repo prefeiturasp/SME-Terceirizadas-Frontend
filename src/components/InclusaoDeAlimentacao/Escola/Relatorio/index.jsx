@@ -11,12 +11,8 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { INCLUSAO_ALIMENTACAO, ESCOLA } from "../../../../configs/constants";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
-import {
-  dataParaUTC,
-  stringSeparadaPorVirgulas
-} from "../../../../helpers/utilities";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
 import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
@@ -63,30 +59,17 @@ class Relatorio extends Component {
         meusDados: response
       });
     });
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getInclusaoDeAlimentacao(uuid).then(response => {
-          const dataMaisProxima =
-            response.inclusoes && response.inclusoes[0].data;
-          this.setState({
-            inclusaoDeAlimentacao: response,
-            ehInclusaoContinua: ehInclusaoContinua === "true",
-            uuid,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial || dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+
+    if (uuid) {
+      getInclusaoDeAlimentacao(uuid).then(response => {
+        this.setState({
+          inclusaoDeAlimentacao: response,
+          ehInclusaoContinua: ehInclusaoContinua === "true",
+          uuid,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
-      }
-    });
+      });
+    }
   }
 
   showModal() {
