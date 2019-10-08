@@ -57,6 +57,7 @@ import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSoli
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
+import * as InclusaoDeAlimentacaoPaginas from "./imports/InclusaoDeAlimentacaoPaginas";
 import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
 import * as inversaoDeDiaDeCardapioPaginas from "./imports/InversaoDeDiaDeCardapioPaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
@@ -96,6 +97,13 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/status-solicitacoes`,
     component: StatusSolicitacoesPage,
     exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}/${
+      constants.RELATORIO
+    }`,
+    component: InclusaoDeAlimentacaoPaginas.RelatorioEscola,
+    exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
