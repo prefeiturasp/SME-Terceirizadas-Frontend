@@ -3,19 +3,19 @@ import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
   getSolicitacoesAprovadosCodae,
-  getSolicitacoesPendentesAprovacaoCodae,
   getSolicitacoesCanceladasCodae,
-  getSolicitacoesRevisaoAprovacaoCodae
+  getSolicitacoesNegadasCodae,
+  getSolicitacoesPendentesAprovacaoCodae
 } from "../../../services/painelCODAE.service";
 import CardLegendas from "../../Shareable/CardLegendas";
+import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { InputSearch } from "../../Shareable/InputSearch";
-import { STATUS, FILTRO } from "../const";
+import { FILTRO, STATUS } from "../const";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
-import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -109,7 +109,7 @@ export class StatusSolicitacoes extends Component {
         tipoCard = CARD_TYPE_ENUM.NEGADO;
         icone = ICON_CARD_TYPE_ENUM.NEGADO;
         titulo = "Recusadas";
-        solicitacoes = await getSolicitacoesRevisaoAprovacaoCodae();
+        solicitacoes = await getSolicitacoesNegadasCodae();
         break;
       default:
         break;

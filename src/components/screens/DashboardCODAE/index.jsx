@@ -1,15 +1,7 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
-import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
-import { dataAtual } from "../../../helpers/utilities";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import {
-  CardStatusDeSolicitacao,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import "../../Shareable/style.scss";
-import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
+import { Field, reduxForm } from "redux-form";
 import {
   ALTERACAO_CARDAPIO,
   CODAE,
@@ -17,26 +9,34 @@ import {
   INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO,
-  SOLICITACOES_PENDENTES,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_NEGADAS
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_PENDENTES,
+  SUSPENSAO_ALIMENTACAO
 } from "../../../configs/constants";
-import Select from "../../Shareable/Select";
-import { FILTRO } from "../const";
+import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasAlteracaoCardapio,
+  getResumoPendenciasCODAEporDRE,
+  getResumoPendenciasCODAEporLote,
   getResumoPendenciasInclusaoAlimentacao,
   getResumoPendenciasInversoesCardapio,
   getResumoPendenciasKitLancheAvulso,
   getResumoPendenciasKitLancheUnificado,
-  getResumoPendenciasSuspensaoCardapio,
-  getResumoPendenciasCODAEporDRE,
-  getResumoPendenciasCODAEporLote
+  getResumoPendenciasSuspensaoCardapio
 } from "../../../services/painelCODAE.service.js";
+import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import Select from "../../Shareable/Select";
+import "../../Shareable/style.scss";
+import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
+import { FILTRO } from "../const";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -82,7 +82,7 @@ class DashboardCODAE extends Component {
       filtro: FILTRO.SEM_FILTRO,
       visao: FILTRO_VISAO.TIPO_SOLICITACAO,
 
-      solicitacoesAprovadasFiltradas: [],
+      solicitacoesAutorizadasFiltradas: [],
       solicitacoesPendentesAprovacaoFiltradas: [],
       solicitacoesCanceladasFiltradas: [],
       solicitacoesRevisaoFiltradas: [],
@@ -157,15 +157,17 @@ class DashboardCODAE extends Component {
     const {
       totalAlunos,
       handleSubmit,
-      solicitacoesAprovadas,
+      solicitacoesAutorizadas,
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
+      solicitacoesNegadas,
       vencimentoPara,
       diretoriasRegionais,
       lotes,
       visaoPor,
       quantidade_suspensoes
     } = this.props;
+
     const {
       collapsed,
       loadingPainelSolicitacoes,
@@ -211,7 +213,7 @@ class DashboardCODAE extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Aprovação"}
+                    cardTitle={"Aguardando Autorização"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
@@ -223,7 +225,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={CARD_TYPE_ENUM.APROVADO}
-                    solicitations={solicitacoesAprovadas}
+                    solicitations={solicitacoesAutorizadas}
                     icon={"fa-check"}
                     href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
                     loading={loadingPainelSolicitacoes}
@@ -235,7 +237,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={solicitacoesCanceladas}
+                    solicitations={solicitacoesNegadas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                     loading={loadingPainelSolicitacoes}

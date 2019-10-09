@@ -14,14 +14,17 @@ import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import { getSuspensaoDeAlimentacaoCODAE } from "./suspensaoDeAlimentacao.service";
+import { SOLICITACOES } from "./contants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
 };
 
+const TODAS_SOLICITACOES_CODAE_URL = `${API_URL}/codae-solicitacoes`;
+
 export const getSolicitacoesAprovadosCodae = async () => {
-  const url = `${API_URL}/codae-solicitacoes/aprovados/`;
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.AUTORIZADOS}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -37,7 +40,7 @@ export const getSolicitacoesAprovadosCodae = async () => {
 };
 
 export const getSolicitacoesCanceladasCodae = async () => {
-  const url = `${API_URL}/codae-solicitacoes/cancelados/`;
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.CANCELADOS}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -53,7 +56,9 @@ export const getSolicitacoesCanceladasCodae = async () => {
 };
 
 export const getSolicitacoesPendentesAprovacaoCodae = async filtro => {
-  const url = `${API_URL}/codae-solicitacoes/pendentes-aprovacao/${filtro}/`;
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
+    SOLICITACOES.PENDENTES
+  }/${filtro}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -68,8 +73,8 @@ export const getSolicitacoesPendentesAprovacaoCodae = async filtro => {
   }
 };
 
-export const getSolicitacoesRevisaoAprovacaoCodae = async () => {
-  const url = `${API_URL}/codae-solicitacoes/solicitacoes-revisao/`;
+export const getSolicitacoesNegadasCodae = async () => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.NEGADOS}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
