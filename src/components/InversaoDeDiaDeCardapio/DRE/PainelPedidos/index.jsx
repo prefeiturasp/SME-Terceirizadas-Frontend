@@ -15,7 +15,7 @@ import {
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
-} from "./helper";
+} from "./../../../../helpers/painelPedidos";
 
 class PainelPedidos extends Component {
   constructor(props) {

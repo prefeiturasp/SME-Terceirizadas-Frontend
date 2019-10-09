@@ -10,7 +10,7 @@ import {
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
-} from "./helper";
+} from "./../../../../helpers/painelPedidos";
 import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";

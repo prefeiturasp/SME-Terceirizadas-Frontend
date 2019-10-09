@@ -12,7 +12,7 @@ import {
   filtraPrioritarios,
   filtraRegular,
   formatarPedidos
-} from "./helper";
+} from "../../../../helpers/painelPedidos";
 import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { FiltroEnum } from "../../../../constants/filtroEnum";

@@ -3,7 +3,7 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
-} from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+} from "../helpers/painelPedidos";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
