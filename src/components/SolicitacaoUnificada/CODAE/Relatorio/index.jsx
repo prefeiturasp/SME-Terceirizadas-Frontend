@@ -1,19 +1,16 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { connect } from "react-redux";
+import { formValueSelector, reduxForm } from "redux-form";
 import {
   CODAEAprovaPedidoDRE,
-  getSolicitacaoUnificada
+  getSolicitacaoUnificada,
+  CODAENegaKitLancheUnificadoEscola
 } from "../../../../services/solicitacaoUnificada.service";
-import { meusDados } from "../../../../services/perfil.service";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import { prazoDoPedidoMensagem } from "./helper";
+import { prazoDoPedidoMensagem } from "../../../../helpers/utilities";
 import TabelaKits from "./TabelaKits";
 import {
   CODAE,
@@ -26,6 +23,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { ModalNegarSolicitacao } from "../../../Shareable/ModalNegarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,7 +31,6 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -41,6 +38,7 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
+    this.updateLogs = this.updateLogs.bind(this);
   }
 
   setRedirect() {
@@ -58,41 +56,18 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    meusDados().then(meusDados => {
-      this.setState({ meusDados });
-    });
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getSolicitacaoUnificada(uuid).then(response => {
-          const solicitacaoUnificada = response.data;
-          const data_de = moment(solicitacaoUnificada.data_de, "DD/MM/YYYY");
-          const data_para = moment(
-            solicitacaoUnificada.data_para,
-            "DD/MM/YYYY"
-          );
-          let dataMaisProxima = data_de;
-          if (dataMaisProxima < data_para) {
-            dataMaisProxima = data_para;
-          }
-
-          this.setState({
-            solicitacaoUnificada,
-            uuid,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+    if (uuid) {
+      getSolicitacaoUnificada(uuid).then(response => {
+        const solicitacaoUnificada = response.data;
+        this.setState({
+          solicitacaoUnificada,
+          uuid,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+            solicitacaoUnificada.prioridade
+          )
         });
-      }
-    });
+      });
+    }
   }
 
   showModal() {
@@ -101,7 +76,12 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação Unificada negada com sucesso!");
+  }
+
+  updateLogs() {
+    getSolicitacaoUnificada(this.state.uuid).then(response => {
+      this.setState({ solicitacaoUnificada: response.data });
+    });
   }
 
   handleSubmit() {
@@ -122,13 +102,22 @@ class Relatorio extends Component {
   }
 
   render() {
-    const { showModal, solicitacaoUnificada } = this.state;
+    const { showModal, solicitacaoUnificada, uuid } = this.state;
+    const { justificativa } = this.props;
     return (
       <div>
         {!solicitacaoUnificada ? (
           <span>Carregando...</span>
         ) : (
           <div>
+            <ModalNegarSolicitacao
+              closeModal={this.closeModal}
+              showModal={showModal}
+              uuid={uuid}
+              justificativa={justificativa}
+              negarEndpoint={CODAENegaKitLancheUnificadoEscola}
+              updateLogs={this.updateLogs}
+            />
             <span className="page-title">
               Solicitação Unificada # {solicitacaoUnificada.id_externo}
               <Link to={`/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
@@ -142,11 +131,6 @@ class Relatorio extends Component {
               </Link>
             </span>
             <div className="card mt-3">
-              <ModalRecusarSolicitacao
-                closeModal={this.closeModal}
-                showModal={showModal}
-              />
-
               <div className="card-body container-detail">
                 {this.renderizarRedirecionamento()}
                 <div className="container-title">
@@ -286,8 +270,19 @@ class Relatorio extends Component {
   }
 }
 
+const formName = "kitLancheUnificadoRelatorioCodaeForm";
+
+const selector = formValueSelector(formName);
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
+
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);

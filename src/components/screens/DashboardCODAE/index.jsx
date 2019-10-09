@@ -15,10 +15,13 @@ import {
   CODAE,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
-  SOLICITACOES,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS
 } from "../../../configs/constants";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
@@ -212,7 +215,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -222,7 +225,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.APROVADO}
                     solicitations={solicitacoesAprovadas}
                     icon={"fa-check"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -234,7 +237,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -244,7 +247,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.CANCELADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
