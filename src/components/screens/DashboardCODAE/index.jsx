@@ -21,7 +21,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_RECUSADAS
+  SOLICITACOES_NEGADAS
 } from "../../../configs/constants";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
@@ -237,7 +237,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES_RECUSADAS}`}
+                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
