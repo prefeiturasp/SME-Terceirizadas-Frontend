@@ -1,14 +1,15 @@
 import { API_URL } from "../constants/config.constants";
-import { PEDIDOS } from "./contants";
+import { PEDIDOS, FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
 };
+const URL_SUSPENSAO_ALIMENTACAO = `${API_URL}/grupos-suspensoes-alimentacao`;
 
 export const createSuspensaoDeAlimentacao = payload => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/`;
 
   let status = 0;
   return fetch(url, {
@@ -29,7 +30,7 @@ export const createSuspensaoDeAlimentacao = payload => {
 };
 
 export const deleteSuspensaoDeAlimentacao = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/`;
   return fetch(url, {
     method: "DELETE",
     headers: authToken
@@ -43,7 +44,7 @@ export const deleteSuspensaoDeAlimentacao = uuid => {
 };
 
 export const getSuspensoesDeAlimentacaoSalvas = () => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/meus_rascunhos/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/meus_rascunhos/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -73,7 +74,7 @@ export const getMotivosSuspensaoCardapio = () => {
 };
 
 export const enviarSuspensaoDeAlimentacao = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/informa-suspensao/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/informa-suspensao/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -92,7 +93,7 @@ export const enviarSuspensaoDeAlimentacao = uuid => {
 };
 
 export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/`;
   let status = 0;
 
   return fetch(url, {
@@ -113,7 +114,7 @@ export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
 };
 
 export const getSuspensoesDeAlimentacaoInformadas = () => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/informadas/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/informadas/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -128,7 +129,7 @@ export const getSuspensoesDeAlimentacaoInformadas = () => {
 };
 
 export const getSuspensaoDeAlimentacaoUUID = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "get",
@@ -147,7 +148,9 @@ export const getSuspensaoDeAlimentacaoUUID = uuid => {
 };
 
 export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/terceirizada-toma-ciencia/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/${
+    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -166,7 +169,7 @@ export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
 };
 
 export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/tomados-ciencia/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/tomados-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
@@ -185,7 +188,9 @@ export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
 };
 
 export const getSuspensaoDeAlimentacaoCODAE = filtro_aplicado => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/pedidos-codae/${filtro_aplicado}/`;
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${
+    PEDIDOS.CODAE
+  }/${filtro_aplicado}/`;
 
   return fetch(url, {
     method: "GET",
@@ -200,7 +205,7 @@ export const getSuspensaoDeAlimentacaoCODAE = filtro_aplicado => {
 };
 
 export const getTerceirizadasSuspensoesDeAlimentacao = filtroAplicado => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${
     PEDIDOS.TERCEIRIZADA
   }/${filtroAplicado}/`;
   const OBJ_REQUEST = {

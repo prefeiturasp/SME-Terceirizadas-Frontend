@@ -1,14 +1,15 @@
 import { API_URL } from "../constants/config.constants";
-import { FLUXO } from "./contants";
+import { FLUXO, PEDIDOS } from "./contants";
 import authService from "./auth";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
 };
+const API_URL_ALTERACOES_CARDAPIO = `${API_URL}/alteracoes-cardapio`;
 
 export const createAlteracaoCardapio = payload => {
-  const url = `${API_URL}/alteracoes-cardapio/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/`;
 
   let status = 0;
   return fetch(url, {
@@ -29,7 +30,7 @@ export const createAlteracaoCardapio = payload => {
 };
 
 export const updateAlteracaoCardapio = (uuid, payload) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "PUT",
@@ -49,7 +50,7 @@ export const updateAlteracaoCardapio = (uuid, payload) => {
 };
 
 export const deleteAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/`;
   return fetch(url, {
     method: "DELETE",
     headers: authToken
@@ -94,7 +95,7 @@ export const getMotivosAlteracaoCardapio = () => {
 };
 
 export const enviarAlteracaoCardapio = (uuid, payload) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/inicio-pedido/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -114,7 +115,7 @@ export const enviarAlteracaoCardapio = (uuid, payload) => {
 };
 
 export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-diretoria-regional/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -129,7 +130,7 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
 };
 
 export const getDiretoriaRegionalPedidosReprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-diretoria-regional/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -144,7 +145,7 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
 };
 
 export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -159,7 +160,7 @@ export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -174,7 +175,7 @@ export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -190,7 +191,9 @@ export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
 
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
 export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-diretoria-regional/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${
+    PEDIDOS.DRE
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -205,7 +208,7 @@ export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => 
 };
 
 export const DREConfirmaAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.DRE_VALIDA}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -224,7 +227,7 @@ export const DREConfirmaAlteracaoCardapio = uuid => {
 };
 
 export const DRENegaAlteracaoCardapio = (uuid, justificativa) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -244,7 +247,7 @@ export const DRENegaAlteracaoCardapio = (uuid, justificativa) => {
 };
 
 export const getAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -259,7 +262,7 @@ export const getAlteracaoCardapio = uuid => {
 };
 
 export const getCodaePedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-codae/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-prioritarios-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -274,7 +277,7 @@ export const getCodaePedidosPrioritarios = filtroAplicado => {
 };
 
 export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-codae/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-limite-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -289,7 +292,7 @@ export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-codae/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-prazo-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -304,7 +307,7 @@ export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
 };
 
 export const getCodaePedidosAprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-codae/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -319,7 +322,7 @@ export const getCodaePedidosAprovados = () => {
 };
 
 export const getCodaePedidosReprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-codae/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -334,7 +337,7 @@ export const getCodaePedidosReprovados = () => {
 };
 
 export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/codae-aprova-pedido/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-aprova-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -353,7 +356,7 @@ export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
 };
 
 export const CODAENegaAlteracaoCardapio = (uuid, justificativa) => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -373,7 +376,7 @@ export const CODAENegaAlteracaoCardapio = (uuid, justificativa) => {
 };
 
 export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -388,7 +391,7 @@ export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -403,7 +406,7 @@ export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -418,7 +421,7 @@ export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-aprovados-terceirizada/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -433,7 +436,7 @@ export const getTerceirizadaPedidosAprovados = () => {
 };
 
 export const getTerceirizadaPedidosReprovados = () => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-reprovados-terceirizada/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -448,7 +451,7 @@ export const getTerceirizadaPedidosReprovados = () => {
 };
 
 export const TerceirizadaTomaCiencia = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/terceirizada-toma-ciencia/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -467,7 +470,9 @@ export const TerceirizadaTomaCiencia = uuid => {
 };
 
 export const getCODAEPedidosAlteracaoCardapio = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-codae/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${
+    PEDIDOS.CODAE
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -482,7 +487,9 @@ export const getCODAEPedidosAlteracaoCardapio = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosDeAlteracaoCardapio = filtroAplicado => {
-  const url = `${API_URL}/alteracoes-cardapio/pedidos-terceirizadas/${filtroAplicado}/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

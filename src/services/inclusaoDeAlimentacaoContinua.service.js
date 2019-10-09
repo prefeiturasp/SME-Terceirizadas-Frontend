@@ -430,7 +430,9 @@ export const getDREPedidosInclusaoContinuosPendentes = filtroAplicado => {
 };
 
 export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-terceirizadas/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_CONTINUA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
