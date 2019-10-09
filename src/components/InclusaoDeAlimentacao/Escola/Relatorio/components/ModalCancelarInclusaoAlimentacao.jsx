@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
+import {
+  toastError,
+  toastSuccess,
+  toastWarn
+} from "../../../../Shareable/Toast/dialogs";
 import { statusEnum } from "../../../../../constants/statusEnum";
 import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
 import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../../../../services/inclusaoDeAlimentacaoAvulsa.service";
@@ -25,17 +29,21 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
 
   async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
-    const escolaCancelaInclusao = this.props.ehInclusaoContinua
-      ? escolaCancelaInclusaoDeAlimentacaoContinua
-      : escolaCancelaInclusaoDeAlimentacaoAvulsa;
-    let resp = "";
-    resp = await escolaCancelaInclusao(uuid, justificativa);
-    if (resp.status === HTTP_STATUS.OK) {
-      this.props.closeModal();
-      toastSuccess("Solicitação cancelada com sucesso!");
-      this.props.setRedirect();
+    if (justificativa === "<p></p>\n") {
+      toastWarn("Justificativa é obrigatória.");
     } else {
-      toastError(resp.detail);
+      const escolaCancelaInclusao = this.props.ehInclusaoContinua
+        ? escolaCancelaInclusaoDeAlimentacaoContinua
+        : escolaCancelaInclusaoDeAlimentacaoAvulsa;
+      let resp = "";
+      resp = await escolaCancelaInclusao(uuid, justificativa);
+      if (resp.status === HTTP_STATUS.OK) {
+        this.props.closeModal();
+        toastSuccess("Solicitação cancelada com sucesso!");
+        this.props.setRedirect();
+      } else {
+        toastError(resp.detail);
+      }
     }
   }
 
