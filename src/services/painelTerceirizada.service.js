@@ -3,17 +3,17 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
-} from "../helpers/painelPedidos";
-import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+} from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
 import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+import { getTerceirizadaPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getTerceirizadaPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
+import { getTerceirizadasPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
+import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -21,7 +21,7 @@ const authToken = {
 };
 
 export const getPendentesAprovacaoList = () => {
-  const url = `${API_URL}/dre-pendentes-aprovacao/`;
+  const url = `${API_URL}/terceirizada-pendentes-aprovacao/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -36,7 +36,8 @@ export const getPendentesAprovacaoList = () => {
     });
 };
 
-export const getResumoPendenciasDREAlteracoesDeCardapio = async (
+export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -50,7 +51,38 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(
+  const solicitacoes = await getTerceirizadaPedidosDeAlteracaoCardapio(filtro);
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
+  TerceirizadaUuid,
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa(
     filtro
   );
 
@@ -68,7 +100,8 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -82,7 +115,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+  const solicitacoes = await getTerceirizadaPedidosDeInclusaoAlimentacaoContinua(
     filtro
   );
 
@@ -100,7 +133,8 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
+export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacao = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -110,43 +144,10 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
     regular: 0
   };
 
-  let pedidosPrioritarios = [];
-  let pedidosLimite = [];
-  let pedidosRegular = [];
-
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(
+  const resumoAvulsa = await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa(
     filtro
   );
-
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
-
-  resposta.limite = pedidosLimite.length;
-  resposta.prioritario = pedidosPrioritarios.length;
-  resposta.regular = pedidosRegular.length;
-  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
-
-  return resposta;
-};
-
-export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
-  dreUuid,
-  filtro = "sem_filtro"
-) => {
-  let resposta = {
-    total: 0,
-    prioritario: 0,
-    limite: 0,
-    regular: 0
-  };
-
-  const resumoAvulsa = await getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa(
-    filtro
-  );
-  const resumoContinua = await getResumoPendenciasDREInclusaoDeAlimentacaoContinua(
+  const resumoContinua = await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua(
     filtro
   );
 
@@ -158,7 +159,8 @@ export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
+export const getResumoPendenciasTerceirizadaInversaoDeDiaDeCardapio = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -172,7 +174,7 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
+  const solicitacoes = await getTerceirizadaPedidosDeInversoes(filtro);
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -188,7 +190,8 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREKitLanche = async (
+export const getResumoPendenciasTerceirizadaKitLanche = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -202,7 +205,7 @@ export const getResumoPendenciasDREKitLanche = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeKitLanche(filtro);
+  const solicitacoes = await getTerceirizadasPedidosDeKitLanche(filtro);
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -218,7 +221,8 @@ export const getResumoPendenciasDREKitLanche = async (
   return resposta;
 };
 
-export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
+export const getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -227,14 +231,27 @@ export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
     limite: 0,
     regular: 0
   };
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
 
-  const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
-  resposta.prioritario = solicitacoes.count;
-  resposta.total = resposta.prioritario;
+  const solicitacoes = await getTerceirizadasSuspensoesDeAlimentacao(filtro);
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
   return resposta;
 };
 
-export const getResumoPendenciasDRESolicitacoesUnificadas = async (
+export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
+  TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -248,7 +265,9 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getCODAEPedidosSolicitacoesUnificadas(filtro);
+  const solicitacoes = await getTerceirizadasPedidosSolicitacoesUnificadas(
+    filtro
+  );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(
@@ -272,57 +291,8 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
 
   return resposta;
 };
-export const getSolicitacoesPendentesParaDRE = (
-  dreUuid,
-  filtro = "sem_filtro"
-) => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
 
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
-  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
-    dree_uuid,
-    filtro
-  )).results;
-
-  const reducer = (resumoPorLote, corrente) => {
-    if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {};
-    }
-    if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
-        corrente.lote
-      ][corrente.prioridade]
-        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
-        : 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
-        "TOTAL"
-      ]
-        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
-        : 1;
-    }
-    return resumoPorLote;
-  };
-
-  let resumoPorLote = solicitacoes.reduce(reducer, {});
-
-  return resumoPorLote;
-};
-
-const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
+const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
 const retornoBase = async url => {
   const OBJ_REQUEST = {
@@ -339,22 +309,16 @@ const retornoBase = async url => {
   }
 };
 
-export const getSolicitacoesPendentesDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/${dreUuid}/`;
+export const getSolicitacoesPendentesTerceirizada = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.PENDENTES
+  }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesAutorizadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
-  return retornoBase(url);
-};
-
-export const getSolicitacoesCanceladasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/${dreUuid}/`;
-  return retornoBase(url);
-};
-
-export const getSolicitacoesRecusadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/${dreUuid}/`;
+export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.CANCELADOS
+  }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };

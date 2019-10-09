@@ -34,3 +34,20 @@ export const filtraRegular = (pedidos, filtro = null) => {
     return prioridade === "REGULAR";
   });
 };
+
+// de informativo
+export const filtraCiencia = informacoes => {
+  return informacoes.filter(pedido => {
+    return pedido.status === "TERCEIRIZADA_TOMA_CIENCIA";
+  });
+};
+
+export const filtraInformados = informacoes => {
+  return informacoes.filter(pedido => {
+    return pedido.status === "INFORMADO";
+  });
+};
+
+export const obtemDataSolicitacao = solicitacao => {
+  return solicitacao.logs[1].criado_em;
+};

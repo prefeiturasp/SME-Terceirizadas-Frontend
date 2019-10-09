@@ -4,7 +4,7 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
-} from "../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+} from "../helpers/painelPedidos";
 import { API_URL } from "../constants/config.constants";
 import { getCODAEPedidosAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import authService from "./auth";

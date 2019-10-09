@@ -191,6 +191,7 @@ class Relatorio extends Component {
                     <p>DRE</p>
                     <p className="value-important">
                       {meusDados.diretorias_regionais &&
+                        meusDados.diretorias_regionais[0] &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>

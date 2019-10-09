@@ -6,7 +6,7 @@ import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDe
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import CardHistorico from "../../components/CardHistorico";
-import { filtraPrioritarios } from "../../Terceirizada/PainelPedidos/helper";
+import { filtraPrioritarios } from "../../../../helpers/painelPedidos";
 import {
   filtraNoLimite,
   filtraRegular
