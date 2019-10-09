@@ -5,7 +5,6 @@ import { Link, Redirect } from "react-router-dom";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { getInversaoDeDiaDeCardapio } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { meusDados } from "../../../../services/perfil.service";
 // import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
@@ -25,7 +24,6 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -51,9 +49,6 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    meusDados().then(meusDados => {
-      this.setState({ meusDados });
-    });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -99,7 +94,6 @@ class Relatorio extends Component {
       showModal,
       InversaoCardapio,
       prazoDoPedidoMensagem,
-      meusDados,
       escolaDaInversao
     } = this.state;
     return (
@@ -166,8 +160,9 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {InversaoCardapio.escola &&
+                        InversaoCardapio.escola.diretoria_regional &&
+                        InversaoCardapio.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
@@ -238,16 +233,15 @@ class Relatorio extends Component {
                   </div>
                 </div>
 
-                {/* <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Cancelar pedido"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-
-                  </div> */}
+                <div className="form-group row float-right mt-4">
+                  <Botao
+                    texto={"Cancelar pedido"}
+                    className="ml-3"
+                    onClick={() => this.showModal()}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                </div>
               </div>
             </div>
           </form>

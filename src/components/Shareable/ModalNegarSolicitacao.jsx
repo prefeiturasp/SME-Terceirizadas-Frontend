@@ -3,37 +3,37 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
-import { CODAENegaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
-import BaseButton, { ButtonStyle, ButtonType } from "./button";
-import { LabelAndCombo, LabelAndTextArea } from "./labelAndInput/labelAndInput";
-import { toastError, toastSuccess } from "./Toast/dialogs";
+import { TextAreaWYSIWYG } from "./TextArea/TextAreaWYSIWYG";
+import { toastError, toastSuccess, toastWarn } from "./Toast/dialogs";
+import Botao from "./Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import { MENSAGEM_VAZIA } from "./TextArea/constants";
 
 export class ModalNegarSolicitacao extends Component {
   constructor(props) {
     super(props);
-    this.state = { justificativa: "", motivoCancelamento: "" };
+    this.state = { justificativa: "" };
   }
 
   async negarSolicitacaoEscolaOuDre(uuid) {
-    const { justificativa, motivoCancelamento } = this.state;
-    const resp = await CODAENegaKitLancheAvulsoEscola(
-      uuid,
-      `${motivoCancelamento} - ${justificativa}`
-    );
-    if (resp.status === HTTP_STATUS.OK) {
-      this.props.closeModal();
-      toastSuccess("Solicitação negada com sucesso!");
+    const { justificativa } = this.state;
+    if (justificativa === MENSAGEM_VAZIA) {
+      toastWarn("Justificativa é obrigatória.");
     } else {
-      toastError(resp.detail);
+      const resp = await this.props.negarEndpoint(uuid, `${justificativa}`);
+      if (resp.status === HTTP_STATUS.OK) {
+        this.props.closeModal();
+        toastSuccess("Solicitação negada com sucesso!");
+        this.props.updateLogs();
+      } else {
+        toastError(resp.detail);
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.justificativa !== this.props.justificativa) {
       this.setState({ justificativa: this.props.justificativa });
-    }
-    if (prevProps.motivoCancelamento !== this.props.motivoCancelamento) {
-      this.setState({ motivoCancelamento: this.props.motivoCancelamento });
     }
   }
 
@@ -45,53 +45,39 @@ export class ModalNegarSolicitacao extends Component {
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="form-row">
+          <div className="form-row mb-3">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
-                name="motivo_cancelamento"
-                label="Motivo"
-                //TODO: criar campos a mais no backend?
-                options={[
-                  {
-                    nome: "Sem motivo",
-                    uuid: "Sem motivo"
-                  },
-                  {
-                    nome: "Em desacordo com o contrato",
-                    uuid: "Em desacordo com o contrato"
-                  }
-                ]}
-                validate={required}
-              />
-            </div>
-            <div className="form-group col-12">
-              <Field
-                component={LabelAndTextArea}
-                placeholder="Obrigatório"
+                component={TextAreaWYSIWYG}
                 label="Justificativa"
                 name="justificativa"
+                required
+                validate={required}
               />
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <BaseButton
-            label="Não"
-            type={ButtonType.BUTTON}
-            onClick={closeModal}
-            style={ButtonStyle.OutlinePrimary}
-            className="ml-3"
-          />
-          <BaseButton
-            label="Sim"
-            type={ButtonType.BUTTON}
-            onClick={() => {
-              this.negarSolicitacaoEscolaOuDre(uuid);
-            }}
-            style={ButtonStyle.Primary}
-            className="ml-3"
-          />
+          <div className="row mt-4">
+            <div className="col-12">
+              <Botao
+                texto="Não"
+                type={BUTTON_TYPE.BUTTON}
+                onClick={closeModal}
+                style={BUTTON_STYLE.BLUE_OUTLINE}
+                className="ml-3"
+              />
+              <Botao
+                texto="Sim"
+                type={BUTTON_TYPE.BUTTON}
+                onClick={() => {
+                  this.negarSolicitacaoEscolaOuDre(uuid);
+                }}
+                style={BUTTON_STYLE.BLUE}
+                className="ml-3"
+              />
+            </div>
+          </div>
         </Modal.Footer>
       </Modal>
     );

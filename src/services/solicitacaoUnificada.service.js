@@ -191,6 +191,27 @@ export const CODAEAprovaPedidoDRE = uuid => {
     });
 };
 
+export const CODAENegaKitLancheUnificadoEscola = async (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const TerceirizadaAprovaPedidoDRE = uuid => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { Botao } from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -12,7 +11,11 @@ import {
 import { INCLUSAO_ALIMENTACAO, ESCOLA } from "../../../../configs/constants";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { meusDados } from "../../../../services/perfil.service";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import {
+  prazoDoPedidoMensagem,
+  corDaMensagem,
+  stringSeparadaPorVirgulas
+} from "../../../../helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
 import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";

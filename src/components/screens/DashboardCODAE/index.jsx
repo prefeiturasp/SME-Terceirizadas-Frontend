@@ -9,7 +9,10 @@ import {
   INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SOLICITACOES,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_PENDENTES,
   SUSPENSAO_ALIMENTACAO
 } from "../../../configs/constants";
 import { FILTRO_VISAO } from "../../../constants/filtroVisao";
@@ -214,7 +217,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={solicitacoesPendentesAprovacao}
                     icon={"fa-exclamation-triangle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -224,7 +227,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.APROVADO}
                     solicitations={solicitacoesAutorizadas}
                     icon={"fa-check"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -236,7 +239,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={solicitacoesNegadas}
                     icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
@@ -246,7 +249,7 @@ class DashboardCODAE extends Component {
                     cardType={CARD_TYPE_ENUM.CANCELADO}
                     solicitations={solicitacoesCanceladas}
                     icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES}`}
+                    href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
                     loading={loadingPainelSolicitacoes}
                   />
                 </div>
