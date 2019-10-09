@@ -17,6 +17,7 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import { MENSAGEM_VAZIA } from "../../../../Shareable/TextArea/constants";
 import { required } from "../../../../../helpers/fieldValidators";
 
 export class ModalCancelarInclusaoDeAlimentacao extends Component {
@@ -29,7 +30,7 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
 
   async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
-    if (justificativa === "<p></p>\n") {
+    if (justificativa === MENSAGEM_VAZIA) {
       toastWarn("Justificativa é obrigatória.");
     } else {
       const escolaCancelaInclusao = this.props.ehInclusaoContinua
