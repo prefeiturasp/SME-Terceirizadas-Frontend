@@ -3,6 +3,7 @@ import {
   CODAE,
   DRE,
   ESCOLA,
+  TERCEIRIZADA,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   RELATORIO,
@@ -37,6 +38,9 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
       break;
     case LOG_PARA.CODAE:
       tipoRelatorio = CODAE;
+      break;
+    case LOG_PARA.TERCEIRIZADA:
+      tipoRelatorio = TERCEIRIZADA;
       break;
     default:
       break;

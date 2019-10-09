@@ -421,3 +421,21 @@ export const getCODAEPedidosInclusaoAvulsoPendentes = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_AVULSA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
+};

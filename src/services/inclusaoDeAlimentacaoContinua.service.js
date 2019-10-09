@@ -449,3 +449,20 @@ export const getDREPedidosInclusaoContinuosPendentes = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
