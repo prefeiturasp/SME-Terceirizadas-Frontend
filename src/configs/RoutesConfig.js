@@ -22,6 +22,7 @@ import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBo
 import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
+import AlteracaoDeCardapioRelatorioEscolaPage from "../pages/Escola/AlteracaoDeCardapio/RelatorioPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -108,6 +109,13 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}/${
+      constants.RELATORIO
+    }`,
+    component: AlteracaoDeCardapioRelatorioEscolaPage,
     exact: false
   },
   {
