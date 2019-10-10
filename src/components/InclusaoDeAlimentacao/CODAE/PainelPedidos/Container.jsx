@@ -29,7 +29,8 @@ class Container extends Component {
     pedidosAutorizadosContinuos().then(response => {
       pedidosAutorizadosRetornados += 1;
       pedidosAutorizados = pedidosAutorizados.concat(response.results);
-      let todosPedidosAutorizadosRetornados = pedidosAutorizadosRetornados === 2;
+      let todosPedidosAutorizadosRetornados =
+        pedidosAutorizadosRetornados === 2;
       if (todosPedidosAutorizadosRetornados) {
         this.setState({ pedidosAutorizados });
       }
@@ -38,7 +39,8 @@ class Container extends Component {
     pedidosAutorizadosNormais().then(response => {
       pedidosAutorizadosRetornados += 1;
       pedidosAutorizados = pedidosAutorizados.concat(response.results);
-      let todosPedidosAutorizadosRetornados = pedidosAutorizadosRetornados === 2;
+      let todosPedidosAutorizadosRetornados =
+        pedidosAutorizadosRetornados === 2;
       if (todosPedidosAutorizadosRetornados) {
         this.setState({ pedidosAutorizados });
       }
