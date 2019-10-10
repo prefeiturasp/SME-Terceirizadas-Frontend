@@ -219,51 +219,21 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
-
-export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getTerceirizadaPedidosAutorizados = () => {
   const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
@@ -408,23 +378,6 @@ export const getCODAEPedidosInclusaoContinuosPendentes = filtroAplicado => {
 
 export const getDREPedidosInclusaoContinuosPendentes = filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

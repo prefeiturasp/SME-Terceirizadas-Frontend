@@ -225,49 +225,20 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_AVULSA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getTerceirizadaPedidosAutorizados = () => {
@@ -391,22 +362,4 @@ export const getCODAEPedidosInclusaoAvulsoPendentes = filtroAplicado => {
     .catch(error => {
       console.log(error);
     });
-};
-
-export const getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
-  }
 };
