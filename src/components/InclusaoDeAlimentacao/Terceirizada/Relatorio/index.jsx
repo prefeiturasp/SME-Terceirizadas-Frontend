@@ -15,7 +15,6 @@ import {
   TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import {
@@ -36,7 +35,6 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: null,
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -66,11 +64,6 @@ class Relatorio extends Component {
       ehInclusaoContinua === "true"
         ? getInclusaoDeAlimentacaoContinua
         : getInclusaoDeAlimentacaoAvulsa;
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
-    });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -189,8 +182,7 @@ class Relatorio extends Component {
     const {
       showModal,
       inclusaoDeAlimentacao,
-      prazoDoPedidoMensagem,
-      meusDados
+      prazoDoPedidoMensagem
     } = this.state;
     return (
       <div className="report food-inclusion">
@@ -257,9 +249,9 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados &&
-                        meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.diretoria_regional &&
+                        inclusaoDeAlimentacao.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">

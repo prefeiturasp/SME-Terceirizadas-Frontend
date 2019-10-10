@@ -143,8 +143,8 @@ export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua = filtroAp
     });
 };
 
-export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-diretoria-regional/`;
+export const getDiretoriaRegionalPedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -173,53 +173,24 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
     });
 };
 
-export const getCodaePedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-prioritarios-codae/${filtroAplicado}/`;
+export const getCODAEPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-limite-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-prazo-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-codae/`;
+export const getCodaePedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -248,53 +219,25 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const getTerceirizadaPedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-prioritarios-terceirizada/${filtroAplicado}/`;
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
-
-export const getTerceirizadaPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-limite-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-no-prazo-terceirizada/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-terceirizada/`;
+export const getTerceirizadaPedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -437,23 +380,6 @@ export const getCODAEPedidosInclusaoContinuosPendentes = filtroAplicado => {
 
 export const getDREPedidosInclusaoContinuosPendentes = filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

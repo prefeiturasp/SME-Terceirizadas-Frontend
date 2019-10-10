@@ -55,17 +55,6 @@ class PainelPedidos extends Component {
     });
   }
 
-  onFiltroSelected(value) {
-    switch (value) {
-      case FiltroEnum.HOJE:
-        this.filtrarHoje();
-        break;
-      default:
-        this.filtrar(value);
-        break;
-    }
-  }
-
   render() {
     const {
       pedidosPrioritarios,
@@ -75,7 +64,7 @@ class PainelPedidos extends Component {
     const {
       visaoPorCombo,
       valorDoFiltro,
-      pedidosAprovados,
+      pedidosAutorizados,
       pedidosReprovados
     } = this.props;
     return (
@@ -92,9 +81,7 @@ class PainelPedidos extends Component {
                     component={Select}
                     name="visao_por"
                     naoDesabilitarPrimeiraOpcao
-                    onChange={event =>
-                      this.onFiltroSelected(event.target.value)
-                    }
+                    onChange={event => this.filtrar(event.target.value)}
                     placeholder={"Filtro por"}
                     options={visaoPorCombo}
                   />
@@ -109,7 +96,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"dre"}
+                    parametroURL={DRE}
                   />
                 </div>
               </div>
@@ -121,7 +108,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -134,18 +121,18 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
               )}
-              {pedidosAprovados.length > 0 && (
+              {pedidosAutorizados.length > 0 && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardHistorico
-                      pedidos={formatarPedidos(pedidosAprovados)}
+                      pedidos={formatarPedidos(pedidosAutorizados)}
                       ultimaColunaLabel={"Data(s)"}
-                      parametroURL={`${DRE}`}
+                      parametroURL={DRE}
                       titulo={
                         "Histórico de Inclusões de Alimentação Autorizadas"
                       }
