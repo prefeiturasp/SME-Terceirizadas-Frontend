@@ -55,17 +55,6 @@ class PainelPedidos extends Component {
     });
   }
 
-  onFiltroSelected(value) {
-    switch (value) {
-      case FiltroEnum.HOJE:
-        this.filtrarHoje();
-        break;
-      default:
-        this.filtrar(value);
-        break;
-    }
-  }
-
   render() {
     const {
       pedidosPrioritarios,
@@ -92,9 +81,7 @@ class PainelPedidos extends Component {
                     component={Select}
                     name="visao_por"
                     naoDesabilitarPrimeiraOpcao
-                    onChange={event =>
-                      this.onFiltroSelected(event.target.value)
-                    }
+                    onChange={event => this.filtrar(event.target.value)}
                     placeholder={"Filtro por"}
                     options={visaoPorCombo}
                   />
@@ -109,7 +96,7 @@ class PainelPedidos extends Component {
                     tipoDeCard={"priority"}
                     pedidos={pedidosPrioritarios}
                     ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={"dre"}
+                    parametroURL={DRE}
                   />
                 </div>
               </div>
@@ -121,7 +108,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -134,7 +121,7 @@ class PainelPedidos extends Component {
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={"dre"}
+                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -145,7 +132,7 @@ class PainelPedidos extends Component {
                     <CardHistorico
                       pedidos={formatarPedidos(pedidosAutorizados)}
                       ultimaColunaLabel={"Data(s)"}
-                      parametroURL={`${DRE}`}
+                      parametroURL={DRE}
                       titulo={
                         "Histórico de Inclusões de Alimentação Autorizadas"
                       }

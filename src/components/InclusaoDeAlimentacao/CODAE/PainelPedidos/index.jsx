@@ -4,17 +4,14 @@ import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { Select } from "../../../Shareable/Select";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { formatarPedidos } from "./helper";
+import { getCODAEPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { getCODAEPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
-  getCodaePedidosPrioritarios as prioritariosContinuo,
-  getCodaePedidosNoPrazoLimite as limitesContinuo,
-  getCodaePedidosNoPrazoRegular as regularesContinuo
-} from "../../../../services/inclusaoDeAlimentacaoContinua.service";
-import {
-  getCodaePedidosPrioritarios as prioritariosAvulso,
-  getCodaePedidosNoPrazoLimite as limitesAvulso,
-  getCodaePedidosNoPrazoRegular as regularesAvulso
-} from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular,
+  formatarPedidos
+} from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
 import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
@@ -24,105 +21,46 @@ class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: []
+      pedidosNoPrazoRegular: [],
+      loading: true
     };
   }
 
+  async atualizarDadosDasInclusoes(filtro) {
+    const inclusoesAvulsas = await getCODAEPedidosDeInclusaoAlimentacaoAvulsa(
+      filtro
+    );
+    const inclusoesContinuas = await getCODAEPedidosDeInclusaoAlimentacaoContinua(
+      filtro
+    );
+    const inclusoesMescladas = inclusoesAvulsas.results.concat(
+      inclusoesContinuas.results
+    );
+    const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
+    const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
+    const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);
+    this.setState({
+      pedidosPrioritarios,
+      pedidosNoPrazoLimite,
+      pedidosNoPrazoRegular,
+      loading: false
+    });
+  }
+
   filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
-    this.setState({ pedidosCarregados: 0 });
-    prioritariosContinuo(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    prioritariosAvulso(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limitesContinuo(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
-        pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limitesAvulso(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
-        pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesContinuo(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regularesAvulso(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
+    this.atualizarDadosDasInclusoes(filtro);
   }
 
-  componentDidMount() {
-    this.filtrar(FiltroEnum.SEM_FILTRO);
-  }
-
-  onFiltroSelected(value) {
-    switch (value) {
-      case FiltroEnum.HOJE:
-        this.filtrarHoje();
-        break;
-      default:
-        this.filtrar(value);
-        break;
-    }
-  }
-
-  filtrarHoje() {
-    let pedidosPrioritarios = [];
-    this.setState({ pedidosCarregados: 4 });
-    prioritariosContinuo(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    prioritariosAvulso(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
+  async componentDidMount() {
+    const filtro = FiltroEnum.SEM_FILTRO;
+    this.atualizarDadosDasInclusoes(filtro);
   }
 
   render() {
     const {
-      pedidosCarregados,
+      loading,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
@@ -133,10 +71,10 @@ class PainelPedidos extends Component {
       pedidosAutorizados,
       pedidosReprovados
     } = this.props;
-    const todosOsPedidosForamCarregados = pedidosCarregados === 6;
+    console.log(pedidosNoPrazoRegular);
     return (
       <div>
-        {!todosOsPedidosForamCarregados ? (
+        {loading ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
@@ -151,9 +89,7 @@ class PainelPedidos extends Component {
                       component={Select}
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.onFiltroSelected(event.target.value)
-                      }
+                      onChange={event => this.filtrar(event.target.value)}
                       placeholder={"Filtro por"}
                       options={visaoPorCombo}
                     />

@@ -179,49 +179,20 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
     });
 };
 
-export const getCodaePedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-prioritarios-codae/${filtroAplicado}/`;
+export const getCODAEPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
+  const url = `${URL_INCLUSAO_AVULSA}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-limite-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-no-prazo-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getCodaePedidosAutorizados = () => {
