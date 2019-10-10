@@ -114,8 +114,8 @@ export const enviarAlteracaoCardapio = (uuid, payload) => {
     });
 };
 
-export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-diretoria-regional/`;
+export const getDiretoriaRegionalPedidosAutorizados = () => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -306,8 +306,8 @@ export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
     });
 };
 
-export const getCodaePedidosAprovados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-codae/`;
+export const getCodaePedidosAutorizados = () => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
