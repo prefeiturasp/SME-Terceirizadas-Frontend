@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getTerceirizadaPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import CardHistorico from "../../components/CardHistorico";
 import {
@@ -70,7 +70,7 @@ class PainelPedidos extends Component {
     const {
       visaoPorCombo,
       valorDoFiltro,
-      pedidosAprovados,
+      pedidosAutorizados,
       pedidosReprovados
     } = this.props;
 
@@ -102,7 +102,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardInversaoPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -116,7 +116,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardInversaoPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
@@ -129,7 +129,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardInversaoPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
@@ -139,11 +139,11 @@ class PainelPedidos extends Component {
                     </div>
                   </div>
                 )}
-                {pedidosAprovados.length > 0 && (
+                {pedidosAutorizados.length > 0 && (
                   <div className="row pt-3">
                     <div className="col-12">
                       <CardHistorico
-                        pedidos={formatarPedidos(pedidosAprovados)}
+                        pedidos={formatarPedidos(pedidosAutorizados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
                           "Histórico de Inversões de cardápio Autorizadas"

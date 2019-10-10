@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import {
-  getCODAEPedidosAprovados,
+  getCODAEPedidosAutorizados,
   getCODAEPedidosReprovados
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
@@ -11,18 +11,18 @@ class Container extends Component {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      pedidosAprovados: [],
+      pedidosAutorizados: [],
       pedidosReprovados: []
     };
   }
 
   componentDidMount() {
-    let pedidosAprovados;
+    let pedidosAutorizados;
     let pedidosReprovados;
 
-    getCODAEPedidosAprovados().then(response => {
-      pedidosAprovados = response.results;
-      this.setState({ pedidosAprovados });
+    getCODAEPedidosAutorizados().then(response => {
+      pedidosAutorizados = response.results;
+      this.setState({ pedidosAutorizados });
     });
 
     getCODAEPedidosReprovados().then(response => {

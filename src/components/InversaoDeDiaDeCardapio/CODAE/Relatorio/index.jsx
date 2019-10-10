@@ -9,7 +9,7 @@ import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  CODAEAprovaPedidoDRE,
+  CODAEAutorizaPedidoDRE,
   getInversaoDeDiaDeCardapio
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -101,7 +101,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    CODAEAprovaPedidoDRE(uuid).then(
+    CODAEAutorizaPedidoDRE(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dias de cardápio autorizada com sucesso!");
