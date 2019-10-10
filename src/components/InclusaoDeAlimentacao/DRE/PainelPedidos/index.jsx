@@ -9,12 +9,12 @@ import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/in
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
-} from "../../../InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+  filtraRegular,
+  formatarPedidos
+} from "../../../../helpers/painelPedidos";
 import { Select } from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
 import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
-import { formatarPedidos } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {

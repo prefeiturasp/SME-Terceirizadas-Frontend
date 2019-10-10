@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { PEDIDOS } from "./contants";
+import { PEDIDOS, FLUXO } from "./contants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -380,6 +380,27 @@ export const CODAEConfirmaInclusaoDeAlimentacaoContinua = uuid => {
     });
 };
 
+export const escolaCancelaInclusaoDeAlimentacaoContinua = async (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua = uuid => {
   const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
@@ -416,6 +437,23 @@ export const getCODAEPedidosInclusaoContinuosPendentes = filtroAplicado => {
 
 export const getDREPedidosInclusaoContinuosPendentes = filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.DRE}/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

@@ -1,32 +1,33 @@
 import React, { Component } from "react";
+import DashboardCODAE from ".";
 import { getTotalAlunos } from "../../../services/codae.service";
+import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
 import { getLotes } from "../../../services/lote.service";
 import {
   getSolicitacoesAprovadosCodae,
   getSolicitacoesCanceladasCodae,
-  getSolicitacoesPendentesAprovacaoCodae,
-  getSolicitacoesRevisaoAprovacaoCodae
+  getSolicitacoesNegadasCodae,
+  getSolicitacoesPendentesAprovacaoCodae
 } from "../../../services/painelCODAE.service";
-import { FILTRO, VENCIMENTO } from "../const";
-import DashboardCODAE from ".";
-import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
-import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
+import { FILTRO, VENCIMENTO } from "../const";
+import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
 
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
     const totalAlunos = await getTotalAlunos();
-    let solicitacoesAprovadas = await getSolicitacoesAprovadosCodae();
+    let solicitacoesAutorizadas = await getSolicitacoesAprovadosCodae();
     let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae(
       FILTRO.SEM_FILTRO
     );
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
-    let solicitacoesRevisao = await getSolicitacoesRevisaoAprovacaoCodae();
+    let solicitacoesNegadas = await getSolicitacoesNegadasCodae();
+
     let diretoriasRegionais = await getDiretoriaregionalSimplissima();
 
-    if (solicitacoesAprovadas.length)
-      solicitacoesAprovadas = ajustarFormatoLog(
-        solicitacoesAprovadas,
+    if (solicitacoesAutorizadas.length)
+      solicitacoesAutorizadas = ajustarFormatoLog(
+        solicitacoesAutorizadas,
         LOG_PARA.CODAE
       );
     if (solicitacoesPendentesAprovacao)
@@ -38,6 +39,9 @@ class DashboardCODAEContainer extends Component {
     if (solicitacoesCanceladas.length)
       solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
 
+    if (solicitacoesNegadas.length)
+      solicitacoesNegadas = ajustarFormatoLog(solicitacoesNegadas);
+
     let lotes = await getLotes();
     lotes = ajustarFormaLotes(lotes.results);
 
@@ -48,10 +52,10 @@ class DashboardCODAEContainer extends Component {
 
     this.setState({
       totalAlunos,
-      solicitacoesAprovadas,
+      solicitacoesAutorizadas,
       solicitacoesPendentesAprovacao,
       solicitacoesCanceladas,
-      solicitacoesRevisao,
+      solicitacoesNegadas,
       lotes,
       diretoriasRegionais: diretoriasRegionais.data.results
     });
@@ -60,10 +64,10 @@ class DashboardCODAEContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      solicitacoesAprovadas: [],
+      solicitacoesAutorizadas: [],
       solicitacoesPendentesAprovacao: [],
       solicitacoesCanceladas: [],
-      solicitacoesRevisao: [],
+      solicitacoesNegadas: [],
       totalAlunos: 0,
       quantidade_suspensoes: null,
       lotes: [],

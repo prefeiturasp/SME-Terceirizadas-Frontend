@@ -124,7 +124,6 @@ class Relatorio extends Component {
       showModal,
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
-      meusDados,
       uuid
     } = this.state;
     const { justificativa, motivo_cancelamento } = this.props;
@@ -181,9 +180,10 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados &&
-                        meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {alteracaoDeCardapio &&
+                        alteracaoDeCardapio.escola &&
+                        alteracaoDeCardapio.escola.diretoria_regional &&
+                        alteracaoDeCardapio.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">

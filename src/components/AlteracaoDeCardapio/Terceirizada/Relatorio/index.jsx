@@ -182,6 +182,7 @@ class Relatorio extends Component {
                     <p className="value-important">
                       {meusDados &&
                         meusDados.diretorias_regionais &&
+                        meusDados.diretorias_regionais[0] &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { CODAE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import { CODAENegaKitLancheAvulsoEscola } from "../../../../services/solicitacaoDeKitLanche.service";
 import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
@@ -129,6 +130,7 @@ class Relatorio extends Component {
           showModal={showModal}
           uuid={uuid}
           justificativa={justificativa}
+          negarEndpoint={CODAENegaKitLancheAvulsoEscola}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -328,8 +330,7 @@ const formName = "kitLancheAvulsoRelatorioCodaeForm";
 const selector = formValueSelector(formName);
 const mapStateToProps = state => {
   return {
-    justificativa: selector(state, "justificativa"),
-    motivo_cancelamento: selector(state, "motivo_cancelamento")
+    justificativa: selector(state, "justificativa")
   };
 };
 
