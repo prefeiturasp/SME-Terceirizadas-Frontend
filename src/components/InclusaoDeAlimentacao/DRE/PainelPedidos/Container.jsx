@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
 import {
-  getDiretoriaRegionalPedidosAprovados as pedidosAprovadosContinuos,
+  getDiretoriaRegionalPedidosAutorizados as pedidosAutorizadosContinuos,
   getDiretoriaRegionalPedidosReprovados as pedidosReprovadosContinuos
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import {
-  getDiretoriaRegionalPedidosAprovados as pedidosAprovadosNormais,
+  getDiretoriaRegionalPedidosAutorizados as pedidosAutorizadosNormais,
   getDiretoriaRegionalPedidosReprovados as pedidosReprovadosNormais
 } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import PainelPedidos from ".";
@@ -15,32 +15,32 @@ class Container extends Component {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      pedidosAprovados: [],
+      pedidosAutorizados: [],
       pedidosReprovados: []
     };
   }
 
   componentDidMount() {
-    let pedidosAprovadosRetornados = 0;
+    let pedidosAutorizadosRetornados = 0;
     let pedidosReprovadosRetornados = 0;
-    let pedidosAprovados = [];
+    let pedidosAutorizados = [];
     let pedidosReprovados = [];
 
-    pedidosAprovadosContinuos().then(response => {
-      pedidosAprovadosRetornados += 1;
-      pedidosAprovados = pedidosAprovados.concat(response.results);
-      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
-      if (todosPedidosAprovadosRetornados) {
-        this.setState({ pedidosAprovados });
+    pedidosAutorizadosContinuos().then(response => {
+      pedidosAutorizadosRetornados += 1;
+      pedidosAutorizados = pedidosAutorizados.concat(response.results);
+      let todosPedidosAutorizadosRetornados = pedidosAutorizadosRetornados === 2;
+      if (todosPedidosAutorizadosRetornados) {
+        this.setState({ pedidosAutorizados });
       }
     });
 
-    pedidosAprovadosNormais().then(response => {
-      pedidosAprovadosRetornados += 1;
-      pedidosAprovados = pedidosAprovados.concat(response.results);
-      let todosPedidosAprovadosRetornados = pedidosAprovadosRetornados === 2;
-      if (todosPedidosAprovadosRetornados) {
-        this.setState({ pedidosAprovados });
+    pedidosAutorizadosNormais().then(response => {
+      pedidosAutorizadosRetornados += 1;
+      pedidosAutorizados = pedidosAutorizados.concat(response.results);
+      let todosPedidosAutorizadosRetornados = pedidosAutorizadosRetornados === 2;
+      if (todosPedidosAutorizadosRetornados) {
+        this.setState({ pedidosAutorizados });
       }
     });
 

@@ -143,8 +143,8 @@ export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua = filtroAp
     });
 };
 
-export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-diretoria-regional/`;
+export const getDiretoriaRegionalPedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -218,8 +218,8 @@ export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
     });
 };
 
-export const getCodaePedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-codae/`;
+export const getCodaePedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -293,8 +293,8 @@ export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
     });
 };
 
-export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-aprovados-terceirizada/`;
+export const getTerceirizadaPedidosAutorizados = () => {
+  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
