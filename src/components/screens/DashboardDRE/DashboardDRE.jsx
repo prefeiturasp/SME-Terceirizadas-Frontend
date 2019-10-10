@@ -463,7 +463,7 @@ class DashboardDRE extends Component {
                     <div className="col-6">
                       <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
                         <CardPendencia
-                          cardTitle={"Kit Lanche Passeio Pansseio"}
+                          cardTitle={"Kit Lanche Passeio"}
                           totalOfOrders={resumoPendenciasDREKitLanche.total}
                           priorityOrders={
                             resumoPendenciasDREKitLanche.prioritario

@@ -160,7 +160,7 @@ export class DashboardEscola extends Component {
           <div className="row">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Pendente Aprovação"}
+                cardTitle={"Aguardando Autorização"}
                 cardType={CARD_TYPE_ENUM.PENDENTE}
                 solicitations={pendentesListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.PENDENTE}
@@ -169,7 +169,7 @@ export class DashboardEscola extends Component {
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Autorizadas"}
+                cardTitle={"Autorizados"}
                 cardType={CARD_TYPE_ENUM.APROVADO}
                 solicitations={autorizadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.APROVADO}
