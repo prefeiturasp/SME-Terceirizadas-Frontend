@@ -37,10 +37,16 @@ class DashboardCODAEContainer extends Component {
       );
 
     if (solicitacoesCanceladas.length)
-      solicitacoesCanceladas = ajustarFormatoLog(solicitacoesCanceladas);
+      solicitacoesCanceladas = ajustarFormatoLog(
+        solicitacoesCanceladas,
+        LOG_PARA.CODAE
+      );
 
     if (solicitacoesNegadas.length)
-      solicitacoesNegadas = ajustarFormatoLog(solicitacoesNegadas);
+      solicitacoesNegadas = ajustarFormatoLog(
+        solicitacoesNegadas,
+        LOG_PARA.CODAE
+      );
 
     let lotes = await getLotes();
     lotes = ajustarFormaLotes(lotes.results);
