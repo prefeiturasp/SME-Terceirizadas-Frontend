@@ -94,6 +94,7 @@ class DashboardCODAE extends Component {
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.changeVisao = this.changeVisao.bind(this);
+    this.filterList = this.filterList.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -170,7 +171,6 @@ class DashboardCODAE extends Component {
       filtro,
       loadingPainelSolicitacoes: false
     });
-    this.filterList = this.filterList.bind(this);
   }
 
   onVencimentoPara(filtro) {
@@ -188,11 +188,47 @@ class DashboardCODAE extends Component {
 
   filterList(event) {
     if (event === undefined) event = { target: { value: "" } };
-    console.log(event.target.value);
-    // solicitacoesAutorizadasFiltradas: [],
-    // solicitacoesPendentesFiltradas: [],
-    // solicitacoesCanceladasFiltradas: [],
-    // solicitacoesNegadasFiltradas: [],
+
+    const {
+      solicitacoesAutorizadas,
+      solicitacoesPendentes,
+      solicitacoesCanceladas,
+      solicitacoesNegadas
+    } = this.props;
+
+    let solicitacoesAutorizadasFiltradas = this.filtraSolciitacao(
+      solicitacoesAutorizadas,
+      event
+    );
+    let solicitacoesPendentesFiltradas = this.filtraSolciitacao(
+      solicitacoesPendentes,
+      event
+    );
+
+    let solicitacoesCanceladasFiltradas = this.filtraSolciitacao(
+      solicitacoesCanceladas,
+      event
+    );
+    let solicitacoesNegadasFiltradas = this.filtraSolciitacao(
+      solicitacoesNegadas,
+      event
+    );
+    this.setState({
+      solicitacoesAutorizadasFiltradas,
+      solicitacoesNegadasFiltradas,
+      solicitacoesPendentesFiltradas,
+      solicitacoesCanceladasFiltradas
+    });
+  }
+
+  filtraSolciitacao(solicitacoesAutorizadasFiltradas, event) {
+    solicitacoesAutorizadasFiltradas = solicitacoesAutorizadasFiltradas.filter(
+      function(item) {
+        const wordToFilter = event.target.value.toLowerCase();
+        return item.text.toLowerCase().search(wordToFilter) !== -1;
+      }
+    );
+    return solicitacoesAutorizadasFiltradas;
   }
 
   render() {
