@@ -246,6 +246,26 @@ export const DRENegaAlteracaoCardapio = (uuid, justificativa) => {
     });
 };
 
+export const EscolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getAlteracaoCardapio = uuid => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/`;
   const OBJ_REQUEST = {

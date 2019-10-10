@@ -2,17 +2,19 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
+import { required } from "../../../../../helpers/fieldValidators";
+import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
+import BaseButton, {
+  ButtonStyle,
+  ButtonType
+} from "../../../../Shareable/button";
 import {
-  DRENegaAlteracaoCardapio,
-  CODAENegaAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
-import BaseButton, { ButtonStyle, ButtonType } from "./button";
-import { LabelAndCombo, LabelAndTextArea } from "./labelAndInput/labelAndInput";
-import { toastError, toastSuccess } from "./Toast/dialogs";
-import { statusEnum } from "../../constants/statusEnum";
+  LabelAndCombo,
+  LabelAndTextArea
+} from "../../../../Shareable/labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
 
-export class ModalNegarAlteracaoCardapio extends Component {
+export class ModalCancelarAlteracaoDeCardapio extends Component {
   constructor(props) {
     super(props);
     this.state = { justificativa: "", motivoCancelamento: "" };
@@ -20,21 +22,16 @@ export class ModalNegarAlteracaoCardapio extends Component {
 
   async negarAlteracaoCardapio(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
-    const { alteracaoDeCardapio } = this.props;
 
-    const functionCancelaAlteracaoCardapio =
-      alteracaoDeCardapio &&
-      alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR
-        ? DRENegaAlteracaoCardapio
-        : CODAENegaAlteracaoCardapio;
+    const function_CancelaAlteracaoCardapio = EscolaCancelaAlteracaoCardapio;
 
-    const resp = await functionCancelaAlteracaoCardapio(
+    const resp = await function_CancelaAlteracaoCardapio(
       uuid,
       `${motivoCancelamento} - ${justificativa}`
     );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      toastSuccess("Alteração de Cardápio recusado com sucesso!");
+      toastSuccess("Alteração de Cardápio cancelada com sucesso!");
       this.props.setRedirect();
     } else {
       toastError(resp.detail);
