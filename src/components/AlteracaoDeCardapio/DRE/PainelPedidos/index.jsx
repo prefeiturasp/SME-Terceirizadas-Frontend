@@ -6,7 +6,11 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { formatarPedidos } from "./helper";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
-import { filtraNoLimite, filtraPrioritarios, filtraRegular } from "../../../../helpers/painelPedidos";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
 import { DRE } from "../../../../configs/constants";
 

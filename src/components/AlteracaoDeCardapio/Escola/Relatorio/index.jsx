@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "../../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import { Redirect } from "react-router-dom";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
@@ -19,10 +16,11 @@ import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-// import "../style.scss";
 import "./style.scss";
 import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
-import { statusEnum, escolaPodeCancelar } from "../../../../constants/statusEnum";
+import {
+  escolaPodeCancelar
+} from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
