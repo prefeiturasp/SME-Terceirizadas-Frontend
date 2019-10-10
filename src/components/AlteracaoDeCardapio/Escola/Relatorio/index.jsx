@@ -18,9 +18,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
-import {
-  escolaPodeCancelar
-} from "../../../../constants/statusEnum";
+import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
   constructor(props) {
