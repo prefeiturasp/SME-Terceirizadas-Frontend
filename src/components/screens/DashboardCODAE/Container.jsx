@@ -17,7 +17,7 @@ class DashboardCODAEContainer extends Component {
   async componentDidMount() {
     const totalAlunos = await getTotalAlunos();
     let solicitacoesAutorizadas = await getSolicitacoesAprovadosCodae();
-    let solicitacoesPendentesAprovacao = await getSolicitacoesPendentesAprovacaoCodae(
+    let solicitacoesPendentes = await getSolicitacoesPendentesAprovacaoCodae(
       FILTRO.SEM_FILTRO
     );
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
@@ -30,9 +30,9 @@ class DashboardCODAEContainer extends Component {
         solicitacoesAutorizadas,
         LOG_PARA.CODAE
       );
-    if (solicitacoesPendentesAprovacao)
-      solicitacoesPendentesAprovacao = ajustarFormatoLog(
-        solicitacoesPendentesAprovacao,
+    if (solicitacoesPendentes)
+      solicitacoesPendentes = ajustarFormatoLog(
+        solicitacoesPendentes,
         LOG_PARA.CODAE
       );
 
@@ -53,7 +53,7 @@ class DashboardCODAEContainer extends Component {
     this.setState({
       totalAlunos,
       solicitacoesAutorizadas,
-      solicitacoesPendentesAprovacao,
+      solicitacoesPendentes,
       solicitacoesCanceladas,
       solicitacoesNegadas,
       lotes,
@@ -65,7 +65,7 @@ class DashboardCODAEContainer extends Component {
     super(props);
     this.state = {
       solicitacoesAutorizadas: [],
-      solicitacoesPendentesAprovacao: [],
+      solicitacoesPendentes: [],
       solicitacoesCanceladas: [],
       solicitacoesNegadas: [],
       totalAlunos: 0,

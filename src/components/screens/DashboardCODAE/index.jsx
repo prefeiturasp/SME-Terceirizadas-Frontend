@@ -83,9 +83,9 @@ class DashboardCODAE extends Component {
       visao: FILTRO_VISAO.TIPO_SOLICITACAO,
 
       solicitacoesAutorizadasFiltradas: [],
-      solicitacoesPendentesAprovacaoFiltradas: [],
+      solicitacoesPendentesFiltradas: [],
       solicitacoesCanceladasFiltradas: [],
-      solicitacoesRevisaoFiltradas: [],
+      solicitacoesNegadasFiltradas: [],
 
       loadingPainelSolicitacoes: true,
 
@@ -94,6 +94,38 @@ class DashboardCODAE extends Component {
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.changeVisao = this.changeVisao.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      solicitacoesAutorizadas,
+      solicitacoesPendentes,
+      solicitacoesCanceladas,
+      solicitacoesNegadas
+    } = this.props;
+    if (prevProps.solicitacoesPendentes.length !== solicitacoesPendentes.length)
+      this.setState({
+        solicitacoesPendentesFiltradas: solicitacoesPendentes
+      });
+
+    if (
+      prevProps.solicitacoesAutorizadas.length !==
+      solicitacoesAutorizadas.length
+    )
+      this.setState({
+        solicitacoesAutorizadasFiltradas: solicitacoesAutorizadas
+      });
+
+    if (prevProps.solicitacoesNegadas.length !== solicitacoesNegadas.length)
+      this.setState({
+        solicitacoesNegadasFiltradas: solicitacoesNegadas
+      });
+    if (
+      prevProps.solicitacoesCanceladas.length !== solicitacoesCanceladas.length
+    )
+      this.setState({
+        solicitacoesCanceladasFiltradas: solicitacoesCanceladas
+      });
   }
 
   componentDidMount() {
@@ -138,6 +170,7 @@ class DashboardCODAE extends Component {
       filtro,
       loadingPainelSolicitacoes: false
     });
+    this.filterList = this.filterList.bind(this);
   }
 
   onVencimentoPara(filtro) {
@@ -153,14 +186,19 @@ class DashboardCODAE extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
+  filterList(event) {
+    if (event === undefined) event = { target: { value: "" } };
+    console.log(event.target.value);
+    // solicitacoesAutorizadasFiltradas: [],
+    // solicitacoesPendentesFiltradas: [],
+    // solicitacoesCanceladasFiltradas: [],
+    // solicitacoesNegadasFiltradas: [],
+  }
+
   render() {
     const {
       totalAlunos,
       handleSubmit,
-      solicitacoesAutorizadas,
-      solicitacoesPendentesAprovacao,
-      solicitacoesCanceladas,
-      solicitacoesNegadas,
       vencimentoPara,
       diretoriasRegionais,
       lotes,
@@ -177,7 +215,11 @@ class DashboardCODAE extends Component {
       resumoPendenciasInversoesCardapio,
       resumoPendenciasKitLancheUnificado,
       resumoPorDRE,
-      resumoPorLote
+      resumoPorLote,
+      solicitacoesAutorizadasFiltradas,
+      solicitacoesPendentesFiltradas,
+      solicitacoesCanceladasFiltradas,
+      solicitacoesNegadasFiltradas
     } = this.state;
     return (
       <div>
@@ -215,7 +257,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Aguardando Autorização"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={solicitacoesPendentesAprovacao}
+                    solicitations={solicitacoesPendentesFiltradas}
                     icon={"fa-exclamation-triangle"}
                     href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
                     loading={loadingPainelSolicitacoes}
@@ -225,7 +267,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={CARD_TYPE_ENUM.APROVADO}
-                    solicitations={solicitacoesAutorizadas}
+                    solicitations={solicitacoesAutorizadasFiltradas}
                     icon={"fa-check"}
                     href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
                     loading={loadingPainelSolicitacoes}
@@ -237,7 +279,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={solicitacoesNegadas}
+                    solicitations={solicitacoesNegadasFiltradas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                     loading={loadingPainelSolicitacoes}
@@ -247,7 +289,7 @@ class DashboardCODAE extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={solicitacoesCanceladas}
+                    solicitations={solicitacoesCanceladasFiltradas}
                     icon={"fa-times-circle"}
                     href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
                     loading={loadingPainelSolicitacoes}
