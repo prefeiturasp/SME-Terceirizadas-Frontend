@@ -22,16 +22,16 @@ export default class Page extends Component {
   }
 
   async componentDidMount() {
-    if (!sessionStorage.getItem("meusDados")) {
+    if (!localStorage.getItem("meusDados")) {
       const meusDados = await getMeusDados();
-      sessionStorage.setItem("nome", JSON.stringify(meusDados.nome));
+      localStorage.setItem("nome", JSON.stringify(meusDados.nome));
       this.setState({
         nome: meusDados.nome,
         nome_instituicao: meusDados.escolas[0] && meusDados.escolas[0].nome,
         registro_funcional: meusDados.registro_funcional || "N/A"
       });
     } else {
-      this.setState({ nome: sessionStorage.getItem("nome") });
+      this.setState({ nome: localStorage.getItem("nome") });
     }
   }
 

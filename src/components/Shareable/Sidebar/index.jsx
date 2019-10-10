@@ -15,7 +15,7 @@ export class Sidebar extends Component {
   }
 
   render() {
-    const tipo_perfil = sessionStorage.getItem("tipo_perfil");
+    const tipo_perfil = localStorage.getItem("tipo_perfil");
     const {
       nome,
       toggle,

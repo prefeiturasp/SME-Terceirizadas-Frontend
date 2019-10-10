@@ -26,7 +26,7 @@ const login = async (email, password) => {
       }).then(result => {
         const response = result.json();
         response.then(result => {
-          sessionStorage.setItem(
+          localStorage.setItem(
             "tipo_perfil",
             JSON.stringify(result.tipo_usuario)
           );
