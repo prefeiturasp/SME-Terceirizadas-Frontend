@@ -20,7 +20,6 @@ import {
   getResumoPendenciasDREInclusaoDeAlimentacao,
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
   getResumoPendenciasDREKitLanche,
-  getResumoPendenciasDRESolicitacoesUnificadas,
   getResumoPendenciasDRESuspensaoDeAlimentacao,
   getResumoPendenciasDREPorLote
 } from "../../../services/painelDRE.service";
@@ -62,7 +61,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio: {},
       resumoPendenciasDREKitLanche: {},
       resumoPendenciasDRESuspensaoDeAlimentacao: {},
-      resumoPendenciasDRESolicitacoesUnificadas: {},
       filtroPendencias: "sem_filtro",
       meusDados: [],
       loadingAutorizadas: true,
@@ -72,8 +70,6 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio: true,
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
-      //lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
       visao: "tipo_solicitacao",
       resumoPorLote: []
     };
@@ -90,16 +86,13 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio: true,
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
       loadingResumoLotes: true
     });
     const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
-      minhaDRE,
       filtroPendencias
     );
     const resumoPendenciasDREInclusoesDeAlimentacao = await getResumoPendenciasDREInclusaoDeAlimentacao(
-      minhaDRE,
       filtroPendencias
     );
     const resumoPendenciasDREInversaoDeDiaDeCardapio = await getResumoPendenciasDREInversaoDeDiaDeCardapio(
@@ -109,9 +102,6 @@ class DashboardDRE extends Component {
       filtroPendencias
     );
     const resumoPendenciasDRESuspensaoDeAlimentacao = await getResumoPendenciasDRESuspensaoDeAlimentacao(
-      filtroPendencias
-    );
-    const resumoPendenciasDRESolicitacoesUnificadas = await getResumoPendenciasDRESolicitacoesUnificadas(
       filtroPendencias
     );
 
@@ -126,7 +116,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESuspensaoDeAlimentacao,
-      resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
       resumoPorLote,
       loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
@@ -134,7 +123,6 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
       loadingKitLanche: !resumoPendenciasDREKitLanche,
       loadingSuspensaoAlimentacao: !resumoPendenciasDRESuspensaoDeAlimentacao,
-      loadingSolicitacoesUnificadas: !resumoPendenciasDRESolicitacoesUnificadas,
       loadingResumoLotes: false
     });
   }
@@ -243,7 +231,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDREKitLanche,
-      resumoPendenciasDRESolicitacoesUnificadas,
       loadingAutorizadas,
       loadingPendentes,
       loadingAlteracaoCardapio,
@@ -251,7 +238,6 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio,
       loadingSuspensaoAlimentacao,
       loadingKitLanche,
-      loadingSolicitacoesUnificadas,
       resumoPorLote,
       loadingResumoLotes
     } = this.state;
@@ -476,24 +462,6 @@ class DashboardDRE extends Component {
                     </div>
                   </div>
                   <div className="row pt-3">
-                    <div className="col-6">
-                      <CardPendencia
-                        cardTitle={"Pedido Unificado"}
-                        totalOfOrders={
-                          resumoPendenciasDRESolicitacoesUnificadas.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDRESolicitacoesUnificadas.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDRESolicitacoesUnificadas.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDRESolicitacoesUnificadas.regular
-                        }
-                        loading={loadingSolicitacoesUnificadas}
-                      />
-                    </div>
                     <div className="col-6">
                       <CardPendencia
                         priorityOrdersOnly={true}
