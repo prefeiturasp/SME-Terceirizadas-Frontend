@@ -13,7 +13,6 @@ import {
   LabelAndTextArea
 } from "../../../../Shareable/labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
-import { statusEnum } from "../../../../../constants/statusEnum";
 
 export class ModalCancelarAlteracaoDeCardapio extends Component {
   constructor(props) {
@@ -23,13 +22,8 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
 
   async negarAlteracaoCardapio(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
-    const { alteracaoDeCardapio } = this.props;
 
-    const function_CancelaAlteracaoCardapio =
-      alteracaoDeCardapio &&
-      alteracaoDeCardapio.status === statusEnum.ESCOLA_CANCELOU
-        ? EscolaCancelaAlteracaoCardapio
-        : EscolaCancelaAlteracaoCardapio;
+    const function_CancelaAlteracaoCardapio = EscolaCancelaAlteracaoCardapio;
 
     const resp = await function_CancelaAlteracaoCardapio(
       uuid,
