@@ -7,7 +7,7 @@ import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import "./style.scss";
 import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
-export class CardPendenciaAprovacao extends Component {
+export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {

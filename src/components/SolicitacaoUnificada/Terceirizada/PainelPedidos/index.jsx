@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
@@ -91,7 +91,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -105,7 +105,7 @@ class PainelPedidos extends Component {
 
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo limite"}
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
@@ -117,7 +117,7 @@ class PainelPedidos extends Component {
 
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo regular"}
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}

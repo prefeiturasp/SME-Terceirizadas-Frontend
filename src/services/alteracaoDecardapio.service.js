@@ -420,8 +420,8 @@ export const getTerceirizadaPedidosNoPrazoRegular = filtroAplicado => {
     });
 };
 
-export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-aprovados-terceirizada/`;
+export const getTerceirizadaPedidosAutorizados = () => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
@@ -160,7 +160,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -174,7 +174,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
@@ -187,7 +187,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}

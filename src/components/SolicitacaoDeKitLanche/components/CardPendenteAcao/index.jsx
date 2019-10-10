@@ -1,34 +1,25 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
+import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
-import { calcularNumeroDeDREsUnicas } from "./helper";
 import "./style.scss";
-import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
+import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 
-export const TIPO_CARD_ENUM = {
-  LIMITE: "on-limit",
-  REGULAR: "regular",
-  PRIORIDADE: "priority"
-};
-
-export class CardPendenciaAprovacao extends Component {
+export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: [],
-      filtrado: false
+      pedidosFiltrados: this.props.pedidos
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
 
-  componentDidUpdate(prevProps, nextProps) {
-    if (this.props.pedidos.length !== nextProps.pedidosFiltrados.length) {
-      if (this.state.filtrado === false) {
-        this.setState({ pedidosFiltrados: this.props.pedidos });
-      }
+  componentDidUpdate(prevProps) {
+    if (this.props.pedidos.length !== prevProps.pedidos.length) {
+      this.setState({ pedidosFiltrados: this.props.pedidos });
     }
   }
 
@@ -38,13 +29,12 @@ export class CardPendenciaAprovacao extends Component {
     pedidosFiltrados = pedidosFiltrados.filter(function(item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
-        item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
-        item.diretoria_regional.nome.toLowerCase().search(palavraAFiltrar) !==
-          -1
-        //item.lote.nome.includes(palavraAFiltrar)
+        item.id_externo.toLowerCase().includes(palavraAFiltrar) ||
+        item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
+        item.escola.codigo_eol.includes(palavraAFiltrar)
       );
     });
-    this.setState({ pedidosFiltrados, filtrado: true });
+    this.setState({ pedidosFiltrados });
   }
 
   render() {
@@ -57,7 +47,7 @@ export class CardPendenciaAprovacao extends Component {
     } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
-      <div className="card card-pendency-approval unified-solicitation">
+      <div className="card card-pendency-approval meal-kit-solicitation">
         <div className={"card-title " + tipoDeCard}>{titulo}</div>
         <div className="row">
           <div className="col-2">
@@ -74,14 +64,14 @@ export class CardPendenciaAprovacao extends Component {
                 <div className="label" />
                 <span className="text">
                   <span className="value">
-                    {calcularNumeroDeDREsUnicas(pedidos)}{" "}
+                    {calcularNumeroDeEscolasUnicas(pedidos)}{" "}
                   </span>
                   {`
                   ${talvezPluralizar(
-                    calcularNumeroDeDREsUnicas(pedidos),
+                    calcularNumeroDeEscolasUnicas(pedidos),
                     "escola"
                   )} ${talvezPluralizar(
-                    calcularNumeroDeDREsUnicas(pedidos),
+                    calcularNumeroDeEscolasUnicas(pedidos),
                     "solicitante"
                   )}
                   `}
@@ -109,13 +99,13 @@ export class CardPendenciaAprovacao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table-unified-solicitation mt-4 mr-3">
+            <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr className="row">
-                  <th className="col-3">Código do Pedido</th>
-                  <th className="col-3">Lote</th>
-                  <th className="col-3">DRE</th>
-                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
+                <tr>
+                  <th>Código do Pedido</th>
+                  <th>Código EOL</th>
+                  <th>Nome da Escola</th>
+                  <th>{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -124,22 +114,15 @@ export class CardPendenciaAprovacao extends Component {
                     return (
                       <Link
                         key={key}
-                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
+                        to={`/${parametroURL}/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${
                           pedido.uuid
                         }`}
                       >
-                        <tr className="row">
-                          <td className="col-3">{pedido.id_externo}</td>
-                          <td className="col-3">
-                            {pedido.escolas_quantidades[0] &&
-                              pedido.escolas_quantidades[0].escola.lote.nome}
-                          </td>
-                          <td className="col-3">
-                            {pedido.diretoria_regional.nome}
-                          </td>
-                          <td className="col-3">
-                            {pedido.solicitacao_kit_lanche.data}
-                          </td>
+                        <tr>
+                          <td>{pedido.id_externo}</td>
+                          <td>{pedido.escola.codigo_eol}</td>
+                          <td>{pedido.escola.nome}</td>
+                          <td>{pedido.solicitacao_kit_lanche.data}</td>
                         </tr>
                       </Link>
                     );

@@ -14,7 +14,7 @@ import {
 } from "../../../../helpers/painelPedidos";
 import { Select } from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -102,7 +102,7 @@ class PainelPedidos extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <CardPendenciaAprovacao
+                  <CardPendenteAcao
                     titulo={
                       "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                     }
@@ -116,7 +116,7 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo limite"}
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
@@ -129,7 +129,7 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo regular"}
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
