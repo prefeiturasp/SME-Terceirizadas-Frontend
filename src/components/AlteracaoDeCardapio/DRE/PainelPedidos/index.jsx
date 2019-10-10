@@ -5,11 +5,12 @@ import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { formatarPedidos } from "./helper";
+import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as prioritarios,
-  getDiretoriaRegionalPedidosNoPrazoLimite as limites,
-  getDiretoriaRegionalPedidosNoPrazoRegular as regular
-} from "../../../../services/alteracaoDecardapio.service";
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular
+} from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
 import { DRE } from "../../../../configs/constants";
 
@@ -17,7 +18,7 @@ class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
+      pedidosCarregados: false,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: []
@@ -25,32 +26,15 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
-    this.setState({ pedidosCarregados: 0 });
-
-    prioritarios(filtro).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
+    getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro).then(response => {
+      let pedidosPrioritarios = filtraPrioritarios(response.results);
+      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      let pedidosNoPrazoRegular = filtraRegular(response.results);
       this.setState({
+        pedidosCarregados: true,
         pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    limites(filtro).then(response => {
-      pedidosNoPrazoLimite = pedidosNoPrazoLimite.concat(response.results);
-      this.setState({
         pedidosNoPrazoLimite,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-
-    regular(filtro).then(response => {
-      pedidosNoPrazoRegular = pedidosNoPrazoRegular.concat(response.results);
-      this.setState({
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
+        pedidosNoPrazoRegular
       });
     });
   }
@@ -74,13 +58,15 @@ class PainelPedidos extends Component {
     let pedidosPrioritarios = [];
     this.setState({ pedidosCarregados: 2 });
 
-    prioritarios(FiltroEnum.HOJE).then(response => {
-      pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
+    getDiretoriaRegionalPedidosDeAlteracaoCardapio(FiltroEnum.HOJE).then(
+      response => {
+        pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
+        this.setState({
+          pedidosPrioritarios,
+          pedidosCarregados: this.state.pedidosCarregados + 1
+        });
+      }
+    );
   }
 
   render() {
@@ -96,7 +82,7 @@ class PainelPedidos extends Component {
       pedidosAprovados,
       pedidosReprovados
     } = this.props;
-    const todosOsPedidosForamCarregados = pedidosCarregados === 3;
+    const todosOsPedidosForamCarregados = pedidosCarregados === true;
     return (
       <div>
         {!todosOsPedidosForamCarregados ? (
