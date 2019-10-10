@@ -9,7 +9,7 @@ import { getDiretoriaRegionalPedidosAprovados } from "../../../../services/inver
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
-import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,

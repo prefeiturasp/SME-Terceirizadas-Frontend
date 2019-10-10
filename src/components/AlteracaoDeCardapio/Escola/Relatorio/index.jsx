@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import { Redirect } from "react-router-dom";
@@ -8,14 +7,10 @@ import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
-import {
-  getAlteracaoCardapio,
-  DREConfirmaAlteracaoCardapio
-} from "../../../../services/alteracaoDecardapio.service";
+import { getAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 import { escolaPodeCancelar } from "../../../../constants/statusEnum";
@@ -89,23 +84,6 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-  }
-
-  handleSubmit() {
-    const alteracaoCardapioUuid = this.state.uuid;
-    DREConfirmaAlteracaoCardapio(alteracaoCardapioUuid).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio aprovada com sucesso!");
-          this.setRedirect();
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Alteração de Cardápio");
-        }
-      },
-      function() {
-        toastError("Houve um erro ao enviar a Alteração de Cardápio");
-      }
-    );
   }
 
   renderParteAvulsa() {

@@ -96,14 +96,14 @@ class Relatorio extends Component {
     DREConfirmaAlteracaoCardapio(alteracaoCardapioUuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio aprovada com sucesso!");
+          toastSuccess("Alteração de Cardápio validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Alteração de Cardápio");
+          toastError("Houve um erro ao validar a Alteração de Cardápio");
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+        toastError("Houve um erro ao validar a Alteração de Cardápio");
       }
     );
   }

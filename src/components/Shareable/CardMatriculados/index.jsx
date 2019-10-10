@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { ToggleExpandir } from "../../Shareable/ToggleExpandir";
 import "./style.scss";
+import { pontuarValor } from "../../../helpers/utilities";
 
 export default class CardMatriculados extends Component {
   render() {
@@ -20,7 +21,9 @@ export default class CardMatriculados extends Component {
             )}
           </div>
           <div className="row">
-            <div className="rectangle">{numeroAlunos}</div>
+            <div className="rectangle">
+              {numeroAlunos && pontuarValor(numeroAlunos)}
+            </div>
             <div className="col-6 beside-text mt-auto">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />

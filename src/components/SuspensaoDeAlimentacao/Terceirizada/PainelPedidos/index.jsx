@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CardInversaoPendenciaAprovacao as CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao as CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   getTerceirizadasSuspensoesDeAlimentacao,
   getSuspensaoDeAlimentacaoTomadaCiencia
@@ -88,7 +88,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -102,7 +102,7 @@ class PainelPedidos extends Component {
 
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo limite"}
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
@@ -113,7 +113,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo regular"}
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}

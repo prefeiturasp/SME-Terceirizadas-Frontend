@@ -7,7 +7,7 @@ import { talvezPluralizar } from "../../../helpers/utilities";
 import "./style.scss";
 import { ALTERACAO_CARDAPIO, RELATORIO, DRE } from "../../../configs/constants";
 
-export class CardPendenciaAprovacao extends Component {
+export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {

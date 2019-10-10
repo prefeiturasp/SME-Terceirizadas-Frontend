@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { CardPendenciaAprovacao } from "../../components/CardPendenciaAprovacao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
@@ -93,7 +93,7 @@ class PainelPedidos extends Component {
     const {
       visaoPorCombo,
       valorDoFiltro,
-      pedidosAprovados,
+      pedidosAutorizados,
       pedidosReprovados
     } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados === 3;
@@ -129,7 +129,7 @@ class PainelPedidos extends Component {
               </div>
               <div className="row pt-3">
                 <div className="col-12">
-                  <CardPendenciaAprovacao
+                  <CardPendenteAcao
                     titulo={
                       "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                     }
@@ -143,7 +143,7 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo limite"}
                       tipoDeCard={"on-limit"}
                       pedidos={pedidosNoPrazoLimite}
@@ -156,7 +156,7 @@ class PainelPedidos extends Component {
               {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={"Solicitações no prazo regular"}
                       tipoDeCard={"regular"}
                       pedidos={pedidosNoPrazoRegular}
@@ -166,11 +166,11 @@ class PainelPedidos extends Component {
                   </div>
                 </div>
               )}
-              {pedidosAprovados.length > 0 && (
+              {pedidosAutorizados.length > 0 && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardHistorico
-                      pedidos={formatarPedidos(pedidosAprovados)}
+                      pedidos={formatarPedidos(pedidosAutorizados)}
                       ultimaColunaLabel={"Data(s)"}
                       titulo={"Histórico de Alterações de Cardápio Autorizadas"}
                       parametroURL={TERCEIRIZADA}

@@ -74,7 +74,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova Solicitação",
-      salvarAtualizarLbl: "Salvar"
+      salvarAtualizarLbl: "Salvar Rascunho"
     });
     this.refresh();
   }

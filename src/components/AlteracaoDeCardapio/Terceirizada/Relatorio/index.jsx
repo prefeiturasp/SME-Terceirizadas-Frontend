@@ -272,7 +272,7 @@ class Relatorio extends Component {
                     </td>
                   </tr>
                 </table>
-                {alteracaoDeCardapio.status === statusEnum.CODAE_APROVADO && (
+                {alteracaoDeCardapio.status === statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
                       label={"Recusar Solicitação"}
