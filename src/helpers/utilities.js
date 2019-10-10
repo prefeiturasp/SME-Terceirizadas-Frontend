@@ -136,3 +136,7 @@ export const corDaMensagem = mensagem => {
   else if (mensagem.includes("limite")) return "yellow";
   else return "green";
 };
+
+export const pontuarValor = valor => {
+  return parseFloat(valor).toLocaleString();
+};
