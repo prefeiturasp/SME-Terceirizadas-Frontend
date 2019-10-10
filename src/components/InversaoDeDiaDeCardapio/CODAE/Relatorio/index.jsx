@@ -1,9 +1,11 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
-import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import { formValueSelector, reduxForm } from "redux-form";
+import { CODAE, INVERSAO_CARDAPIO } from "../../../../configs/constants";
+import { statusEnum } from "../../../../constants/statusEnum";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
@@ -11,18 +13,16 @@ import {
   getInversaoDeDiaDeCardapio
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalNegarInversaoDiaCardapio } from "../../../Shareable/ModalNegarInversaoDiaCardapio";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
-import { CODAE, INVERSAO_CARDAPIO } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { ModalNegarInversaoDiaCardapio } from "../../../Shareable/ModalNegarInversaoDiaCardapio";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -123,7 +123,6 @@ class Relatorio extends Component {
       showModal,
       InversaoCardapio,
       prazoDoPedidoMensagem,
-      meusDados,
       escolaDaInversao,
       uuid
     } = this.state;
@@ -195,8 +194,9 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {InversaoCardapio.escola &&
+                        InversaoCardapio.escola.diretoria_regional &&
+                        InversaoCardapio.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
