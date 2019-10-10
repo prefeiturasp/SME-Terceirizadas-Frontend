@@ -71,7 +71,6 @@ class PainelPedidos extends Component {
       pedidosAutorizados,
       pedidosReprovados
     } = this.props;
-    console.log(pedidosNoPrazoRegular);
     return (
       <div>
         {loading ? (
