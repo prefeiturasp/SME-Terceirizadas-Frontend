@@ -6,13 +6,13 @@ import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
+import { ModalCancelarAlteracaoDeCardapio } from "./components/ModalCancelarAlteracaoDeCardapio";
 import { getAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import "./style.scss";
-import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
+import { ESCOLA, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 import { escolaPodeCancelar } from "../../../../constants/statusEnum";
 
 class Relatorio extends Component {
@@ -40,7 +40,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidos = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${DRE}/${ALTERACAO_CARDAPIO}`} />;
+      return <Redirect to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`} />;
     }
   };
 
@@ -112,7 +112,7 @@ class Relatorio extends Component {
     const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div>
-        <ModalNegarAlteracaoCardapio
+        <ModalCancelarAlteracaoDeCardapio
           closeModal={this.closeModal}
           showModal={showModal}
           uuid={uuid}
