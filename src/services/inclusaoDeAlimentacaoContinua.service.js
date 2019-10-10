@@ -220,7 +220,9 @@ export const getCodaePedidosReprovados = () => {
 };
 
 export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+  const url = `${URL_INCLUSAO_CONTINUA}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
