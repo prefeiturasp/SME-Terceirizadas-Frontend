@@ -4,7 +4,7 @@ import If from "./layout";
 import "./style.scss";
 
 // https://getbootstrap.com/docs/4.0/components/buttons/
-export var ButtonStyle = {
+export const ButtonStyle = {
   Primary: "primary",
   Secondary: "secondary",
   Success: "success",
@@ -26,7 +26,7 @@ export var ButtonStyle = {
   OutlineLink: "outline-link"
 };
 
-export var ButtonIcon = {
+export const ButtonIcon = {
   TRASH: "trash",
   HOME: "home",
   EDIT: "edit",
@@ -35,7 +35,7 @@ export var ButtonIcon = {
   POWER_OFF: "power-off"
 };
 
-export var ButtonType = {
+export const ButtonType = {
   SUBMIT: "submit",
   BUTTON: "button",
   RESET: "reset"

@@ -82,7 +82,6 @@ export class StatusSolicitacoes extends Component {
     let titulo = "";
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    console.log(dadosMeus);
     const terceirizadaUUID = dadosMeus.terceirizadas[0].uuid;
 
     switch (this.props.tipoStatus) {

@@ -3,7 +3,10 @@ import { STATUS } from "../../../components/screens/const";
 import StatusSolicitacoes from "../../../components/screens/DashboardTerceirizada/StatusSolicitacoes";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
-import { SOLICITACOES_AUTORIZADAS, TERCEIRIZADA } from "../../../configs/constants";
+import {
+  SOLICITACOES_AUTORIZADAS,
+  TERCEIRIZADA
+} from "../../../configs/constants";
 import { HOME } from "../constants";
 
 const atual = {
