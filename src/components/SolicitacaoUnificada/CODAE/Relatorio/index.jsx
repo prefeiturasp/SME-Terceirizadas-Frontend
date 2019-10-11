@@ -4,7 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
-  CODAEAprovaPedidoDRE,
+  CODAEAutorizaPedidoKitLancheUnificado,
   getSolicitacaoUnificada,
   CODAENegaKitLancheUnificadoEscola
 } from "../../../../services/solicitacaoUnificada.service";
@@ -86,7 +86,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    CODAEAprovaPedidoDRE(uuid).then(
+    CODAEAutorizaPedidoKitLancheUnificado(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação Unificada autorizada com sucesso!");
@@ -252,7 +252,7 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                       <Botao
-                        texto="Autorizar Solicitação"
+                        texto="Autorizar"
                         type={BUTTON_TYPE.SUBMIT}
                         onClick={() => this.handleSubmit()}
                         style={BUTTON_STYLE.GREEN}

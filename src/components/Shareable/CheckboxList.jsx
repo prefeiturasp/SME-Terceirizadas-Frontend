@@ -24,7 +24,7 @@ export const CheckBoxListDefault = props => {
     `Cadastro de ${props.typeOfFeature}`,
     `Validação de ${props.typeOfFeature}`,
     `Edição de ${props.typeOfFeature}`,
-    `Aprovação de ${props.typeOfFeature}`,
+    `Autorização de ${props.typeOfFeature}`,
     `Cancelamento de ${props.typeOfFeature}`,
     `Validação de Cancelamento de ${props.typeOfFeature}`,
     `Edição de Cancelamento de ${props.typeOfFeature}`,

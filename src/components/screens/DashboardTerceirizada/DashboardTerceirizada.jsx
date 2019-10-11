@@ -220,7 +220,7 @@ class DashboardTerceirizada extends Component {
             <div className="row">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Aprovação"}
+                  cardTitle={"Aguardando Autorização"}
                   cardType={"card-pending"}
                   solicitations={pendentesListFiltered}
                   icon={"fa-exclamation-triangle"}

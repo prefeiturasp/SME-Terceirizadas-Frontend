@@ -69,7 +69,7 @@ export const tipoDeStatus = status => {
     case "DRE revisou":
     case "CODAE autorizou":
     case "Terceirizada tomou ciência":
-      return "aprovado";
+      return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":
       return "cancelado";
@@ -83,7 +83,7 @@ export const tipoDeStatus = status => {
 };
 
 export const tipoDeStatusClasse = status => {
-  return tipoDeStatus(status.status_evento_explicacao) === "aprovado"
+  return tipoDeStatus(status.status_evento_explicacao) === "prosseguiu"
     ? "active"
     : tipoDeStatus(status.status_evento_explicacao) === "reprovado"
     ? "disapproved"

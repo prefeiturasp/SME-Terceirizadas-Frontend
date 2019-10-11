@@ -357,7 +357,7 @@ export const getCodaePedidosReprovados = () => {
 };
 
 export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-aprova-pedido/`;
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
