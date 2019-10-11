@@ -172,7 +172,7 @@ export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
     });
 };
 
-export const CODAEAprovaPedidoDRE = uuid => {
+export const CODAEAutorizaPedidoKitLancheUnificado = uuid => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
@@ -212,7 +212,7 @@ export const CODAENegaKitLancheUnificadoEscola = async (
   }
 };
 
-export const TerceirizadaAprovaPedidoDRE = uuid => {
+export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
   }/`;
@@ -233,9 +233,9 @@ export const TerceirizadaAprovaPedidoDRE = uuid => {
     });
 };
 
-export const getTerceirizadaPedidosAprovados = () => {
+export const getTerceirizadaPedidosAutorizadosKitLancheUnificado = () => {
   //todo RETIRAR
-  const url = `${URL_SOLICITACAO_UNIFICADA}/pedidos-aprovados-terceirizada/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -249,9 +249,9 @@ export const getTerceirizadaPedidosAprovados = () => {
     });
 };
 
-export const getCODAEPedidosAprovados = () => {
+export const getCODAEPedidosAutorizadosKitLancheUnificado = () => {
   //TODO RETIRAR
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-aprovados-codae/`;
+  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

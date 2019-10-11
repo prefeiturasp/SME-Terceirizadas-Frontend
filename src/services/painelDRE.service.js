@@ -5,7 +5,6 @@ import {
   filtraRegular
 } from "../helpers/painelPedidos";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
@@ -15,28 +14,7 @@ import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.se
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 
-const authToken = {
-  Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
-};
-
 const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
-
-export const getPendentesAprovacaoList = () => {
-  const url = `${API_URL}/dre-pendentes-aprovacao/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
 
 export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   filtro = "sem_filtro"

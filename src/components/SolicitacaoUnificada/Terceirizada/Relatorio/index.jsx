@@ -6,7 +6,7 @@ import { reduxForm } from "redux-form";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  TerceirizadaAprovaPedidoDRE,
+  TerceirizadaTomaCienciaSolicitacoUnificada,
   getSolicitacaoUnificada
 } from "../../../../services/solicitacaoUnificada.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -108,17 +108,19 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    TerceirizadaAprovaPedidoDRE(uuid).then(
+    TerceirizadaTomaCienciaSolicitacoUnificada(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação Unificada autorizada com sucesso!");
+          toastSuccess("Ciência da Solicitação Unificada enviada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao autorizar a Solicitação Unificada");
+          toastError(
+            "Houve um erro ao enviar ciência da Solicitação Unificada"
+          );
         }
       },
       function() {
-        toastError("Houve um erro ao autorizar a Solicitação Unificada");
+        toastError("Houve um erro ao enviar ciência da Solicitação Unificada");
       }
     );
   }
