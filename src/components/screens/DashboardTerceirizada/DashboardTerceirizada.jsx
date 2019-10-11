@@ -9,7 +9,11 @@ import {
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO,
-  TERCEIRIZADA
+  TERCEIRIZADA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
@@ -266,7 +270,7 @@ class DashboardTerceirizada extends Component {
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={pendentesListFiltered}
                   icon={"fa-exclamation-triangle"}
-                  href={`${TERCEIRIZADA}/solicitacoes`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_PENDENTES}`}
                 />
               </div>
               <div className="col-6">
@@ -275,7 +279,7 @@ class DashboardTerceirizada extends Component {
                   cardType={CARD_TYPE_ENUM.AUTORIZADO}
                   solicitations={autorizadasListFiltered}
                   icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                  href={`/${TERCEIRIZADA}/solicitacoes`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_AUTORIZADAS}`}
                 />
               </div>
             </div>
@@ -286,7 +290,7 @@ class DashboardTerceirizada extends Component {
                   cardType={CARD_TYPE_ENUM.NEGADO}
                   solicitations={negadasListFiltered}
                   icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                  href={`${TERCEIRIZADA}/solicitacoes`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
                 />
               </div>
               <div className="col-6">
@@ -295,7 +299,7 @@ class DashboardTerceirizada extends Component {
                   cardType={CARD_TYPE_ENUM.CANCELADO}
                   solicitations={canceladasListFiltered}
                   icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                  href={`/${TERCEIRIZADA}/solicitacoes`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`}
                 />
               </div>
             </div>

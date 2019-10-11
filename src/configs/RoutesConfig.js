@@ -35,6 +35,12 @@ import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/Statu
 import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
+
+import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
+import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
+import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
+import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
+
 import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
@@ -310,6 +316,26 @@ const routesConfig = [
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
+    component: StatusSolicitacoesAutorizadasTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_NEGADAS}`,
+    component: StatusSolicitacoesNegadasTerceirizadaPage,
+    exact: false
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_CANCELADAS}`,
+    component: StatusSolicitacoesCanceladasTerceirizadaPage,
     exact: false
   },
   {
