@@ -316,7 +316,7 @@ class Relatorio extends Component {
                   statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
                     <Botao
-                      texto={"Recusar Solicitação"}
+                      texto={"Recusar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={BUTTON_TYPE.BUTTON}

@@ -252,7 +252,7 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                       <Botao
-                        texto="Autorizar Solicitação"
+                        texto="Autorizar"
                         type={BUTTON_TYPE.SUBMIT}
                         onClick={() => this.handleSubmit()}
                         style={BUTTON_STYLE.GREEN}

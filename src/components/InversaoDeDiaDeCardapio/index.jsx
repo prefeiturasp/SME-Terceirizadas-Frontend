@@ -295,7 +295,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       type={BUTTON_TYPE.SUBMIT}
                     />
                     <Botao
-                      texto="Enviar Solicitação"
+                      texto="Enviar"
                       disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({

@@ -275,14 +275,14 @@ class Relatorio extends Component {
                 {alteracaoDeCardapio.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Negar Solicitação"}
+                      label={"Negar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}
                       style={ButtonStyle.OutlinePrimary}
                     />
                     <BaseButton
-                      label="Autorizar Solicitação"
+                      label="Autorizar"
                       type={ButtonType.SUBMIT}
                       onClick={() => this.handleSubmit()}
                       style={ButtonStyle.Primary}

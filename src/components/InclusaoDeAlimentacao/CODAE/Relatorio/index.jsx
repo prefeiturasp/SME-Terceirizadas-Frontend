@@ -337,14 +337,14 @@ class Relatorio extends Component {
                 {inclusaoDeAlimentacao.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
                     <Botao
-                      texto={"Negar Solicitação"}
+                      texto={"Negar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      texto="Autorizar Solicitação"
+                      texto="Autorizar"
                       type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
                       style={BUTTON_STYLE.GREEN}
