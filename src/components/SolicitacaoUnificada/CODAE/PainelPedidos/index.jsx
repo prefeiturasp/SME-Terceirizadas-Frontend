@@ -63,7 +63,6 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    console.log(pedidosPrioritarios, pedidosNoPrazoRegular, pedidosCarregados);
     const { visaoPorCombo, pedidosAutorizados, pedidosReprovados } = this.props;
     return (
       <div>

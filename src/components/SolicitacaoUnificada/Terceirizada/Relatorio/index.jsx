@@ -114,7 +114,9 @@ class Relatorio extends Component {
           toastSuccess("Ciência da Solicitação Unificada enviada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar ciência da Solicitação Unificada");
+          toastError(
+            "Houve um erro ao enviar ciência da Solicitação Unificada"
+          );
         }
       },
       function() {
