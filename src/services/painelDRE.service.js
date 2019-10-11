@@ -133,7 +133,6 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
 };
 
 export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
-  dreUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {

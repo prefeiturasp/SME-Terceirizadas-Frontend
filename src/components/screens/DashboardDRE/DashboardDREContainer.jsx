@@ -15,15 +15,13 @@ class DashboardDREContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: 4050,
+      enrolled: "...",
       autorizadasList: [],
       pendentesList: [],
       recusadasList: [],
       canceladasList: [],
-      autorizadasListFiltered: [],
-      pendentesListFiltered: [],
-      recusadasListFiltered: [],
-      canceladasListFiltered: [],
+      negadasList: [],
+
       resumoPendenciasDREAlteracoesDeCardapio: {},
       meusDados: [],
       loadingAutorizadas: true,
@@ -63,7 +61,7 @@ class DashboardDREContainer extends Component {
     const dreUuid = meusDados.diretorias_regionais[0].uuid;
     let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
     let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
-    let recusadas = await getSolicitacoesRecusadasDRE(dreUuid);
+    let negadas = await getSolicitacoesRecusadasDRE(dreUuid);
     let canceladas = await getSolicitacoesCanceladasDRE(dreUuid);
     const minhaDRE = await getDiretoriaregionalDetalhe(dreUuid);
     const lotesDRE = (await minhaDRE).data.lotes;
@@ -75,19 +73,14 @@ class DashboardDREContainer extends Component {
 
     autorizadas = ajustarFormatoLog(autorizadas.results, LOG_PARA.DRE);
     pendentes = ajustarFormatoLog(pendentes.results, LOG_PARA.DRE);
-    recusadas = ajustarFormatoLog(recusadas.results, LOG_PARA.DRE);
+    negadas = ajustarFormatoLog(negadas.results, LOG_PARA.DRE);
     canceladas = ajustarFormatoLog(canceladas.results, LOG_PARA.DRE);
 
     this.setState({
       autorizadasList: autorizadas,
       pendentesList: pendentes,
-      recusadasList: recusadas,
+      negadasList: negadas,
       canceladasList: canceladas,
-
-      autorizadasListFiltered: autorizadas,
-      pendentesListFiltered: pendentes,
-      recusadasListFiltered: recusadas,
-      canceladasListFiltered: canceladas,
 
       meusDados,
       loadingAutorizadas: false,
