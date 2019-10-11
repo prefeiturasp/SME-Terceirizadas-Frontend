@@ -11,7 +11,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { DRE, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import { ModalNaoValidarInclusaoAlimentacao } from "./components/ModalNaoValidarInclusaoAlimentacao";
 import {
   getInclusaoDeAlimentacaoAvulsa,
   DREConfirmaInclusaoDeAlimentacaoAvulsa
@@ -102,7 +102,6 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação não validado com sucesso!");
   }
 
   handleSubmit() {
@@ -184,13 +183,16 @@ class Relatorio extends Component {
       showModal,
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
-      meusDados
+      meusDados,
+      ehInclusaoContinua
     } = this.state;
     return (
       <div className="report">
-        <ModalRecusarSolicitacao
+        <ModalNaoValidarInclusaoAlimentacao
           closeModal={this.closeModal}
           showModal={showModal}
+          inclusaoDeAlimentacao={inclusaoDeAlimentacao}
+          ehInclusaoContinua={ehInclusaoContinua}
         />
         {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
         {!inclusaoDeAlimentacao ? (

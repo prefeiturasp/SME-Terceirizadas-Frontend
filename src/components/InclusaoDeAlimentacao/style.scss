@@ -100,3 +100,19 @@
     }
   }
 }
+
+.info-inclusao {
+  .titulo {
+    margin-bottom: 0.5em;
+  }
+  .inclusoes {
+    margin-top: 0.5em;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+  }
+}
+
+.conteudo {
+  margin: 0.5em 1em 2em 1em;
+}
