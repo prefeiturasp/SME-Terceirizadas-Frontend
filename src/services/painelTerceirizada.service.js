@@ -300,3 +300,17 @@ export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };
+
+export const getSolicitacoesAutorizadasTerceirizada = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.AUTORIZADOS
+  }/${TerceirizadaUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesNegadasTerceirizada = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.NEGADOS
+  }/${TerceirizadaUuid}/`;
+  return retornoBase(url);
+};
