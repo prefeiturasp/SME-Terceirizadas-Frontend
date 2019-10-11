@@ -848,7 +848,7 @@ class SolicitacaoUnificada extends Component {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      texto="Enviar Solicitação"
+                      texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
                       onClick={handleSubmit(values =>
                         this.handleSubmit({

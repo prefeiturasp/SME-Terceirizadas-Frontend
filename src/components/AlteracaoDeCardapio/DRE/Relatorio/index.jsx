@@ -280,14 +280,14 @@ class Relatorio extends Component {
                 {alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Recusar Solicitação"}
+                      label={"Recusar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}
                       style={ButtonStyle.OutlinePrimary}
                     />
                     <BaseButton
-                      label="Validar Solicitação"
+                      label="Validar"
                       type={ButtonType.SUBMIT}
                       onClick={() => this.handleSubmit()}
                       style={ButtonStyle.Primary}

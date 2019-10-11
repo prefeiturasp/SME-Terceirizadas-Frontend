@@ -275,7 +275,7 @@ class Relatorio extends Component {
                 {alteracaoDeCardapio.status === statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
                     <BaseButton
-                      label={"Recusar Solicitação"}
+                      label={"Recusar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={ButtonType.BUTTON}

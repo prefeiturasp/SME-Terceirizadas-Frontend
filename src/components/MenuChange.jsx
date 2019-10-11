@@ -125,7 +125,7 @@ export class MenuChange extends Component {
             <div className="form-group row float-right">
               <Button label="Cancelar" style={ButtonStyle.OutlinePrimary} />
               <Button
-                label="Enviar Solicitação"
+                label="Enviar"
                 type={ButtonType.SUBMIT}
                 style={ButtonStyle.Primary}
                 className="ml-3"

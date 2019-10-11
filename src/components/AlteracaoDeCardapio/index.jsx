@@ -539,7 +539,7 @@ class AlteracaoCardapio extends Component {
                   style={BUTTON_STYLE.OutlinePrimary}
                 />
                 <Botao
-                  texto="Enviar Solicitação"
+                  texto="Enviar"
                   disabled={pristine || submitting}
                   type={BUTTON_TYPE.SUBMIT}
                   onClick={handleSubmit(values =>
