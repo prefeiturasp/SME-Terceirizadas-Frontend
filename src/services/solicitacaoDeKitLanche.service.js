@@ -201,9 +201,9 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosDeKitLancheAprovados = () => {
+export const getDiretoriaRegionalPedidosDeKitLancheAutorizados = () => {
   //TODO TIRAR
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-diretoria-regional/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -248,9 +248,9 @@ export const getCodaePedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getCodaePedidosDeKitLancheAprovados = () => {
+export const getCodaePedidosDeKitLancheAutorizados = () => {
   //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-codae/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -280,25 +280,9 @@ export const getCodaePedidosDeKitLancheReprovados = () => {
     });
 };
 
-export const getDrePedidosDeKitLancheAprovados = () => {
-  //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-dre/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getPedidosDeKitLancheAprovadosTerceirizada = () => {
+export const getPedidosDeKitLancheAutorizadosTerceirizada = () => {
   //TODO tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-aprovados-terceirizadas/`;
+  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-terceirizadas/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -344,7 +328,7 @@ export const getDetalheKitLancheAvulsa = uuid => {
     });
 };
 
-export const aprovaDeKitLancheAvulsoDiretoriaRegional = uuid => {
+export const validaDeKitLancheAvulsoDiretoriaRegional = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -442,7 +426,7 @@ export const CODAENegaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const aprovaDeKitLancheAvulsoCodae = uuid => {
+export const autorizaDeKitLancheAvulsoCodae = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -462,7 +446,7 @@ export const aprovaDeKitLancheAvulsoCodae = uuid => {
     });
 };
 
-export const aprovaDeKitLancheAvulsoTerceirizadas = uuid => {
+export const cienciaDeKitLancheAvulsoTerceirizadas = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
   }/`;

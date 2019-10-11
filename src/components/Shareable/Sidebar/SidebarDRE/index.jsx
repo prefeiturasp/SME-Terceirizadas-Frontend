@@ -63,7 +63,7 @@ export class SidebarDRE extends Component {
               className="collapse-item"
               to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
             >
-              Aguardando aprovação
+              Aguardando autorização
             </NavLink>
             <NavLink
               activeClassName="active"

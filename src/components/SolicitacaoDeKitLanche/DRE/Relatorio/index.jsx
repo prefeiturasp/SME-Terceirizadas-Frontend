@@ -6,7 +6,7 @@ import { dataParaUTC } from "../../../../helpers/utilities";
 import { connect } from "react-redux";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  aprovaDeKitLancheAvulsoDiretoriaRegional,
+  validaDeKitLancheAvulsoDiretoriaRegional,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -94,7 +94,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    aprovaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
+    validaDeKitLancheAvulsoDiretoriaRegional(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(

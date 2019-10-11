@@ -70,7 +70,7 @@ class PainelPedidos extends Component {
     const {
       visaoPorCombo,
       valorDoFiltro,
-      pedidosAprovados,
+      pedidosAutorizados,
       pedidosReprovados
     } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
@@ -138,11 +138,11 @@ class PainelPedidos extends Component {
                     </div>
                   </div>
                 )}
-                {pedidosAprovados && pedidosAprovados.length > 0 && (
+                {pedidosAutorizados && pedidosAutorizados.length > 0 && (
                   <div className="row pt-3">
                     <div className="col-12">
                       <CardHistorico
-                        pedidos={formatarPedidos(pedidosAprovados)}
+                        pedidos={formatarPedidos(pedidosAutorizados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
                           "Histórico de Solicitações de Kit Lanche Passeio Autorizadas"
