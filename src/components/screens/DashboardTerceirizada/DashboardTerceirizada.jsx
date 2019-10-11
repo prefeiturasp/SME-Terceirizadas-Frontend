@@ -5,12 +5,13 @@ import { Field, reduxForm } from "redux-form";
 import {
   ALTERACAO_CARDAPIO,
   INCLUSAO_ALIMENTACAO,
-  TERCEIRIZADA,
+  INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO,
-  INVERSAO_CARDAPIO
+  TERCEIRIZADA
 } from "../../../configs/constants";
+import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasTerceirizadaAlteracoesDeCardapio,
   getResumoPendenciasTerceirizadaInclusaoDeAlimentacao,
@@ -18,17 +19,21 @@ import {
   getResumoPendenciasTerceirizadaKitLanche,
   getResumoPendenciasTerceirizadaSolicitacoesUnificadas,
   getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
+  getSolicitacoesCanceladasTerceirizada,
+  getSolicitacoesNegadasTerceirizada,
   getSolicitacoesPendentesTerceirizada,
-  getSolicitacoesCanceladasTerceirizada
+  getSolicitacoesAutorizadasTerceirizada
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import CardBody from "../../Shareable/CardBody";
+import CardLegendas from "../../Shareable/CardLegendas";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import { dataAtual } from "../../../helpers/utilities";
-import CardBody from "../../Shareable/CardBody";
-import CardLegendas from "../../Shareable/CardLegendas";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardStatusDeSolicitacao, {
+  ICON_CARD_TYPE_ENUM,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
 import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
@@ -45,6 +50,9 @@ class DashboardTerceirizada extends Component {
     this.state = {
       pendentesListFiltered: [],
       canceladasListFiltered: [],
+      negadasListFiltered: [],
+      autorizadasListFiltered: [],
+
       collapsed: true,
       pendentesListSolicitacao: [],
       canceladasListSolicitacao: [],
@@ -163,14 +171,46 @@ class DashboardTerceirizada extends Component {
         canceladasListFiltered: canceladasListSolicitacao
       });
     });
+
+    getSolicitacoesNegadasTerceirizada(minhaTerceirizada).then(request => {
+      let negadasListSolicitacao = ajustarFormatoLog(
+        request.results,
+        LOG_PARA.TERCEIRIZADA
+      );
+      this.setState({
+        negadasListSolicitacao,
+        negadasListFiltered: negadasListSolicitacao
+      });
+    });
+
+    getSolicitacoesAutorizadasTerceirizada(minhaTerceirizada).then(request => {
+      let autorizadasListSolicitacao = ajustarFormatoLog(
+        request.results,
+        LOG_PARA.TERCEIRIZADA
+      );
+      this.setState({
+        autorizadasListSolicitacao: autorizadasListSolicitacao,
+        autorizadasListFiltered: autorizadasListSolicitacao
+      });
+    });
   }
 
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
-    const { pendentesListSolicitacao, canceladasListSolicitacao } = this.state;
+    const {
+      pendentesListSolicitacao,
+      canceladasListSolicitacao,
+      autorizadasListSolicitacao,
+      negadasListSolicitacao
+    } = this.state;
 
     this.setState({
       pendentesListFiltered: this.filtrarNome(pendentesListSolicitacao, event),
+      autorizadasListFiltered: this.filtrarNome(
+        autorizadasListSolicitacao,
+        event
+      ),
+      negadasListFiltered: this.filtrarNome(negadasListSolicitacao, event),
       canceladasListFiltered: this.filtrarNome(canceladasListSolicitacao, event)
     });
   }
@@ -184,6 +224,8 @@ class DashboardTerceirizada extends Component {
       gestaoDeAlimentacao,
       pendentesListFiltered,
       canceladasListFiltered,
+      negadasListFiltered,
+      autorizadasListFiltered,
 
       resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
@@ -221,7 +263,7 @@ class DashboardTerceirizada extends Component {
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Aguardando Autorização"}
-                  cardType={"card-pending"}
+                  cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={pendentesListFiltered}
                   icon={"fa-exclamation-triangle"}
                   href={`${TERCEIRIZADA}/solicitacoes`}
@@ -229,10 +271,30 @@ class DashboardTerceirizada extends Component {
               </div>
               <div className="col-6">
                 <CardStatusDeSolicitacao
+                  cardTitle={"Autorizadas"}
+                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                  solicitations={autorizadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                  href={`/${TERCEIRIZADA}/solicitacoes`}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Negadas"}
+                  cardType={CARD_TYPE_ENUM.NEGADO}
+                  solicitations={negadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                  href={`${TERCEIRIZADA}/solicitacoes`}
+                />
+              </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
                   cardTitle={"Canceladas"}
-                  cardType={"card-cancelled"}
+                  cardType={CARD_TYPE_ENUM.CANCELADO}
                   solicitations={canceladasListFiltered}
-                  icon={"fa-times-circle"}
+                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
                   href={`/${TERCEIRIZADA}/solicitacoes`}
                 />
               </div>
