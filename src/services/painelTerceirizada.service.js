@@ -4,7 +4,6 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
-import authService from "./auth";
 import { AUTH_TOKEN, SOLICITACOES } from "./contants";
 import { getTerceirizadaPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
@@ -14,27 +13,6 @@ import { getTerceirizadasPedidosDeKitLanche } from "./solicitacaoDeKitLanche.ser
 import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
-
-const authToken = {
-  Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
-};
-
-export const getPendentesAprovacaoList = () => {
-  const url = `${API_URL}/terceirizada-pendentes-aprovacao/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
 
 export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   TerceirizadaUuid,

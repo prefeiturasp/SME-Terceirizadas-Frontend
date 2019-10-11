@@ -19,8 +19,8 @@ export const PEDIDOS = {
 };
 
 export const SOLICITACOES = {
-  AUTORIZADOS: "aprovados",
-  PENDENTES: "pendentes-aprovacao",
+  AUTORIZADOS: "autorizados",
+  PENDENTES: "pendentes-autorizacao",
   NEGADOS: "negados",
   CANCELADOS: "cancelados",
   PENDENTES_VALIDACAO_DRE: "pendentes-validacao"

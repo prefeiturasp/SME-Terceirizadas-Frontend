@@ -8,18 +8,18 @@ export const formatarPedidos = pedidos => {
 
 export const filtraPrioritarios = pedidos => {
   return pedidos.filter(pedido => {
-    return pedido.solicitacao_kit_lanche.prioridade === "PRIORITARIO";
+    return pedido.prioridade === "PRIORITARIO";
   });
 };
 
 export const filtraNoLimite = pedidos => {
   return pedidos.filter(pedido => {
-    return pedido.solicitacao_kit_lanche.prioridade === "LIMITE";
+    return pedido.prioridade === "LIMITE";
   });
 };
 
 export const filtraRegular = pedidos => {
   return pedidos.filter(pedido => {
-    return pedido.solicitacao_kit_lanche.prioridade === "REGULAR";
+    return pedido.prioridade === "REGULAR";
   });
 };
