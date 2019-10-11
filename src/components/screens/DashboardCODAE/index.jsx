@@ -302,7 +302,7 @@ class DashboardCODAE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.APROVADO}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={solicitacoesAutorizadasFiltradas}
                     icon={"fa-check"}
                     href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
@@ -340,7 +340,7 @@ class DashboardCODAE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Aprovação{" "}
+                  Solicitação Aguardando Autorização{" "}
                 </span>
                 <span>
                   <i className="fas fa-ban" />

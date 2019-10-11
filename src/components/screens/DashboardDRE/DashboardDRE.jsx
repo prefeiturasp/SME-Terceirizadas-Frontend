@@ -287,7 +287,7 @@ class DashboardDRE extends Component {
               <div className="row mb-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Aprovação"}
+                    cardTitle={"Aguardando Autorização"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
@@ -298,7 +298,7 @@ class DashboardDRE extends Component {
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.APROVADO}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={autorizadasListFiltered}
                     icon={"fa-check"}
                     href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
@@ -336,7 +336,7 @@ class DashboardDRE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Aprovação{" "}
+                  Solicitação Aguardando Autorização{" "}
                 </span>
                 <span>
                   <i className="fas fa-ban" />

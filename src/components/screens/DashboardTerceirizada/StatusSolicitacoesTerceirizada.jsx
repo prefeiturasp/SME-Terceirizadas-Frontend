@@ -42,13 +42,13 @@ export default class StatusSolicitacoesTerceirizada extends Component {
           </div>
           <div className="pb-3" />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Aprovadas"}
+            titulo={"Autorizadas"}
             solicitacoes={solicitacoes}
             tipo={"card-authorized"}
             icone={"fa-check"}
           />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Aguardando Aprovação"}
+            titulo={"Aguardando Autorização"}
             solicitacoes={solicitacoes}
             tipo={"card-pending"}
             icone={"fa-exclamation-triangle"}

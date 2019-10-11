@@ -98,8 +98,8 @@ export class StatusSolicitacoes extends Component {
         break;
 
       case STATUS.AUTORIZADAS:
-        tipoCard = CARD_TYPE_ENUM.APROVADO;
-        icone = ICON_CARD_TYPE_ENUM.APROVADO;
+        tipoCard = CARD_TYPE_ENUM.AUTORIZADO;
+        icone = ICON_CARD_TYPE_ENUM.AUTORIZADO;
         titulo = "Autorizadas";
         solicitacoes = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
         break;

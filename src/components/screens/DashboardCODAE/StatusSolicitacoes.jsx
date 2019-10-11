@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
-  getSolicitacoesAprovadosCodae,
+  getSolicitacoesAutorizadasCodae,
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
-  getSolicitacoesPendentesAprovacaoCodae
+  getSolicitacoesPendentesAutorizacaoCodae
 } from "../../../services/painelCODAE.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
@@ -83,17 +83,17 @@ export class StatusSolicitacoes extends Component {
 
     switch (this.props.tipoStatus) {
       case STATUS.AUTORIZADAS:
-        tipoCard = CARD_TYPE_ENUM.APROVADO;
-        icone = ICON_CARD_TYPE_ENUM.APROVADO;
+        tipoCard = CARD_TYPE_ENUM.AUTORIZADO;
+        icone = ICON_CARD_TYPE_ENUM.AUTORIZADO;
         titulo = "Autorizadas";
-        solicitacoes = await getSolicitacoesAprovadosCodae();
+        solicitacoes = await getSolicitacoesAutorizadasCodae();
         break;
 
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
         titulo = "Pendentes";
-        solicitacoes = await getSolicitacoesPendentesAprovacaoCodae(
+        solicitacoes = await getSolicitacoesPendentesAutorizacaoCodae(
           FILTRO.SEM_FILTRO
         );
         break;
