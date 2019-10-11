@@ -4,10 +4,10 @@ import { getTotalAlunos } from "../../../services/codae.service";
 import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
 import { getLotes } from "../../../services/lote.service";
 import {
-  getSolicitacoesAprovadosCodae,
+  getSolicitacoesAutorizadasCodae,
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
-  getSolicitacoesPendentesAprovacaoCodae
+  getSolicitacoesPendentesAutorizacaoCodae
 } from "../../../services/painelCODAE.service";
 import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
 import { FILTRO, VENCIMENTO } from "../const";
@@ -16,8 +16,8 @@ import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
 class DashboardCODAEContainer extends Component {
   async componentDidMount() {
     const totalAlunos = await getTotalAlunos();
-    let solicitacoesAutorizadas = await getSolicitacoesAprovadosCodae();
-    let solicitacoesPendentes = await getSolicitacoesPendentesAprovacaoCodae(
+    let solicitacoesAutorizadas = await getSolicitacoesAutorizadasCodae();
+    let solicitacoesPendentes = await getSolicitacoesPendentesAutorizacaoCodae(
       FILTRO.SEM_FILTRO
     );
     let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();

@@ -170,9 +170,9 @@ export class DashboardEscola extends Component {
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Autorizados"}
-                cardType={CARD_TYPE_ENUM.APROVADO}
+                cardType={CARD_TYPE_ENUM.AUTORIZADO}
                 solicitations={autorizadasListFiltered}
-                icon={ICON_CARD_TYPE_ENUM.APROVADO}
+                icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
                 href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
             </div>

@@ -7,7 +7,7 @@ describe("Teste <FluxoDeStatus>", () => {
   const listaDeStatus = [
     {
       titulo: "Solicitação Realizada",
-      status: "aprovado",
+      status: "prosseguiu",
       status_evento_explicacao: "Solicitação Realizada",
       criado_em: "25/04/2019 às 9:20",
       usuario: { rf: "7972324", nome: "João da Silva" }
