@@ -295,7 +295,7 @@ export const escolaCancelaInclusaoDeAlimentacaoAvulsa = async (
 };
 
 export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/diretoria-regional-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -314,7 +314,7 @@ export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
 };
 
 export const CODAEConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/codae-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",

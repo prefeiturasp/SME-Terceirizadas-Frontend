@@ -121,8 +121,8 @@ export const inicioPedido = uuid => {
     });
 };
 
-export const dreAprovaPedidoEscola = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/diretoria-regional-aprova-pedido/`;
+export const dreValidaPedidoEscola = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -162,8 +162,8 @@ export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
     });
 };
 
-export const CODAEAprovaPedidoDRE = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-aprova-pedido/`;
+export const CODAEAutorizaPedidoDRE = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -265,8 +265,8 @@ export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-diretoria-regional/`;
+export const getDiretoriaRegionalPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -295,8 +295,8 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
     });
 };
 
-export const getCODAEPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
+export const getCODAEPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -325,8 +325,8 @@ export const getCODAEPedidosReprovados = () => {
     });
 };
 
-export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-terceirizada/`;
+export const getTerceirizadaPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

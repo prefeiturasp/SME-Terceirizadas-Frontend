@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  dreAprovaPedidoEscola,
+  dreValidaPedidoEscola,
   getInversaoDeDiaDeCardapio
 } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { meusDados } from "../../../../services/perfil.service";
@@ -101,7 +101,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    dreAprovaPedidoEscola(uuid).then(
+    dreValidaPedidoEscola(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dias de cardápio validada com sucesso!");

@@ -13,7 +13,7 @@ export const TIPO_CARD_ENUM = {
   PRIORIDADE: "priority"
 };
 
-export class CardInversaoPendenciaAprovacao extends Component {
+export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {

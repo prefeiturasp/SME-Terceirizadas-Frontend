@@ -5,11 +5,11 @@ import { DRE } from "../../../../configs/constants";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getDiretoriaRegionalPedidosAutorizados } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
-import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
@@ -25,7 +25,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
-      pedidosAprovados: []
+      pedidosAutorizados: []
     };
   }
 
@@ -49,8 +49,8 @@ class PainelPedidos extends Component {
 
   componentDidMount() {
     this.filtrar(FiltroEnum.SEM_FILTRO);
-    getDiretoriaRegionalPedidosAprovados().then(response => {
-      this.setState({ pedidosAprovados: response.results });
+    getDiretoriaRegionalPedidosAutorizados().then(response => {
+      this.setState({ pedidosAutorizados: response.results });
     });
   }
 
@@ -71,7 +71,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      pedidosAprovados
+      pedidosAutorizados
     } = this.state;
     const { visaoPorCombo, valorDoFiltro, pedidosReprovados } = this.props;
 
@@ -103,7 +103,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardInversaoPendenciaAprovacao
+                    <CardPendenteAcao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -117,7 +117,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardInversaoPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
@@ -130,7 +130,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardInversaoPendenciaAprovacao
+                      <CardPendenteAcao
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
@@ -140,11 +140,11 @@ class PainelPedidos extends Component {
                     </div>
                   </div>
                 )}
-                {pedidosAprovados.length > 0 && (
+                {pedidosAutorizados.length > 0 && (
                   <div className="row pt-3">
                     <div className="col-12">
                       <CardHistorico
-                        pedidos={formatarPedidos(pedidosAprovados)}
+                        pedidos={formatarPedidos(pedidosAutorizados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={
                           "Histórico de Inversões de cardápio Autorizadas"
