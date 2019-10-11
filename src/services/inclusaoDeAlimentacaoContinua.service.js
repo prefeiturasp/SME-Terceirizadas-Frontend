@@ -286,7 +286,7 @@ export const inicioPedidoContinua = uuid => {
 };
 
 export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/diretoria-regional-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -305,7 +305,7 @@ export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
 };
 
 export const CODAEConfirmaInclusaoDeAlimentacaoContinua = uuid => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/codae-aprova-pedido/`;
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",

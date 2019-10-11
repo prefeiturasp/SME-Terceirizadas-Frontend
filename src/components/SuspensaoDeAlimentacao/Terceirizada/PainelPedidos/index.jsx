@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CardPendenteAcao as CardPendenteAcao } from "../../components/CardPendenteAcao";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   getTerceirizadasSuspensoesDeAlimentacao,
   getSuspensaoDeAlimentacaoTomadaCiencia
