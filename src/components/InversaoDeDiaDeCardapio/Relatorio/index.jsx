@@ -4,11 +4,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { INVERSAO_CARDAPIO } from "../../../configs/constants";
+import {
+  INVERSAO_CARDAPIO,
+  ESCOLA,
+  DRE,
+  CODAE,
+  TERCEIRIZADA
+} from "../../../configs/constants";
 import { statusEnum } from "../../../constants/statusEnum";
 import { dataParaUTC } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
-import { meusDados } from "../../../services/perfil.service";
 import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -20,8 +25,6 @@ import { ModalNegarInversaoDiaCardapio } from "../../Shareable/ModalNegarInversa
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
-import { ModalRecusarSolicitacao } from "../../Shareable/ModalRecusarSolicitacao";
-
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 
 class Relatorio extends Component {
@@ -119,13 +122,20 @@ class Relatorio extends Component {
       showModal,
       InversaoCardapio,
       prazoDoPedidoMensagem,
-      escolaDaInversao
+      escolaDaInversao,
+      uuid
     } = this.state;
+    const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div className="report">
-        <ModalRecusarSolicitacao
+        <ModalNegarInversaoDiaCardapio
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          motivoCancelamento={motivo_cancelamento}
+          inversaoDeDiaDeCardapio={InversaoCardapio}
+          setRedirect={this.setRedirect.bind(this)}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
         {!InversaoCardapio ? (
@@ -258,55 +268,89 @@ class Relatorio extends Component {
                   </div>
                 </div>
 
-
-                <div className="form-group row float-right mt-4">
-                  <Botao
-                    texto={"Cancelar pedido"}
-                    className="ml-3"
-                    onClick={() => this.showModal()}
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                </div>
-
-                {InversaoCardapio.status === statusEnum.DRE_A_VALIDAR && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Não Validar Solicitação"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Validar Solicitação"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
-
-                {InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Negar Solicitação"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Autorizar Solicitação"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
-
+                {(() => {
+                  switch (this.props.VISAO) {
+                    case ESCOLA:
+                      return (
+                        <div className="form-group row float-right mt-4">
+                          <Botao
+                            texto={"Cancelar pedido"}
+                            className="ml-3"
+                            onClick={() => this.showModal()}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </div>
+                      );
+                    case DRE:
+                      return (
+                        InversaoCardapio.status ===
+                          statusEnum.DRE_A_VALIDAR && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Não Validar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Validar Solicitação"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case CODAE:
+                      return (
+                        InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Negar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Autorizar Solicitação"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case TERCEIRIZADA:
+                      return (
+                        InversaoCardapio.status ===
+                          statusEnum.CODAE_AUTORIZADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Recusar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Ciente"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    default:
+                      return "AQUI";
+                  }
+                })()}
               </div>
             </div>
           </form>
@@ -315,7 +359,6 @@ class Relatorio extends Component {
     );
   }
 }
-
 
 const formName = "relatorioInversaoDeDiaDeCardapio";
 const RelatorioForm = reduxForm({

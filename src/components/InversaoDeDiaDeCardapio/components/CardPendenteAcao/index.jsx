@@ -7,7 +7,11 @@ import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import "./style.scss";
 
+<<<<<<< HEAD
 export class CardPendenteAcao extends Component {
+=======
+export class CardInversaoPendenciaAprovacao extends Component {
+>>>>>>> Ajustes nos import
   constructor(props) {
     super(props);
     this.state = {

@@ -18,4 +18,3 @@ export const corDaMensagem = mensagem => {
   else if (mensagem.includes("limite")) return "yellow";
   else return "green";
 };
-

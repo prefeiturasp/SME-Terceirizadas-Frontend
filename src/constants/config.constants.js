@@ -24,5 +24,5 @@ module.exports = {
   USER_URL: USER_URL,
   API_MOCK: API_MOCK,
   REFRESH_TOKEN_TIMEOUT: REFRESH_TOKEN_TIMEOUT,
-  HOME: "",
+  HOME: ""
 };

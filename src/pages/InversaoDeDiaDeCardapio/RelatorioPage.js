@@ -3,16 +3,21 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import { INVERSAO_CARDAPIO, ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
+import {
+  INVERSAO_CARDAPIO,
+  ESCOLA,
+  DRE,
+  CODAE,
+  TERCEIRIZADA
+} from "../../configs/constants";
 
 import {
   CODAEAprovaPedidoDRE,
   dreAprovaPedidoEscola,
-  terceirizadaTomaCiencia,
+  terceirizadaTomaCiencia
 } from "../../services/inversaoDeDiaDeCardapio.service";
 
 class RelatorioBase extends React.Component {
-
   render() {
     const atual = {
       href: "#",
@@ -30,25 +35,27 @@ class RelatorioBase extends React.Component {
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
         <Relatorio
           VISAO={this.props.VISAO}
-          HandleAprovaPedido={this.props.HandleAprovaPedido} />
+          HandleAprovaPedido={this.props.HandleAprovaPedido}
+        />
       </Page>
     );
   }
 }
 
 // Escola
-export const RelatorioEscola = () => (
-  <RelatorioBase VISAO={ESCOLA}/>
-)
+export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
-  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreAprovaPedidoEscola}/>
-)
+  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreAprovaPedidoEscola} />
+);
 // CODAE
 export const RelatorioCODAE = () => (
-  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAprovaPedidoDRE}/>
-)
+  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAprovaPedidoDRE} />
+);
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
-  <RelatorioBase VISAO={TERCEIRIZADA} HandleAprovaPedido={terceirizadaTomaCiencia}/>
-)
+  <RelatorioBase
+    VISAO={TERCEIRIZADA}
+    HandleAprovaPedido={terceirizadaTomaCiencia}
+  />
+);

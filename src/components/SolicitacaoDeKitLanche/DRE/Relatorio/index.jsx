@@ -13,11 +13,10 @@ import { meusDados } from "../../../../services/perfil.service";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import "../style.scss";
-import { prazoDoPedidoMensagem } from "./helper";
+import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import "./style.scss";
 import { DRE, SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
-import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
