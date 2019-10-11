@@ -30,9 +30,9 @@ const login = async (email, password) => {
             "tipo_perfil",
             JSON.stringify(result.tipo_usuario)
           );
+          window.location.href = "/";
         });
       });
-      window.location.href = "/";
     }
     return isValid;
   } catch (error) {
