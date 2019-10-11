@@ -20,6 +20,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
+const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
+
 export const getPendentesAprovacaoList = () => {
   const url = `${API_URL}/dre-pendentes-aprovacao/`;
 
@@ -271,32 +273,13 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
 
   return resposta;
 };
-export const getSolicitacoesPendentesParaDRE = (
-  dreUuid,
-  filtro = "sem_filtro"
-) => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
 
 export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
+  const solicitacoes = (await getSolicitacoesPendentesValidacaoDRE(
     dree_uuid,
     filtro
   )).results;
-
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
       resumoPorLote[corrente.lote] = {};
@@ -321,8 +304,6 @@ export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
   return resumoPorLote;
 };
 
-const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
-
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
@@ -336,6 +317,13 @@ const retornoBase = async url => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getSolicitacoesPendentesValidacaoDRE = async (dreUuid, filtro) => {
+  const url = `${SOLICITACOES_DRE}/${
+    SOLICITACOES.PENDENTES_VALIDACAO_DRE
+  }/${dreUuid}/${filtro}`;
+  return retornoBase(url);
 };
 
 export const getSolicitacoesPendentesDRE = async dreUuid => {

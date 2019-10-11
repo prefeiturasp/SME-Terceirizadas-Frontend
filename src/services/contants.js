@@ -22,7 +22,8 @@ export const SOLICITACOES = {
   AUTORIZADOS: "aprovados",
   PENDENTES: "pendentes-aprovacao",
   NEGADOS: "negados",
-  CANCELADOS: "cancelados"
+  CANCELADOS: "cancelados",
+  PENDENTES_VALIDACAO_DRE: "pendentes-validacao"
 };
 
 export const AUTH_TOKEN = {
