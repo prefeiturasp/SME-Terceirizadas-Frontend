@@ -225,7 +225,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                   Descrição da Inversão
                 </label>
                 <div className="row w-100 pt-3">
-                  <div className="col-md-12 col-lg-5">
+                  <div className="inversao-datepicker col-md-12 col-lg-5">
                     <Field
                       component={InputComData}
                       name="data_de"
@@ -242,7 +242,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <span className="pr-3">para</span>
                     <i className="fas fa-arrow-right" />
                   </div>
-                  <div className="col-md-12 col-lg-5">
+                  <div className="inversao-datepicker col-md-12 col-lg-5">
                     <Field
                       component={InputComData}
                       name="data_para"
@@ -251,7 +251,6 @@ export class InversaoDeDiaDeCardapio extends Component {
                       required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
-                      activeCalendar
                       minDate={proximos_dois_dias_uteis}
                       maxDate={dateDelta(60)}
                     />

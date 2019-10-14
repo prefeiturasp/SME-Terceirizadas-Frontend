@@ -13,6 +13,7 @@ import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
+import InversaoDeDiaDeCardapioPage from "../pages/Escola/InversaoDeDiaDeCardapioPage";
 
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
 import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
@@ -150,11 +151,11 @@ const routesConfig = [
     component: RelatorioPageInversaoDiaCardapio.RelatorioEscola,
     exact: true
   },
-  // {
-  //   path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
-  //   component: InversaoDeDiaDeCardapioPage,
-  //   exact: false
-  // },
+  {
+    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
+    component: InversaoDeDiaDeCardapioPage,
+    exact: false
+  },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: SuspensaoDeAlimentacaoPage,
