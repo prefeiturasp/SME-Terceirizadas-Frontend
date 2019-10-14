@@ -20,13 +20,13 @@ import {
   SOLICITACAO_KIT_LANCHE
 } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
-import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { corDaMensagem } from "../../CODAE/Relatorio/helper";
 
 class Relatorio extends Component {
   constructor(props) {
