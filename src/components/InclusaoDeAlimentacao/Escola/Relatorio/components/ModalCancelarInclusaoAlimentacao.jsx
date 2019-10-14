@@ -7,7 +7,10 @@ import {
   toastSuccess,
   toastWarn
 } from "../../../../Shareable/Toast/dialogs";
-import { stringSeparadaPorVirgulas, mensagemCancelamento } from "../../../../../helpers/utilities";
+import {
+  stringSeparadaPorVirgulas,
+  mensagemCancelamento
+} from "../../../../../helpers/utilities";
 import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../../../../services/inclusaoDeAlimentacaoContinua.service";
 import Botao from "../../../../Shareable/Botao";
