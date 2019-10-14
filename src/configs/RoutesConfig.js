@@ -45,7 +45,6 @@ import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/S
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 
-import SolicitacaoDeKitLanchePage from "../pages/Escola/SolicitacaoDeKitLanchePage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
@@ -66,10 +65,12 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import * as constants from "./constants";
 
 import * as InclusaoDeAlimentacaoPaginas from "./imports/InclusaoDeAlimentacaoPaginas";
-import * as solicitacaoKitLanchePaginas from "./imports/SolicitacaoDeKitLanchePaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
+import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
+import * as RelatorioPageKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
+
 
 const routesConfig = [
   {
@@ -135,12 +136,12 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${
       constants.RELATORIO
     }`,
-    component: solicitacaoKitLanchePaginas.RelatorioEscola,
+    component: RelatorioPageKitLanche.RelatorioEscola,
     exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    component: SolicitacaoDeKitLanchePage,
+    component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false
   },
   {
@@ -150,11 +151,11 @@ const routesConfig = [
     component: RelatorioPageInversaoDiaCardapio.RelatorioEscola,
     exact: true
   },
-  // {
-  //   path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
-  //   component: InversaoDeDiaDeCardapioPage,
-  //   exact: false
-  // },
+  {
+    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
+    component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
+    exact: false
+  },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: SuspensaoDeAlimentacaoPage,
@@ -213,19 +214,19 @@ const routesConfig = [
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${
       constants.RELATORIO
     }`,
-    component: solicitacaoKitLanchePaginas.RelatorioDRE,
+    component: RelatorioPageKitLanche.RelatorioDRE,
     exact: false
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    component: solicitacaoKitLanchePaginas.PainelPedidosDRE,
+    component: PainelPageKitLanche.PainelPedidosDRE,
     exact: false
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
       constants.RELATORIO
     }`,
-    component: solicitacaoKitLanchePaginas.RelatorioDREUnificada,
+    component: RelatorioPageKitLanche.RelatorioDRE,
     exact: true
   },
   {
@@ -373,12 +374,12 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${
       constants.RELATORIO
     }`,
-    component: solicitacaoKitLanchePaginas.RelatorioTerceirizada,
+    component: RelatorioPageKitLanche.RelatorioTerceirizada,
     exact: false
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    component: solicitacaoKitLanchePaginas.PainelPedidosTerceirizada,
+    component: PainelPageKitLanche.PainelPedidosTerceirizada,
     exact: false
   },
   {
@@ -466,12 +467,12 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
       constants.RELATORIO
     }`,
-    component: solicitacaoKitLanchePaginas.RelatorioCODAE,
+    component: RelatorioPageKitLanche.RelatorioCODAE,
     exact: false
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    component: solicitacaoKitLanchePaginas.PainelPedidosCODAE,
+    component: PainelPageKitLanche.PainelPedidosCODAE,
     exact: true
   },
   {
