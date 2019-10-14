@@ -11,11 +11,13 @@ import {
   TERCEIRIZADA
 } from "../../configs/constants";
 
-// import {
-//   CODAEAutorizaPedidoDRE,
-//   dreValidaPedidoEscola,
-//   terceirizadaTomaCiencia
-// } from "../../services/inversaoDeDiaDeCardapio.service";
+import {
+  autorizaDeKitLancheAvulsoCodae,
+  validaDeKitLancheAvulsoDiretoriaRegional,
+  cienciaDeKitLancheAvulsoTerceirizadas,
+  DREnaoValidarKitLancheAvulsoEscola,
+  CODAENegaKitLancheAvulsoEscola
+} from "../../services/solicitacaoDeKitLanche.service";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -36,7 +38,7 @@ class RelatorioBase extends React.Component {
         <Relatorio
           VISAO={this.props.VISAO}
           HandleAprovaPedido={this.props.HandleAprovaPedido}
-          negarEndpoint={""}
+          negarEndpoint={this.props.negarEndpoint}
         />
       </Page>
     );
@@ -47,13 +49,24 @@ class RelatorioBase extends React.Component {
 export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
-  <RelatorioBase VISAO={DRE} HandleAprovaPedido={() => {}} />
+  <RelatorioBase
+    VISAO={DRE}
+    HandleAprovaPedido={validaDeKitLancheAvulsoDiretoriaRegional}
+    negarEndpoint={DREnaoValidarKitLancheAvulsoEscola}
+  />
 );
 // CODAE
 export const RelatorioCODAE = () => (
-  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={() => {}} />
+  <RelatorioBase
+    VISAO={CODAE}
+    HandleAprovaPedido={autorizaDeKitLancheAvulsoCodae}
+    negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+  />
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
-  <RelatorioBase VISAO={TERCEIRIZADA} HandleAprovaPedido={() => {}} />
+  <RelatorioBase
+    VISAO={TERCEIRIZADA}
+    HandleAprovaPedido={cienciaDeKitLancheAvulsoTerceirizadas}
+  />
 );

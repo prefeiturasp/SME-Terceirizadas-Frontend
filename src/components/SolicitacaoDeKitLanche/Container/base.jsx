@@ -7,29 +7,30 @@ import {
   maxValue,
   required,
   naoPodeSerZero
-} from "../../helpers/fieldValidators";
-import { extrairKitsLanche } from "../../components/SolicitacaoUnificada/helper";
-import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { validateTourRequestForm } from "../../helpers/formValidators/tourRequestValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
-import { InputComData } from "../Shareable/DatePicker";
+} from "../../../helpers/fieldValidators";
+import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
+import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
+import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
+import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
+import { InputComData } from "../../Shareable/DatePicker";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,
   registroAtualizaKitLanche,
   removeKitLanche,
   solicitarKitLanche
-} from "../../services/solicitacaoDeKitLanche.service";
-import { Botao } from "../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../Shareable/Botao/constants";
-import CardMatriculados from "../Shareable/CardMatriculados";
-import { InputText } from "../Shareable/Input/InputText";
-import { Rascunhos } from "./Rascunhos";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+} from "../../../services/solicitacaoDeKitLanche.service";
+import { Botao } from "../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import { InputText } from "../../Shareable/Input/InputText";
+import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
+import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
+
+import { Rascunhos } from "../Rascunhos";
 import { montaObjetoRequisicao } from "./helper";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-import { PedidoKitLanche } from "../Shareable/PedidoKitLanche";
 import "./style.scss";
 
 const ENTER = 13;
@@ -287,7 +288,6 @@ export class SolicitacaoDeKitLanche extends Component {
       handleSubmit,
       pristine,
       submitting,
-      meusDados,
       proximos_dois_dias_uteis
     } = this.props;
     const {
@@ -306,9 +306,7 @@ export class SolicitacaoDeKitLanche extends Component {
         ) : (
           <form onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
-            <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos}
-            />
+            <CardMatriculados numeroAlunos={this.props.quantidade_alunos} />
             <Rascunhos
               rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
               OnDeleteButtonClicked={(id_externo, uuid) =>
@@ -353,7 +351,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     required
                     validate={[
                       required,
-                      maxValue(meusDados.escolas[0].quantidade_alunos),
+                      maxValue(this.props.quantidade_alunos),
                       naoPodeSerZero
                     ]}
                   />

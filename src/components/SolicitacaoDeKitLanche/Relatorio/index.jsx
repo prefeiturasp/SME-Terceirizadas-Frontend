@@ -3,7 +3,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
+import {
+  SOLICITACAO_KIT_LANCHE,
+  ESCOLA,
+  DRE,
+  CODAE,
+  TERCEIRIZADA
+} from "../../../configs/constants";
 import { statusEnum, escolaPodeCancelar } from "../../../constants/statusEnum";
 import { dataParaUTC } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
@@ -294,76 +300,93 @@ class Relatorio extends Component {
                   </div>
                 </div>
 
-                {escolaPodeCancelar(solicitacaoKitLanche.status) && (
-                  <div className="form-group row float-right mt-4">
-                    <div className="col-12 text-right">
-                      <Botao
-                        texto={"Cancelar"}
-                        onClick={() => this.showModal()}
-                        type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {solicitacaoKitLanche.status === statusEnum.DRE_A_VALIDAR && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Não Validar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Validar"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
-
-                {solicitacaoKitLanche.status === statusEnum.DRE_VALIDADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Negar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Autorizar"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
-
-                {solicitacaoKitLanche.status ===
-                  statusEnum.CODAE_AUTORIZADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Recusar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Ciente"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
+                {(() => {
+                  switch (this.props.VISAO) {
+                    case ESCOLA:
+                      return (
+                        escolaPodeCancelar(solicitacaoKitLanche.status) && (
+                          <div className="form-group row float-right mt-4">
+                            <div className="col-12 text-right">
+                              <Botao
+                                texto={"Cancelar"}
+                                onClick={() => this.showModal()}
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                              />
+                            </div>
+                          </div>
+                        )
+                      );
+                    case DRE:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.DRE_A_VALIDAR && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Não Validar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Validar"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case CODAE:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.DRE_VALIDADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Negar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Autorizar"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case TERCEIRIZADA:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.CODAE_AUTORIZADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Recusar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Ciente"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    default:
+                      return "AQUI";
+                  }
+                })()}
               </div>
             </div>
           </form>

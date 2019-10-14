@@ -10,7 +10,7 @@ import { filtraPrioritarios } from "../../../../helpers/painelPedidos";
 import {
   filtraNoLimite,
   filtraRegular
-} from "../../../SolicitacaoDeKitLanche/helper";
+} from "../../../SolicitacaoDeKitLanche/Container/helper";
 import { formatarPedidos } from "./helper";
 import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";

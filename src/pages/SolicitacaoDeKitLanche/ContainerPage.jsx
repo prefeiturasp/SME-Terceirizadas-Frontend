@@ -2,6 +2,7 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import Container from "../../components/SolicitacaoDeKitLanche/Container";
+import { meusDados } from "../../services/perfil.service";
 import { HOME } from "../../constants/config.constants";
 import {
   SOLICITACAO_KIT_LANCHE,
@@ -12,6 +13,38 @@ import {
 } from "../../configs/constants";
 
 export class PainelPedidosBase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      meusDados: {},
+      quantidade_alunos: 0
+    };
+  }
+
+  componentDidMount() {
+    meusDados().then(response => {
+      this.setState({
+        meusDados: response
+      });
+
+      switch (this.props.VISAO) {
+        case ESCOLA:
+          this.setState({
+            quantidade_alunos: response.escola[0].quantidade_alunos
+          });
+          break;
+        case DRE:
+          this.setState({
+            quantidade_alunos:
+              response.diretorias_regionais[0].quantidade_alunos
+          });
+          break;
+        default:
+          return "";
+      }
+    });
+  }
+
   render() {
     const atual = {
       href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
@@ -20,7 +53,10 @@ export class PainelPedidosBase extends React.Component {
     return (
       <Page titulo={atual.titulo}>
         <Breadcrumb home={HOME} atual={atual} />
-        <Container />
+        <Container
+          meus_dados={this.state.meus_dados}
+          quantidade_alunos={this.state.quantidade_alunos}
+        />
       </Page>
     );
   }
