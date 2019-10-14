@@ -47,8 +47,7 @@ export class ModalCancelarSolicitacao extends Component {
       showModal,
       closeModal,
       uuid,
-      solicitacaoKitLanche,
-      origemSolicitacao
+      solicitacaoKitLanche
     } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
