@@ -55,8 +55,5 @@ export const RelatorioCODAE = () => (
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
-  <RelatorioBase
-    VISAO={TERCEIRIZADA}
-    HandleAprovaPedido={() => {}}
-  />
+  <RelatorioBase VISAO={TERCEIRIZADA} HandleAprovaPedido={() => {}} />
 );

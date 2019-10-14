@@ -44,7 +44,7 @@ class RelatorioBase extends React.Component {
 }
 
 export class InversaoDeDiaDeCardapioPage extends React.Component {
-  render(){
+  render() {
     const atual = {
       href: "/escola/inversao-de-dia-de-cardapio",
       titulo: "Inversão de dia de Cardápio"
@@ -54,7 +54,7 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
         <Breadcrumb home={HOME} atual={atual} />
         <Container />
       </Page>
-    )
+    );
   }
 }
 

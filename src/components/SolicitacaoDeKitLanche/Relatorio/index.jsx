@@ -8,9 +8,7 @@ import { statusEnum, escolaPodeCancelar } from "../../../constants/statusEnum";
 import { dataParaUTC } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { meusDados } from "../../../services/perfil.service";
-import {
-  getDetalheKitLancheAvulsa
-} from "../../../services/solicitacaoDeKitLanche.service";
+import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
 import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -21,7 +19,6 @@ import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { ModalNegarSolicitacao } from "../../Shareable/ModalNegarSolicitacao";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-
 
 class Relatorio extends Component {
   constructor(props) {
@@ -310,7 +307,6 @@ class Relatorio extends Component {
                   </div>
                 )}
 
-
                 {solicitacaoKitLanche.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
                     <Botao
@@ -326,7 +322,7 @@ class Relatorio extends Component {
                       onClick={() => this.handleSubmit()}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
-                      />
+                    />
                   </div>
                 )}
 
@@ -368,7 +364,6 @@ class Relatorio extends Component {
                     />
                   </div>
                 )}
-
               </div>
             </div>
           </form>

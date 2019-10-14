@@ -71,7 +71,6 @@ import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCarda
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
 import * as RelatorioPageKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 
-
 const routesConfig = [
   {
     path: "/",
