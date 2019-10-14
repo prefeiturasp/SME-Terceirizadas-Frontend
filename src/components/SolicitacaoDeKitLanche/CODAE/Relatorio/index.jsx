@@ -13,7 +13,6 @@ import {
   autorizaDeKitLancheAvulsoCodae,
   getDetalheKitLancheAvulsa
 } from "../../../../services/solicitacaoDeKitLanche.service";
-import { corDaMensagem } from "../../../InversaoDeDiaDeCardapio/DRE/Relatorio/helper";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -24,6 +23,7 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { ModalNegarSolicitacao } from "../../../Shareable/ModalNegarSolicitacao";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem } from "./helper";
+import { corDaMensagem } from "../../DRE/Relatorio/helper";
 
 class Relatorio extends Component {
   constructor(props) {

@@ -7,10 +7,11 @@ import {
   DRENegaInversaoDeDiaDeCardapio,
   CODAENegaInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
-import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { LabelAndCombo, LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/statusEnum";
+import Botao from "./Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 
 export class ModalNegarInversaoDiaCardapio extends Component {
   constructor(props) {
@@ -89,20 +90,20 @@ export class ModalNegarInversaoDiaCardapio extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <BaseButton
-            label="Não"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Não"
+            type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={ButtonStyle.OutlinePrimary}
+            style={BUTTON_STYLE.BLUE_OUTLINE}
             className="ml-3"
           />
-          <BaseButton
-            label="Sim"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.BUTTON}
             onClick={() => {
               this.negarInversaoDiaCardapio(uuid);
             }}
-            style={ButtonStyle.Primary}
+            style={BUTTON_STYLE.BLUE}
             className="ml-3"
           />
         </Modal.Footer>

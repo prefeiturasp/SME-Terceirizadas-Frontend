@@ -9,7 +9,7 @@ import { getDiretoriaRegionalPedidosAutorizados } from "../../../../services/inv
 import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
-import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
@@ -103,7 +103,7 @@ class PainelPedidos extends Component {
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardPendenteAcao
+                    <CardInversaoPendenciaAprovacao
                       titulo={
                         "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
                       }
@@ -117,7 +117,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardPendenteAcao
+                      <CardInversaoPendenciaAprovacao
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
@@ -130,7 +130,7 @@ class PainelPedidos extends Component {
                 {valorDoFiltro !== "hoje" && (
                   <div className="row pt-3">
                     <div className="col-12">
-                      <CardPendenteAcao
+                      <CardInversaoPendenciaAprovacao
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}

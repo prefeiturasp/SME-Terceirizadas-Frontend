@@ -5,7 +5,6 @@ import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getInclusaoDeAlimentacaoAvulsa,
   CODAEConfirmaInclusaoDeAlimentacaoAvulsa
@@ -20,6 +19,7 @@ import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
 import Botao from "../../../Shareable/Botao";
+import { ModalNegarInclusaoAlimentacao } from "./components/ModalNegarInclusaoAlimentacao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -174,13 +174,16 @@ class Relatorio extends Component {
     const {
       showModal,
       inclusaoDeAlimentacao,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      ehInclusaoContinua
     } = this.state;
     return (
       <div className="report food-inclusion">
-        <ModalRecusarSolicitacao
+        <ModalNegarInclusaoAlimentacao
           closeModal={this.closeModal}
           showModal={showModal}
+          inclusaoDeAlimentacao={inclusaoDeAlimentacao}
+          ehInclusaoContinua={ehInclusaoContinua}
         />
         {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
         {!inclusaoDeAlimentacao ? (

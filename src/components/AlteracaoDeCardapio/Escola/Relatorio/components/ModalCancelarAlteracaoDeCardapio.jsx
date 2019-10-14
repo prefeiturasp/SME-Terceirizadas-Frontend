@@ -4,15 +4,16 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../../../../helpers/fieldValidators";
 import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
-import BaseButton, {
-  ButtonStyle,
-  ButtonType
-} from "../../../../Shareable/button";
 import {
   LabelAndCombo,
   LabelAndTextArea
 } from "../../../../Shareable/labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
+import Botao from "../../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE
+} from "../../../../Shareable/Botao/constants";
 
 export class ModalCancelarAlteracaoDeCardapio extends Component {
   constructor(props) {
@@ -86,20 +87,20 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <BaseButton
-            label="Não"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Não"
+            type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={ButtonStyle.OutlinePrimary}
+            style={BUTTON_STYLE.BLUE_OUTLINE}
             className="ml-3"
           />
-          <BaseButton
-            label="Sim"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.BUTTON}
             onClick={() => {
               this.negarAlteracaoCardapio(uuid);
             }}
-            style={ButtonStyle.Primary}
+            style={BUTTON_STYLE.BLUE}
             className="ml-3"
           />
         </Modal.Footer>

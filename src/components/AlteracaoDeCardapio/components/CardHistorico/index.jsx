@@ -4,10 +4,15 @@ import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
 import { Link } from "react-router-dom";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
 import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -87,16 +92,12 @@ export class CardHistorico extends Component {
                     />
                     Selecionar todos
                   </label>
-                  <div className="float-right">
-                    <BaseButton
-                      label="Imprimir"
-                      icon="print"
-                      type={ButtonType.BUTTON}
-                      title="Imprimir solicitações selecionadas"
-                      onClick={this.handleClickSubmit}
-                      style={ButtonStyle.OutlinePrimary}
-                    />
-                  </div>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.BLUE}
+                    icon={BUTTON_ICON.PRINT}
+                    className="float-right"
+                  />
                 </div>
               </div>
               <div className="pb-3" />

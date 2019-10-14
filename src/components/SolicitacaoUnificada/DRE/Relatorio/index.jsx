@@ -15,7 +15,6 @@ import {
   CODAEAutorizaPedidoKitLancheUnificado,
   getSolicitacaoUnificada
 } from "../../../../services/solicitacaoUnificada.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   ModalCancelarSolicitacao,
@@ -26,6 +25,8 @@ import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem } from "./helper";
 import "./style.scss";
 import TabelaKits from "./TabelaKits";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -248,11 +249,11 @@ class Relatorio extends Component {
               </div>
             </div>
             <div className="botoes-acao">
-              <BaseButton
+              <Botao
                 label="Cancelar"
-                type={ButtonType.SUBMIT}
+                type={BUTTON_TYPE.SUBMIT}
                 onClick={() => this.showModal()}
-                style={ButtonStyle.Success}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
             </div>

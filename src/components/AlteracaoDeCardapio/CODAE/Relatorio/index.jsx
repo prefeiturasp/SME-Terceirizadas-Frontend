@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
+import { Botao } from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
@@ -274,18 +275,18 @@ class Relatorio extends Component {
                 </table>
                 {alteracaoDeCardapio.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Negar"}
+                    <Botao
+                      texto={"Negar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Autorizar"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Autorizar"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>
