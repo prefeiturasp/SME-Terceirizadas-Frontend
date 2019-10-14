@@ -2,6 +2,16 @@
   "name": "terceirizadas",
   "version": "0.1.3",
   "private": true,
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 2.76,
+        "functions": 1.25,
+        "lines": 2.74,
+        "statements": 2.76
+      }
+    }
+  },
   "dependencies": {
     "@khanacademy/react-multi-select": "^0.3.2",
     "axios": "^0.19.0",
@@ -72,7 +82,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "cypress": "^3.4.1",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "enzyme-to-json": "^3.3.5",
