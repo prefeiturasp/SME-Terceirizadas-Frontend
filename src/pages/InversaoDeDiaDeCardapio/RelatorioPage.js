@@ -1,6 +1,7 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
+import Container from "../../components/InversaoDeDiaDeCardapio/Container";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
 import {
@@ -39,6 +40,21 @@ class RelatorioBase extends React.Component {
         />
       </Page>
     );
+  }
+}
+
+export class InversaoDeDiaDeCardapioPage extends React.Component {
+  render(){
+    const atual = {
+      href: "/escola/inversao-de-dia-de-cardapio",
+      titulo: "Inversão de dia de Cardápio"
+    };
+    return (
+      <Page titulo={atual.titulo}>
+        <Breadcrumb home={HOME} atual={atual} />
+        <Container />
+      </Page>
+    )
   }
 }
 
