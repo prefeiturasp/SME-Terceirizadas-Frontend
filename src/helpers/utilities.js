@@ -1,5 +1,6 @@
 import moment from "moment";
 import "moment/locale/pt-br";
+import { statusEnum } from "../constants/statusEnum";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -139,4 +140,19 @@ export const corDaMensagem = mensagem => {
 
 export const pontuarValor = valor => {
   return parseFloat(valor).toLocaleString();
+};
+
+export const mensagemCancelamento = status => {
+  switch (status) {
+    case statusEnum.DRE_A_VALIDAR:
+      return "Esta solicitação está aguardando validação pela DRE. ";
+    case statusEnum.DRE_VALIDADO:
+    case statusEnum.CODAE_A_AUTORIZAR:
+      return "Esta solicitação já foi validada pela DRE. ";
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+    case statusEnum.CODAE_AUTORIZADO:
+      return "Esta solicitação já foi autorizada pela CODAE. ";
+    default:
+      return "";
+  }
 };

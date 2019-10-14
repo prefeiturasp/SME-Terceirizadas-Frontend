@@ -14,6 +14,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
+import { mensagemCancelamento } from "../../../../../helpers/utilities";
 
 export class ModalCancelarAlteracaoDeCardapio extends Component {
   constructor(props) {
@@ -49,13 +50,22 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
   }
 
   render() {
-    const { showModal, closeModal, uuid } = this.props;
+    const { showModal, closeModal, uuid, alteracaoDeCardapio } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className="row">
+            <div className="col-12">
+              <p className="label--red">
+                {alteracaoDeCardapio &&
+                  mensagemCancelamento(alteracaoDeCardapio.status)}
+                Deseja seguir em frente com o cancelamento?
+              </p>
+            </div>
+          </div>
           <div className="form-row">
             <div className="form-group col-12">
               <Field

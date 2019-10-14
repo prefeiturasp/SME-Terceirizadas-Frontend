@@ -36,6 +36,7 @@ class RelatorioBase extends React.Component {
         <Relatorio
           VISAO={this.props.VISAO}
           HandleAprovaPedido={this.props.HandleAprovaPedido}
+          toastSucessoMensagem={this.props.toastSucessoMensagem}
         />
       </Page>
     );
@@ -46,16 +47,29 @@ class RelatorioBase extends React.Component {
 export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
-  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreValidaPedidoEscola} />
+  <RelatorioBase
+    VISAO={DRE}
+    HandleAprovaPedido={dreValidaPedidoEscola}
+    toastSucessoMensagem={"Inversão de dias de cardápio validada com sucesso!"}
+  />
 );
 // CODAE
 export const RelatorioCODAE = () => (
-  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAutorizaPedidoDRE} />
+  <RelatorioBase
+    VISAO={CODAE}
+    HandleAprovaPedido={CODAEAutorizaPedidoDRE}
+    toastSucessoMensagem={
+      "Inversão de dias de cardápio autorizada com sucesso!"
+    }
+  />
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     VISAO={TERCEIRIZADA}
     HandleAprovaPedido={terceirizadaTomaCiencia}
+    toastSucessoMensagem={
+      "Ciência de Inversão de dias de cardápio enviada com sucesso!"
+    }
   />
 );

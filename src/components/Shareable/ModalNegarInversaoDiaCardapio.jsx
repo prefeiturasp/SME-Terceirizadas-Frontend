@@ -12,6 +12,7 @@ import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/statusEnum";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import { mensagemCancelamento } from "../../helpers/utilities";
 
 export class ModalNegarInversaoDiaCardapio extends Component {
   constructor(props) {
@@ -52,13 +53,22 @@ export class ModalNegarInversaoDiaCardapio extends Component {
   }
 
   render() {
-    const { showModal, closeModal, uuid } = this.props;
+    const { showModal, closeModal, uuid, inversaoDeDiaDeCardapio } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div className="row">
+            <div className="col-12">
+              <p className="label--red">
+                {inversaoDeDiaDeCardapio &&
+                  mensagemCancelamento(inversaoDeDiaDeCardapio.status)}
+                Deseja seguir em frente com o cancelamento?
+              </p>
+            </div>
+          </div>
           <div className="form-row">
             <div className="form-group col-12">
               <Field

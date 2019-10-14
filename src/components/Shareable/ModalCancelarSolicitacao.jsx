@@ -8,6 +8,7 @@ import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import { mensagemCancelamento } from "../../helpers/utilities";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
@@ -51,11 +52,14 @@ export class ModalCancelarSolicitacao extends Component {
         </Modal.Header>
         <Modal.Body>
           <div className="form-row">
-            <div className="col-12">
-              <p className="label--red">
-                Este pedido já foi autorizado pela CODAE. Deseja seguir em
-                frente com o cancelamento?
-              </p>
+            <div className="row">
+              <div className="col-12">
+                <p className="label--red">
+                  {solicitacaoKitLanche &&
+                    mensagemCancelamento(solicitacaoKitLanche.status)}
+                  Deseja seguir em frente com o cancelamento?
+                </p>
+              </div>
             </div>
             <div className="col-12 label--gray margin-fix">
               <b>Resumo</b>
