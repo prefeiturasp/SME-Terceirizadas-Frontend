@@ -288,7 +288,8 @@ export class SolicitacaoDeKitLanche extends Component {
       handleSubmit,
       pristine,
       submitting,
-      proximos_dois_dias_uteis
+      proximos_dois_dias_uteis,
+      meusDados
     } = this.props;
     const {
       rascunhosSolicitacoesKitLanche,
@@ -306,7 +307,7 @@ export class SolicitacaoDeKitLanche extends Component {
         ) : (
           <form onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
-            <CardMatriculados numeroAlunos={this.props.quantidade_alunos} />
+            <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />
             <Rascunhos
               rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
               OnDeleteButtonClicked={(id_externo, uuid) =>
@@ -351,7 +352,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     required
                     validate={[
                       required,
-                      maxValue(this.props.quantidade_alunos),
+                      maxValue(meusDados.quantidade_alunos),
                       naoPodeSerZero
                     ]}
                   />

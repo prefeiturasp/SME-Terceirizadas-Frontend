@@ -23,25 +23,22 @@ export class PainelPedidosBase extends React.Component {
 
   componentDidMount() {
     meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
+
+      let meusDados = response;
 
       switch (this.props.VISAO) {
         case ESCOLA:
-          this.setState({
-            quantidade_alunos: response.escola[0].quantidade_alunos
-          });
+          meusDados['quantidade_alunos'] = response.escolas[0].quantidade_alunos
           break;
         case DRE:
-          this.setState({
-            quantidade_alunos:
-              response.diretorias_regionais[0].quantidade_alunos
-          });
+          meusDados['quantidade_alunos'] = response.diretorias_regionais[0].quantidade_alunos
           break;
         default:
           return "";
       }
+      this.setState({
+        meusDados
+      });
     });
   }
 
@@ -54,8 +51,7 @@ export class PainelPedidosBase extends React.Component {
       <Page titulo={atual.titulo}>
         <Breadcrumb home={HOME} atual={atual} />
         <Container
-          meus_dados={this.state.meus_dados}
-          quantidade_alunos={this.state.quantidade_alunos}
+          meusDados={this.state.meusDados}
         />
       </Page>
     );
