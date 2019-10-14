@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
 import "./style.scss";
+import Botao from "../Botao";
+import { BUTTON_TYPE, BUTTON_STYLE, BUTTON_ICON } from "../Botao/constants";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -68,13 +69,12 @@ export class CardHistorico extends Component {
                     Selecionar todos
                   </label>
                   <div className="float-right">
-                    <BaseButton
-                      label="Imprimir"
-                      icon="print"
-                      type={ButtonType.BUTTON}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE}
                       title="Imprimir solicitações selecionadas"
-                      onClick={this.handleClickSubmit}
-                      style={ButtonStyle.OutlinePrimary}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
                     />
                   </div>
                 </div>

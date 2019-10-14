@@ -3,10 +3,11 @@ import { Field } from "redux-form";
 import { LabelAndTextArea, LabelAndCombo } from "./labelAndInput/labelAndInput";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
-import BaseButton, { ButtonStyle, ButtonType } from "./button";
 import { DREnaoValidarKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastSuccess, toastError } from "./Toast/dialogs";
+import Botao from "./Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 
 export class ModalNaoValidarSolicitacao extends Component {
   constructor(props) {
@@ -75,20 +76,20 @@ export class ModalNaoValidarSolicitacao extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <BaseButton
-            label="Não"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Não"
+            type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={ButtonStyle.OutlinePrimary}
+            style={BUTTON_STYLE.BLUE_OUTLINE}
             className="ml-3"
           />
-          <BaseButton
-            label="Sim"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.BUTTON}
             onClick={() => {
               this.cancelarSolicitacaoDaEscola(uuid);
             }}
-            style={ButtonStyle.Primary}
+            style={BUTTON_STYLE.BLUE}
             className="ml-3"
           />
         </Modal.Footer>

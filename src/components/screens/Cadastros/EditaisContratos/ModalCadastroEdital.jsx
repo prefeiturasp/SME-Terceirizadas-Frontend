@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 
 import "../style.scss";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 export class ModalCadastroEdital extends Component {
   onSubmit() {
@@ -141,18 +142,20 @@ export class ModalCadastroEdital extends Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <BaseButton
-            label="Não"
-            type={ButtonType.BUTTON}
+          <Botao
+            texto="Não"
+            type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={ButtonStyle.OutlinePrimary}
+            style={BUTTON_STYLE.BLUE_OUTLINE}
             className="ml-3"
           />
-          <BaseButton
-            label="Sim"
-            type={ButtonType.BUTTON}
-            onClick={() => this.onSubmit()}
-            style={ButtonStyle.Primary}
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() => {
+              this.onSubmit();
+            }}
+            style={BUTTON_STYLE.BLUE}
             className="ml-3"
           />
         </Modal.Footer>
