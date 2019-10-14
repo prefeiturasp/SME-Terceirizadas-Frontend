@@ -12,8 +12,8 @@ import {
 } from "../../configs/constants";
 
 import {
-  CODAEAprovaPedidoDRE,
-  dreAprovaPedidoEscola,
+  CODAEAutorizaPedidoDRE,
+  dreValidaPedidoEscola,
   terceirizadaTomaCiencia
 } from "../../services/inversaoDeDiaDeCardapio.service";
 
@@ -46,11 +46,11 @@ class RelatorioBase extends React.Component {
 export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
-  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreAprovaPedidoEscola} />
+  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreValidaPedidoEscola} />
 );
 // CODAE
 export const RelatorioCODAE = () => (
-  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAprovaPedidoDRE} />
+  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAutorizaPedidoDRE} />
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
