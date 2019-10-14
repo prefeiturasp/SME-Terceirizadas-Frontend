@@ -4,24 +4,27 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { CODAE, INVERSAO_CARDAPIO } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
 import {
-  CODAEAutorizaPedidoDRE,
-  getInversaoDeDiaDeCardapio
-} from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { meusDados } from "../../../../services/perfil.service";
-import Botao from "../../../Shareable/Botao";
+  INVERSAO_CARDAPIO,
+  ESCOLA,
+  DRE,
+  CODAE,
+  TERCEIRIZADA
+} from "../../../configs/constants";
+import { statusEnum } from "../../../constants/statusEnum";
+import { dataParaUTC } from "../../../helpers/utilities";
+import { getDiasUteis } from "../../../services/diasUteis.service";
+import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
-} from "../../../Shareable/Botao/constants";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalNegarInversaoDiaCardapio } from "../../../Shareable/ModalNegarInversaoDiaCardapio";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+} from "../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { ModalNegarInversaoDiaCardapio } from "../../Shareable/ModalNegarInversaoDiaCardapio";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+
+import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 
 class Relatorio extends Component {
@@ -30,7 +33,6 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -49,16 +51,13 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${CODAE}/${INVERSAO_CARDAPIO}`} />;
+      return <Redirect to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`} />;
     }
   };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    meusDados().then(meusDados => {
-      this.setState({ meusDados });
-    });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -101,7 +100,7 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    CODAEAutorizaPedidoDRE(uuid).then(
+    this.props.HandleAprovaPedido(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dias de cardápio autorizada com sucesso!");
@@ -146,9 +145,10 @@ class Relatorio extends Component {
             <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
               InversaoCardapio.id_externo
             }`}</span>
-            <Link to={`/${CODAE}/${INVERSAO_CARDAPIO}`}>
+            <Link to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`}>
               <Botao
                 texto="voltar"
+                titulo="voltar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.BLUE}
                 icon={BUTTON_ICON.ARROW_LEFT}
@@ -166,6 +166,7 @@ class Relatorio extends Component {
                     {prazoDoPedidoMensagem}
                     <Botao
                       type={BUTTON_TYPE.BUTTON}
+                      titulo="imprimir"
                       style={BUTTON_STYLE.BLUE}
                       icon={BUTTON_ICON.PRINT}
                       className="float-right"
@@ -266,24 +267,90 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Negar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Autorizar"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
+
+                {(() => {
+                  switch (this.props.VISAO) {
+                    case ESCOLA:
+                      return (
+                        <div className="form-group row float-right mt-4">
+                          <Botao
+                            texto={"Cancelar pedido"}
+                            className="ml-3"
+                            onClick={() => this.showModal()}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </div>
+                      );
+                    case DRE:
+                      return (
+                        InversaoCardapio.status ===
+                          statusEnum.DRE_A_VALIDAR && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Não Validar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Validar Solicitação"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case CODAE:
+                      return (
+                        InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Negar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Autorizar Solicitação"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case TERCEIRIZADA:
+                      return (
+                        InversaoCardapio.status ===
+                          statusEnum.CODAE_AUTORIZADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Recusar Solicitação"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Ciente"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    default:
+                      return "AQUI";
+                  }
+                })()}
               </div>
             </div>
           </form>
@@ -293,7 +360,7 @@ class Relatorio extends Component {
   }
 }
 
-const formName = "relatorioInversaoDeDiaDeCardapioCODAE";
+const formName = "relatorioInversaoDeDiaDeCardapio";
 const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true
