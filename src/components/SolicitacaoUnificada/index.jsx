@@ -90,7 +90,7 @@ class SolicitacaoUnificada extends Component {
     param.solicitacaoUnificada.escolas_quantidades.forEach(function(
       escola_quantidade
     ) {
-      var foundIndex = schoolsFiltered.findIndex(
+      let foundIndex = schoolsFiltered.findIndex(
         escola => escola.codigo_eol === escola_quantidade.escola.codigo_eol
       );
       schoolsFiltered[foundIndex].checked = true;
@@ -223,7 +223,7 @@ class SolicitacaoUnificada extends Component {
   }
 
   handleNumberOfStudents(school, event) {
-    var foundIndex = this.state.schoolsFiltered.findIndex(
+    const foundIndex = this.state.schoolsFiltered.findIndex(
       escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
@@ -248,7 +248,7 @@ class SolicitacaoUnificada extends Component {
   }
 
   handleNumberOfStudentsPerSchool(school, event) {
-    var foundIndex = this.state.schoolsFiltered.findIndex(
+    const foundIndex = this.state.schoolsFiltered.findIndex(
       escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;
@@ -262,10 +262,10 @@ class SolicitacaoUnificada extends Component {
   }
 
   setNumberOfMealKits(school) {
-    var foundIndex = this.state.schoolsFiltered.findIndex(
+    const foundIndex = this.state.schoolsFiltered.findIndex(
       escola => escola.codigo_eol === school.codigo_eol
     );
-    var schoolsFiltered = this.state.schoolsFiltered;
+    let schoolsFiltered = this.state.schoolsFiltered;
     if (schoolsFiltered[foundIndex].checked) {
       schoolsFiltered[foundIndex].number_of_meal_kits =
         schoolsFiltered[foundIndex].number_of_choices *
@@ -292,7 +292,7 @@ class SolicitacaoUnificada extends Component {
   }
 
   handleCheck(school) {
-    var foundIndex = this.state.schoolsFiltered.findIndex(
+    const foundIndex = this.state.schoolsFiltered.findIndex(
       escola => escola.codigo_eol === school.codigo_eol
     );
     let schoolsFiltered = this.state.schoolsFiltered;

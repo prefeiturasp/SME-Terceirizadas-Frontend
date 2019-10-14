@@ -163,7 +163,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             this.resetForm();
           }
         } else {
-          var keys = Object.keys(response.data);
+          let keys = Object.keys(response.data);
           keys.forEach(function(key) {
             toastError(response.data[key][0]);
           });
@@ -179,7 +179,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             this.resetForm();
           }
         } else {
-          var keys = Object.keys(response.data);
+          let keys = Object.keys(response.data);
           keys.forEach(function(key) {
             toastError(response.data[key][0]);
           });

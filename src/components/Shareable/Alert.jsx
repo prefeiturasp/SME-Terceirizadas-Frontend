@@ -5,7 +5,7 @@ import If from "./layout";
 // TODO: colocar fonte roboto
 export const ErrorAlert = ({ meta }) => {
   const isVisible = meta !== undefined;
-  var divStyle = {
+  let divStyle = {
     color: "red"
   };
   return (

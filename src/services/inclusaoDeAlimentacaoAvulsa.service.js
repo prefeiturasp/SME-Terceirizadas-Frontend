@@ -365,3 +365,87 @@ export const getCODAEPedidosInclusaoAvulsoPendentes = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const naoValidarInclusaoNormalDRE = uuid => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/${
+    FLUXO.DRE_NAO_VALIDA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const negarInclusaoNormalCodae = uuid => {
+  const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/${
+    FLUXO.CODAE_NEGA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const naoValidarInclusaoContinuaDRE = uuid => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/${
+    FLUXO.DRE_NAO_VALIDA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const negarInclusaoContinuaCodae = uuid => {
+  const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/${
+    FLUXO.CODAE_NEGA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
