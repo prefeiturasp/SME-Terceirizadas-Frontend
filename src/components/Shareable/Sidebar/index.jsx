@@ -4,6 +4,10 @@ import { SidebarCODAE } from "./SidebarCODAE";
 import { SidebarDRE } from "./SidebarDRE";
 import { SidebarEscola } from "./SidebarEscola";
 import { SidebarTerceirizada } from "./SidebarTerceirizada";
+import { AvatarEscola } from "../Avatar/AvatarEscola";
+import { AvatarDRE } from "../Avatar/AvatarDRE";
+import { AvatarCODAE } from "../Avatar/AvatarCODAE";
+import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 
 export class Sidebar extends Component {
@@ -46,12 +50,11 @@ export class Sidebar extends Component {
             className="sidebar-brand d-flex align-items-center justify-content-center"
             to="/"
           >
-            <div className="sidebar-brand-icon rotate-n-15">
-              <img
-                alt="Imagem ilustrativa"
-                className="img-profile rounded-circle"
-                src="https://source.unsplash.com/QAB-WJcbgJk/60x60"
-              />
+            <div className="sidebar-brand-icon mb-3">
+              {tipo_perfil === `"codae"` && <AvatarCODAE />}
+              {tipo_perfil === `"diretoria_regional"` && <AvatarDRE />}
+              {tipo_perfil === `"escola"` && <AvatarEscola />}
+              {tipo_perfil === `"terceirizada"` && <AvatarTerceirizada />}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
