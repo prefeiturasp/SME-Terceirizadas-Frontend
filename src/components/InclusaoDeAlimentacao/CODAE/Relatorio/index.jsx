@@ -93,7 +93,6 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
   }
 
   handleSubmit() {
