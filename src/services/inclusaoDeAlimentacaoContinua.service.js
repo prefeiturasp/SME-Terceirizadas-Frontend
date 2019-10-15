@@ -112,21 +112,6 @@ export const getInclusaoDeAlimentacaoContinua = uuid => {
     });
 };
 
-export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
 export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua = filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/pedidos-diretoria-regional/${filtroAplicado}/`;

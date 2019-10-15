@@ -144,55 +144,27 @@ export const getDiretoriaRegionalPedidosReprovados = () => {
     });
 };
 
-export const getDiretoriaRegionalPedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-prioritarios-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-limite-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-prazo-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
 export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${
     PEDIDOS.DRE
+  }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCODAEPedidosDeAlteracaoCardapio = filtroAplicado => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${
+    PEDIDOS.CODAE
   }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -268,51 +240,6 @@ export const EscolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
 
 export const getAlteracaoCardapio = uuid => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosPrioritarios = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-prioritarios-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosNoPrazoLimite = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-limite-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosNoPrazoRegular = filtroAplicado => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-no-prazo-codae/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

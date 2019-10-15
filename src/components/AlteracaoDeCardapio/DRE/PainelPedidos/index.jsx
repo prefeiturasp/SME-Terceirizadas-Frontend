@@ -44,32 +44,6 @@ class PainelPedidos extends Component {
     this.filtrar(FiltroEnum.SEM_FILTRO);
   }
 
-  onFiltroSelected(value) {
-    switch (value) {
-      case FiltroEnum.HOJE:
-        this.filtrarHoje();
-        break;
-      default:
-        this.filtrar(value);
-        break;
-    }
-  }
-
-  filtrarHoje() {
-    let pedidosPrioritarios = [];
-    this.setState({ pedidosCarregados: 2 });
-
-    getDiretoriaRegionalPedidosDeAlteracaoCardapio(FiltroEnum.HOJE).then(
-      response => {
-        pedidosPrioritarios = pedidosPrioritarios.concat(response.results);
-        this.setState({
-          pedidosPrioritarios,
-          pedidosCarregados: this.state.pedidosCarregados + 1
-        });
-      }
-    );
-  }
-
   render() {
     const {
       pedidosCarregados,
@@ -102,7 +76,7 @@ class PainelPedidos extends Component {
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
                       onChange={event =>
-                        this.onFiltroSelected(event.target.value)
+                        this.filtrar(event.target.value)
                       }
                       placeholder={"Filtro por"}
                       options={visaoPorCombo}
