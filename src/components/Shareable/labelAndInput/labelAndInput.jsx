@@ -16,61 +16,6 @@ import { Grid } from "../responsiveBs4";
 import { OpcoesCustomizadas } from "./OpcoesCustomizadas";
 import "./style.scss";
 
-export const LabelAndInput = props => {
-  const {
-    cols,
-    name,
-    label,
-    input,
-    min,
-    placeholder,
-    readOnly,
-    type,
-    meta,
-    disabled,
-    classNameInput,
-    hasIcon,
-    max
-  } = props;
-  return (
-    <Grid cols={cols}>
-      {label && (
-        <label htmlFor={name} className={"col-form-label"}>
-          {label}
-        </label>
-      )}
-      <div className="d-flex">
-        <input
-          {...input}
-          className={`form-control ${classNameInput}`}
-          disabled={disabled}
-          name={name}
-          id={name}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          type={type}
-          min={min}
-          maxLength={max}
-        />
-        <If isVisible={hasIcon}>
-          <i className="fas fa-pen" />
-        </If>
-      </div>
-      <If isVisible={meta}>
-        <ErrorAlert meta={meta} />
-      </If>
-    </Grid>
-  );
-};
-LabelAndInput.propTypes = {
-  cols: PropTypes.string,
-  name: PropTypes.string,
-  readOnly: PropTypes.bool
-};
-LabelAndInput.defaultProps = {
-  readOnly: false,
-  classNameInput: ""
-};
 export class LabelAndCombo extends Component {
   constructor(props) {
     super(props);
@@ -438,13 +383,4 @@ export const LabelAndTextAreaCustom = props => {
       </If>
     </Grid>
   );
-};
-LabelAndInput.propTypes = {
-  cols: PropTypes.string,
-  name: PropTypes.string,
-  readOnly: PropTypes.bool
-};
-LabelAndInput.defaultProps = {
-  readOnly: false,
-  classNameInput: ""
 };

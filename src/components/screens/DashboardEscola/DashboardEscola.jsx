@@ -17,7 +17,7 @@ import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
+import { InputText } from "../../Shareable/Input/InputText";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
 
@@ -112,39 +112,33 @@ export class DashboardEscola extends Component {
             <div className="user-data">
               <form>
                 <div className="row">
-                  <div className="form-group col-6">
+                  <div className="col-6">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="RF Responsável"
                       placeholder="00000000"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
-                  <div className="form-group col-6">
+                  <div className="col-6">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Cargo / Função"
                       placeholder="Nome do Cargo"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
                 </div>
                 <div className="row">
-                  <div className="form-group col-12">
+                  <div className="col-12">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Nome"
                       placeholder="Nome Completo"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
                 </div>
