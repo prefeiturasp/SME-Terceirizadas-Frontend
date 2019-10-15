@@ -39,6 +39,7 @@ class RelatorioBase extends React.Component {
           VISAO={this.props.VISAO}
           HandleAprovaPedido={this.props.HandleAprovaPedido}
           negarEndpoint={this.props.negarEndpoint}
+          toastSucessoMensagem={this.props.toastSucessoMensagem}
         />
       </Page>
     );
@@ -53,6 +54,9 @@ export const RelatorioDRE = () => (
     VISAO={DRE}
     HandleAprovaPedido={validaDeKitLancheAvulsoDiretoriaRegional}
     negarEndpoint={DREnaoValidarKitLancheAvulsoEscola}
+    toastSucessoMensagem={
+      "Solicitação de Kit Lanche Passeio validada com sucesso!"
+    }
   />
 );
 // CODAE
@@ -61,6 +65,9 @@ export const RelatorioCODAE = () => (
     VISAO={CODAE}
     HandleAprovaPedido={autorizaDeKitLancheAvulsoCodae}
     negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+    toastSucessoMensagem={
+      "Solicitação de Kit Lanche Passeio autorizada com sucesso!"
+    }
   />
 );
 // TERCEIRIZADA
@@ -68,5 +75,8 @@ export const RelatorioTerceirizada = () => (
   <RelatorioBase
     VISAO={TERCEIRIZADA}
     HandleAprovaPedido={cienciaDeKitLancheAvulsoTerceirizadas}
+    toastSucessoMensagem={
+      "Ciência de Solicitação de Kit Lanche Passeio enviada com sucesso!"
+    }
   />
 );

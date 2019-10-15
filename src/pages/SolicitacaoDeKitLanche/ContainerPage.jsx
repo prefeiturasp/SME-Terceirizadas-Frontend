@@ -2,6 +2,9 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import Container from "../../components/SolicitacaoDeKitLanche/Container";
+import PainelPedidosKitLancheDRE from "../../components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
+import PainelPedidosKitLancheCODAE from "../../components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";
+import PainelPedidosKitLancheTerceirizada from "../../components/SolicitacaoDeKitLanche/Terceirizada/PainelPedidos/Container";
 import { meusDados } from "../../services/perfil.service";
 import { HOME } from "../../constants/config.constants";
 import {
@@ -51,7 +54,14 @@ export class PainelPedidosBase extends React.Component {
     return (
       <Page titulo={atual.titulo}>
         <Breadcrumb home={HOME} atual={atual} />
-        <Container meusDados={this.state.meusDados} />
+        {this.props.VISAO === ESCOLA && (
+          <Container meusDados={this.state.meusDados} />
+        )}
+        {this.props.VISAO === DRE && <PainelPedidosKitLancheDRE />}
+        {this.props.VISAO === CODAE && <PainelPedidosKitLancheCODAE />}
+        {this.props.VISAO === TERCEIRIZADA && (
+          <PainelPedidosKitLancheTerceirizada />
+        )}
       </Page>
     );
   }

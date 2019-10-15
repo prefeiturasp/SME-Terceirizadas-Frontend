@@ -92,13 +92,12 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
+    const { toastSucessoMensagem } = this.props;
     const uuid = this.state.uuid;
     this.props.HandleAprovaPedido(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(
-            "Solicitação de Kit Lanche Passeio autorizada com sucesso!"
-          );
+          toastSuccess(toastSucessoMensagem);
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(

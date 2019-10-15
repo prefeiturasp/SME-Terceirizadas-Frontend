@@ -3,7 +3,6 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeDREsUnicas } from "./helper";
-import "./style.scss";
 import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 

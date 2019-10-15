@@ -3,7 +3,6 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import "./style.scss";
 import { SUSPENSAO_ALIMENTACAO } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 

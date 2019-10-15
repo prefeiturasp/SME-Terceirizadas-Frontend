@@ -300,7 +300,7 @@ const retornoBase = async url => {
 export const getSolicitacoesPendentesValidacaoDRE = async (dreUuid, filtro) => {
   const url = `${SOLICITACOES_DRE}/${
     SOLICITACOES.PENDENTES_VALIDACAO_DRE
-  }/${dreUuid}/${filtro}`;
+  }/${dreUuid}/${filtro}/`;
   return retornoBase(url);
 };
 
