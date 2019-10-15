@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Stand } from "react-burgers";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
 import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
@@ -19,7 +19,8 @@ export class CardHistorico extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidos: []
+      pedidos: [],
+      redirect: false
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
@@ -47,13 +48,24 @@ export class CardHistorico extends Component {
     this.props.change("selecionar_todos", !this.props.selecionar_todos);
   }
 
+  setRedirect() {
+    this.setState({ redirect: true });
+  }
+
+  redirectTo(pedido) {
+    if (this.state.redirect) {
+      return (
+        <Redirect
+          to={`/${
+            this.props.parametroURL
+          }/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
+        />
+      );
+    }
+  }
+
   render() {
-    const {
-      titulo,
-      ultimaColunaLabel,
-      handleSubmit,
-      parametroURL
-    } = this.props;
+    const { titulo, ultimaColunaLabel, handleSubmit } = this.props;
     const { collapsed, pedidos } = this.state;
     return (
       <div className="card mt-3">
@@ -79,8 +91,11 @@ export class CardHistorico extends Component {
           <div className="card-body">
             <form onSubmit={handleSubmit}>
               <div className="row">
-                <div className="col-12 select-all">
-                  <label htmlFor="selecionar_todos" className="checkbox-label">
+                <div className="col-12 select-all historic">
+                  <label
+                    htmlFor="selecionar_todos"
+                    className="checkbox-label small"
+                  >
                     <Field
                       component={"input"}
                       type="checkbox"
@@ -113,43 +128,37 @@ export class CardHistorico extends Component {
                   {pedidos.length > 0 &&
                     pedidos.map((pedido, key) => {
                       return (
-                        <Link
-                          key={key}
-                          to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
-                            pedido.uuid
-                          }`}
-                        >
-                          <tr className="row">
-                            <td className="td-check col-4">
-                              <label
-                                htmlFor={`check_${key}`}
-                                className="checkbox-label"
-                              >
-                                <Field
-                                  component={"input"}
-                                  type="checkbox"
-                                  name={`check_${key}`}
-                                />
-                                <span
-                                  onClick={() => this.onCheckClicked(key)}
-                                  className="checkbox-custom"
-                                />
-                              </label>
+                        <tr key={key} className="row c-pointer">
+                          {this.redirectTo(pedido)}
+                          <td className="td-check col-4">
+                            <label
+                              htmlFor={`check_${key}`}
+                              className="checkbox-label small report-line"
+                            >
+                              <Field
+                                component={"input"}
+                                type="checkbox"
+                                name={`check_${key}`}
+                              />
+                              <span
+                                onClick={() => this.onCheckClicked(key)}
+                                className="checkbox-custom small report-line"
+                              />
+                            </label>
+                            <span onClick={() => this.setRedirect()}>
                               {pedido.id_externo}
-                            </td>
-                            <td className="col-4">{pedido.escola.nome}</td>
-                            <td className="col-4">
-                              {pedido.data_inicial
-                                ? `${pedido.data_inicial} a ${
-                                    pedido.data_final
-                                  }`
-                                : stringSeparadaPorVirgulas(
-                                    pedido.inclusoes,
-                                    "data"
-                                  )}
-                            </td>
-                          </tr>
-                        </Link>
+                            </span>
+                          </td>
+                          <td className="col-4">{pedido.escola.nome}</td>
+                          <td className="col-4">
+                            {pedido.data_inicial
+                              ? `${pedido.data_inicial} a ${pedido.data_final}`
+                              : stringSeparadaPorVirgulas(
+                                  pedido.inclusoes,
+                                  "data"
+                                )}
+                          </td>
+                        </tr>
                       );
                     })}
                 </tbody>

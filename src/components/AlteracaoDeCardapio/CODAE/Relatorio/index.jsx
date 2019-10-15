@@ -17,7 +17,6 @@ import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-import "../style.scss";
 import "./style.scss";
 import { ALTERACAO_CARDAPIO, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
