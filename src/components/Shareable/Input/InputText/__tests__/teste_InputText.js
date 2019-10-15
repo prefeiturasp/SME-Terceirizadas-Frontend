@@ -50,7 +50,6 @@ describe("teste InputText", () => {
   });
 });
 
-
 describe("teste InputText warning message", () => {
   let inputWrapper;
   beforeEach(() => {
