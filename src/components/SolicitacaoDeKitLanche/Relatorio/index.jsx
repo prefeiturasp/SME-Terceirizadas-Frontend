@@ -1,32 +1,30 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
-import { dataParaUTC } from "../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../services/diasUteis.service";
+import { formValueSelector, reduxForm } from "redux-form";
 import {
-  cienciaDeKitLancheAvulsoTerceirizadas,
-  getDetalheKitLancheAvulsa
-} from "../../../../services/solicitacaoDeKitLanche.service";
-import { meusDados } from "../../../../services/perfil.service";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
-import "../style.scss";
-import { prazoDoPedidoMensagem } from "./helper";
-import "./style.scss";
-import {
-  TERCEIRIZADA,
-  SOLICITACAO_KIT_LANCHE
-} from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
-import Botao from "../../../Shareable/Botao";
+  SOLICITACAO_KIT_LANCHE,
+  ESCOLA,
+  DRE,
+  CODAE,
+  TERCEIRIZADA
+} from "../../../configs/constants";
+import { statusEnum, escolaPodeCancelar } from "../../../constants/statusEnum";
+import { dataParaUTC } from "../../../helpers/utilities";
+import { getDiasUteis } from "../../../services/diasUteis.service";
+import { meusDados } from "../../../services/perfil.service";
+import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
-} from "../../../Shareable/Botao/constants";
-import { corDaMensagem } from "../../CODAE/Relatorio/helper";
+} from "../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { ModalNegarSolicitacao } from "../../Shareable/ModalNegarSolicitacao";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -51,7 +49,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
     if (this.state.redirect) {
-      return <Redirect to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`} />;
+      return <Redirect to={`/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`} />;
     }
   };
 
@@ -69,8 +67,7 @@ class Relatorio extends Component {
         new Date(response.proximos_dois_dias_uteis)
       );
       if (uuid) {
-        getDetalheKitLancheAvulsa(uuid).then(response => {
-          const solicitacaoKitLanche = response;
+        getDetalheKitLancheAvulsa(uuid).then(solicitacaoKitLanche => {
           const data = solicitacaoKitLanche.solicitacao_kit_lanche.data;
           this.setState({
             solicitacaoKitLanche,
@@ -92,27 +89,26 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusada com sucesso!");
   }
 
   handleSubmit() {
     const uuid = this.state.uuid;
-    cienciaDeKitLancheAvulsoTerceirizadas(uuid).then(
+    this.props.HandleAprovaPedido(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
-            "Ciência de Solicitação de Kit Lanche Passeio enviada com sucesso!"
+            "Solicitação de Kit Lanche Passeio autorizada com sucesso!"
           );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
-            "Houve um erro ao tomar ciência da Solicitação de Kit Lanche Passeio"
+            "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
           );
         }
       },
       function() {
         toastError(
-          "Houve um erro ao tomar ciência da Solicitação de Kit Lanche Passeio"
+          "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
         );
       }
     );
@@ -122,25 +118,29 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      uuid
     } = this.state;
+    const { justificativa } = this.props;
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
-        <ModalRecusarSolicitacao
+        <ModalNegarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          negarEndpoint={this.props.negarEndpoint}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
               Solicitação de Kit Lanche Passeio #{" "}
               {solicitacaoKitLanche.id_externo}
-              <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
+              <Link to={`/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`}>
                 <Botao
                   texto="voltar"
                   type={BUTTON_TYPE.BUTTON}
-                  titulo="voltar"
                   style={BUTTON_STYLE.BLUE}
                   icon={BUTTON_ICON.ARROW_LEFT}
                   className="float-right"
@@ -158,7 +158,6 @@ class Relatorio extends Component {
                     {prazoDoPedidoMensagem}
                     <Botao
                       type={BUTTON_TYPE.BUTTON}
-                      titulo="imprimir"
                       style={BUTTON_STYLE.BLUE}
                       icon={BUTTON_ICON.PRINT}
                       className="float-right"
@@ -223,18 +222,6 @@ class Relatorio extends Component {
                         solicitacaoKitLanche.escola.alunos_total}
                     </span>
                   </div>
-                  {/* <div className="report-students-div col-3">
-                    <span>Nº de alunos matutino</span>
-                    <span>{escola.matutino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos vespertino</span>
-                    <span>{escola.vespertino}</span>
-                  </div>
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos nortuno</span>
-                    <span>{escola.noturno}</span>
-                  </div> */}
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
@@ -312,25 +299,94 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {solicitacaoKitLanche.status ===
-                  statusEnum.CODAE_AUTORIZADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Recusar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Ciente"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
+
+                {(() => {
+                  switch (this.props.VISAO) {
+                    case ESCOLA:
+                      return (
+                        escolaPodeCancelar(solicitacaoKitLanche.status) && (
+                          <div className="form-group row float-right mt-4">
+                            <div className="col-12 text-right">
+                              <Botao
+                                texto={"Cancelar"}
+                                onClick={() => this.showModal()}
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                              />
+                            </div>
+                          </div>
+                        )
+                      );
+                    case DRE:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.DRE_A_VALIDAR && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Não Validar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Validar"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case CODAE:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.DRE_VALIDADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Negar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Autorizar"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    case TERCEIRIZADA:
+                      return (
+                        solicitacaoKitLanche.status ===
+                          statusEnum.CODAE_AUTORIZADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Recusar"}
+                              className="ml-3"
+                              onClick={() => this.showModal()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto="Ciente"
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.handleSubmit()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          </div>
+                        )
+                      );
+                    default:
+                      return "AQUI";
+                  }
+                })()}
               </div>
             </div>
           </form>
@@ -339,9 +395,18 @@ class Relatorio extends Component {
     );
   }
 }
+const formName = "kitLancheAvulsoRelatorioForm";
+
+const selector = formValueSelector(formName);
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa")
+  };
+};
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+export default connect(mapStateToProps)(RelatorioForm);
