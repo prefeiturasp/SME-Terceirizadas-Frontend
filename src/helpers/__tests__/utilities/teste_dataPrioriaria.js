@@ -1,4 +1,4 @@
-import { dataPrioritaria } from "../utilities";
+import { dataPrioritaria } from "../../utilities";
 
 //TODO: fazer iterando valores
 describe("Teste data prioritária", () => {
