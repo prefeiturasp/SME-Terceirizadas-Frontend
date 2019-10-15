@@ -75,9 +75,7 @@ class PainelPedidos extends Component {
                       component={Select}
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.filtrar(event.target.value)
-                      }
+                      onChange={event => this.filtrar(event.target.value)}
                       placeholder={"Filtro por"}
                       options={visaoPorCombo}
                     />
