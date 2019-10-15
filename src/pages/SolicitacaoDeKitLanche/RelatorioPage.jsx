@@ -1,11 +1,10 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
-import Container from "../../components/InversaoDeDiaDeCardapio/Container";
+import Relatorio from "../../components/SolicitacaoDeKitLanche/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
 import {
-  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
   ESCOLA,
   DRE,
   CODAE,
@@ -13,10 +12,12 @@ import {
 } from "../../configs/constants";
 
 import {
-  CODAEAutorizaPedidoDRE,
-  dreValidaPedidoEscola,
-  terceirizadaTomaCiencia
-} from "../../services/inversaoDeDiaDeCardapio.service";
+  autorizaDeKitLancheAvulsoCodae,
+  validaDeKitLancheAvulsoDiretoriaRegional,
+  cienciaDeKitLancheAvulsoTerceirizadas,
+  DREnaoValidarKitLancheAvulsoEscola,
+  CODAENegaKitLancheAvulsoEscola
+} from "../../services/solicitacaoDeKitLanche.service";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -26,8 +27,8 @@ class RelatorioBase extends React.Component {
     };
     const anteriores = [
       {
-        href: `/${this.props.VISAO}/${INVERSAO_CARDAPIO}`,
-        titulo: "Solicitações de Inversao de Dia do Cardapio"
+        href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
+        titulo: "Solicitações de Kit Lanche Passeio"
       }
     ];
 
@@ -37,22 +38,8 @@ class RelatorioBase extends React.Component {
         <Relatorio
           VISAO={this.props.VISAO}
           HandleAprovaPedido={this.props.HandleAprovaPedido}
+          negarEndpoint={this.props.negarEndpoint}
         />
-      </Page>
-    );
-  }
-}
-
-export class InversaoDeDiaDeCardapioPage extends React.Component {
-  render() {
-    const atual = {
-      href: "/escola/inversao-de-dia-de-cardapio",
-      titulo: "Inversão de dia de Cardápio"
-    };
-    return (
-      <Page titulo={atual.titulo}>
-        <Breadcrumb home={HOME} atual={atual} />
-        <Container />
       </Page>
     );
   }
@@ -62,16 +49,24 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
 export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
-  <RelatorioBase VISAO={DRE} HandleAprovaPedido={dreValidaPedidoEscola} />
+  <RelatorioBase
+    VISAO={DRE}
+    HandleAprovaPedido={validaDeKitLancheAvulsoDiretoriaRegional}
+    negarEndpoint={DREnaoValidarKitLancheAvulsoEscola}
+  />
 );
 // CODAE
 export const RelatorioCODAE = () => (
-  <RelatorioBase VISAO={CODAE} HandleAprovaPedido={CODAEAutorizaPedidoDRE} />
+  <RelatorioBase
+    VISAO={CODAE}
+    HandleAprovaPedido={autorizaDeKitLancheAvulsoCodae}
+    negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+  />
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     VISAO={TERCEIRIZADA}
-    HandleAprovaPedido={terceirizadaTomaCiencia}
+    HandleAprovaPedido={cienciaDeKitLancheAvulsoTerceirizadas}
   />
 );
