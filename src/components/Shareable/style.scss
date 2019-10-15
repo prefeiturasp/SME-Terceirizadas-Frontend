@@ -405,3 +405,57 @@ div.caption-choices {
     margin: 0 0 0.2em 0 !important;
   }
 }
+
+.card-pendency-approval {
+  padding: 16px 44px;
+  border: 1px solid #dadada;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  .card-title {
+    font-weight: bold;
+    font-size: 18px;
+    &.priority {
+      color: $red;
+    }
+    &.on-limit {
+      color: $orange;
+    }
+    &.regular {
+      color: $greenPanel;
+    }
+  }
+  .order-box {
+    display: grid;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border: 0.5px solid #e8e8e8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    &.priority {
+      background: $red;
+    }
+    &.on-limit {
+      background: $orange;
+    }
+    &.regular {
+      background: $greenPanel;
+    }
+    span {
+      font-weight: bold;
+      font-size: 34px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .order {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+  .order-lines {
+    .text {
+      font-size: 14px;
+      color: $blackInput;
+    }
+  }
+}

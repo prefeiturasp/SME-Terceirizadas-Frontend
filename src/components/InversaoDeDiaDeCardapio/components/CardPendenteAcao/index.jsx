@@ -5,7 +5,6 @@ import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
-import "./style.scss";
 
 export class CardInversaoPendenciaAprovacao extends Component {
   constructor(props) {

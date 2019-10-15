@@ -69,7 +69,9 @@ export default class Page extends Component {
                 </Link>
               )}
             </h1>
-            {children[1]}
+            {children.map((child, key) => {
+              return <div key={key}>{key > 0 && child}</div>;
+            })}
           </div>
         </div>
       </div>

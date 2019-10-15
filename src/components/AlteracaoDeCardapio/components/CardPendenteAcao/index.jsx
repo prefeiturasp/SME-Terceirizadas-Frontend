@@ -4,8 +4,8 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
-import "./style.scss";
 import { ALTERACAO_CARDAPIO } from "../../../../configs/constants";
+import "../../../Shareable/style.scss";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
