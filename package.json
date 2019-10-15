@@ -3,6 +3,9 @@
   "version": "0.1.3",
   "private": true,
   "jest": {
+    "watchPathIgnorePatterns": [
+      "src/components/Shareable/Avatar"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 2.76,
