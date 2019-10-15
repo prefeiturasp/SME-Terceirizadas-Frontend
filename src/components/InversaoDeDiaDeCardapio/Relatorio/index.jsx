@@ -21,6 +21,7 @@ import {
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { ModalCancelarInversaoDiaCardapio } from "../../Shareable/ModalCancelarInversaoDiaCardapio";
 import { ModalNegarInversaoDiaCardapio } from "../../Shareable/ModalNegarInversaoDiaCardapio";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 
@@ -34,13 +35,15 @@ class Relatorio extends Component {
       unifiedSolicitationList: [],
       uuid: null,
       redirect: false,
-      showModal: false,
+      showModalCancelar: false,
+      showModalNegar: false,
       ehInclusaoContinua: false,
       InversaoCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
-    this.closeModal = this.closeModal.bind(this);
+    this.closeModalCancelar = this.closeModalCancelar.bind(this);
+    this.closeModalNegar = this.closeModalNegar.bind(this);
   }
 
   setRedirect() {
@@ -90,12 +93,20 @@ class Relatorio extends Component {
     });
   }
 
-  showModal() {
-    this.setState({ showModal: true });
+  showModalCancelar() {
+    this.setState({ showModalCancelar: true });
   }
 
-  closeModal() {
-    this.setState({ showModal: false });
+  closeModalCancelar() {
+    this.setState({ showModalCancelar: false });
+  }
+
+  showModalNegar() {
+    this.setState({ showModalNegar: true });
+  }
+
+  closeModalNegar() {
+    this.setState({ showModalNegar: false });
   }
 
   handleSubmit() {
@@ -103,7 +114,7 @@ class Relatorio extends Component {
     this.props.HandleAprovaPedido(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Inversão de dias de cardápio autorizada com sucesso!");
+          toastSuccess(this.props.toastSucessoMensagem);
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
@@ -119,7 +130,8 @@ class Relatorio extends Component {
 
   render() {
     const {
-      showModal,
+      showModalCancelar,
+      showModalNegar,
       InversaoCardapio,
       prazoDoPedidoMensagem,
       escolaDaInversao,
@@ -129,13 +141,19 @@ class Relatorio extends Component {
     return (
       <div className="report">
         <ModalNegarInversaoDiaCardapio
-          closeModal={this.closeModal}
-          showModal={showModal}
+          closeModal={this.closeModalNegar}
+          showModal={showModalNegar}
           uuid={uuid}
           justificativa={justificativa}
           motivoCancelamento={motivo_cancelamento}
           inversaoDeDiaDeCardapio={InversaoCardapio}
           setRedirect={this.setRedirect.bind(this)}
+        />
+        <ModalCancelarInversaoDiaCardapio
+          showModal={showModalCancelar}
+          closeModal={this.closeModalCancelar}
+          uuid={uuid}
+          solicitacaoInversaoDeDiaDeCardapio={InversaoCardapio}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
         {!InversaoCardapio ? (
@@ -276,7 +294,7 @@ class Relatorio extends Component {
                           <Botao
                             texto={"Cancelar pedido"}
                             className="ml-3"
-                            onClick={() => this.showModal()}
+                            onClick={() => this.showModalCancelar()}
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                           />
@@ -311,7 +329,7 @@ class Relatorio extends Component {
                             <Botao
                               texto={"Negar Solicitação"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showModalNegar()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />

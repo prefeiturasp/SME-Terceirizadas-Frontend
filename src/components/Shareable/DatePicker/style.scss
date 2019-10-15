@@ -35,6 +35,18 @@ div.datepicker {
   }
 }
 
+.inversao-datepicker {
+  div.datepicker {
+    div.react-datepicker-wrapper {
+      .react-datepicker__input-container {
+        input {
+          height: 35px;
+        }
+      }
+    }
+  }
+}
+
 .input-group {
   &.calendar {
     input {

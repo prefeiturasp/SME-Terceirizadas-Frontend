@@ -67,7 +67,7 @@ export class SidebarEscola extends Component {
               className="collapse-item"
               to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
             >
-              Aguardando autorização
+              Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"

@@ -7,8 +7,10 @@ import {
   toastSuccess,
   toastWarn
 } from "../../../../Shareable/Toast/dialogs";
-import { statusEnum } from "../../../../../constants/statusEnum";
-import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
+import {
+  stringSeparadaPorVirgulas,
+  mensagemCancelamento
+} from "../../../../../helpers/utilities";
 import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../../../../services/inclusaoDeAlimentacaoContinua.service";
 import Botao from "../../../../Shareable/Botao";
@@ -119,9 +121,7 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
             <div className="col-12">
               <p className="label--red">
                 {inclusaoDeAlimentacao &&
-                inclusaoDeAlimentacao.status === statusEnum.CODAE_AUTORIZADO
-                  ? "Esta solicitação já foi autorizada pela CODAE. "
-                  : "Esta solicitação está aguardando validação da DRE ou autorização da CODAE. "}
+                  mensagemCancelamento(inclusaoDeAlimentacao.status)}
                 Deseja seguir em frente com o cancelamento?
               </p>
             </div>
