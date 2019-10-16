@@ -220,11 +220,10 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, vision_by, filtro_por } = this.props;
+    const { handleSubmit, vision_by, filtro_por, meusDados } = this.props;
 
     const {
       collapsed,
-      lotesTerceirizada,
       gestaoDeAlimentacao,
       pendentesListFiltered,
       canceladasListFiltered,
@@ -252,11 +251,17 @@ class DashboardTerceirizada extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={
+              (meusDados && meusDados.terceirizadas[0].quantidade_alunos) || 0
+            }
           >
-            <Collapse isOpened={!collapsed}>
-              <TabelaHistoricoLotes lotes={lotesTerceirizada} />
-            </Collapse>
+            {meusDados && (
+              <Collapse isOpened={!collapsed}>
+                <TabelaHistoricoLotes
+                  lotes={meusDados.terceirizadas[0].lotes}
+                />
+              </Collapse>
+            )}
           </CardMatriculados>
           <CardBody
             titulo={"Acompanhamento solicitações"}

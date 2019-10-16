@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import DashboardTerceirizada from "./DashboardTerceirizada";
 
 class DashboardTerceirizadaContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: 4050,
       gestaoDeAlimentacao: false,
       vision_by: [
         {
@@ -30,8 +30,13 @@ class DashboardTerceirizadaContainer extends Component {
           nome: "Mês",
           uuid: "daqui_a_30_dias"
         }
-      ]
+      ],
+      meusDados: null
     };
+  }
+
+  async componentDidMount() {
+    this.setState({ meusDados: await getMeusDados() });
   }
 
   render() {

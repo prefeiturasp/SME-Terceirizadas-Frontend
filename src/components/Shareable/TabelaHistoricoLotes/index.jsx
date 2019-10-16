@@ -20,7 +20,11 @@ export const TabelaHistoricoLotes = props => {
                     {lote.nome}
                   </Link>
                 </td>
-                <td>{lote && lote.tipo_gestao && lote.tipo_gestao.nome}</td>
+                <td>
+                  {lote &&
+                    lote.tipo_gestao &&
+                    (lote.tipo_gestao.nome || lote.tipo_gestao)}
+                </td>
               </tr>
             );
           })}
