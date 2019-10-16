@@ -259,6 +259,7 @@ class DashboardTerceirizada extends Component {
               <Collapse isOpened={!collapsed}>
                 <TabelaHistoricoLotes
                   lotes={meusDados.terceirizadas[0].lotes}
+                  tipoPerfil={"Terceirizada"}
                 />
               </Collapse>
             )}

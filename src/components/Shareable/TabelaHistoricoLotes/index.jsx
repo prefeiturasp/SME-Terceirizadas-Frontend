@@ -5,7 +5,7 @@ import "./style.scss";
 export const TabelaHistoricoLotes = props => {
   return (
     <div className="table-lote">
-      <p className="pt-3">Lotes pertencentes à DRE</p>
+      <p className="pt-3">Lotes pertencentes à {props.tipoPerfil || "DRE"}</p>
       <table>
         <tr>
           <th>Lote</th>
