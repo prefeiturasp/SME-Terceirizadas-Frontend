@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { LabelAndTextArea, LabelAndCombo } from "./labelAndInput/labelAndInput";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import Botao from "./Botao";
+import Select from "./Select";
+import { TextArea } from "./TextArea/TextArea";
 
 export class ModalRecusarSolicitacao extends Component {
   render() {
@@ -18,7 +19,7 @@ export class ModalRecusarSolicitacao extends Component {
           <div className="form-row">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
+                component={Select}
                 name="razao"
                 label="Motivo"
                 onChange={value => this.props.change("razao", value)}
@@ -33,7 +34,7 @@ export class ModalRecusarSolicitacao extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="obs"

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { LabelAndTextArea, LabelAndCombo } from "./labelAndInput/labelAndInput";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
 import { DREnaoValidarKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
@@ -8,6 +7,8 @@ import HTTP_STATUS from "http-status-codes";
 import { toastSuccess, toastError } from "./Toast/dialogs";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import Select from "./Select";
+import { TextArea } from "./TextArea/TextArea";
 
 export class ModalNaoValidarSolicitacao extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export class ModalNaoValidarSolicitacao extends Component {
           <div className="form-row">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
+                component={Select}
                 name="motivo_cancelamento"
                 label="Motivo"
                 //TODO: criar campos a mais no backend?
@@ -67,7 +68,7 @@ export class ModalNaoValidarSolicitacao extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"

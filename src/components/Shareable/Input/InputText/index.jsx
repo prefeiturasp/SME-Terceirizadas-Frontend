@@ -36,8 +36,9 @@ export const InputText = props => {
       ]}
       <input
         {...input}
-        className={`form-control ${className} ${meta.touched &&
-          meta.error &&
+        className={`form-control ${className} ${meta &&
+          meta.touched &&
+          (meta.error || meta.warning) &&
           "invalid-field"}`}
         disabled={disabled}
         min={min}

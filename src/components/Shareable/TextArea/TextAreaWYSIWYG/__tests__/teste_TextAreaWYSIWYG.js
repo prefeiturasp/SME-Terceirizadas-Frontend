@@ -1,10 +1,9 @@
 import { mount } from "enzyme";
 import React from "react";
-import { LabelAndTextArea } from "../labelAndInput/labelAndInput";
+import { TextAreaWYSIWYG } from "../index";
 
-describe("<LabelAndTextArea/>", () => {
+describe("teste TextArea", () => {
   let wrapper;
-
   const props = {
     input: { onChange: jest.fn() },
     name: "TESTX",
@@ -12,7 +11,7 @@ describe("<LabelAndTextArea/>", () => {
     label: "LBLTEST"
   };
   beforeEach(() => {
-    wrapper = mount(<LabelAndTextArea {...props} />);
+    wrapper = mount(<TextAreaWYSIWYG temOpcoesCustomizadas {...props} />);
   });
 
   it("correct name props", () => {
