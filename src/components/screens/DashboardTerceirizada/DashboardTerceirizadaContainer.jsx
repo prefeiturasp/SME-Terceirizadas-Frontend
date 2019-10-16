@@ -11,6 +11,24 @@ class DashboardTerceirizadaContainer extends Component {
         {
           nome: "Tipo de Solicitação",
           uuid: "tipo_solicitacao"
+        },
+        {
+          nome: "Lote",
+          uuid: "lote"
+        }
+      ],
+      filtro_por: [
+        {
+          nome: "Sem filtro",
+          uuid: "sem_filtro"
+        },
+        {
+          nome: "Semana",
+          uuid: "daqui_a_7_dias"
+        },
+        {
+          nome: "Mês",
+          uuid: "daqui_a_30_dias"
         }
       ]
     };

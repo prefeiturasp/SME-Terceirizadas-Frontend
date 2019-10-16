@@ -44,9 +44,9 @@ import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimen
 import IconePD from "../../Shareable/Icones/IconePD";
 import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
 import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
+import Select from "../../Shareable/Select";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -220,7 +220,7 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const { enrolled, handleSubmit, vision_by } = this.props;
+    const { enrolled, handleSubmit, vision_by, filtro_por } = this.props;
 
     const {
       collapsed,
@@ -358,13 +358,22 @@ class DashboardTerceirizada extends Component {
               <div className="card-body">
                 <div className="card-title font-weight-bold dashboard-card-title">
                   <div className="row">
-                    <div className="col-3 mt-3">
-                      <i className="fas fa-lock" />
-                      Pendências
+                    <div className="col-3 mt-3 color-black">Pendências</div>
+                    <div className="offset-3 col-3 text-right my-auto">
+                      <Select
+                        naoDesabilitarPrimeiraOpcao
+                        onChange={event =>
+                          this.changeFiltroPendencias(event.target.value)
+                        }
+                        placeholder={"Filtro por"}
+                        options={filtro_por}
+                      />
                     </div>
-                    <div className="offset-6 col-3 text-right my-auto">
-                      <LabelAndCombo
-                        onChange={() => {}}
+                    <div className="col-3 text-right my-auto">
+                      <Select
+                        naoDesabilitarPrimeiraOpcao
+                        disabled={!this.state.lotesDRE}
+                        onChange={event => this.changeVisao(event.target.value)}
                         placeholder={"Visão por"}
                         options={vision_by}
                       />

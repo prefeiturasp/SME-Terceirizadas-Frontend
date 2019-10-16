@@ -4,10 +4,8 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../../../../helpers/fieldValidators";
 import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
-import {
-  LabelAndCombo,
-  LabelAndTextArea
-} from "../../../../Shareable/labelAndInput/labelAndInput";
+import { TextArea } from "../../../../Shareable/TextArea/TextArea";
+import { Select } from "../../../../Shareable/Select";
 import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
 import Botao from "../../../../Shareable/Botao";
 import {
@@ -69,7 +67,7 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
           <div className="form-row">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
+                component={Select}
                 name="motivo_cancelamento"
                 label="Motivo"
                 //TODO: criar campos a mais no backend?
@@ -88,7 +86,7 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"

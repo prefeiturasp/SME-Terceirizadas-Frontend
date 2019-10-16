@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 import { Field, reduxForm } from "redux-form";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import Select from "../../Shareable/Select";
 
 class DetalhePendenciaPorDRE extends Component {
   constructor(props) {
@@ -54,8 +54,8 @@ class DetalhePendenciaPorDRE extends Component {
               </div>
               <span className="combo-box">
                 <Field
-                  component={LabelAndCombo}
-                  onChange={uuid => this.handleField(uuid)}
+                  component={Select}
+                  onChange={event => this.handleField(event.target.value)}
                   placeholder={"Visão por"}
                   options={this.state.vision_by}
                 />

@@ -7,12 +7,12 @@ import {
   DRENegaInversaoDeDiaDeCardapio,
   CODAENegaInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
-import { LabelAndCombo, LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/statusEnum";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import { mensagemCancelamento } from "../../helpers/utilities";
+import Select from "./Select";
 
 export class ModalNegarInversaoDiaCardapio extends Component {
   constructor(props) {
@@ -72,7 +72,7 @@ export class ModalNegarInversaoDiaCardapio extends Component {
           <div className="form-row">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
+                component={Select}
                 name="motivo_cancelamento"
                 label="Motivo"
                 //TODO: criar campos a mais no backend?
@@ -91,7 +91,7 @@ export class ModalNegarInversaoDiaCardapio extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={Select}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"

@@ -29,7 +29,7 @@ describe("teste InputText", () => {
   it("não deve ser required", () => {
     expect(inputWrapper.find("input").props().required).toBe(true);
   });
-  it("não deve ser required", () => {
+  it("deve exibir asterisco quando obrigatorio", () => {
     expect(inputWrapper.find(".required-asterisk").text()).toEqual("*");
   });
   it("não deve ser disabled", () => {
