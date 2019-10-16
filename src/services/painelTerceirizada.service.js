@@ -314,3 +314,42 @@ export const getSolicitacoesNegadasTerceirizada = async TerceirizadaUuid => {
   }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };
+
+export const getSolicitacoesPendenteCienciaTerceirizada = async (
+  TerceirizadaUuid,
+  filtroAplicado
+) => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.PENDENTES_CIENCIA
+  }/${TerceirizadaUuid}/${filtroAplicado}`;
+  return retornoBase(url);
+};
+
+
+export const getResumoPendenciasTerceirizadaporLote = async (uuid, filtro, tipoResumo) => {
+  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
+  const response = await getSolicitacoesPendenteCienciaTerceirizada(uuid, filtro);
+  const solicitacoes = response.results;
+  const reducer = (resumo, corrente) => {
+    if (!resumo[corrente[tipoResumo]]) {
+      resumo[corrente[tipoResumo]] = {};
+    }
+    if (corrente.prioridade !== "VENCIDO") {
+      resumo[corrente[tipoResumo]][corrente.prioridade] = resumo[
+        corrente[tipoResumo]
+      ][corrente.prioridade]
+        ? (resumo[corrente[tipoResumo]][corrente.prioridade] += 1)
+        : 1;
+      resumo[corrente[tipoResumo]]["TOTAL"] = resumo[corrente[tipoResumo]][
+        "TOTAL"
+      ]
+        ? (resumo[corrente[tipoResumo]]["TOTAL"] += 1)
+        : 1;
+    }
+    return resumo;
+  };
+
+  let resumo = solicitacoes.reduce(reducer, {});
+
+  return resumo;
+};

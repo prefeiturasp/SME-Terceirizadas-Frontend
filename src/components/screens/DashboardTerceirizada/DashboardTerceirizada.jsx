@@ -15,6 +15,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
+import { RESUMO_POR } from "../../../services/contants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasTerceirizadaAlteracoesDeCardapio,
@@ -26,36 +27,36 @@ import {
   getSolicitacoesCanceladasTerceirizada,
   getSolicitacoesNegadasTerceirizada,
   getSolicitacoesPendentesTerceirizada,
-  getSolicitacoesAutorizadasTerceirizada
+  getSolicitacoesAutorizadasTerceirizada,
+  getResumoPendenciasTerceirizadaporLote
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardBody from "../../Shareable/CardBody";
 import CardLegendas from "../../Shareable/CardLegendas";
-import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
-import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconePD from "../../Shareable/Icones/IconePD";
-import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
-import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
 import Select from "../../Shareable/Select";
+import { MenuIcones } from "./components/MenuIcones";
+import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      secao: null,
+
       pendentesListFiltered: [],
       canceladasListFiltered: [],
       negadasListFiltered: [],
       autorizadasListFiltered: [],
+
+      resumoPorLote: [],
 
       collapsed: true,
       pendentesListSolicitacao: [],
@@ -81,6 +82,7 @@ class DashboardTerceirizada extends Component {
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+    this.renderSecao = this.renderSecao.bind(this);
   }
 
   alterarCollapse() {
@@ -93,6 +95,10 @@ class DashboardTerceirizada extends Component {
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
     return listaFiltro;
+  }
+
+  renderSecao(secao) {
+    this.setState({ secao });
   }
 
   async carregaResumosPendencias(filtroPendencias, minhaTerceirizada) {
@@ -130,6 +136,12 @@ class DashboardTerceirizada extends Component {
       filtroPendencias
     );
 
+    const resumoPorLote = await getResumoPendenciasTerceirizadaporLote(
+      minhaTerceirizada,
+      filtroPendencias,
+      RESUMO_POR.TIPO_DE_SOLICITACAO
+    );
+
     this.setState({
       resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
@@ -137,6 +149,7 @@ class DashboardTerceirizada extends Component {
       resumoPendenciasTerceirizadaKitLanche,
       resumoPendenciasTerceirizadaSuspensaoDeAlimentacao,
       resumoPendenciasTerceirizadaSolicitacoesUnificadas,
+      resumoPorLote,
       filtroPendencias,
       loadingAlteracaoCardapio: !resumoPendenciasTerceirizadaAlteracoesDeCardapio,
       loadingInclusoesAlimentacao: !resumoPendenciasTerceirizadaInclusoesDeAlimentacao,
@@ -224,7 +237,7 @@ class DashboardTerceirizada extends Component {
 
     const {
       collapsed,
-      gestaoDeAlimentacao,
+      secao,
       pendentesListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
@@ -312,54 +325,8 @@ class DashboardTerceirizada extends Component {
             <CardLegendas />
           </CardBody>
           <div className="card mt-3" />
-          {!gestaoDeAlimentacao ? (
-            <div>
-              <div className="row mt-3">
-                <div
-                  className="col-4"
-                  onClick={() =>
-                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
-                  }
-                >
-                  <CardLogo titulo={"Gestão de Alimentação"}>
-                    <IconeGestaoDeAlimentacao />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Dieta Especial"} disabled>
-                    <IconeDietaEspecial />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Finanças"} disabled>
-                    <IconeFinancas />
-                  </CardLogo>
-                </div>
-              </div>
-              <div className="row mt-3">
-                <div
-                  className="col-4"
-                  onClick={() =>
-                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
-                  }
-                >
-                  <CardLogo titulo={"Pesquisa e Desenvolvimento P&D"} disabled>
-                    <IconePD />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Supervisão"} disabled>
-                    <IconeSupervisao />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Planejamento de Cardápio"} disabled>
-                    <IconePlanejamentoCardapio />
-                  </CardLogo>
-                </div>
-              </div>
-            </div>
-          ) : (
+          {!secao && <MenuIcones renderSecao={this.renderSecao} />}
+          {secao === MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO && (
             <div className="card mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold dashboard-card-title">

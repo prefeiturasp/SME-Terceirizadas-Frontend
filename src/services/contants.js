@@ -21,6 +21,7 @@ export const PEDIDOS = {
 export const SOLICITACOES = {
   AUTORIZADOS: "autorizados",
   PENDENTES: "pendentes-autorizacao",
+  PENDENTES_CIENCIA: "pendentes-ciencia",
   NEGADOS: "negados",
   CANCELADOS: "cancelados",
   PENDENTES_VALIDACAO_DRE: "pendentes-validacao"
@@ -30,3 +31,9 @@ export const AUTH_TOKEN = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
 };
+
+export const RESUMO_POR = {
+  TIPO_DE_SOLICITACAO: "desc_doc",
+  LOTE: "lote",
+  DRE: "dre_nome"
+}
