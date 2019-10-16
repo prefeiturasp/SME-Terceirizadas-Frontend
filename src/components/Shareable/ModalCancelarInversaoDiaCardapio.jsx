@@ -3,11 +3,11 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { cancelaInversaoDiaCardapioEscola } from "../../services/inversaoDeDiaDeCardapio.service";
-import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/statusEnum";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import { TextArea } from "./TextArea/TextArea";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
@@ -78,7 +78,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"

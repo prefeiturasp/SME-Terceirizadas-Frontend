@@ -4,11 +4,11 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import { cancelaKitLancheUnificadoDre } from "../../services/solicitacaoUnificada.service";
-import { LabelAndTextArea } from "./labelAndInput/labelAndInput";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import { mensagemCancelamento } from "../../helpers/utilities";
+import { TextArea } from "./TextArea/TextArea";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
@@ -73,7 +73,7 @@ export class ModalCancelarSolicitacao extends Component {
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"
