@@ -5,6 +5,7 @@ import { talvezPluralizar } from "../../../../helpers/utilities";
 import { calcularNumeroDeDREsUnicas } from "./helper";
 import { SOLICITACAO_KIT_LANCHE_UNIFICADA } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import "./style.scss";
 
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
