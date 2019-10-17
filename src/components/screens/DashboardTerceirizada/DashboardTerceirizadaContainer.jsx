@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import DashboardTerceirizada from "./DashboardTerceirizada";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/tiposSolicitacao.constants";
 
 class DashboardTerceirizadaContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gestaoDeAlimentacao: false,
       vision_by: [
         {
           nome: "Tipo de Solicitação",
@@ -31,7 +31,8 @@ class DashboardTerceirizadaContainer extends Component {
           uuid: "daqui_a_30_dias"
         }
       ],
-      meusDados: null
+      meusDados: null,
+      tiposDeSolicitacao: TIPOS_SOLICITACAO_LISTA
     };
   }
 
