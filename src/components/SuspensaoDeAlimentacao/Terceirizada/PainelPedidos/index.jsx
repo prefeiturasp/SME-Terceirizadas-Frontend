@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   getTerceirizadasSuspensoesDeAlimentacao,
@@ -17,6 +17,7 @@ import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -73,6 +74,7 @@ class PainelPedidos extends Component {
       pedidosTomadaCiencia,
       pedidosCarregados
     } = this.state;
+    const { visaoPorCombo } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -84,6 +86,18 @@ class PainelPedidos extends Component {
                 <div className="row">
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
+                  </div>
+                  <div className="offset-6 col-3 text-right">
+                    <Field
+                      component={Select}
+                      name="visao_por"
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.onFiltroSelected(event.target.value)
+                      }
+                      placeholder={"Filtro por"}
+                      options={visaoPorCombo}
+                    />
                   </div>
                 </div>
                 <div className="row pt-3">
