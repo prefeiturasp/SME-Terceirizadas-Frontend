@@ -3,4 +3,4 @@ export const PRAZOS = {
   LIMITE: "LIMITE",
   REGULAR: "REGULAR",
   TOTAL: "TOTAL"
-}
+};

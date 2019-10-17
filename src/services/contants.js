@@ -36,4 +36,4 @@ export const RESUMO_POR = {
   TIPO_DE_SOLICITACAO: "desc_doc",
   LOTE: "lote",
   DRE: "dre_nome"
-}
+};
