@@ -1,6 +1,3 @@
-import { TIPOS_SOLICITACAO_LABEL } from "../../../constants/tiposSolicitacao.constants";
-import { PRAZOS } from "../../../constants/prazos.constants";
-
 export const filtraPrioritarios = pedidos => {
   return pedidos.filter(pedido => {
     return pedido.solicitacao_kit_lanche.prioridade === "PRIORITARIO";
@@ -21,4 +18,12 @@ export const filtraRegular = pedidos => {
 
 export const filtrarTotalSolicitacoes = pedidos => {
   return pedidos.length;
+};
+
+export const formatarLotesParaVisao = lotes => {
+  lotes.forEach(lote => {
+    lote["titulo"] = lote["nome"];
+    lote["link"] = lote["uuid"];
+  });
+  return lotes;
 };

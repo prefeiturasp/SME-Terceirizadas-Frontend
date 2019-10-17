@@ -39,7 +39,7 @@ class DashboardTerceirizada extends Component {
     super(props);
     this.state = {
       secao: null,
-
+      cards: this.props.cards,
       pendentesListFiltered: [],
       canceladasListFiltered: [],
       negadasListFiltered: [],
@@ -79,9 +79,24 @@ class DashboardTerceirizada extends Component {
     this.setState({ secao });
   }
 
+  setfiltroPorVencimento(filtroPorVencimento) {
+    this.setState({ filtroPorVencimento }, () => {
+      this.carregaResumosPendencias();
+    });
+  }
+
   setVisao(visao) {
-    this.setState({ visao });
-    this.carregaResumosPendencias();
+    const { tiposSolicitacao, lotes } = this.props;
+    this.setState(
+      {
+        visao,
+        cards:
+          visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
+      },
+      () => {
+        this.carregaResumosPendencias();
+      }
+    );
   }
 
   async carregaResumosPendencias() {
@@ -175,24 +190,19 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const {
-      handleSubmit,
-      vision_by,
-      filtro_por,
-      meusDados,
-      tiposDeSolicitacao
-    } = this.props;
+    const { handleSubmit, vision_by, filtro_por, meusDados } = this.props;
 
     const {
+      cards,
       collapsed,
       secao,
+      visao,
       pendentesListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
       autorizadasListFiltered,
       resumo,
-      loadingPainelSolicitacoes,
-      visao
+      loadingPainelSolicitacoes
     } = this.state;
 
     return (
@@ -220,7 +230,7 @@ class DashboardTerceirizada extends Component {
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
           >
-            <div className="row">
+            <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Aguardando Autorização"}
@@ -274,7 +284,7 @@ class DashboardTerceirizada extends Component {
                       <Select
                         naoDesabilitarPrimeiraOpcao
                         onChange={event =>
-                          this.changefiltroPorVencimento(event.target.value)
+                          this.setfiltroPorVencimento(event.target.value)
                         }
                         placeholder={"Filtro por"}
                         options={filtro_por}
@@ -292,59 +302,51 @@ class DashboardTerceirizada extends Component {
                   </div>
                 </div>
                 <div className="pt-3" />
-                {visao === FILTRO_VISAO.TIPO_SOLICITACAO && (
-                  <div className="row pt-3">
-                    {tiposDeSolicitacao.map((tipoDeSolicitacao, key) => {
-                      return resumo[tipoDeSolicitacao.solicitacao] ? (
-                        <div key={key} className="col-6 pb-3">
-                          <Link
-                            to={`/${TERCEIRIZADA}/${tipoDeSolicitacao.link}`}
-                          >
-                            <CardPendencia
-                              cardTitle={tipoDeSolicitacao.solicitacao}
-                              totalOfOrders={
-                                resumo[tipoDeSolicitacao.solicitacao][
-                                  "TOTAL"
-                                ] || 0
-                              }
-                              priorityOrders={
-                                resumo[tipoDeSolicitacao.solicitacao][
-                                  "PRIORITARIO"
-                                ] || 0
-                              }
-                              onLimitOrders={
-                                resumo[tipoDeSolicitacao.solicitacao][
-                                  "LIMITE"
-                                ] || 0
-                              }
-                              regularOrders={
-                                resumo[tipoDeSolicitacao.solicitacao][
-                                  "REGULAR"
-                                ] || 0
-                              }
-                              loading={loadingPainelSolicitacoes}
-                            />
-                          </Link>
-                        </div>
-                      ) : (
-                        <div key={key} className="col-6">
-                          <Link
-                            to={`/${TERCEIRIZADA}/${tipoDeSolicitacao.link}`}
-                          >
-                            <CardPendencia
-                              cardTitle={tipoDeSolicitacao.solicitacao}
-                              totalOfOrders={0}
-                              priorityOrders={0}
-                              onLimitOrders={0}
-                              regularOrders={0}
-                              loading={loadingPainelSolicitacoes}
-                            />
-                          </Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <div className="row pt-3">
+                  {cards.map((card, key) => {
+                    return resumo[card.titulo] ? (
+                      <div key={key} className="col-6 pb-3">
+                        <Link
+                          to={
+                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                              ? `/${TERCEIRIZADA}/${card.link}`
+                              : "/"
+                          }
+                        >
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
+                            priorityOrders={
+                              resumo[card.titulo]["PRIORITARIO"] || 0
+                            }
+                            onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
+                            regularOrders={resumo[card.titulo]["REGULAR"] || 0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6 pb-3">
+                        <Link
+                          to={
+                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                              ? `/${TERCEIRIZADA}/${card.link}`
+                              : "/"
+                          }
+                        >
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={0}
+                            priorityOrders={0}
+                            onLimitOrders={0}
+                            regularOrders={0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
