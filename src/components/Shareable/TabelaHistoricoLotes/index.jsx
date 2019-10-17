@@ -5,7 +5,7 @@ import "./style.scss";
 export const TabelaHistoricoLotes = props => {
   return (
     <div className="table-lote">
-      <p className="pt-3">Lotes pertencentes à DRE</p>
+      <p className="pt-3">Lotes pertencentes à {props.tipoPerfil || "DRE"}</p>
       <table>
         <tr>
           <th>Lote</th>
@@ -20,7 +20,11 @@ export const TabelaHistoricoLotes = props => {
                     {lote.nome}
                   </Link>
                 </td>
-                <td>{lote && lote.tipo_gestao && lote.tipo_gestao.nome}</td>
+                <td>
+                  {lote &&
+                    lote.tipo_gestao &&
+                    (lote.tipo_gestao.nome || lote.tipo_gestao)}
+                </td>
               </tr>
             );
           })}

@@ -314,3 +314,14 @@ export const getSolicitacoesNegadasTerceirizada = async TerceirizadaUuid => {
   }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };
+
+export const getSolicitacoesPendenteCienciaTerceirizada = async (
+  TerceirizadaUuid,
+  filtroAplicado,
+  tipoVisao
+) => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.PENDENTES_CIENCIA
+  }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}`;
+  return retornoBase(url);
+};

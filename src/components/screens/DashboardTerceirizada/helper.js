@@ -19,3 +19,11 @@ export const filtraRegular = pedidos => {
 export const filtrarTotalSolicitacoes = pedidos => {
   return pedidos.length;
 };
+
+export const formatarLotesParaVisao = lotes => {
+  lotes.forEach(lote => {
+    lote["titulo"] = lote["nome"];
+    lote["link"] = lote["uuid"];
+  });
+  return lotes;
+};

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import DashboardTerceirizada from "./DashboardTerceirizada";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/tiposSolicitacao.constants";
+import { formatarLotesParaVisao } from "./helper";
 
 class DashboardTerceirizadaContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: 4050,
-      gestaoDeAlimentacao: false,
       vision_by: [
         {
           nome: "Tipo de Solicitação",
@@ -30,8 +31,21 @@ class DashboardTerceirizadaContainer extends Component {
           nome: "Mês",
           uuid: "daqui_a_30_dias"
         }
-      ]
+      ],
+      meusDados: null,
+      cards: TIPOS_SOLICITACAO_LISTA,
+      tiposSolicitacao: TIPOS_SOLICITACAO_LISTA,
+      lotes: null
     };
+  }
+
+  componentDidMount() {
+    getMeusDados().then(response => {
+      this.setState({
+        meusDados: response,
+        lotes: formatarLotesParaVisao(response.terceirizadas[0].lotes)
+      });
+    });
   }
 
   render() {
