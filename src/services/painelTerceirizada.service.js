@@ -322,6 +322,6 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
 ) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.PENDENTES_CIENCIA
-  }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}`;
+  }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
   return retornoBase(url);
 };
