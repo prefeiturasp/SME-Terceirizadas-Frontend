@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import {
-  DRENegaAlteracaoCardapio,
+  DRENaoValidaAlteracaoCardapio,
   CODAENegaAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
 import { toastError, toastSuccess } from "./Toast/dialogs";
@@ -27,7 +27,7 @@ export class ModalNegarAlteracaoCardapio extends Component {
     const functionCancelaAlteracaoCardapio =
       alteracaoDeCardapio &&
       alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR
-        ? DRENegaAlteracaoCardapio
+        ? DRENaoValidaAlteracaoCardapio
         : CODAENegaAlteracaoCardapio;
 
     const resp = await functionCancelaAlteracaoCardapio(
@@ -53,11 +53,17 @@ export class ModalNegarAlteracaoCardapio extends Component {
   }
 
   render() {
-    const { showModal, closeModal, uuid } = this.props;
+    const { showModal, closeModal, uuid, alteracaoDeCardapio } = this.props;
+    let negarOuNaoValidarStr = "negar";
+    if (
+      alteracaoDeCardapio &&
+      alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR
+    )
+      negarOuNaoValidarStr = "não validar";
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+          <Modal.Title>{`Deseja ${negarOuNaoValidarStr} a solicitação?`}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="form-row">

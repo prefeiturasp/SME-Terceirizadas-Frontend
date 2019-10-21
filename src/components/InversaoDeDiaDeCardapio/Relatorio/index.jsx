@@ -308,7 +308,7 @@ class Relatorio extends Component {
                             <Botao
                               texto={"Não Validar"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showModalNegar()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />

@@ -2,17 +2,17 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
-import {
-  DRENegaInversaoDeDiaDeCardapio,
-  CODAENegaInversaoDeDiaDeCardapio
-} from "../../services/inversaoDeDiaDeCardapio.service";
-import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/statusEnum";
-import Botao from "./Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import { required } from "../../helpers/fieldValidators";
 import { mensagemCancelamento } from "../../helpers/utilities";
+import {
+  CODAENegaInversaoDeDiaDeCardapio,
+  DRENegaInversaoDeDiaDeCardapio
+} from "../../services/inversaoDeDiaDeCardapio.service";
+import Botao from "./Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "./Botao/constants";
 import Select from "./Select";
+import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export class ModalNegarInversaoDiaCardapio extends Component {
   constructor(props) {
@@ -54,10 +54,16 @@ export class ModalNegarInversaoDiaCardapio extends Component {
 
   render() {
     const { showModal, closeModal, uuid, inversaoDeDiaDeCardapio } = this.props;
+    let negarValidar = "negar";
+    if (
+      inversaoDeDiaDeCardapio &&
+      inversaoDeDiaDeCardapio.status === statusEnum.DRE_A_VALIDAR
+    )
+      negarValidar = "não validar";
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+          <Modal.Title>{`Deseja ${negarValidar} a solicitação?`}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
