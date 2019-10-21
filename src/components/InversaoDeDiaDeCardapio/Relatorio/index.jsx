@@ -306,14 +306,14 @@ class Relatorio extends Component {
                           statusEnum.DRE_A_VALIDAR && (
                           <div className="form-group row float-right mt-4">
                             <Botao
-                              texto={"Não Validar Solicitação"}
+                              texto={"Não Validar"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showModalNegar()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
-                              texto="Validar Solicitação"
+                              texto="Validar"
                               type={BUTTON_TYPE.SUBMIT}
                               onClick={() => this.handleSubmit()}
                               style={BUTTON_STYLE.GREEN}
