@@ -20,6 +20,7 @@ class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: []
@@ -51,12 +52,14 @@ class PainelPedidos extends Component {
     this.setState({
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
+      loading: false
     });
   }
 
   render() {
     const {
+      loading,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
@@ -69,93 +72,97 @@ class PainelPedidos extends Component {
     } = this.props;
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit}>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="row">
-                <div className="col-3 font-10 my-auto">
-                  Data: {dataAtualDDMMYYYY()}
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          <form onSubmit={this.props.handleSubmit}>
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-3 font-10 my-auto">
+                    Data: {dataAtualDDMMYYYY()}
+                  </div>
+                  <div className="offset-6 col-3 text-right">
+                    <Field
+                      component={Select}
+                      name="visao_por"
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event => this.filtrar(event.target.value)}
+                      placeholder={"Filtro por"}
+                      options={visaoPorCombo}
+                    />
+                  </div>
                 </div>
-                <div className="offset-6 col-3 text-right">
-                  <Field
-                    component={Select}
-                    name="visao_por"
-                    naoDesabilitarPrimeiraOpcao
-                    onChange={event => this.filtrar(event.target.value)}
-                    placeholder={"Filtro por"}
-                    options={visaoPorCombo}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardPendenteAcao
-                    titulo={
-                      "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
-                    }
-                    tipoDeCard={"priority"}
-                    pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data da Inclusão"}
-                    parametroURL={DRE}
-                  />
-                </div>
-              </div>
-              {valorDoFiltro !== "hoje" && (
                 <div className="row pt-3">
                   <div className="col-12">
                     <CardPendenteAcao
-                      titulo={"Solicitações no prazo limite"}
-                      tipoDeCard={"on-limit"}
-                      pedidos={pedidosNoPrazoLimite}
+                      titulo={
+                        "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
+                      }
+                      tipoDeCard={"priority"}
+                      pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
                       parametroURL={DRE}
                     />
                   </div>
                 </div>
-              )}
-              {valorDoFiltro !== "hoje" && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardPendenteAcao
-                      titulo={"Solicitações no prazo regular"}
-                      tipoDeCard={"regular"}
-                      pedidos={pedidosNoPrazoRegular}
-                      ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={DRE}
-                    />
+                {valorDoFiltro !== "hoje" && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardPendenteAcao
+                        titulo={"Solicitações no prazo limite"}
+                        tipoDeCard={"on-limit"}
+                        pedidos={pedidosNoPrazoLimite}
+                        ultimaColunaLabel={"Data da Inclusão"}
+                        parametroURL={DRE}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-              {pedidosAutorizados.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(pedidosAutorizados)}
-                      ultimaColunaLabel={"Data(s)"}
-                      parametroURL={DRE}
-                      titulo={
-                        "Histórico de Inclusões de Alimentação Autorizadas"
-                      }
-                    />
+                )}
+                {valorDoFiltro !== "hoje" && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardPendenteAcao
+                        titulo={"Solicitações no prazo regular"}
+                        tipoDeCard={"regular"}
+                        pedidos={pedidosNoPrazoRegular}
+                        ultimaColunaLabel={"Data da Inclusão"}
+                        parametroURL={DRE}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
-              {pedidosReprovados.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(pedidosReprovados)}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
-                      }
-                    />
+                )}
+                {pedidosAutorizados.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(pedidosAutorizados)}
+                        ultimaColunaLabel={"Data(s)"}
+                        parametroURL={DRE}
+                        titulo={
+                          "Histórico de Inclusões de Alimentação Autorizadas"
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+                {pedidosReprovados.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(pedidosReprovados)}
+                        ultimaColunaLabel={"Data(s)"}
+                        titulo={
+                          "Histórico de Inclusões de Alimentação Reprovadas"
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        )}
       </div>
     );
   }
