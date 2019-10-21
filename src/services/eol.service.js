@@ -5,7 +5,7 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getCargo = (codigoEol) => {
+export const getCargo = codigoEol => {
   // TODO: pegar periodos escolares da escola ex: escolas/periodos
   const url = `${EOL_API_URL}/cargos/${codigoEol}`;
   const OBJ_REQUEST = {

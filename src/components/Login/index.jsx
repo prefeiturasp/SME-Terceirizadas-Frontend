@@ -24,9 +24,7 @@ export class Login extends Component {
     if (rf.length === 7) {
       getCargo(rf).then(response => {
         if (response && response.results && response.results.length) {
-          console.log(response)
           response.results.forEach(registro => {
-            console.log(registro)
             if (registro.cargo === "DIRETOR DE ESCOLA") {
               this.setState({ habilitarCampos: true });
             }
