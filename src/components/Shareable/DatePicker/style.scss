@@ -55,9 +55,7 @@ div.datepicker {
     }
     display: -webkit-inline-box;
     .input-group-prepend {
-      @media only screen and (max-width: 1650px) {
-        margin-top: 2px;
-      }
+      align-items: flex-end;
       .input-group-text {
         display: block;
         text-align: center;

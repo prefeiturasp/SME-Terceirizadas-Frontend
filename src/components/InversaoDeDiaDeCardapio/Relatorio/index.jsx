@@ -292,7 +292,7 @@ class Relatorio extends Component {
                       return (
                         <div className="form-group row float-right mt-4">
                           <Botao
-                            texto={"Cancelar pedido"}
+                            texto={"Cancelar"}
                             className="ml-3"
                             onClick={() => this.showModalCancelar()}
                             type={BUTTON_TYPE.BUTTON}
@@ -306,14 +306,14 @@ class Relatorio extends Component {
                           statusEnum.DRE_A_VALIDAR && (
                           <div className="form-group row float-right mt-4">
                             <Botao
-                              texto={"Não Validar Solicitação"}
+                              texto={"Não Validar"}
                               className="ml-3"
                               onClick={() => this.showModal()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
-                              texto="Validar Solicitação"
+                              texto="Validar"
                               type={BUTTON_TYPE.SUBMIT}
                               onClick={() => this.handleSubmit()}
                               style={BUTTON_STYLE.GREEN}
@@ -327,14 +327,14 @@ class Relatorio extends Component {
                         InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
                           <div className="form-group row float-right mt-4">
                             <Botao
-                              texto={"Negar Solicitação"}
+                              texto={"Negar"}
                               className="ml-3"
                               onClick={() => this.showModalNegar()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
-                              texto="Autorizar Solicitação"
+                              texto="Autorizar"
                               type={BUTTON_TYPE.SUBMIT}
                               onClick={() => this.handleSubmit()}
                               style={BUTTON_STYLE.GREEN}
@@ -349,7 +349,7 @@ class Relatorio extends Component {
                           statusEnum.CODAE_AUTORIZADO && (
                           <div className="form-group row float-right mt-4">
                             <Botao
-                              texto={"Recusar Solicitação"}
+                              texto={"Recusar"}
                               className="ml-3"
                               onClick={() => this.showModal()}
                               type={BUTTON_TYPE.BUTTON}
