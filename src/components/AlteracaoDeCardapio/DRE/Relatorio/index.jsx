@@ -281,7 +281,7 @@ class Relatorio extends Component {
                 {alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
                     <Botao
-                      texto={"Recusar"}
+                      texto={"Não validar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
                       type={BUTTON_TYPE.BUTTON}

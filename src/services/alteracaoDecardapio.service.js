@@ -198,7 +198,7 @@ export const DREConfirmaAlteracaoCardapio = uuid => {
     });
 };
 
-export const DRENegaAlteracaoCardapio = (uuid, justificativa) => {
+export const DRENaoValidaAlteracaoCardapio = (uuid, justificativa) => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   let status = 0;
   return fetch(url, {
