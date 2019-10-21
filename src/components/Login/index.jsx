@@ -8,14 +8,32 @@ import { Field, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { Link } from "react-router-dom";
 import "./style.scss";
+import { getCargo } from "../../services/eol.service";
 
 export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       mostrarCadastro: false,
-      termos: false
+      termos: false,
+      habilitarCampos: false
     };
+  }
+
+  onRFchanged(rf) {
+    if (rf.length === 7) {
+      getCargo(rf).then(response => {
+        if (response && response.results && response.results.length) {
+          console.log(response)
+          response.results.forEach(registro => {
+            console.log(registro)
+            if (registro.cargo === "DIRETOR DE ESCOLA") {
+              this.setState({ habilitarCampos: true });
+            }
+          });
+        }
+      });
+    }
   }
 
   onTermosClicked() {
@@ -82,6 +100,7 @@ export class Login extends Component {
 
   renderCadastro() {
     const { handleSubmit } = this.props;
+    const { habilitarCampos } = this.state;
     return (
       <div className="form">
         <form onSubmit={handleSubmit(this.handleSubmit)}>
@@ -94,6 +113,7 @@ export class Login extends Component {
                 name="email"
                 required
                 type="email"
+                disabled
                 validate={[required]}
               />
             </div>
@@ -107,6 +127,7 @@ export class Login extends Component {
                 placeholder={"Digite seu nome"}
                 required
                 type="text"
+                disabled
                 validate={[required]}
               />
             </div>
@@ -118,6 +139,7 @@ export class Login extends Component {
                 placeholder={"Digite seu sobrenome"}
                 required
                 type="text"
+                disabled
                 validate={[required]}
               />
             </div>
@@ -128,9 +150,10 @@ export class Login extends Component {
                 component={InputText}
                 label="Nº RF"
                 name="rf"
+                onChange={event => this.onRFchanged(event.target.value)}
                 placeholder={"Digite o RF"}
                 required
-                type="text"
+                type="number"
                 validate={[required]}
               />
             </div>
@@ -155,6 +178,7 @@ export class Login extends Component {
                 placeholder={"******"}
                 required
                 type="password"
+                disabled={!habilitarCampos}
                 validate={required}
               />
             </div>
@@ -166,6 +190,7 @@ export class Login extends Component {
                 placeholder={"******"}
                 required
                 type="password"
+                disabled={!habilitarCampos}
                 validate={required}
               />
             </div>

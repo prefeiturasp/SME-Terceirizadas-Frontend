@@ -3,6 +3,9 @@ let API_URL = process.env.REACT_APP_API_URL;
 let JWT_AUTH = `${API_URL}/api-token-auth/`;
 let USER_URL = `${API_URL}/users/`;
 let API_MOCK = process.env.REACT_APP_API_MOCK;
+let EOL_API_URL = process.env.REACT_APP_EOL_API_URL;
+console.log(API_URL, EOL_API_URL)
+let EOL_API_TOKEN = process.env.REACT_APP_EOL_API_TOKEN;
 
 // verifica o tempo minimo para refresh do token
 // se faltar 300s (5 min) para o token vencer, ele deve ser atualizado
@@ -24,5 +27,7 @@ module.exports = {
   USER_URL: USER_URL,
   API_MOCK: API_MOCK,
   REFRESH_TOKEN_TIMEOUT: REFRESH_TOKEN_TIMEOUT,
+  EOL_API_URL: EOL_API_URL,
+  EOL_API_TOKEN: EOL_API_TOKEN,
   HOME: ""
 };
