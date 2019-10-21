@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { Field, FormSection } from "redux-form";
-import {
-  LabelAndInput,
-  LabelAndDate
-} from "../../../Shareable/labelAndInput/labelAndInput";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required } from "../../../../helpers/fieldValidators";
 import moment from "moment";
@@ -13,6 +9,10 @@ import {
   renderizarLabelEmpresa
 } from "./helper";
 import { dateDelta } from "../../../../helpers/utilities";
+import { InputText } from "../../../Shareable/Input/InputText";
+import { InputComData } from "../../../Shareable/DatePicker";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class ContratosRelacionados extends Component {
   constructor(props) {
@@ -138,7 +138,7 @@ class ContratosRelacionados extends Component {
     this.setState({ nomeDoFormAtual: this.props.nomeForm });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (
       this.props.reseta === true &&
       this.state.formVigenciaContratos.length > 1
@@ -275,19 +275,18 @@ class ContratosRelacionados extends Component {
                       excluirContratoRelacionado(indice);
                     }}
                   >
-                    excluir <i class="fas fa-trash-alt" />
+                    excluir <i className="fas fa-trash-alt" />
                   </button>
                 </div>
               )}
               <div className="data-processo-adm">
                 <div className="inputs-processo">
                   <div>
-                    <label className="label">
-                      <span>* </span>Processo administrativo do contrato
-                    </label>
                     <Field
                       name={`processo_administrativo${indice}`}
-                      component={LabelAndInput}
+                      label="Processo administrativo do contrato"
+                      component={InputText}
+                      required
                       validate={required}
                       onChange={value => {
                         obtemDadosParaSubmit(
@@ -300,13 +299,12 @@ class ContratosRelacionados extends Component {
                     />
                   </div>
                   <div>
-                    <label className="label">
-                      <span>* </span>Data da proposta
-                    </label>
                     <Field
                       name={`data_proposta${indice}`}
-                      component={LabelAndDate}
+                      label="Data da proposta"
+                      component={InputComData}
                       validate={required}
+                      required
                       onChange={value => {
                         obtemDadosParaSubmit(`data_proposta`, value, indice);
                       }}
@@ -317,13 +315,12 @@ class ContratosRelacionados extends Component {
               </div>
               <div className="section-contrato-vigencia">
                 <div className="coluna contrato">
-                  <label className="label">
-                    <span>* </span>N° do contrato
-                  </label>
                   <Field
                     name={`numero_contrato${indice}`}
-                    component={LabelAndInput}
+                    label="N° do contrato"
+                    component={InputText}
                     validate={required}
+                    required
                     onChange={event =>
                       adicionaNumeroContrato(indice, event.target.value)
                     }
@@ -333,15 +330,14 @@ class ContratosRelacionados extends Component {
                 <section>
                   {formVigenciaContratos.map((formContrato, key) => {
                     return (
-                      <FormSection name={`secaoContrato${key}`}>
+                      <FormSection key={key} name={`secaoContrato${key}`}>
                         <div className="colunas">
                           <div className="coluna">
-                            <label className="label">
-                              <span>* </span>Vigencia
-                            </label>
                             <Field
                               name={`data_inicial${key}`}
-                              component={LabelAndDate}
+                              component={InputComData}
+                              label="Vigencia"
+                              required
                               validate={required}
                               minDate={this.obtemDataInicial(key, indice)}
                               onChange={value =>
@@ -355,11 +351,10 @@ class ContratosRelacionados extends Component {
                               maxDate={dateDelta(1825)}
                             />
                           </div>
-                          <div className="coluna">
+                          <div className="coluna mt-auto">
                             <Field
                               name={`data_final${key}`}
-                              component={LabelAndDate}
-                              label=" "
+                              component={InputComData}
                               minDate={
                                 moment(
                                   vigencias[key]["data_inicial"],
@@ -367,6 +362,7 @@ class ContratosRelacionados extends Component {
                                 )["_d"]
                               }
                               maxDate={dateDelta(1825)}
+                              required
                               validate={required}
                               onChange={value =>
                                 this.handleField(
@@ -384,16 +380,17 @@ class ContratosRelacionados extends Component {
                   })}
                 </section>
                 <aside>
-                  <button
-                    type="button"
-                    className="btn btn-outline-info"
-                    onClick={() => {
-                      this.nomeFormAtual();
-                      this.adicionaContratoData();
-                    }}
-                  >
-                    +
-                  </button>
+                  <div className={`col-1 mt-auto mb-1 mr-1`}>
+                    <Botao
+                      texto="+"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      onClick={() => {
+                        this.nomeFormAtual();
+                        this.adicionaContratoData();
+                      }}
+                    />
+                  </div>
                 </aside>
               </div>
               <div className="container-processo-adm">
@@ -401,7 +398,7 @@ class ContratosRelacionados extends Component {
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (
                       <div>
-                        <label className="label">
+                        <label className="label font-weight-normal">
                           <span>* </span>Lote
                         </label>
                         <Field
@@ -432,7 +429,7 @@ class ContratosRelacionados extends Component {
 
                     {diretoriasRegionais.length ? (
                       <div>
-                        <label className="label">
+                        <label className="label font-weight-normal">
                           <span>* </span>DRE
                         </label>
                         <Field
@@ -490,7 +487,7 @@ class ContratosRelacionados extends Component {
                         <div className="pt-3">
                           <div>
                             <label className="label-selected-unities">
-                              DRE's selecionadas
+                              DREs selecionadas
                             </label>
                             {diretoriasNomesSelecionadas.map((dre, indice) => {
                               return (
@@ -511,7 +508,7 @@ class ContratosRelacionados extends Component {
                 <div>
                   {empresas.length ? (
                     <div>
-                      <label className="label">
+                      <label className="label font-weight-normal">
                         <span>* </span>Empresa
                       </label>
                       <Field

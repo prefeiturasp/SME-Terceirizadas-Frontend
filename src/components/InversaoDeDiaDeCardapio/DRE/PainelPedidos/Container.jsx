@@ -1,21 +1,33 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getDiretoriaRegionalPedidosAprovados } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import {
+  getDiretoriaRegionalPedidosAutorizados,
+  getDiretoriaRegionalPedidosReprovados
+} from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      pedidosAprovados: [],
+      pedidosAutorizados: [],
       pedidosReprovados: []
     };
   }
 
   componentDidMount() {
-    getDiretoriaRegionalPedidosAprovados().then(response => {
-      this.setState({ pedidosAprovados: response.results });
+    let pedidosAutorizados;
+    let pedidosReprovados;
+
+    getDiretoriaRegionalPedidosAutorizados().then(response => {
+      pedidosAutorizados = response.results;
+      this.setState({ pedidosAutorizados });
+    });
+
+    getDiretoriaRegionalPedidosReprovados().then(response => {
+      pedidosReprovados = response.results;
+      this.setState({ pedidosReprovados });
     });
   }
 

@@ -4,10 +4,10 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../helpers/utilities";
-import "./style.scss";
+import "../style.scss";
 import { ALTERACAO_CARDAPIO, RELATORIO, DRE } from "../../../configs/constants";
 
-export class CardPendenciaAprovacao extends Component {
+export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -110,6 +110,7 @@ export class CardPendenciaAprovacao extends Component {
                     pedido.inclusoes && pedido.inclusoes[0].data;
                   return (
                     <Link
+                      key={key}
                       to={`/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
                         pedido.uuid
                       }&ehInclusaoContinua=${pedido.data_inicial !==

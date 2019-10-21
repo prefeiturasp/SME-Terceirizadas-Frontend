@@ -1,11 +1,9 @@
-import { extrairTiposALimentacao } from "../components/InclusaoDeAlimentacao/helper";
-
 const LOAD_ALTERACAO_CARDAPIO = "LOAD_ALTERACAO_CARDAPIO";
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALTERACAO_CARDAPIO:
-      if (action.data != null) {
+      if (action.data !== null) {
         if (action.data.data_inicial === action.data.data_final) {
           action.data.alterar_dia = action.data.data_final;
           action.data.data_inicial = null;
@@ -15,11 +13,9 @@ export default function reducer(state = {}, action) {
         action.data.substituicoes.forEach(function(substituicao) {
           action.data[`substituicoes_${substituicao.periodo_escolar.nome}`] = {
             check: true,
-            tipo_de_refeicao: extrairTiposALimentacao(
-              substituicao.tipos_alimentacao
-            ),
-            numero_de_alunos: substituicao.qtd_alunos,
-            tipos_selecionados: substituicao.tipos_alimentacao
+            tipo_alimentacao_de: substituicao.tipo_alimentacao_de.uuid,
+            tipo_alimentacao_para: substituicao.tipo_alimentacao_para.uuid,
+            numero_de_alunos: substituicao.qtd_alunos
           };
         });
       }

@@ -1,8 +1,12 @@
-import authService, { calculateTokenSecondsLeft, isTokenExpired, TOKEN_ALIAS } from "../auth";
+import authService, {
+  calculateTokenSecondsLeft,
+  isTokenExpired,
+  TOKEN_ALIAS
+} from "../auth";
 
 if (typeof localStorage === "undefined" || localStorage === null) {
-  var LocalStorage = require("node-localstorage").LocalStorage;
-  localStorage = new LocalStorage("./scratch");
+  let LocalStorage = require("node-localstorage").LocalStorage;
+  localStorage = new LocalStorage("./scratch"); // eslint-disable-line
 }
 
 const expiredToken =

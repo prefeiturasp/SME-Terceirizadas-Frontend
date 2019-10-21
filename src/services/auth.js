@@ -17,7 +17,22 @@ const login = async (email, password) => {
     const isValid = isValidResponse(json);
     if (isValid) {
       localStorage.setItem(TOKEN_ALIAS, json.token);
-      window.location.href = "/";
+      await fetch(`${CONFIG.API_URL}/usuarios/meus-dados/`, {
+        method: "GET",
+        headers: {
+          Authorization: `JWT ${json.token}`,
+          "Content-Type": "application/json"
+        }
+      }).then(result => {
+        const response = result.json();
+        response.then(result => {
+          localStorage.setItem(
+            "tipo_perfil",
+            JSON.stringify(result.tipo_usuario)
+          );
+          window.location.href = "/";
+        });
+      });
     }
     return isValid;
   } catch (error) {

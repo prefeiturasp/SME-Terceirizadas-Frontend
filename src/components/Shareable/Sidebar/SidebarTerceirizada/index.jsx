@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { TERCEIRIZADA, PAINEL_CONTROLE } from "../../../../configs/constants";
+import { TERCEIRIZADA } from "../../../../configs/constants";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export class SidebarTerceirizada extends Component {
   renderTerceirizada() {
     const { subMenu } = this.state;
     return [
-      <li className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -40,7 +40,7 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${TERCEIRIZADA}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>
@@ -49,34 +49,33 @@ export class SidebarTerceirizada extends Component {
               className="collapse-item"
               to={`/${TERCEIRIZADA}/solicitacoes`}
             >
-              Solicitações Autorizadas
+              Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${TERCEIRIZADA}/solicitacoes`}
             >
-              Solicitações Pendentes <br />
-              de Autorização
+              Aguardando autorização
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${TERCEIRIZADA}/solicitacoes`}
             >
-              Solicitações Recusadas
+              Negadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${TERCEIRIZADA}/solicitacoes`}
             >
-              Solicitações Canceladas
+              Canceladas
             </NavLink>
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -124,7 +123,7 @@ export class SidebarTerceirizada extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit <br /> Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -179,7 +178,7 @@ export class SidebarTerceirizada extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -207,7 +206,7 @@ export class SidebarTerceirizada extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={3} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

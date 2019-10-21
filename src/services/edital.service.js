@@ -46,7 +46,7 @@ export const atualizarEditalEContrato = (payload, uuid) => {
     });
 };
 
-export const obterEditaisEContratos = payload => {
+export const obterEditaisEContratos = () => {
   const url = `${API_URL}/editais-contratos/`;
   let status = 0;
   return fetch(url, {

@@ -7,11 +7,11 @@ import { TERCEIRIZADA, INCLUSAO_ALIMENTACAO } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
-  titulo: "Inclusões de Alimentação"
+  titulo: "Inclusão de Alimentação - Pendente Ciência"
 };
 
 export default () => (
-  <Page>
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />
   </Page>

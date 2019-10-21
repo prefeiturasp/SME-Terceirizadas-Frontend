@@ -1,0 +1,84 @@
+@import "../../../styles/variables.scss";
+
+.card-title-status {
+  font-weight: 600;
+  font-size: 13px;
+  color: $blackInput;
+  letter-spacing: 0.01em;
+  padding-top: 5px;
+  span {
+    color: $grayPlaceholder;
+    font-weight: normal;
+    font-size: 10px;
+    padding-right: 5px;
+  }
+}
+
+.card-list-panel {
+  overflow-x: hidden;
+  border: none !important;
+  i {
+    padding: 0 10px;
+  }
+  hr {
+    margin-top: 5px;
+  }
+  p.data {
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 12px;
+    color: $blackInput;
+    cursor: pointer;
+    margin-bottom: 0.3rem;
+    span {
+      font-weight: normal;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  span.date-time {
+    font-size: 10px;
+    color: $blackInput;
+    padding-right: 35px;
+  }
+  a.see-more {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    color: $blue;
+    padding: 10px 0;
+  }
+  &.card-authorized {
+    i {
+      color: $greenPanel;
+    }
+  }
+  &.card-pending {
+    border-left-color: $orange !important;
+    i {
+      color: $orange;
+    }
+  }
+  &.card-denied {
+    border-left-color: $red !important;
+    i {
+      color: $red;
+    }
+  }
+  &.card-cancelled {
+    border-left-color: $black !important;
+    i {
+      color: $black;
+    }
+  }
+}
+
+.ajuste-icones {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 0.5em;
+  img {
+    height: 1em;
+  }
+}

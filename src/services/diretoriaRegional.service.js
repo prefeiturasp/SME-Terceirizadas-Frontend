@@ -19,8 +19,6 @@ export const getLotes = async () => {
   });
 };
 
-
-
 export const getDiretoriaregional = () => {
   const url = `${API_URL}/diretorias-regionais/`;
   let status = 0;
@@ -40,7 +38,7 @@ export const getDiretoriaregional = () => {
     });
 };
 
-export const getDiretoriaregionalDetalhe = (uuid) => {
+export const getDiretoriaregionalDetalhe = uuid => {
   const url = `${API_URL}/diretorias-regionais/${uuid}/`;
   let status = 0;
   return fetch(url, {

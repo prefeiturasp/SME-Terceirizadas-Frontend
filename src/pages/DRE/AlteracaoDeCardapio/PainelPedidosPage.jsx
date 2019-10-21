@@ -7,11 +7,11 @@ import { DRE, ALTERACAO_CARDAPIO } from "../../../configs/constants";
 
 const atual = {
   href: `/${DRE}/${ALTERACAO_CARDAPIO}`,
-  titulo: "Alterações de Cardápio"
+  titulo: "Alteração de Cardápio - Pendente Validação"
 };
 
 export default () => (
-  <Page>
+  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />
   </Page>

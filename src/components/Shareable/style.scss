@@ -1,5 +1,9 @@
 @import "../../styles/variables.scss";
 
+.font-10 {
+  font-size: 10px;
+}
+
 label {
   margin-bottom: 0 !important;
 }
@@ -21,8 +25,10 @@ textarea {
 .card-body {
   padding: 2rem !important;
 }
+
 .dashboard-card-title {
   input.input-search {
+    font-size: 14px;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -36,8 +42,69 @@ textarea {
       padding-right: 5px;
     }
   }
+  .color-black {
+    color: $blackInput;
+  }
   i.fa-search {
     font-size: 20px;
+  }
+}
+
+.checkbox-label {
+  color: $gray;
+  font-size: 14px;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    &:checked {
+      ~ .checkbox-custom {
+        background-color: $blueCheckAndRadio;
+        border-radius: 5px;
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+        border: 1px solid $blueCheckAndRadio;
+        &:after {
+          transform: rotate(45deg) scale(1);
+          opacity: 1;
+          left: 7px;
+          top: 2px;
+          width: 6px;
+          height: 12px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          background-color: transparent;
+          border-radius: 0;
+        }
+      }
+    }
+  }
+  .checkbox-custom {
+    position: absolute;
+    top: 0px;
+    left: -30px;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid $gray;
+    cursor: pointer;
+    &:after {
+      position: absolute;
+      content: "";
+      left: 12px;
+      top: 12px;
+      height: 0px;
+      width: 0px;
+      border-radius: 5px;
+      border: solid $blueCheckAndRadio;
+      border-width: 0 3px 3px 0;
+      transform: rotate(0deg) scale(0);
+      opacity: 1;
+    }
+    &.radio {
+      border-radius: 15px;
+    }
   }
 }
 
@@ -69,10 +136,8 @@ textarea {
 }
 
 .current-date {
-  font-size: 13px;
-  span {
-    color: #4c5862;
-  }
+  font-size: 10px;
+  color: $grayPlaceholder;
 }
 
 p.caption {
@@ -180,14 +245,15 @@ div.caption-choices {
 .report-label-value {
   margin-top: 20px;
   font-size: 14px;
-  color: #686868;
+  color: $gray;
   .value {
     font-weight: bold;
+    color: $blackInput;
   }
   .value-important {
     font-weight: bold;
     font-size: 15px;
-    color: #353535;
+    color: $blackInput;
   }
 }
 
@@ -203,63 +269,6 @@ div.caption-choices {
 
 .c-pointer {
   cursor: pointer;
-}
-
-.checkbox-label {
-  color: $gray;
-  input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    &:checked {
-      ~ .checkbox-custom {
-        background-color: $blueCheckAndRadio;
-        border-radius: 5px;
-        transform: rotate(0deg) scale(1);
-        opacity: 1;
-        border: 1px solid $blueCheckAndRadio;
-        &:after {
-          transform: rotate(45deg) scale(1);
-          opacity: 1;
-          left: 7px;
-          top: 2px;
-          width: 6px;
-          height: 12px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          background-color: transparent;
-          border-radius: 0;
-        }
-      }
-    }
-  }
-  .checkbox-custom {
-    position: absolute;
-    top: 10px;
-    left: 0px;
-    height: 20px;
-    width: 20px;
-    background-color: #fff;
-    border-radius: 3px;
-    border: 1px solid $gray;
-    cursor: pointer;
-    &:after {
-      position: absolute;
-      content: "";
-      left: 12px;
-      top: 12px;
-      height: 0px;
-      width: 0px;
-      border-radius: 5px;
-      border: solid $blueCheckAndRadio;
-      border-width: 0 3px 3px 0;
-      transform: rotate(0deg) scale(0);
-      opacity: 1;
-    }
-    &.radio {
-      border-radius: 15px;
-    }
-  }
 }
 
 .btn-styled {
@@ -314,29 +323,34 @@ div.caption-choices {
   }
 }
 
+.draft {
+  font-size: 14px;
+}
+
 // ----------- Libraries ---------------
 
 // @khanacademy/react-multi-select
 .multiselect-wrapper-disabled .dropdown-heading {
   pointer-events: none;
-  background-color: #e9ecef !important;
+  background-color: $grayDisabled !important;
 }
 
-.multiselect-wrapper-disabled
-  .dropdown
-  .dropdown-heading
-  .dropdown-heading-value
-  span {
-  color: #5d515b !important;
+.dropdown .dropdown-heading .dropdown-heading-value span {
+  color: $blackInput !important;
+  font-size: 14px;
 }
 
-// react-tostify
-.Toastify__toast-container--top-center {
-  font-weight: 500;
-  font-size: 22px;
-  left: 15%;
-  min-width: 90%;
-  text-align: center;
+.dropdown-content
+  .select-panel
+  .select-list
+  label:not([aria-selected="true"]).select-item {
+  color: $blackInput !important;
+  font-size: 14px;
+}
+
+.dropdown-content .select-panel .select-item:not([aria-selected="true"]) {
+  color: $blackInput !important;
+  font-size: 14px;
 }
 
 // react-burgers
@@ -360,6 +374,97 @@ div.caption-choices {
   th {
     font-weight: normal;
     font-size: 14px;
+    color: $gray;
+  }
+  td {
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+    border-bottom: 1px solid #c0c0c0;
+    padding: 10px 0;
+  }
+}
+.label {
+  font-size: 14px;
+  line-height: 16px;
+  &--red {
+    @extend .label;
+    color: $redAlert;
+  }
+  &--gray {
+    @extend .label;
+    color: $gray;
+  }
+}
+
+.margin-fix {
+  p {
+    margin: 0 0 0.2em 0 !important;
+  }
+  b {
+    margin: 0 0 0.2em 0 !important;
+  }
+}
+
+.card-pendency-approval {
+  padding: 16px 44px;
+  border: 1px solid #dadada;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  .card-title {
+    font-weight: bold;
+    font-size: 18px;
+    &.priority {
+      color: $red;
+    }
+    &.on-limit {
+      color: $orange;
+    }
+    &.regular {
+      color: $greenPanel;
+    }
+  }
+  .order-box {
+    display: grid;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border: 0.5px solid #e8e8e8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    &.priority {
+      background: $red;
+    }
+    &.on-limit {
+      background: $orange;
+    }
+    &.regular {
+      background: $greenPanel;
+    }
+    span {
+      font-weight: bold;
+      font-size: 34px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .order {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+  .order-lines {
+    .text {
+      font-size: 14px;
+      color: $blackInput;
+    }
+  }
+}
+
+.orders-table {
+  width: 100%;
+  th {
+    font-weight: normal;
+    font-size: 14px;
     color: #686868;
   }
   td {
@@ -368,5 +473,44 @@ div.caption-choices {
     color: #353535;
     border-bottom: 1px solid #c0c0c0;
     padding: 10px 0;
+  }
+  tr {
+    th:nth-child(1),
+    td:nth-child(1),
+    th:nth-child(2),
+    td:nth-child(2) {
+      padding-left: 10px;
+      width: 20%;
+    }
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 39%;
+    }
+    th:nth-child(4) {
+      padding-left: 90px;
+    }
+    td:nth-child(4) {
+      padding-left: 110px;
+      padding-right: 0px;
+    }
+  }
+  thead,
+  tbody {
+    display: block;
+  }
+  tbody {
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+.fa-search {
+  &.inside-input {
+    z-index: 1;
+    padding-top: 12px;
+    color: #2881bb;
+    font-size: 20px;
+    position: relative;
   }
 }

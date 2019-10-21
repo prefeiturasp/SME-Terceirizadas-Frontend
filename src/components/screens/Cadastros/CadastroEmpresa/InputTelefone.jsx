@@ -52,21 +52,40 @@ class TelefoneOuCelular extends Component {
       setaContatoRepresentante,
       setaContatosNutricionista,
       indice,
-      cenario
+      cenario,
+      name,
+      id,
+      input,
+      label
     } = this.props;
     return (
-      <MaskedInput
-        mask={valor => this.verificaCampo(valor)}
-        className="form-control"
-        guide={false}
-        onChange={event => {
-          cenario === "contatoEmpresa"
-            ? setaContatosEmpresa("telefone", event.target.value, indice)
-            : cenario === "contatoRepresentante"
-            ? setaContatoRepresentante(event.target.value, indice)
-            : setaContatosNutricionista("telefone", event.target.value, indice);
-        }}
-      />
+      <div className="input">
+        {label && (
+          <label htmlFor={name} className={`col-form-label`}>
+            <span className="required-asterisk">*</span>
+            {label}
+          </label>
+        )}
+        <MaskedInput
+          {...input}
+          name={name}
+          id={id}
+          mask={valor => this.verificaCampo(valor)}
+          className="form-control"
+          guide={false}
+          onChange={event => {
+            cenario === "contatoEmpresa"
+              ? setaContatosEmpresa("telefone", event.target.value, indice)
+              : cenario === "contatoRepresentante"
+              ? setaContatoRepresentante(event.target.value, indice)
+              : setaContatosNutricionista(
+                  "telefone",
+                  event.target.value,
+                  indice
+                );
+          }}
+        />
+      </div>
     );
   }
 }

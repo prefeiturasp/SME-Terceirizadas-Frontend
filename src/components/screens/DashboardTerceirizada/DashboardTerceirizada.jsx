@@ -3,191 +3,298 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import {
-  ALTERACAO_CARDAPIO,
-  INCLUSAO_ALIMENTACAO,
   TERCEIRIZADA,
-  SOLICITACAO_KIT_LANCHE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO,
-  INVERSAO_CARDAPIO
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import CardLogo from "../../Shareable/CardLogo/CardLogo";
+import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import { dataAtual } from "../../../helpers/utilities";
+import {
+  getSolicitacoesCanceladasTerceirizada,
+  getSolicitacoesNegadasTerceirizada,
+  getSolicitacoesPendentesTerceirizada,
+  getSolicitacoesAutorizadasTerceirizada,
+  getSolicitacoesPendenteCienciaTerceirizada
+} from "../../../services/painelTerceirizada.service";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import CardBody from "../../Shareable/CardBody";
+import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
-import IconeFinancas from "../../Shareable/Icones/IconeFinancas";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconePD from "../../Shareable/Icones/IconePD";
-import IconePlanejamentoCardapio from "../../Shareable/Icones/IconePlanejamentoCardapio";
-import IconeSupervisao from "../../Shareable/Icones/IconeSupervisao";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import CardStatusDeSolicitacao, {
+  ICON_CARD_TYPE_ENUM,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
+import { ajustarFormatoLog, LOG_PARA } from "../helper";
+import Select from "../../Shareable/Select";
+import { MenuIcones } from "./components/MenuIcones";
+import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
+import { FILTRO } from "../const";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      secao: null,
+      cards: this.props.cards,
+      pendentesListFiltered: [],
+      canceladasListFiltered: [],
+      negadasListFiltered: [],
+      autorizadasListFiltered: [],
+
+      lotes: [],
+      resumo: [],
+
       collapsed: true,
-      lotes: [
-        {
-          nome: "7A IP I IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        },
-        {
-          nome: "7A IP II IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        }
-      ],
-      gestaoDeAlimentacao: false
+      pendentesListSolicitacao: [],
+      canceladasListSolicitacao: [],
+      loadingPainelSolicitacoes: true,
+
+      visao: FILTRO_VISAO.TIPO_SOLICITACAO,
+      filtroPorVencimento: FILTRO.SEM_FILTRO,
+
+      minhaTerceirizada: null
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+    this.renderSecao = this.renderSecao.bind(this);
   }
 
   alterarCollapse() {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
-  render() {
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
+  }
+
+  renderSecao(secao) {
+    this.setState({ secao });
+  }
+
+  setfiltroPorVencimento(filtroPorVencimento) {
+    this.setState({ filtroPorVencimento }, () => {
+      this.carregaResumosPendencias();
+    });
+  }
+
+  setVisao(visao) {
+    const { tiposSolicitacao, lotes } = this.props;
+    this.setState(
+      {
+        visao,
+        cards:
+          visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
+      },
+      () => {
+        this.carregaResumosPendencias();
+      }
+    );
+  }
+
+  async carregaResumosPendencias() {
+    const { minhaTerceirizada, visao, filtroPorVencimento } = this.state;
+    this.setState({ loadingPainelSolicitacoes: true });
+    const resumo = await getSolicitacoesPendenteCienciaTerceirizada(
+      minhaTerceirizada,
+      filtroPorVencimento,
+      visao
+    );
+    this.setState({
+      resumo: resumo.results,
+      loadingPainelSolicitacoes: false
+    });
+  }
+
+  async componentDidMount() {
+    let minhaTerceirizada = null;
+    getMeusDados().then(response => {
+      this.setState({ minhaTerceirizada: response.terceirizadas[0].uuid });
+      minhaTerceirizada = response.terceirizadas[0].uuid;
+
+      this.carregaResumosPendencias();
+
+      getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(request => {
+        let pendentesListSolicitacao = ajustarFormatoLog(
+          request.results,
+          LOG_PARA.TERCEIRIZADA
+        );
+        this.setState({
+          pendentesListSolicitacao,
+          pendentesListFiltered: pendentesListSolicitacao
+        });
+      });
+
+      getSolicitacoesCanceladasTerceirizada(minhaTerceirizada).then(request => {
+        let canceladasListSolicitacao = ajustarFormatoLog(
+          request.results,
+          LOG_PARA.TERCEIRIZADA
+        );
+        this.setState({
+          canceladasListSolicitacao,
+          canceladasListFiltered: canceladasListSolicitacao
+        });
+      });
+
+      getSolicitacoesNegadasTerceirizada(minhaTerceirizada).then(request => {
+        let negadasListSolicitacao = ajustarFormatoLog(
+          request.results,
+          LOG_PARA.TERCEIRIZADA
+        );
+        this.setState({
+          negadasListSolicitacao,
+          negadasListFiltered: negadasListSolicitacao
+        });
+      });
+
+      getSolicitacoesAutorizadasTerceirizada(minhaTerceirizada).then(
+        request => {
+          let autorizadasListSolicitacao = ajustarFormatoLog(
+            request.results,
+            LOG_PARA.TERCEIRIZADA
+          );
+          this.setState({
+            autorizadasListSolicitacao: autorizadasListSolicitacao,
+            autorizadasListFiltered: autorizadasListSolicitacao
+          });
+        }
+      );
+    });
+  }
+
+  onPesquisaChanged(event) {
+    if (event === undefined) event = { target: { value: "" } };
     const {
-      enrolled,
-      handleSubmit,
-      solicitations,
-      vision_by,
-      quantidade_suspensoes
-    } = this.props;
-    const { collapsed, gestaoDeAlimentacao, lotes } = this.state;
+      pendentesListSolicitacao,
+      canceladasListSolicitacao,
+      autorizadasListSolicitacao,
+      negadasListSolicitacao
+    } = this.state;
+
+    this.setState({
+      pendentesListFiltered: this.filtrarNome(pendentesListSolicitacao, event),
+      autorizadasListFiltered: this.filtrarNome(
+        autorizadasListSolicitacao,
+        event
+      ),
+      negadasListFiltered: this.filtrarNome(negadasListSolicitacao, event),
+      canceladasListFiltered: this.filtrarNome(canceladasListSolicitacao, event)
+    });
+  }
+
+  render() {
+    const { handleSubmit, vision_by, filtro_por, meusDados } = this.props;
+
+    const {
+      cards,
+      collapsed,
+      secao,
+      visao,
+      pendentesListFiltered,
+      canceladasListFiltered,
+      negadasListFiltered,
+      autorizadasListFiltered,
+      resumo,
+      loadingPainelSolicitacoes
+    } = this.state;
+
     return (
       <div>
-        <form onSubmit={handleSubmit(handleSubmit)}>
+        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={
+              (meusDados && meusDados.terceirizadas[0].quantidade_alunos) || 0
+            }
           >
-            <Collapse isOpened={!collapsed}>
-              <TabelaHistoricoLotes lotes={lotes} />
-            </Collapse>
+            {meusDados && (
+              <Collapse isOpened={!collapsed}>
+                <TabelaHistoricoLotes
+                  lotes={meusDados.terceirizadas[0].lotes}
+                  tipoPerfil={"Terceirizada"}
+                />
+              </Collapse>
+            )}
           </CardMatriculados>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                <span>
-                  <i className="fas fa-thumbtack" />
-                  Painel de Status de Solicitações
-                  <i className="fas fa-pen" />
-                </span>
-                <span className="float-right">
-                  <input className="input-search" placeholder="Pesquisar" />
-                  <i className="fas fa-search" />
-                </span>
+          <CardBody
+            titulo={"Acompanhamento solicitações"}
+            dataAtual={dataAtual()}
+            onChange={this.onPesquisaChanged}
+          >
+            <div className="row pb-3">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Aguardando Autorização"}
+                  cardType={CARD_TYPE_ENUM.PENDENTE}
+                  solicitations={pendentesListFiltered}
+                  icon={"fa-exclamation-triangle"}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_PENDENTES}`}
+                />
               </div>
-              <div>
-                <p className="current-date">
-                  Data: <span>28 de março de 2019</span>
-                </p>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Pendente Aprovação"}
-                    cardType={"card-pending"}
-                    solicitations={solicitations}
-                    icon={"fa-exclamation-triangle"}
-                    href={`${TERCEIRIZADA}/solicitacoes`}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={solicitations}
-                    icon={"fa-times-circle"}
-                    href={`/${TERCEIRIZADA}/solicitacoes`}
-                  />
-                </div>
-              </div>
-              <p className="caption">Legenda</p>
-              <div className="caption-choices">
-                <span>
-                  <i className="fas fa-check" />
-                  Solicitação Autorizada
-                </span>
-                <span>
-                  <i className="fas fa-exclamation-triangle" />
-                  Solicitação Pendente Aprovação
-                </span>
-                <span>
-                  <i className="fas fa-ban" />
-                  Solicitação Recusada
-                </span>
-                <span>
-                  <i className="fas fa-times-circle" />
-                  Solicitação Cancelada
-                </span>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Autorizadas"}
+                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                  solicitations={autorizadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_AUTORIZADAS}`}
+                />
               </div>
             </div>
-          </div>
-          {!gestaoDeAlimentacao ? (
-            <div>
-              <div className="row mt-3">
-                <div
-                  className="col-4"
-                  onClick={() =>
-                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
-                  }
-                >
-                  <CardLogo titulo={"Gestão de Alimentação"}>
-                    <IconeGestaoDeAlimentacao />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Dieta Especial"} disabled>
-                    <IconeDietaEspecial />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Finanças"} disabled>
-                    <IconeFinancas />
-                  </CardLogo>
-                </div>
+            <div className="row">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Negadas"}
+                  cardType={CARD_TYPE_ENUM.NEGADO}
+                  solicitations={negadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
+                />
               </div>
-              <div className="row mt-3">
-                <div
-                  className="col-4"
-                  onClick={() =>
-                    this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
-                  }
-                >
-                  <CardLogo titulo={"Pesquisa e Desenvolvimento P&D"} disabled>
-                    <IconePD />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Supervisão"} disabled>
-                    <IconeSupervisao />
-                  </CardLogo>
-                </div>
-                <div className="col-4">
-                  <CardLogo titulo={"Planejamento de Cardápio"} disabled>
-                    <IconePlanejamentoCardapio />
-                  </CardLogo>
-                </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Canceladas"}
+                  cardType={CARD_TYPE_ENUM.CANCELADO}
+                  solicitations={canceladasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`}
+                />
               </div>
             </div>
-          ) : (
+            <CardLegendas />
+          </CardBody>
+          <div className="card mt-3" />
+          {!secao && <MenuIcones renderSecao={this.renderSecao} />}
+          {secao === MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO && (
             <div className="card mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold dashboard-card-title">
                   <div className="row">
-                    <div className="col-3 mt-3">
-                      <i className="fas fa-lock" />
-                      Pendências
+                    <div className="col-3 mt-3 color-black">Pendências</div>
+                    <div className="offset-3 col-3 text-right my-auto">
+                      <Select
+                        naoDesabilitarPrimeiraOpcao
+                        onChange={event =>
+                          this.setfiltroPorVencimento(event.target.value)
+                        }
+                        placeholder={"Filtro por"}
+                        options={filtro_por}
+                      />
                     </div>
-                    <div className="offset-6 col-3 text-right my-auto">
-                      <LabelAndCombo
-                        onChange={() => {}}
+                    <div className="col-3 text-right my-auto">
+                      <Select
+                        naoDesabilitarPrimeiraOpcao
+                        disabled={resumo.length === 0}
+                        onChange={event => this.setVisao(event.target.value)}
                         placeholder={"Visão por"}
                         options={vision_by}
                       />
@@ -196,95 +303,49 @@ class DashboardTerceirizada extends Component {
                 </div>
                 <div className="pt-3" />
                 <div className="row pt-3">
-                  <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Escolas"}
-                      totalOfOrders={16}
-                      priorityOrders={8}
-                      onLimitOrders={2}
-                      regularOrders={6}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <CardPendencia
-                      cardTitle={"Lotes"}
-                      totalOfOrders={47}
-                      priorityOrders={10}
-                      onLimitOrders={7}
-                      regularOrders={30}
-                    />
-                  </div>
-                </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`}>
-                      <CardPendencia
-                        cardTitle={"Inclusão de Alimentação"}
-                        totalOfOrders={16}
-                        priorityOrders={8}
-                        onLimitOrders={2}
-                        regularOrders={6}
-                      />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`}>
-                      <CardPendencia
-                        cardTitle={"Inversão de dias de cardápio"}
-                        totalOfOrders={50}
-                        priorityOrders={2}
-                        onLimitOrders={18}
-                        regularOrders={30}
-                      />
-                    </Link>
-                  </div>
-                </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`}>
-                      <CardPendencia
-                        cardTitle={"Alteração de Cardápio"}
-                        totalOfOrders={20}
-                        priorityOrders={5}
-                        onLimitOrders={10}
-                        regularOrders={10}
-                      />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE}`}>
-                      <CardPendencia
-                        cardTitle={"Kit Lanche"}
-                        totalOfOrders={120}
-                        priorityOrders={20}
-                        onLimitOrders={40}
-                        regularOrders={60}
-                      />
-                    </Link>
-                  </div>
-                </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
-                      <CardPendencia
-                        cardTitle={"Solicitação Unificada"}
-                        totalOfOrders={2}
-                        priorityOrders={1}
-                        onLimitOrders={0}
-                        regularOrders={1}
-                      />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
-                      <CardPendencia
-                        cardTitle={"Suspensão de Alimentação"}
-                        totalOfOrders={quantidade_suspensoes}
-                        priorityOrders={quantidade_suspensoes}
-                        priorityOrdersOnly={true}
-                      />
-                    </Link>
-                  </div>
+                  {cards.map((card, key) => {
+                    return resumo[card.titulo] ? (
+                      <div key={key} className="col-6 pb-3">
+                        <Link
+                          to={
+                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                              ? `/${TERCEIRIZADA}/${card.link}`
+                              : "/"
+                          }
+                        >
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
+                            priorityOrders={
+                              resumo[card.titulo]["PRIORITARIO"] || 0
+                            }
+                            onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
+                            regularOrders={resumo[card.titulo]["REGULAR"] || 0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6 pb-3">
+                        <Link
+                          to={
+                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                              ? `/${TERCEIRIZADA}/${card.link}`
+                              : "/"
+                          }
+                        >
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={0}
+                            priorityOrders={0}
+                            onLimitOrders={0}
+                            regularOrders={0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

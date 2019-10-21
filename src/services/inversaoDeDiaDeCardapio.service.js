@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { FLUXO } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -120,8 +121,8 @@ export const inicioPedido = uuid => {
     });
 };
 
-export const dreAprovaPedidoEscola = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/diretoria-regional-aprova-pedido/`;
+export const dreValidaPedidoEscola = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -139,12 +140,54 @@ export const dreAprovaPedidoEscola = uuid => {
     });
 };
 
-export const CODAEAprovaPedidoDRE = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-aprova-pedido/`;
+export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.DRE_NAO_VALIDA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAEAutorizaPedidoDRE = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
@@ -222,8 +265,8 @@ export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-diretoria-regional/`;
+export const getDiretoriaRegionalPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -237,9 +280,8 @@ export const getDiretoriaRegionalPedidosAprovados = () => {
     });
 };
 
-
-export const getCODAEPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-codae/`;
+export const getDiretoriaRegionalPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -253,8 +295,8 @@ export const getCODAEPedidosAprovados = () => {
     });
 };
 
-export const getTerceirizadaPedidosAprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-aprovados-terceirizada/`;
+export const getCODAEPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -265,5 +307,56 @@ export const getTerceirizadaPedidosAprovados = () => {
     })
     .catch(error => {
       console.log(error);
+    });
+};
+
+export const getCODAEPedidosReprovados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-codae/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getTerceirizadaPedidosAutorizados = () => {
+  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-terceirizada/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const cancelaInversaoDiaCardapioEscola = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.ESCOLA_CANCELA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
     });
 };

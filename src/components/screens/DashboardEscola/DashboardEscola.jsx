@@ -1,23 +1,91 @@
 import React, { Component } from "react";
-import { LabelAndInput } from "../../Shareable/labelAndInput/labelAndInput";
-import { Field, reduxForm } from "redux-form";
-import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Collapse } from "react-collapse";
+import { Field, reduxForm } from "redux-form";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
+} from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
-import { CardStatusDeSolicitacao } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import CardAtalho from "./CardAtalho";
 import CardLegendas from "../../Shareable/CardLegendas";
-import CardHistorico from "../../Shareable/CardHistorico/CardHistorico";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import {
+  CardStatusDeSolicitacao,
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { InputText } from "../../Shareable/Input/InputText";
+import CardAtalho from "./CardAtalho";
 import "./style.scss";
 
 export class DashboardEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      autorizadasListFiltered: [],
+      pendentesListFiltered: [],
+      negadasListFiltered: [],
+      canceladasListFiltered: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
+    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+
+    if (prevProps.autorizadas.length !== autorizadas.length)
+      this.setState({
+        autorizadasListFiltered: autorizadas
+      });
+
+    if (prevProps.pendentes.length !== pendentes.length)
+      this.setState({
+        pendentesListFiltered: pendentes
+      });
+
+    if (prevProps.negadas.length !== negadas.length)
+      this.setState({
+        negadasListFiltered: negadas
+      });
+    if (prevProps.canceladas.length !== canceladas.length)
+      this.setState({
+        canceladasListFiltered: canceladas
+      });
+  }
+
+  onPesquisaChanged(event) {
+    if (event === undefined) event = { target: { value: "" } };
+    const { autorizadas, pendentes, negadas, canceladas } = this.props;
+
+    let pendentesListFiltered = pendentes;
+    let autorizadasListFiltered = autorizadas;
+    let negadasListFiltered = negadas;
+    let canceladasListFiltered = canceladas;
+
+    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
+    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
+    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+
+    this.setState({
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    });
+  }
+
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
   }
 
   alterarCollapse() {
@@ -25,8 +93,14 @@ export class DashboardEscola extends Component {
   }
 
   render() {
-    const { collapsed } = this.state;
-    const { numeroAlunos, autorizadas, theadList, trs } = this.props;
+    const {
+      collapsed,
+      pendentesListFiltered,
+      autorizadasListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
+    } = this.state;
+    const { numeroAlunos } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
@@ -38,39 +112,33 @@ export class DashboardEscola extends Component {
             <div className="user-data">
               <form>
                 <div className="row">
-                  <div className="form-group col-6">
+                  <div className="col-6">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="RF Responsável"
                       placeholder="00000000"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
-                  <div className="form-group col-6">
+                  <div className="col-6">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Cargo / Função"
                       placeholder="Nome do Cargo"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
                 </div>
                 <div className="row">
-                  <div className="form-group col-12">
+                  <div className="col-12">
                     <Field
-                      component={LabelAndInput}
+                      component={InputText}
                       label="Nome"
                       placeholder="Nome Completo"
                       type="text"
                       name="numero_alunos"
-                      className="form-control"
-                      hasIcon
                     />
                   </div>
                 </div>
@@ -79,46 +147,47 @@ export class DashboardEscola extends Component {
           </Collapse>
         </CardMatriculados>
         <CardBody
-          titulo={"Painel de Status de Solicitações"}
+          titulo={"Acompanhamento solicitações"}
           dataAtual={dataAtual()}
+          onChange={this.onPesquisaChanged}
         >
           <div className="row">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Autorizadas"}
-                cardType={"card-authorized"}
-                solicitations={autorizadas}
-                icon={"fa-check"}
-                href={"/escola/status-solicitacoes"}
+                cardTitle={"Aguardando Autorização"}
+                cardType={CARD_TYPE_ENUM.PENDENTE}
+                solicitations={pendentesListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.PENDENTE}
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
               />
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Pendente Aprovação"}
-                cardType={"card-pending"}
-                solicitations={autorizadas}
-                icon={"fa-exclamation-triangle"}
-                href={"/escola/status-solicitacoes"}
+                cardTitle={"Autorizados"}
+                cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                solicitations={autorizadasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
               />
             </div>
           </div>
           <div className="row pt-3">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Recusadas"}
-                cardType={"card-denied"}
-                solicitations={autorizadas}
-                icon={"fa-ban"}
-                href={"/escola/status-solicitacoes"}
+                cardTitle={"Negadas"}
+                cardType={CARD_TYPE_ENUM.NEGADO}
+                solicitations={negadasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
               />
             </div>
             <div className="col-6">
               <CardStatusDeSolicitacao
                 cardTitle={"Canceladas"}
-                cardType={"card-cancelled"}
-                solicitations={autorizadas}
-                icon={"fa-times-circle"}
-                href={"/escola/status-solicitacoes"}
+                cardType={CARD_TYPE_ENUM.CANCELADO}
+                solicitations={canceladasListFiltered}
+                icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
               />
             </div>
           </div>
@@ -151,11 +220,11 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Solicitação de Kit Lanche"}
+              titulo={"Solicitação de Kit Lanche Passeio"}
               texto={
-                "Quando houver necessidade da solicitação de Kit Lanche para consumo durante " +
+                "Quando houver necessidade da solicitação de Kit Lanche Passeio para consumo durante " +
                 "o passeio externo (situações em que não há possibilidade de oferecer a " +
-                "alimentação na própria unidade como por exemplo Kit Lanche para visitar " +
+                "alimentação na própria unidade como por exemplo Kit Lanche Passeio para visitar " +
                 "o museu)"
               }
               textoLink={"Novo pedido"}
@@ -188,11 +257,6 @@ export class DashboardEscola extends Component {
             />
           </div>
         </div>
-        <CardHistorico
-          thead={theadList}
-          trs={trs}
-          titulo={"Histórico de Alimentações solicitadas"}
-        />
       </div>
     );
   }

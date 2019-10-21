@@ -1,6 +1,11 @@
+@import "../../../styles/variables.scss";
+
 .linked-card {
   a {
-    color: #a8a8a8;
+    color: $green;
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
 
@@ -12,24 +17,31 @@
   .col-lg-12 {
     padding: 0;
   }
+  .card {
+    .card-body {
+      .card-title {
+        color: $blackInput;
+      }
+    }
+  }
   ul.select-list {
     li {
-      background-color: #035d96;
+      background-color: $blue;
     }
   }
   label {
     &.label {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       span {
-        color: #c9251b;
+        color: $red;
       }
     }
     &.link {
       cursor: pointer;
       font-weight: bold;
-      color: #035d96;
+      color: $blue;
     }
     &.label-selected-unities {
       font-weight: normal;
@@ -47,7 +59,7 @@
 .modal-cadastro-lote {
   p {
     font-size: 14px;
-    color: #686868;
+    color: $gray;
     margin-bottom: 0;
     &:first-child {
       font-weight: bold;
@@ -84,8 +96,9 @@ table.cadastro {
   .input-search {
     width: 50%;
     padding-right: 10px;
+    border: none;
+    border-bottom: 1px solid $gray;
     &::placeholder {
-      padding-right: 10px;
       text-align: right;
     }
   }
@@ -94,7 +107,7 @@ table.cadastro {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -114,14 +127,11 @@ table.cadastro {
     &:first-child {
       padding-left: 20px;
       width: 50%;
+      color: $blackInput;
       font-weight: bold;
     }
     &:nth-child(2) {
       width: 19%;
-    }
-
-    &:nth-child(4) {
-      text-align: center;
     }
   }
   tr.relationed-company-title {
@@ -129,7 +139,7 @@ table.cadastro {
     td {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       padding: 10px 0 0 0;
       border: none;
       &:first-child {
@@ -143,9 +153,12 @@ table.cadastro {
       background: #f2fbfe;
       font-weight: bold;
       font-size: 14px;
-      color: #353535;
+      color: $blackInput;
       border: none;
       padding: 10px 0;
+      &.link {
+        color: $blue;
+      }
       span {
         font-weight: 600;
         color: #707683;
@@ -187,6 +200,7 @@ table.cadastro-empresa {
   .input-search {
     width: 50%;
     padding-right: 10px;
+    border: none;
     &::placeholder {
       padding-right: 10px;
       text-align: right;
@@ -197,7 +211,7 @@ table.cadastro-empresa {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -244,7 +258,7 @@ table.cadastro-empresa {
     td {
       font-weight: 600;
       font-size: 14px;
-      color: #686868;
+      color: $gray;
       padding: 10px 0 0 0;
       border: none;
       &:first-child {
@@ -376,6 +390,7 @@ table.cadastro-empresa {
   position: relative !important;
   label[aria-selected="true"] {
     font-weight: bold !important;
+    font-size: 14px;
     color: white !important;
     background-color: #109cf1 !important;
   }
@@ -389,7 +404,8 @@ table.cadastro-empresa {
 
   li {
     font-weight: bold;
-    color: #353535;
+    cursor: pointer;
+    color: $blue;
   }
 }
 
@@ -414,7 +430,7 @@ section {
     padding: 1.5em 32px 0 32px;
 
     nav {
-      color: #686868;
+      color: $gray;
     }
 
     .header-button {
@@ -422,7 +438,7 @@ section {
       width: 242px;
       height: 40px;
       border-radius: 4px;
-      border: solid 1px #035d96;
+      border: solid 1px $blue;
     }
   }
 
@@ -497,13 +513,17 @@ section {
   margin-top: 1em;
 }
 
+* {
+  font-family: Roboto;
+}
+
 .modal-cadastro-edital {
   margin: 0 1em;
   display: grid;
 
   header {
-    color: #686868;
-    font-family: Roboto;
+    color: $gray;
+    font-family: Roboto !important;
     font-size: 14px;
     font-weight: bold;
   }
@@ -514,7 +534,7 @@ section {
     font-size: 14px;
 
     span {
-      font-family: Roboto;
+      font-family: Roboto !important;
       font-weight: normal;
       font-size: 14px;
       line-height: 1.29;
@@ -541,7 +561,7 @@ table.cadastro-lote {
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.01em;
-    color: #686868;
+    color: $gray;
     border-bottom: 2px solid #a8a8a8;
     padding-bottom: 10px;
     &:first-child {
@@ -623,7 +643,7 @@ table.cadastro-lote {
 
       .header {
         font-weight: bold;
-        color: #686868;
+        color: $gray;
       }
 
       .contrato-detalhe {
@@ -645,7 +665,7 @@ table.cadastro-lote {
     grid-template-columns: 62% 36%;
     grid-column-gap: 2%;
   }
-  .section-nutri-contato{
+  .section-nutri-contato {
     display: grid;
     grid-template-columns: 34% 64%;
     grid-column-gap: 2%;

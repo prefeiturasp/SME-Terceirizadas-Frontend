@@ -3,34 +3,47 @@ import { Collapse } from "react-collapse";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import BaseButton, { ButtonStyle, ButtonType } from "../../Shareable/button";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
-import "../../Shareable/style.scss";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import "./style.scss";
+import {
+  ALTERACAO_CARDAPIO,
+  DRE,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
+} from "../../../configs/constants";
+import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasDREAlteracoesDeCardapio,
   getResumoPendenciasDREInclusaoDeAlimentacao,
   getResumoPendenciasDREInversaoDeDiaDeCardapio,
   getResumoPendenciasDREKitLanche,
   getResumoPendenciasDRESuspensaoDeAlimentacao,
-  getResumoPendenciasDRESolicitacoesUnificadas
+  getResumoPendenciasDREPorLote
 } from "../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
-import { dataAtual } from "../../../helpers/utilities";
-import { DRE, ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO, INVERSAO_CARDAPIO, SOLICITACAO_KIT_LANCHE } from "../../../configs/constants";
-import { getResumoPendenciasDREPorLote } from "../../../services/painelDRE.service"
+import { Botao } from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardStatusDeSolicitacao, {
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { Select } from "../../Shareable/Select";
+import "../../Shareable/style.scss";
+import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
+import "./style.scss";
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      autorizadasList: [],
       autorizadasListFiltered: [],
-      pendentesList: [],
       pendentesListFiltered: [],
+      negadasListFiltered: [],
+      canceladasListFiltered: [],
+
       collapsed: true,
       lotes: [
         {
@@ -47,7 +60,6 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio: {},
       resumoPendenciasDREKitLanche: {},
       resumoPendenciasDRESuspensaoDeAlimentacao: {},
-      resumoPendenciasDRESolicitacoesUnificadas: {},
       filtroPendencias: "sem_filtro",
       meusDados: [],
       loadingAutorizadas: true,
@@ -57,8 +69,6 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio: true,
       loadingKitLanche: true,
       loadingSuspensaoAlimentacao: true,
-      loadingSolicitacoesUnificadas: true,
-      //lotes: ["LOTE A (MOCK)", "LOTE B (MOCK)", "LOTE C (MOCK)"],
       visao: "tipo_solicitacao",
       resumoPorLote: []
     };
@@ -70,21 +80,18 @@ class DashboardDRE extends Component {
 
   async carregaResumosPendencias(filtroPendencias) {
     this.setState({
-      loadingAlteracaoCardapio : true,
-      loadingInclusoesAlimentacao : true,
-      loadingInversoesCardapio : true,
-      loadingKitLanche : true,
-      loadingSuspensaoAlimentacao : true,
-      loadingSolicitacoesUnificadas : true,
+      loadingAlteracaoCardapio: true,
+      loadingInclusoesAlimentacao: true,
+      loadingInversoesCardapio: true,
+      loadingKitLanche: true,
+      loadingSuspensaoAlimentacao: true,
       loadingResumoLotes: true
     });
     const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
-      minhaDRE,
       filtroPendencias
     );
     const resumoPendenciasDREInclusoesDeAlimentacao = await getResumoPendenciasDREInclusaoDeAlimentacao(
-      minhaDRE,
       filtroPendencias
     );
     const resumoPendenciasDREInversaoDeDiaDeCardapio = await getResumoPendenciasDREInversaoDeDiaDeCardapio(
@@ -96,11 +103,11 @@ class DashboardDRE extends Component {
     const resumoPendenciasDRESuspensaoDeAlimentacao = await getResumoPendenciasDRESuspensaoDeAlimentacao(
       filtroPendencias
     );
-    const resumoPendenciasDRESolicitacoesUnificadas = await getResumoPendenciasDRESolicitacoesUnificadas(
+
+    let resumoPorLote = await getResumoPendenciasDREPorLote(
+      minhaDRE,
       filtroPendencias
     );
-
-    let resumoPorLote = await getResumoPendenciasDREPorLote(minhaDRE, filtroPendencias)
 
     this.setState({
       resumoPendenciasDREAlteracoesDeCardapio,
@@ -108,15 +115,13 @@ class DashboardDRE extends Component {
       resumoPendenciasDREInversaoDeDiaDeCardapio,
       resumoPendenciasDREKitLanche,
       resumoPendenciasDRESuspensaoDeAlimentacao,
-      resumoPendenciasDRESolicitacoesUnificadas,
       filtroPendencias,
       resumoPorLote,
-      loadingAlteracaoCardapio : !(resumoPendenciasDREAlteracoesDeCardapio),
-      loadingInclusoesAlimentacao : !(resumoPendenciasDREInclusoesDeAlimentacao),
-      loadingInversoesCardapio : !(resumoPendenciasDREInversaoDeDiaDeCardapio),
-      loadingKitLanche : !(resumoPendenciasDREKitLanche),
-      loadingSuspensaoAlimentacao : !(resumoPendenciasDRESuspensaoDeAlimentacao),
-      loadingSolicitacoesUnificadas : !(resumoPendenciasDRESolicitacoesUnificadas),
+      loadingAlteracaoCardapio: !resumoPendenciasDREAlteracoesDeCardapio,
+      loadingInclusoesAlimentacao: !resumoPendenciasDREInclusoesDeAlimentacao,
+      loadingInversoesCardapio: !resumoPendenciasDREInversaoDeDiaDeCardapio,
+      loadingKitLanche: !resumoPendenciasDREKitLanche,
+      loadingSuspensaoAlimentacao: !resumoPendenciasDRESuspensaoDeAlimentacao,
       loadingResumoLotes: false
     });
   }
@@ -126,54 +131,68 @@ class DashboardDRE extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.autorizadasListFiltered.length !==
-      this.props.autorizadasListFiltered.length
-    )
+    if (prevProps.autorizadasList.length !== this.props.autorizadasList.length)
       this.setState({
-        autorizadasListFiltered: this.props.autorizadasListFiltered,
-        autorizadasList: this.props.autorizadasList
+        autorizadasListFiltered: this.props.autorizadasList
       });
 
-    if (
-      prevProps.pendentesListFiltered.length !==
-      this.props.pendentesListFiltered.length
-    )
+    if (prevProps.pendentesList.length !== this.props.pendentesList.length)
       this.setState({
-        pendentesListFiltered: this.props.pendentesListFiltered,
-        pendentesList: this.props.pendentesList
+        pendentesListFiltered: this.props.pendentesList
       });
 
-    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas){
-      this.setState({loadingAutorizadas: this.props.loadingAutorizadas})
-    };
+    if (prevProps.canceladasList.length !== this.props.canceladasList.length)
+      this.setState({
+        canceladasListFiltered: this.props.canceladasList
+      });
 
-    if (prevProps.loadingPendentes !== this.props.loadingPendentes){
-      this.setState({loadingPendentes: this.props.loadingPendentes})
+    if (prevProps.negadasList.length !== this.props.negadasList.length)
+      this.setState({
+        negadasListFiltered: this.props.negadasList
+      });
+
+    if (prevProps.loadingAutorizadas !== this.props.loadingAutorizadas) {
+      this.setState({ loadingAutorizadas: this.props.loadingAutorizadas });
     }
 
-    if (prevProps.lotesDRE !== this.props.lotesDRE){
-      this.setState({lotesDRE: this.props.lotesDRE})
+    if (prevProps.loadingPendentes !== this.props.loadingPendentes) {
+      this.setState({ loadingPendentes: this.props.loadingPendentes });
+    }
 
+    if (prevProps.lotesDRE !== this.props.lotesDRE) {
+      this.setState({ lotesDRE: this.props.lotesDRE });
     }
   }
 
   filterList(event) {
     if (event === undefined) event = { target: { value: "" } };
 
-    let autorizadasListFiltered = this.state.autorizadasList;
-    autorizadasListFiltered = autorizadasListFiltered.filter(function(item) {
+    const {
+      autorizadasList,
+      pendentesList,
+      canceladasList,
+      negadasList
+    } = this.props;
+
+    const autorizadasListFiltered = this.filtraTexto(autorizadasList, event);
+    const pendentesListFiltered = this.filtraTexto(pendentesList, event);
+    const canceladasListFiltered = this.filtraTexto(canceladasList, event);
+    const negadasListFiltered = this.filtraTexto(negadasList, event);
+
+    this.setState({
+      autorizadasListFiltered,
+      pendentesListFiltered,
+      canceladasListFiltered,
+      negadasListFiltered
+    });
+  }
+
+  filtraTexto(lista, event) {
+    lista = lista.filter(function(item) {
       const wordToFilter = event.target.value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
-
-    let pendentesListFiltered = this.state.pendentesList;
-    pendentesListFiltered = pendentesListFiltered.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
-    });
-
-    this.setState({ autorizadasListFiltered, pendentesListFiltered });
+    return lista;
   }
 
   alterarCollapse() {
@@ -185,18 +204,16 @@ class DashboardDRE extends Component {
   }
 
   changeVisao(visao) {
-    this.setState({visao})
+    this.setState({ visao });
   }
-
 
   render() {
     const {
       enrolled,
       handleSubmit,
       vision_by,
-      canceladasList,
-      recusadasList,
-      filtro_por
+      filtro_por,
+      quantidade_suspensoes
     } = this.props;
 
     const {
@@ -204,12 +221,12 @@ class DashboardDRE extends Component {
       lotesDRE,
       autorizadasListFiltered,
       pendentesListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered,
       resumoPendenciasDREAlteracoesDeCardapio,
       resumoPendenciasDREInclusoesDeAlimentacao,
       resumoPendenciasDREInversaoDeDiaDeCardapio,
-      resumoPendenciasDRESuspensaoDeAlimentacao,
       resumoPendenciasDREKitLanche,
-      resumoPendenciasDRESolicitacoesUnificadas,
       loadingAutorizadas,
       loadingPendentes,
       loadingAlteracaoCardapio,
@@ -217,10 +234,8 @@ class DashboardDRE extends Component {
       loadingInversoesCardapio,
       loadingSuspensaoAlimentacao,
       loadingKitLanche,
-      loadingSolicitacoesUnificadas,
       resumoPorLote,
-      loadingResumoLotes,
-
+      loadingResumoLotes
     } = this.state;
 
     return (
@@ -236,17 +251,17 @@ class DashboardDRE extends Component {
               <TabelaHistoricoLotes lotes={lotesDRE} />
             </Collapse>
           </CardMatriculados>
-          <div className="card mt-3">
+          <div className="card card-shortcut-to-form mt-3">
             <div className="card-body">
-              <div className="card-title font-weight-bold title-color">
+              <div className="card-title font-weight-bold">
                 Faça uma Solicitação Unificada
               </div>
               <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
               <Link to="/dre/solicitacao-unificada">
-                <BaseButton
-                  label="Solicitação Unificada"
-                  type={ButtonType.BUTTON}
-                  style={ButtonStyle.OutlinePrimary}
+                <Botao
+                  texto="Solicitação Unificada"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
                 />
               </Link>
             </div>
@@ -254,11 +269,7 @@ class DashboardDRE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                <span>
-                  <i className="fas fa-thumbtack" />
-                  Painel de Status de Solicitações
-                  <i className="fas fa-pen" />
-                </span>
+                Acompanhamento de solicitações
                 <span className="float-right">
                   <input
                     className="input-search"
@@ -273,49 +284,49 @@ class DashboardDRE extends Component {
                   Data: <span>{dataAtual()}</span>
                 </p>
               </div>
-              <div className="row">
+              <div className="row mb-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={"card-authorized"}
-                    solicitations={autorizadasListFiltered}
-                    icon={"fa-check"}
-                    href={"/dre/solicitacoes-autorizadas"}
-                    loading={loadingAutorizadas}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Pendente Aprovação"}
-                    cardType={"card-pending"}
+                    cardTitle={"Aguardando Autorização"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={pendentesListFiltered}
                     icon={"fa-exclamation-triangle"}
-                    href={"/dre/solicitacoes-pendentes"}
+                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                     loading={loadingPendentes}
                   />
                 </div>
-              </div>
-              <div className="row pt-3">
-                {recusadasList.length > 0 && <div className="col-6">
+                <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Recusadas"}
-                    cardType={"card-denied"}
-                    solicitations={recusadasList}
-                    icon={"fa-ban"}
-                    href={"/dre/solicitacoes-recusadas"}
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={autorizadasListFiltered}
+                    icon={"fa-check"}
+                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                    loading={loadingAutorizadas}
                   />
-                </div>}
-
-                {canceladasList.length > 0  && <div className="col-6">
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={negadasListFiltered}
+                    icon={"fa-ban"}
+                    href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+                    loading={loadingPendentes}
+                  />
+                </div>
+                <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
-                    cardType={"card-cancelled"}
-                    solicitations={canceladasList}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={canceladasListFiltered}
                     icon={"fa-times-circle"}
-                    href={"/dre/solicitacoes-canceladas"}
+                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                    loading={loadingAutorizadas}
                   />
-                </div>}
-
+                </div>
               </div>
               <p className="caption">Legenda</p>
               <div className="caption-choices">
@@ -325,11 +336,11 @@ class DashboardDRE extends Component {
                 </span>
                 <span>
                   <i className="fas fa-exclamation-triangle" />
-                  Solicitação Pendente Aprovação
+                  Solicitação Aguardando Autorização{" "}
                 </span>
                 <span>
                   <i className="fas fa-ban" />
-                  Solicitação Recusada
+                  Solicitação Negada
                 </span>
                 <span>
                   <i className="fas fa-times-circle" />
@@ -342,20 +353,22 @@ class DashboardDRE extends Component {
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
                 <div className="row">
-                  <div className="col-3 mt-3">
-                    <i className="fas fa-lock" />
-                    Pendências
-                  </div>
+                  <div className="col-3 mt-3 color-black">Pendências</div>
                   <div className="offset-3 col-3 text-right my-auto">
-                    <LabelAndCombo
-                      onChange={this.changeFiltroPendencias}
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.changeFiltroPendencias(event.target.value)
+                      }
                       placeholder={"Filtro por"}
                       options={filtro_por}
                     />
                   </div>
                   <div className="col-3 text-right my-auto">
-                    <LabelAndCombo
-                      onChange={this.changeVisao}
+                    <Select
+                      naoDesabilitarPrimeiraOpcao
+                      disabled={!this.state.lotesDRE}
+                      onChange={event => this.changeVisao(event.target.value)}
                       placeholder={"Visão por"}
                       options={vision_by}
                     />
@@ -363,141 +376,134 @@ class DashboardDRE extends Component {
                 </div>
               </div>
               {/* Visão por Tipo de Solicitação */}
-              {this.state.visao === "tipo_solicitacao" &&
-              <div>
-                <div className="pt-3" />
-                <div className="row">
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
-                      <CardPendencia
-                        cardTitle={"Inclusão de Alimentação"}
-                        totalOfOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDREInclusoesDeAlimentacao.regular
-                        }
-                        loading={loadingInclusoesAlimentacao}
-                      />
-                    </Link>
+              {this.state.visao === "tipo_solicitacao" && (
+                <div>
+                  <div className="pt-3" />
+                  <div className="row">
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${INCLUSAO_ALIMENTACAO}`}>
+                        <CardPendencia
+                          cardTitle={"Inclusão de Alimentação"}
+                          totalOfOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREInclusoesDeAlimentacao.regular
+                          }
+                          loading={loadingInclusoesAlimentacao}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${INVERSAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Inversão de Dia de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREInversaoDeDiaDeCardapio.regular
+                          }
+                          loading={loadingInversoesCardapio}
+                        />
+                      </Link>
+                    </div>
                   </div>
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${INVERSAO_CARDAPIO}`}>
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${ALTERACAO_CARDAPIO}`}>
+                        <CardPendencia
+                          cardTitle={"Alteração de Cardápio"}
+                          totalOfOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.total
+                          }
+                          priorityOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.prioritario
+                          }
+                          onLimitOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.limite
+                          }
+                          regularOrders={
+                            resumoPendenciasDREAlteracoesDeCardapio.regular
+                          }
+                          loading={loadingAlteracaoCardapio}
+                        />
+                      </Link>
+                    </div>
+                    <div className="col-6">
+                      <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
+                        <CardPendencia
+                          cardTitle={"Kit Lanche Passeio"}
+                          totalOfOrders={resumoPendenciasDREKitLanche.total}
+                          priorityOrders={
+                            resumoPendenciasDREKitLanche.prioritario
+                          }
+                          onLimitOrders={resumoPendenciasDREKitLanche.limite}
+                          regularOrders={resumoPendenciasDREKitLanche.regular}
+                          loading={loadingKitLanche}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="row pt-3">
+                    <div className="col-6">
                       <CardPendencia
-                        cardTitle={"Inversão de Dia de Cardápio"}
-                        totalOfOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDREInversaoDeDiaDeCardapio.regular
-                        }
-                        loading={loadingInversoesCardapio}
+                        priorityOrdersOnly={true}
+                        cardTitle={"Suspensão de Alimentação"}
+                        totalOfOrders={quantidade_suspensoes}
+                        priorityOrders={quantidade_suspensoes}
+                        loading={loadingSuspensaoAlimentacao}
                       />
-                    </Link>
+                    </div>
                   </div>
                 </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${ALTERACAO_CARDAPIO}`}>
-                      <CardPendencia
-                        cardTitle={"Alteração de Cardápio"}
-                        totalOfOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.total
-                        }
-                        priorityOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.prioritario
-                        }
-                        onLimitOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.limite
-                        }
-                        regularOrders={
-                          resumoPendenciasDREAlteracoesDeCardapio.regular
-                        }
-                        loading={loadingAlteracaoCardapio}
-                      />
-                    </Link>
-                  </div>
-                  <div className="col-6">
-                    <Link to={`/${DRE}/${SOLICITACAO_KIT_LANCHE}`}>
-                      <CardPendencia
-                        cardTitle={"Kit Lanche"}
-                        totalOfOrders={resumoPendenciasDREKitLanche.total}
-                        priorityOrders={resumoPendenciasDREKitLanche.prioritario}
-                        onLimitOrders={resumoPendenciasDREKitLanche.limite}
-                        regularOrders={resumoPendenciasDREKitLanche.regular}
-                        loading={loadingKitLanche}
-                      />
-                    </Link>
-                  </div>
-                </div>
-                <div className="row pt-3">
-                <div className="col-6">
-                  <CardPendencia
-                    cardTitle={"Pedido Unificado"}
-                    totalOfOrders={resumoPendenciasDRESolicitacoesUnificadas.total}
-                    priorityOrders={resumoPendenciasDRESolicitacoesUnificadas.prioritario}
-                    onLimitOrders={resumoPendenciasDRESolicitacoesUnificadas.limite}
-                    regularOrders={resumoPendenciasDRESolicitacoesUnificadas.regular}
-                    loading={loadingSolicitacoesUnificadas}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardPendencia
-                    priorityOrdersOnly={true}
-                    cardTitle={"Suspensão de Refeição"}
-                    totalOfOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.total
-                    }
-                    priorityOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.prioritario
-                    }
-                    onLimitOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.limite
-                    }
-                    regularOrders={
-                      resumoPendenciasDRESuspensaoDeAlimentacao.regular
-                    }
-                    loading={loadingSuspensaoAlimentacao}
-                  />
-                </div>
-              </div>
-              </div>
-              }
+              )}
               {/* /Tipo de Solicitação */}
 
               {/* Visão por Lote */}
-              {this.state.visao === "lote" &&
-              <div className="row pt-3">
-                  {this.state.lotesDRE.map(
-                    lote => {
-                      return (
-                        <div className="col-6">
-                          <CardPendencia
-                            cardTitle={lote.nome}
-                            totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
-                            priorityOrders={resumoPorLote[lote.nome]["PRIORITARIO"]}
-                            onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
-                            regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
-                            loading={loadingResumoLotes}
-                          />
-                        </div>
-                      )
-                    }
-                  )}
-              </div>
-              }
+              {this.state.visao === "lote" && (
+                <div className="row pt-3">
+                  {this.state.lotesDRE.map((lote, key) => {
+                    return resumoPorLote[lote.nome] ? (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={lote.nome}
+                          totalOfOrders={resumoPorLote[lote.nome]["TOTAL"]}
+                          priorityOrders={
+                            resumoPorLote[lote.nome]["PRIORITARIO"]
+                          }
+                          onLimitOrders={resumoPorLote[lote.nome]["LIMITE"]}
+                          regularOrders={resumoPorLote[lote.nome]["REGULAR"]}
+                          loading={loadingResumoLotes}
+                        />
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6">
+                        <CardPendencia
+                          cardTitle={lote.nome}
+                          totalOfOrders={0}
+                          priorityOrders={0}
+                          onLimitOrders={0}
+                          regularOrders={0}
+                          loading={loadingResumoLotes}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
               {/* /Lotes */}
             </div>
           </div>
@@ -523,6 +529,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps
-)(DashboardDREForm);
+export default connect(mapStateToProps)(DashboardDREForm);

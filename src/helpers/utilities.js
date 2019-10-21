@@ -1,5 +1,6 @@
 import moment from "moment";
 import "moment/locale/pt-br";
+import { statusEnum } from "../constants/statusEnum";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -44,7 +45,7 @@ export const dataPrioritaria = (
 };
 
 export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: null }].concat(lista);
+  return [{ nome: "Selecione", uuid: "" }].concat(lista);
 };
 
 export const formatarParaMultiselect = lista => {
@@ -73,7 +74,7 @@ export const dataParaUTC = data => {
 };
 
 export const geradorUUID = () => {
-  var S4 = function() {
+  let S4 = function() {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
   };
   return (
@@ -115,8 +116,43 @@ export const talvezPluralizar = (contador, substantivo, sufixo = "s") => {
 };
 
 export const getDataObj = data => {
-  return moment(
-    data,
-    "DD/MM/YYYY"
-  )["_d"];
-}
+  return moment(data, "DD/MM/YYYY")["_d"];
+};
+
+export const prazoDoPedidoMensagem = prioridade => {
+  switch (prioridade) {
+    case "REGULAR":
+      return "Pedido no prazo regular";
+    case "LIMITE":
+      return "Pedido no prazo limite";
+    case "PRIORITARIO":
+      return "Pedido próximo ao prazo de vencimento";
+    default:
+      return "";
+  }
+};
+
+export const corDaMensagem = mensagem => {
+  if (mensagem.includes("vencimento")) return "red";
+  else if (mensagem.includes("limite")) return "yellow";
+  else return "green";
+};
+
+export const pontuarValor = valor => {
+  return parseFloat(valor).toLocaleString();
+};
+
+export const mensagemCancelamento = status => {
+  switch (status) {
+    case statusEnum.DRE_A_VALIDAR:
+      return "Esta solicitação está aguardando validação pela DRE. ";
+    case statusEnum.DRE_VALIDADO:
+    case statusEnum.CODAE_A_AUTORIZAR:
+      return "Esta solicitação já foi validada pela DRE. ";
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+    case statusEnum.CODAE_AUTORIZADO:
+      return "Esta solicitação já foi autorizada pela CODAE. ";
+    default:
+      return "";
+  }
+};

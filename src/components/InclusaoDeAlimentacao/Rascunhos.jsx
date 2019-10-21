@@ -15,12 +15,12 @@ export class Rascunhos extends Component {
   render() {
     const { rascunhosInclusaoDeAlimentacao, carregarRascunho } = this.props;
     const cardsInclusoes = rascunhosInclusaoDeAlimentacao.map(
-      inclusaoDeAlimentacao => {
+      (inclusaoDeAlimentacao, key) => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
         const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
         let backgroundColor = "#DADADA";
         return (
-          <div className="bg-white border rounded mt-1">
+          <div key={key} className="draft bg-white border rounded mt-1 p-2">
             <div className="mt-2">
               <label className="bold ml-3">
                 {`Inclusão de Alimentação # ${id_externo}`}
@@ -33,9 +33,9 @@ export class Rascunhos extends Component {
               </span>
             </div>
             <div className="icon-draft-card float-right">
-              Salvo em: {inclusaoDeAlimentacao.created_at}
+              Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
-                onClick={p =>
+                onClick={() =>
                   this.removerRascunho(id_externo, uuid, ehInclusaoContinua)
                 }
               >
@@ -58,9 +58,7 @@ export class Rascunhos extends Component {
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final
                     })`
-                  : `Inclusão de Alimentação - ${
-                      inclusaoDeAlimentacao.inclusoes.length
-                    } dia(s)`}
+                  : `${inclusaoDeAlimentacao.inclusoes.length} dia(s)`}
               </p>
             </div>
           </div>

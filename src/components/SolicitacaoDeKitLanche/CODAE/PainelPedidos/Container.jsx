@@ -1,32 +1,34 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCodaePedidosDeKitLancheReprovados, getCodaePedidosDeKitLancheAprovados } from "../../../../services/solicitacaoDeKitLanche.service";
+import {
+  getCodaePedidosDeKitLancheReprovados,
+  getCodaePedidosDeKitLancheAutorizados
+} from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      pedidosAprovados: [],
+      pedidosAutorizados: [],
       pedidosReprovados: []
     };
   }
 
   componentDidMount() {
     let pedidosReprovados = [];
-    let pedidosAprovados = [];
+    let pedidosAutorizados = [];
 
-    getCodaePedidosDeKitLancheAprovados().then(response => {
-      pedidosAprovados = response.results
-      this.setState({pedidosAprovados})
-    })
+    getCodaePedidosDeKitLancheAutorizados().then(response => {
+      pedidosAutorizados = response.results;
+      this.setState({ pedidosAutorizados });
+    });
 
     getCodaePedidosDeKitLancheReprovados().then(response => {
-      pedidosReprovados = response.results
-      this.setState({pedidosReprovados})
-    })
-
+      pedidosReprovados = response.results;
+      this.setState({ pedidosReprovados });
+    });
   }
 
   render() {

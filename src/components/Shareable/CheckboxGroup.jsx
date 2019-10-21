@@ -3,13 +3,7 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import { ErrorAlert } from "./Alert";
 
-export const field = ({
-  input,
-  meta,
-  options,
-  choicesNumberLimit,
-  checkAll
-}) => {
+export const field = ({ input, meta, options }) => {
   const { name, onChange, onBlur, onFocus } = input;
   const inputValue = input.value;
 
@@ -30,7 +24,7 @@ export const field = ({
       height: "2em"
     };
     return (
-      <div className="form-check  form-check-inline">
+      <div key={index} className="form-check  form-check-inline">
         <input
           className="compare_items form-check-input"
           type="checkbox"

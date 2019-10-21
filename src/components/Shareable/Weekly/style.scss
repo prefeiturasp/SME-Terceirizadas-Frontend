@@ -1,25 +1,32 @@
-.week-circle {
-  height: 25px;
-  width: 25px;
-  padding-left: 7px;
-  margin-left: 5px;
-  color: #686868;
-  background-color: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
-}
+@import "../../../styles/variables.scss";
 
-.week-circle-clicked {
-  height: 25px;
-  width: 25px;
-  padding-left: 7px;
-  margin-left: 5px;
-  color: #fff;
-  background-color: #686868;
-  border: 1px solid #e8e8e8;
-  border-radius: 50%;
-  display: inline-block;
-  cursor: pointer;
+.weekly {
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
+  .week-circle {
+    height: 25px;
+    width: 25px;
+    padding-left: 7px;
+    margin-left: 5px;
+    color: #686868;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .week-circle-clicked {
+    height: 25px;
+    width: 25px;
+    padding-left: 7px;
+    margin-left: 5px;
+    color: #fff;
+    background-color: #686868;
+    border: 1px solid #e8e8e8;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+  }
 }

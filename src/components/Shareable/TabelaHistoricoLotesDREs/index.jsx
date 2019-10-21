@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../TabelaHistoricoLotes/style.scss";
 
 export const TabelaHistoricoLotesDREs = props => {
@@ -12,11 +13,17 @@ export const TabelaHistoricoLotesDREs = props => {
           <th>DRE</th>
           <th className="pl-5">Tipo</th>
         </tr>
-        {lotes.map(function(lote) {
+        {lotes.map(function(lote, key) {
           return (
-            <tr>
-              <td>{lote.lote}</td>
-              <td>{lote.dre}</td>
+            <tr key={key}>
+              <td>
+                <Link to={`/configuracoes/cadastros/lote?uuid=${lote.id}`}>
+                  {lote.lote}
+                </Link>
+              </td>
+              <td>
+                <Link to="#">{lote.dre}</Link>
+              </td>
               <td className="pl-5">{lote.tipo}</td>
             </tr>
           );

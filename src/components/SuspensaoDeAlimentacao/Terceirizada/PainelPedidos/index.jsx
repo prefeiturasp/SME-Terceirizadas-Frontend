@@ -1,106 +1,155 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
-  CardInversaoPendenciaAprovacao,
-  TIPO_CARD_ENUM
-} from "../../components/CardPendenciaAprovacao";
-import {
-  getSuspensoesDeAlimentacaoInformadas,
+  getTerceirizadasSuspensoesDeAlimentacao,
   getSuspensaoDeAlimentacaoTomadaCiencia
 } from "../../../../services/suspensaoDeAlimentacao.service.js";
-import CardHistorico from "./CardHistorico";
-import { formatarPedidos } from "./helper";
+import CardHistorico from "../../components/CardHistorico";
+import {
+  filtraNoLimite,
+  filtraPrioritarios,
+  filtraRegular,
+  formatarPedidos
+} from "../../../../helpers/painelPedidos";
 import { TERCEIRIZADA } from "../../../../configs/constants";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      solicitacoesCarregadas: 0,
-      todasSolicitacoes: [],
-      todasSolicitacoesTomadaCiencia: []
+      pedidosPrioritarios: [],
+      pedidosNoPrazoLimite: [],
+      pedidosNoPrazoRegular: [],
+      pedidosTomadaCiencia: [],
+      pedidosCarregados: false
     };
   }
 
-  filtrar() {
-    let todasSolicitacoes = [];
-    this.setState({ solicitacoesCarregadas: 0 });
-    getSuspensoesDeAlimentacaoInformadas().then(response => {
-      todasSolicitacoes = response;
+  filtrar(filtro) {
+    getTerceirizadasSuspensoesDeAlimentacao(filtro).then(response => {
+      let pedidosPrioritarios = filtraPrioritarios(response.results);
+      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      let pedidosNoPrazoRegular = filtraRegular(response.results);
       this.setState({
-        todasSolicitacoes,
-        solicitacoesCarregadas: this.state.solicitacoesCarregadas + 1
-      });
-    });
-  }
-
-  filtrarSolicitacoesTomadasCiencia() {
-    let todasSolicitacoesTomadaCiencia = [];
-    this.setState({ solicitacoesCarregadas: 0 });
-    getSuspensaoDeAlimentacaoTomadaCiencia().then(response => {
-      todasSolicitacoesTomadaCiencia = response.data.results;
-      this.setState({
-        todasSolicitacoesTomadaCiencia
+        pedidosPrioritarios,
+        pedidosNoPrazoLimite,
+        pedidosNoPrazoRegular,
+        pedidosCarregados: true
       });
     });
   }
 
   componentDidMount() {
-    this.filtrarSolicitacoesTomadasCiencia();
-    this.filtrar();
+    this.filtrar(FiltroEnum.SEM_FILTRO);
+
+    getSuspensaoDeAlimentacaoTomadaCiencia().then(response => {
+      this.setState({
+        pedidosTomadaCiencia: response.data.results
+      });
+    });
+  }
+
+  onFiltroSelected(value) {
+    switch (value) {
+      case FiltroEnum.HOJE:
+        this.filtrarHoje();
+        break;
+      default:
+        this.filtrar(value);
+        break;
+    }
   }
 
   render() {
     const {
-      solicitacoesCarregadas,
-      todasSolicitacoes,
-      todasSolicitacoesTomadaCiencia
+      pedidosPrioritarios,
+      pedidosNoPrazoLimite,
+      pedidosNoPrazoRegular,
+      pedidosTomadaCiencia,
+      pedidosCarregados
     } = this.state;
-
-    const todosOsPedidosForamCarregados = solicitacoesCarregadas;
+    const { visaoPorCombo } = this.props;
     return (
       <div>
-        {!todosOsPedidosForamCarregados ? (
+        {!pedidosCarregados ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <div>
-              <div className="row">
-                <div className="col-7">
-                  <div className="page-title">
-                    Suspensão de Alimentação - Pendente Tomar Ciência
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-3 font-10 my-auto">
+                    Data: {dataAtualDDMMYYYY()}
                   </div>
-                </div>
-                <div className="col-5" />
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos para tomar ciência"}
-                    tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
-                    totalSOlicitacoes={todasSolicitacoes}
-                    pedidos={todasSolicitacoes}
-                    ultimaColunaLabel={"Data"}
-                    parametroURL={TERCEIRIZADA}
-                  />
-                </div>
-              </div>
-              {todasSolicitacoesTomadaCiencia.length > 0 && (
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(
-                        todasSolicitacoesTomadaCiencia
-                      )}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Suspensão de Alimentações Tomadas Ciência"
+                  <div className="offset-6 col-3 text-right">
+                    <Field
+                      component={Select}
+                      name="visao_por"
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.onFiltroSelected(event.target.value)
                       }
+                      placeholder={"Filtro por"}
+                      options={visaoPorCombo}
                     />
                   </div>
                 </div>
-              )}
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardPendenteAcao
+                      titulo={
+                        "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
+                      }
+                      tipoDeCard={TIPODECARD.PRIORIDADE}
+                      pedidos={pedidosPrioritarios}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
+                    />
+                  </div>
+                </div>
+
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardPendenteAcao
+                      titulo={"Solicitações no prazo limite"}
+                      tipoDeCard={TIPODECARD.NO_LIMITE}
+                      pedidos={pedidosNoPrazoLimite}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
+                    />
+                  </div>
+                </div>
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardPendenteAcao
+                      titulo={"Solicitações no prazo regular"}
+                      tipoDeCard={TIPODECARD.REGULAR}
+                      pedidos={pedidosNoPrazoRegular}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={TERCEIRIZADA}
+                    />
+                  </div>
+                </div>
+                {pedidosTomadaCiencia.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(pedidosTomadaCiencia)}
+                        ultimaColunaLabel={"Data(s)"}
+                        titulo={
+                          "Histórico de Suspensão de Alimentações Tomadas Ciência"
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </form>
         )}

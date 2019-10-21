@@ -7,14 +7,19 @@ cache:
 
 before_script:
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
 
 script:
-  - npm test
+  - npm run-script coverage
+  - npm run-script eslint
+  - npm run-script prettier
   - docker build -t marcelomaia/terceirizadas_frontend .
   - docker run -d -p 8080:80 marcelomaia/terceirizadas_frontend
   - docker ps -a
 
 after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - bash utility/telegram_notification.sh
 
 deploy:

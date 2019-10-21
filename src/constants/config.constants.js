@@ -1,3 +1,4 @@
+/* eslint-disable */
 let API_URL = process.env.REACT_APP_API_URL;
 let JWT_AUTH = `${API_URL}/api-token-auth/`;
 let USER_URL = `${API_URL}/users/`;
@@ -22,5 +23,6 @@ module.exports = {
   JWT_AUTH: JWT_AUTH,
   USER_URL: USER_URL,
   API_MOCK: API_MOCK,
-  REFRESH_TOKEN_TIMEOUT: REFRESH_TOKEN_TIMEOUT
+  REFRESH_TOKEN_TIMEOUT: REFRESH_TOKEN_TIMEOUT,
+  HOME: ""
 };

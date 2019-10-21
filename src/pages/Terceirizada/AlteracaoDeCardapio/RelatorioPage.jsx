@@ -3,10 +3,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/AlteracaoDeCardapio/Terceirizada/Relatorio";
 import { HOME } from "../constants";
-import {
-  ALTERACAO_CARDAPIO,
-  TERCEIRIZADA
-} from "../../../configs/constants";
+import { ALTERACAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/constants";
 
 const atual = {
   href: "#",

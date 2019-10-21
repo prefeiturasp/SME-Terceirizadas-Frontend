@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
+import { Botao } from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { Redirect } from "react-router-dom";
-import { reduxForm } from "redux-form";
+import { reduxForm, formValueSelector } from "redux-form";
+import { connect } from "react-redux";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
+import { ModalNegarAlteracaoCardapio } from "../../../Shareable/ModalNegarAlteracaoCardapio";
 import {
   getAlteracaoCardapio,
   DREConfirmaAlteracaoCardapio
@@ -14,7 +15,7 @@ import {
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../../Shareable/dialogs";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import "../style.scss";
 import "./style.scss";
 import { DRE, ALTERACAO_CARDAPIO } from "../../../../configs/constants";
@@ -67,8 +68,6 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(response => {
-          console.log("response: ", response);
-
           const dataMaisProxima =
             response.inclusoes && response.inclusoes[0].data;
           this.setState({
@@ -89,9 +88,8 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Alteração de Cardápio recusado com sucesso!");
   }
 
   handleSubmit() {
@@ -99,14 +97,14 @@ class Relatorio extends Component {
     DREConfirmaAlteracaoCardapio(alteracaoCardapioUuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio aprovada com sucesso!");
+          toastSuccess("Alteração de Cardápio validada com sucesso!");
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao aprovar a Alteração de Cardápio");
+          toastError("Houve um erro ao validar a Alteração de Cardápio");
         }
       },
-      function(error) {
-        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+      function() {
+        toastError("Houve um erro ao validar a Alteração de Cardápio");
       }
     );
   }
@@ -132,13 +130,20 @@ class Relatorio extends Component {
       showModal,
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
-      meusDados
+      meusDados,
+      uuid
     } = this.state;
+    const { justificativa, motivo_cancelamento } = this.props;
     return (
       <div>
-        <ModalRecusarSolicitacao
+        <ModalNegarAlteracaoCardapio
           closeModal={this.closeModal}
           showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          motivoCancelamento={motivo_cancelamento}
+          alteracaoDeCardapio={alteracaoDeCardapio}
+          setRedirect={this.setRedirect.bind(this)}
         />
         {this.renderizarRedirecionamentoParaPedidos()}
         {!alteracaoDeCardapio ? (
@@ -226,24 +231,23 @@ class Relatorio extends Component {
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
+                    <th>Tipos de Alimentação de</th>
+                    <th>Tipos de Alimentação para</th>
                   </tr>
                   {alteracaoDeCardapio.substituicoes.map(
-                    quantidade_por_periodo => {
+                    (quantidade_por_periodo, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td>
                             {quantidade_por_periodo.periodo_escolar &&
                               quantidade_por_periodo.periodo_escolar.nome}
                           </td>
                           <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
+                            {quantidade_por_periodo.tipo_alimentacao_de.nome}
                           </td>
-                          <td>{quantidade_por_periodo.qtd_alunos}</td>
+                          <td>
+                            {quantidade_por_periodo.tipo_alimentacao_para.nome}
+                          </td>
                         </tr>
                       );
                     }
@@ -276,18 +280,18 @@ class Relatorio extends Component {
                 </table>
                 {alteracaoDeCardapio.status === statusEnum.DRE_A_VALIDAR && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Recusar Solicitação"}
+                    <Botao
+                      texto={"Não validar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Validar Solicitação"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Validar"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>
@@ -301,8 +305,19 @@ class Relatorio extends Component {
   }
 }
 
+const formName = "relatorioAlteracaoDeCardapioDre";
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: formName,
   enableReinitialize: true
 })(Relatorio);
-export default RelatorioForm;
+
+const selector = formValueSelector(formName);
+
+const mapStateToProps = state => {
+  return {
+    justificativa: selector(state, "justificativa"),
+    motivo_cancelamento: selector(state, "motivo_cancelamento")
+  };
+};
+
+export default connect(mapStateToProps)(RelatorioForm);

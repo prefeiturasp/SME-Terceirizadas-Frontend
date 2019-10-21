@@ -1,59 +1,62 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import {
-  formatarSubmissaoSolicitacaoNormal,
-  formatarSubmissaoSolicitacaoContinua,
-  extrairTiposALimentacao
-} from "./helper";
-import {
-  geradorUUID,
-  agregarDefault,
-  checaSeDataEstaEntre2e5DiasUteis,
-  formatarParaMultiselect,
-  getDataObj
-} from "../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
+import { InputText } from "../Shareable/Input/InputText";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import {
+  agregarDefault,
+  checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect,
+  geradorUUID,
+  getDataObj
+} from "../../helpers/utilities";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { Select } from "../Shareable/Select";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import {
-  criarInclusaoDeAlimentacaoNormal,
   atualizarInclusaoDeAlimentacaoNormal,
+  criarInclusaoDeAlimentacaoNormal,
   getInclusoesNormaisSalvas,
   inicioPedidoNormal
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 import {
-  criarInclusaoDeAlimentacaoContinua,
   atualizarInclusaoDeAlimentacaoContinua,
-  getInclusoesContinuasSalvas
+  criarInclusaoDeAlimentacaoContinua,
+  getInclusoesContinuasSalvas,
+  inicioPedidoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import { inicioPedidoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { Botao } from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
-import {
-  LabelAndCombo,
-  LabelAndDate,
-  LabelAndInput,
-  LabelAndTextArea
-} from "../Shareable/labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { InputComData } from "../Shareable/DatePicker";
 import Weekly from "../Shareable/Weekly/Weekly";
+import {
+  extrairTiposALimentacao,
+  formatarSubmissaoSolicitacaoContinua,
+  formatarSubmissaoSolicitacaoNormal
+} from "./helper";
 import { Rascunhos } from "./Rascunhos";
+import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import "./style.scss";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
+const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      validacaoPeriodos: [],
       loading: true,
       periodos: [],
       rascunhosInclusaoDeAlimentacao: [],
       status: "SEM STATUS",
-      title: "Nova Inclusão de Alimentação",
+      title: "Nova Solicitação",
       id: "",
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -148,7 +151,7 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ ...this.state, showModal: false });
   }
 
@@ -199,14 +202,14 @@ class InclusaoDeAlimentacao extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(null);
     let periodos = this.state.periodos;
@@ -235,11 +238,52 @@ class InclusaoDeAlimentacao extends Component {
       ],
       periodos
     });
+    this.retetaCamposQuantidadeAlunosETiposAlimentacao(this.props.periodos);
     this.refresh();
+  }
+
+  retetaCamposQuantidadeAlunosETiposAlimentacao(periodos) {
+    periodos.forEach((periodo, indice) => {
+      this.bloqueiaCamposQuantidadeAlunosReset(indice, periodo);
+    });
+  }
+
+  bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
+    let periodos = this.state.periodos;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    if (validacaoPeriodos[indice].checado === true) {
+      validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
+    }
+    this.setState({ validacaoPeriodos, periodos });
+  }
+
+  atualizaIndiceNoValidacaoPeriodos(indice, periodo) {
+    let periodos = this.state.periodos;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    if (validacaoPeriodos[indice].checado === false) {
+      validacaoPeriodos[indice].checado = true;
+    } else {
+      validacaoPeriodos[indice].checado = false;
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.resetaCampoQuantidadeAlunos(periodo);
+    }
+
+    this.setState({ validacaoPeriodos, periodos });
   }
 
   carregarRascunho(param) {
     const inclusaoDeAlimentacao = param.inclusaoDeAlimentacao;
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    inclusaoDeAlimentacao.quantidades_periodo.forEach(qtd_periodo => {
+      validacaoPeriodos.forEach((periodo, indice) => {
+        if (qtd_periodo.periodo_escolar.nome === periodo.turno) {
+          validacaoPeriodos[indice].checado = true;
+        }
+      });
+    });
+    this.setState({ validacaoPeriodos });
     this.props.reset("foodInclusion");
     this.props.loadFoodInclusion(inclusaoDeAlimentacao);
     let { periodos } = this.state;
@@ -266,7 +310,9 @@ class InclusaoDeAlimentacao extends Component {
           {
             id: 0,
             motivo: inclusaoDeAlimentacao.motivo.uuid,
-            outroMotivo: inclusaoDeAlimentacao.outro_motivo !== null,
+            outroMotivo:
+              inclusaoDeAlimentacao.outro_motivo !== null &&
+              inclusaoDeAlimentacao.outro_motivo !== "",
             motivoContinuo:
               inclusaoDeAlimentacao.data_inicial &&
               inclusaoDeAlimentacao.data_final,
@@ -288,12 +334,29 @@ class InclusaoDeAlimentacao extends Component {
     this.setState({
       periodos,
       status: inclusaoDeAlimentacao.status,
-      title: `Inclusão de Cardápio # ${inclusaoDeAlimentacao.id_externo}`,
+      title: `Inclusão de Alimentação # ${inclusaoDeAlimentacao.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       id: inclusaoDeAlimentacao.id_externo,
       inclusoes
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
+  }
+
+  resetaCampoQuantidadeAlunos(periodo) {
+    this.props.change(
+      `quantidades_periodo_${periodo.nome}.numero_alunos`,
+      null
+    );
+  }
+
+  adicionaIndiceNoValidacaoPeriodos(periodos) {
+    let validacaoPeriodos = this.state.validacaoPeriodos;
+    periodos.forEach(periodo => {
+      validacaoPeriodos.push({
+        checado: periodo.checked,
+        turno: periodo.nome
+      });
+    });
   }
 
   componentDidMount() {
@@ -302,6 +365,7 @@ class InclusaoDeAlimentacao extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
+      this.adicionaIndiceNoValidacaoPeriodos(this.props.periodos);
       this.setState({
         periodos: this.props.periodos
       });
@@ -343,12 +407,12 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function(error) {
+          function() {
             toastError("Erro ao carregar as inclusões salvas");
           }
         );
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as inclusões salvas");
       }
     );
@@ -364,7 +428,7 @@ class InclusaoDeAlimentacao extends Component {
           toastError("Houve um erro ao enviar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );
@@ -379,16 +443,18 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Rascunho salvo com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho salvo com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -401,16 +467,18 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
-            toastSuccess("Rascunho atualizado com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho atualizado com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );
@@ -426,16 +494,18 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Rascunho salvo com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho salvo com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao salvar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao salvar a inclusão de alimentação");
         }
       );
@@ -448,16 +518,18 @@ class InclusaoDeAlimentacao extends Component {
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
-            toastSuccess("Rascunho atualizado com sucesso");
-            if (values.status === "DRE_A_VALIDAR") {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
               this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
-            } else this.resetForm();
+            } else {
+              toastSuccess("Rascunho atualizado com sucesso");
+              this.resetForm();
+            }
             this.refresh();
           } else {
             toastError("Houve um erro ao atualizar a inclusão de alimentação");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao atualizar a inclusão de alimentação");
         }
       );
@@ -482,6 +554,12 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
   render() {
     const {
       handleSubmit,
@@ -496,15 +574,17 @@ class InclusaoDeAlimentacao extends Component {
       inclusoes,
       periodos,
       showModal,
-      loading
+      loading,
+      validacaoPeriodos
     } = this.state;
     const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
+    const dataInicialContinua = inclusoes[0].data_inicial;
     return (
       <div>
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit} onKeyPress={this.onKeyPress}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={
@@ -521,95 +601,94 @@ class InclusaoDeAlimentacao extends Component {
                     rascunhosInclusaoDeAlimentacao
                   }
                   removerRascunho={this.removerRascunho}
-                  resetForm={event => this.resetForm(event)}
+                  resetForm={() => this.resetForm()}
                   carregarRascunho={params => this.carregarRascunho(params)}
                 />
               </div>
             )}
-            <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <h3 className="font-weight-bold">{title}</h3>
+            <div ref={this.titleRef} className="mt-2 page-title">
+              {title}
             </div>
-            <div className="card mt-3">
+            <div className="card solicitation mt-2">
               <div className="card-body">
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão
                 </div>
-                {inclusoes.map((dia_motivo, key) => {
+                {inclusoes.map((diaMotivo, indice) => {
                   return (
-                    <FormSection name={`inclusoes_${dia_motivo.id}`}>
-                      <div className="form-row">
-                        {!ehMotivoContinuo && (
-                          <div className="form-group col-sm-3">
+                    <FormSection
+                      key={indice}
+                      name={`inclusoes_${diaMotivo.id}`}
+                    >
+                      <section>
+                        <div className="grid_principal">
+                          <div>
                             <Field
-                              component={LabelAndDate}
+                              component={Select}
+                              name="motivo"
+                              label="Motivo"
+                              onChange={event =>
+                                this.handleField(
+                                  "motivo",
+                                  event.target.value,
+                                  diaMotivo.id
+                                )
+                              }
+                              options={
+                                inclusoes.length > 1
+                                  ? agregarDefault(motivos_simples)
+                                  : agregarDefault(motivos_simples).concat(
+                                      motivos_continuos
+                                    )
+                              }
+                              required
+                              validate={required}
+                            />
+                          </div>
+                          {!ehMotivoContinuo && ehMotivoContinuo !== null && (
+                            <Field
+                              component={InputComData}
                               name="data"
                               onChange={value =>
-                                this.handleField("data", value, dia_motivo.id)
+                                this.handleField("data", value, diaMotivo.id)
                               }
                               onBlur={event =>
                                 this.onDataChanged(event.target.value)
                               }
                               minDate={proximos_dois_dias_uteis}
                               label="Dia"
+                              required
                               validate={required}
                             />
-                          </div>
-                        )}
-                        <div className="form-group col-sm-8 p-0">
-                          <Field
-                            component={LabelAndCombo}
-                            name="motivo"
-                            label="Motivo"
-                            onChange={value =>
-                              this.handleField("motivo", value, dia_motivo.id)
-                            }
-                            options={
-                              inclusoes.length > 1
-                                ? agregarDefault(motivos_simples)
-                                : agregarDefault(motivos_simples).concat(
-                                    motivos_continuos
-                                  )
-                            }
-                            validate={required}
-                          />
+                          )}
                         </div>
-                      </div>
-                      {dia_motivo.outroMotivo && (
-                        <div className="form-row">
-                          <div
-                            className={
-                              !dia_motivo.motivoContinuo
-                                ? "form-group col-sm-8 offset-sm-3"
-                                : "form-group col-sm-8 p-0"
-                            }
-                          >
+                        {diaMotivo.outroMotivo && (
+                          <div className="grid-outro-motivo pb-2">
                             <Field
-                              component={LabelAndInput}
+                              component={InputText}
                               label="Qual o motivo?"
                               onChange={event =>
                                 this.handleField(
                                   "outro_motivo",
                                   event,
-                                  dia_motivo.id
+                                  diaMotivo.id
                                 )
                               }
                               name="outro_motivo"
-                              className="form-control"
+                              required
                               validate={required}
                             />
                           </div>
-                        </div>
-                      )}
-                      {ehMotivoContinuo && (
-                        <div className="form-row">
-                          <div className="form-group col-sm-3">
+                        )}
+                        {ehMotivoContinuo && (
+                          <div className={"grid-motivo-continuo"}>
                             <Field
-                              component={LabelAndDate}
+                              component={InputComData}
                               onChange={value =>
                                 this.handleField(
                                   "data_inicial",
                                   value,
-                                  dia_motivo.id
+                                  diaMotivo.id
                                 )
                               }
                               onBlur={event =>
@@ -617,66 +696,75 @@ class InclusaoDeAlimentacao extends Component {
                               }
                               name="data_inicial"
                               label="De"
+                              required
                               validate={required}
                               minDate={proximos_dois_dias_uteis}
                             />
+                            <div>
+                              <Field
+                                component={InputComData}
+                                onChange={value =>
+                                  this.handleField(
+                                    "data_final",
+                                    value,
+                                    diaMotivo.id
+                                  )
+                                }
+                                minDate={getDataObj(dataInicialContinua)}
+                                disabled={!dataInicialContinua}
+                                name="data_final"
+                                label="Até"
+                                required
+                                validate={required}
+                              />
+                            </div>
+                            <div>
+                              <Field
+                                component={Weekly}
+                                name="dias_semana"
+                                onChange={value =>
+                                  this.handleField(
+                                    "dias_semana",
+                                    value,
+                                    diaMotivo.id
+                                  )
+                                }
+                                required
+                                className="form-group col-sm-4"
+                                label="Repetir"
+                              />
+                            </div>
                           </div>
-                          <div className="form-group col-sm-3">
-                            <Field
-                              component={LabelAndDate}
-                              onChange={value =>
-                                this.handleField(
-                                  "data_final",
-                                  value,
-                                  dia_motivo.id
-                                )
-                              }
-                              minDate={getDataObj(inclusoes[0].data_inicial)}
-                              disabled={!inclusoes[0].data_inicial}
-                              name="data_final"
-                              label="Até"
-                              validate={required}
-                            />
-                          </div>
-                          <Field
-                            component={Weekly}
-                            name="dias_semana"
-                            onChange={value =>
-                              this.handleField(
-                                "dias_semana",
-                                value,
-                                dia_motivo.id
-                              )
-                            }
-                            classNameArgs="form-group col-sm-4"
-                            label="Repetir"
-                          />
-                        </div>
-                      )}
+                        )}
+                      </section>
                     </FormSection>
                   );
                 })}
                 {!ehMotivoContinuo && (
-                  <BaseButton
-                    label="Adicionar dia"
+                  <Botao
                     className="col-sm-3"
+                    texto="Adicionar dia"
                     onClick={() => this.adicionarDia()}
-                    style={ButtonStyle.OutlinePrimary}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
                   />
                 )}
                 <div className="row table-titles">
                   <div className="col-3">Período</div>
-                  <div className="col-6">Tipo de Alimentação</div>
-                  <div className="col-3">Nº de Alunos</div>
+                  <div className="col-6 type-food">Tipo de Alimentação</div>
+                  <div className="col-3 n-students">Nº de Alunos</div>
                 </div>
-                {periodos.map((periodo, key) => {
+                {periodos.map((periodo, indice) => {
                   return (
-                    <FormSection name={`quantidades_periodo_${periodo.nome}`}>
+                    <FormSection
+                      key={indice}
+                      name={`quantidades_periodo_${periodo.nome}`}
+                    >
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
-                        <div className="form-check col-md-3 mr-4 ml-4">
+                        <div className="form-check col-md-3 mr-4">
                           <div
-                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
+                            className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field
@@ -685,7 +773,13 @@ class InclusaoDeAlimentacao extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() => this.onCheckChanged(periodo)}
+                                onClick={() => {
+                                  this.onCheckChanged(periodo);
+                                  this.atualizaIndiceNoValidacaoPeriodos(
+                                    indice,
+                                    periodo
+                                  );
+                                }}
                                 className="checkbox-custom"
                               />{" "}
                               {periodo.nome}
@@ -695,9 +789,9 @@ class InclusaoDeAlimentacao extends Component {
                         <div className="form-group col-md-5 mr-5">
                           <div
                             className={
-                              true
-                                ? "multiselect-wrapper-enabled"
-                                : "multiselect-wrapper-disabled"
+                              !validacaoPeriodos[indice].checado
+                                ? "multiselect-wrapper-disabled"
+                                : "multiselect-wrapper-enabled"
                             }
                           >
                             <Field
@@ -722,16 +816,22 @@ class InclusaoDeAlimentacao extends Component {
                         </div>
                         <div className="form-group col-md-2">
                           <Field
-                            component={LabelAndInput}
+                            component={InputText}
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
-                            disabled={false}
+                            disabled={!validacaoPeriodos[indice].checado}
                             type="number"
-                            name="numero_alunos"
+                            name={`numero_alunos`}
                             min="0"
                             className="form-control"
-                            validate={periodo.checked ? required : null}
+                            required={validacaoPeriodos[indice].checado}
+                            validate={
+                              validacaoPeriodos[indice].checado && [
+                                required,
+                                naoPodeSerZero
+                              ]
+                            }
                           />
                         </div>
                       </div>
@@ -739,43 +839,44 @@ class InclusaoDeAlimentacao extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group">
+                <div className="form-group pb-5">
                   <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
+                    component={TextAreaWYSIWYG}
                     label="Observações"
                     name="descricao"
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label={this.state.salvarAtualizarLbl}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values
-                      })
-                    )}
-                    className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Enviar Solicitação"
-                    type={ButtonType.SUBMIT}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values,
-                        status: "DRE_A_VALIDAR"
-                      })
-                    )}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={() => this.resetForm()}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values
+                        })
+                      )}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values,
+                          status: STATUS_DRE_A_VALIDAR
+                        })
+                      )}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -3,7 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 import {
   DRE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  PAINEL_CONTROLE
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
 
 export class SidebarDRE extends Component {
@@ -23,7 +26,7 @@ export class SidebarDRE extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li className="nav-item">
+      <li key={0} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -44,35 +47,42 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${DRE}/${PAINEL_CONTROLE}`}
+              to={`/`}
             >
               Home
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${DRE}/solicitacoes-autorizadas`}
+              to={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
             >
-              Solicitações Autorizadas
+              Autorizadas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${DRE}/solicitacoes-pendentes`}
+              to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
             >
-              Solicitações Pendentes <br />
-              de Autorização
+              Aguardando autorização
             </NavLink>
-            <NavLink activeClassName="active" className="collapse-item" to="#">
-              Solicitações Recusadas
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+            >
+              Negadas
             </NavLink>
-            <NavLink activeClassName="active" className="collapse-item" to="#">
-              Solicitações Canceladas
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+            >
+              Canceladas
             </NavLink>
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={1} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -81,7 +91,7 @@ export class SidebarDRE extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-edit" />
-          <span>Solicitações</span>
+          <span>Novas solicitações</span>
         </NavLink>
         <div
           id="collapseSolicitacoes"
@@ -100,7 +110,7 @@ export class SidebarDRE extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={2} className="nav-item">
         <NavLink
           className={`nav-link collapsed`}
           data-toggle="collapse"
@@ -148,14 +158,14 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação Unificada
+                  Unificada
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -203,7 +213,7 @@ export class SidebarDRE extends Component {
                   className="collapse-item"
                   to="#"
                 >
-                  Solicitação de Kit Lanche
+                  Solicitação de Kit Lanche Passeio
                 </NavLink>
                 <NavLink
                   activeClassName="active"
@@ -231,7 +241,7 @@ export class SidebarDRE extends Component {
           </div>
         </div>
       </li>,
-      <li className="nav-item">
+      <li key={3} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

@@ -3,17 +3,33 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import {
+  required,
+  textAreaRequired,
+  deveSerNoAnoCorrente
+} from "../../helpers/fieldValidators";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  dateDelta
+} from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
-import { atualizarInversaoDeDiaDeCardapio, criarInversaoDeDiaDeCardapio, getInversoesDeDiaDeCardapio, inicioPedido, removerInversaoDeDiaDeCardapio } from "../../services/inversaoDeDiaDeCardapio.service";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import {
+  atualizarInversaoDeDiaDeCardapio,
+  criarInversaoDeDiaDeCardapio,
+  getInversoesDeDiaDeCardapio,
+  inicioPedido,
+  removerInversaoDeDiaDeCardapio
+} from "../../services/inversaoDeDiaDeCardapio.service";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/dialogs";
-import { LabelAndDate, LabelAndTextArea } from "../Shareable/labelAndInput/labelAndInput";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { InputComData } from "../Shareable/DatePicker";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import Botao from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -21,8 +37,8 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.state = {
       rascunhosInversoes: [],
       status: "SEM STATUS",
-      title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar",
+      title: "Nova Solicitação",
+      salvarAtualizarLbl: "Salvar Rascunho",
       segundoDiaUtil: "",
       showModal: false,
       loading: true
@@ -44,7 +60,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -52,13 +68,13 @@ export class InversaoDeDiaDeCardapio extends Component {
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("inversaoDeDiaDeCardapioForm");
     this.props.loadInversaoDeDiaDeCardapio(null);
     this.setState({
       status: "SEM STATUS",
-      title: "Nova solicitação",
-      salvarAtualizarLbl: "Salvar"
+      title: "Nova Solicitação",
+      salvarAtualizarLbl: "Salvar Rascunho"
     });
     this.refresh();
   }
@@ -69,7 +85,9 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.props.loadInversaoDeDiaDeCardapio(inversaoDeDiaDeCardapio);
     this.setState({
       status: inversaoDeDiaDeCardapio.status,
-      title: `Solicitação # ${inversaoDeDiaDeCardapio.id_externo}`,
+      title: `Inversão de dia de Cardápio # ${
+        inversaoDeDiaDeCardapio.id_externo
+      }`,
       salvarAtualizarLbl: "Atualizar"
     });
   }
@@ -78,7 +96,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.refresh();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
@@ -91,14 +109,10 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   refresh() {
-    getInversoesDeDiaDeCardapio()
-      .then(response => {
-        const rascunhosInversoes = response.results;
-        this.setState({ rascunhosInversoes });
-      })
-      .catch(error => {
-        console.log("ERROR AO TENTAR CARREGAR INVERSÕES SALVAS: ", error);
-      });
+    getInversoesDeDiaDeCardapio().then(response => {
+      const rascunhosInversoes = response.results;
+      this.setState({ rascunhosInversoes });
+    });
   }
 
   showModal() {
@@ -131,7 +145,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           toastError("Houve um erro ao enviar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );
@@ -140,46 +154,42 @@ export class InversaoDeDiaDeCardapio extends Component {
   onSubmit(values) {
     values.escola = this.props.meusDados.escolas[0].uuid;
     if (!values.uuid) {
-      criarInversaoDeDiaDeCardapio(values)
-        .then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
+      criarInversaoDeDiaDeCardapio(values).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
+          } else {
             toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
-              this.iniciarPedido(response.data.uuid);
-            } else this.resetForm();
-          } else {
-            var keys = Object.keys(response.data);
-            keys.forEach(function(key) {
-              toastError(response.data[key][0]);
-            });
+            this.resetForm();
           }
-        })
-        .catch(error => {
-          console.log("ERRO AO TENTAR SALVAR: ", error);
-        });
+        } else {
+          let keys = Object.keys(response.data);
+          keys.forEach(function(key) {
+            toastError(response.data[key][0]);
+          });
+        }
+      });
     } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, values)
-        .then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
-            if (values.status === "DRE_A_VALIDAR") {
-              this.iniciarPedido(response.data.uuid);
-            } else this.resetForm();
+      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
           } else {
-            var keys = Object.keys(response.data);
-            keys.forEach(function(key) {
-              toastError(response.data[key][0]);
-            });
+            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
+            this.resetForm();
           }
-        })
-        .catch(error => {
-          console.log("ERRO AO TENTAR SALVAR: ", error);
-        });
+        } else {
+          let keys = Object.keys(response.data);
+          keys.forEach(function(key) {
+            toastError(response.data[key][0]);
+          });
+        }
+      });
     }
   }
 
   render() {
-    const { showModal, loading } = this.state;
+    const { showModal, loading, rascunhosInversoes } = this.state;
     const {
       handleSubmit,
       pristine,
@@ -197,90 +207,103 @@ export class InversaoDeDiaDeCardapio extends Component {
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos || 0}
             />
-            <Rascunhos
-              rascunhosInversoes={this.state.rascunhosInversoes}
-              removerRascunho={this.removerRascunho}
-              resetForm={event => this.resetForm(event)}
-              carregarRascunho={params => this.carregarRascunho(params)}
-            />
-            <div className="mt-3 page-title">{this.state.title}</div>
-            <div className="card border rounded mt-2">
+            {rascunhosInversoes.length > 0 && (
+              <div className="mt-3">
+                <span className="page-title">Rascunhos</span>
+                <Rascunhos
+                  rascunhosInversoes={rascunhosInversoes}
+                  removerRascunho={this.removerRascunho}
+                  resetForm={() => this.resetForm()}
+                  carregarRascunho={params => this.carregarRascunho(params)}
+                />
+              </div>
+            )}
+            <div className="mt-2 page-title">{this.state.title}</div>
+            <div className="card inversao-dia-cardapio border rounded mt-2">
               <div className="card-body">
-                <label className="font-weight-bold">
-                  Descrição da Alteração
+                <label className="card-title font-weight-bold">
+                  Descrição da Inversão
                 </label>
-                <div className="row w-100 pb-3">
-                  <div className="col-md-12 col-lg-5">
+                <div className="row w-100 pt-3">
+                  <div className="inversao-datepicker col-md-12 col-lg-5">
                     <Field
-                      component={LabelAndDate}
+                      component={InputComData}
                       name="data_de"
                       label="Referência"
                       textoLabel="Cardápio dia"
-                      validate={required}
+                      required
+                      validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={dateDelta(60)}
                     />
                   </div>
                   <div className="col-md-12 col-lg-2 for-span">
-                    <span className="font-weight-bold pr-3">para</span>
-                    <i class="fas fa-arrow-right" />
+                    <span className="pr-3">para</span>
+                    <i className="fas fa-arrow-right" />
                   </div>
-                  <div className="col-md-12 col-lg-5">
+                  <div className="inversao-datepicker col-md-12 col-lg-5">
                     <Field
-                      component={LabelAndDate}
+                      component={InputComData}
                       name="data_para"
                       label="Aplicar em"
                       textoLabel="Cardápio dia"
-                      validate={required}
+                      required
+                      validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
-                      activeCalendar
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={dateDelta(60)}
                     />
                   </div>
                 </div>
-                <div className="row form-group">
-                  <Field
-                    component={LabelAndTextArea}
-                    label="Motivo"
-                    name="motivo"
-                    validate={[textAreaRequired]}
-                  />
-                </div>
-                <div className="row form-group">
-                  <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
-                    label="Observação"
-                    name="observacao"
-                  />
-                </div>
-                <div className="row form-group text-right mt-4">
+                <div className="row">
                   <div className="col-12">
-                    <BaseButton
-                      label="Cancelar"
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Motivo"
+                      name="motivo"
+                      required
+                      validate={[textAreaRequired]}
+                    />
+                  </div>
+                </div>
+                <div className="row mt-5">
+                  <div className="col-12 mt-2 pb-5">
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Observação"
+                      name="observacao"
+                    />
+                  </div>
+                </div>
+                <div className="row text-right mt-4">
+                  <div className="col-12 mt-2">
+                    <Botao
+                      texto="Cancelar"
                       onClick={event => this.resetForm(event)}
                       disabled={pristine || submitting}
-                      style={ButtonStyle.OutlinePrimary}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_TYPE.SUBMIT}
                     />
-                    <BaseButton
-                      label={this.state.salvarAtualizarLbl}
-                      disabled={pristine || submitting}
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      disabled={submitting}
                       onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
-                      type={ButtonType.SUBMIT}
-                      style={ButtonStyle.OutlinePrimary}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      type={BUTTON_TYPE.SUBMIT}
                     />
-                    <BaseButton
-                      label="Enviar Solicitação"
-                      disabled={pristine || submitting}
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Enviar"
+                      disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
-                          status: "DRE_A_VALIDAR"
+                          status: STATUS_DRE_A_VALIDAR
                         })
                       )}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
+                      type={BUTTON_TYPE.SUBMIT}
                       className="ml-3"
                     />
                   </div>

@@ -1,0 +1,74 @@
+@import "../../../../styles/variables.scss";
+
+div.tour-time {
+  p.label {
+    color: $gray;
+    font-size: 14px;
+    font-weight: normal;
+  }
+  label.container-radio {
+    color: $blackInput;
+    &:not(:first-child) {
+      margin-left: 30px;
+    }
+  }
+  div.explanation {
+    label {
+      color: $gray;
+      font-size: 14px;
+      font-weight: normal;
+    }
+  }
+}
+
+.container-radio {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    &:checked ~ .checkmark {
+      background-color: $blueCheckAndRadio;
+    }
+    &:checked ~ .checkmark:after {
+      display: block;
+    }
+  }
+  &:hover {
+    input:not(:checked) ~ .checkmark {
+      background-color: $grayInputBackground;
+    }
+  }
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: $white;
+    border: 1px solid $grayPlaceholder;
+    border-radius: 50%;
+    &:after {
+      content: "";
+      position: absolute;
+      display: none;
+      top: 5px;
+      left: 5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+    }
+  }
+}

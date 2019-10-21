@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getInclusaoDeAlimentacaoAvulsa,
   CODAEConfirmaInclusaoDeAlimentacaoAvulsa
@@ -16,13 +14,17 @@ import {
   CODAEConfirmaInclusaoDeAlimentacaoContinua
 } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { getDiasUteis } from "../../../../services/diasUteis.service";
-import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../../Shareable/dialogs";
-import "../style.scss";
-import "./style.scss";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
+import Botao from "../../../Shareable/Botao";
+import { ModalNegarInclusaoAlimentacao } from "./components/ModalNegarInclusaoAlimentacao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -30,7 +32,6 @@ class Relatorio extends Component {
     this.state = {
       unifiedSolicitationList: [],
       uuid: null,
-      meusDados: null,
       redirect: false,
       showModal: false,
       ehInclusaoContinua: false,
@@ -60,11 +61,6 @@ class Relatorio extends Component {
       ehInclusaoContinua === "true"
         ? getInclusaoDeAlimentacaoContinua
         : getInclusaoDeAlimentacaoAvulsa;
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
-    });
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.proximos_cinco_dias_uteis)
@@ -95,9 +91,8 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
-    toastSuccess("Solicitação de Alimentação recusado com sucesso!");
   }
 
   handleSubmit() {
@@ -114,7 +109,7 @@ class Relatorio extends Component {
           toastError("Houve um erro ao autorizar a Inclusão de Alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Inclusão de Alimentação");
       }
     );
@@ -129,9 +124,9 @@ class Relatorio extends Component {
             <th>Data</th>
             <th>Motivo</th>
           </tr>
-          {inclusaoDeAlimentacao.inclusoes.map(inclusao => {
+          {inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
             return (
-              <tr>
+              <tr key={key}>
                 <td>{inclusao.data}</td>
                 <td>{inclusao.motivo.nome}</td>
               </tr>
@@ -179,13 +174,15 @@ class Relatorio extends Component {
       showModal,
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
-      meusDados
+      ehInclusaoContinua
     } = this.state;
     return (
-      <div>
-        <ModalRecusarSolicitacao
+      <div className="report food-inclusion">
+        <ModalNegarInclusaoAlimentacao
           closeModal={this.closeModal}
           showModal={showModal}
+          inclusaoDeAlimentacao={inclusaoDeAlimentacao}
+          ehInclusaoContinua={ehInclusaoContinua}
         />
         {this.renderizarRedirecionamentoParaPedidosDeInclusao()}
         {!inclusaoDeAlimentacao ? (
@@ -195,6 +192,15 @@ class Relatorio extends Component {
             <span className="page-title">{`Inclusão de Alimentacão - Pedido # ${
               inclusaoDeAlimentacao.id_externo
             }`}</span>
+            <Link to={`/${CODAE}/${INCLUSAO_ALIMENTACAO}`}>
+              <Botao
+                texto="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
@@ -204,6 +210,12 @@ class Relatorio extends Component {
                     )}`}
                   >
                     {prazoDoPedidoMensagem}
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      className="float-right"
+                    />
                   </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
@@ -229,9 +241,9 @@ class Relatorio extends Component {
                   <div className="col-2 report-label-value">
                     <p>DRE</p>
                     <p className="value-important">
-                      {meusDados &&
-                        meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                      {inclusaoDeAlimentacao.escola &&
+                        inclusaoDeAlimentacao.escola.diretoria_regional &&
+                        inclusaoDeAlimentacao.escola.diretoria_regional.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
@@ -294,9 +306,9 @@ class Relatorio extends Component {
                     <th>Quantidade de Alunos</th>
                   </tr>
                   {inclusaoDeAlimentacao.quantidades_periodo.map(
-                    quantidade_por_periodo => {
+                    (quantidade_por_periodo, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td>
                             {quantidade_por_periodo.periodo_escolar &&
                               quantidade_por_periodo.periodo_escolar.nome}
@@ -324,20 +336,20 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {inclusaoDeAlimentacao.status === statusEnum.DRE_APROVADO && (
+                {inclusaoDeAlimentacao.status === statusEnum.DRE_VALIDADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Negar Solicitação"}
+                    <Botao
+                      texto={"Negar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Autorizar Solicitação"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Autorizar"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

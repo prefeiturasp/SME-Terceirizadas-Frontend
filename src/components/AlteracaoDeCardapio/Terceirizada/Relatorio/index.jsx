@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { ModalRecusarSolicitacao } from "../../../Shareable/ModalRecusarSolicitacao";
 import {
   getAlteracaoCardapio,
@@ -14,14 +12,15 @@ import {
 import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { meusDados } from "../../../../services/perfil.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../../Shareable/dialogs";
-import "../style.scss";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import {
   ALTERACAO_CARDAPIO,
   TERCEIRIZADA
 } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -85,7 +84,7 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal(e) {
+  closeModal() {
     this.setState({ showModal: false });
     toastSuccess("Alteração de Cardápio recusada!");
   }
@@ -104,7 +103,7 @@ class Relatorio extends Component {
           );
         }
       },
-      function(error) {
+      function() {
         toastError("ouve um erro ao dar ciência sobre Alteração de Cardápio");
       }
     );
@@ -183,6 +182,7 @@ class Relatorio extends Component {
                     <p className="value-important">
                       {meusDados &&
                         meusDados.diretorias_regionais &&
+                        meusDados.diretorias_regionais[0] &&
                         meusDados.diretorias_regionais[0].nome}
                     </p>
                   </div>
@@ -225,24 +225,23 @@ class Relatorio extends Component {
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
+                    <th>Tipos de Alimentação de</th>
+                    <th>Tipos de Alimentação para</th>
                   </tr>
                   {alteracaoDeCardapio.substituicoes.map(
-                    quantidade_por_periodo => {
+                    (quantidade_por_periodo, key) => {
                       return (
-                        <tr>
+                        <tr key={key}>
                           <td>
                             {quantidade_por_periodo.periodo_escolar &&
                               quantidade_por_periodo.periodo_escolar.nome}
                           </td>
                           <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
+                            {quantidade_por_periodo.tipo_alimentacao_de.nome}
                           </td>
-                          <td>{quantidade_por_periodo.qtd_alunos}</td>
+                          <td>
+                            {quantidade_por_periodo.tipo_alimentacao_para.nome}
+                          </td>
                         </tr>
                       );
                     }
@@ -273,20 +272,20 @@ class Relatorio extends Component {
                     </td>
                   </tr>
                 </table>
-                {alteracaoDeCardapio.status === statusEnum.CODAE_APROVADO && (
+                {alteracaoDeCardapio.status === statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label={"Recusar Solicitação"}
+                    <Botao
+                      texto={"Recusar"}
                       className="ml-3"
                       onClick={() => this.showModal()}
-                      type={ButtonType.BUTTON}
-                      style={ButtonStyle.OutlinePrimary}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                    <BaseButton
-                      label="Ciente"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Ciente"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

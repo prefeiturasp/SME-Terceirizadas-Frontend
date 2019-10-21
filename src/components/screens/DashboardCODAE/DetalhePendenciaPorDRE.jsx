@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { CardPendencia } from "../../Shareable/CardPendencia/CardPendencia";
 import { Field, reduxForm } from "redux-form";
-import { LabelAndCombo } from "../../Shareable/labelAndInput/labelAndInput";
+import Select from "../../Shareable/Select";
 
 class DetalhePendenciaPorDRE extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       vision_by: [
@@ -29,7 +29,7 @@ class DetalhePendenciaPorDRE extends Component {
           uuid: "lote"
         }
       ]
-    }
+    };
   }
 
   handleField() {
@@ -37,7 +37,6 @@ class DetalhePendenciaPorDRE extends Component {
   }
 
   render() {
-    console.log(this.props)
     return (
       <div>
         <div>
@@ -55,8 +54,8 @@ class DetalhePendenciaPorDRE extends Component {
               </div>
               <span className="combo-box">
                 <Field
-                  component={LabelAndCombo}
-                  onChange={uuid => this.handleField(uuid)}
+                  component={Select}
+                  onChange={event => this.handleField(event.target.value)}
                   placeholder={"Visão por"}
                   options={this.state.vision_by}
                 />
@@ -75,7 +74,7 @@ class DetalhePendenciaPorDRE extends Component {
               </div>
               <div className="col-6">
                 <CardPendencia
-                  cardTitle={"Kit Lanche"}
+                  cardTitle={"Kit Lanche Passeio"}
                   totalOfOrders={18}
                   priorityOrders={3}
                   onLimitOrders={5}

@@ -1,0 +1,45 @@
+@import "../../../styles/variables.scss";
+
+* {
+  font-family: Roboto;
+}
+
+.Toastify__toast-container--top-center {
+  font-weight: 500;
+  font-family: Roboto;
+  font-weight: bold;
+  font-size: 18px;
+  height: 50px;
+  left: 15%;
+  letter-spacing: 0.02em;
+  min-width: 90%;
+  text-align: center;
+  .Toastify__toast--success {
+    background: $greenBackgroundToastSuccess;
+    color: $greenToastSuccess;
+    button.Toastify__close-button.Toastify__close-button--success {
+      color: $greenToastSuccess;
+    }
+  }
+  .Toastify__toast--error {
+    background: $redBackgroundToastError;
+    color: $redToastError;
+    button.Toastify__close-button.Toastify__close-button--error {
+      color: $redToastError;
+    }
+  }
+  .Toastify__toast--warning {
+    background: $yellowBackgroundToastWarning;
+    color: $yellowToastWarning;
+    button.Toastify__close-button.Toastify__close-button--warning {
+      color: $yellowToastWarning;
+    }
+  }
+  .Toastify__toast--info {
+    background: $blueBackgroundToastInfo;
+    color: $blueToastInfo;
+    button.Toastify__close-button.Toastify__close-button--info {
+      color: $blueToastInfo;
+    }
+  }
+}

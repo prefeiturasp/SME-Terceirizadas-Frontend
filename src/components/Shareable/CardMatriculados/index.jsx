@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
+import { ToggleExpandir } from "../../Shareable/ToggleExpandir";
 import "./style.scss";
+import { pontuarValor } from "../../../helpers/utilities";
 
 export default class CardMatriculados extends Component {
   render() {
@@ -12,23 +13,20 @@ export default class CardMatriculados extends Component {
             <div className="col-5">Nº de Matriculados</div>
             {collapsed !== undefined && (
               <div className="offset-6 col-1 my-auto text-right">
-                <Stand
+                <ToggleExpandir
                   onClick={this.props.alterarCollapse}
-                  color={"#C8C8C8"}
-                  width={15}
-                  lineHeight={3}
-                  lineSpacing={1}
-                  padding={0}
-                  active={!collapsed}
+                  ativo={!collapsed}
                 />
               </div>
             )}
           </div>
           <div className="row">
-            <div className="rectangle">{numeroAlunos}</div>
-            <div className="col-4 beside-text my-auto">
-              Informação automática disponibilizada no <br />
-              <span>Cadastro da Unidade Escolar</span>
+            <div className="rectangle">
+              {numeroAlunos && pontuarValor(numeroAlunos)}
+            </div>
+            <div className="col-6 beside-text mt-auto">
+              Informação automática disponibilizada pelo Cadastro da Unidade
+              Escolar <br />
             </div>
           </div>
           <div className="row">{this.props.children}</div>

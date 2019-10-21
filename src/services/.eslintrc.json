@@ -1,0 +1,4 @@
+// https://github.com/yannickcr/eslint-plugin-react#configuration
+{
+  "rules": { "no-console": "off" }
+}

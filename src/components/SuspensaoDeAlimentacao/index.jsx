@@ -1,3 +1,4 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -9,26 +10,23 @@ import {
   updateSuspensaoDeAlimentacao,
   enviarSuspensaoDeAlimentacao
 } from "../../services/suspensaoDeAlimentacao.service";
-import {
-  geradorUUID,
-  formatarParaMultiselect
-} from "../../helpers/utilities";
+import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
-import {
-  LabelAndDate,
-  LabelAndTextArea,
-  LabelAndCombo,
-  LabelAndInput
-} from "../Shareable/labelAndInput/labelAndInput";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
-import { required } from "../../helpers/fieldValidators";
+import { InputText } from "../Shareable/Input/InputText";
+import { Select } from "../Shareable/Select";
+import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "../Shareable/dialogs";
-import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
+import { InputComData } from "../Shareable/DatePicker";
+import Botao from "../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 
+const ENTER = 13;
 class FoodSuspensionEditor extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +34,7 @@ class FoodSuspensionEditor extends Component {
       loading: true,
       suspensoesDeAlimentacaoList: [],
       status: "SEM STATUS",
-      title: "Nova Suspensão de Alimentação",
+      title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
       dias_razoes: [
         {
@@ -74,8 +72,6 @@ class FoodSuspensionEditor extends Component {
     this.setState({ dias_razoes });
   }
 
-
-
   addDay() {
     this.setState({
       dias_razoes: this.state.dias_razoes.concat([
@@ -88,8 +84,6 @@ class FoodSuspensionEditor extends Component {
       ])
     });
   }
-
-
 
   handleSelectedChanged = (selectedOptions, period) => {
     let options = this.state.options;
@@ -104,13 +98,6 @@ class FoodSuspensionEditor extends Component {
     );
   };
 
-  fontHeader = {
-    color: "#686868"
-  };
-  bgMorning = {
-    background: "#FFF7CB"
-  };
-
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
       deleteSuspensaoDeAlimentacao(uuid).then(
@@ -122,19 +109,19 @@ class FoodSuspensionEditor extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function(error) {
+        function() {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
     }
   }
 
-  resetForm(event) {
+  resetForm() {
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(null);
     this.setState({
       status: "SEM STATUS",
-      title: "Nova Suspensão de Alimentação",
+      title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
       dias_razoes: [
         {
@@ -152,8 +139,6 @@ class FoodSuspensionEditor extends Component {
     });
   }
 
-
-
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = [];
     suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
@@ -164,7 +149,9 @@ class FoodSuspensionEditor extends Component {
         id: geradorUUID(),
         data: suspensaoAlimentacao.data,
         motivo: suspensaoAlimentacao.motivo.uuid,
-        outroMotivo: suspensaoAlimentacao.outro_motivo !== null
+        outroMotivo:
+          suspensaoAlimentacao.outro_motivo !== null &&
+          suspensaoAlimentacao.outro_motivo !== ""
       };
       novoDia[`data${idx}`] = suspensaoAlimentacao.data;
       novoDia[`motivo${idx}`] = suspensaoAlimentacao.motivo.uuid;
@@ -265,7 +252,7 @@ class FoodSuspensionEditor extends Component {
           suspensoesDeAlimentacaoList: res.results
         });
       },
-      function(error) {
+      function() {
         toastError("Erro ao carregar as suspensões salvas");
       }
     );
@@ -282,7 +269,7 @@ class FoodSuspensionEditor extends Component {
           toastError(res.error);
         }
       },
-      function(error) {
+      function() {
         toastError("Houve um erro ao enviar a Suspensão de Alimentação");
       }
     );
@@ -311,17 +298,18 @@ class FoodSuspensionEditor extends Component {
         createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              toastSuccess("Suspensão de Alimentação salva com sucesso");
               this.refresh();
-              if (status === "A_VALIDAR") {
+              if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao salvar a Suspensão de Alimentação");
           }
         );
@@ -329,32 +317,36 @@ class FoodSuspensionEditor extends Component {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               this.refresh();
-              if (status === "A_VALIDAR") {
+              if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
+              } else {
+                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
               }
             } else {
               toastError(res.error);
             }
           },
-          function(error) {
+          function() {
             toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
           }
         );
       }
-
     } else {
       toastError(error);
+    }
+  }
+
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
     }
   }
 
   render() {
     const {
       handleSubmit,
-      pristine,
-      submitting,
       meusDados,
       periodos,
       motivos,
@@ -377,25 +369,26 @@ class FoodSuspensionEditor extends Component {
       NOITE: suspensoes_NOITE && suspensoes_NOITE.check,
       INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check
     };
-    const colors = {
-      MANHA: "#FFF7CB",
-      TARDE: "#FFEED6",
-      NOITE: "#E4F1FF",
-      INTEGRAL: "#EBEDFF"
-    };
     return (
       <div>
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+            onKeyPress={this.onKeyPress}
+          >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={meusDados.escolas[0].quantidade_alunos}
             />
             {suspensoesDeAlimentacaoList.length > 0 && (
               <div className="mt-3">
-                <span className="page-title">Rascunhos</span>
+                <span ref={this.titleRef} className="page-title">
+                  Rascunhos
+                </span>
                 <Rascunhos
                   suspensoesDeAlimentacaoList={suspensoesDeAlimentacaoList}
                   OnDeleteButtonClicked={this.OnDeleteButtonClicked}
@@ -406,44 +399,46 @@ class FoodSuspensionEditor extends Component {
                 />
               </div>
             )}
-            <div ref={this.titleRef} className="form-row mt-3 ml-1">
-              <h3 className="font-weight-bold" style={{ color: "#353535" }}>
-                {title}
-              </h3>
-            </div>
-            <div className="card mt-3">
+            <div className="mt-2 page-title">{title}</div>
+            <div className="card solicitation mt-3">
               <div className="card-body">
-                <div
-                  className="card-title font-weight-bold"
-                  style={this.fontHeader}
-                >
+                <div className="card-title font-weight-bold">
                   Descrição da Suspensão
                 </div>
                 {dias_razoes.map((dia_motivo, key) => {
                   return (
-                    <FormSection name={`dias_razoes_${dia_motivo.data}`}>
+                    <FormSection
+                      key={key}
+                      name={`dias_razoes_${dia_motivo.data}`}
+                    >
                       <div className="form-row">
                         <div className="form-group col-sm-3">
                           <Field
-                            component={LabelAndDate}
+                            component={InputComData}
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
                             onChange={value =>
                               this.handleField(`data${key}`, value, key)
                             }
                             label="Dia"
+                            required
                             validate={required}
                           />
                         </div>
                         <div className="form-group col-sm-8">
                           <Field
-                            component={LabelAndCombo}
+                            component={Select}
                             name={`motivo${key}`}
                             label="Motivo"
                             options={motivos}
-                            onChange={value =>
-                              this.handleField(`motivo${key}`, value, key)
+                            onChange={event =>
+                              this.handleField(
+                                `motivo${key}`,
+                                event.target.value,
+                                key
+                              )
                             }
+                            required
                             validate={required}
                           />
                         </div>
@@ -452,7 +447,7 @@ class FoodSuspensionEditor extends Component {
                         <div className="form-row">
                           <div className="form-group col-sm-8 offset-sm-3">
                             <Field
-                              component={LabelAndInput}
+                              component={InputText}
                               label="Qual o motivo?"
                               onChange={event =>
                                 this.handleField(
@@ -461,6 +456,7 @@ class FoodSuspensionEditor extends Component {
                                   key
                                 )
                               }
+                              required
                               name={`outro_motivo${key}`}
                               className="form-control"
                               validate={required}
@@ -471,36 +467,31 @@ class FoodSuspensionEditor extends Component {
                     </FormSection>
                   );
                 })}
-                <BaseButton
-                  label="Adicionar dia"
-                  className="col-sm-3"
+                <Botao
+                  texto="Adicionar dia"
+                  titulo="Adicionar dia"
+                  className="col-3"
                   onClick={() => this.addDay()}
-                  style={ButtonStyle.OutlinePrimary}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  type={BUTTON_TYPE.BUTTON}
                 />
-                <table className="table table-borderless">
-                  <tr>
-                    <td>Período</td>
-                    <td style={{ paddingLeft: "9rem" }}>Tipo de Alimentação</td>
-                    <td>Nº de Alunos</td>
-                  </tr>
-                </table>
+                <div className="row table-titles">
+                  <div className="col-3">Período</div>
+                  <div className="col-6 type-food">Tipo de Alimentação</div>
+                  <div className="col-3 n-students">Nº de Alunos</div>
+                </div>
                 {periodos.map((period, key) => {
                   this.props.change(
                     `suspensoes_${period.nome}.periodo`,
                     period.uuid
                   );
                   return (
-                    <FormSection name={`suspensoes_${period.nome}`}>
+                    <FormSection key={key} name={`suspensoes_${period.nome}`}>
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
-                        <div className="form-check col-md-3 mr-4 ml-4">
+                        <div className="form-check col-md-3 mr-4">
                           <div
-                            className="pl-5 pt-2 pb-2"
-                            style={{
-                              marginLeft: "-1.4rem",
-                              background: colors[period.nome],
-                              borderRadius: "7px"
-                            }}
+                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field
@@ -551,12 +542,19 @@ class FoodSuspensionEditor extends Component {
                         </div>
                         <div className="form-group col-md-2">
                           <Field
-                            component={LabelAndInput}
+                            component={InputText}
+                            disabled={!checkMap[period.nome]}
                             type="number"
                             name="numero_de_alunos"
                             min="0"
                             className="form-control"
-                            validate={checkMap[period.nome] ? required : null}
+                            required
+                            validate={
+                              checkMap[period.nome] && [
+                                required,
+                                naoPodeSerZero
+                              ]
+                            }
                           />
                         </div>
                       </div>
@@ -564,42 +562,44 @@ class FoodSuspensionEditor extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group">
+                <div className="form-group pb-5">
                   <Field
-                    component={LabelAndTextArea}
-                    placeholder="Campo opcional"
+                    component={TextAreaWYSIWYG}
                     label="Observações"
                     name="observacao"
                   />
                 </div>
                 <div className="form-group row float-right mt-4">
-                  <BaseButton
-                    label="Cancelar"
-                    onClick={event => this.resetForm(event)}
-                    disabled={pristine || submitting}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label={this.state.salvarAtualizarLbl}
-                    disabled={pristine || submitting}
-                    onClick={handleSubmit(values => this.onSubmit(values))}
-                    className="ml-3"
-                    type={ButtonType.SUBMIT}
-                    style={ButtonStyle.OutlinePrimary}
-                  />
-                  <BaseButton
-                    label="Enviar Solicitação"
-                    disabled={pristine || submitting}
-                    type={ButtonType.SUBMIT}
-                    onClick={handleSubmit(values =>
-                      this.onSubmit({
-                        ...values,
-                        status: "A_VALIDAR"
-                      })
-                    )}
-                    style={ButtonStyle.Primary}
-                    className="ml-3"
-                  />
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={event => this.resetForm(event)}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values
+                        })
+                      )}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values,
+                          status: STATUS_DRE_A_VALIDAR
+                        })
+                      )}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

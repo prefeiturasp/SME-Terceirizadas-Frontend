@@ -5,8 +5,15 @@ import "./style.scss";
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
   PENDENTE: "card-pending",
-  APROVADO: "card-authorized",
+  AUTORIZADO: "card-authorized",
   NEGADO: "card-denied"
+};
+
+export const ICON_CARD_TYPE_ENUM = {
+  CANCELADO: "fa-times-circle",
+  PENDENTE: "fa-exclamation-triangle",
+  AUTORIZADO: "fa-check",
+  NEGADO: "fa-ban"
 };
 
 export const CardStatusDeSolicitacao = props => {
@@ -21,14 +28,17 @@ export const CardStatusDeSolicitacao = props => {
         {loading && (
           <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
         )}
+        <span className="float-right my-auto">Data/Hora</span>
       </div>
       <hr />
-      {solicitations.slice(0, 3).map((solicitation, key) => {
+      {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
-          <p className="data">
-            {solicitation.text}
-            <span className="float-right">{solicitation.date}</span>
-          </p>
+          <NavLink to={solicitation.link} key={key}>
+            <p className="data">
+              {solicitation.text}
+              <span className="float-right">{solicitation.date}</span>
+            </p>
+          </NavLink>
         );
       })}
       {solicitations.length > 3 && (

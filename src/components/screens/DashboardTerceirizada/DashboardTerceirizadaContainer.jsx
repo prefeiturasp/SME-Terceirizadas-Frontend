@@ -1,66 +1,51 @@
 import React, { Component } from "react";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import DashboardTerceirizada from "./DashboardTerceirizada";
-
-import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service"
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/tiposSolicitacao.constants";
+import { formatarLotesParaVisao } from "./helper";
 
 class DashboardTerceirizadaContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: 4050,
-      solicitations: [
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "11:19"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação de Kit Lanche",
-          date: "Qua 11:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        },
-        {
-          text: "12083 - 7A IP I - Solicitação Unificada",
-          date: "Qua 10:07"
-        }
-      ],
       vision_by: [
         {
-          label: "Visão por",
-          value: ""
+          nome: "Tipo de Solicitação",
+          uuid: "tipo_solicitacao"
         },
         {
-          label: "Dia",
-          value: "day"
-        },
-        {
-          label: "Semana",
-          value: "week"
-        },
-        {
-          label: "Mês",
-          value: "month"
-        },
-        {
-          label: "Lote",
-          value: "lote"
+          nome: "Lote",
+          uuid: "lote"
         }
       ],
-      quantidade_suspensoes: null
+      filtro_por: [
+        {
+          nome: "Sem filtro",
+          uuid: "sem_filtro"
+        },
+        {
+          nome: "Semana",
+          uuid: "daqui_a_7_dias"
+        },
+        {
+          nome: "Mês",
+          uuid: "daqui_a_30_dias"
+        }
+      ],
+      meusDados: null,
+      cards: TIPOS_SOLICITACAO_LISTA,
+      tiposSolicitacao: TIPOS_SOLICITACAO_LISTA,
+      lotes: null
     };
   }
 
-  componentDidMount(){
-    getSuspensoesDeAlimentacaoInformadas().then(response => {
-      let quantidade_suspensoes = response.count
-      this.setState({ quantidade_suspensoes })
-    })
+  componentDidMount() {
+    getMeusDados().then(response => {
+      this.setState({
+        meusDados: response,
+        lotes: formatarLotesParaVisao(response.terceirizadas[0].lotes)
+      });
+    });
   }
 
   render() {

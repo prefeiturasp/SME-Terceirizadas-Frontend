@@ -3,9 +3,15 @@
 .card-title-status {
   font-weight: 600;
   font-size: 13px;
-  color: #323c47;
+  color: $blackInput;
   letter-spacing: 0.01em;
   padding-top: 5px;
+  span {
+    color: $grayPlaceholder;
+    font-weight: normal;
+    font-size: 10px;
+    padding-right: 5px;
+  }
 }
 
 .card-panel {
@@ -19,8 +25,9 @@
   p.data {
     padding: 0 10px;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
     color: #707683;
+    margin-bottom: 0.3rem;
     span {
       font-weight: normal;
     }
@@ -30,7 +37,7 @@
     font-size: 13px;
     text-align: center;
     color: $blue;
-    padding-bottom: 10px;
+    padding: 10px 0;
   }
   &.card-authorized {
     border-left-color: $greenPanel !important;
@@ -58,12 +65,11 @@
   }
 }
 
-.ajuste-icones{
+.ajuste-icones {
   display: flex;
   justify-content: space-between;
   margin-right: 0.5em;
-
-  img{
+  img {
     height: 1em;
   }
 }

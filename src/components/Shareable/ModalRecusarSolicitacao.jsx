@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { LabelAndTextArea, LabelAndCombo } from "./labelAndInput/labelAndInput";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
-import BaseButton, { ButtonStyle, ButtonType } from "../Shareable/button";
+import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
+import Botao from "./Botao";
+import Select from "./Select";
+import { TextArea } from "./TextArea/TextArea";
 
 export class ModalRecusarSolicitacao extends Component {
   render() {
@@ -17,17 +19,22 @@ export class ModalRecusarSolicitacao extends Component {
           <div className="form-row">
             <div className="form-group col-12">
               <Field
-                component={LabelAndCombo}
+                component={Select}
                 name="razao"
                 label="Motivo"
                 onChange={value => this.props.change("razao", value)}
-                options={[{value: 'Fora do prazo', label: 'Fora do prazo/em desacordo com o contrato'}]}
+                options={[
+                  {
+                    value: "Fora do prazo",
+                    label: "Fora do prazo/em desacordo com o contrato"
+                  }
+                ]}
                 validate={required}
               />
             </div>
             <div className="form-group col-12">
               <Field
-                component={LabelAndTextArea}
+                component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="obs"
@@ -36,11 +43,11 @@ export class ModalRecusarSolicitacao extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <BaseButton
+          <Botao
             label="Recusar"
-            type={ButtonType.BUTTON}
+            type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={ButtonStyle.Primary}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
             className="ml-3"
           />
         </Modal.Footer>

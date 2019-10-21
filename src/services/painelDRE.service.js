@@ -1,97 +1,24 @@
 import { API_URL } from "../constants/config.constants";
 import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREAlteracaoCardapioPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREAlteracaoCardapioLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREAlteracaoCardapioRegular
-} from "./alteracaoDecardapio.service";
-
-import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREInclusaoAlimentacaoAvulsaPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREInclusaoAlimentacaoAvulsaLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREInclusaoAlimentacaoAvulsaRegular
-} from "./inclusaoDeAlimentacaoAvulsa.service";
-
-import {
-  getDiretoriaRegionalPedidosPrioritarios as getDREInclusaoAlimentacaoContinuaPrioritario,
-  getDiretoriaRegionalPedidosNoPrazoLimite as getDREInclusaoAlimentacaoContinuaLimite,
-  getDiretoriaRegionalPedidosNoPrazoRegular as getDREInclusaoAlimentacaoContinuaRegular
-} from "./inclusaoDeAlimentacaoContinua.service";
-
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
-import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
-} from "./../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/helper";
+} from "../helpers/painelPedidos";
+import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
-import authService from "./auth";
+// TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
+import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
 
-const authToken = {
-  Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
-};
+const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
 
-export const getPendentesAprovacaoList = () => {
-  const url = `${API_URL}/dre-pendentes-aprovacao/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getSolicitacoesAutorizadasPelaDRE = dreUuid => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-autorizadas-por-mim/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getSolicitacoesPendentesParaDRE = (
-  dreUuid,
+export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   filtro = "sem_filtro"
 ) => {
-  const url = `${API_URL}/diretorias-regionais/${dreUuid}/solicitacoes-pendentes-para-mim/${filtro}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-const getResumoPendenciasDRE = async ({
-  filtro,
-  getSolicitacoesLimite,
-  getSolicitacoesPrioritario,
-  getSolicitacoesRegular
-}) => {
   let resposta = {
     total: 0,
     prioritario: 0,
@@ -99,54 +26,93 @@ const getResumoPendenciasDRE = async ({
     regular: 0
   };
 
-  const pedidosLimite = await getSolicitacoesLimite(filtro);
-  const pedidosPrioritarios = await getSolicitacoesPrioritario(filtro);
-  const pedidosRegular = await getSolicitacoesRegular(filtro);
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
 
-  resposta.limite = pedidosLimite ? pedidosLimite.count : 0;
-  resposta.prioritario = pedidosPrioritarios ? pedidosPrioritarios.count : 0;
-  resposta.regular = pedidosRegular ? pedidosRegular.count : 0;
+  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(
+    filtro
+  );
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
   resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
 
   return resposta;
 };
 
-export const getResumoPendenciasDREAlteracoesDeCardapio = async (
-  dreUuid,
+export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   filtro = "sem_filtro"
 ) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREAlteracaoCardapioLimite,
-    getSolicitacoesPrioritario: getDREAlteracaoCardapioPrioritario,
-    getSolicitacoesRegular: getDREAlteracaoCardapioRegular
-  });
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+    filtro
+  );
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
 };
 
-const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   filtro = "sem_filtro"
 ) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREInclusaoAlimentacaoAvulsaLimite,
-    getSolicitacoesPrioritario: getDREInclusaoAlimentacaoAvulsaPrioritario,
-    getSolicitacoesRegular: getDREInclusaoAlimentacaoAvulsaRegular
-  });
-};
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
 
-const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
-  filtro = "sem_filtro"
-) => {
-  return getResumoPendenciasDRE({
-    filtro,
-    getSolicitacoesLimite: getDREInclusaoAlimentacaoContinuaLimite,
-    getSolicitacoesPrioritario: getDREInclusaoAlimentacaoContinuaPrioritario,
-    getSolicitacoesRegular: getDREInclusaoAlimentacaoContinuaRegular
-  });
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(
+    filtro
+  );
+
+  if (solicitacoes) {
+    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
+    pedidosLimite = filtraNoLimite(solicitacoes.results);
+    pedidosRegular = filtraRegular(solicitacoes.results);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
 };
 
 export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
-  dreUuid,
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -242,10 +208,8 @@ export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
   };
 
   const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
-
   resposta.prioritario = solicitacoes.count;
   resposta.total = resposta.prioritario;
-
   return resposta;
 };
 
@@ -288,29 +252,74 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREPorLote = async (
-  dree_uuid,
-  filtro = "sem_filtro"
-) => {
+export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesParaDRE(
+  const solicitacoes = (await getSolicitacoesPendentesValidacaoDRE(
     dree_uuid,
     filtro
   )).results;
-
   const reducer = (resumoPorLote, corrente) => {
     if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {}
+      resumoPorLote[corrente.lote] = {};
     }
     if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[corrente.lote][corrente.prioridade] ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1): 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote]["TOTAL"] ? (resumoPorLote[corrente.lote]["TOTAL"] += 1): 1;
+      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
+        corrente.lote
+      ][corrente.prioridade]
+        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
+        : 1;
+      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
+        "TOTAL"
+      ]
+        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
+        : 1;
     }
     return resumoPorLote;
   };
 
-
   let resumoPorLote = solicitacoes.reduce(reducer, {});
 
   return resumoPorLote;
+};
+
+const retornoBase = async url => {
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesPendentesValidacaoDRE = async (dreUuid, filtro) => {
+  const url = `${SOLICITACOES_DRE}/${
+    SOLICITACOES.PENDENTES_VALIDACAO_DRE
+  }/${dreUuid}/${filtro}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesPendentesDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesAutorizadasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesCanceladasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/${dreUuid}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesRecusadasDRE = async dreUuid => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/${dreUuid}/`;
+  return retornoBase(url);
 };

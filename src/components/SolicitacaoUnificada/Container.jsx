@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { meusDados } from "../../services/perfil.service";
-import { motivosSolicitacaoUnificada } from "../../services/solicitacaoUnificada.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoUnificada from ".";
 
 class SolicitacaoUnificadaContainer extends Component {
@@ -12,7 +11,6 @@ class SolicitacaoUnificadaContainer extends Component {
       meusDados: null,
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null,
-      motivos: [],
       escolas: []
     };
   }
@@ -31,15 +29,12 @@ class SolicitacaoUnificadaContainer extends Component {
         escola["tempo_passeio"] = null;
         escola["kit_lanche"] = null;
         escola["checked"] = false;
+        escola["kitsChecked"] = [];
       });
       this.setState({
         meusDados: response,
         escolas
       });
-    });
-
-    motivosSolicitacaoUnificada().then(response => {
-      this.setState({ motivos: agregarDefault(response.results) });
     });
 
     getDiasUteis().then(response => {

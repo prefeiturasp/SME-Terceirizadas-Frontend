@@ -7,9 +7,9 @@ import { HOME } from "./constants";
 const atual = {
   href: "/escola/inclusao-de-alimentacao",
   titulo: "Inclusão de Alimentação"
-}
+};
 
-export default props => (
+export default () => (
   <Page titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} />
     <Container />

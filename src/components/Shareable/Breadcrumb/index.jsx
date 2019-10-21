@@ -11,14 +11,14 @@ export default class Breadcrumb extends Component {
           <ul className="br-breadcrumb">
             <li>
               <Link className={`home ${atual && "is-active"}`} exact to={home}>
-                <i class="fas fa-home" />
+                <i className="fas fa-home" />
               </Link>
             </li>
             {anteriores &&
               anteriores.length > 0 &&
-              anteriores.map(anterior => {
+              anteriores.map((anterior, key) => {
                 return (
-                  <li>
+                  <li key={key}>
                     <Link className="is-active" exact to={anterior.href}>
                       {anterior.titulo}
                     </Link>

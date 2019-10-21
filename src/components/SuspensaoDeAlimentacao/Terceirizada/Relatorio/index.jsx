@@ -1,13 +1,9 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import BaseButton, { ButtonStyle, ButtonType } from "../../../Shareable/button";
-import { toastError, toastSuccess } from "../../../Shareable/dialogs";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import "../style.scss";
-import { corDaMensagem } from "./helper";
-import "./style.scss";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -18,6 +14,13 @@ import {
   TERCEIRIZADA
 } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
+import "./style.scss";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -49,7 +52,11 @@ class Relatorio extends Component {
       getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
         let suspensaoAlimentacao = response.data;
         let dadosEscola = suspensaoAlimentacao.escola;
-        this.setState({ suspensaoAlimentacao, dadosEscola, uuid });
+        this.setState({
+          suspensaoAlimentacao,
+          dadosEscola,
+          uuid
+        });
       });
     }
   }
@@ -67,7 +74,7 @@ class Relatorio extends Component {
           toastError("Erro ao tomar ciência de suspensão de alimentação");
         }
       },
-      function(error) {
+      function() {
         toastError("Erro ao tomar ciência de suspensão de alimentação");
       }
     );
@@ -76,21 +83,28 @@ class Relatorio extends Component {
   render() {
     const { suspensaoAlimentacao, dadosEscola } = this.state;
     return (
-      <div>
+      <div className="report">
         {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
         {!suspensaoAlimentacao ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Suspensao de alimentação - Solicitação # ${
+            <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
               suspensaoAlimentacao.id_externo
             }`}</span>
+            <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
+              <Botao
+                texto="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                titulo="voltar"
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row">
-                  <p className={`col-12 title-message ${corDaMensagem("red")}`}>
-                    Solicitação no prazo limite
-                  </p>
                   <div className="col-2">
                     <span className="badge-sme badge-secondary-sme">
                       <span className="id-of-solicitation-dre">
@@ -102,7 +116,7 @@ class Relatorio extends Component {
                       </span>
                     </span>
                   </div>
-                  <div className="report-div-beside-order my-auto col-8">
+                  <div className="report-div-beside-order suspension col-8">
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
@@ -149,34 +163,36 @@ class Relatorio extends Component {
                 </div>
                 <div className="row">
                   <div className="col-12 report-label-value">
-                    <p className="value">
-                      Descrição da suspensão de alimentação
-                    </p>
+                    <p className="value">Descrição da Suspensão</p>
                   </div>
                 </div>
                 {/* {this.renderDetalheInversao()} */}
-                <div className="descricao-suspensao">
-                  <div>Período</div>
-                  <div>Tipos de Alimentação</div>
-                  <div>Quantidade de Alunos</div>
-                </div>
-                <div>
-                  {suspensaoAlimentacao.quantidades_por_periodo.map(item => {
-                    return (
-                      <div className="descricao-suspensao pt-2">
-                        <div>{item.periodo_escolar.nome}</div>
-                        <div className="tipos-alimentacoes">
-                          {stringSeparadaPorVirgulas(
-                            item.tipos_alimentacao,
-                            "nome"
-                          )}
-                        </div>
-                        <div>{item.numero_alunos}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="pt-5" />
+                <table className="table-periods">
+                  <tr>
+                    <th>Período</th>
+                    <th>Tipos de Alimentação</th>
+                    <th>Quantidade de Alunos</th>
+                  </tr>
+                  {suspensaoAlimentacao.quantidades_por_periodo.map(
+                    (quantidade_por_periodo, key) => {
+                      return (
+                        <tr key={key}>
+                          <td>
+                            {quantidade_por_periodo.periodo_escolar &&
+                              quantidade_por_periodo.periodo_escolar.nome}
+                          </td>
+                          <td>
+                            {stringSeparadaPorVirgulas(
+                              quantidade_por_periodo.tipos_alimentacao,
+                              "nome"
+                            )}
+                          </td>
+                          <td>{quantidade_por_periodo.numero_alunos}</td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </table>
                 <div className="row">
                   <div className="col-12 report-label-value">
                     <p>Observações</p>
@@ -188,14 +204,13 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-                {suspensaoAlimentacao.status !==
-                  statusEnum.TERCEIRIZADA_TOMA_CIENCIA && (
+                {suspensaoAlimentacao.status === statusEnum.INFORMADO && (
                   <div className="form-group row float-right mt-4">
-                    <BaseButton
-                      label="Tomar ciência"
-                      type={ButtonType.SUBMIT}
+                    <Botao
+                      texto="Ciente"
+                      type={BUTTON_TYPE.SUBMIT}
                       onClick={() => this.handleSubmit()}
-                      style={ButtonStyle.Primary}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

@@ -3,19 +3,18 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { LabelAndCombo } from "../../../Shareable/labelAndInput/labelAndInput";
-import {
-  CardInversaoPendenciaAprovacao,
-  TIPO_CARD_ENUM
-} from "../../components/CardPendenciaAprovacao";
+import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
+import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 import CardHistorico from "../../components/CardHistorico";
-import { filtraPrioritarios } from "../../Terceirizada/PainelPedidos/helper";
+import { filtraPrioritarios } from "../../../../helpers/painelPedidos";
 import {
   filtraNoLimite,
   filtraRegular
-} from "../../../SolicitacaoDeKitLanche/helper";
+} from "../../../SolicitacaoDeKitLanche/Container/helper";
 import { formatarPedidos } from "./helper";
 import { CODAE } from "../../../../configs/constants";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -61,11 +60,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
     } = this.state;
-    const {
-      visaoPorCombo,
-      pedidosAprovados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, pedidosAutorizados, pedidosReprovados } = this.props;
     const todosOsPedidosForamCarregados = true;
     return (
       <div>
@@ -73,92 +68,91 @@ class PainelPedidos extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <div>
-              <div className="row">
-                <div className="col-7">
-                  <div className="page-title">
-                    Inversão de dia de Cardápio - Pendente Autorização
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-3 font-10 my-auto">
+                    Data: {dataAtualDDMMYYYY()}
+                  </div>
+                  <div className="offset-6 col-3 text-right">
+                    <Field
+                      component={Select}
+                      name="visao_por"
+                      naoDesabilitarPrimeiraOpcao
+                      onChange={event =>
+                        this.onFiltroSelected(event.target.value)
+                      }
+                      placeholder={"Filtro por"}
+                      options={visaoPorCombo}
+                    />
                   </div>
                 </div>
-                <div className="col-5">
-                  <div className="row">
-                    <div classame="col-6">
-                      <span>Vencimento para:</span>
-                    </div>
-                    <div className="col-6">
-                      <Field
-                        component={LabelAndCombo}
-                        name="visao_por"
-                        onChange={value => this.onFiltroSelected(value)}
-                        placeholder={"Visão por dia"}
-                        options={visaoPorCombo}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={
-                      "Pedidos próximos ao prazo de vencimento (2 dias ou menos)"
-                    }
-                    tipoDeCard={TIPO_CARD_ENUM.PRIORIDADE}
-                    pedidos={pedidosPrioritarios}
-                    ultimaColunaLabel={"Data"}
-                    parametroURL={CODAE}
-                  />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos no prazo limite"}
-                    tipoDeCard={"on-limit"}
-                    pedidos={pedidosNoPrazoLimite}
-                    ultimaColunaLabel={"Data"}
-                    parametroURL={CODAE}
-                  />
-                </div>
-              </div>
-
-              <div className="row pt-3">
-                <div className="col-12">
-                  <CardInversaoPendenciaAprovacao
-                    titulo={"Pedidos no prazo regular"}
-                    tipoDeCard={"regular"}
-                    pedidos={pedidosNoPrazoRegular}
-                    ultimaColunaLabel={"Data"}
-                    parametroURL={CODAE}
-                  />
-                </div>
-              </div>
-              {pedidosAprovados.length > 0 && (
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(pedidosAprovados)}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={"Histórico de Inclusões de Alimentação Autorizadas"}
+                    <CardInversaoPendenciaAprovacao
+                      titulo={
+                        "Solicitações próximas ao prazo de vencimento (2 dias ou menos)"
+                      }
+                      tipoDeCard={TIPODECARD.PRIORIDADE}
+                      pedidos={pedidosPrioritarios}
+                      ultimaColunaLabel={"Data"}
                       parametroURL={CODAE}
                     />
                   </div>
                 </div>
-              )}
-              {pedidosReprovados.length > 0 && (
+
                 <div className="row pt-3">
                   <div className="col-12">
-                    <CardHistorico
-                      pedidos={formatarPedidos(pedidosReprovados)}
-                      ultimaColunaLabel={"Data(s)"}
-                      titulo={
-                        "Histórico de Inclusões de Alimentação Reprovadas"
-                      }
+                    <CardInversaoPendenciaAprovacao
+                      titulo={"Solicitações no prazo limite"}
+                      tipoDeCard={TIPODECARD.NO_LIMITE}
+                      pedidos={pedidosNoPrazoLimite}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
-              )}
+
+                <div className="row pt-3">
+                  <div className="col-12">
+                    <CardInversaoPendenciaAprovacao
+                      titulo={"Solicitações no prazo regular"}
+                      tipoDeCard={TIPODECARD.REGULAR}
+                      pedidos={pedidosNoPrazoRegular}
+                      ultimaColunaLabel={"Data"}
+                      parametroURL={CODAE}
+                    />
+                  </div>
+                </div>
+                {pedidosAutorizados.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(pedidosAutorizados)}
+                        ultimaColunaLabel={"Data(s)"}
+                        titulo={
+                          "Histórico de Inclusões de Alimentação Autorizadas"
+                        }
+                        parametroURL={CODAE}
+                      />
+                    </div>
+                  </div>
+                )}
+                {pedidosReprovados.length > 0 && (
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <CardHistorico
+                        pedidos={formatarPedidos(pedidosReprovados)}
+                        ultimaColunaLabel={"Data(s)"}
+                        titulo={
+                          "Histórico de Inclusões de Alimentação Reprovadas"
+                        }
+                        parametroURL={CODAE}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </form>
         )}

@@ -6,7 +6,7 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/escola/status-solicitacoes",
-  titulo: "Painel de Status de Solicitações"
+  titulo: "Acompanhamento de solicitações "
 };
 
 export default () => (

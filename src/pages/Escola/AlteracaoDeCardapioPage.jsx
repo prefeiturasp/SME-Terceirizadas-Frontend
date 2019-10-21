@@ -11,7 +11,7 @@ const atual = {
 
 export default () => (
   <Page titulo={atual.titulo}>
-    <Breadcrumb home={HOME} atual={atual}/>
+    <Breadcrumb home={HOME} atual={atual} />
     <Container />
   </Page>
 );

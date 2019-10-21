@@ -1,3 +1,5 @@
+@import "../../../styles/variables.scss";
+
 .card-pendency {
   border: 1px solid #dadada;
   box-sizing: border-box;
@@ -7,7 +9,7 @@
     padding: 10px 15px;
     font-weight: bold;
     font-size: 16px;
-    color: #353535;
+    color: $blackInput;
   }
   hr {
     margin-top: -10px;
@@ -17,7 +19,7 @@
     margin-left: 20px;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    background: #036aa8;
+    background: $blue;
     border: 0.5px solid #e8e8e8;
     box-sizing: border-box;
     border-radius: 4px;
@@ -41,21 +43,25 @@
       border-radius: 2px;
     }
     &:nth-child(1) .label {
-      background: #c9251b;
+      background: $red;
     }
     &:nth-child(2) .label {
-      background: #e1a303;
+      background: $orange;
     }
     &:nth-child(3) .label {
-      background: #5ec430;
+      background: $green;
     }
     .text {
-      font-size: 14px;
+      font-size: 12px;
       color: #686868;
       .value {
-        padding-left: 10px;
+        padding-left: 0.5em;
         font-weight: bold;
       }
     }
   }
+}
+
+.descricao-solicitacoes {
+  display: grid;
 }

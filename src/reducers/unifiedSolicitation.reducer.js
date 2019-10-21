@@ -1,4 +1,4 @@
-import { extrairKitsLanche, extrairTempoPasseio } from "../components/SolicitacaoUnificada/helper";
+import { extrairKitsLanche } from "../components/SolicitacaoUnificada/helper";
 
 const LOAD_UNIFIED_SOLICITATION = "LOAD_UNIFIED_SOLICITATION";
 
@@ -7,17 +7,14 @@ export default function reducer(state = {}, action) {
     case LOAD_UNIFIED_SOLICITATION:
       //Aplica o que vem do Backend no formulário do Frontend de Solicitação Unificada
       //TODO: ver um jeito de não precisar converter tantos dados
-      if (action.data != null) {
+      if (action.data !== null) {
         action.data.data = action.data.solicitacao_kit_lanche.data;
-        action.data.motivo = action.data.motivo.uuid;
         action.data.descricao = action.data.solicitacao_kit_lanche.descricao;
         if (action.data.lista_kit_lanche_igual) {
           action.data.kit_lanche = extrairKitsLanche(
             action.data.solicitacao_kit_lanche.kits
           );
-          action.data.tempo_passeio = extrairTempoPasseio(
-            action.data.solicitacao_kit_lanche.tempo_passeio
-          );
+          action.data.tempo_passeio = action.data.solicitacao_kit_lanche.tempo_passeio.toString();
         }
         action.data.escolas_quantidades.forEach(function(escola_quantidade) {
           action.data[`school_${escola_quantidade.escola.codigo_eol}`] = {
@@ -33,11 +30,10 @@ export default function reducer(state = {}, action) {
               ? extrairKitsLanche(escola_quantidade.kits)
               : [],
             tempo_passeio: !action.data.lista_kit_lanche_igual
-              ? extrairTempoPasseio(escola_quantidade.tempo_passeio)
+              ? escola_quantidade.tempo_passeio.toString()
               : null
           };
         });
-        console.log(action.data);
       }
       return {
         data: {

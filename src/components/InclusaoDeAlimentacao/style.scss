@@ -1,38 +1,118 @@
-h3 {
-  color: #353535;
+@import "../../styles/variables.scss";
+
+.card.solicitation {
+  .card-title {
+    color: $blackInput;
+  }
+  .table-titles {
+    font-size: 14px;
+    padding-left: 15px;
+    color: $gray;
+    .type-food {
+      padding-left: 20px;
+    }
+    div {
+      padding: 15px 0;
+    }
+  }
+  .period-quantity {
+    border-radius: 7px;
+    &.number-0 {
+      background-color: #fff7cb;
+    }
+    &.number-1 {
+      background-color: #ebedff;
+    }
+    &.number-2 {
+      background-color: #ffeed6;
+    }
+    &.number-3 {
+      background-color: #eaffe3;
+    }
+    &.number-4 {
+      background-color: #e4f1ff;
+    }
+  }
+
+  section {
+    margin: 0.5em 0 1.5em 0;
+    grid-row-gap: 2em;
+
+    .grid_principal {
+      display: grid !important;
+      grid-template-columns: 69% 29%;
+      grid-column-gap: 2%;
+    }
+
+    .grid-motivo-continuo {
+      display: grid !important;
+      grid-template-columns: 28% 28% 38%;
+      grid-column-gap: 2%;
+    }
+
+    .display {
+      display: none;
+    }
+
+    .grid-outro-motivo {
+      display: grid;
+      grid-template-columns: 60% 40%;
+
+      div {
+        padding: 0 !important;
+      }
+    }
+  }
 }
 
-.table-titles {
-  div {
-    padding: 15px 0;
-    &:nth-child(1) {
-      padding-left: 1rem;
-    }
-    &:nth-child(2) {
-      padding-left: 3.5rem;
-    }
-    &:nth-child(3) {
-      padding-left: 1.5rem;
+.badge-sme {
+  &.badge-secondary-sme {
+    background-color: #d9d8d8;
+  }
+}
+
+.report {
+  .title-message {
+    color: $gray;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  table.table-periods {
+    margin-top: 20px;
+    tr {
+      color: $gray;
+      margin-top: 20px;
+      font-size: 14px;
+      th {
+        font-weight: normal;
+        &:not(:first-child) {
+          padding-left: 40px;
+        }
+      }
+      td {
+        font-weight: bold;
+        color: $blackInput;
+        &:not(:first-child) {
+          padding-left: 40px;
+        }
+      }
     }
   }
 }
 
-.period-quantity {
-  margin-left: -1.4rem;
-  border-radius: 7px;
-  &.number-0 {
-    background-color: #fff7cb;
+.info-inclusao {
+  .titulo {
+    margin-bottom: 0.5em;
   }
-  &.number-1 {
-    background-color: #ebedff;
+  .inclusoes {
+    margin-top: 0.5em;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 50% 50%;
   }
-  &.number-2 {
-    background-color: #ffeed6;
-  }
-  &.number-3 {
-    background-color: #eaffe3;
-  }
-  &.number-4 {
-    background-color: #e4f1ff;
-  }
+}
+
+.conteudo {
+  margin: 0.5em 1em 2em 1em;
 }

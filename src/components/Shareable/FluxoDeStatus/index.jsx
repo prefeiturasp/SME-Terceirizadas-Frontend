@@ -1,20 +1,25 @@
 import React from "react";
 import {
+  existeAlgumStatusFimDeFluxo,
   fluxoPartindoEscola,
   fluxoPartindoDRE,
-  tipoDeStatus,
-  fluxoInformativoPartindoEscola
+  fluxoInformativoPartindoEscola,
+  tipoDeStatusClasse
 } from "./helper";
 import "./style.scss";
 
 export const FluxoDeStatus = props => {
   const { listaDeStatus, tipoDeFluxo } = props;
+  const fluxoNaoFinalizado =
+    listaDeStatus && existeAlgumStatusFimDeFluxo(listaDeStatus);
   const fluxo =
     tipoDeFluxo === "informativo"
       ? fluxoInformativoPartindoEscola
       : tipoDeFluxo === "partindoDRE"
       ? fluxoPartindoDRE
       : fluxoPartindoEscola;
+  const fluxoUtilizado =
+    fluxo.length > listaDeStatus.length ? fluxo : listaDeStatus;
   return (
     <div className="w-100">
       <div className="row">
@@ -23,29 +28,30 @@ export const FluxoDeStatus = props => {
         </div>
         <div className="col-10">
           <ul className={`progressbar-titles fluxos`}>
-            {fluxo.map((status, key) => {
-              return <li key={key}>{status.titulo}</li>;
+            {fluxoUtilizado.map((status, key) => {
+              return (
+                <li key={key}>
+                  {listaDeStatus[key]
+                    ? listaDeStatus[key].status_evento_explicacao
+                    : status.titulo}
+                </li>
+              );
             })}
           </ul>
           <ul className="progressbar">
-            {fluxo.map((status, key) => {
+            {fluxoUtilizado.map((status, key) => {
               let novoStatus = listaDeStatus[key] || status;
               return (
                 <li
                   key={key}
-                  className={
-                    tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                    "aprovado"
-                      ? "active"
-                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                        "reprovado"
-                      ? "disapproved"
-                      : tipoDeStatus(novoStatus.status_evento_explicacao) ===
-                        "cancelado"
-                      ? "cancelled"
+                  className={`${
+                    tipoDeStatusClasse(novoStatus) !== "pending"
+                      ? tipoDeStatusClasse(novoStatus)
+                      : fluxoNaoFinalizado
+                      ? "pending"
                       : ""
-                  }
-                  style={{ width: 100 / fluxo.length + "%" }}
+                  }`}
+                  style={{ width: 100 / fluxoUtilizado.length + "%" }}
                 >
                   {novoStatus.criado_em}
                   <br />
