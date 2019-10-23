@@ -6,11 +6,13 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const setUsuario = () => {
-  const url = `${API_URL}/usuarios/`;
+export const setUsuario = payload => {
+  console.log(payload);
+  const url = `${API_URL}/cadastro/`;
   return fetch(url, {
     method: "POST",
-    headers: authToken
+    body: payload,
+    headers: { "Content-Type": "application/json" }
   })
     .then(result => {
       return result.json();

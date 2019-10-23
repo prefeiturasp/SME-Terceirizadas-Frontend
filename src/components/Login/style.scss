@@ -83,3 +83,24 @@ a.hyperlink {
     }
   }
 }
+
+div.input-group.email-sme {
+  .col-8, .col-4 {
+    padding-left: 0;
+  }
+  .col-8 {
+    padding-right: 0;
+    margin-right: -20px;
+  }
+  input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .input-group-append {
+    padding-top: 35px;
+    .input-group-text {
+      height: 38px;
+      font-size: 14px;
+    }
+  }
+}

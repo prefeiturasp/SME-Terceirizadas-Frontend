@@ -7,8 +7,8 @@ import { Checkbox } from "../Shareable/Checkbox";
 import { Field, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { Link } from "react-router-dom";
+import { setUsuario } from "../../services/perfil.service";
 import "./style.scss";
-import { getCargo } from "../../services/eol.service";
 
 export class Login extends Component {
   constructor(props) {
@@ -18,20 +18,6 @@ export class Login extends Component {
       termos: false,
       habilitarCampos: false
     };
-  }
-
-  onRFchanged(rf) {
-    if (rf.length === 7) {
-      getCargo(rf).then(response => {
-        if (response && response.results && response.results.length) {
-          response.results.forEach(registro => {
-            if (registro.cargo === "DIRETOR DE ESCOLA") {
-              this.setState({ habilitarCampos: true });
-            }
-          });
-        }
-      });
-    }
   }
 
   onTermosClicked() {
@@ -46,6 +32,12 @@ export class Login extends Component {
       authService.login(email, password);
     }
   };
+
+  handleSubmitCadastro = values => {
+    setUsuario(JSON.stringify(values)).then(response => {
+      console.log(response);
+    })
+  }
 
   renderLogin() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -98,48 +90,29 @@ export class Login extends Component {
 
   renderCadastro() {
     const { handleSubmit } = this.props;
-    const { habilitarCampos } = this.state;
     return (
       <div className="form">
-        <form onSubmit={handleSubmit(this.handleSubmit)}>
+        <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
           <div className="row">
             <div className="col-12">
-              <Field
-                component={InputText}
-                placeholder={"nome@sme.prefeitura.sp.gov.br"}
-                label="E-mail"
-                name="email"
-                required
-                type="email"
-                disabled
-                validate={[required]}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Nome"
-                name="nome"
-                placeholder={"Digite seu nome"}
-                required
-                type="text"
-                disabled
-                validate={[required]}
-              />
-            </div>
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Sobrenome"
-                name="sobrenome"
-                placeholder={"Digite seu sobrenome"}
-                required
-                type="text"
-                disabled
-                validate={[required]}
-              />
+              <div className="input-group email-sme">
+                <div className="col-8">
+                  <Field
+                    component={InputText}
+                    placeholder={"seu.nome"}
+                    label="E-mail"
+                    name="email"
+                    required
+                    type="text"
+                    validate={[required]}
+                  />
+                </div>
+                <div className="input-group-append col-4">
+                  <span className="input-group-text" id="basic-addon2">
+                    @sme.prefeitura.sp.gov.br
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div className="row">
@@ -147,8 +120,7 @@ export class Login extends Component {
               <Field
                 component={InputText}
                 label="Nº RF"
-                name="rf"
-                onChange={event => this.onRFchanged(event.target.value)}
+                name="registro_funcional"
                 placeholder={"Digite o RF"}
                 required
                 type="number"
@@ -158,9 +130,9 @@ export class Login extends Component {
             <div className="col-6">
               <Field
                 component={InputText}
-                label="Nº Vínculo"
-                name="vinculo"
-                placeholder={"Digite o vínculo da função"}
+                label="CPF"
+                name="cpf"
+                placeholder={"Digite o seu CPF"}
                 required
                 type="text"
                 validate={[required]}
@@ -176,7 +148,6 @@ export class Login extends Component {
                 placeholder={"******"}
                 required
                 type="password"
-                disabled={!habilitarCampos}
                 validate={required}
               />
             </div>
@@ -184,11 +155,10 @@ export class Login extends Component {
               <Field
                 component={InputText}
                 label="Confirme sua senha"
-                name="confirmar_senha"
+                name="confirmar_password"
                 placeholder={"******"}
                 required
                 type="password"
-                disabled={!habilitarCampos}
                 validate={required}
               />
             </div>

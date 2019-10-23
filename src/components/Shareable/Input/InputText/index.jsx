@@ -6,6 +6,7 @@ import "../style.scss";
 
 export const InputText = props => {
   const {
+    acrescentarAppend,
     className,
     disabled,
     esconderAsterisco,
@@ -47,6 +48,13 @@ export const InputText = props => {
         required={required}
         type={type}
       />
+      {acrescentarAppend && (
+        <div className="input-group-append">
+          <span className="input-group-text" id="basic-addon1">
+            {acrescentarAppend}
+          </span>
+        </div>
+      )}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>
