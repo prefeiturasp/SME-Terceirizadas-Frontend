@@ -1,0 +1,12 @@
+@import "../../../styles/variables.scss";
+
+div.header-logo {
+  display: block;
+  height: 70px;
+  background-color: $white;
+  text-align: center;
+  img {
+    height: 64px;
+  }
+
+}
