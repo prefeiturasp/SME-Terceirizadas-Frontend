@@ -43,6 +43,7 @@ export const InputText = props => {
         disabled={disabled}
         min={min}
         name={name}
+        data-cy={input.name}
         placeholder={placeholder}
         required={required}
         type={type}
