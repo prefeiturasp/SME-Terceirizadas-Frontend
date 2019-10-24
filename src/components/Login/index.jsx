@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import authService from "../../services/auth";
-import { required } from "../../helpers/fieldValidators";
+import HTTP_STATUS from "http-status-codes";
+import { required, length, semArroba } from "../../helpers/fieldValidators";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { Checkbox } from "../Shareable/Checkbox";
@@ -9,6 +10,8 @@ import { InputText } from "../Shareable/Input/InputText";
 import { Link } from "react-router-dom";
 import { setUsuario } from "../../services/perfil.service";
 import "./style.scss";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
+import { validarForm } from "./validar";
 
 export class Login extends Component {
   constructor(props) {
@@ -34,10 +37,21 @@ export class Login extends Component {
   };
 
   handleSubmitCadastro = values => {
-    setUsuario(JSON.stringify(values)).then(response => {
-      console.log(response);
-    })
-  }
+    const erro = validarForm(values);
+    if (erro) {
+      toastError(erro);
+    } else {
+      setUsuario(JSON.stringify(values)).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess(
+            "Cadastro efetuado com sucesso! Confirme seu e-mail para poder se logar."
+          );
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(response.data.detail);
+        }
+      });
+    }
+  };
 
   renderLogin() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -104,7 +118,7 @@ export class Login extends Component {
                     name="email"
                     required
                     type="text"
-                    validate={[required]}
+                    validate={[required, semArroba]}
                   />
                 </div>
                 <div className="input-group-append col-4">
@@ -123,8 +137,12 @@ export class Login extends Component {
                 name="registro_funcional"
                 placeholder={"Digite o RF"}
                 required
-                type="number"
-                validate={[required]}
+                type="text"
+                pattern="\d*"
+                title="somente números"
+                helpText="Somente números"
+                maxlength="7"
+                validate={[required, length(7)]}
               />
             </div>
             <div className="col-6">
@@ -135,7 +153,10 @@ export class Login extends Component {
                 placeholder={"Digite o seu CPF"}
                 required
                 type="text"
-                validate={[required]}
+                helpText="Somente números"
+                pattern="\d*"
+                maxlength="11"
+                validate={[required, length(11)]}
               />
             </div>
           </div>
@@ -144,11 +165,14 @@ export class Login extends Component {
               <Field
                 component={InputText}
                 label="Senha"
-                name="senha"
+                name="password"
                 placeholder={"******"}
                 required
                 type="password"
                 validate={required}
+                pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                title="Pelo menos 8 caracteres, uma letra e um número"
+                helpText="Pelo menos 8 caracteres, uma letra e um número"
               />
             </div>
             <div className="col-6">

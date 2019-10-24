@@ -28,6 +28,12 @@ const maxLength = max => value =>
 export const minLength = min => value =>
   value && value.length < min ? `Deve ter ao menos ${min} letra(s)` : undefined;
 
+export const length = size => value =>
+  value && value.length !== size ? `Deve ter ${size} caracteres` : undefined;
+
+export const semArroba = value =>
+  value && value.includes("@") ? "Campo e-mail não deve conter @" : undefined;
+
 // eslint-disable-next-line
 const number = value =>
   value && isNaN(Number(value)) ? "Deve ser um número" : undefined;

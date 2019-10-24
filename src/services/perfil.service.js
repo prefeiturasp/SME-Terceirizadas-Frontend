@@ -7,15 +7,19 @@ const authToken = {
 };
 
 export const setUsuario = payload => {
-  console.log(payload);
   const url = `${API_URL}/cadastro/`;
+  let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
     headers: { "Content-Type": "application/json" }
   })
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
       return error.json();
