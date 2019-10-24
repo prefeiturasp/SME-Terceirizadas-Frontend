@@ -18,6 +18,7 @@ export const Botao = props => {
     <button
       type={type}
       title={titulo}
+      data-cy={texto}
       className={`general-button ${style} ${className}`}
       onClick={onClick}
       disabled={disabled}
