@@ -62,9 +62,8 @@ export default class DashboardEscolaContainer extends Component {
   async componentDidMount() {
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const minhaEscolaUUID = dadosMeus.escolas[0] && dadosMeus.escolas[0].uuid;
-    const numeroAlunos =
-      dadosMeus.escolas[0] && dadosMeus.escolas[0].quantidade_alunos;
+    const minhaEscolaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
+    const numeroAlunos = dadosMeus.vinculo_atual.instituicao.quantidade_alunos;
     if (minhaEscolaUUID) {
       let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
       let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
