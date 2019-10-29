@@ -10,7 +10,8 @@ export const BUTTON_ICON = {
   PRINT: "fas fa-print",
   CHART_LINE: "fas fa-chart-line",
   FILE_PDF: "far fa-file-pdf",
-  SHARE_SQUARE: "fas fa-share-square"
+  SHARE_SQUARE: "fas fa-share-square",
+  SEARCH: "fas fa-search"
 };
 
 export const BUTTON_TYPE = {

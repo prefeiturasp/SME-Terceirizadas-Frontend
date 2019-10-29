@@ -1,0 +1,23 @@
+@import "../../styles/variables.scss";
+
+.permissions {
+  h2 {
+    font-weight: bold;
+    font-size: 14px;
+    color: $gray;
+  }
+  .search-result {
+    margin: 0;
+    margin-top: 16px;
+    height: 70px;
+    background-color: $grayBackground;
+    p {
+      color: $gray;
+      margin-bottom: 0;
+      &.rf {
+        color: $blue;
+        font-weight: 500;
+      }
+    }
+  }
+}
