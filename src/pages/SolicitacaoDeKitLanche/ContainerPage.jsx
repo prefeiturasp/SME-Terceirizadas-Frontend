@@ -35,7 +35,7 @@ export class PainelPedidosBase extends React.Component {
           break;
         case DRE:
           meusDados["quantidade_alunos"] =
-            response.diretorias_regionais[0].quantidade_alunos;
+            response.vinculo_atual.instituicao.quantidade_alunos;
           break;
         default:
           return "";
