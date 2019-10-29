@@ -87,7 +87,7 @@ class DashboardDRE extends Component {
       loadingSuspensaoAlimentacao: true,
       loadingResumoLotes: true
     });
-    const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
+    const minhaDRE = (await getMeusDados()).vinculo_atual.instituicao.uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
       filtroPendencias
     );
