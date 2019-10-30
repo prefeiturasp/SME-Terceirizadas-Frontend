@@ -47,3 +47,45 @@ export const criarEquipeAdministradoraEscola = (uuid, registroFuncional) => {
       return error.json();
     });
 };
+
+export const getEquipeAdministradoraEscola = uuid => {
+  const url = `${API_URL}/vinculos-escolas/${uuid}/get_equipe_administradora/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const finalizarVinculo = (uuid, vinculoUuid) => {
+  const url = `${API_URL}/vinculos-escolas/${uuid}/finalizar_vinculo/`;
+  let status = 0;
+  const body = {
+    vinculo_uuid: vinculoUuid
+  }
+  return fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Field, reduxForm } from "redux-form";
 import InputText from "../Shareable/Input/InputText";
 import "./style.scss";
@@ -10,18 +11,22 @@ import {
 } from "../Shareable/Botao/constants";
 import {
   getDadosUsuarioEOL,
-  criarEquipeAdministradoraEscola
+  criarEquipeAdministradoraEscola,
+  getEquipeAdministradoraEscola,
+  finalizarVinculo
 } from "../../services/permissoes.service";
 import { meusDados } from "../../services/perfil.service";
-import { toastError } from "../Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
 
 class Permissoes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       minhaInstituicao: null,
-      perfilEOL: null,
-      registroFuncional: null
+      perfisEOL: null,
+      registroFuncional: null,
+      equipeAdministradora: []
     };
     this.permitir = this.permitir.bind(this);
   }
@@ -29,38 +34,77 @@ class Permissoes extends Component {
   componentDidMount() {
     meusDados().then(response => {
       this.setState({ minhaInstituicao: response.vinculo_atual.instituicao });
+      this.setEquipeAdministradora();
+    });
+  }
+
+  async setEquipeAdministradora() {
+    const { minhaInstituicao } = this.state;
+    const equipeAdministradora = await getEquipeAdministradoraEscola(
+      minhaInstituicao.uuid
+    );
+    this.setState({
+      equipeAdministradora: equipeAdministradora.data
     });
   }
 
   filterList(registroFuncional) {
     if (registroFuncional.length === 7) {
       getDadosUsuarioEOL(registroFuncional).then(response => {
-        this.setState({ registroFuncional, perfilEOL: response.data[0] });
+        this.setState({ registroFuncional, perfisEOL: response.data });
       });
     } else {
       this.setState({
         registroFuncional: null,
-        perfilEOL: null
+        perfisEOL: null
       });
     }
   }
 
   permitir() {
-    const { minhaInstituicao, perfilEOL, registroFuncional } = this.state;
-    if (minhaInstituicao.nome.includes(perfilEOL.divisao)) {
+    const { minhaInstituicao, perfisEOL, registroFuncional } = this.state;
+    let mesmaInstituicao = false;
+    perfisEOL.forEach(perfilEOL => {
+      if (minhaInstituicao.nome.includes(perfilEOL.divisao)) {
+        mesmaInstituicao = true;
+      }
+    });
+    if (mesmaInstituicao) {
       criarEquipeAdministradoraEscola(
         minhaInstituicao.uuid,
         registroFuncional
       ).then(response => {
-        console.log(response);
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Permissão realizada com sucesso");
+          this.setEquipeAdministradora();
+        }
+      }).catch(error => {
+        toastError(error.data.detail);
       });
     } else {
-      toastError(`Usuário pertence a instituição ${perfilEOL.divisao}`);
+      toastError(
+        `Usuário pertence a(s) instituição(ões) ${stringSeparadaPorVirgulas(
+          perfisEOL,
+          "divisao"
+        )}`
+      );
+    }
+  }
+
+  excluir(permissaoUuid) {
+    if (window.confirm("Deseja realmente finalizar essa permissão?")) {
+      const { minhaInstituicao } = this.state;
+      finalizarVinculo(minhaInstituicao.uuid, permissaoUuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Vínculo finalizado com sucesso!");
+          this.setEquipeAdministradora();
+        }
+      });
     }
   }
 
   render() {
-    const { perfilEOL, registroFuncional } = this.state;
+    const { equipeAdministradora, perfisEOL, registroFuncional } = this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="permissions">
@@ -73,23 +117,23 @@ class Permissoes extends Component {
                   <Field
                     component={InputText}
                     type="number"
-                    placeholder="Pesquisar"
+                    placeholder="Pesquisar Código RF"
                     onChange={event => this.filterList(event.target.value)}
                     className="form-control"
                     icone={`${BUTTON_ICON.SEARCH} fa-lg`}
                   />
                 </div>
               </div>
-              {perfilEOL && (
+              {perfisEOL && perfisEOL.length > 0 && (
                 <div className="row search-result">
                   <div className="col-2 align-self-center">
                     <p className="rf">{registroFuncional}</p>
                   </div>
                   <div className="col-3 align-self-center">
-                    <p>{perfilEOL.nm_pessoa}</p>
+                    <p>{perfisEOL[0].nm_pessoa}</p>
                   </div>
                   <div className="col-5 align-self-center">
-                    <p>{perfilEOL.divisao}</p>
+                    <p>{stringSeparadaPorVirgulas(perfisEOL, "divisao")}</p>
                   </div>
                   <div className="col-2 align-self-center">
                     <Botao
@@ -101,6 +145,29 @@ class Permissoes extends Component {
                   </div>
                 </div>
               )}
+              <div className="table-users">
+                <div className="row titles">
+                  <div className="col-3">Código RF</div>
+                  <div className="col-9">Nome</div>
+                </div>
+                {equipeAdministradora.length > 0 &&
+                  equipeAdministradora.map((vinculo, key) => {
+                    return (
+                      <div key={key} className="row values">
+                        <div className="col-3">
+                          {vinculo.usuario.registro_funcional}
+                        </div>
+                        <div className="col-8">{vinculo.usuario.nome}</div>
+                        <div className="col-1 trash">
+                          <i
+                            onClick={() => this.excluir(vinculo.uuid)}
+                            className="fas fa-trash"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           </div>
         </form>
