@@ -8,11 +8,7 @@ export const validarSubmissao = (values, meusDados) => {
     }
   });
   if (!aoMenosUmPeriodo) return "Necessário ao selecionar ao menos um período";
-  if (
-    meusDados &&
-    meusDados.escolas.length &&
-    meusDados.escolas[0].quantidade_alunos < totalAlunos
-  )
+  if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
     return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
   return false;
 };

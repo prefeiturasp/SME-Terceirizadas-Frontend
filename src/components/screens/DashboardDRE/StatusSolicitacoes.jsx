@@ -82,7 +82,7 @@ export class StatusSolicitacoes extends Component {
     let titulo = "";
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const dreUuid = dadosMeus.diretorias_regionais[0].uuid;
+    const dreUuid = dadosMeus.vinculo_atual.instituicao.uuid;
 
     switch (this.props.tipoStatus) {
       case STATUS.AUTORIZADAS:

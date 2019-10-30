@@ -152,7 +152,7 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     if (!values.uuid) {
       criarInversaoDeDiaDeCardapio(values).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
