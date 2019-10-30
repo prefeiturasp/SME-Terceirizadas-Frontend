@@ -405,7 +405,7 @@ class SolicitacaoUnificada extends Component {
 
   handleSubmit(values) {
     values.escolas = this.state.schoolsFiltered;
-    values.diretoria_regional = this.props.meusDados.diretorias_regionais[0].uuid;
+    values.diretoria_regional = this.props.meusDados.vinculo_atual.instituicao.uuid;
     values.kits_total = this.state.kitsTotal;
     values.kit_lanche = this.state.kitsChecked;
     const error = validateSubmit(values, this.state);
@@ -534,8 +534,7 @@ class SolicitacaoUnificada extends Component {
               collapsed={collapsed}
               alterarCollapse={this.alterarCollapse}
               numeroAlunos={
-                meusDados.diretorias_regionais &&
-                meusDados.diretorias_regionais[0].quantidade_alunos
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
               }
             >
               <Collapse isOpened={!collapsed}>

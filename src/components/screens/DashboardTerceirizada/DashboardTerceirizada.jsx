@@ -221,7 +221,7 @@ class DashboardTerceirizada extends Component {
             {meusDados && (
               <Collapse isOpened={!collapsed}>
                 <TabelaHistoricoLotes
-                  lotes={meusDados.vinculo_atual.lotes}
+                  lotes={meusDados.vinculo_atual.instituicao.lotes}
                   tipoPerfil={"Terceirizada"}
                 />
               </Collapse>

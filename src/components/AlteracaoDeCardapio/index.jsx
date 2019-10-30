@@ -192,7 +192,7 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     const status = values.status;
     delete values.status;
     const erros = validateSubmit(values, this.props.meusDados);

@@ -23,11 +23,11 @@ describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => 
   };
 
   const meusDados = {
-    escolas: [
-      {
+    vinculo_atual: {
+      instituicao: {
         uuid: "9f86ecb8-bdba-4d70-9fb7-13844f563636"
       }
-    ]
+    }
   };
 
   it("formata submissao inclusao de alimentacao continua", () => {

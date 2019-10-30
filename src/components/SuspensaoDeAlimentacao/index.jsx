@@ -287,7 +287,7 @@ class FoodSuspensionEditor extends Component {
       values.dias_razoes[idx]["outro_motivo"] =
         values.dias_razoes[idx][`outro_motivo${idx}`];
     });
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     const error = validateSubmit(values, this.props.meusDados);
     values.quantidades_por_periodo = values.suspensoes;
     values.suspensoes_alimentacao = values.dias_razoes;

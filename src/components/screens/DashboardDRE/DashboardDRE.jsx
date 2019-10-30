@@ -237,7 +237,6 @@ class DashboardDRE extends Component {
       resumoPorLote,
       loadingResumoLotes
     } = this.state;
-
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>

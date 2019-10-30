@@ -161,7 +161,7 @@ export class SolicitacaoDeKitLanche extends Component {
   onSubmit(values) {
     values.kit_lanche = this.state.kitsChecked;
     values.quantidade_alunos = parseInt(values.quantidade_alunos);
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     let solicitacao_kit_lanche = montaObjetoRequisicao(values);
     if (values.confirmar) {
       solicitacao_kit_lanche.confirmar = values.confirmar;
