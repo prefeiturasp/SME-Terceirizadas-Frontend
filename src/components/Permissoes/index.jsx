@@ -70,17 +70,16 @@ class Permissoes extends Component {
       }
     });
     if (mesmaInstituicao) {
-      criarEquipeAdministradoraEscola(
-        minhaInstituicao.uuid,
-        registroFuncional
-      ).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Permissão realizada com sucesso");
-          this.setEquipeAdministradora();
-        }
-      }).catch(error => {
-        toastError(error.data.detail);
-      });
+      criarEquipeAdministradoraEscola(minhaInstituicao.uuid, registroFuncional)
+        .then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Permissão realizada com sucesso");
+            this.setEquipeAdministradora();
+          }
+        })
+        .catch(error => {
+          toastError(error.data.detail);
+        });
     } else {
       toastError(
         `Usuário pertence a(s) instituição(ões) ${stringSeparadaPorVirgulas(

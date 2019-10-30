@@ -63,9 +63,7 @@ export const InputText = props => {
           </span>
         </div>
       )}
-      {icone && (
-        <i className={icone}></i>
-      )}
+      {icone && <i className={icone} />}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>

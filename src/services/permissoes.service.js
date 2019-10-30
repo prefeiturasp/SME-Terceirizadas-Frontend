@@ -30,7 +30,7 @@ export const criarEquipeAdministradoraEscola = (uuid, registroFuncional) => {
   let status = 0;
   const body = {
     registro_funcional: registroFuncional
-  }
+  };
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(body),
@@ -72,7 +72,7 @@ export const finalizarVinculo = (uuid, vinculoUuid) => {
   let status = 0;
   const body = {
     vinculo_uuid: vinculoUuid
-  }
+  };
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify(body),
@@ -88,4 +88,4 @@ export const finalizarVinculo = (uuid, vinculoUuid) => {
     .catch(error => {
       return error.json();
     });
-}
+};
