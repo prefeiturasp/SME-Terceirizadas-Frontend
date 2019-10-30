@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
 import AlteracaoDeCardapio from ".";
+import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
+import { meusDados } from "../../services/perfil.service";
 
 class Container extends Component {
   constructor(props) {
