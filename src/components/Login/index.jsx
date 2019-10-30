@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import authService from "../../services/auth";
 import HTTP_STATUS from "http-status-codes";
-import { required, length, semArroba } from "../../helpers/fieldValidators";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Field, reduxForm } from "redux-form";
+import { length, required, semArroba } from "../../helpers/fieldValidators";
+import authService from "../../services/auth";
+import { setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { Checkbox } from "../Shareable/Checkbox";
-import { Field, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
-import { Link } from "react-router-dom";
-import { setUsuario } from "../../services/perfil.service";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import "./style.scss";
-import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { validarForm } from "./validar";
 
 export class Login extends Component {
@@ -41,11 +41,12 @@ export class Login extends Component {
     if (erro) {
       toastError(erro);
     } else {
-      setUsuario(JSON.stringify(values)).then(response => {
+      setUsuario(values).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             "Cadastro efetuado com sucesso! Confirme seu e-mail para poder se logar."
           );
+          setTimeout(() => window.location.reload(), 2000);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
         }

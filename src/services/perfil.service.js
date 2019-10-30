@@ -9,9 +9,11 @@ const authToken = {
 export const setUsuario = payload => {
   const url = `${API_URL}/cadastro/`;
   let status = 0;
+  let values = { ...payload };
+  values["email"] = values["email"] + "@sme.prefeitura.sp.gov.br";
   return fetch(url, {
     method: "POST",
-    body: payload,
+    body: JSON.stringify(values),
     headers: { "Content-Type": "application/json" }
   })
     .then(res => {
@@ -22,7 +24,7 @@ export const setUsuario = payload => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return console.log(error);
     });
 };
 
