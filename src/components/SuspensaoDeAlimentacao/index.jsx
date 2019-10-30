@@ -382,7 +382,9 @@ class FoodSuspensionEditor extends Component {
           >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+              }
             />
             {suspensoesDeAlimentacaoList.length > 0 && (
               <div className="mt-3">

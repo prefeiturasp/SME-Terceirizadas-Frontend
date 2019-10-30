@@ -31,7 +31,7 @@ export class PainelPedidosBase extends React.Component {
       switch (this.props.VISAO) {
         case ESCOLA:
           meusDados["quantidade_alunos"] =
-            response.escolas[0].quantidade_alunos;
+            response.vinculo_atual.instituicao.quantidade_alunos;
           break;
         case DRE:
           meusDados["quantidade_alunos"] =
