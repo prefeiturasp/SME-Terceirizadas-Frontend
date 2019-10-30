@@ -18,6 +18,7 @@ import {
 import { meusDados } from "../../services/perfil.service";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
+import { TAMANHO_RF } from "../../constants/fields.constants";
 
 class Permissoes extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class Permissoes extends Component {
   }
 
   filterList(registroFuncional) {
-    if (registroFuncional.length === 7) {
+    if (registroFuncional.length === TAMANHO_RF) {
       getDadosUsuarioEOL(registroFuncional).then(response => {
         this.setState({ registroFuncional, perfisEOL: response.data });
       });
@@ -75,6 +76,8 @@ class Permissoes extends Component {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Permissão realizada com sucesso");
             this.setEquipeAdministradora();
+            this.props.change("registro_funcional", "");
+            this.setState({ perfisEOL: null });
           }
         })
         .catch(error => {
@@ -115,6 +118,7 @@ class Permissoes extends Component {
                 <div className="col-6 pt-3">
                   <Field
                     component={InputText}
+                    name="registro_funcional"
                     type="number"
                     placeholder="Pesquisar Código RF"
                     onChange={event => this.filterList(event.target.value)}
