@@ -21,7 +21,7 @@ class Container extends Component {
     meusDados().then(response => {
       this.setState({
         meusDados: response,
-        periodos: response.escolas[0].periodos_escolares
+        periodos: response.vinculo_atual.periodos_escolares
       });
     });
 

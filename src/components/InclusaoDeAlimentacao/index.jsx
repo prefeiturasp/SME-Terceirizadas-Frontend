@@ -588,8 +588,8 @@ class InclusaoDeAlimentacao extends Component {
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={
-                meusDados.escolas.length
-                  ? meusDados.escolas[0].quantidade_alunos
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+                  ? meusDados.vinculo_atual.instituicao.quantidade_alunos
                   : 0
               }
             />

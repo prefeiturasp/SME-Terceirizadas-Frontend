@@ -205,7 +205,9 @@ export class InversaoDeDiaDeCardapio extends Component {
           <form>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos || 0}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+              }
             />
             {rascunhosInversoes.length > 0 && (
               <div className="mt-3">

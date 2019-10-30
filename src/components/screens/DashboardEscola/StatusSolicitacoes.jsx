@@ -80,7 +80,7 @@ export class StatusSolicitacoes extends Component {
     let titulo = "";
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
+    const minhaEscolaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
 
     switch (this.props.tipoStatus) {
       case STATUS.RECUSADAS:
