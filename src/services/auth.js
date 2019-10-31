@@ -31,6 +31,10 @@ const login = async (email, password) => {
             "tipo_perfil",
             JSON.stringify(result.tipo_usuario)
           );
+          localStorage.setItem(
+            "perfil",
+            JSON.stringify(result.vinculo_atual.perfil.nome)
+          );
           window.location.href = "/";
         });
       });

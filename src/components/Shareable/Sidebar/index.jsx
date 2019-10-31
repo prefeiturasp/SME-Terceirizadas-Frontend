@@ -9,6 +9,7 @@ import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
+import { TIPO_PERFIL } from "../../../constants";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -53,7 +54,7 @@ export class Sidebar extends Component {
             <div className="sidebar-brand-icon mb-3">
               {tipo_perfil === `"codae"` && <AvatarCODAE />}
               {tipo_perfil === `"diretoria_regional"` && <AvatarDRE />}
-              {tipo_perfil === `"escola"` && <AvatarEscola />}
+              {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
               {tipo_perfil === `"terceirizada"` && <AvatarTerceirizada />}
             </div>
           </Link>
