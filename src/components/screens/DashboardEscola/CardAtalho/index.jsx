@@ -9,7 +9,7 @@ export default props => (
       <p className="card-text">{props.texto}</p>
     </div>
     <div className="card-footer">
-      <NavLink to={props.href} className="card-link">
+      <NavLink to={props.href} className="card-link" data-cy={props.nome}>
         {props.textoLink}
       </NavLink>
     </div>

@@ -33,7 +33,7 @@ export const CardStatusDeSolicitacao = props => {
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
         return (
-          <NavLink to={solicitation.link} key={key}>
+          <NavLink to={solicitation.link} key={key} data-cy={`${cardType}-${key}`}>
             <p className="data">
               {solicitation.text}
               <span className="float-right">{solicitation.date}</span>
@@ -42,7 +42,11 @@ export const CardStatusDeSolicitacao = props => {
         );
       })}
       {solicitations.length > 3 && (
-        <NavLink to={`${href}`} className="see-more">
+        <NavLink
+          to={`${href}`}
+          className="see-more"
+          data-cy={`ver-mais-${cardType}`}
+        >
           Ver Mais
         </NavLink>
       )}
