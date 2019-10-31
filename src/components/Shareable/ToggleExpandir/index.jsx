@@ -4,7 +4,11 @@ import "./style.scss";
 export const ToggleExpandir = props => {
   const { onClick, ativo, className } = props;
   return (
-    <span onClick={onClick} className={`toggle-expandir ${className}`} data-cy='botao-expandir'>
+    <span
+      onClick={onClick}
+      className={`toggle-expandir ${className}`}
+      data-cy="botao-expandir"
+    >
       {ativo ? (
         <i className="fas fa-chevron-up" />
       ) : (
