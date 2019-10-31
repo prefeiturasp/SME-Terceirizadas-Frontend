@@ -34,6 +34,7 @@ export const Select = props => {
           meta.error &&
           "invalid-field"}`}
         disabled={disabled}
+        data-cy={label}
         onChange={input ? input.onChange : onChange}
         name={name}
         required={required}
