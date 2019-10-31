@@ -22,10 +22,11 @@ export const InputText = props => {
     type,
     title,
     maxlength,
-    pattern
+    pattern,
+    icone
   } = props;
   return (
-    <div className="input">
+    <div className={`input ${icone && "icon"}`}>
       {label && [
         required && !esconderAsterisco && (
           <span className="required-asterisk">*</span>
@@ -62,6 +63,7 @@ export const InputText = props => {
           </span>
         </div>
       )}
+      {icone && <i className={icone} />}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>

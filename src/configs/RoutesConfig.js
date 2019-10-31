@@ -1,4 +1,4 @@
-import { painelHome } from "./helper";
+import { painelHome, permissoes } from "./helper";
 import { Login } from "../components/Login";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
@@ -18,8 +18,6 @@ import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/Solicitac
 import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
-import PermissionsCheckBoxesPage from "../pages/Configuracoes/PermissionsCheckBoxesPage";
-import PermissionsPage from "../pages/Configuracoes/PermissionsPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
 import AlteracaoDeCardapioRelatorioEscolaPage from "../pages/Escola/AlteracaoDeCardapio/RelatorioPage";
@@ -449,13 +447,8 @@ const routesConfig = [
   },
   {
     path: `/configuracoes/permissoes`,
-    component: PermissionsPage,
+    component: permissoes(),
     exact: false
-  },
-  {
-    path: `/permission-root/permissions/:type/:subtype`,
-    component: PermissionsCheckBoxesPage,
-    exact: null
   },
   {
     path: `/configuracoes`,
