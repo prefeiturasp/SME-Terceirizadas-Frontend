@@ -119,7 +119,7 @@ export class Login extends Component {
                     name="email"
                     required
                     type="text"
-                    validate={[required, semArroba]}
+                    validate={[required]}
                   />
                 </div>
                 <div className="input-group-append col-4">
