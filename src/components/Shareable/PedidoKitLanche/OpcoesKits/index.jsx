@@ -83,6 +83,7 @@ export class OpcoesKits extends Component {
                     onCardChange={this.onCardChange}
                     kitLanche={kitLanche}
                     kitsChecked={kitsChecked}
+                    numeroKit={key}
                     checked={kitsChecked.includes(kitLanche.uuid)}
                     {...this.props}
                   />

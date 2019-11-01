@@ -589,6 +589,7 @@ class SolicitacaoUnificada extends Component {
                     <Field
                       component={InputText}
                       label="Unidades Escolares"
+                      name="pesquisar"
                       placeholder="Pesquisar"
                       onChange={this.filterList}
                       className="form-control"
@@ -605,6 +606,7 @@ class SolicitacaoUnificada extends Component {
                       component={"input"}
                       type="checkbox"
                       name="lista_kit_lanche_igual"
+                      data-cy="checkbox-lista-igual"
                     />
                     <span
                       onClick={() => this.handleMultipleOrder()}
@@ -689,6 +691,7 @@ class SolicitacaoUnificada extends Component {
                                   <span
                                     onClick={() => this.handleCheck(school)}
                                     className="checkbox-custom"
+                                    data-cy={`checkbox-${school.nome}`}
                                   />{" "}
                                   {school.codigo_eol + " - " + school.nome}
                                 </label>

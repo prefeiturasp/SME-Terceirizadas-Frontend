@@ -479,6 +479,7 @@ class AlteracaoCardapio extends Component {
                               )
                             }
                             className="checkbox-custom"
+                            data-cy={`checkbox-${periodo.nome}`}
                           />
                           <div className=""> {periodo.nome}</div>
                         </label>
