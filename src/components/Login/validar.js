@@ -4,7 +4,9 @@ export const validarForm = values => {
   let erro = false;
   /*if (values.email.includes("@")) {
     erro = "Campo e-mail não deve conter @";
-  } else*/ if (values.registro_funcional.length !== 7) {
+  } else*/ if (
+    values.registro_funcional.length !== 7
+  ) {
     erro = "Campo registro funcional deve conter 7 números";
   } else if (!values.termos) {
     erro = "É necessário aceitar os termos de uso";

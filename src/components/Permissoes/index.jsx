@@ -16,7 +16,11 @@ import {
   finalizarVinculo
 } from "../../services/permissoes.service";
 import { meusDados } from "../../services/perfil.service";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import {
+  toastError,
+  toastSuccess,
+  toastWarn
+} from "../Shareable/Toast/dialogs";
 import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
 import { TAMANHO_RF } from "../../constants/fields.constants";
 
@@ -27,7 +31,8 @@ class Permissoes extends Component {
       minhaInstituicao: null,
       perfisEOL: null,
       registroFuncional: null,
-      equipeAdministradora: []
+      equipeAdministradora: [],
+      bloquearBotao: false
     };
     this.permitir = this.permitir.bind(this);
   }
@@ -52,7 +57,11 @@ class Permissoes extends Component {
   filterList(registroFuncional) {
     if (registroFuncional.length === TAMANHO_RF) {
       getDadosUsuarioEOL(registroFuncional).then(response => {
-        this.setState({ registroFuncional, perfisEOL: response.data });
+        if (response.data.length > 0) {
+          this.setState({ registroFuncional, perfisEOL: response.data });
+        } else {
+          toastWarn("Usuário não encontrado");
+        }
       });
     } else {
       this.setState({
@@ -71,17 +80,20 @@ class Permissoes extends Component {
       }
     });
     if (mesmaInstituicao) {
+      this.setState({ bloquearBotao: true });
       criarEquipeAdministradoraEscola(minhaInstituicao.uuid, registroFuncional)
         .then(response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Permissão realizada com sucesso");
             this.setEquipeAdministradora();
             this.props.change("registro_funcional", "");
-            this.setState({ perfisEOL: null });
+            this.setState({ perfisEOL: null, bloquearBotao: false });
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(response.data.detail);
           }
         })
-        .catch(error => {
-          toastError(error.data.detail);
+        .catch(() => {
+          toastError("Erro ao permitir usuário");
         });
     } else {
       toastError(
@@ -106,7 +118,12 @@ class Permissoes extends Component {
   }
 
   render() {
-    const { equipeAdministradora, perfisEOL, registroFuncional } = this.state;
+    const {
+      equipeAdministradora,
+      perfisEOL,
+      registroFuncional,
+      bloquearBotao
+    } = this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="permissions">
@@ -144,6 +161,7 @@ class Permissoes extends Component {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.BUTTON}
                       onClick={this.permitir}
+                      disabled={bloquearBotao}
                     />
                   </div>
                 </div>
