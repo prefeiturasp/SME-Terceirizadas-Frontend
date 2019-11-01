@@ -22,7 +22,10 @@ import {
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
-import { ModalNegarSolicitacao } from "../../Shareable/ModalNegarSolicitacao";
+import {
+  ORIGEM_SOLICITACAO,
+  ModalCancelarSolicitacao
+} from "../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 
@@ -124,13 +127,22 @@ class Relatorio extends Component {
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
-        <ModalNegarSolicitacao
+        <ModalCancelarSolicitacao
+          closeModal={this.closeModal}
+          showModal={showModal}
+          uuid={uuid}
+          justificativa={justificativa}
+          meusDados={meusDados}
+          origemSolicitacao={ORIGEM_SOLICITACAO.ESCOLA}
+          solicitacaoKitLanche={solicitacaoKitLanche}
+        />
+        {/* <ModalNegarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
           uuid={uuid}
           justificativa={justificativa}
           negarEndpoint={this.props.negarEndpoint}
-        />
+        /> */}
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">

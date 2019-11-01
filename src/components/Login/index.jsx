@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { length, required, semArroba } from "../../helpers/fieldValidators";
+import { length, required } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import { setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";

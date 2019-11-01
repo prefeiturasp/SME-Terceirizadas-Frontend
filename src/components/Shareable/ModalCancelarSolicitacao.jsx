@@ -44,7 +44,13 @@ export class ModalCancelarSolicitacao extends Component {
     }
   }
   render() {
-    const { showModal, closeModal, uuid, solicitacaoKitLanche } = this.props;
+    const {
+      showModal,
+      closeModal,
+      uuid,
+      solicitacaoKitLanche,
+      origemSolicitacao
+    } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -93,7 +99,7 @@ export class ModalCancelarSolicitacao extends Component {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              this.cancelarSolicitacaoDaEscola(uuid);
+              this.cancelarSolicitacaoDaEscola(uuid, origemSolicitacao);
             }}
             style={BUTTON_STYLE.BLUE}
             className="ml-3"
