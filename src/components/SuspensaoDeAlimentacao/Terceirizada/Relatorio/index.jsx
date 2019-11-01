@@ -2,27 +2,27 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import {
-  getSuspensaoDeAlimentacaoUUID,
-  terceirizadaTomaCienciaSuspensaoDeAlimentacao
-} from "../../../../services/suspensaoDeAlimentacao.service";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA
 } from "../../../../configs/constants";
 import { statusEnum } from "../../../../constants/statusEnum";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import {
+  getSuspensaoDeAlimentacaoUUID,
+  terceirizadaTomaCienciaSuspensaoDeAlimentacao
+} from "../../../../services/suspensaoDeAlimentacao.service";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
 
-class Relatorio extends Component {
+class RelatorioSuspensaoAlimentacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -225,7 +225,7 @@ class Relatorio extends Component {
 }
 
 const RelatorioForm = reduxForm({
-  form: "unifiedSolicitationFilledForm",
+  form: "suspensaoALimentacaoForm",
   enableReinitialize: true
-})(Relatorio);
+})(RelatorioSuspensaoAlimentacao);
 export default RelatorioForm;
