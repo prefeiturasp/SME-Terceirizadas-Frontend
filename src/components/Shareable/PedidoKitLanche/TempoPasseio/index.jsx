@@ -22,6 +22,7 @@ export class TempoPasseio extends Component {
               onChange={onTempoPasseioChanged}
               type="radio"
               value="0"
+              data-cy="radio-4h"
               name={nameTempoPasseio}
             />
             <span className="checkmark" />
@@ -33,6 +34,7 @@ export class TempoPasseio extends Component {
               onChange={onTempoPasseioChanged}
               type="radio"
               value="1"
+              data-cy="radio-5-7h"
               name={nameTempoPasseio}
             />
             <span className="checkmark" />
@@ -44,6 +46,7 @@ export class TempoPasseio extends Component {
               onChange={onTempoPasseioChanged}
               type="radio"
               value="2"
+              data-cy="radio-8h"
               name={nameTempoPasseio}
             />
             <span className="checkmark" />

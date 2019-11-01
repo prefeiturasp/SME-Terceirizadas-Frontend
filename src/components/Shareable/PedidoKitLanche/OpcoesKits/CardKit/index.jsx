@@ -12,7 +12,8 @@ export class CardKit extends Component {
       onCardChange,
       nomeKitsLanche,
       tempoPasseio,
-      esconderDetalhamentoKits
+      esconderDetalhamentoKits,
+      numeroKit
     } = this.props;
     const disabled =
       (!checked &&
@@ -42,6 +43,7 @@ export class CardKit extends Component {
                 onChange={() => onCardChange(uuid)}
                 type="checkbox"
                 name={nomeKitsLanche}
+                data-cy={`kit-${numeroKit + 1}`}
               />
               <span className="checkmark" />
             </label>

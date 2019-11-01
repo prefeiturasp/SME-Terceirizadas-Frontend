@@ -781,6 +781,7 @@ class InclusaoDeAlimentacao extends Component {
                                   );
                                 }}
                                 className="checkbox-custom"
+                                data-cy={`checkbox-${periodo.nome}`}
                               />{" "}
                               {periodo.nome}
                             </label>

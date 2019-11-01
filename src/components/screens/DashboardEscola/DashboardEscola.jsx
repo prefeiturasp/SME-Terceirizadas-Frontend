@@ -197,6 +197,7 @@ export class DashboardEscola extends Component {
           <div className="col-3">
             <CardAtalho
               titulo={"Inclusão de Alimentação"}
+              nome="card-inclusao"
               texto={
                 "Quando houver necessidade de incluir dentro" +
                 " da unidade alimentação para os alunos matriculados" +
@@ -209,6 +210,7 @@ export class DashboardEscola extends Component {
           <div className="col-3">
             <CardAtalho
               titulo={"Alteração de Cardápio"}
+              nome="card-alteracao"
               texto={
                 "Quando houver necessidade de alteração do cardápio dentro da unidade, " +
                 "alterando o tipo de alimentação (exemplos: alteração de refeição " +
@@ -221,6 +223,7 @@ export class DashboardEscola extends Component {
           <div className="col-3">
             <CardAtalho
               titulo={"Solicitação de Kit Lanche Passeio"}
+              nome="card-kit-lanche"
               texto={
                 "Quando houver necessidade da solicitação de Kit Lanche Passeio para consumo durante " +
                 "o passeio externo (situações em que não há possibilidade de oferecer a " +
@@ -234,6 +237,7 @@ export class DashboardEscola extends Component {
           <div className="col-3">
             <CardAtalho
               titulo={"Inversão de Dias de Cardapio"}
+              nome="card-inversao"
               texto={
                 "Quando houver necessidade da inversão de todo cardápio de um dia do mês por " +
                 "outro dia de atendimento (exemplo: inversão do cardápio do dia X pelo dia Y)"
@@ -247,6 +251,7 @@ export class DashboardEscola extends Component {
           <div className="col-3">
             <CardAtalho
               titulo={"Suspensão de Alimentação"}
+              nome="card-suspensao"
               texto={
                 "Quando houver necessidade de suspensão da alimentação de algum dia do mês " +
                 "(refeição/lanche) por não ter atendimento com alunos (exemplo: suspensão da " +

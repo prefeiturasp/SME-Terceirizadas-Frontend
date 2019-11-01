@@ -75,6 +75,7 @@ export default class Weekly extends Component {
                     ? "week-circle-clicked"
                     : "week-circle"
                 }
+                data-cy={`dia-${key}`}
                 value={day.value}
               >
                 {day.label}

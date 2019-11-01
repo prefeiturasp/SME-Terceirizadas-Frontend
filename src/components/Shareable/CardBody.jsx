@@ -9,6 +9,7 @@ const CardBody = props => (
           <input
             className="input-search"
             placeholder="Pesquisar"
+            data-cy={"pesquisar"}
             onChange={e => {
               props.onChange(e);
             }}

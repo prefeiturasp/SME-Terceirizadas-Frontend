@@ -80,7 +80,7 @@ export class Login extends Component {
             validate={required}
           />
           <p className="mt-2">
-            <Link className="hyperlink" to="#">
+            <Link className="hyperlink" to="#" data-cy="esqueci-senha">
               Esqueci minha senha
             </Link>
           </p>
@@ -93,6 +93,7 @@ export class Login extends Component {
           />
           <Link
             className="hyperlink text-center mt-3 d-block"
+            data-cy="ainda-nao-cadastrado"
             onClick={() => this.setState({ mostrarCadastro: true })}
             to="#"
           >
@@ -202,6 +203,7 @@ export class Login extends Component {
             <div className="col-4">
               <Link
                 className="hyperlink text-right mt-3 d-block"
+                data-cy="voltar"
                 onClick={() => this.setState({ mostrarCadastro: false })}
                 to="#"
               >
