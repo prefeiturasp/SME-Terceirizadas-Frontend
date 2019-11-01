@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { length, required, semArroba } from "../../helpers/fieldValidators";
+import { length, required } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import { setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
@@ -19,7 +19,8 @@ export class Login extends Component {
     this.state = {
       mostrarCadastro: false,
       termos: false,
-      habilitarCampos: false
+      habilitarCampos: false,
+      bloquearBotao: false
     };
   }
 
@@ -32,6 +33,7 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
+      this.setState({ bloquearBotao: true });
       authService.login(email, password);
     }
   };
@@ -41,11 +43,13 @@ export class Login extends Component {
     if (erro) {
       toastError(erro);
     } else {
+      this.setState({ bloquearBotao: true });
       setUsuario(values).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             "Cadastro efetuado com sucesso! Confirme seu e-mail para poder se logar."
           );
+          this.setState({ bloquearBotao: false });
           setTimeout(() => window.location.reload(), 2000);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
@@ -56,6 +60,7 @@ export class Login extends Component {
 
   renderLogin() {
     const { handleSubmit, pristine, submitting } = this.props;
+    const { bloquearBotao } = this.state;
     return (
       <div className="form">
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
@@ -88,7 +93,7 @@ export class Login extends Component {
             className="col-12"
             style={BUTTON_STYLE.GREEN}
             texto="Acessar"
-            disabled={pristine || submitting}
+            disabled={pristine || submitting || bloquearBotao}
             type={BUTTON_TYPE.SUBMIT}
           />
           <Link
@@ -105,6 +110,7 @@ export class Login extends Component {
 
   renderCadastro() {
     const { handleSubmit } = this.props;
+    const { bloquearBotao } = this.state;
     return (
       <div className="form">
         <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
@@ -215,6 +221,7 @@ export class Login extends Component {
               style={BUTTON_STYLE.GREEN}
               texto="Cadastrar"
               className="col-12"
+              disabled={bloquearBotao}
             />
           </div>
         </form>
