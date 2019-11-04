@@ -7,7 +7,7 @@ const authToken = {
 };
 
 export const getDadosUsuarioEOL = registroFuncional => {
-  const url = `${API_URL}/dados-usuario-eol/${registroFuncional}`;
+  const url = `${API_URL}/dados-usuario-eol/${registroFuncional}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
