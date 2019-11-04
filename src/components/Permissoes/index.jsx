@@ -89,10 +89,12 @@ class Permissoes extends Component {
             this.props.change("registro_funcional", "");
             this.setState({ perfisEOL: null, bloquearBotao: false });
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            this.setState({ perfisEOL: null, bloquearBotao: false });
             toastError(response.data.detail);
           }
         })
         .catch(() => {
+          this.setState({ perfisEOL: null, bloquearBotao: false });
           toastError("Erro ao permitir usuário");
         });
     } else {
