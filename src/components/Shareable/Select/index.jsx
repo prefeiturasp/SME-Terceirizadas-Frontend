@@ -16,9 +16,9 @@ export const Select = props => {
     naoDesabilitarPrimeiraOpcao,
     onChange,
     options,
-    required
+    required,
+    width
   } = props;
-
   return (
     <div className="select">
       {label && [
@@ -38,6 +38,7 @@ export const Select = props => {
         onChange={input ? input.onChange : onChange}
         name={name}
         required={required}
+        style={width && { width: width - 12 }}
       >
         {options.map((e, key) => {
           return (
