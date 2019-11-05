@@ -12,6 +12,8 @@ import { InputText } from "../Shareable/Input/InputText";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import "./style.scss";
 import { validarForm } from "./validar";
+import Select from "../Shareable/Select";
+import { TIPOS_EMAIL_CADASTRO } from "./constans";
 
 export class Login extends Component {
   constructor(props) {
@@ -20,8 +22,17 @@ export class Login extends Component {
       mostrarCadastro: false,
       termos: false,
       habilitarCampos: false,
-      bloquearBotao: false
+      bloquearBotao: false,
+      width: null
     };
+    this.emailInput = React.createRef();
+  }
+
+  componentDidUpdate() {
+    if (this.emailInput.current && !this.state.width) {
+      const width = this.emailInput.current.offsetWidth;
+      this.setState({ width });
+    }
   }
 
   onTermosClicked() {
@@ -116,24 +127,28 @@ export class Login extends Component {
       <div className="form">
         <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
           <div className="row">
-            <div className="col-12">
-              <div className="input-group email-sme">
-                <div className="col-8">
-                  <Field
-                    component={InputText}
-                    placeholder={"seu.nome"}
-                    label="E-mail"
-                    name="email"
-                    required
-                    type="text"
-                    validate={[required]}
-                  />
-                </div>
-                <div className="input-group-append col-4">
-                  <span className="input-group-text" id="basic-addon2">
-                    @sme.prefeitura.sp.gov.br
-                  </span>
-                </div>
+            <div className="input-group email-sme">
+              <div ref={this.emailInput} className="col-6">
+                <Field
+                  component={InputText}
+                  placeholder={"seu.nome"}
+                  label="E-mail"
+                  name="email"
+                  required
+                  type="text"
+                  validate={[required]}
+                />
+              </div>
+              <div className="input-group-append col-6">
+                <Field
+                  component={Select}
+                  name="tipo_email"
+                  options={TIPOS_EMAIL_CADASTRO}
+                  required
+                  validate={required}
+                  naoDesabilitarPrimeiraOpcao
+                  width={this.state.width}
+                />
               </div>
             </div>
           </div>

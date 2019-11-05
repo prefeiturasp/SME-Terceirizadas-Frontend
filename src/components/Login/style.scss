@@ -89,9 +89,13 @@ div.input-group.email-sme {
   .col-4 {
     padding-left: 0;
   }
-  .col-8 {
+  .col-6 {
     padding-right: 0;
-    margin-right: -20px;
+    margin-right: -12px;
+  }
+  select {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
   input {
     border-top-right-radius: 0;
