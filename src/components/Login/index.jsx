@@ -33,7 +33,6 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      this.setState({ bloquearBotao: true });
       authService.login(email, password);
     }
   };
@@ -53,6 +52,7 @@ export class Login extends Component {
           setTimeout(() => window.location.reload(), 2000);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
+          this.setState({ bloquearBotao: false });
         }
       });
     }
