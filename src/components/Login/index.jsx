@@ -7,7 +7,6 @@ import authService from "../../services/auth";
 import { setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { Checkbox } from "../Shareable/Checkbox";
 import { InputText } from "../Shareable/Input/InputText";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import "./style.scss";
@@ -193,28 +192,6 @@ export class Login extends Component {
                 type="password"
                 validate={required}
               />
-            </div>
-          </div>
-          <p className="terms my-auto pt-2">Termos de uso</p>
-          <div className="row">
-            <div className="col-8 pt-2">
-              <Field
-                classNameTexto={"text-terms"}
-                component={Checkbox}
-                name="termos"
-                onClick={() => this.onTermosClicked()}
-                texto="Li e concordo com os termos de uso"
-              />
-            </div>
-            <div className="col-4">
-              <Link
-                className="hyperlink text-right mt-3 d-block"
-                data-cy="voltar"
-                onClick={() => this.setState({ mostrarCadastro: false })}
-                to="#"
-              >
-                Voltar
-              </Link>
             </div>
           </div>
           <div className="pt-2">

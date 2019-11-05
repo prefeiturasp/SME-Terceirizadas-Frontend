@@ -8,8 +8,6 @@ export const validarForm = values => {
     values.registro_funcional.length !== 7
   ) {
     erro = "Campo registro funcional deve conter 7 números";
-  } else if (!values.termos) {
-    erro = "É necessário aceitar os termos de uso";
   } else if (!validarCPF(values.cpf)) {
     erro = "CPF inválido";
   } else if (values.password !== values.confirmar_password) {
