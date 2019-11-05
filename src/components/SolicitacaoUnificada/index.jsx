@@ -298,13 +298,11 @@ class SolicitacaoUnificada extends Component {
     let schoolsFiltered = this.state.schoolsFiltered;
     school.checked = !school.checked;
     schoolsFiltered[foundIndex].checked = school.checked;
+    schoolsFiltered[foundIndex].burger_active =
+      school.checked && !this.props.multipleOrder;
     this.props.change(`school_${school.codigo_eol}.check`, school.checked);
     if (this.props.multipleOrder) {
       schoolsFiltered[foundIndex].quantidade_alunos = this.props.max_alunos;
-      this.props.change(
-        `school_${school.codigo_eol}.quantidade_alunos`,
-        this.props.max_alunos
-      );
     }
     schoolsFiltered = this.setNumberOfMealKits(school);
     let studentsTotal = 0;
@@ -616,24 +614,6 @@ class SolicitacaoUnificada extends Component {
                   </label>
                 </div>
                 <Collapse isOpened={multipleOrder}>
-                  <div className="form-group row">
-                    <div className="col-6">
-                      <Field
-                        component={InputText}
-                        name="quantidade_max_alunos_por_escola"
-                        onChange={event =>
-                          this.props.change(
-                            "quantidade_max_alunos_por_escola",
-                            event.target.value
-                          )
-                        }
-                        type="number"
-                        label="Número máximo de alunos por unidade educacional"
-                        required={multipleOrder === true}
-                        validate={multipleOrder === true && [required]}
-                      />
-                    </div>
-                  </div>
                   <PedidoKitLanche
                     nameTempoPasseio="tempo_passeio"
                     nomeKitsLanche="kit_lanche"
@@ -887,7 +867,6 @@ const mapStateToProps = state => {
     initialValues: state.unifiedSolicitation.data,
     multipleOrder: selector(state, "lista_kit_lanche_igual"),
     kitsTotal: selector(state, "kits_total"),
-    max_alunos: selector(state, "quantidade_max_alunos_por_escola"),
     prosseguir: selector(state, "prosseguir")
   };
 };

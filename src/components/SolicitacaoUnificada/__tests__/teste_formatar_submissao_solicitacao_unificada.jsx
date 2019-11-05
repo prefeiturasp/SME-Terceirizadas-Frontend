@@ -5,7 +5,6 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
     data: "02/08/2019",
     diretoria_regional: "dae78a0b-b16d-4bbe-aa96-b91d906199bc",
     descricao: "<p></p>\n",
-    quantidade_max_alunos_por_escola: null,
     kit_lanche: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
     lista_kit_lanche_igual: true,
     local: "Ibirapuera",
@@ -28,7 +27,6 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
       local: "Ibirapuera",
       diretoria_regional: "dae78a0b-b16d-4bbe-aa96-b91d906199bc",
       lista_kit_lanche_igual: true,
-      quantidade_max_alunos_por_escola: null,
       solicitacao_kit_lanche: {
         kits: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
         data: "02/08/2019",
@@ -54,7 +52,6 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
       local: "Ibirapuera",
       diretoria_regional: "dae78a0b-b16d-4bbe-aa96-b91d906199bc",
       lista_kit_lanche_igual: false,
-      quantidade_max_alunos_por_escola: null,
       solicitacao_kit_lanche: {
         kits: [],
         data: "02/08/2019",

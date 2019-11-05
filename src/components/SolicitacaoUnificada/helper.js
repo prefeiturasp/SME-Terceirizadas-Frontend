@@ -11,9 +11,6 @@ export const formatarSubmissao = values => {
   dataFormatada.local = values.local;
   dataFormatada.diretoria_regional = values.diretoria_regional;
   dataFormatada.lista_kit_lanche_igual = values.lista_kit_lanche_igual || false;
-  dataFormatada.quantidade_max_alunos_por_escola = dataFormatada.lista_kit_lanche_igual
-    ? values.quantidade_max_alunos_por_escola
-    : null;
   dataFormatada.solicitacao_kit_lanche = {
     kits: dataFormatada.lista_kit_lanche_igual ? values.kit_lanche : [],
     data: values.data,
