@@ -15,7 +15,7 @@ class DashboardDREContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: "...",
+      enrolled: null,
       autorizadasList: [],
       pendentesList: [],
       recusadasList: [],
