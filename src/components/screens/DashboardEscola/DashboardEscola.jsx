@@ -105,46 +105,8 @@ export class DashboardEscola extends Component {
       <div className="dashboard-school">
         <CardMatriculados
           numeroAlunos={numeroAlunos}
-          collapsed={collapsed}
           alterarCollapse={this.alterarCollapse}
         >
-          <Collapse isOpened={!collapsed}>
-            <div className="user-data">
-              <form>
-                <div className="row">
-                  <div className="col-6">
-                    <Field
-                      component={InputText}
-                      label="RF Responsável"
-                      placeholder="00000000"
-                      type="text"
-                      name="numero_alunos"
-                    />
-                  </div>
-                  <div className="col-6">
-                    <Field
-                      component={InputText}
-                      label="Cargo / Função"
-                      placeholder="Nome do Cargo"
-                      type="text"
-                      name="numero_alunos"
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12">
-                    <Field
-                      component={InputText}
-                      label="Nome"
-                      placeholder="Nome Completo"
-                      type="text"
-                      name="numero_alunos"
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-          </Collapse>
         </CardMatriculados>
         <CardBody
           titulo={"Acompanhamento solicitações"}
