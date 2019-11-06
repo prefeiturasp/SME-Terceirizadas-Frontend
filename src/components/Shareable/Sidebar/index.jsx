@@ -58,7 +58,7 @@ export class Sidebar extends Component {
               {tipo_perfil === `"terceirizada"` && <AvatarTerceirizada />}
             </div>
           </Link>
-          <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
+          <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
             <div className="nav-item">
               {!toggled && nome && nome !== "" && (
                 <div className="sidebar-brand-text text-center">

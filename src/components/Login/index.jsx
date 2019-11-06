@@ -7,11 +7,12 @@ import authService from "../../services/auth";
 import { setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { Checkbox } from "../Shareable/Checkbox";
 import { InputText } from "../Shareable/Input/InputText";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import "./style.scss";
 import { validarForm } from "./validar";
+import Select from "../Shareable/Select";
+import { TIPOS_EMAIL_CADASTRO } from "./constans";
 
 export class Login extends Component {
   constructor(props) {
@@ -20,8 +21,17 @@ export class Login extends Component {
       mostrarCadastro: false,
       termos: false,
       habilitarCampos: false,
-      bloquearBotao: false
+      bloquearBotao: false,
+      width: null
     };
+    this.emailInput = React.createRef();
+  }
+
+  componentDidUpdate() {
+    if (this.emailInput.current && !this.state.width) {
+      const width = this.emailInput.current.offsetWidth;
+      this.setState({ width });
+    }
   }
 
   onTermosClicked() {
@@ -33,7 +43,6 @@ export class Login extends Component {
   handleSubmit = values => {
     const { email, password } = values;
     if (email && password) {
-      this.setState({ bloquearBotao: true });
       authService.login(email, password);
     }
   };
@@ -53,6 +62,7 @@ export class Login extends Component {
           setTimeout(() => window.location.reload(), 2000);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
+          this.setState({ bloquearBotao: false });
         }
       });
     }
@@ -116,24 +126,28 @@ export class Login extends Component {
       <div className="form">
         <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
           <div className="row">
-            <div className="col-12">
-              <div className="input-group email-sme">
-                <div className="col-8">
-                  <Field
-                    component={InputText}
-                    placeholder={"seu.nome"}
-                    label="E-mail"
-                    name="email"
-                    required
-                    type="text"
-                    validate={[required]}
-                  />
-                </div>
-                <div className="input-group-append col-4">
-                  <span className="input-group-text" id="basic-addon2">
-                    @sme.prefeitura.sp.gov.br
-                  </span>
-                </div>
+            <div className="input-group email-sme">
+              <div ref={this.emailInput} className="col-6">
+                <Field
+                  component={InputText}
+                  placeholder={"seu.nome"}
+                  label="E-mail"
+                  name="email"
+                  required
+                  type="text"
+                  validate={[required]}
+                />
+              </div>
+              <div className="input-group-append col-6">
+                <Field
+                  component={Select}
+                  name="tipo_email"
+                  options={TIPOS_EMAIL_CADASTRO}
+                  required
+                  validate={required}
+                  naoDesabilitarPrimeiraOpcao
+                  width={this.state.width}
+                />
               </div>
             </div>
           </div>
@@ -193,28 +207,6 @@ export class Login extends Component {
                 type="password"
                 validate={required}
               />
-            </div>
-          </div>
-          <p className="terms my-auto pt-2">Termos de uso</p>
-          <div className="row">
-            <div className="col-8 pt-2">
-              <Field
-                classNameTexto={"text-terms"}
-                component={Checkbox}
-                name="termos"
-                onClick={() => this.onTermosClicked()}
-                texto="Li e concordo com os termos de uso"
-              />
-            </div>
-            <div className="col-4">
-              <Link
-                className="hyperlink text-right mt-3 d-block"
-                data-cy="voltar"
-                onClick={() => this.setState({ mostrarCadastro: false })}
-                to="#"
-              >
-                Voltar
-              </Link>
             </div>
           </div>
           <div className="pt-2">
