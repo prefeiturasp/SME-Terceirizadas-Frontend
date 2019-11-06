@@ -265,12 +265,6 @@ class Relatorio extends Component {
                   <div className="row">
                     <div className="col-12 text-right">
                       <Botao
-                        texto={"Recusar"}
-                        onClick={() => this.showModal()}
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                      <Botao
                         texto="Ciente"
                         type={BUTTON_TYPE.SUBMIT}
                         onClick={() => this.handleSubmit()}
