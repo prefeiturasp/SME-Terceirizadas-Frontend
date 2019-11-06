@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Collapse } from "react-collapse";
-import { Field, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import {
   ESCOLA,
   SOLICITACOES_AUTORIZADAS,
@@ -17,7 +16,6 @@ import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { InputText } from "../../Shareable/Input/InputText";
 import CardAtalho from "./CardAtalho";
 import "./style.scss";
 
@@ -94,7 +92,6 @@ export class DashboardEscola extends Component {
 
   render() {
     const {
-      collapsed,
       pendentesListFiltered,
       autorizadasListFiltered,
       negadasListFiltered,
@@ -106,8 +103,7 @@ export class DashboardEscola extends Component {
         <CardMatriculados
           numeroAlunos={numeroAlunos}
           alterarCollapse={this.alterarCollapse}
-        >
-        </CardMatriculados>
+        />
         <CardBody
           titulo={"Acompanhamento solicitações"}
           dataAtual={dataAtual()}
