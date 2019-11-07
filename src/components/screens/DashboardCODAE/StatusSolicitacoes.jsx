@@ -13,7 +13,7 @@ import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { InputSearch } from "../../Shareable/InputSearch";
+import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import { FILTRO, STATUS } from "../const";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
 
@@ -131,7 +131,7 @@ export class StatusSolicitacoes extends Component {
         <div className="card mt-3">
           <div className="card-body">
             <div className="pr-3">
-              <InputSearch
+              <InputSearchPendencias
                 voltarLink={`/`}
                 filterList={this.onPesquisarChanged}
               />
