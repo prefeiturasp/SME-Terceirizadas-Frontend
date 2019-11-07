@@ -49,7 +49,7 @@ export class PainelPedidosBase extends React.Component {
   render() {
     const atual = {
       href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-      titulo: "Solicitação de Kit Lanche Passeio"
+      titulo: "Kit Lanche Passeio"
     };
     return (
       <Page titulo={atual.titulo}>

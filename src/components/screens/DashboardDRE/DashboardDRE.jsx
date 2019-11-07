@@ -244,7 +244,7 @@ class DashboardDRE extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={enrolled ? enrolled : 0}
           >
             <Collapse isOpened={!collapsed}>
               <TabelaHistoricoLotes lotes={lotesDRE} />
