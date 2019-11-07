@@ -46,13 +46,15 @@ export const CardStatusDeSolicitacao = props => {
         );
       })}
       {solicitations.length > 3 && (
-        <NavLink
-          to={`${href}`}
-          className="see-more"
-          data-cy={`ver-mais-${cardType}`}
-        >
-          Ver Mais
-        </NavLink>
+        <div className="container-link">
+          <NavLink
+            to={`${href}`}
+            className="see-more"
+            data-cy={`ver-mais-${cardType}`}
+          >
+            Ver Mais
+          </NavLink>
+        </div>
       )}
     </div>
   );
