@@ -52,10 +52,12 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {tipo_perfil === `"codae"` && <AvatarCODAE />}
-              {tipo_perfil === `"diretoria_regional"` && <AvatarDRE />}
+              {tipo_perfil === TIPO_PERFIL.CODAE && <AvatarCODAE />}
+              {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <AvatarDRE />}
               {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
-              {tipo_perfil === `"terceirizada"` && <AvatarTerceirizada />}
+              {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
+                <AvatarTerceirizada />
+              )}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
@@ -82,10 +84,12 @@ export class Sidebar extends Component {
             </div>
           </div>
           <div className="sidebar-wrapper">
-            {tipo_perfil === `"codae"` && <SidebarCODAE />}
-            {tipo_perfil === `"diretoria_regional"` && <SidebarDRE />}
-            {tipo_perfil === `"escola"` && <SidebarEscola />}
-            {tipo_perfil === `"terceirizada"` && <SidebarTerceirizada />}
+            {tipo_perfil === TIPO_PERFIL.CODAE && <SidebarCODAE />}
+            {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <SidebarDRE />}
+            {tipo_perfil === TIPO_PERFIL.ESCOLA && <SidebarEscola />}
+            {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
+              <SidebarTerceirizada />
+            )}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">

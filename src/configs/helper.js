@@ -3,14 +3,15 @@ import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
+import { TIPO_PERFIL } from "../constants";
 
 export const painelHome = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    case `"diretoria_regional"`:
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return DashboardDREPage;
-    case `"codae"`:
+    case TIPO_PERFIL.CODAE:
       return DashboardCODAEPage;
-    case `"terceirizada"`:
+    case TIPO_PERFIL.TERCEIRIZADA:
       return DashboardTerceirizadaPage;
     default:
       return DashboardEscolaPage;
@@ -19,11 +20,11 @@ export const painelHome = () => {
 
 export const permissoes = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    case `"diretoria_regional"`:
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return PermissoesPage.PermissoesDRE;
+    case TIPO_PERFIL.CODAE:
       return PermissoesPage.PermissoesEscola;
-    case `"codae"`:
-      return PermissoesPage.PermissoesEscola;
-    case `"terceirizada"`:
+    case TIPO_PERFIL.TERCEIRIZADA:
       return PermissoesPage.PermissoesEscola;
     default:
       return PermissoesPage.PermissoesEscola;

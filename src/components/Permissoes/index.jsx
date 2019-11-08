@@ -9,12 +9,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../Shareable/Botao/constants";
-import {
-  getDadosUsuarioEOL,
-  criarEquipeAdministradoraEscola,
-  getEquipeAdministradoraEscola,
-  finalizarVinculo
-} from "../../services/permissoes.service";
+import { getDadosUsuarioEOL } from "../../services/permissoes.service";
 import { meusDados } from "../../services/perfil.service";
 import {
   toastError,
@@ -46,7 +41,8 @@ class Permissoes extends Component {
 
   async setEquipeAdministradora() {
     const { minhaInstituicao } = this.state;
-    const equipeAdministradora = await getEquipeAdministradoraEscola(
+    const { getEquipeAdministradora } = this.props;
+    const equipeAdministradora = await getEquipeAdministradora(
       minhaInstituicao.uuid
     );
     this.setState({
@@ -73,6 +69,7 @@ class Permissoes extends Component {
 
   permitir() {
     const { minhaInstituicao, perfisEOL, registroFuncional } = this.state;
+    const { criarEquipeAdministradora } = this.props;
     let mesmaInstituicao = false;
     perfisEOL.forEach(perfilEOL => {
       if (minhaInstituicao.nome.includes(perfilEOL.divisao)) {
@@ -81,7 +78,7 @@ class Permissoes extends Component {
     });
     if (mesmaInstituicao) {
       this.setState({ bloquearBotao: true });
-      criarEquipeAdministradoraEscola(minhaInstituicao.uuid, registroFuncional)
+      criarEquipeAdministradora(minhaInstituicao.uuid, registroFuncional)
         .then(response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Permissão realizada com sucesso");
@@ -108,6 +105,7 @@ class Permissoes extends Component {
   }
 
   excluir(permissaoUuid) {
+    const { finalizarVinculo } = this.props;
     if (window.confirm("Deseja realmente finalizar essa permissão?")) {
       const { minhaInstituicao } = this.state;
       finalizarVinculo(minhaInstituicao.uuid, permissaoUuid).then(response => {

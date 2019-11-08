@@ -3,7 +3,14 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Permissoes from "../../components/Permissoes";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import { ESCOLA } from "../../configs/constants";
+import {
+  criarEquipeAdministradoraEscola,
+  getEquipeAdministradoraEscola,
+  finalizarVinculoEscola,
+  criarEquipeAdministradoraDiretoriaRegional,
+  getEquipeAdministradoraDiretoriaRegional,
+  finalizarVinculoDiretoriaRegional
+} from "../../services/permissoes.service";
 
 class PermissoesBase extends React.Component {
   render() {
@@ -22,4 +29,19 @@ class PermissoesBase extends React.Component {
 }
 
 // Escola
-export const PermissoesEscola = () => <PermissoesBase VISAO={ESCOLA} />;
+export const PermissoesEscola = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraEscola}
+    getEquipeAdministradora={getEquipeAdministradoraEscola}
+    finalizarVinculo={finalizarVinculoEscola}
+  />
+);
+
+// DRE
+export const PermissoesDRE = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraDiretoriaRegional}
+    getEquipeAdministradora={getEquipeAdministradoraDiretoriaRegional}
+    finalizarVinculo={finalizarVinculoDiretoriaRegional}
+  />
+);
