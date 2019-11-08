@@ -67,8 +67,76 @@ export const getEquipeAdministradoraEscola = uuid => {
     });
 };
 
-export const finalizarVinculo = (uuid, vinculoUuid) => {
+export const finalizarVinculoEscola = (uuid, vinculoUuid) => {
   const url = `${API_URL}/vinculos-escolas/${uuid}/finalizar_vinculo/`;
+  let status = 0;
+  const body = {
+    vinculo_uuid: vinculoUuid
+  };
+  return fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const criarEquipeAdministradoraDiretoriaRegional = (
+  uuid,
+  registroFuncional
+) => {
+  const url = `${API_URL}/vinculos-diretorias-regionais/${uuid}/criar_equipe_administradora/`;
+  let status = 0;
+  const body = {
+    registro_funcional: registroFuncional
+  };
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getEquipeAdministradoraDiretoriaRegional = uuid => {
+  const url = `${API_URL}/vinculos-diretorias-regionais/${uuid}/get_equipe_administradora/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const finalizarVinculoDiretoriaRegional = (uuid, vinculoUuid) => {
+  const url = `${API_URL}/vinculos-diretorias-regionais/${uuid}/finalizar_vinculo/`;
   let status = 0;
   const body = {
     vinculo_uuid: vinculoUuid
