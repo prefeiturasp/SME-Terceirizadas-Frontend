@@ -40,7 +40,8 @@ class CadastroLote extends Component {
       escolasSelecionadas: [],
       loading: true,
       uuid: null,
-      redirect: false
+      redirect: false,
+      deactivate: true
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -70,6 +71,18 @@ class CadastroLote extends Component {
       this.setState({
         loading: false
       });
+      if (
+        meusDados.vinculo_atual.perfil.nome ===
+        "GESTAO_ALIMENTACAO_TERCEIRIZADA"
+      ) {
+        this.setState({
+          deactivate: false
+        });
+      } else {
+        this.setState({
+          deactivate: true
+        });
+      }
     }
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -264,7 +277,8 @@ class CadastroLote extends Component {
       exibirModal,
       diretoria_regional,
       tipo_gestao,
-      uuid
+      uuid,
+      deactivate
     } = this.state;
     return (
       <div className="cadastro pt-3">
@@ -286,16 +300,18 @@ class CadastroLote extends Component {
             <div className="card-body">
               <div className="card-title font-weight-bold">Dados do Lote</div>
               <div className="row pt-3">
-                <div className="col-12">
-                  <Link
-                    to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`}
-                  >
-                    <Botao
-                      texto="Consulta de lotes cadastrados"
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
-                    />
-                  </Link>
-                </div>
+                {!deactivate && (
+                  <div className="col-12">
+                    <Link
+                      to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`}
+                    >
+                      <Botao
+                        texto="Consulta de lotes cadastrados"
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                      />
+                    </Link>
+                  </div>
+                )}
               </div>
               <div className="row pt-3">
                 <div className="col-8">
@@ -306,6 +322,7 @@ class CadastroLote extends Component {
                     onChange={event =>
                       this.onDiretoriaRegionalSelected(event.target.value)
                     }
+                    disabled={deactivate}
                     options={diretoriasRegionais}
                     required
                     validate={required}
@@ -313,34 +330,36 @@ class CadastroLote extends Component {
                 </div>
               </div>
               <div className="row pt-3">
-                <div className="col-8">
-                  <label className="label font-weight-normal pb-3">
-                    Subprefeitura
-                  </label>
-                  {subprefeituras.length ? (
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="subprefeituras"
-                      selected={subprefeiturasSelecionadas}
-                      options={subprefeituras}
-                      valueRenderer={(selected, options) =>
-                        renderizarLabelSubprefeitura(selected, options)
-                      }
-                      onSelectedChanged={value =>
-                        this.onSubprefeiturasSelected(value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                  ) : (
-                    <div className="col-12">Carregando subprefeituras..</div>
-                  )}
-                </div>
+                {!deactivate && (
+                  <div className="col-8">
+                    <label className="label font-weight-normal pb-3">
+                      Subprefeitura
+                    </label>
+                    {subprefeituras.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="subprefeituras"
+                        selected={subprefeiturasSelecionadas}
+                        options={subprefeituras}
+                        valueRenderer={(selected, options) =>
+                          renderizarLabelSubprefeitura(selected, options)
+                        }
+                        onSelectedChanged={value =>
+                          this.onSubprefeiturasSelected(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="col-12">Carregando subprefeituras..</div>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="row pt-3">
                 <div className="col-4">
@@ -351,6 +370,7 @@ class CadastroLote extends Component {
                     name="iniciais"
                     required
                     validate={required}
+                    disabled={deactivate}
                   />
                 </div>
                 <div className="col-4">
@@ -360,6 +380,7 @@ class CadastroLote extends Component {
                     className="form-control"
                     name="nome"
                     required
+                    disabled={deactivate}
                     validate={required}
                   />
                 </div>
@@ -371,6 +392,7 @@ class CadastroLote extends Component {
                     onChange={event =>
                       this.onTipoGestaoSelected(event.target.value)
                     }
+                    disabled={deactivate}
                     options={tiposGestao}
                     required
                     validate={required}
@@ -378,32 +400,36 @@ class CadastroLote extends Component {
                 </div>
               </div>
               <div className="row pt-3">
-                <div className="col-12">
-                  <label className="label font-weight-normal pb-3">
-                    Unidades Específicas do Lote
-                  </label>
-                  {escolas.length ? (
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="escolas"
-                      selected={escolasSelecionadas}
-                      options={escolas}
-                      valueRenderer={(selected, options) =>
-                        renderizarLabelEscola(selected, options)
-                      }
-                      onSelectedChanged={value => this.onEscolasSelected(value)}
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                  ) : (
-                    <div className="col-12">Carregando escolas..</div>
-                  )}
-                </div>
+                {!deactivate && (
+                  <div className="col-12">
+                    <label className="label font-weight-normal pb-3">
+                      Unidades Específicas do Lote
+                    </label>
+                    {escolas.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="escolas"
+                        selected={escolasSelecionadas}
+                        options={escolas}
+                        valueRenderer={(selected, options) =>
+                          renderizarLabelEscola(selected, options)
+                        }
+                        onSelectedChanged={value =>
+                          this.onEscolasSelected(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="col-12">Carregando escolas..</div>
+                    )}
+                  </div>
+                )}
               </div>
               {escolasSelecionadasNomes.length > 0 && (
                 <div className="row pt-3">
@@ -422,31 +448,33 @@ class CadastroLote extends Component {
                 </div>
               )}
               <div className="row mt-5">
-                <div className="col-12 text-right">
-                  {!uuid && (
+                {!deactivate && (
+                  <div className="col-12 text-right">
+                    {!uuid && (
+                      <Botao
+                        texto="Cancelar"
+                        onClick={() => this.resetForm()}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        type={BUTTON_STYLE.BUTTON}
+                      />
+                    )}
+                    {uuid && (
+                      <Botao
+                        texto="Excluir"
+                        onClick={this.excluirLote}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        type={BUTTON_STYLE.BUTTON}
+                      />
+                    )}
                     <Botao
-                      texto="Cancelar"
-                      onClick={() => this.resetForm()}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      type={BUTTON_STYLE.BUTTON}
+                      texto={"Salvar"}
+                      onClick={this.exibirModal}
+                      className="ml-3"
+                      type={BUTTON_STYLE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
                     />
-                  )}
-                  {uuid && (
-                    <Botao
-                      texto="Excluir"
-                      onClick={this.excluirLote}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      type={BUTTON_STYLE.BUTTON}
-                    />
-                  )}
-                  <Botao
-                    texto={"Salvar"}
-                    onClick={this.exibirModal}
-                    className="ml-3"
-                    type={BUTTON_STYLE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                  />
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
