@@ -234,6 +234,8 @@ class AlteracaoCardapio extends Component {
                 this.refresh();
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
+                this.refresh();
+                this.resetForm("alteracaoCardapio");
               }
             } else {
               toastError(res.error);
