@@ -2,17 +2,20 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { required } from "../../../../../helpers/fieldValidators";
+import {
+  required,
+  textAreaRequired
+} from "../../../../../helpers/fieldValidators";
+import { mensagemCancelamento } from "../../../../../helpers/utilities";
 import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
-import { TextArea } from "../../../../Shareable/TextArea/TextArea";
-import { Select } from "../../../../Shareable/Select";
-import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
 import Botao from "../../../../Shareable/Botao";
 import {
-  BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_TYPE
 } from "../../../../Shareable/Botao/constants";
-import { mensagemCancelamento } from "../../../../../helpers/utilities";
+import { Select } from "../../../../Shareable/Select";
+import { TextArea } from "../../../../Shareable/TextArea/TextArea";
+import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
 
 export class ModalCancelarAlteracaoDeCardapio extends Component {
   constructor(props) {
@@ -49,6 +52,8 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
 
   render() {
     const { showModal, closeModal, uuid, alteracaoDeCardapio } = this.props;
+
+    const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -90,6 +95,7 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"
+                validate={[required, textAreaRequired]}
               />
             </div>
           </div>
@@ -109,6 +115,7 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
               this.negarAlteracaoCardapio(uuid);
             }}
             style={BUTTON_STYLE.BLUE}
+            disabled={justificativa === "" || justificativa === undefined}
             className="ml-3"
           />
         </Modal.Footer>

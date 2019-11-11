@@ -153,6 +153,7 @@ class Relatorio extends Component {
           showModal={showModalCancelar}
           closeModal={this.closeModalCancelar}
           uuid={uuid}
+          justificativa={justificativa}
           solicitacaoInversaoDeDiaDeCardapio={InversaoCardapio}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}

@@ -46,6 +46,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
       uuid,
       solicitacaoInversaoDeDiaDeCardapio
     } = this.props;
+    const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -102,6 +103,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
             }}
             style={BUTTON_STYLE.BLUE}
             className="ml-3"
+            disabled={justificativa === "" || justificativa === undefined}
           />
         </Modal.Footer>
       </Modal>
