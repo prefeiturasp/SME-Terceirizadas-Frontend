@@ -327,25 +327,6 @@ class DashboardDRE extends Component {
                   />
                 </div>
               </div>
-              <p className="caption">Legenda</p>
-              <div className="caption-choices">
-                <span>
-                  <i className="fas fa-check" />
-                  Solicitação Autorizada
-                </span>
-                <span>
-                  <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Autorização{" "}
-                </span>
-                <span>
-                  <i className="fas fa-ban" />
-                  Solicitação Negada
-                </span>
-                <span>
-                  <i className="fas fa-times-circle" />
-                  Solicitação Cancelada
-                </span>
-              </div>
             </div>
           </div>
           <div className="card mt-3">

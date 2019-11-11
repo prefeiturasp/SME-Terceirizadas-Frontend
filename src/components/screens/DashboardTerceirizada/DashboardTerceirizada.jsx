@@ -20,7 +20,6 @@ import {
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardBody from "../../Shareable/CardBody";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
@@ -272,7 +271,6 @@ class DashboardTerceirizada extends Component {
                 />
               </div>
             </div>
-            <CardLegendas />
           </CardBody>
           <div className="card mt-3" />
           {!secao && <MenuIcones renderSecao={this.renderSecao} />}

@@ -9,7 +9,6 @@ import {
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import {
   CardStatusDeSolicitacao,
@@ -149,7 +148,6 @@ export class DashboardEscola extends Component {
               />
             </div>
           </div>
-          <CardLegendas />
         </CardBody>
         <div className="row row-shortcuts">
           <div className="col-3">
