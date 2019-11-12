@@ -3,6 +3,7 @@ import { Login } from "../components/Login";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -418,6 +419,11 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/lote`,
     component: CadastroLotePage,
+    exact: false
+  },
+  {
+    path: `/configuracoes/cadastros/tipo-alimentacao-unidade-escolar`,
+    component: CadastroTipoAlimentacaoPage,
     exact: false
   },
   {

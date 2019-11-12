@@ -1,0 +1,25 @@
+.formulario-tipo-alimentacao {
+  font-family: Roboto;
+  font-style: normal;
+  font-size: 14px;
+
+  .header {
+    font-weight: bold;
+    color: #42474a;
+  }
+
+  .tipos-de-unidade {
+    display: flex;
+    flex-direction: column;
+    padding: 1em 0 2em 0;
+
+    header {
+      color: #42474a;
+      padding-bottom: 0.3em;
+    }
+
+    article {
+      width: 30%;
+    }
+  }
+}
