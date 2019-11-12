@@ -52,7 +52,9 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {tipo_perfil === TIPO_PERFIL.CODAE && <AvatarCODAE />}
+              {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
+                <AvatarCODAE />
+              )}
               {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <AvatarDRE />}
               {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
               {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
@@ -84,7 +86,9 @@ export class Sidebar extends Component {
             </div>
           </div>
           <div className="sidebar-wrapper">
-            {tipo_perfil === TIPO_PERFIL.CODAE && <SidebarCODAE />}
+            {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
+              <SidebarCODAE />
+            )}
             {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <SidebarDRE />}
             {tipo_perfil === TIPO_PERFIL.ESCOLA && <SidebarEscola />}
             {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (

@@ -18,6 +18,7 @@ import {
 } from "../Shareable/Toast/dialogs";
 import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
 import { TAMANHO_RF } from "../../constants/fields.constants";
+import { CODAE } from "../../configs/constants";
 
 class Permissoes extends Component {
   constructor(props) {
@@ -69,14 +70,14 @@ class Permissoes extends Component {
 
   permitir() {
     const { minhaInstituicao, perfisEOL, registroFuncional } = this.state;
-    const { criarEquipeAdministradora } = this.props;
+    const { criarEquipeAdministradora, visao } = this.props;
     let mesmaInstituicao = false;
     perfisEOL.forEach(perfilEOL => {
       if (minhaInstituicao.nome.includes(perfilEOL.divisao)) {
         mesmaInstituicao = true;
       }
     });
-    if (mesmaInstituicao) {
+    if (visao === CODAE || mesmaInstituicao) {
       this.setState({ bloquearBotao: true });
       criarEquipeAdministradora(minhaInstituicao.uuid, registroFuncional)
         .then(response => {
@@ -88,6 +89,12 @@ class Permissoes extends Component {
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             this.setState({ perfisEOL: null, bloquearBotao: false });
             toastError(response.data.detail);
+          } else if (response.status === HTTP_STATUS.FORBIDDEN) {
+            this.setState({ perfisEOL: null, bloquearBotao: false });
+            toastError("Você não tem permissão para essa ação");
+          } else {
+            this.setState({ perfisEOL: null, bloquearBotao: false });
+            toastError("Erro ao permitir usuário");
           }
         })
         .catch(() => {
