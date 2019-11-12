@@ -21,6 +21,7 @@ export class Login extends Component {
       mostrarCadastro: false,
       termos: false,
       habilitarCampos: false,
+      email_recuperacao: "",
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN
@@ -32,7 +33,8 @@ export class Login extends Component {
     LOGIN: 0,
     RECUPERAR_SENHA: 1,
     CADASTRAR: 2,
-    RECUPERACAO_SENHA_OK: 3
+    RECUPERACAO_SENHA_OK: 3,
+    RECUPERACAO_SENHA_NAO_OK: 4
   };
 
   componentDidUpdate() {
@@ -57,11 +59,16 @@ export class Login extends Component {
 
   handleRecuperaSenha = registro_funcional => {
     recuperaSenha(registro_funcional.email_ou_rf).then(resp => {
-      // console.log(resp.status === HTTP_STATUS.OK);
-      if (resp.status === HTTP_STATUS.OK)
+      if (resp.status === HTTP_STATUS.OK) {
         this.setState({
-          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK
+          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK,
+          email_recuperacao: resp.data.email
         });
+      } else {
+        this.setState({
+          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK
+        });
+      }
     });
   };
 
@@ -262,17 +269,53 @@ export class Login extends Component {
             </div>
           </div>
         </center>
-        <div className="p-3">
-          <div className="p-5">
+        <div className="mt-3 alinha-centro">
+          <div>
             <p className="texto-simples-verde mt-2">
-              Seu link de recuperação de senha foi enviado para
-              mar**********@gmail.com.
+              {`Seu link de recuperação de senha foi enviado para
+            ${this.state.email_recuperacao}`}
             </p>
             <p className="texto-simples-verde mt-2">
               Verifique sua caixa de entrada!
             </p>
           </div>
         </div>
+        <center className="mt-5">
+          <Botao
+            className="col-4 "
+            style={BUTTON_STYLE.GREEN}
+            texto="Continuar"
+            type={BUTTON_TYPE.SUBMIT}
+            onClick={() =>
+              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+            }
+          />
+        </center>
+      </div>
+    );
+  }
+
+  renderRecuperacaoNOK() {
+    return (
+      <div>
+        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+        <center className="mt-5">
+          <div className="div-circular-vermelho">
+            <div>
+              <i className="fas fa-times fa-3x check-vermelho" />
+            </div>
+          </div>
+        </center>
+        <center>
+          <div className="col-8 mt-3">
+            <p className="texto-simples-vermelho mt-2">
+              Você não tem um e-mail cadastrado para recuperar sua senha.
+            </p>
+            <p className="texto-simples-vermelho mt-2">
+              Para restabelecer o seu acesso, procure o Diretor da sua unidade.
+            </p>
+          </div>
+        </center>
         <center>
           <Botao
             className="col-4"
@@ -355,6 +398,8 @@ export class Login extends Component {
         return this.renderEsqueciSenha();
       case this.COMPONENTE.RECUPERACAO_SENHA_OK:
         return this.renderRecuperacaoOK();
+      case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
+        return this.renderRecuperacaoNOK();
       default:
         return this.renderLogin();
     }

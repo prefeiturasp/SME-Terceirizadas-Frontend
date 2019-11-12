@@ -124,6 +124,12 @@ div.input-group.email-sme {
     text-align: center;
     color: #297805;
   }
+  &-vermelho {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    color: #b40c02;
+  }
   &-grande {
     @extend .texto-simples;
     align-items: center;
@@ -139,17 +145,46 @@ div.input-group.email-sme {
   justify-content: flex-end;
 }
 
-.div-circular-verde {
+.div-circular {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 3px solid #297805;
   border-radius: 50%;
   width: 7em;
   height: 7em;
+  &-verde {
+    @extend .div-circular;
+    border: 3px solid #297805;
+  }
+  &-vermelho {
+    @extend .div-circular;
+    border: 3px solid #b40c02;
+  }
 }
 
-.check-verde {
-  color: #297805;
+.check {
+  color: #42474a;
+  &-verde {
+    @extend .check;
+    color: #297805;
+  }
+  &-vermelho {
+    @extend .check;
+    color: #b40c02;
+  }
+}
 
+.alinha-centro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    display: grid;
+    grid-auto-rows: auto;
+
+    &:first-child {
+      width: 50%;
+    }
+  }
 }
