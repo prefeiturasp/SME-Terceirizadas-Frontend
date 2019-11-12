@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import { length, required } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
-import { setUsuario } from "../../services/perfil.service";
+import { recuperaSenha, setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
@@ -27,10 +27,12 @@ export class Login extends Component {
     };
     this.emailInput = React.createRef();
   }
+
   COMPONENTE = {
     LOGIN: 0,
     RECUPERAR_SENHA: 1,
-    CADASTRAR: 2
+    CADASTRAR: 2,
+    RECUPERACAO_SENHA_OK: 3
   };
 
   componentDidUpdate() {
@@ -51,6 +53,16 @@ export class Login extends Component {
     if (email && password) {
       authService.login(email, password);
     }
+  };
+
+  handleRecuperaSenha = registro_funcional => {
+    recuperaSenha(registro_funcional.email_ou_rf).then(resp => {
+      // console.log(resp.status === HTTP_STATUS.OK);
+      if (resp.status === HTTP_STATUS.OK)
+        this.setState({
+          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK
+        });
+    });
   };
 
   handleSubmitCadastro = values => {
@@ -239,19 +251,54 @@ export class Login extends Component {
       </div>
     );
   }
+  renderRecuperacaoOK() {
+    return (
+      <div>
+        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+        <center className="mt-5">
+          <div className="div-circular-verde">
+            <div>
+              <i className="fas fa-check fa-3x check-verde" />
+            </div>
+          </div>
+        </center>
+        <div className="p-3">
+          <div className="p-5">
+            <p className="texto-simples-verde mt-2">
+              Seu link de recuperação de senha foi enviado para
+              mar**********@gmail.com.
+            </p>
+            <p className="texto-simples-verde mt-2">
+              Verifique sua caixa de entrada!
+            </p>
+          </div>
+        </div>
+        <center>
+          <Botao
+            className="col-4"
+            style={BUTTON_STYLE.GREEN}
+            texto="Continuar"
+            type={BUTTON_TYPE.SUBMIT}
+            onClick={() =>
+              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+            }
+          />
+        </center>
+      </div>
+    );
+  }
 
   renderEsqueciSenha() {
+    const { handleSubmit } = this.props;
     return (
       <div className="form">
-        <h3 className="texto-preto-simples-grande mt-3">
-          Recuperação de Senha
-        </h3>
-        <p className="texto-preto-simples mt-4">
+        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+        <p className="texto-simples mt-4">
           Caso você tenha cadastrado um endereço de e-mail, informe seu usuário
           ou RF e ao continuar você receberá um e-mail com as orientações para
           redefinição da sua senha.
         </p>
-        <p className="texto-preto-simples">
+        <p className="texto-simples">
           Se você não tem e-mail cadastrado ou não tem mais acesso ao endereço
           de e-mail cadastrado, procure o responsável pelo SIGPAE na sua
           unidade.
@@ -291,6 +338,7 @@ export class Login extends Component {
             style={BUTTON_STYLE.GREEN}
             texto="Continuar"
             type={BUTTON_TYPE.SUBMIT}
+            onClick={handleSubmit(values => this.handleRecuperaSenha(values))}
           />
         </div>
       </div>
@@ -305,6 +353,8 @@ export class Login extends Component {
         return this.renderCadastro();
       case this.COMPONENTE.RECUPERAR_SENHA:
         return this.renderEsqueciSenha();
+      case this.COMPONENTE.RECUPERACAO_SENHA_OK:
+        return this.renderRecuperacaoOK();
       default:
         return this.renderLogin();
     }
