@@ -28,6 +28,25 @@ export const setUsuario = payload => {
     });
 };
 
+export const recuperaSenha = registro_funcional => {
+  const url = `${API_URL}/cadastro/recuperar-senha/${registro_funcional}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" }
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return console.log(error);
+    });
+};
+
 export const meusDados = () => {
   const url = `${API_URL}/usuarios/meus-dados/`;
   return fetch(url, {
