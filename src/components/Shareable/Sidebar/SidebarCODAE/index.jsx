@@ -7,6 +7,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
+import { PERFIL } from "../../../../constants";
 
 export class SidebarCODAE extends Component {
   constructor(props) {
@@ -287,13 +288,18 @@ export class SidebarCODAE extends Component {
                 </NavLink>
               </div>
             )}
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes/permissoes"
-            >
-              Permissões
-            </NavLink>
+            {[
+              PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA,
+              PERFIL.COORDENADOR_DIETA_ESPECIAL
+            ].includes(localStorage.getItem("perfil")) && (
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to="/configuracoes/permissoes"
+              >
+                Permissões
+              </NavLink>
+            )}
             <NavLink
               activeClassName="active"
               className="collapse-item"
