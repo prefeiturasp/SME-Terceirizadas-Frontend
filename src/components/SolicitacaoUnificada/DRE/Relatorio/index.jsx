@@ -250,7 +250,7 @@ class Relatorio extends Component {
             </div>
             <div className="botoes-acao">
               <Botao
-                label="Cancelar"
+                texto="Cancelar"
                 type={BUTTON_TYPE.SUBMIT}
                 onClick={() => this.showModal()}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
