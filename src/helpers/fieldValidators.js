@@ -12,6 +12,11 @@ export const diasAntecedencia = value => {
   return value !== undefined ? undefined : "Campo obrigatório";
 };
 
+export const senhasDevemSerIguais = senha1 => value => {
+  console.log(senha1, value);
+  return value === "" ? undefined : "Senhas devem ser iguais";
+};
+
 // XXX: Workaround for labelAndTextArea component
 export const textAreaRequired = value => {
   return value !== "<p></p>\n" ? undefined : "Campo obrigatório";
