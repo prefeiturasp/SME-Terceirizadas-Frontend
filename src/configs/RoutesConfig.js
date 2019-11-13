@@ -1,6 +1,6 @@
 import { painelHome, permissoes } from "./helper";
 import { Login } from "../components/Login";
-import PerfilPage  from "../pages/Perfil/PerfilPage";
+import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
