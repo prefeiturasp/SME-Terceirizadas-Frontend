@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
-import { meusDados } from "../../../services/perfil.service";
+import HTTP_STATUS from "http-status-codes";
+import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { meusDados, atualizarEmail } from "../../../services/perfil.service";
 import { AvatarCODAE } from "../../Shareable/Avatar/AvatarCODAE";
 import { AvatarDRE } from "../../Shareable/Avatar/AvatarDRE";
 import { AvatarEscola } from "../../Shareable/Avatar/AvatarEscola";
@@ -12,6 +14,8 @@ import "./style.scss";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import ModalAlterarSenha from "./components/ModalAlterarSenha";
+import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
+import authService from "../../../services/auth";
 
 class Perfil extends Component {
   constructor(props) {
@@ -46,6 +50,17 @@ class Perfil extends Component {
     if (buttonLabel === "Editar") {
       this.setState({
         buttonLabel: "Salvar"
+      });
+    } else {
+      atualizarEmail({ email: this.props.email }).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("E-mail atualizado com sucesso! Você será deslogado...");
+          setTimeout(() => {
+            authService.logout();
+          }, 3000);
+        } else {
+          toastError("Erro ao atualizar e-mail");
+        }
       });
     }
   }
@@ -149,4 +164,11 @@ Perfil = reduxForm({
   destroyOnUnmount: false
 })(Perfil);
 
-export default Perfil;
+const selector = formValueSelector("perfil");
+const mapStateToProps = state => {
+  return {
+    email: selector(state, "email")
+  };
+};
+
+export default connect(mapStateToProps)(Perfil);
