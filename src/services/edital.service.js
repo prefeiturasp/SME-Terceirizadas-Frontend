@@ -66,7 +66,7 @@ export const obterEditaisEContratos = () => {
 };
 
 export const obtemEdital = uuid => {
-  const url = `${API_URL}/editais-contratos/${uuid}`;
+  const url = `${API_URL}/editais-contratos/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
