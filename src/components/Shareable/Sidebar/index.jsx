@@ -73,7 +73,9 @@ export class Sidebar extends Component {
               )}
               <div className="profile">
                 <i className="fas fa-user-edit" />
-                <span>Perfil</span>
+                <Link to="/perfil">
+                  <span>Perfil</span>
+                </Link>
               </div>
             </div>
           </div>
