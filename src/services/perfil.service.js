@@ -101,6 +101,26 @@ export const atualizarEmail = payload => {
     });
 };
 
+export const atualizarSenhaLogado = payload => {
+  const url = `${API_URL}/usuarios/atualizar-senha/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const confirmarEmail = (uuid, confirmationKey) => {
   const url = `${API_URL}/confirmar_email/${uuid}/${confirmationKey}/`;
   let status = 0;

@@ -7,6 +7,7 @@ import {
 } from "./../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
 import InputText from "../../../../Shareable/Input/InputText";
+import { required } from "../../../../../helpers/fieldValidators";
 
 export class ModalAlterarSenha extends Component {
   constructor(props) {
@@ -18,9 +19,19 @@ export class ModalAlterarSenha extends Component {
     };
   }
 
+  onSenhaChanged(value) {
+    const numbers = /[0-9]/g;
+    const letters = /[a-zA-Z]/g;
+    this.setState({
+      numero: value.match(numbers),
+      tamanho: value.length >= 8,
+      letra: value.match(letters)
+    });
+  }
+
   render() {
     const { letra, numero, tamanho } = this.state;
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, onSubmit } = this.props;
     return (
       <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -33,28 +44,32 @@ export class ModalAlterarSenha extends Component {
                 <div className="form-group col-12">
                   <Field
                     component={InputText}
-                    esconderAsterisco
                     label="Senha atual"
                     name="senha_atual"
                     type="password"
+                    required
+                    validate={required}
                   />
                 </div>
                 <div className="form-group col-12">
                   <Field
                     component={InputText}
-                    esconderAsterisco
                     label="Nova Senha"
                     name="senha"
                     type="password"
+                    onChange={event => this.onSenhaChanged(event.target.value)}
+                    required
+                    validate={required}
                   />
                 </div>
                 <div className="form-group col-12">
                   <Field
                     component={InputText}
-                    esconderAsterisco
                     label="Confirmação da Nova Senha"
                     name="confirmar_senha"
                     type="password"
+                    required
+                    validate={required}
                   />
                 </div>
               </div>
@@ -70,7 +85,7 @@ export class ModalAlterarSenha extends Component {
                     />
                   </div>
                   <div className={`${numero ? "accepted" : "denied"}`}>
-                    Ao menos um numero
+                    Ao menos um número
                     <i
                       className={`fas fa-${numero ? "check" : "times"} fa-lg`}
                     />
@@ -96,9 +111,10 @@ export class ModalAlterarSenha extends Component {
           />
           <Botao
             texto="Confirmar"
-            type={BUTTON_TYPE.BUTTON}
+            type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN}
             className="ml-3"
+            onClick={() => onSubmit(letra && numero && tamanho)}
           />
         </Modal.Footer>
       </Modal>

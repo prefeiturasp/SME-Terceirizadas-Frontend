@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { meusDados, atualizarEmail } from "../../../services/perfil.service";
+import {
+  meusDados,
+  atualizarEmail,
+  atualizarSenhaLogado
+} from "../../../services/perfil.service";
 import { AvatarCODAE } from "../../Shareable/Avatar/AvatarCODAE";
 import { AvatarDRE } from "../../Shareable/Avatar/AvatarDRE";
 import { AvatarEscola } from "../../Shareable/Avatar/AvatarEscola";
@@ -28,6 +32,7 @@ class Perfil extends Component {
     this.abrirModal = this.abrirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
     this.onEditEmailClicked = this.onEditEmailClicked.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -43,6 +48,30 @@ class Perfil extends Component {
 
   fecharModal() {
     this.setState({ showModal: false });
+  }
+
+  onSubmit(validado) {
+    if (!validado) {
+      toastError("Preencha os requisitos de segurança da senha");
+    } else {
+      const { senha_atual, senha, confirmar_senha } = this.props;
+      const values = {
+        senha_atual: senha_atual,
+        senha: senha,
+        confirmar_senha: confirmar_senha
+      };
+      atualizarSenhaLogado(values).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Senha atualizada com sucesso!");
+          this.props.change("senha_atual", "");
+          this.props.change("senha", "");
+          this.props.change("confirmar_senha", "");
+          this.fecharModal();
+        } else {
+          toastError(response.data.detail);
+        }
+      });
+    }
   }
 
   onEditEmailClicked() {
@@ -65,12 +94,10 @@ class Perfil extends Component {
     }
   }
 
-  handleSubmit() {}
-
   render() {
     const tipo_perfil = localStorage.getItem("tipo_perfil");
     const { buttonLabel, meusDados, showModal } = this.state;
-    const { handleSubmit } = this.props;
+    const { handleSubmit, senha } = this.props;
     return (
       <div className="profile">
         {!meusDados ? (
@@ -114,7 +141,7 @@ class Perfil extends Component {
                 </div>
                 <div className="col-8">
                   <div className="form">
-                    <form onSubmit={handleSubmit(this.handleSubmit)}>
+                    <form onSubmit={handleSubmit(this.onSubmit)}>
                       <div className="row">
                         <div className="col-9">
                           <Field
@@ -131,7 +158,7 @@ class Perfil extends Component {
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             texto={buttonLabel}
                             onClick={this.onEditEmailClicked}
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                           />
                         </div>
                       </div>
@@ -151,6 +178,8 @@ class Perfil extends Component {
             <ModalAlterarSenha
               showModal={showModal}
               closeModal={this.fecharModal}
+              onSubmit={this.onSubmit}
+              senha={senha}
             />
           </div>
         )}
@@ -167,7 +196,10 @@ Perfil = reduxForm({
 const selector = formValueSelector("perfil");
 const mapStateToProps = state => {
   return {
-    email: selector(state, "email")
+    email: selector(state, "email"),
+    senha_atual: selector(state, "senha_atual"),
+    senha: selector(state, "senha"),
+    confirmar_senha: selector(state, "confirmar_senha")
   };
 };
 
