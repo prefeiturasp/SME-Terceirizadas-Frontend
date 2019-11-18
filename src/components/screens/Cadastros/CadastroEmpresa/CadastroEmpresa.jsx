@@ -5,7 +5,7 @@ import { Field, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { required } from "../../../../helpers/fieldValidators";
+import { required, tamanhoCnpj } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
 import {
@@ -25,6 +25,7 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { Botao } from "../../../Shareable/Botao";
 import { InputText } from "../../../Shareable/Input/InputText";
 import { loadEmpresa } from "../../../../reducers/empresa.reducer";
+import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -32,6 +33,9 @@ class CadastroEmpresa extends Component {
     super(props);
     this.state = {
       lotes: "",
+      exibirModal: false,
+      tituloModal: "Confirma cadastro de Empresa?",
+      valoresForm: null,
       lotesSelecionados: [],
       lotesNomesSelecionados: [],
       formValido: false,
@@ -63,6 +67,20 @@ class CadastroEmpresa extends Component {
     this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
     this.setaContatoRepresentante = this.setaContatoRepresentante.bind(this);
     this.setaContatosNutricionista = this.setaContatosNutricionista.bind(this);
+    this.exibirModal = this.exibirModal.bind(this);
+    this.fecharModal = this.fecharModal.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  exibirModal(values) {
+    this.setState({
+      exibirModal: true,
+      valoresForm: values
+    });
+  }
+
+  fecharModal() {
+    this.setState({ exibirModal: false });
   }
 
   setRedirect() {
@@ -191,10 +209,12 @@ class CadastroEmpresa extends Component {
           email: null
         });
       }
-      contatosNutricionista[indice]["telefone"] = nutri.contatos[0].telefone;
+      contatosNutricionista[indice]["telefone"] =
+        nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
       contatosNutricionista[indice]["responsavel"] = nutri.nome;
-      contatosNutricionista[indice]["crn"] = nutri.crn;
-      contatosNutricionista[indice]["email"] = nutri.contatos[0].email;
+      contatosNutricionista[indice]["crn"] = nutri.crn_numero;
+      contatosNutricionista[indice]["email"] =
+        nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
 
       this.setState({ contatosNutricionista });
 
@@ -204,15 +224,15 @@ class CadastroEmpresa extends Component {
       );
       this.props.change(
         `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
-        nutri.nome
+        nutri.crn_numero
       );
       this.props.change(
         `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
-        nutri.contatos[0].telefone
+        nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone
       );
       this.props.change(
         `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
-        nutri.contatos[0].email
+        nutri.contatos.length === 0 ? null : nutri.contatos[0].email
       );
     });
   }
@@ -243,7 +263,8 @@ class CadastroEmpresa extends Component {
     const uuid = urlParams.get("uuid");
     if (lotes !== prevState.lotes) {
       if (uuid) {
-        this.setState({ uuid });
+        const tituloModal = "Confirma atualização de Empresa?";
+        this.setState({ uuid, tituloModal });
         getTerceirizadaUUID(uuid).then(response => {
           if (response.status !== HTTP_STATUS.NOT_FOUND) {
             this.props.reset();
@@ -316,6 +337,7 @@ class CadastroEmpresa extends Component {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Empresa atualizada com sucesso!");
           this.setRedirect();
+          this.resetForm();
         } else {
           toastError("Erro ao atualizar cadastro de empresa");
         }
@@ -325,12 +347,12 @@ class CadastroEmpresa extends Component {
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Empresa cadastrada com sucesso!");
           this.setRedirect();
+          this.resetForm();
         } else {
           toastError("Erro ao cadastrar empresa");
         }
       });
     }
-    this.resetForm();
   }
 
   onKeyPress(event) {
@@ -347,11 +369,21 @@ class CadastroEmpresa extends Component {
       lotes,
       lotesSelecionados,
       lotesNomesSelecionados,
-      uuid
+      uuid,
+      valoresForm,
+      exibirModal,
+      tituloModal
     } = this.state;
     return (
       <div className="cadastro pt-3">
         {this.renderRedirect()}
+        <ModalCadastroEmpresa
+          titulo={tituloModal}
+          values={valoresForm}
+          onSubmit={this.onSubmit}
+          closeModal={this.fecharModal}
+          showModal={exibirModal}
+        />
         <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
           <div className="card">
             <div>
@@ -384,7 +416,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CNPJ"
                       name="cnpj"
-                      validate={required}
+                      validate={[required, tamanhoCnpj]}
                     />
                   </div>
                 </div>
@@ -394,6 +426,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="Nome Fantasia"
                       name="nome_fantasia"
+                      validate={required}
                     />
                   </div>
                 </div>
@@ -404,7 +437,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="Endereço"
                       name="endereco"
-                      // validate={required}
+                      validate={required}
                     />
                   </div>
                   <div className="col-3">
@@ -413,7 +446,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CEP"
                       name="cep"
-                      // validate={required}
+                      validate={required}
                     />
                   </div>
                 </div>
@@ -438,6 +471,7 @@ class CadastroEmpresa extends Component {
                                   setaContatosEmpresa={this.setaContatosEmpresa}
                                   indice={indiceEmpresa}
                                   cenario="contatoEmpresa"
+                                  validador={required}
                                 />
                               </div>
                               <div>
@@ -682,7 +716,7 @@ class CadastroEmpresa extends Component {
                         <Botao
                           texto={"Salvar"}
                           onClick={handleSubmit(values =>
-                            this.onSubmit({
+                            this.exibirModal({
                               ...values
                             })
                           )}
@@ -696,7 +730,7 @@ class CadastroEmpresa extends Component {
                         <Botao
                           texto={"Atualizar"}
                           onClick={handleSubmit(values =>
-                            this.onSubmit({
+                            this.exibirModal({
                               ...values
                             })
                           )}
