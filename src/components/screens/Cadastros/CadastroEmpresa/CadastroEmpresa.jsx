@@ -1,16 +1,30 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Field, reduxForm, FormSection } from "redux-form";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
-import { transformaObjetos, fieldCnpj, fieldCep } from "./helper";
-import { toastSuccess } from "../../../Shareable/Toast/dialogs";
+import {
+  createTerceirizada,
+  getTerceirizadaUUID,
+  updateTerceirizada
+} from "../../../../services/terceirizada.service";
+import {
+  transformaObjetos,
+  fieldCnpj,
+  fieldCep,
+  retornaJsonDaRequisisicao
+} from "./helper";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import TelefoneOuCelular from "./InputTelefone";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { Botao } from "../../../Shareable/Botao";
 import { InputText } from "../../../Shareable/Input/InputText";
+import { loadEmpresa } from "../../../../reducers/empresa.reducer";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -19,6 +33,7 @@ class CadastroEmpresa extends Component {
     this.state = {
       lotes: "",
       lotesSelecionados: [],
+      lotesNomesSelecionados: [],
       formValido: false,
       contatosEmpresaForm: ["contatoEmpresa_0"],
       contatosTerceirizadaForm: ["contatoTerceirizada_0"],
@@ -31,11 +46,14 @@ class CadastroEmpresa extends Component {
         }
       ],
 
+      uuid: null,
+      redirect: false,
+
       contatosNutricionista: [
         {
           telefone: null,
           responsavel: null,
-          contato: null,
+          crn: null,
           email: null
         }
       ],
@@ -46,6 +64,18 @@ class CadastroEmpresa extends Component {
     this.setaContatoRepresentante = this.setaContatoRepresentante.bind(this);
     this.setaContatosNutricionista = this.setaContatosNutricionista.bind(this);
   }
+
+  setRedirect() {
+    this.setState({
+      redirect: true
+    });
+  }
+
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to="/configuracoes/cadastros/empresas-cadastradas" />;
+    }
+  };
 
   nomeFormContatoEmpresa() {
     const indiceDoFormAtual = `contatoEmpresa_${
@@ -109,11 +139,95 @@ class CadastroEmpresa extends Component {
         {
           telefone: null,
           responsavel: null,
-          contato: null,
+          crn: null,
           email: null
         }
       ])
     });
+  }
+
+  atribuiContatosEmpresaForm(contatos) {
+    contatos.forEach((contato, indice) => {
+      let contatosEmpresaForm = this.state.contatosEmpresaForm;
+      let contatosEmpresa = this.state.contatosEmpresa;
+      if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
+        contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
+        contatosEmpresa.push({
+          telefone: null,
+          email: null
+        });
+      }
+      this.setState({ contatosEmpresaForm });
+
+      contatosEmpresa[indice]["email"] = contato.email;
+      contatosEmpresa[indice]["telefone"] = contato.telefone;
+
+      this.setState({ contatosEmpresa });
+
+      this.props.change(
+        `contatoEmpresa_${indice}.telefone_empresa_${indice}`,
+        contato.telefone
+      );
+      this.props.change(
+        `contatoEmpresa_${indice}.email_empresa_${indice}`,
+        contato.email
+      );
+    });
+  }
+
+  atribuiNutricionistaEmpresaForm(nutricionistas) {
+    nutricionistas.forEach((nutri, indice) => {
+      let contatosNutricionista = this.state.contatosNutricionista;
+      let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
+      if (
+        indice !== 0 &&
+        nutricionistas.length > contatosNutricionista.length
+      ) {
+        contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
+        contatosNutricionista.push({
+          telefone: null,
+          responsavel: null,
+          crn: null,
+          email: null
+        });
+      }
+      contatosNutricionista[indice]["telefone"] = nutri.contatos[0].telefone;
+      contatosNutricionista[indice]["responsavel"] = nutri.nome;
+      contatosNutricionista[indice]["crn"] = nutri.crn;
+      contatosNutricionista[indice]["email"] = nutri.contatos[0].email;
+
+      this.setState({ contatosNutricionista });
+
+      this.props.change(
+        `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
+        nutri.nome
+      );
+      this.props.change(
+        `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
+        nutri.nome
+      );
+      this.props.change(
+        `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
+        nutri.contatos[0].telefone
+      );
+      this.props.change(
+        `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
+        nutri.contatos[0].email
+      );
+    });
+  }
+
+  setaValoresForm(data) {
+    this.props.change("cep", data.cep);
+    this.props.change("cnpj", data.cnpj);
+    this.props.change("nome_fantasia", data.nome_fantasia);
+    this.props.change("razao_social", data.razao_social);
+    this.props.change("endereco", data.endereco);
+    this.props.change("representante_legal", data.representante_legal);
+    this.props.change("email_representante_legal", data.representante_email);
+    this.props.change("telefone_representante", data.representante_telefone);
+    this.atribuiContatosEmpresaForm(data.contatos);
+    this.atribuiNutricionistaEmpresaForm(data.nutricionistas);
   }
 
   componentDidMount() {
@@ -121,6 +235,38 @@ class CadastroEmpresa extends Component {
       let lotes = transformaObjetos(response);
       this.setState({ lotes });
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let lotes = this.state.lotes;
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    if (lotes !== prevState.lotes) {
+      if (uuid) {
+        this.setState({ uuid });
+        getTerceirizadaUUID(uuid).then(response => {
+          if (response.status !== HTTP_STATUS.NOT_FOUND) {
+            this.props.reset();
+            let lotesNomesSelecionados = [];
+            let lotesSelecionados = [];
+            response.data.lotes.forEach(lote => {
+              lotesNomesSelecionados.push(lote.nome);
+              lotesSelecionados.push(lote.uuid);
+            });
+            this.setState({
+              lotesNomesSelecionados,
+              lotesSelecionados
+            });
+          }
+          this.setaValoresForm(response.data);
+        });
+      } else {
+        this.setState({
+          uuid: null,
+          redirect: false
+        });
+      }
+    }
   }
 
   renderizarLabelLote(selected, options) {
@@ -136,8 +282,18 @@ class CadastroEmpresa extends Component {
     return `${selected.length} lotes selecionados`;
   }
 
-  lidarComSelecionados(value) {
-    this.setState({ lotesSelecionados: value });
+  lidarComSelecionados(values) {
+    const lotes = this.state.lotes;
+    let lotesNomesSelecionados = [];
+    values.forEach(value => {
+      const indice = lotes.findIndex(lote => lote.uuid === value);
+      lotesNomesSelecionados.push(lotes[indice].label);
+    });
+
+    this.setState({
+      lotesNomesSelecionados,
+      lotesSelecionados: values
+    });
   }
 
   resetForm() {
@@ -147,7 +303,34 @@ class CadastroEmpresa extends Component {
   salvaFormulario() {
     this.resetForm();
     this.setState({ lotesSelecionados: [] });
-    toastSuccess("Empresa adicionada com sucesso!");
+  }
+
+  onSubmit(values) {
+    const uuid = this.state.uuid;
+    const request = JSON.stringify(
+      retornaJsonDaRequisisicao(values, this.state)
+    );
+
+    if (uuid !== null) {
+      updateTerceirizada(uuid, request).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Empresa atualizada com sucesso!");
+          this.setRedirect();
+        } else {
+          toastError("Erro ao atualizar cadastro de empresa");
+        }
+      });
+    } else {
+      createTerceirizada(request).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          toastSuccess("Empresa cadastrada com sucesso!");
+          this.setRedirect();
+        } else {
+          toastError("Erro ao cadastrar empresa");
+        }
+      });
+    }
+    this.resetForm();
   }
 
   onKeyPress(event) {
@@ -161,12 +344,14 @@ class CadastroEmpresa extends Component {
     const {
       contatosEmpresaForm,
       contatosTerceirizadaForm,
-      editaisContratosForm,
       lotes,
-      lotesSelecionados
+      lotesSelecionados,
+      lotesNomesSelecionados,
+      uuid
     } = this.state;
     return (
       <div className="cadastro pt-3">
+        {this.renderRedirect()}
         <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
           <div className="card">
             <div>
@@ -189,8 +374,7 @@ class CadastroEmpresa extends Component {
                     <Field
                       component={InputText}
                       label="Razão social"
-                      name="razão_social"
-                      required
+                      name="razao_social"
                       validate={required}
                     />
                   </div>
@@ -200,7 +384,6 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CNPJ"
                       name="cnpj"
-                      required
                       validate={required}
                     />
                   </div>
@@ -221,8 +404,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="Endereço"
                       name="endereco"
-                      required
-                      validate={required}
+                      // validate={required}
                     />
                   </div>
                   <div className="col-3">
@@ -231,8 +413,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CEP"
                       name="cep"
-                      required
-                      validate={required}
+                      // validate={required}
                     />
                   </div>
                 </div>
@@ -373,7 +554,7 @@ class CadastroEmpresa extends Component {
                                       component={InputText}
                                       onChange={event =>
                                         this.setaContatosNutricionista(
-                                          "contato",
+                                          "crn",
                                           event.target.value,
                                           indiceTerceirizada
                                         )
@@ -438,51 +619,6 @@ class CadastroEmpresa extends Component {
 
               <div>
                 <div className="card-body">
-                  <div className="container-fields">
-                    <div className="fields">
-                      {editaisContratosForm.map(
-                        (editalContrato, indiceContratos) => {
-                          return (
-                            <FormSection
-                              nomeForm={`editaisEContratos_${indiceContratos}`}
-                              name={editalContrato}
-                              key={indiceContratos}
-                            >
-                              <div className="fields-set-edital">
-                                <div>
-                                  <Field
-                                    label="Edital de Pregão n°"
-                                    name={`edital_${indiceContratos}`}
-                                    component={InputText}
-                                    required
-                                    validate={required}
-                                  />
-                                </div>
-                                <div>
-                                  <Field
-                                    label="Contrato n°"
-                                    name={`contrato_${indiceContratos}`}
-                                    component={InputText}
-                                    required
-                                    validate={required}
-                                  />
-                                </div>
-                              </div>
-                            </FormSection>
-                          );
-                        }
-                      )}
-                    </div>
-                    <div className={`col-1 mt-auto mb-1`}>
-                      <Botao
-                        texto="+"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.BLUE_OUTLINE}
-                        onClick={() => this.nomeFormContatoEdital()}
-                      />
-                    </div>
-                  </div>
-
                   <div className="row pt-3">
                     <div className="col-12">
                       <label className="label font-weight-normal pb-3">
@@ -496,9 +632,9 @@ class CadastroEmpresa extends Component {
                           selected={lotesSelecionados}
                           options={lotes}
                           valueRenderer={this.renderizarLabelLote}
-                          onSelectedChanged={value =>
-                            this.lidarComSelecionados(value)
-                          }
+                          onSelectedChanged={value => {
+                            this.lidarComSelecionados(value);
+                          }}
                           overrideStrings={{
                             search: "Busca",
                             selectSomeItems: "Selecione",
@@ -512,24 +648,22 @@ class CadastroEmpresa extends Component {
                       )}
                     </div>
                     <div className="col-12">
-                      {this.state.lotesSelecionados.length > 0 && (
+                      {lotesNomesSelecionados.length > 0 && (
                         <div className="row pt-3">
                           <div className="col-12">
                             <label className="label-selected-unities">
                               Lotes Selecionados
                             </label>
-                            {this.state.lotesSelecionados.map(
-                              (lote, indice) => {
-                                return (
-                                  <div
-                                    className="value-selected-unities"
-                                    key={indice}
-                                  >
-                                    {lote}
-                                  </div>
-                                );
-                              }
-                            )}
+                            {lotesNomesSelecionados.map((lote, indice) => {
+                              return (
+                                <div
+                                  className="value-selected-unities"
+                                  key={indice}
+                                >
+                                  {lote}
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
@@ -537,21 +671,41 @@ class CadastroEmpresa extends Component {
                   </div>
 
                   <div className="row mt-5">
-                    <div className="col-12 text-right">
-                      <Botao
-                        texto="Cancelar"
-                        onClick={event => this.resetForm(event)}
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                      <Botao
-                        texto={"Salvar"}
-                        onClick={handleSubmit(() => this.salvaFormulario())}
-                        className="ml-3"
-                        type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN}
-                      />
-                    </div>
+                    {uuid === null ? (
+                      <div className="col-12 text-right">
+                        <Botao
+                          texto="Cancelar"
+                          onClick={event => this.resetForm(event)}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                        <Botao
+                          texto={"Salvar"}
+                          onClick={handleSubmit(values =>
+                            this.onSubmit({
+                              ...values
+                            })
+                          )}
+                          className="ml-3"
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={BUTTON_STYLE.GREEN}
+                        />
+                      </div>
+                    ) : (
+                      <div className="col-12 text-right">
+                        <Botao
+                          texto={"Atualizar"}
+                          onClick={handleSubmit(values =>
+                            this.onSubmit({
+                              ...values
+                            })
+                          )}
+                          className="ml-3"
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={BUTTON_STYLE.GREEN}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -564,7 +718,25 @@ class CadastroEmpresa extends Component {
 }
 
 const CadastroEmpresaForm = reduxForm({
-  form: "cadastroEmpresaForm"
+  form: "cadastroEmpresaForm",
+  enableReinitialize: true
 })(CadastroEmpresa);
+const mapStateToProps = state => {
+  return {
+    initialValues: state.cadastroEmpresaForm.data
+  };
+};
 
-export default CadastroEmpresaForm;
+const mapDispatchToProps = dispatch => {
+  bindActionCreators(
+    {
+      loadEmpresa
+    },
+    dispatch
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CadastroEmpresaForm);

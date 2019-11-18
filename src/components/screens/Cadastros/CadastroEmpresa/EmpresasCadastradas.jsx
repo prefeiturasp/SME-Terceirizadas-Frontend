@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { getTerceirizada } from "../../../../services/terceirizada.service.js";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { retornArrayTerceirizadas } from "./helper.js";
 import "../style.scss";
 
@@ -60,7 +60,20 @@ class EmpresasCadastradas extends Component {
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
                   <td>{empresa.status}</td>
+
                   <td className="btn-action">
+                    <div className="mr-4">
+                      {empresa.ativo && (
+                        <NavLink
+                          className="float-left"
+                          to={`/configuracoes/cadastros/empresa?uuid=${
+                            empresa.uuid
+                          }`}
+                        >
+                          <i className="fas fa-pen" />
+                        </NavLink>
+                      )}
+                    </div>
                     <ToggleExpandir
                       onClick={() => this.lidarComBurger(empresa)}
                       ativo={empresa.ativo}
