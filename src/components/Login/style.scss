@@ -180,7 +180,7 @@ div.input-group.email-sme {
   align-items: center;
 
   div {
-    display: grid;
+    display: block;
     grid-auto-rows: auto;
 
     &:first-child {

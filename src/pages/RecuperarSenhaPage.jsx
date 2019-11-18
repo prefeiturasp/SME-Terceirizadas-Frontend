@@ -13,7 +13,7 @@ import {
   toastError,
   toastSuccess
 } from "../components/Shareable/Toast/dialogs";
-import { minLength, required } from "../helpers/fieldValidators";
+import { required } from "../helpers/fieldValidators";
 import { atualizarSenha } from "../services/perfil.service";
 import "./style.scss";
 
@@ -24,6 +24,7 @@ class RecuperarSenhaPage extends Component {
     this.state = {
       mensagem: ""
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(payLoad) {
@@ -49,7 +50,7 @@ class RecuperarSenhaPage extends Component {
     const { senha1, senha2, pristine, handleSubmit } = this.props;
     const { mensagem } = this.state;
     return (
-      <form>
+      <form onSubmit={handleSubmit(this.handleSubmit)}>
         <HeaderLogo />
         <div className="container pt-3">
           <div className="card">
@@ -65,8 +66,11 @@ class RecuperarSenhaPage extends Component {
                   required
                   name="senha1"
                   type="password"
-                  validate={[required, minLength(6)]}
+                  validate={[required]}
                   maxlength={20}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                  title="Pelo menos 8 caracteres, uma letra e um número"
+                  helpText="Pelo menos 8 caracteres, uma letra e um número"
                 />
                 <Field
                   component={InputText}
@@ -77,13 +81,14 @@ class RecuperarSenhaPage extends Component {
                   validate={required}
                   maxlength={20}
                   helpText={"As senhas devem ser iguais"}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                  title="Pelo menos 8 caracteres, uma letra e um número"
                 />
-                <div className="pt-3 alinha-centro">
+                <div className="pt-3 text-center">
                   <Botao
                     texto="Confirmar senha"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    onClick={handleSubmit(values => this.handleSubmit(values))}
                     disabled={senha1 !== senha2 || pristine}
                   />
                 </div>
