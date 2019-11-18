@@ -13,6 +13,7 @@ import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO } from "./constans";
 import "./style.scss";
 import { validarForm } from "./validar";
+import { REGEX_PASSWORD } from "../Shareable/Input/InputText/constants";
 
 export class Login extends Component {
   constructor(props) {
@@ -228,7 +229,7 @@ export class Login extends Component {
                 required
                 type="password"
                 validate={required}
-                pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                pattern={REGEX_PASSWORD}
                 title="Pelo menos 8 caracteres, uma letra e um número"
                 helpText="Pelo menos 8 caracteres, uma letra e um número"
               />
