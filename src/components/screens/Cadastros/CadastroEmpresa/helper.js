@@ -39,8 +39,8 @@ const retornaNutricionistas = nutricionistas => {
     return {
       nome: nutri.nome,
       crn: nutri.crn_numero,
-      telefone: nutri.contatos[0].telefone,
-      email: nutri.contatos[0].email
+      telefone: nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone,
+      email: nutri.contatos.length === 0 ? null : nutri.contatos[0].email
     };
   });
   return listaNutricionistas;
@@ -81,9 +81,8 @@ export const retornArrayTerceirizadas = response => {
       ativo: false,
       endereco: resp.endereco,
       cep: resp.cep,
-
-      telefone: resp.contatos[0].telefone,
-      email: resp.contatos[0].email,
+      telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
+      email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
 
       representante: resp.representante_legal,
       telefonefax: resp.representante_telefone,
