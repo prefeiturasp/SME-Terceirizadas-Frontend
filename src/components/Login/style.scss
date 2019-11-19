@@ -109,3 +109,82 @@ div.input-group.email-sme {
     }
   }
 }
+
+.texto-simples {
+  color: #42474a;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: justify;
+  padding: 5;
+  &-verde {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    color: #297805;
+  }
+  &-vermelho {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    color: #b40c02;
+  }
+  &-grande {
+    @extend .texto-simples;
+    align-items: center;
+    text-align: center;
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: bold;
+  }
+}
+
+.alinha-direita {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.div-circular {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 7em;
+  height: 7em;
+  &-verde {
+    @extend .div-circular;
+    border: 3px solid #297805;
+  }
+  &-vermelho {
+    @extend .div-circular;
+    border: 3px solid #b40c02;
+  }
+}
+
+.check {
+  color: #42474a;
+  &-verde {
+    @extend .check;
+    color: #297805;
+  }
+  &-vermelho {
+    @extend .check;
+    color: #b40c02;
+  }
+}
+
+.alinha-centro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    display: block;
+    grid-auto-rows: auto;
+
+    &:first-child {
+      width: 50%;
+    }
+  }
+}

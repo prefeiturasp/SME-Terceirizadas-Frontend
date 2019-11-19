@@ -9,8 +9,12 @@ import {
   finalizarVinculoEscola,
   criarEquipeAdministradoraDiretoriaRegional,
   getEquipeAdministradoraDiretoriaRegional,
-  finalizarVinculoDiretoriaRegional
+  finalizarVinculoDiretoriaRegional,
+  criarEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada,
+  getEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada,
+  finalizarVinculoCODAEGestaoAlimentacaoTerceirizada
 } from "../../services/permissoes.service";
+import { CODAE, DRE, ESCOLA } from "../../configs/constants";
 
 class PermissoesBase extends React.Component {
   render() {
@@ -34,6 +38,7 @@ export const PermissoesEscola = () => (
     criarEquipeAdministradora={criarEquipeAdministradoraEscola}
     getEquipeAdministradora={getEquipeAdministradoraEscola}
     finalizarVinculo={finalizarVinculoEscola}
+    visao={ESCOLA}
   />
 );
 
@@ -43,5 +48,20 @@ export const PermissoesDRE = () => (
     criarEquipeAdministradora={criarEquipeAdministradoraDiretoriaRegional}
     getEquipeAdministradora={getEquipeAdministradoraDiretoriaRegional}
     finalizarVinculo={finalizarVinculoDiretoriaRegional}
+    visao={DRE}
+  />
+);
+
+// CODAE - Gestão de Alimentação Terceirizada
+export const PermissoesCODAEGestaoAlimentacaoTerceirizada = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={
+      criarEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada
+    }
+    getEquipeAdministradora={
+      getEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada
+    }
+    finalizarVinculo={finalizarVinculoCODAEGestaoAlimentacaoTerceirizada}
+    visao={CODAE}
   />
 );

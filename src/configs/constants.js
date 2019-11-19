@@ -22,6 +22,7 @@ export const SOLICITACOES = "solicitacoes";
 export const CONFIGURACOES = "configuracoes";
 export const MENSAGEM = "mensagem";
 export const PERMISSOES = "permissoes";
+export const PERFIL = "perfil";
 
 export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";

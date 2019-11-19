@@ -20,9 +20,11 @@ const anteriores = [
   }
 ];
 
-export const RelatorioPage = () => (
+const RelatorioPage = () => (
   <Page>
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <Relatorio />
   </Page>
 );
+
+export default RelatorioPage;

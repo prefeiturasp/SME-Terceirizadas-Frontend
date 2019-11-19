@@ -9,7 +9,7 @@ export const painelHome = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return DashboardDREPage;
-    case TIPO_PERFIL.CODAE:
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return DashboardCODAEPage;
     case TIPO_PERFIL.TERCEIRIZADA:
       return DashboardTerceirizadaPage;
@@ -22,8 +22,8 @@ export const permissoes = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return PermissoesPage.PermissoesDRE;
-    case TIPO_PERFIL.CODAE:
-      return PermissoesPage.PermissoesEscola;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return PermissoesPage.PermissoesCODAEGestaoAlimentacaoTerceirizada;
     case TIPO_PERFIL.TERCEIRIZADA:
       return PermissoesPage.PermissoesEscola;
     default:

@@ -1,5 +1,6 @@
 import { painelHome, permissoes } from "./helper";
 import { Login } from "../components/Login";
+import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
@@ -17,6 +18,7 @@ import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDi
 
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
 import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
+import SolicitacaoUnificadaRelatorioDREPage from "../pages/DRE/SolicitacaoUnificada/RelatorioPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
@@ -79,6 +81,12 @@ const routesConfig = [
   {
     path: "/login",
     component: Login,
+    exact: false
+  },
+
+  {
+    path: "/perfil",
+    component: PerfilPage,
     exact: false
   },
   {
@@ -224,7 +232,7 @@ const routesConfig = [
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
       constants.RELATORIO
     }`,
-    component: RelatorioPageKitLanche.RelatorioDRE,
+    component: SolicitacaoUnificadaRelatorioDREPage,
     exact: true
   },
   {
@@ -422,7 +430,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/configuracoes/cadastros/tipo-alimentacao-unidade-escolar`,
+    path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
     exact: false
   },

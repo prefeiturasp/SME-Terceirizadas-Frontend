@@ -6,7 +6,7 @@ export function transformaObjetos(objetos, lista = [], obj = {}) {
     objetos.results.map(objeto => {
       obj.uuid = objeto["uuid"];
       obj.label = objeto["nome"];
-      obj.value = objeto["nome"];
+      obj.value = objeto["uuid"];
       lista.push(obj);
       obj = {};
     });
@@ -39,8 +39,8 @@ const retornaNutricionistas = nutricionistas => {
     return {
       nome: nutri.nome,
       crn: nutri.crn_numero,
-      telefone: nutri.contatos[0].telefone,
-      email: nutri.contatos[0].email
+      telefone: nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone,
+      email: nutri.contatos.length === 0 ? null : nutri.contatos[0].email
     };
   });
   return listaNutricionistas;
@@ -73,18 +73,16 @@ const retornaEditais = contratos => {
 export const retornArrayTerceirizadas = response => {
   const listaTerceirizadas = response.map(resp => {
     return {
+      uuid: resp.uuid,
       codigo_empresa: resp.id_externo,
       nome: resp.razao_social,
       cnpj: resp.cnpj,
       status: resp.ativo ? "Ativa" : "Inativa",
       ativo: false,
-      endereco: `${resp.endereco.rua}, n°${resp.endereco.numero} - ${
-        resp.endereco.bairro
-      }`,
-      cep: resp.endereco.cep,
-
-      telefone: resp.contatos[0].telefone,
-      email: resp.contatos[0].email,
+      endereco: resp.endereco,
+      cep: resp.cep,
+      telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
+      email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
 
       representante: resp.representante_legal,
       telefonefax: resp.representante_telefone,
@@ -95,4 +93,34 @@ export const retornArrayTerceirizadas = response => {
     };
   });
   return listaTerceirizadas;
+};
+
+export const retornaJsonDaRequisisicao = (valoresForm, valoresState) => {
+  let contatosNutri = [];
+  valoresState.contatosNutricionista.forEach(nutri => {
+    contatosNutri.push({
+      nome: nutri.responsavel,
+      crn_numero: nutri.crn,
+      contatos: [
+        {
+          telefone: nutri.telefone,
+          email: nutri.email
+        }
+      ]
+    });
+  });
+
+  return {
+    nome_fantasia: valoresForm.nome_fantasia,
+    razao_social: valoresForm.razao_social,
+    cnpj: valoresForm.cnpj,
+    representante_legal: valoresForm.representante_legal,
+    representante_telefone: valoresForm.telefone_representante,
+    representante_email: valoresForm.email_representante_legal,
+    endereco: valoresForm.endereco,
+    cep: valoresForm.cep,
+    contatos: valoresState.contatosEmpresa,
+    nutricionistas: contatosNutri,
+    lotes: valoresState.lotesSelecionados
+  };
 };

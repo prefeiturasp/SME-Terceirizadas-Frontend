@@ -1,0 +1,74 @@
+@import "../../../styles/variables.scss";
+
+.profile {
+  .card {
+    .card-body {
+      margin: 5em 3em;
+      .information {
+        border-right: 1px solid $grayDisabled;
+        .avatar {
+          svg {
+            border: 2px solid $green;
+            border-radius: 50%;
+            height: 150px;
+            width: 150px;
+          }
+        }
+        .name {
+          padding-top: 1em;
+          color: $blackInput;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .data {
+          padding-top: 1em;
+          color: $blackInput;
+          font-size: 14px;
+        }
+      }
+      .form {
+        margin-top: 2em;
+        margin-left: 2em;
+        .button {
+          padding-top: 35px;
+        }
+        .password {
+          cursor: pointer;
+          padding-top: 2em;
+          font-size: 14px;
+          color: $blue;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modal-50w {
+  .col-4 {
+    margin-top: 8em;
+    .password-requirements {
+      margin-top: auto;
+      font-size: 10px;
+      .title {
+        color: $grayPlaceholder;
+        font-weight: bold;
+      }
+      .requirements {
+        .accepted {
+          padding: 5px 0;
+          color: $green;
+        }
+        .denied {
+          padding: 3px 0;
+          color: $red;
+        }
+        i {
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+}
