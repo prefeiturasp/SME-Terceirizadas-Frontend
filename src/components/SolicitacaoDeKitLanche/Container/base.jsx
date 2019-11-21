@@ -3,16 +3,14 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,
-  required,
-  naoPodeSerZero
+  naoPodeSerZero,
+  required
 } from "../../../helpers/fieldValidators";
-import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
-import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
-import { InputComData } from "../../Shareable/DatePicker";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,
@@ -21,14 +19,15 @@ import {
   solicitarKitLanche
 } from "../../../services/solicitacaoDeKitLanche.service";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
+import { InputComData } from "../../Shareable/DatePicker";
 import { InputText } from "../../Shareable/Input/InputText";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
+import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
-
+import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
 import { Rascunhos } from "../Rascunhos";
 import { montaObjetoRequisicao } from "./helper";
 import "./style.scss";
@@ -184,9 +183,7 @@ export class SolicitacaoDeKitLanche extends Component {
           );
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            "Houve um erro ao enviar a Solicitação de Kit Lanche Passeio"
-          );
+          toastError(`${res.data.detail}`);
         }
       },
       function() {
@@ -228,7 +225,7 @@ export class SolicitacaoDeKitLanche extends Component {
         } else if (resp.data.tipo_error) {
           this.validaTipoMensagemError(resp.data);
         } else {
-          toastError("Erro ao salvar Solicitação de Kit Lanche Passeio");
+          toastError(`${resp.data}`);
         }
       });
     } else {
