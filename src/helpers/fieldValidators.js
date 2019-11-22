@@ -13,8 +13,9 @@ export const diasAntecedencia = value => {
 };
 
 // XXX: Workaround for labelAndTextArea component
-export const textAreaRequired = value =>
-  value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+export const textAreaRequired = value => {
+  return value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+};
 
 export const requiredCheck = value =>
   value !== undefined
@@ -27,6 +28,12 @@ const maxLength = max => value =>
 
 export const minLength = min => value =>
   value && value.length < min ? `Deve ter ao menos ${min} letra(s)` : undefined;
+
+export const length = size => value =>
+  value && value.length !== size ? `Deve ter ${size} caracteres` : undefined;
+
+export const semArroba = value =>
+  value && value.includes("@") ? "Campo e-mail não deve conter @" : undefined;
 
 // eslint-disable-next-line
 const number = value =>
@@ -57,9 +64,13 @@ export const alphaNumeric = value =>
     : undefined;
 
 export const numericInteger = value =>
-  value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
+  // value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
+  value && !/\D/.test(value) ? undefined : "Somente números";
 
 export const phoneNumber = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)
     ? "Invalid phone number, must be 10 digits"
     : undefined;
+
+export const tamanhoCnpj = value =>
+  value.length < 14 ? "CNPJ Inválido" : undefined;

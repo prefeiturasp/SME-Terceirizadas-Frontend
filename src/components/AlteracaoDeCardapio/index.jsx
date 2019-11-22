@@ -27,6 +27,7 @@ import {
   deleteAlteracaoCardapio,
   enviarAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
+import moment from "moment";
 
 const ENTER = 13;
 
@@ -43,7 +44,8 @@ class AlteracaoCardapio extends Component {
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       substituicoesAlimentacao: [],
-      substituicoesEdit: []
+      substituicoesEdit: [],
+      dataInicial: null
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -123,10 +125,13 @@ class AlteracaoCardapio extends Component {
   };
 
   OnEditButtonClicked(param) {
+    let dataInicial = this.state.dataInicial;
+    dataInicial = param["alteracaoDeCardapio"].data_inicial;
     this.props.reset("alteracaoCardapio");
     this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
     this.setState({
+      dataInicial,
       status: param.alteracaoDeCardapio.status,
       title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
@@ -135,11 +140,13 @@ class AlteracaoCardapio extends Component {
   }
 
   refresh() {
+    let alteracaoCardapioList = this.state.alteracaoCardapioList;
     getAlteracoesCardapioList()
       .then(response => {
+        alteracaoCardapioList =
+          response.results.length > 0 ? response.results : [];
         this.setState({
-          ...this.state,
-          alteracaoCardapioList: response.results
+          alteracaoCardapioList
         });
       })
       .catch(error => {
@@ -156,6 +163,7 @@ class AlteracaoCardapio extends Component {
     this.props.change("motivo", null);
     this.props.change("observacao", null);
     periodos.forEach(periodo => {
+      periodo.checado = false;
       this.props.change(`substituicoes_${periodo.nome}.check`, false);
       this.props.change(
         `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
@@ -167,13 +175,14 @@ class AlteracaoCardapio extends Component {
       );
     });
     this.setState({
+      periodos,
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: null,
       showModal: false,
-      salvarAtualizarLbl: "Salvar Rascunho"
+      salvarAtualizarLbl: "Salvar Rascunho",
+      dataInicial: null
     });
-    this.refresh();
   }
 
   enviaAlteracaoCardapio(uuid) {
@@ -192,7 +201,7 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     const status = values.status;
     delete values.status;
     const erros = validateSubmit(values, this.props.meusDados);
@@ -206,6 +215,7 @@ class AlteracaoCardapio extends Component {
                 await this.enviaAlteracaoCardapio(response.data.uuid);
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
+                this.refresh();
               }
               this.resetForm();
             }
@@ -219,13 +229,14 @@ class AlteracaoCardapio extends Component {
         updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
           async res => {
             if (res.status === HTTP_STATUS.OK) {
-              this.refresh();
               if (status === STATUS_DRE_A_VALIDAR) {
                 await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
+                this.refresh();
+                this.resetForm("alteracaoCardapio");
               }
-              this.resetForm();
             } else {
               toastError(res.error);
             }
@@ -235,6 +246,8 @@ class AlteracaoCardapio extends Component {
           }
         );
       }
+    } else {
+      toastError(erros);
     }
   }
 
@@ -350,13 +363,20 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  obtemDataInicial = value => {
+    let dataInicial = this.state.dataInicial;
+    dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
+    this.setState({ dataInicial });
+  };
+
   render() {
     const {
       loading,
       alteracaoCardapioList,
       periodos,
       showModal,
-      substituicoesEdit
+      substituicoesEdit,
+      dataInicial
     } = this.state;
     const {
       handleSubmit,
@@ -378,7 +398,9 @@ class AlteracaoCardapio extends Component {
           >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+              }
             />
 
             {alteracaoCardapioList.length > 0 && (
@@ -417,12 +439,14 @@ class AlteracaoCardapio extends Component {
                     name="data_inicial"
                     label="De"
                     disabled={this.props.alterar_dia}
+                    onChange={value => this.obtemDataInicial(value)}
                   />
                   <Field
                     component={InputComData}
                     name="data_final"
                     label="Até"
-                    disabled={this.props.alterar_dia}
+                    disabled={dataInicial !== null ? false : true}
+                    minDate={dataInicial}
                   />
                 </section>
                 <section className="section-form-motivo mt-3">
@@ -477,6 +501,7 @@ class AlteracaoCardapio extends Component {
                               )
                             }
                             className="checkbox-custom"
+                            data-cy={`checkbox-${periodo.nome}`}
                           />
                           <div className=""> {periodo.nome}</div>
                         </label>

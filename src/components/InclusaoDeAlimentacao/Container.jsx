@@ -25,7 +25,9 @@ class Container extends Component {
       const meusDados = response;
       this.setState({
         meusDados,
-        periodos: formatarPeriodos(response.escolas[0].periodos_escolares)
+        periodos: formatarPeriodos(
+          response.vinculo_atual.instituicao.periodos_escolares
+        )
       });
     });
 

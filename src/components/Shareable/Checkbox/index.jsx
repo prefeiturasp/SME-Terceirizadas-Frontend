@@ -12,6 +12,7 @@ export const Checkbox = props => {
           component={"input"}
           type="checkbox"
           name={input.name}
+          data-cy={input.name}
         />
         <span onClick={onClick} className={`checkbox-custom ${className}`} />{" "}
         {texto ? (

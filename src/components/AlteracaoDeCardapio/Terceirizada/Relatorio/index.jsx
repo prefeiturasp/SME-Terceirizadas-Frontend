@@ -181,9 +181,8 @@ class Relatorio extends Component {
                     <p>DRE</p>
                     <p className="value-important">
                       {meusDados &&
-                        meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0] &&
-                        meusDados.diretorias_regionais[0].nome}
+                        meusDados.vinculo_atual.instituicao &&
+                        meusDados.vinculo_atual.instituicao.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">
@@ -274,13 +273,6 @@ class Relatorio extends Component {
                 </table>
                 {alteracaoDeCardapio.status === statusEnum.CODAE_AUTORIZADO && (
                   <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto={"Recusar"}
-                      className="ml-3"
-                      onClick={() => this.showModal()}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
                     <Botao
                       texto="Ciente"
                       type={BUTTON_TYPE.SUBMIT}

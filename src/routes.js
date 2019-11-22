@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./components/Login";
 import RoutesConfig from "./configs/RoutesConfig";
+import ConfirmarEmailPage from "./pages/ConfirmarEmailPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import RecuperarSenhaPage from "./pages/RecuperarSenhaPage";
 import authService from "./services/auth";
 
 const PrivateRouter = (
@@ -37,6 +39,8 @@ const Routes = () => (
           />
         );
       })}
+      <Route path="/confirmar-email" component={ConfirmarEmailPage} />
+      <Route path="/recuperar-senha" component={RecuperarSenhaPage} />
       <Route path="*" component={NotFoundPage} />
     </Switch>
   </BrowserRouter>

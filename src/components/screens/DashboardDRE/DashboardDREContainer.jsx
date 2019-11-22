@@ -15,7 +15,7 @@ class DashboardDREContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      enrolled: "...",
+      enrolled: null,
       autorizadasList: [],
       pendentesList: [],
       recusadasList: [],
@@ -58,7 +58,7 @@ class DashboardDREContainer extends Component {
 
   async componentDidMount() {
     const meusDados = await getMeusDados();
-    const dreUuid = meusDados.diretorias_regionais[0].uuid;
+    const dreUuid = meusDados.vinculo_atual.instituicao.uuid;
     let autorizadas = await getSolicitacoesAutorizadasDRE(dreUuid);
     let pendentes = await getSolicitacoesPendentesDRE(dreUuid);
     let negadas = await getSolicitacoesRecusadasDRE(dreUuid);
@@ -85,7 +85,7 @@ class DashboardDREContainer extends Component {
       meusDados,
       loadingAutorizadas: false,
       loadingPendentes: false,
-      enrolled: meusDados.diretorias_regionais[0].quantidade_alunos,
+      enrolled: meusDados.vinculo_atual.instituicao.quantidade_alunos,
       lotesDRE
     });
   }

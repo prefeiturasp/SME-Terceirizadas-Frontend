@@ -1,11 +1,12 @@
 import React from "react";
+import Container from "../../components/InclusaoDeAlimentacao/Container";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
-import Container from "../../components/InclusaoDeAlimentacao/Container";
+import { ESCOLA, SUSPENSAO_ALIMENTACAO } from "../../configs/constants";
 import { HOME } from "./constants";
 
 const atual = {
-  href: "/escola/inclusao-de-alimentacao",
+  href: `/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`,
   titulo: "Inclusão de Alimentação"
 };
 

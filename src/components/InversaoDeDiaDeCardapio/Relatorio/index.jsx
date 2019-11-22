@@ -153,6 +153,7 @@ class Relatorio extends Component {
           showModal={showModalCancelar}
           closeModal={this.closeModalCancelar}
           uuid={uuid}
+          justificativa={justificativa}
           solicitacaoInversaoDeDiaDeCardapio={InversaoCardapio}
         />
         {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
@@ -348,13 +349,6 @@ class Relatorio extends Component {
                         InversaoCardapio.status ===
                           statusEnum.CODAE_AUTORIZADO && (
                           <div className="form-group row float-right mt-4">
-                            <Botao
-                              texto={"Recusar"}
-                              className="ml-3"
-                              onClick={() => this.showModal()}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                            />
                             <Botao
                               texto="Ciente"
                               type={BUTTON_TYPE.SUBMIT}

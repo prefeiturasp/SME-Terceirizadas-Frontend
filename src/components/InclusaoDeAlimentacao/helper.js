@@ -31,7 +31,7 @@ export const formatarDiasSemana = diasSemana => {
 
 export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
   let dataFormatada = {};
-  dataFormatada.escola = meusDados.escolas[0].uuid;
+  dataFormatada.escola = meusDados.vinculo_atual.instituicao.uuid;
   dataFormatada.motivo = values.inclusoes[0].motivo;
   dataFormatada.data_inicial = values.inclusoes[0].data_inicial;
   dataFormatada.data_final = values.inclusoes[0].data_final;
@@ -56,7 +56,7 @@ export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
 
 export const formatarSubmissaoSolicitacaoNormal = (values, meusDados) => {
   let dataFormatada = {};
-  dataFormatada.escola = meusDados.escolas[0].uuid;
+  dataFormatada.escola = meusDados.vinculo_atual.instituicao.uuid;
   let inclusoes = [];
   values.inclusoes.forEach(inclusao => {
     let inclusao_formatada = {};

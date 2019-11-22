@@ -6,6 +6,7 @@ import "../style.scss";
 
 export const InputText = props => {
   const {
+    acrescentarAppend,
     className,
     disabled,
     esconderAsterisco,
@@ -18,10 +19,14 @@ export const InputText = props => {
     name,
     placeholder,
     required,
-    type
+    type,
+    title,
+    maxlength,
+    pattern,
+    icone
   } = props;
   return (
-    <div className="input">
+    <div className={`input ${icone && "icon"}`}>
       {label && [
         required && !esconderAsterisco && (
           <span className="required-asterisk">*</span>
@@ -43,10 +48,22 @@ export const InputText = props => {
         disabled={disabled}
         min={min}
         name={name}
+        data-cy={input.name}
         placeholder={placeholder}
         required={required}
         type={type}
+        title={title}
+        pattern={pattern}
+        maxLength={maxlength}
       />
+      {acrescentarAppend && (
+        <div className="input-group-append">
+          <span className="input-group-text" id="basic-addon1">
+            {acrescentarAppend}
+          </span>
+        </div>
+      )}
+      {icone && <i className={icone} />}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>

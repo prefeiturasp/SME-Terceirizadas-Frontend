@@ -2,13 +2,14 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
+import { textAreaRequired } from "../../helpers/fieldValidators";
+import { mensagemCancelamento } from "../../helpers/utilities";
 import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import { cancelaKitLancheUnificadoDre } from "../../services/solicitacaoUnificada.service";
-import { toastError, toastSuccess } from "./Toast/dialogs";
 import Botao from "./Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
-import { mensagemCancelamento } from "../../helpers/utilities";
+import { BUTTON_STYLE, BUTTON_TYPE } from "./Botao/constants";
 import { TextArea } from "./TextArea/TextArea";
+import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
@@ -44,7 +45,14 @@ export class ModalCancelarSolicitacao extends Component {
     }
   }
   render() {
-    const { showModal, closeModal, uuid, solicitacaoKitLanche } = this.props;
+    const {
+      showModal,
+      closeModal,
+      uuid,
+      solicitacaoKitLanche,
+      origemSolicitacao
+    } = this.props;
+    const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -77,6 +85,7 @@ export class ModalCancelarSolicitacao extends Component {
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"
+                validate={textAreaRequired}
               />
             </div>
           </div>
@@ -93,9 +102,10 @@ export class ModalCancelarSolicitacao extends Component {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              this.cancelarSolicitacaoDaEscola(uuid);
+              this.cancelarSolicitacaoDaEscola(uuid, origemSolicitacao);
             }}
             style={BUTTON_STYLE.BLUE}
+            disabled={justificativa === "" || justificativa === undefined}
             className="ml-3"
           />
         </Modal.Footer>

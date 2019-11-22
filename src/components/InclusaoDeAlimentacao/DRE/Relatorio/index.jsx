@@ -255,7 +255,7 @@ class Relatorio extends Component {
                     <p className="value-important">
                       {meusDados &&
                         meusDados.diretorias_regionais &&
-                        meusDados.diretorias_regionais[0].nome}
+                        meusDados.vinculo_atual.instituicao.nome}
                     </p>
                   </div>
                   <div className="col-2 report-label-value">

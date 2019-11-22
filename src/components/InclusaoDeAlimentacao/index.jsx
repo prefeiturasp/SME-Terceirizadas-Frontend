@@ -6,7 +6,11 @@ import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import {
+  required,
+  naoPodeSerZero,
+  numericInteger
+} from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -588,8 +592,8 @@ class InclusaoDeAlimentacao extends Component {
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={
-                meusDados.escolas.length
-                  ? meusDados.escolas[0].quantidade_alunos
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+                  ? meusDados.vinculo_atual.instituicao.quantidade_alunos
                   : 0
               }
             />
@@ -781,6 +785,7 @@ class InclusaoDeAlimentacao extends Component {
                                   );
                                 }}
                                 className="checkbox-custom"
+                                data-cy={`checkbox-${periodo.nome}`}
                               />{" "}
                               {periodo.nome}
                             </label>
@@ -824,12 +829,13 @@ class InclusaoDeAlimentacao extends Component {
                             type="number"
                             name={`numero_alunos`}
                             min="0"
-                            className="form-control"
+                            className="form-control quantidade-aluno"
                             required={validacaoPeriodos[indice].checado}
                             validate={
                               validacaoPeriodos[indice].checado && [
                                 required,
-                                naoPodeSerZero
+                                naoPodeSerZero,
+                                numericInteger
                               ]
                             }
                           />

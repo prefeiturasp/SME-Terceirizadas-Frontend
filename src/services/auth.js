@@ -1,5 +1,6 @@
 import decode from "jwt-decode";
 import CONFIG from "../constants/config.constants";
+import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const TOKEN_ALIAS = "TOKEN";
 
@@ -30,9 +31,15 @@ const login = async (email, password) => {
             "tipo_perfil",
             JSON.stringify(result.tipo_usuario)
           );
+          localStorage.setItem(
+            "perfil",
+            JSON.stringify(result.vinculo_atual.perfil.nome)
+          );
           window.location.href = "/";
         });
       });
+    } else {
+      toastError("Login e/ou senha inválidos");
     }
     return isValid;
   } catch (error) {

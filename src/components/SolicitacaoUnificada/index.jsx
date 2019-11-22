@@ -298,13 +298,11 @@ class SolicitacaoUnificada extends Component {
     let schoolsFiltered = this.state.schoolsFiltered;
     school.checked = !school.checked;
     schoolsFiltered[foundIndex].checked = school.checked;
+    schoolsFiltered[foundIndex].burger_active =
+      school.checked && !this.props.multipleOrder;
     this.props.change(`school_${school.codigo_eol}.check`, school.checked);
     if (this.props.multipleOrder) {
       schoolsFiltered[foundIndex].quantidade_alunos = this.props.max_alunos;
-      this.props.change(
-        `school_${school.codigo_eol}.quantidade_alunos`,
-        this.props.max_alunos
-      );
     }
     schoolsFiltered = this.setNumberOfMealKits(school);
     let studentsTotal = 0;
@@ -405,7 +403,7 @@ class SolicitacaoUnificada extends Component {
 
   handleSubmit(values) {
     values.escolas = this.state.schoolsFiltered;
-    values.diretoria_regional = this.props.meusDados.diretorias_regionais[0].uuid;
+    values.diretoria_regional = this.props.meusDados.vinculo_atual.instituicao.uuid;
     values.kits_total = this.state.kitsTotal;
     values.kit_lanche = this.state.kitsChecked;
     const error = validateSubmit(values, this.state);
@@ -534,8 +532,7 @@ class SolicitacaoUnificada extends Component {
               collapsed={collapsed}
               alterarCollapse={this.alterarCollapse}
               numeroAlunos={
-                meusDados.diretorias_regionais &&
-                meusDados.diretorias_regionais[0].quantidade_alunos
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
               }
             >
               <Collapse isOpened={!collapsed}>
@@ -590,6 +587,7 @@ class SolicitacaoUnificada extends Component {
                     <Field
                       component={InputText}
                       label="Unidades Escolares"
+                      name="pesquisar"
                       placeholder="Pesquisar"
                       onChange={this.filterList}
                       className="form-control"
@@ -606,6 +604,7 @@ class SolicitacaoUnificada extends Component {
                       component={"input"}
                       type="checkbox"
                       name="lista_kit_lanche_igual"
+                      data-cy="checkbox-lista-igual"
                     />
                     <span
                       onClick={() => this.handleMultipleOrder()}
@@ -615,24 +614,6 @@ class SolicitacaoUnificada extends Component {
                   </label>
                 </div>
                 <Collapse isOpened={multipleOrder}>
-                  <div className="form-group row">
-                    <div className="col-6">
-                      <Field
-                        component={InputText}
-                        name="quantidade_max_alunos_por_escola"
-                        onChange={event =>
-                          this.props.change(
-                            "quantidade_max_alunos_por_escola",
-                            event.target.value
-                          )
-                        }
-                        type="number"
-                        label="Número máximo de alunos por unidade educacional"
-                        required={multipleOrder === true}
-                        validate={multipleOrder === true && [required]}
-                      />
-                    </div>
-                  </div>
                   <PedidoKitLanche
                     nameTempoPasseio="tempo_passeio"
                     nomeKitsLanche="kit_lanche"
@@ -690,6 +671,7 @@ class SolicitacaoUnificada extends Component {
                                   <span
                                     onClick={() => this.handleCheck(school)}
                                     className="checkbox-custom"
+                                    data-cy={`checkbox-${school.nome}`}
                                   />{" "}
                                   {school.codigo_eol + " - " + school.nome}
                                 </label>
@@ -885,7 +867,6 @@ const mapStateToProps = state => {
     initialValues: state.unifiedSolicitation.data,
     multipleOrder: selector(state, "lista_kit_lanche_igual"),
     kitsTotal: selector(state, "kits_total"),
-    max_alunos: selector(state, "quantidade_max_alunos_por_escola"),
     prosseguir: selector(state, "prosseguir")
   };
 };

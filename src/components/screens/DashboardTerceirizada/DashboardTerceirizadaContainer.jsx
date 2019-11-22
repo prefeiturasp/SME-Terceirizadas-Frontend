@@ -43,7 +43,7 @@ class DashboardTerceirizadaContainer extends Component {
     getMeusDados().then(response => {
       this.setState({
         meusDados: response,
-        lotes: formatarLotesParaVisao(response.terceirizadas[0].lotes)
+        lotes: formatarLotesParaVisao(response.vinculo_atual.instituicao.lotes)
       });
     });
   }

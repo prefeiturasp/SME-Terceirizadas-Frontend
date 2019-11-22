@@ -9,6 +9,7 @@ import loteReducer from "./reducers/lote.reducer";
 import { tourRequestReducer } from "./reducers/tourRequest.reducer";
 import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
 import editalReducer from "./reducers/edital.reducer";
+import loadEmpresa from "./reducers/empresa.reducer";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
   foodInclusion: foodInclusionReducer,
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
-  cadastroEditaisForm: editalReducer
+  cadastroEditaisForm: editalReducer,
+  cadastroEmpresaForm: loadEmpresa
 });
 
 export default rootReducer;

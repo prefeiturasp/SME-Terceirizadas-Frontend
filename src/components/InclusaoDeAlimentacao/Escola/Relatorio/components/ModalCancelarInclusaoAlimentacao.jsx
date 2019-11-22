@@ -20,7 +20,10 @@ import {
 } from "../../../../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { MENSAGEM_VAZIA } from "../../../../Shareable/TextArea/constants";
-import { required } from "../../../../../helpers/fieldValidators";
+import {
+  required,
+  textAreaRequired
+} from "../../../../../helpers/fieldValidators";
 
 export class ModalCancelarInclusaoDeAlimentacao extends Component {
   constructor(props) {
@@ -111,6 +114,7 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
   }
   render() {
     const { showModal, closeModal, uuid, inclusaoDeAlimentacao } = this.props;
+    const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -171,7 +175,7 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
                 label="Justificativa"
                 name="justificativa"
                 required
-                validate={required}
+                validate={[required, textAreaRequired]}
               />
             </div>
           </div>
@@ -193,6 +197,11 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
               }}
               style={BUTTON_STYLE.BLUE}
               className="ml-3"
+              disabled={
+                justificativa === "" ||
+                justificativa === undefined ||
+                justificativa === "<p>1</p> "
+              }
             />
           </Modal.Footer>
         </div>

@@ -31,11 +31,11 @@ export class PainelPedidosBase extends React.Component {
       switch (this.props.VISAO) {
         case ESCOLA:
           meusDados["quantidade_alunos"] =
-            response.escolas[0].quantidade_alunos;
+            response.vinculo_atual.instituicao.quantidade_alunos;
           break;
         case DRE:
           meusDados["quantidade_alunos"] =
-            response.diretorias_regionais[0].quantidade_alunos;
+            response.vinculo_atual.instituicao.quantidade_alunos;
           break;
         default:
           return "";
@@ -49,7 +49,7 @@ export class PainelPedidosBase extends React.Component {
   render() {
     const atual = {
       href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-      titulo: "Solicitação de Kit Lanche Passeio"
+      titulo: "Kit Lanche Passeio"
     };
     return (
       <Page titulo={atual.titulo}>

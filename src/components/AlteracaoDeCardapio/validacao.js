@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const validateSubmit = (values, meusDados) => {
   values["substituicoes"] = [];
   let totalAlunos = 0;
@@ -45,11 +47,7 @@ export const validateSubmit = (values, meusDados) => {
 
   if (temPeriodosEscolares(values)) return "Obrigatório ao menos um período";
 
-  if (
-    meusDados &&
-    meusDados.escolas.length &&
-    totalAlunos > meusDados.escolas[0].quantidade_alunos
-  ) {
+  if (totalAlunos > meusDados.vinculo_atual.instituicao.quantidade_alunos) {
     return "Número de alunos do pedido maior que a quantidade de alunos da escola";
   } else {
     delete values["substituicoes_MANHA"];
@@ -68,7 +66,11 @@ export const validateSubmit = (values, meusDados) => {
   )
     return "Obrigatório informar uma data ou período.";
 
-  if (values["data_inicial"] > values["data_final"])
+  const dataInicial = moment(values["data_inicial"], "DD/MM/YYYY");
+  const dataFinal = moment(values["data_final"], "DD/MM/YYYY");
+  const diferencaDeDias = dataFinal.diff(dataInicial, "days");
+
+  if (diferencaDeDias <= 0)
     return "Data inicial deve ser anterior à data final.";
 
   if (

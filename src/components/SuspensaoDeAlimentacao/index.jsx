@@ -287,7 +287,7 @@ class FoodSuspensionEditor extends Component {
       values.dias_razoes[idx]["outro_motivo"] =
         values.dias_razoes[idx][`outro_motivo${idx}`];
     });
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     const error = validateSubmit(values, this.props.meusDados);
     values.quantidades_por_periodo = values.suspensoes;
     values.suspensoes_alimentacao = values.dias_razoes;
@@ -382,7 +382,9 @@ class FoodSuspensionEditor extends Component {
           >
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+              }
             />
             {suspensoesDeAlimentacaoList.length > 0 && (
               <div className="mt-3">

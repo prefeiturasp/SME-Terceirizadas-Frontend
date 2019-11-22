@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
 import AlteracaoDeCardapio from ".";
+import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import { getMotivosAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
+import { getDiasUteis } from "../../services/diasUteis.service";
+import { meusDados } from "../../services/perfil.service";
 
 class Container extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class Container extends Component {
     meusDados().then(response => {
       this.setState({
         meusDados: response,
-        periodos: response.escolas[0].periodos_escolares
+        periodos: response.vinculo_atual.instituicao.periodos_escolares
       });
     });
 

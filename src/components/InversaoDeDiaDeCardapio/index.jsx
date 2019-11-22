@@ -152,7 +152,7 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.escolas[0].uuid;
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     if (!values.uuid) {
       criarInversaoDeDiaDeCardapio(values).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
@@ -205,7 +205,9 @@ export class InversaoDeDiaDeCardapio extends Component {
           <form>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
-              numeroAlunos={meusDados.escolas[0].quantidade_alunos || 0}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+              }
             />
             {rascunhosInversoes.length > 0 && (
               <div className="mt-3">

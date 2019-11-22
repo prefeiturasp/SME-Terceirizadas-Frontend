@@ -87,7 +87,7 @@ class DashboardDRE extends Component {
       loadingSuspensaoAlimentacao: true,
       loadingResumoLotes: true
     });
-    const minhaDRE = (await getMeusDados()).diretorias_regionais[0].uuid;
+    const minhaDRE = (await getMeusDados()).vinculo_atual.instituicao.uuid;
     const resumoPendenciasDREAlteracoesDeCardapio = await getResumoPendenciasDREAlteracoesDeCardapio(
       filtroPendencias
     );
@@ -237,7 +237,6 @@ class DashboardDRE extends Component {
       resumoPorLote,
       loadingResumoLotes
     } = this.state;
-
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
@@ -245,7 +244,7 @@ class DashboardDRE extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
-            numeroAlunos={enrolled}
+            numeroAlunos={enrolled ? enrolled : 0}
           >
             <Collapse isOpened={!collapsed}>
               <TabelaHistoricoLotes lotes={lotesDRE} />
@@ -327,25 +326,6 @@ class DashboardDRE extends Component {
                     loading={loadingAutorizadas}
                   />
                 </div>
-              </div>
-              <p className="caption">Legenda</p>
-              <div className="caption-choices">
-                <span>
-                  <i className="fas fa-check" />
-                  Solicitação Autorizada
-                </span>
-                <span>
-                  <i className="fas fa-exclamation-triangle" />
-                  Solicitação Aguardando Autorização{" "}
-                </span>
-                <span>
-                  <i className="fas fa-ban" />
-                  Solicitação Negada
-                </span>
-                <span>
-                  <i className="fas fa-times-circle" />
-                  Solicitação Cancelada
-                </span>
               </div>
             </div>
           </div>

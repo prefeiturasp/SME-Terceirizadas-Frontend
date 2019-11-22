@@ -8,12 +8,11 @@ import {
   getSolicitacoesPendentesEscola
 } from "../../../services/painelEscola.service";
 import { meusDados } from "../../../services/perfil.service";
-import CardLegendas from "../../Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { InputSearch } from "../../Shareable/InputSearch";
+import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import { STATUS } from "../const";
 import { ajustarFormatoLog } from "../helper";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
@@ -80,7 +79,7 @@ export class StatusSolicitacoes extends Component {
     let titulo = "";
     const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const minhaEscolaUUID = dadosMeus.escolas[0].uuid;
+    const minhaEscolaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
 
     switch (this.props.tipoStatus) {
       case STATUS.RECUSADAS:
@@ -107,7 +106,7 @@ export class StatusSolicitacoes extends Component {
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
-        titulo = "Pendentes";
+        titulo = "Aguardando Autorização";
         solicitacoes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
         break;
 
@@ -131,7 +130,7 @@ export class StatusSolicitacoes extends Component {
       <div className="card mt-3">
         <div className="card-body">
           <div className="pr-3">
-            <InputSearch
+            <InputSearchPendencias
               voltarLink={`/`}
               filterList={this.onPesquisarChanged}
             />
@@ -145,7 +144,6 @@ export class StatusSolicitacoes extends Component {
             selecionarTodos={this.selecionarTodos}
             onCheckClicked={this.onCheckClicked}
           />
-          <CardLegendas />
         </div>
       </div>
     );

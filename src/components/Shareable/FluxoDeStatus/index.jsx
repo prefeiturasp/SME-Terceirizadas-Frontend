@@ -57,8 +57,9 @@ export const FluxoDeStatus = props => {
                   <br />
                   {novoStatus.usuario && (
                     <span>
-                      {novoStatus.usuario.rf !== undefined &&
-                        `RF: ${novoStatus.usuario.rf} - `}
+                      {novoStatus.usuario.registro_funcional !== undefined &&
+                        `RF: ${novoStatus.usuario.registro_funcional}`}
+                      <br />
                       {novoStatus.usuario && novoStatus.usuario.nome}
                     </span>
                   )}

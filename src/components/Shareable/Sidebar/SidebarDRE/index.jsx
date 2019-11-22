@@ -8,6 +8,7 @@ import {
   SOLICITACOES_RECUSADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
+import { PERFIL } from "../../../../constants";
 
 export class SidebarDRE extends Component {
   constructor(props) {
@@ -287,13 +288,17 @@ export class SidebarDRE extends Component {
                 </NavLink>
               </div>
             )}
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes/permissoes"
-            >
-              Permissões
-            </NavLink>
+            {[PERFIL.SUPLENTE, PERFIL.COGESTOR].includes(
+              localStorage.getItem("perfil")
+            ) && (
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to="/configuracoes/permissoes"
+              >
+                Permissões
+              </NavLink>
+            )}
             <NavLink
               activeClassName="active"
               className="collapse-item"

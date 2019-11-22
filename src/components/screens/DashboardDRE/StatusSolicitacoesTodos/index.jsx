@@ -31,7 +31,7 @@ export class StatusSolicitacoesTodos extends Component {
 
   async componentDidMount() {
     const meusDados = await getMeusDados();
-    const dreUUid = meusDados.diretorias_regionais[0].uuid;
+    const dreUUid = meusDados.vinculo_atual.instituicao.uuid;
     const autorizadas = await getSolicitacoesAutorizadasDRE(dreUUid);
     const pendentes = await getSolicitacoesPendentesDRE(dreUUid);
     const recusadas = await getSolicitacoesRecusadasDRE(dreUUid);

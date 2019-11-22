@@ -12,6 +12,7 @@ import {
   SOLICITACOES_RECUSADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
+import { PERFIL } from "../../../../constants";
 
 export class SidebarEscola extends Component {
   constructor(props) {
@@ -319,13 +320,15 @@ export class SidebarEscola extends Component {
                 </NavLink>
               </div>
             )}
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes/permissoes"
-            >
-              Permissões
-            </NavLink>
+            {localStorage.getItem("perfil") === PERFIL.DIRETOR && (
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to="/configuracoes/permissoes"
+              >
+                Permissões
+              </NavLink>
+            )}
           </div>
         </div>
       </li>

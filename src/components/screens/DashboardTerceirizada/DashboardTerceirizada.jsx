@@ -20,7 +20,6 @@ import {
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardBody from "../../Shareable/CardBody";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
@@ -116,8 +115,8 @@ class DashboardTerceirizada extends Component {
   async componentDidMount() {
     let minhaTerceirizada = null;
     getMeusDados().then(response => {
-      this.setState({ minhaTerceirizada: response.terceirizadas[0].uuid });
-      minhaTerceirizada = response.terceirizadas[0].uuid;
+      minhaTerceirizada = response.vinculo_atual.instituicao.uuid;
+      this.setState({ minhaTerceirizada });
 
       this.carregaResumosPendencias();
 
@@ -213,13 +212,15 @@ class DashboardTerceirizada extends Component {
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
             numeroAlunos={
-              (meusDados && meusDados.terceirizadas[0].quantidade_alunos) || 0
+              (meusDados &&
+                meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
+              0
             }
           >
             {meusDados && (
               <Collapse isOpened={!collapsed}>
                 <TabelaHistoricoLotes
-                  lotes={meusDados.terceirizadas[0].lotes}
+                  lotes={meusDados.vinculo_atual.instituicao.lotes}
                   tipoPerfil={"Terceirizada"}
                 />
               </Collapse>
@@ -270,7 +271,6 @@ class DashboardTerceirizada extends Component {
                 />
               </div>
             </div>
-            <CardLegendas />
           </CardBody>
           <div className="card mt-3" />
           {!secao && <MenuIcones renderSecao={this.renderSecao} />}

@@ -9,6 +9,7 @@ import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
+import { TIPO_PERFIL } from "../../../constants";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -51,13 +52,17 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {tipo_perfil === `"codae"` && <AvatarCODAE />}
-              {tipo_perfil === `"diretoria_regional"` && <AvatarDRE />}
-              {tipo_perfil === `"escola"` && <AvatarEscola />}
-              {tipo_perfil === `"terceirizada"` && <AvatarTerceirizada />}
+              {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
+                <AvatarCODAE />
+              )}
+              {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <AvatarDRE />}
+              {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
+              {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
+                <AvatarTerceirizada />
+              )}
             </div>
           </Link>
-          <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3">
+          <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
             <div className="nav-item">
               {!toggled && nome && nome !== "" && (
                 <div className="sidebar-brand-text text-center">
@@ -68,7 +73,9 @@ export class Sidebar extends Component {
               )}
               <div className="profile">
                 <i className="fas fa-user-edit" />
-                <span>Perfil</span>
+                <Link to="/perfil">
+                  <span>Perfil</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -81,10 +88,14 @@ export class Sidebar extends Component {
             </div>
           </div>
           <div className="sidebar-wrapper">
-            {tipo_perfil === `"codae"` && <SidebarCODAE />}
-            {tipo_perfil === `"diretoria_regional"` && <SidebarDRE />}
-            {tipo_perfil === `"escola"` && <SidebarEscola />}
-            {tipo_perfil === `"terceirizada"` && <SidebarTerceirizada />}
+            {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
+              <SidebarCODAE />
+            )}
+            {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <SidebarDRE />}
+            {tipo_perfil === TIPO_PERFIL.ESCOLA && <SidebarEscola />}
+            {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
+              <SidebarTerceirizada />
+            )}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mt-5 pb-2">
