@@ -1,4 +1,4 @@
-import { painelHome, permissoes } from "./helper";
+import { painelHome, permissoes, relatorios } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
@@ -87,6 +87,11 @@ const routesConfig = [
     path: "/perfil",
     component: PerfilPage,
     exact: false
+  },
+  {
+    path: "/relatorios",
+    component: relatorios(),
+    exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,

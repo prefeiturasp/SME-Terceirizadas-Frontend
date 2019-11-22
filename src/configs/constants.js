@@ -17,6 +17,7 @@ export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 
 export const RELATORIO = "relatorio";
+export const RELATORIOS = "relatorios";
 export const HISTORICO = "historico";
 export const SOLICITACOES = "solicitacoes";
 export const CONFIGURACOES = "configuracoes";
