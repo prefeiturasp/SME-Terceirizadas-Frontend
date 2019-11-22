@@ -92,7 +92,7 @@ export class StatusSolicitacoes extends Component {
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
-        titulo = "Aguardando Aprovação";
+        titulo = "Aguardando Autorização";
         solicitacoes = await getSolicitacoesPendentesAutorizacaoCodae(
           FILTRO.SEM_FILTRO
         );
