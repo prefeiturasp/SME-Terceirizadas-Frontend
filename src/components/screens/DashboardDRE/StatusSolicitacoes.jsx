@@ -95,7 +95,7 @@ export class StatusSolicitacoes extends Component {
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
-        titulo = "Pendentes";
+        titulo = "Aguardando Autorização";
         solicitacoes = await getSolicitacoesPendentesDRE(dreUuid);
         break;
 
