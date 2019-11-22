@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { montaArraySteps } from "./helper";
 import "./style.scss";
 
@@ -7,11 +7,11 @@ class Wizard extends Component {
     super(props);
     this.state = {
       steps: null,
-      stepsList: []
+      stepsList: [],
+      stepsNames: null,
+      currentStep: 0
     };
   }
-
-  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
     const { steps } = this.props;
@@ -24,8 +24,44 @@ class Wizard extends Component {
     }
   }
 
+  renderWithSetp(stepNumber) {
+    const componentSteps = this.props.componentSteps;
+    return componentSteps[stepNumber];
+  }
+
   render() {
-    return <section>dfdfd</section>;
+    const { currentStep } = this.state;
+    const { stepsNames } = this.props;
+    return (
+      <Fragment>
+        <section className="wizard-container">
+          {stepsNames.map((step, index) => {
+            return (
+              <a
+                key={index}
+                href={`#${index}`}
+                className={
+                  index === currentStep
+                    ? "current-step"
+                    : index < currentStep
+                    ? "passed-step"
+                    : "next-step"
+                }
+                onClick={event => {
+                  event.preventDefault();
+                  this.setState({ currentStep: index });
+                }}
+              >
+                <span>{stepsNames[index]}</span>
+              </a>
+            );
+          })}
+        </section>
+        <section className="wizard-content">
+          {this.renderWithSetp(currentStep)}
+        </section>
+      </Fragment>
+    );
   }
 }
 

@@ -5,6 +5,8 @@ import { bindActionCreators } from "redux";
 import { loadTipoAlimentacao } from "../../../../reducers/tipoAlimentacaoReducer";
 import Wizard from "../../../Shareable/Wizard";
 import { Select } from "../../../Shareable/Select";
+
+import StepMatutino from "./components/WizardSteps/StepMatutino";
 import "./style.scss";
 
 class CadastroTipoAlimentacao extends Component {
@@ -12,7 +14,23 @@ class CadastroTipoAlimentacao extends Component {
     super(props);
     this.state = {
       meusDados: null,
-      uuidUnidadeEscolar: null
+      uuidUnidadeEscolar: null,
+
+      dadosAlimentacao: {
+        tipoAlimentos: [
+          { nome: "Lanche - 4 horas", combinacoes: [1] },
+          { nome: "Lanche - 5 horas", combinacoes: [1] },
+          { nome: "Refeição/Sobremesa", combinacoes: [1] },
+          { nome: "Refeição/ Sobremesa/ Lanche", combinacoes: [1] }
+        ],
+        possibilidades: [
+          "Refeição/Sobremesa",
+          "Merenda Seca",
+          "Lanche 4h",
+          "Lanche 5h",
+          "Merenda Seca/ Sobremesa da Refeição"
+        ]
+      }
     };
   }
 
@@ -25,7 +43,7 @@ class CadastroTipoAlimentacao extends Component {
   }
 
   render() {
-    const { uuidUnidadeEscolar } = this.state;
+    const { uuidUnidadeEscolar, dadosAlimentacao } = this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="card mt-3">
@@ -54,7 +72,25 @@ class CadastroTipoAlimentacao extends Component {
                 />
               </article>
             </section>
-            {uuidUnidadeEscolar === null && <Wizard steps={5} />}
+            {uuidUnidadeEscolar === null && (
+              <Wizard
+                steps={6}
+                componentSteps={[
+                  <StepMatutino
+                    key="matutino"
+                    dadosAlimentacao={dadosAlimentacao}
+                  />
+                ]}
+                stepsNames={[
+                  "1° Período Matutino",
+                  "2° Período Intermediario",
+                  "3° Período Vespetino",
+                  "4° Período Noturno",
+                  "Integral Lanche",
+                  "Integral Refeição"
+                ]}
+              />
+            )}
           </form>
         </div>
       </div>
