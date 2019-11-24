@@ -34,6 +34,7 @@ class Wizard extends Component {
     const { stepsNames } = this.props;
     return (
       <Fragment>
+
         <section className="wizard-container">
           {stepsNames.map((step, index) => {
             return (

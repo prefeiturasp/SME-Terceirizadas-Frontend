@@ -11,6 +11,7 @@ class StepMatutino extends Component {
     return (
       <Fragment>
         <div className="section">
+        <span className="titulo-card">Tipo de alimentos atuais</span>
           <div className="tipos-alimentacao">
             {dadosAlimentacao.tipoAlimentos.map((alimento, indice) => {
               return indice === 0 ? (
@@ -48,7 +49,11 @@ class StepMatutino extends Component {
         </div>
 
         <div className="section-escolhas">
+          <span className="titulo-card">Possibilidade</span>
+          <div></div>
+          <span className="titulo-card">Combinação</span>
           <div className="possibilidades" />
+
           <div className="funcoes">
             <a href="#0">
               <i className="fas fa-chevron-right" />
@@ -57,6 +62,8 @@ class StepMatutino extends Component {
               <i className="fas fa-chevron-left" />
             </a>
           </div>
+
+
           <div className="combinacoes" />
         </div>
       </Fragment>

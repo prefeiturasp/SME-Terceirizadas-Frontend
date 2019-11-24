@@ -80,6 +80,7 @@ section.wizard-content {
     display: grid;
 
     .tipos-alimentacao {
+      margin-top: 0.7em;
       display: grid;
       width: 95%;
 
@@ -141,10 +142,12 @@ section.wizard-content {
   .section-escolhas {
     display: grid;
     grid-template-columns: 46% 6% 46%;
+    grid-template-rows: 1.5em auto;
     grid-column-gap: 1%;
 
     .possibilidades,
     .combinacoes {
+      margin-top: 0.7em;
       background: #f5f6f8;
       border: 1px solid #dadada;
       box-sizing: border-box;
@@ -176,5 +179,12 @@ section.wizard-content {
         margin-bottom: 0.5em;
       }
     }
+  }
+
+  .titulo-card {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #42474a;
   }
 }

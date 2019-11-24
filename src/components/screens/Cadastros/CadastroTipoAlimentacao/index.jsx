@@ -18,10 +18,10 @@ class CadastroTipoAlimentacao extends Component {
 
       dadosAlimentacao: {
         tipoAlimentos: [
-          { nome: "Lanche - 4 horas", combinacoes: [1] },
-          { nome: "Lanche - 5 horas", combinacoes: [1] },
-          { nome: "Refeição/Sobremesa", combinacoes: [1] },
-          { nome: "Refeição/ Sobremesa/ Lanche", combinacoes: [1] }
+          { nome: "Lanche - 4 horas", combinacoes: [] },
+          { nome: "Lanche - 5 horas", combinacoes: [] },
+          { nome: "Refeição/Sobremesa", combinacoes: [] },
+          { nome: "Refeição/ Sobremesa/ Lanche", combinacoes: [] }
         ],
         possibilidades: [
           "Refeição/Sobremesa",
