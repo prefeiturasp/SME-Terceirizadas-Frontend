@@ -14,6 +14,8 @@ div.evolution {
   .legend-unit {
     .title {
       display: inline-flex;
+      font-size: 14px;
+      color: #42474a;
       div.circle {
         width: 10px;
         height: 10px;
@@ -21,8 +23,12 @@ div.evolution {
         margin-top: 5px;
         margin-right: 12px;
       }
-      font-size: 14px;
-      color: #42474a;
+      div.text {
+        margin-top: 3px;
+      }
+      &.small {
+        font-size: 11px;
+      }
     }
     .total {
       font-size: 20px;

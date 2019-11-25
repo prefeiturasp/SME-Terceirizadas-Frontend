@@ -149,6 +149,35 @@ class Relatorios extends Component {
                   })}
                 </div>
               )}
+              {graficoEvolucao && (
+                <div className="row">
+                  <div className="col-8 legend">
+                    <div className="row">
+                      {TIPOS_SOLICITACAO_LISTA.map(tipoSolicitacao => {
+                        return (
+                          graficoEvolucao[tipoSolicitacao.titulo] && (
+                            <div className="col-4">
+                              <div className="legend-unit">
+                                <div className="title small">
+                                  <div
+                                    className="circle"
+                                    style={{
+                                      backgroundColor: tipoSolicitacao.cor
+                                    }}
+                                  />
+                                  <div className="text">
+                                    {tipoSolicitacao.titulo}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
