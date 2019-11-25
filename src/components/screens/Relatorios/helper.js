@@ -1,32 +1,19 @@
 export const mesInteiro = mes => {
-  switch (mes) {
-    case "Jan":
-      return "Janeiro";
-    case "Fev":
-      return "Fevereiro";
-    case "Mar":
-      return "Março";
-    case "Abr":
-      return "Abril";
-    case "Mai":
-      return "Maio";
-    case "Jun":
-      return "Junho";
-    case "Jul":
-      return "Julho";
-    case "Ago":
-      return "Agosto";
-    case "Set":
-      return "Setembro";
-    case "Out":
-      return "Outubro";
-    case "Nov":
-      return "Novembro";
-    case "Dez":
-      return "Dezembro";
-    default:
-      return mes;
-  }
+  const mesInteiro = {
+    Jan: "Janeiro",
+    Dev: "Fevereiro",
+    Mar: "Março",
+    Abr: "Abril",
+    Mai: "Maio",
+    Jun: "Junho",
+    Jul: "Julho",
+    Ago: "Agosto",
+    Set: "Setembro",
+    Out: "Outubro",
+    Nov: "Novembro",
+    Dez: "Dezembro"
+  };
+  return mesInteiro[mes];
 };
 
 export const anoCorrente = () => {
