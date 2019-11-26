@@ -245,6 +245,14 @@ export class Login extends Component {
               />
             </div>
           </div>
+          <div
+            onClick={() =>
+              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+            }
+            className="text-right back"
+          >
+            voltar
+          </div>
           <div className="pt-2">
             <Botao
               type={BUTTON_TYPE.SUBMIT}

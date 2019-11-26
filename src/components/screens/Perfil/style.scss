@@ -28,13 +28,17 @@
       }
       .form {
         margin-top: 2em;
-        margin-left: 2em;
+        margin-left: 1em;
+        div.input-group.email-sme select {
+          width: 15em;
+        }
         .button {
           padding-top: 35px;
         }
         .password {
           cursor: pointer;
           padding-top: 2em;
+          padding-left: 2em;
           font-size: 14px;
           color: $blue;
           &:hover {
