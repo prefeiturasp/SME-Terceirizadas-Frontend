@@ -1,17 +1,17 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { length, required, minLength } from "../../../helpers/fieldValidators";
+import { length, minLength, required } from "../../../helpers/fieldValidators";
+import { dateDelta } from "../../../helpers/utilities";
+import { criaDietaEspecial } from "../../../services/dietaEspecial";
 import { meusDados } from "../../../services/perfil.service";
+import Botao from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { InputComData } from "../../Shareable/DatePicker";
 import InputText from "../../Shareable/Input/InputText";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
-import Botao from "../../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
-import { criaDietaEspecial } from "../../../services/dietaEspecial";
-import HTTP_STATUS from "http-status-codes";
-import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { dateDelta } from "../../../helpers/utilities";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import "./style.scss";
 
 const minLength6 = minLength(6);
@@ -52,40 +52,34 @@ class solicitacaoDietaEspecial extends Component {
               Descrição da Solicitação
             </span>
           </div>
-          <section className="row">
-            <div className="col-2">
-              <Field
-                component={InputText}
-                label="Cód. EOL do Aluno"
-                name="codigo_eol_aluno"
-                placeholder="Insira o Código"
-                className="form-control"
-                validate={[required, length(6)]}
-              />
-            </div>
-            <div className="col-7">
-              <Field
-                component={InputText}
-                label="Nome completo do Aluno"
-                name="nome_completo_aluno"
-                placeholder="Insira o Nome do Aluno"
-                className="form-control"
-                validate={[required, minLength6]}
-              />
-            </div>
-            <div className="col-3">
-              <Field
-                component={InputComData}
-                label="Data de Nascimento"
-                name="data_nascimento_aluno"
-                placeholder="Selecione"
-                className="form-control"
-                minDate={dateDelta(-360 * 99)}
-                maxDate={dateDelta(-1)}
-                validate={required}
-              />
-            </div>
-          </section>
+          <div className="grid-container">
+            <div className="ajuste-fonte">Cód. EOL do Aluno</div>
+            <div className="ajuste-fonte">Nome completo do Aluno</div>
+            <div className="ajuste-fonte">Data de Nascimento</div>
+            <Field
+              component={InputText}
+              name="codigo_eol_aluno"
+              placeholder="Insira o Código"
+              className="form-control"
+              validate={[required, length(6)]}
+            />
+            <Field
+              component={InputText}
+              name="nome_completo_aluno"
+              placeholder="Insira o Nome do Aluno"
+              className="form-control"
+              validate={[required, minLength6]}
+            />
+            <Field
+              component={InputComData}
+              name="data_nascimento_aluno"
+              placeholder="Selecione"
+              className="form-control"
+              minDate={dateDelta(-360 * 99)}
+              maxDate={dateDelta(-1)}
+              validate={required}
+            />
+          </div>
           <section className="row">
             <div className="col-7">
               <Field
