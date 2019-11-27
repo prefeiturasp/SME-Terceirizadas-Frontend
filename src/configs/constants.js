@@ -5,6 +5,8 @@ export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
+export const DIETA_ESPECIAL = "dieta-especial";
+
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
 export const DRE = "dre";
