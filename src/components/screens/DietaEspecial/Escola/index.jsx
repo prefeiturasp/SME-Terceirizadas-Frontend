@@ -1,17 +1,27 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
-import { length, minLength, required } from "../../../helpers/fieldValidators";
-import { dateDelta } from "../../../helpers/utilities";
-import { criaDietaEspecial } from "../../../services/dietaEspecial";
-import { meusDados } from "../../../services/perfil.service";
-import Botao from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import { InputComData } from "../../Shareable/DatePicker";
-import InputText from "../../Shareable/Input/InputText";
-import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
-import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+import { Field, formValueSelector, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import {
+  length,
+  minLength,
+  required
+} from "../../../../helpers/fieldValidators";
+import { dateDelta } from "../../../../helpers/utilities";
+import { criaDietaEspecial } from "../../../../services/dietaEspecial";
+import { meusDados } from "../../../../services/perfil.service";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
+import CardMatriculados from "../../../Shareable/CardMatriculados";
+import { InputComData } from "../../../Shareable/DatePicker";
+import InputText from "../../../Shareable/Input/InputText";
+import InputFile from "../../../Shareable/Input/InputFile";
+import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
 
 const minLength6 = minLength(6);
@@ -20,9 +30,12 @@ class solicitacaoDietaEspecial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantidadeAlunos: "..."
+      quantidadeAlunos: "...",
+      files: null
     };
+    this.setFiles = this.setFiles.bind(this);
   }
+
   componentDidMount() {
     meusDados().then(meusDados => {
       this.setState({
@@ -31,7 +44,12 @@ class solicitacaoDietaEspecial extends Component {
     });
   }
 
+  setFiles(files) {
+    this.setState({ files });
+  }
+
   async onSubmit(payload) {
+    payload.files = this.state.files;
     const response = await criaDietaEspecial(payload);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Solicitação realizada com sucesso.");
@@ -44,14 +62,12 @@ class solicitacaoDietaEspecial extends Component {
     const { quantidadeAlunos } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
+      <form className="special-diet" onSubmit={handleSubmit}>
         <CardMatriculados numeroAlunos={quantidadeAlunos} />
         <div className="card mt-2 p-4">
-          <div>
-            <span className="card-title font-weight-bold cinza-escuro">
-              Descrição da Solicitação
-            </span>
-          </div>
+          <span className="card-title font-weight-bold cinza-escuro">
+            Descrição da Solicitação
+          </span>
           <div className="grid-container">
             <div className="ajuste-fonte">Cód. EOL do Aluno</div>
             <div className="ajuste-fonte">Nome completo do Aluno</div>
@@ -102,6 +118,30 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </section>
+          <hr />
+          <section className="row attachments">
+            <div className="col-9">
+              <div className="card-title font-weight-bold cinza-escuro mt-4">
+                Laudo Médico
+              </div>
+              <div className="text">
+                Anexe o laudo fornecido pelo médico acima. Sem ele, a
+                solicitação de Dieta Especial será negada.
+              </div>
+            </div>
+            <div className="col-3 btn">
+              <Field
+                component={InputFile}
+                className="inputfile"
+                texto="Anexar"
+                name="files"
+                icon={BUTTON_ICON.ATTACH}
+                accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
+                setFiles={this.setFiles}
+                multiple
+              />
+            </div>
+          </section>
           <section className="row mb-5">
             <div className="col-12">
               <Field
@@ -141,4 +181,11 @@ const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial"
 })(solicitacaoDietaEspecial);
 
-export default componentNameForm;
+const selector = formValueSelector("solicitacaoDietaEspecial");
+const mapStateToProps = state => {
+  return {
+    files: selector(state, "files")
+  };
+};
+
+export default connect(mapStateToProps)(componentNameForm);

@@ -1,0 +1,21 @@
+@import "../../../../styles/variables.scss";
+
+.input-file {
+  text-align: right;
+  input.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .file-name {
+    padding-top: 5px;
+    font-size: 10px;
+    &:hover {
+      color: $blue;
+      text-decoration: underline;
+    }
+  }
+}
