@@ -47,6 +47,13 @@ class FiltrosDeBusca extends Component {
   };
 
   componentDidUpdate() {
+    if (this.props.limpaForm) {
+      this.props.change("status_solicitacao", STATUS_SOLICITACAO[0].uuid);
+      this.props.change("tipo_de__solicitacao", TIPO_SOLICITACAO[0].uuid);
+      this.props.change("data_de", null);
+      this.props.change("data_ate", null);
+      this.props.setaFalseLimpaForm();
+    }
     const { meusDados } = this.props;
     if (meusDados !== this.state.meusDados) {
       this.setState({ meusDados });
@@ -86,13 +93,14 @@ class FiltrosDeBusca extends Component {
   }
 
   onRequest = values => {
-    const dataDe = moment(values.date_de).format("DD-MM-YYYY");
-    const dataAte = moment(values.date_ate).format("DD-MM-YYYY");
+    const dataDe = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
+    const dataAte = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
     getPedidosESolicitacoesFiltro(values, dataDe, dataAte).then(response => {
       if (response.results.length > 0) {
         this.props.renderizarRelatorio(response.results);
       } else {
         toastError("Nenhum resultado encontrado!");
+        this.props.renderizarRelatorio(response.results);
       }
     });
   };

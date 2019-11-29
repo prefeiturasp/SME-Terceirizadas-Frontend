@@ -9,24 +9,51 @@ class Relatorios extends Component {
     super(props);
     this.state = {
       renderizaConteudoPadrao: true,
-      resultadosFiltro: null
+      resultadosFiltro: null,
+      limpaForm: false
     };
     this.renderizarRelatorio = this.renderizarRelatorio.bind(this);
+    this.setaFalseLimpaForm = this.setaFalseLimpaForm.bind(this);
+  }
+
+  setaFalseLimpaForm() {
+    this.setState({
+      limpaForm: false
+    });
   }
 
   renderizarRelatorio = resultado => {
-    this.setState({
-      renderizaConteudoPadrao: false,
-      resultadosFiltro: resultado
-    });
+    if (resultado === "sair") {
+      this.setState({
+        renderizaConteudoPadrao: !this.state.renderizaConteudoPadrao,
+        resultadosFiltro: [],
+        limpaForm: true
+      });
+    } else {
+      this.setState({
+        renderizaConteudoPadrao: !this.state.renderizaConteudoPadrao,
+        resultadosFiltro: resultado
+      });
+    }
   };
 
   render() {
-    const { renderizaConteudoPadrao } = this.state;
+    const { renderizaConteudoPadrao, resultadosFiltro, limpaForm } = this.state;
     return (
       <Fragment>
-        <BuscaPorPeriodo renderizarRelatorio={this.renderizarRelatorio} />
-        {renderizaConteudoPadrao ? <GraficoEvolucao /> : <ResultadoFiltro />}
+        <BuscaPorPeriodo
+          renderizarRelatorio={this.renderizarRelatorio}
+          limpaForm={limpaForm}
+          setaFalseLimpaForm={this.setaFalseLimpaForm}
+        />
+        {renderizaConteudoPadrao ? (
+          <GraficoEvolucao />
+        ) : (
+          <ResultadoFiltro
+            resultadosFiltro={resultadosFiltro}
+            renderizarRelatorio={this.renderizarRelatorio}
+          />
+        )}
       </Fragment>
     );
   }

@@ -11,7 +11,8 @@ export const BUTTON_ICON = {
   CHART_LINE: "fas fa-chart-line",
   FILE_PDF: "far fa-file-pdf",
   SHARE_SQUARE: "fas fa-share-square",
-  SEARCH: "fas fa-search"
+  SEARCH: "fas fa-search",
+  SAIR: "fas fa-door-open"
 };
 
 export const BUTTON_TYPE = {
