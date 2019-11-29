@@ -32,6 +32,12 @@ export class InputFile extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.submitted !== prevProps.submitted) {
+      this.setState({ files: [] });
+    }
+  }
+
   deleteFile(index) {
     let files = this.state.files;
     files.splice(index, 1);

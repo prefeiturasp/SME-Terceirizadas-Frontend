@@ -27,10 +27,12 @@ class solicitacaoDietaEspecial extends Component {
     super(props);
     this.state = {
       quantidadeAlunos: "...",
-      files: null
+      files: null,
+      submitted: false
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +58,8 @@ class solicitacaoDietaEspecial extends Component {
     const response = await criaDietaEspecial(payload);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Solicitação realizada com sucesso.");
+      this.setState({ submitted: !this.state.submitted });
+      this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
         toastError("Por favor anexe o laudo médico");
@@ -70,8 +74,13 @@ class solicitacaoDietaEspecial extends Component {
     }
   }
 
+  resetForm() {
+    this.props.reset("solicitacaoDietaEspecial");
+    this.setState({ files: [] });
+  }
+
   render() {
-    const { quantidadeAlunos } = this.state;
+    const { quantidadeAlunos, submitted } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -159,6 +168,7 @@ class solicitacaoDietaEspecial extends Component {
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                 setFiles={this.setFiles}
                 removeFile={this.removeFile}
+                submitted={submitted}
                 multiple
               />
             </div>
