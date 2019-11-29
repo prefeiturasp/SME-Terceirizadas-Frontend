@@ -438,6 +438,7 @@ class AlteracaoCardapio extends Component {
                     component={InputComData}
                     name="data_inicial"
                     label="De"
+                    minDate={proximos_dois_dias_uteis}
                     disabled={this.props.alterar_dia}
                     onChange={value => this.obtemDataInicial(value)}
                   />
