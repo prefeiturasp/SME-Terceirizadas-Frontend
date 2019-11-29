@@ -195,3 +195,11 @@ export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 };
+
+export const truncarString = (str, numeroMaximoChars) => {
+  if (str.length > numeroMaximoChars) {
+    return str.slice(0, numeroMaximoChars) + "...";
+  } else {
+    return str;
+  }
+};
