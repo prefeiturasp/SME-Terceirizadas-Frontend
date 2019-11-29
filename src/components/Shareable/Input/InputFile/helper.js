@@ -4,7 +4,8 @@ export async function readerFile(file) {
     reader.onload = () => {
       const base64 = reader.result.split("base64,")[1];
       return resolve({
-        anexo: `data:${file.type};base64,${base64}`
+        arquivo: `data:${file.type};base64,${base64}`,
+        nome: file.name
       });
     };
     reader.readAsDataURL(file);

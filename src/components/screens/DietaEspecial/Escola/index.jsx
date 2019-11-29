@@ -34,6 +34,7 @@ class solicitacaoDietaEspecial extends Component {
       files: null
     };
     this.setFiles = this.setFiles.bind(this);
+    this.removeFile = this.removeFile.bind(this);
   }
 
   componentDidMount() {
@@ -44,15 +45,30 @@ class solicitacaoDietaEspecial extends Component {
     });
   }
 
+  removeFile(index) {
+    let files = this.state.files;
+    files.splice(index, 1);
+    this.setState({ files });
+  }
+
   setFiles(files) {
     this.setState({ files });
   }
 
   async onSubmit(payload) {
-    payload.files = this.state.files;
+    payload.anexos = this.state.files;
     const response = await criaDietaEspecial(payload);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Solicitação realizada com sucesso.");
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
+        toastError("Por favor anexe o laudo médico");
+      } else if (response.data["anexos"][0]["nome"][0]) {
+        const erro = response.data["anexos"][0]["nome"][0];
+        toastError(erro);
+      } else {
+        toastError("Erro ao solicitar dieta especial");
+      }
     } else {
       toastError("Erro ao solicitar dieta especial");
     }
@@ -128,6 +144,12 @@ class solicitacaoDietaEspecial extends Component {
                 Anexe o laudo fornecido pelo médico acima. Sem ele, a
                 solicitação de Dieta Especial será negada.
               </div>
+              <div className="card-warning mt-2">
+                <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
+                .docx, .pdf, .png, .jpg ou .jpeg, com até 2Mb. <br /> O Laudo
+                deve ter sido emitido há, no máximo, 3 meses. Após a data de
+                aprovação no sistema, o laudo terá validade de 12 meses
+              </div>
             </div>
             <div className="col-3 btn">
               <Field
@@ -138,11 +160,12 @@ class solicitacaoDietaEspecial extends Component {
                 icon={BUTTON_ICON.ATTACH}
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                 setFiles={this.setFiles}
+                removeFile={this.removeFile}
                 multiple
               />
             </div>
           </section>
-          <section className="row mb-5">
+          <section className="row mt-5 mb-5">
             <div className="col-12">
               <Field
                 component={TextAreaWYSIWYG}

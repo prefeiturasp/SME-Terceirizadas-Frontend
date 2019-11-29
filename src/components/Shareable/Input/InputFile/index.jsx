@@ -6,6 +6,8 @@ import "./style.scss";
 import Botao from "../../Botao";
 import { BUTTON_STYLE, BUTTON_ICON, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
+import { toastSuccess, toastError } from "../../Toast/dialogs";
+import { truncarString } from "../../../../helpers/utilities";
 
 export class InputFile extends Component {
   constructor(props) {
@@ -16,26 +18,57 @@ export class InputFile extends Component {
   }
 
   openFile(file) {
-    let pdfWindow = window.open("");
-    pdfWindow.document.write(
-      "<iframe width='100%' height='100%' src='" + file.base64 + "'></iframe>"
-    );
+    if (file.nome.includes(".doc")) {
+      const link = document.createElement("a");
+      link.href = file.base64;
+      link.download = file.nome;
+      link.click();
+    } else {
+      let pdfWindow = window.open("");
+      pdfWindow.document.write(
+        "<iframe width='100%' height='100%' src='" + file.base64 + "'></iframe>"
+      );
+    }
+  }
+
+  deleteFile(index) {
+    let files = this.state.files;
+    files.splice(index, 1);
+    this.props.removeFile(index);
+    this.setState({ files });
   }
 
   async onInputChange(event) {
-    let files = [];
-    let data = [];
+    let valido = true;
+    const QUANTIDADE_ARQUIVOS = event.target.files.length;
     Array.from(event.target.files).forEach(file => {
-      readerFile(file)
-        .then(anexo => {
-          data.push(anexo);
-          files.push({ nome: file.name, base64: anexo.anexo });
-        })
-        .then(() => {
-          this.props.setFiles(data);
-          this.setState({ files });
-        });
+      const extensao = file.name.split(".")[file.name.split(".").length - 1];
+      if (!["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(extensao)) {
+        toastError(`Extensão não suportada: ${extensao}`);
+        valido = false;
+      } else if (file.size > 2097152) {
+        toastError(`Tamanho máximo: 2MB`);
+        valido = false;
+      }
     });
+    if (valido) {
+      let files = [];
+      let data = [];
+      Array.from(event.target.files).forEach(file => {
+        readerFile(file)
+          .then(anexo => {
+            data.push(anexo);
+            files.push({ nome: file.name, base64: anexo.arquivo });
+          })
+          .then(() => {
+            if (files.length === QUANTIDADE_ARQUIVOS) {
+              toastSuccess("Laudo(s) incluso(s) com sucesso");
+              this.props.setFiles(data);
+              this.setState({ files });
+            }
+          });
+      });
+    }
   }
 
   render() {
@@ -83,12 +116,19 @@ export class InputFile extends Component {
         />
         {files.map((file, key) => {
           return (
-            <div
-              className="file-name"
-              onClick={() => this.openFile(file)}
-              key={key}
-            >
-              {file.nome}
+            <div className="file-div row" key={key}>
+              <div
+                className="file-name col-8"
+                onClick={() => this.openFile(file)}
+              >
+                {truncarString(file.nome, 20)}
+              </div>
+              <div className="col-4 exclude-icon">
+                <i
+                  onClick={() => this.deleteFile(key)}
+                  className="fas fa-times"
+                />
+              </div>
             </div>
           );
         })}

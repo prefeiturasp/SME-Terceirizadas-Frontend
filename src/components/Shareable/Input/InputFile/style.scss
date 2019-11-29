@@ -10,12 +10,21 @@
     position: absolute;
     z-index: -1;
   }
-  .file-name {
-    padding-top: 5px;
-    font-size: 10px;
-    &:hover {
-      color: $blue;
-      text-decoration: underline;
+  .file-div {
+    .file-name {
+      padding-top: 5px;
+      font-size: 10px;
+      &:hover {
+        color: $blue;
+        text-decoration: underline;
+      }
+    }
+    .exclude-icon {
+      i {
+        &:hover {
+          color: $red;
+        }
+      }
     }
   }
 }
