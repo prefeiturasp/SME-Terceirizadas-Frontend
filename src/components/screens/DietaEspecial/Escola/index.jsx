@@ -89,6 +89,7 @@ class solicitacaoDietaEspecial extends Component {
               name="codigo_eol_aluno"
               placeholder="Insira o Código"
               className="form-control"
+              type="number"
               validate={[required, length(6)]}
             />
             <Field
@@ -105,6 +106,8 @@ class solicitacaoDietaEspecial extends Component {
               className="form-control"
               minDate={dateDelta(-360 * 99)}
               maxDate={dateDelta(-1)}
+              showMonthDropdown
+              showYearDropdown
               validate={required}
             />
           </div>
@@ -112,9 +115,9 @@ class solicitacaoDietaEspecial extends Component {
             <div className="col-7">
               <Field
                 component={InputText}
-                label="Nome do Pescritor da receita (médico, nutricionista, fonoaudiólogo)"
+                label="Nome do Prescritor da receita (médico, nutricionista, fonoaudiólogo)"
                 name="nome_completo_pescritor"
-                placeholder="Insira o Nome do Pescritor"
+                placeholder="Insira o Nome do Prescritor"
                 className="form-control"
                 validate={[required, minLength6]}
               />
