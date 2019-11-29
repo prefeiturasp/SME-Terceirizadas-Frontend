@@ -11,11 +11,7 @@ import { dateDelta } from "../../../../helpers/utilities";
 import { criaDietaEspecial } from "../../../../services/dietaEspecial";
 import { meusDados } from "../../../../services/perfil.service";
 import Botao from "../../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
-} from "../../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
 import { InputComData } from "../../../Shareable/DatePicker";
 import InputText from "../../../Shareable/Input/InputText";
@@ -64,8 +60,8 @@ class solicitacaoDietaEspecial extends Component {
       if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
         toastError("Por favor anexe o laudo médico");
       } else if (response.data["anexos"][0]["nome"][0]) {
-        const erro = response.data["anexos"][0]["nome"][0];
-        toastError(erro);
+        const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
+        toastError(erroExtensaoInvalida);
       } else {
         toastError("Erro ao solicitar dieta especial");
       }
@@ -157,7 +153,6 @@ class solicitacaoDietaEspecial extends Component {
                 className="inputfile"
                 texto="Anexar"
                 name="files"
-                icon={BUTTON_ICON.ATTACH}
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                 setFiles={this.setFiles}
                 removeFile={this.removeFile}

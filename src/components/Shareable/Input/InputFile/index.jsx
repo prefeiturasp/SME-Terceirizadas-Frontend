@@ -8,6 +8,7 @@ import { BUTTON_STYLE, BUTTON_ICON, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
 import { toastSuccess, toastError } from "../../Toast/dialogs";
 import { truncarString } from "../../../../helpers/utilities";
+import { DOIS_MB } from "../../../../constants";
 
 export class InputFile extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ export class InputFile extends Component {
       if (!["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(extensao)) {
         toastError(`Extensão não suportada: ${extensao}`);
         valido = false;
-      } else if (file.size > 2097152) {
+      } else if (file.size > DOIS_MB) {
         toastError(`Tamanho máximo: 2MB`);
         valido = false;
       }

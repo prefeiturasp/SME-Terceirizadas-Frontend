@@ -19,3 +19,5 @@ export const TIPO_PERFIL = {
 };
 
 export const ENTER = 13;
+
+export const DOIS_MB = 2097152;
