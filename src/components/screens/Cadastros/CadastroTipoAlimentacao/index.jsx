@@ -226,7 +226,7 @@ class CadastroTipoAlimentacao extends Component {
               </section>
               {uuidUnidadeEscolar !== null && (
                 <Fragment>
-                  <section className="wizard-container">
+                  {/* <section className="wizard-container">
                     {tipoUnidadeSelect.periodos.map((periodo, index) => {
                       return (
                         <a
@@ -247,7 +247,15 @@ class CadastroTipoAlimentacao extends Component {
                         </a>
                       );
                     })}
-                  </section>
+                  </section> */}
+                  <ul class="wizardd">
+                    <li>Passo 1</li>
+                    <li class="selected">Passo 2</li>
+                    <li>Passo 3</li>
+                    <li>Passo 4</li>
+                    <li>Passo 4</li>
+                    <li>Fim</li>
+                  </ul>
                   <section className="conteudo-step">
                     <nav>Tipo de alimentos atuais </nav>
                     <nav>Possibilidade</nav>

@@ -414,3 +414,54 @@
 
   color: #686868;
 }
+
+.wizardd {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  li {
+    background-color: #e4e4e4;
+    border-radius: 5px;
+    display: inline;
+    position: relative;
+    width: 20%;
+    height: 40px;
+
+    &:after {
+      content: "";
+      height: 100%;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      right: 0;
+      margin-right: -15px;
+
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid #e4e4e4;
+    }
+
+    &:before {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+      width: 0;
+      height: 0;
+
+      border-top: 20px solid transparent;
+      border-bottom: 20px solid transparent;
+      border-left: 20px solid #fff;
+    }
+
+    &:last-child::after {
+      border-left-color: transparent;
+    }
+
+    &:first-child::before {
+      border-left-color: transparent;
+    }
+  }
+}
