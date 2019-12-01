@@ -1,4 +1,4 @@
-import { painelHome, permissoes } from "./helper";
+import { painelHome, permissoes, relatorios } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
@@ -47,6 +47,8 @@ import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
+
+import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -87,6 +89,16 @@ const routesConfig = [
   {
     path: "/perfil",
     component: PerfilPage,
+    exact: false
+  },
+  {
+    path: "/relatorios",
+    component: relatorios(),
+    exact: true
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
+    component: DietaEspecialEscolaPage,
     exact: false
   },
   {

@@ -84,6 +84,15 @@ a.hyperlink {
   }
 }
 
+div.text-right.back {
+  color: $blue;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 div.input-group.email-sme {
   .col-8,
   .col-4 {

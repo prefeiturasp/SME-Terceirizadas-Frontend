@@ -1,24 +1,20 @@
-import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import InputText from "../Shareable/Input/InputText";
-import "./style.scss";
+import { CODAE } from "../../configs/constants";
+import { TAMANHO_RF } from "../../constants/fields.constants";
+import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
+import { meusDados } from "../../services/perfil.service";
+import { getDadosUsuarioEOL } from "../../services/permissoes.service";
 import { Botao } from "../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../Shareable/Botao/constants";
-import { getDadosUsuarioEOL } from "../../services/permissoes.service";
-import { meusDados } from "../../services/perfil.service";
-import {
-  toastError,
-  toastSuccess,
-  toastWarn
-} from "../Shareable/Toast/dialogs";
-import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
-import { TAMANHO_RF } from "../../constants/fields.constants";
-import { CODAE } from "../../configs/constants";
+import InputText from "../Shareable/Input/InputText";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import "./style.scss";
 
 class Permissoes extends Component {
   constructor(props) {
@@ -57,7 +53,7 @@ class Permissoes extends Component {
         if (response.data.length > 0) {
           this.setState({ registroFuncional, perfisEOL: response.data });
         } else {
-          toastWarn("Usuário não encontrado");
+          toastError(`${response.data.detail}`);
         }
       });
     } else {

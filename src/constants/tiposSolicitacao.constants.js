@@ -20,26 +20,32 @@ export const TIPOS_SOLICITACAO_LABEL = {
 export const TIPOS_SOLICITACAO_LISTA = [
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO,
+    cor: "rgba(205, 100, 2, 1)",
     link: INCLUSAO_ALIMENTACAO
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DE_CARDAPIO,
+    cor: "rgba(1, 68, 111, 1)",
     link: ALTERACAO_CARDAPIO
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO,
+    cor: "rgba(173, 0, 7, 1)",
     link: SOLICITACAO_KIT_LANCHE
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
+    cor: "rgba(41, 120, 5, 1)",
     link: INVERSAO_CARDAPIO
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA,
+    cor: "rgba(244, 77, 167, 1)",
     link: SOLICITACAO_KIT_LANCHE_UNIFICADA
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SUSPENSAO_DE_ALIMENTACAO,
+    cor: "rgba(1, 154, 200, 1)",
     link: SUSPENSAO_ALIMENTACAO
   }
 ];

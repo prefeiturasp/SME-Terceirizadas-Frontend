@@ -83,6 +83,8 @@ export class InputComData extends Component {
       name,
       placeholder,
       required,
+      showMonthDropdown,
+      showYearDropdown,
       textoLabel
     } = this.props;
     return (
@@ -116,6 +118,8 @@ export class InputComData extends Component {
           <DatePicker
             {...input}
             placeholderText={placeholder}
+            showMonthDropdown={showMonthDropdown}
+            showYearDropdown={showYearDropdown}
             dateFormat={dateFormat}
             isClearable={true}
             withPortal={fullScreen}

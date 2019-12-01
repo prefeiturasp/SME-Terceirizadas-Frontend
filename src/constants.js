@@ -17,3 +17,7 @@ export const TIPO_PERFIL = {
   DIETA_ESPECIAL: `"dieta_especial"`,
   TERCEIRIZADA: `"terceirizada"`
 };
+
+export const ENTER = 13;
+
+export const DOIS_MB = 2097152;

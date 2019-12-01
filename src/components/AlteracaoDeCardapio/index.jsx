@@ -419,7 +419,7 @@ class AlteracaoCardapio extends Component {
             <section className="card  mt-3">
               <article className="card-body">
                 <div
-                  className="card-title font-weight-bold"
+                  className="card-title font-weight-bold descricao"
                   style={this.fontHeader}
                 >
                   Descrição da Alteração
@@ -438,6 +438,7 @@ class AlteracaoCardapio extends Component {
                     component={InputComData}
                     name="data_inicial"
                     label="De"
+                    minDate={proximos_dois_dias_uteis}
                     disabled={this.props.alterar_dia}
                     onChange={value => this.obtemDataInicial(value)}
                   />

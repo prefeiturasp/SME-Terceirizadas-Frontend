@@ -22,15 +22,20 @@ export const requiredCheck = value =>
     ? undefined
     : "Campo obrigatório: selecione ao menos uma opção";
 
-// eslint-disable-next-line
-const maxLength = max => value =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined;
+export const maxLength = max => value =>
+  value && value.length > max
+    ? `Deve ter ${max} caracteres(s) ou menos`
+    : undefined;
 
 export const minLength = min => value =>
-  value && value.length < min ? `Deve ter ao menos ${min} letra(s)` : undefined;
+  value && value.length < min
+    ? `Deve ter ao menos ${min} caracteres(s)`
+    : undefined;
 
 export const length = size => value =>
-  value && value.length !== size ? `Deve ter ${size} caracteres` : undefined;
+  value && value.length !== size
+    ? `Deve ter exatamente ${size} caracteres`
+    : undefined;
 
 export const semArroba = value =>
   value && value.includes("@") ? "Campo e-mail não deve conter @" : undefined;

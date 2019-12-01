@@ -5,6 +5,7 @@ import "./style.scss";
 
 export const Botao = props => {
   const {
+    accept,
     className,
     disabled,
     icon,
@@ -22,6 +23,7 @@ export const Botao = props => {
       className={`general-button ${style} ${className}`}
       onClick={onClick}
       disabled={disabled}
+      accept={accept}
     >
       {icon && <i className={`${icon} ${texto && "text-and-icon"}`} />}
       {texto}

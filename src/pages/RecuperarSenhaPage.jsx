@@ -16,7 +16,6 @@ import {
 import { required } from "../helpers/fieldValidators";
 import { atualizarSenha } from "../services/perfil.service";
 import "./style.scss";
-import { REGEX_PASSWORD } from "../components/Shareable/Input/InputText/constants";
 
 class RecuperarSenhaPage extends Component {
   constructor(props) {
@@ -69,7 +68,7 @@ class RecuperarSenhaPage extends Component {
                   type="password"
                   validate={[required]}
                   maxlength={20}
-                  pattern={REGEX_PASSWORD}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
                   helpText="Pelo menos 8 caracteres, uma letra e um número"
                 />
@@ -82,7 +81,7 @@ class RecuperarSenhaPage extends Component {
                   validate={required}
                   maxlength={20}
                   helpText={"As senhas devem ser iguais"}
-                  pattern={REGEX_PASSWORD}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
                 />
                 <div className="pt-3 text-center">
