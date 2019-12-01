@@ -45,7 +45,8 @@ class AlteracaoCardapio extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
-      dataInicial: null
+      dataInicial: null,
+      observacao: null
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -201,53 +202,57 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    const status = values.status;
-    delete values.status;
-    const erros = validateSubmit(values, this.props.meusDados);
-    if (!erros) {
-      this.resetaTodoPeriodoCheck();
-      if (!values.uuid) {
-        createAlteracaoCardapio(JSON.stringify(values))
-          .then(async response => {
-            if (response.status === HTTP_STATUS.CREATED) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(response.data.uuid);
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-              }
-              this.resetForm();
-            }
-          })
-          .catch(error => {
-            toastError(error);
-            this.resetForm("alteracaoCardapio");
-            this.refresh();
-          });
-      } else {
-        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-                this.resetForm("alteracaoCardapio");
-              }
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
-        );
-      }
+    if (this.state.observacao.length === 8) {
+      toastError("Campo de observações obrigatório");
     } else {
-      toastError(erros);
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      const status = values.status;
+      delete values.status;
+      const erros = validateSubmit(values, this.props.meusDados);
+      if (!erros) {
+        this.resetaTodoPeriodoCheck();
+        if (!values.uuid) {
+          createAlteracaoCardapio(JSON.stringify(values))
+            .then(async response => {
+              if (response.status === HTTP_STATUS.CREATED) {
+                if (status === STATUS_DRE_A_VALIDAR) {
+                  await this.enviaAlteracaoCardapio(response.data.uuid);
+                } else {
+                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  this.refresh();
+                }
+                this.resetForm();
+              }
+            })
+            .catch(error => {
+              toastError(error);
+              this.resetForm("alteracaoCardapio");
+              this.refresh();
+            });
+        } else {
+          updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+            async res => {
+              if (res.status === HTTP_STATUS.OK) {
+                if (status === STATUS_DRE_A_VALIDAR) {
+                  await this.enviaAlteracaoCardapio(res.data.uuid);
+                  this.refresh();
+                } else {
+                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  this.refresh();
+                  this.resetForm("alteracaoCardapio");
+                }
+              } else {
+                toastError(res.error);
+              }
+            },
+            function() {
+              toastError("Houve um erro ao salvar a Alteração de Cardápio");
+            }
+          );
+        }
+      } else {
+        toastError(erros);
+      }
     }
   }
 
@@ -548,6 +553,11 @@ class AlteracaoCardapio extends Component {
                   component={TextAreaWYSIWYG}
                   label="Observações"
                   name="observacao"
+                  validate={required}
+                  required={required}
+                  onChange={value => {
+                    this.setState({ observacao: value });
+                  }}
                 />
               </article>
               <article className="card-body footer-button">
