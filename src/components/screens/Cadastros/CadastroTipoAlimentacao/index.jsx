@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux";
 import { loadTipoAlimentacao } from "../../../../reducers/tipoAlimentacaoReducer";
 import { Select } from "../../../Shareable/Select";
 import { Botao } from "../../../Shareable/Botao";
+import Wizard from "../../../Shareable/Wizard";
 import { ModalCadastroTipoAlimentacao } from "./components/ModalCadastroTipoAlimentacao";
 import "./style.scss";
 
@@ -226,36 +227,11 @@ class CadastroTipoAlimentacao extends Component {
               </section>
               {uuidUnidadeEscolar !== null && (
                 <Fragment>
-                  {/* <section className="wizard-container">
-                    {tipoUnidadeSelect.periodos.map((periodo, index) => {
-                      return (
-                        <a
-                          key={index}
-                          href={`#${index}`}
-                          className={
-                            index === currentStep
-                              ? "current-step"
-                              : index < currentStep
-                              ? "passed-step"
-                              : "next-step"
-                          }
-                          onClick={event => {
-                            event.preventDefault();
-                          }}
-                        >
-                          <span>{periodo.turno}</span>
-                        </a>
-                      );
-                    })}
-                  </section> */}
-                  <ul class="wizardd">
-                    <li>Passo 1</li>
-                    <li class="selected">Passo 2</li>
-                    <li>Passo 3</li>
-                    <li>Passo 4</li>
-                    <li>Passo 4</li>
-                    <li>Fim</li>
-                  </ul>
+                  <Wizard
+                    arrayOfObjects={tipoUnidadeSelect.periodos}
+                    currentStep={currentStep}
+                    nameItem="turno"
+                  />
                   <section className="conteudo-step">
                     <nav>Tipo de alimentos atuais </nav>
                     <nav>Possibilidade</nav>
