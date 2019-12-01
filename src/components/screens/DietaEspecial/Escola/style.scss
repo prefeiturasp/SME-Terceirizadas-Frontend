@@ -1,0 +1,36 @@
+@import "../../../../styles/variables.scss";
+
+form.special-diet {
+  .cinza-escuro {
+    color: $gray;
+  }
+  .grid-container {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 20% 50% 30%;
+    column-gap: 2%;
+    row-gap: 0.5em;
+  }
+  .ajuste-fonte {
+    font-size: 14px;
+    font-weight: 500;
+    color: #686868;
+  }
+  .attachments {
+    .text {
+      font-size: 14px;
+      color: #686868;
+    }
+    .card-warning {
+      border: 1px solid $red;
+      color: $red;
+      font-size: 10px;
+      padding: 10px;
+    }
+    .btn {
+      display: flex;
+      margin-top: 2em;
+      justify-content: flex-end;
+    }
+  }
+}

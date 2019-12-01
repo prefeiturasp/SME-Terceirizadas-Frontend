@@ -12,11 +12,13 @@ export const BUTTON_ICON = {
   FILE_PDF: "far fa-file-pdf",
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
-  SAIR: "fas fa-door-open"
+  SAIR: "fas fa-door-open",
+  ATTACH: "fas fa-paperclip"
 };
 
 export const BUTTON_TYPE = {
   SUBMIT: "submit",
   BUTTON: "button",
-  RESET: "reset"
+  RESET: "reset",
+  FILE: "file"
 };

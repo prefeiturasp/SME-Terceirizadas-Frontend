@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
+  ALTERACAO_CARDAPIO,
+  DIETA_ESPECIAL,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
-  ALTERACAO_CARDAPIO,
-  SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
-  SUSPENSAO_ALIMENTACAO,
+  RELATORIOS,
+  SOLICITACAO_KIT_LANCHE,
   SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS,
-  RELATORIOS
+  SUSPENSAO_ALIMENTACAO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -140,6 +141,13 @@ export class SidebarEscola extends Component {
               to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
             >
               Suspensão de Alimentação
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${ESCOLA}/${DIETA_ESPECIAL}`}
+            >
+              Dieta especial
             </NavLink>
           </div>
         </div>

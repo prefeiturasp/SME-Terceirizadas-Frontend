@@ -70,7 +70,7 @@ export const validateSubmit = (values, meusDados) => {
   const dataFinal = moment(values["data_final"], "DD/MM/YYYY");
   const diferencaDeDias = dataFinal.diff(dataInicial, "days");
 
-  if (diferencaDeDias <= 0)
+  if (!values["alterar_dia"] && diferencaDeDias <= 0)
     return "Data inicial deve ser anterior à data final.";
 
   if (
