@@ -31,7 +31,7 @@ class Relatorios extends Component {
       });
     } else {
       this.setState({
-        renderizaConteudoPadrao: !this.state.renderizaConteudoPadrao,
+        renderizaConteudoPadrao: false,
         resultadosFiltro: resultado
       });
     }
