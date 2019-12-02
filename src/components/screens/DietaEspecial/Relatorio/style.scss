@@ -1,0 +1,7 @@
+@import "../../../../styles/variables.scss";
+
+.value-important {
+  &.link {
+    color: $blue;
+  }
+}
