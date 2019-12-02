@@ -12,7 +12,8 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  SOLICITACOES_DIETA_ESPECIAL
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -156,6 +157,15 @@ export class SidebarEscola extends Component {
         <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
           <i className="fas fa-file-alt" />
           <span>Relatórios</span>
+        </NavLink>
+      </li>,
+      <li key={3} className="nav-item">
+        <NavLink
+          className={`nav-link collapsed`}
+          to={`/${SOLICITACOES_DIETA_ESPECIAL}/`}
+        >
+          <i className="fas fa-file-alt" />
+          <span>Dieta Especial</span>
         </NavLink>
       </li>,
       <li key={4} className="nav-item">

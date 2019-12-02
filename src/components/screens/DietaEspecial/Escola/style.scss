@@ -15,6 +15,9 @@ form.special-diet {
     font-size: 14px;
     font-weight: 500;
     color: #686868;
+    span {
+      color: $red;
+    }
   }
   .attachments {
     .text {
