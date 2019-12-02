@@ -208,7 +208,7 @@ class AlteracaoCardapio extends Component {
     if (!erros) {
       this.resetaTodoPeriodoCheck();
       if (!values.uuid) {
-        createAlteracaoCardapio(JSON.stringify(values))
+        createAlteracaoCardapio(values)
           .then(async response => {
             if (response.status === HTTP_STATUS.CREATED) {
               if (status === STATUS_DRE_A_VALIDAR) {
