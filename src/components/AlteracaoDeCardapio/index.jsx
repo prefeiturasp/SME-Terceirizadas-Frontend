@@ -9,7 +9,7 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
-import { required } from "../../helpers/fieldValidators";
+import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { montaPeriodoDeAlteracao } from "./helper";
@@ -45,8 +45,7 @@ class AlteracaoCardapio extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
-      dataInicial: null,
-      observacao: null
+      dataInicial: null
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -202,57 +201,53 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit(values) {
-    if (this.state.observacao.length === 8) {
-      toastError("Campo de observações obrigatório");
-    } else {
-      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      const status = values.status;
-      delete values.status;
-      const erros = validateSubmit(values, this.props.meusDados);
-      if (!erros) {
-        this.resetaTodoPeriodoCheck();
-        if (!values.uuid) {
-          createAlteracaoCardapio(JSON.stringify(values))
-            .then(async response => {
-              if (response.status === HTTP_STATUS.CREATED) {
-                if (status === STATUS_DRE_A_VALIDAR) {
-                  await this.enviaAlteracaoCardapio(response.data.uuid);
-                } else {
-                  toastSuccess("Alteração de Cardápio salva com sucesso");
-                  this.refresh();
-                }
-                this.resetForm();
-              }
-            })
-            .catch(error => {
-              toastError(error);
-              this.resetForm("alteracaoCardapio");
-              this.refresh();
-            });
-        } else {
-          updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-            async res => {
-              if (res.status === HTTP_STATUS.OK) {
-                if (status === STATUS_DRE_A_VALIDAR) {
-                  await this.enviaAlteracaoCardapio(res.data.uuid);
-                  this.refresh();
-                } else {
-                  toastSuccess("Alteração de Cardápio salva com sucesso");
-                  this.refresh();
-                  this.resetForm("alteracaoCardapio");
-                }
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+    const status = values.status;
+    delete values.status;
+    const erros = validateSubmit(values, this.props.meusDados);
+    if (!erros) {
+      this.resetaTodoPeriodoCheck();
+      if (!values.uuid) {
+        createAlteracaoCardapio(JSON.stringify(values))
+          .then(async response => {
+            if (response.status === HTTP_STATUS.CREATED) {
+              if (status === STATUS_DRE_A_VALIDAR) {
+                await this.enviaAlteracaoCardapio(response.data.uuid);
               } else {
-                toastError(res.error);
+                toastSuccess("Alteração de Cardápio salva com sucesso");
+                this.refresh();
               }
-            },
-            function() {
-              toastError("Houve um erro ao salvar a Alteração de Cardápio");
+              this.resetForm();
             }
-          );
-        }
+          })
+          .catch(error => {
+            toastError(error);
+            this.resetForm("alteracaoCardapio");
+            this.refresh();
+          });
       } else {
-        toastError(erros);
+        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          async res => {
+            if (res.status === HTTP_STATUS.OK) {
+              if (status === STATUS_DRE_A_VALIDAR) {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              } else {
+                toastSuccess("Alteração de Cardápio salva com sucesso");
+                this.refresh();
+                this.resetForm("alteracaoCardapio");
+              }
+            } else {
+              toastError(res.error);
+            }
+          },
+          function() {
+            toastError("Houve um erro ao salvar a Alteração de Cardápio");
+          }
+        );
       }
+    } else {
+      toastError(erros);
     }
   }
 
@@ -553,11 +548,7 @@ class AlteracaoCardapio extends Component {
                   component={TextAreaWYSIWYG}
                   label="Observações"
                   name="observacao"
-                  validate={required}
-                  required={required}
-                  onChange={value => {
-                    this.setState({ observacao: value });
-                  }}
+                  validate={textAreaRequired}
                 />
               </article>
               <article className="card-body footer-button">
