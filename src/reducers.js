@@ -10,6 +10,7 @@ import { tourRequestReducer } from "./reducers/tourRequest.reducer";
 import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
 import editalReducer from "./reducers/edital.reducer";
 import loadEmpresa from "./reducers/empresa.reducer";
+import loadFiltroBusca from "./reducers/loadFiltroBusca";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
   cadastroEditaisForm: editalReducer,
-  cadastroEmpresaForm: loadEmpresa
+  cadastroEmpresaForm: loadEmpresa,
+  FiltrosDeBuscaForm: loadFiltroBusca
 });
 
 export default rootReducer;

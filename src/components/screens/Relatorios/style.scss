@@ -38,3 +38,257 @@ div.evolution {
     }
   }
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 59% 39%;
+  column-gap: 2%;
+  grid-template-rows: auto;
+
+  .container-left {
+    .container-left-bottom {
+      margin: 1em 0 0 0;
+      display: grid;
+      grid-template-columns: 30% 30% 36%;
+      column-gap: 2%;
+    }
+  }
+
+  label {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 165%;
+    color: #42474a;
+    margin: 0 0 0.5em 0 !important;
+  }
+
+  .container-right {
+    .container-right-bottom {
+      margin: 1em 0 0 0;
+      display: grid;
+      grid-template-columns: 72% 24%;
+      column-gap: 4%;
+
+      .filtrar {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
+div.datepicker {
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background-color: $green;
+  }
+  .react-datepicker__close-icon {
+    display: none;
+  }
+  .fa-calendar-alt {
+    z-index: 0;
+    cursor: text;
+    padding-top: 12px;
+    color: $green;
+    position: relative;
+  }
+  div.react-datepicker-wrapper {
+    width: 150px !important;
+    margin-right: -30px;
+    .react-datepicker__input-container {
+      input {
+        height: 38px;
+        font-size: 14px;
+        color: $blackInput;
+        &.invalid-field:not(:focus) {
+          box-shadow: none;
+          border-color: $red;
+        }
+      }
+    }
+  }
+}
+
+.realtorio-filtro {
+  header {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 165%;
+    color: #686868;
+  }
+
+  .total-pedidos {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    margin-top: 2em;
+    color: #42474a;
+  }
+
+  .grid-listagem-itens {
+    .cabecalho-listagem {
+      display: grid;
+      grid-template-columns: 20% 20% 20% 40%;
+    }
+
+    .corpo-listagem {
+      div.linha-dado {
+        margin-top: 1em;
+        display: grid;
+        grid-template-columns: 3% 97%;
+        border-bottom: 1px solid #c0c0c0;
+
+        .grid-detalhe-item {
+          display: grid;
+          grid-template-columns: 17% 21% 21% auto;
+
+          font-style: normal;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 16px;
+          cursor: pointer;
+          color: #036aa8;
+
+          div {
+            display: flex;
+            align-items: center;
+          }
+        }
+
+        .input-check {
+          display: flex;
+          align-items: center;
+          margin-bottom: 0.1em;
+        }
+
+        .check-item {
+          input[type="checkbox"] {
+            display: none;
+          }
+
+          label {
+            cursor: pointer;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+
+            color: #686868;
+          }
+
+          input[type="checkbox"] + label:before {
+            border: 1px solid #828688;
+            content: "\00a0";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 21px;
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+            height: 16px;
+            margin: 0 0.25em 0 0;
+            padding: 0;
+            vertical-align: top;
+            width: 16px;
+            border-radius: 4px;
+          }
+
+          input[type="checkbox"]:checked + label:before {
+            background: #198459;
+            color: #fff;
+            content: "\2713";
+            text-align: center;
+          }
+
+          input[type="checkbox"]:checked + label:after {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .check-seleciona-todos {
+      width: 15%;
+      margin-top: 1.5em;
+
+      input[type="checkbox"] {
+        display: none;
+      }
+
+      label {
+        cursor: pointer;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+
+        color: #686868;
+      }
+
+      input[type="checkbox"] + label:before {
+        border: 1px solid #828688;
+        content: "\00a0";
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+        display: inline-flex;
+        align-items: center;
+        text-align: center;
+        height: 16px;
+        margin: 0 0.25em 0 0;
+        padding: 0;
+        vertical-align: top;
+        width: 16px;
+        border-radius: 4px;
+      }
+
+      input[type="checkbox"]:checked + label:before {
+        background: #198459;
+        color: #fff;
+        content: "\2713";
+        text-align: center;
+      }
+
+      input[type="checkbox"]:checked + label:after {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .cabecalho {
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    .cabecalho-esquerdo {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      line-height: 165%;
+      /* or 33px */
+
+      color: #42474a;
+    }
+
+    .cabecalho-direito {
+      display: flex;
+      justify-content: flex-end;
+
+      section {
+        display: flex;
+        justify-content: space-around;
+      }
+    }
+  }
+}

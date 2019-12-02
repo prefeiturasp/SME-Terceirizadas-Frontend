@@ -12,6 +12,7 @@ export const BUTTON_ICON = {
   FILE_PDF: "far fa-file-pdf",
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
+  SAIR: "fas fa-door-open",
   ATTACH: "fas fa-paperclip"
 };
 
