@@ -2,11 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import {
-  length,
-  minLength,
-  required
-} from "../../../../helpers/fieldValidators";
+import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
 import { criaDietaEspecial } from "../../../../services/dietaEspecial";
 import { meusDados } from "../../../../services/perfil.service";
@@ -19,6 +15,11 @@ import InputFile from "../../../Shareable/Input/InputFile";
 import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
+import {
+  DIETA_ESPECIAL,
+  ESCOLA,
+  RELATORIO
+} from "../../../../configs/constants";
 
 const minLength6 = minLength(6);
 
@@ -61,7 +62,9 @@ class solicitacaoDietaEspecial extends Component {
       toastSuccess("Solicitação realizada com sucesso.");
       this.setState({
         submitted: !this.state.submitted,
-        resumo: `/escola/dieta-especial/relatorio?uuid=${response.data.uuid}`
+        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+          response.data.uuid
+        }`
       });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -110,7 +113,7 @@ class solicitacaoDietaEspecial extends Component {
               className="form-control"
               type="number"
               required
-              validate={[required, length(6)]}
+              validate={[required, minLength6]}
             />
             <Field
               component={InputText}
