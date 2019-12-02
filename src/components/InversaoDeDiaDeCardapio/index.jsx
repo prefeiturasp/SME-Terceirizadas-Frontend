@@ -139,14 +139,14 @@ export class InversaoDeDiaDeCardapio extends Component {
     inicioPedido(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          toastSuccess("Inclusão de Alimentação enviada com sucesso!");
+          toastSuccess("Inversão de dia de Cardápio enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+          toastError("Houve um erro ao enviar a Inversão de dia de Cardápio");
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+        toastError("Houve um erro ao enviar a Inversão de dia de Cardápio");
       }
     );
   }
