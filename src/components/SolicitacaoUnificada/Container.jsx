@@ -11,7 +11,8 @@ class SolicitacaoUnificadaContainer extends Component {
       meusDados: null,
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null,
-      escolas: []
+      escolas: [],
+      lotes: []
     };
   }
 
@@ -33,7 +34,8 @@ class SolicitacaoUnificadaContainer extends Component {
       });
       this.setState({
         meusDados: response,
-        escolas
+        escolas,
+        lotes: response.vinculo_atual.instituicao.lotes
       });
     });
 
