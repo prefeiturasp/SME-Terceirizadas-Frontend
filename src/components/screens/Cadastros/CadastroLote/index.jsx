@@ -73,7 +73,9 @@ class CadastroLote extends Component {
       });
       if (
         meusDados.vinculo_atual.perfil.nome ===
-        "GESTAO_ALIMENTACAO_TERCEIRIZADA"
+          "COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA" ||
+        meusDados.vinculo_atual.perfil.nome ===
+          "ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA"
       ) {
         this.setState({
           deactivate: false
@@ -85,7 +87,10 @@ class CadastroLote extends Component {
       }
     }
     const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
+    const uuid =
+      this.props.location && this.props.location.state
+        ? this.props.location.state.uuid
+        : urlParams.get("uuid");
     if (uuid && !loading && !loteCarregado) {
       getLote(uuid).then(response => {
         if (response.status !== HTTP_STATUS.NOT_FOUND) {

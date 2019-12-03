@@ -16,13 +16,14 @@ const anteriores = [
   }
 ];
 
-export default () => (
+export default props => (
   <Page
     titulo={atual.titulo}
     botaoVoltar
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}`}
+    {...props}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <Container />
+    <Container {...props} />
   </Page>
 );

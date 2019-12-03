@@ -88,14 +88,14 @@ export class ModalCadastroLote extends Component {
         </Modal.Body>
         <Modal.Footer>
           <Botao
-            label="Não"
+            texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
             className="ml-3"
           />
           <Botao
-            label="Sim"
+            texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => this.onSubmit()}
             style={BUTTON_STYLE.BLUE}
