@@ -15,6 +15,15 @@ import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/custom.css";
 import "./styles/sb-admin-2.css";
+import * as Sentry from "@sentry/browser";
+
+/* eslint-disable-next-line */
+if (process.env.NODE_ENV === "production") {
+  // This way we can pass params to static files. see Dockerfile.
+  // when build default env is production
+  const SENTRY_URL = "SENTRY_URL_REPLACE_ME";
+  Sentry.init({ dsn: SENTRY_URL });
+}
 
 toast.configure();
 
