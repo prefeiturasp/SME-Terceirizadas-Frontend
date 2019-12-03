@@ -62,11 +62,13 @@ export default class Page extends Component {
               {titulo}
               {botaoVoltar && (
                 <Link
-                  to={
-                    this.props.location && this.props.location.state
-                      ? this.props.location.state.prevPath
-                      : voltarPara
-                  }
+                  to={{
+                    pathname:
+                      this.props.location && this.props.location.state
+                        ? this.props.location.state.prevPath
+                        : voltarPara,
+                    state: { botaoVoltar: true }
+                  }}
                 >
                   <Botao
                     texto="voltar"

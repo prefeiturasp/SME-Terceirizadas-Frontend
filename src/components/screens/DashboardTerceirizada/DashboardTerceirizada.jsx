@@ -114,6 +114,15 @@ class DashboardTerceirizada extends Component {
 
   async componentDidMount() {
     let minhaTerceirizada = null;
+    if (
+      this.props.location &&
+      this.props.location.state &&
+      this.props.location.state.botaoVoltar
+    ) {
+      this.setState({
+        secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO
+      });
+    }
     getMeusDados().then(response => {
       minhaTerceirizada = response.vinculo_atual.instituicao.uuid;
       this.setState({ minhaTerceirizada });
