@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import { minLength, required } from "../../../../helpers/fieldValidators";
+import {
+  minLength,
+  required,
+  length
+} from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
 import { criaDietaEspecial } from "../../../../services/dietaEspecial";
 import { meusDados } from "../../../../services/perfil.service";
@@ -113,7 +117,7 @@ class solicitacaoDietaEspecial extends Component {
               className="form-control"
               type="number"
               required
-              validate={[required, minLength6]}
+              validate={[required, length(6)]}
             />
             <Field
               component={InputText}
