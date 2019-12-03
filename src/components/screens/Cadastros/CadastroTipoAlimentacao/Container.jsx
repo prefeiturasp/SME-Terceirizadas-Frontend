@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { meusDados } from "../../../../services/perfil.service";
+import { getTiposUnidadeEscolar } from "../../../../services/cadastroTipoAlimentacao.service";
 import CadastroTipoAlimentacao from ".";
 
 class Container extends Component {
@@ -19,6 +20,15 @@ class Container extends Component {
         meusDados: response
       });
     });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.tiposUnidadesEscolar === this.state.tiposUnidadesEscolar) {
+      getTiposUnidadeEscolar().then(response => {
+        const tiposUnidadesEscolar = response.results;
+        this.setState({ tiposUnidadesEscolar });
+      });
+    }
   }
 
   render() {

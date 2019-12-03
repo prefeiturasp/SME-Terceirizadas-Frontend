@@ -7,83 +7,106 @@ import { Select } from "../../../Shareable/Select";
 import { Botao } from "../../../Shareable/Botao";
 import Wizard from "../../../Shareable/Wizard";
 import { ModalCadastroTipoAlimentacao } from "./components/ModalCadastroTipoAlimentacao";
+import { getVinculosTipoAlimentacao } from "../../../../services/cadastroTipoAlimentacao.service";
 import "./style.scss";
 
-import { getDadosUnidadeEscolar, adicionaCheckPossibilidades } from "./helper";
+import {
+  pegaDadosdeUnidadeEscolar,
+  criaArraydePeriodosEscolares,
+  criaArrayDeTiposAlimentacao,
+  adicionaCheckAObjetos,
+  pegaDadosdeUnidadeEscolarOriginal
+} from "./helper";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
 class CadastroTipoAlimentacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: null,
-      uuidUnidadeEscolar: null,
       load: false,
-      unidadesEscolares: [],
+
       dadosEscolares: null,
       tipoUnidadeSelect: null,
-      currentStep: 0,
       currentTipoAlimentacao: 0,
       showModal: false,
       dadosWizard: null,
-      redirect: false
+      redirect: false,
+
+      dadosTipoAlimentacaoPorUe: null,
+      dadosTipoAlimentacaoOriginal: null,
+      currentStep: 0,
+      unidadesEscolares: null,
+      meusDados: null,
+      uuidUnidadeEscolar: null,
+      periodosEscolares: null,
+      tiposAlimentacao: null
     };
     this.closeModal = this.closeModal.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  montaTipoUnidadeEscolar = data => {
-    let unidadesEscolares = this.state.unidadesEscolares;
-    unidadesEscolares.push({ nome: "Selecione a unidade", uuid: "" });
-    data.forEach(unidadeEscolar => {
-      unidadesEscolares.push({
-        nome: unidadeEscolar.tipo_ue,
-        uuid: unidadeEscolar.uuid
+  montaTipoUnidadeEscolar = tiposUnidades => {
+    let unidadesEscolares = [{ nome: "Selecione a unidade", uuid: "" }];
+
+    tiposUnidades &&
+      tiposUnidades.forEach(tipoUnidade => {
+        unidadesEscolares.push({
+          nome: tipoUnidade.iniciais,
+          uuid: tipoUnidade.uuid
+        });
       });
-    });
 
-    const dadosEscolares = adicionaCheckPossibilidades(data);
-
-    this.setState({
-      unidadesEscolares,
-      dadosEscolares
-    });
+    if (this.state.unidadesEscolares === null) {
+      this.setState({
+        unidadesEscolares
+      });
+    }
   };
 
-  setRedirect() {
-    this.setState({
-      redirect: true
-    });
-  }
-
-  // renderizarRedirecionamentoParaPedidos = () => {
-  //   if (this.state.redirect) {
-  //     return <Redirect to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`} />;
-  //   }
-  // };
-
-  requestDadosEscolares() {
-    getDadosUnidadeEscolar().then(response => {
-      this.montaTipoUnidadeEscolar(response.data);
-    });
-  }
-
   componentDidUpdate(prevProps, prevState) {
+    let unidadesEscolares = this.state.unidadesEscolares;
     const { meusDados } = this.props;
     if (meusDados !== prevState.meusDados) {
       this.setState({ meusDados });
       if (this.state.load === false) {
         this.setState({ load: true });
-        this.requestDadosEscolares();
       }
+    }
+
+    if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
+      this.montaTipoUnidadeEscolar(this.props.tiposUnidadesEscolar);
     }
   }
 
-  getDadosTipoUnidadeEscolar = value => {
-    const dadosEscolares = this.state.dadosEscolares;
-    dadosEscolares.forEach(escola => {
-      if (escola.uuid === value) {
-        this.setState({ tipoUnidadeSelect: escola });
-      }
+  getDadosTipoUnidadeEscolar = uuid => {
+    getVinculosTipoAlimentacao().then(response => {
+      const dadosTipoAlimentacaoOriginal = pegaDadosdeUnidadeEscolarOriginal(
+        uuid,
+        response.results
+      );
+      let dadosTipoAlimentacaoPorUe = pegaDadosdeUnidadeEscolar(
+        uuid,
+        response.results
+      );
+      let periodosEscolares = criaArraydePeriodosEscolares(
+        dadosTipoAlimentacaoPorUe
+      );
+
+      let tiposAlimentacao = criaArrayDeTiposAlimentacao(
+        dadosTipoAlimentacaoPorUe
+      );
+
+      dadosTipoAlimentacaoPorUe = adicionaCheckAObjetos(
+        dadosTipoAlimentacaoPorUe
+      );
+
+      this.setState({
+        dadosTipoAlimentacaoOriginal,
+        dadosTipoAlimentacaoPorUe,
+        periodosEscolares,
+        uuidUnidadeEscolar: uuid,
+        tiposAlimentacao
+      });
     });
   };
 
@@ -95,47 +118,47 @@ class CadastroTipoAlimentacao extends Component {
   };
 
   adicionaItemASubstituicoes = (currentStep, currentTipoAlimentacao) => {
-    let tipoUnidadeSelect = this.state.tipoUnidadeSelect;
+    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
     let arrayPossibilidades = [];
-    tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
       currentTipoAlimentacao
     ].possibilidades.forEach((possibilidade, index) => {
       if (possibilidade.check) {
         possibilidade.check = false;
 
-        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
           currentTipoAlimentacao
-        ].combinacoes.push(possibilidade);
+        ].substituicoes.push(possibilidade);
 
         arrayPossibilidades.push(possibilidade);
 
-        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
           currentTipoAlimentacao
         ].possibilidades.splice(index, 1);
       }
     });
 
-    this.setState({ tipoUnidadeSelect });
+    this.setState({ dadosTipoAlimentacaoPorUe });
   };
 
   adicionaItemAPossibilidades = (currentStep, currentTipoAlimentacao) => {
-    let tipoUnidadeSelect = this.state.tipoUnidadeSelect;
-    tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
+    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
       currentTipoAlimentacao
-    ].combinacoes.forEach((combinacao, index) => {
+    ].substituicoes.forEach((combinacao, index) => {
       if (combinacao.check) {
         combinacao.check = false;
 
-        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
           currentTipoAlimentacao
         ].possibilidades.push(combinacao);
 
-        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
           currentTipoAlimentacao
-        ].combinacoes.splice(index, 1);
+        ].substituicoes.splice(index, 1);
       }
     });
-    this.setState({ tipoUnidadeSelect });
+    this.setState({ dadosTipoAlimentacaoPorUe });
   };
 
   setaCheckTipoAlimentacao = (
@@ -144,12 +167,12 @@ class CadastroTipoAlimentacao extends Component {
     indice,
     condicao
   ) => {
-    let tipoUnidadeSelect = this.state.tipoUnidadeSelect;
-    tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
+    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
       currentTipoAlimentacao
     ].possibilidades[indice].check = !condicao;
 
-    this.setState({ tipoUnidadeSelect });
+    this.setState({ dadosTipoAlimentacaoPorUe });
   };
 
   setaCheckCombinacaoAlimentacao = (
@@ -158,21 +181,12 @@ class CadastroTipoAlimentacao extends Component {
     indice,
     condicao
   ) => {
-    let tipoUnidadeSelect = this.state.tipoUnidadeSelect;
-    tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
+    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
       currentTipoAlimentacao
-    ].combinacoes[indice].check = !condicao;
+    ].substituicoes[indice].check = !condicao;
 
-    this.setState({ tipoUnidadeSelect });
-  };
-
-  obtemDadosDoWizard = (uuidUnidadeEscolar, dadosEscolares) => {
-    dadosEscolares.forEach(dadoEscolar => {
-      if (dadoEscolar.uuid === uuidUnidadeEscolar) {
-        this.setState({ dadosWizard: dadoEscolar });
-      }
-    });
-    this.showModal();
+    this.setState({ dadosTipoAlimentacaoPorUe });
   };
 
   showModal() {
@@ -183,16 +197,53 @@ class CadastroTipoAlimentacao extends Component {
     this.setState({ showModal: false });
   }
 
+  onSubmit() {
+    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
+    dadosTipoAlimentacaoPorUe.forEach(tipoAlimentacao => {
+      let data = {
+        tipo_unidade_escolar: tipoAlimentacao.uuid,
+        periodo_escolar: tipoAlimentacao.periodo_escolar.uuid,
+        substituicoes: [
+          {
+            tipo_alimentacao: null,
+            substituicoes: [],
+            possibilidades: []
+          }
+        ]
+      };
+
+      let possibilidadesArray = [];
+      let substituicoesArray = [];
+
+      tipoAlimentacao.substituicoes.forEach(substituicao => {
+        data.substituicoes[0].tipo_alimentacao =
+          substituicao.tipo_alimentacao.uuid;
+        substituicoesArray = substituicao.substituicoes;
+        possibilidadesArray = substituicao.substituicoes.concat(
+          substituicao.possibilidades
+        );
+      });
+
+      possibilidadesArray.forEach(possibilidade => {
+        data.substituicoes[0].possibilidades.push(possibilidade.uuid);
+      });
+
+      substituicoesArray.forEach(substituicao => {
+        data.substituicoes[0].substituicoes.push(substituicao.uuid);
+      });
+
+      console.log(data);
+    });
+  }
+
   render() {
     const {
+      dadosTipoAlimentacaoPorUe,
       uuidUnidadeEscolar,
       unidadesEscolares,
-      tipoUnidadeSelect,
       currentStep,
       currentTipoAlimentacao,
-      dadosEscolares,
-      showModal,
-      dadosWizard
+      showModal
     } = this.state;
     const { handleSubmit } = this.props;
     return (
@@ -200,8 +251,8 @@ class CadastroTipoAlimentacao extends Component {
         <ModalCadastroTipoAlimentacao
           closeModal={this.closeModal}
           showModal={showModal}
-          tiposAlimentacoes={dadosWizard}
-          // setRedirect={this.setRedirect.bind(this)}
+          onSubmit={this.onSubmit}
+          tiposAlimentacoes={dadosTipoAlimentacaoPorUe}
         />
         <div className="card mt-3">
           <div className="card-body formulario-tipo-alimentacao">
@@ -215,12 +266,9 @@ class CadastroTipoAlimentacao extends Component {
                   <Field
                     component={Select}
                     name="tipos_unidades"
-                    options={unidadesEscolares}
+                    options={unidadesEscolares ? unidadesEscolares : []}
                     onChange={event => {
                       this.getDadosTipoUnidadeEscolar(event.target.value);
-                      this.setState({
-                        uuidUnidadeEscolar: event.target.value
-                      });
                     }}
                   />
                 </article>
@@ -228,9 +276,9 @@ class CadastroTipoAlimentacao extends Component {
               {uuidUnidadeEscolar !== null && (
                 <Fragment>
                   <Wizard
-                    arrayOfObjects={tipoUnidadeSelect.periodos}
+                    arrayOfObjects={dadosTipoAlimentacaoPorUe}
                     currentStep={currentStep}
-                    nameItem="turno"
+                    nameItem="nome"
                   />
                   <section className="conteudo-step">
                     <nav>Tipo de alimentos atuais </nav>
@@ -239,11 +287,55 @@ class CadastroTipoAlimentacao extends Component {
                     <nav>Combinação</nav>
 
                     <div className="itens-tipo-alimentacao">
-                      {tipoUnidadeSelect.periodos[
-                        currentStep
-                      ].tipos_alimentos.map((alimento, indice) => {
-                        return indice === 0 ? (
-                          alimento.combinacoes.length > 0 ? (
+                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes.map(
+                        (alimento, indice) => {
+                          return indice === 0 ? (
+                            alimento.substituicoes.length > 0 ? (
+                              <a
+                                className="passou"
+                                key={indice}
+                                href={`#${indice}`}
+                                onClick={event => {
+                                  event.preventDefault();
+                                  this.setaIndiceTipoAlimentacao(indice);
+                                }}
+                              >
+                                <span>
+                                  {alimento.tipo_alimentacao.nome}{" "}
+                                  <i className="fas fa-check" />
+                                </span>
+                              </a>
+                            ) : (
+                              <Fragment>
+                                {this.setaIndiceTipoAlimentacao(indice)}
+                                <a
+                                  className="ativo"
+                                  key={indice}
+                                  href={`#${indice}`}
+                                  onClick={event => {
+                                    event.preventDefault();
+                                  }}
+                                >
+                                  <span>{alimento.tipo_alimentacao.nome}</span>
+                                </a>
+                              </Fragment>
+                            )
+                          ) : dadosTipoAlimentacaoPorUe[currentStep]
+                              .substituicoes[indice - 1].substituicoes
+                              .length === 0 ? (
+                            <a
+                              className="inativo"
+                              key={indice}
+                              href={`#${indice}`}
+                              onClick={event => {
+                                event.preventDefault();
+                              }}
+                            >
+                              <span>{alimento.tipo_alimentacao.nome}</span>
+                            </a>
+                          ) : dadosTipoAlimentacaoPorUe[currentStep]
+                              .substituicoes[indice].substituicoes.length >
+                            0 ? (
                             <a
                               className="passou"
                               key={indice}
@@ -254,72 +346,31 @@ class CadastroTipoAlimentacao extends Component {
                               }}
                             >
                               <span>
-                                {alimento.nome} <i className="fas fa-check" />
+                                {alimento.tipo_alimentacao.nome}{" "}
+                                <i className="fas fa-check" />
                               </span>
                             </a>
                           ) : (
                             <Fragment>
-                              {this.setaIndiceTipoAlimentacao(indice)}
                               <a
                                 className="ativo"
                                 key={indice}
                                 href={`#${indice}`}
                                 onClick={event => {
                                   event.preventDefault();
+                                  this.setaIndiceTipoAlimentacao(indice);
                                 }}
                               >
-                                <span>{alimento.nome}</span>
+                                <span>{alimento.tipo_alimentacao.nome}</span>
                               </a>
                             </Fragment>
-                          )
-                        ) : tipoUnidadeSelect.periodos[currentStep]
-                            .tipos_alimentos[indice - 1].combinacoes.length ===
-                          0 ? (
-                          <a
-                            className="inativo"
-                            key={indice}
-                            href={`#${indice}`}
-                            onClick={event => {
-                              event.preventDefault();
-                            }}
-                          >
-                            <span>{alimento.nome}</span>
-                          </a>
-                        ) : tipoUnidadeSelect.periodos[currentStep]
-                            .tipos_alimentos[indice].combinacoes.length > 0 ? (
-                          <a
-                            className="passou"
-                            key={indice}
-                            href={`#${indice}`}
-                            onClick={event => {
-                              event.preventDefault();
-                              this.setaIndiceTipoAlimentacao(indice);
-                            }}
-                          >
-                            <span>
-                              {alimento.nome} <i className="fas fa-check" />
-                            </span>
-                          </a>
-                        ) : (
-                          <Fragment>
-                            <a
-                              className="ativo"
-                              key={indice}
-                              href={`#${indice}`}
-                              onClick={event => {
-                                event.preventDefault();
-                                this.setaIndiceTipoAlimentacao(indice);
-                              }}
-                            >
-                              <span>{alimento.nome}</span>
-                            </a>
-                          </Fragment>
-                        );
-                      })}
+                          );
+                        }
+                      )}
                     </div>
 
                     <div className="itens-possibilidades">
-                      {tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                         currentTipoAlimentacao
                       ].possibilidades.map((possibilidade, indice) => {
                         return (
@@ -349,12 +400,12 @@ class CadastroTipoAlimentacao extends Component {
                     </div>
 
                     <div className="funcoes">
-                      {tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                         currentTipoAlimentacao
                       ].possibilidades.filter(v => v.check).length > 0 ? (
-                        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+                        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                           currentTipoAlimentacao
-                        ].combinacoes.filter(v => v.check).length > 0 ? (
+                        ].substituicoes.filter(v => v.check).length > 0 ? (
                           <Fragment>
                             <a
                               href="#0"
@@ -408,11 +459,9 @@ class CadastroTipoAlimentacao extends Component {
                             </a>
                           </Fragment>
                         )
-                      ) : tipoUnidadeSelect.periodos[
-                          currentStep
-                        ].tipos_alimentos[
+                      ) : dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                           currentTipoAlimentacao
-                        ].combinacoes.filter(v => v.check).length > 0 ? (
+                        ].substituicoes.filter(v => v.check).length > 0 ? (
                         <Fragment>
                           <a
                             href="#1"
@@ -458,15 +507,13 @@ class CadastroTipoAlimentacao extends Component {
                       )}
                     </div>
 
-                    {tipoUnidadeSelect.periodos[currentStep].tipos_alimentos[
+                    {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                       currentTipoAlimentacao
-                    ].combinacoes.length > 0 ? (
+                    ].substituicoes.length > 0 ? (
                       <div className="itens-combinacoes-check">
-                        {tipoUnidadeSelect.periodos[
-                          currentStep
-                        ].tipos_alimentos[
+                        {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
                           currentTipoAlimentacao
-                        ].combinacoes.map((combinacao, indice) => {
+                        ].substituicoes.map((substituicao, indice) => {
                           return (
                             <div
                               key={indice}
@@ -477,17 +524,17 @@ class CadastroTipoAlimentacao extends Component {
                                   currentStep,
                                   currentTipoAlimentacao,
                                   indice,
-                                  combinacao.check
+                                  substituicao.check
                                 );
                               }}
                             >
                               <input
                                 type="checkbox"
-                                name={combinacao.nome}
-                                value={combinacao.uuid}
-                                checked={combinacao.check}
+                                name={substituicao.nome}
+                                value={substituicao.uuid}
+                                checked={substituicao.check}
                               />
-                              <label>{combinacao.nome}</label>
+                              <label>{substituicao.nome}</label>
                             </div>
                           );
                         })}
@@ -506,11 +553,11 @@ class CadastroTipoAlimentacao extends Component {
 
                   <section className="botao-footer">
                     {currentStep === 0 ? (
-                      tipoUnidadeSelect.periodos[
+                      dadosTipoAlimentacaoPorUe[
                         currentStep
-                      ].tipos_alimentos.filter(v => v.combinacoes.length)
+                      ].substituicoes.filter(v => v.substituicoes.length)
                         .length ===
-                      tipoUnidadeSelect.periodos[currentStep].tipos_alimentos
+                      dadosTipoAlimentacaoPorUe[currentStep].substituicoes
                         .length ? (
                         <Fragment>
                           <Botao
@@ -548,14 +595,13 @@ class CadastroTipoAlimentacao extends Component {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
-                        {tipoUnidadeSelect.periodos[
+                        {dadosTipoAlimentacaoPorUe[
                           currentStep
-                        ].tipos_alimentos.filter(v => v.combinacoes.length)
+                        ].substituicoes.filter(v => v.substituicoes.length)
                           .length ===
-                        tipoUnidadeSelect.periodos[currentStep].tipos_alimentos
+                        dadosTipoAlimentacaoPorUe[currentStep].substituicoes
                           .length ? (
-                          currentStep + 1 <
-                          tipoUnidadeSelect.periodos.length ? (
+                          currentStep + 1 < dadosTipoAlimentacaoPorUe.length ? (
                             <Botao
                               texto={"Próximo"}
                               className="ml-3"
@@ -572,18 +618,13 @@ class CadastroTipoAlimentacao extends Component {
                             <Botao
                               texto={"Finalizar"}
                               className="ml-3"
-                              onClick={() =>
-                                this.obtemDadosDoWizard(
-                                  uuidUnidadeEscolar,
-                                  dadosEscolares
-                                )
-                              }
+                              onClick={() => this.showModal()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN}
                             />
                           )
                         ) : currentStep + 1 <
-                          tipoUnidadeSelect.periodos.length ? (
+                          dadosTipoAlimentacaoPorUe.length ? (
                           <Fragment>
                             <Botao
                               texto={"Próximo"}

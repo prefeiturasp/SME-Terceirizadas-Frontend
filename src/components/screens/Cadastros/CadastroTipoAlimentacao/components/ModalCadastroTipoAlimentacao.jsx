@@ -24,7 +24,7 @@ export class ModalCadastroTipoAlimentacao extends Component {
 
   render() {
     const { tiposAlimentacoes, frameAtual } = this.state;
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, onSubmit } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -37,7 +37,7 @@ export class ModalCadastroTipoAlimentacao extends Component {
           </div>
           <div className="wizard-container modal-wizard">
             {tiposAlimentacoes &&
-              tiposAlimentacoes.periodos.map((periodo, indice) => {
+              tiposAlimentacoes.map((periodo, indice) => {
                 return (
                   <a
                     key={indice}
@@ -54,24 +54,24 @@ export class ModalCadastroTipoAlimentacao extends Component {
                       this.setState({ frameAtual: indice });
                     }}
                   >
-                    <span>{periodo.turno}</span>
+                    <span>{periodo.periodo_escolar.nome}</span>
                   </a>
                 );
               })}
           </div>
           <div className="descricao">Tipo de alimentação</div>
           {tiposAlimentacoes &&
-            tiposAlimentacoes.periodos[frameAtual].tipos_alimentos.map(
+            tiposAlimentacoes[frameAtual].substituicoes.map(
               (alimentacao, indice) => {
                 return (
                   <div key={indice} className="detalhe-alimentacao">
                     <div className="titulo-descricao">De:</div>
                     <div className="titulo-descricao">Para:</div>
-                    <div>{alimentacao.nome}</div>
+                    <div>{alimentacao.tipo_alimentacao.nome}</div>
                     <div>
-                      {tiposAlimentacoes.periodos[frameAtual].tipos_alimentos[
+                      {tiposAlimentacoes[frameAtual].substituicoes[
                         indice
-                      ].combinacoes.map((combinacao, indice) => {
+                      ].substituicoes.map((combinacao, indice) => {
                         return <div key={indice}>{combinacao.nome}</div>;
                       })}
                     </div>
@@ -86,12 +86,14 @@ export class ModalCadastroTipoAlimentacao extends Component {
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => closeModal()}
             />
             <Botao
               texto={"Confirmar"}
               className="ml-3"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
+              onClick={onSubmit}
             />
           </div>
         </Modal.Footer>

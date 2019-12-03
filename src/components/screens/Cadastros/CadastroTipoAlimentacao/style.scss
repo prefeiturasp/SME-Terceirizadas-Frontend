@@ -217,9 +217,11 @@
 
       span {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         width: 100%;
         margin-right: 1em;
+        font-size: 1em;
 
         i {
           display: flex;
@@ -227,6 +229,7 @@
           justify-content: center;
           border: 1px solid #52c41a;
           width: 1.9em;
+          max-height: 22px;
           border-radius: 50%;
           color: #fff;
           background: #52c41a;

@@ -10,24 +10,25 @@ class Wizard extends Component {
     const { currentStep, arrayOfObjects, nameItem } = this.props;
     return (
       <ul className="wizard">
-        {arrayOfObjects.map((item, index) => {
-          return (
-            <li
-              key={index}
-              className={
-                index === currentStep
-                  ? "current-step"
-                  : index < currentStep
-                  ? "past-step"
-                  : index === currentStep + 1
-                  ? "next next-step"
-                  : "next-step"
-              }
-            >
-              <div>{item[`${nameItem}`]}</div>
-            </li>
-          );
-        })}
+        {arrayOfObjects &&
+          arrayOfObjects.map((item, index) => {
+            return (
+              <li
+                key={index}
+                className={
+                  index === currentStep
+                    ? "current-step"
+                    : index < currentStep
+                    ? "past-step"
+                    : index === currentStep + 1
+                    ? "next next-step"
+                    : "next-step"
+                }
+              >
+                <div>{item.periodo_escolar[`${nameItem}`]}</div>
+              </li>
+            );
+          })}
       </ul>
     );
   }
