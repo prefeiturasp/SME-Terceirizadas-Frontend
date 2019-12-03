@@ -26,7 +26,7 @@ export const criaDietaEspecial = async payload => {
 };
 
 export const getDietaEspecial = async uuid => {
-  const url = `${URL_DIETA_ESPECIAL}/${uuid}`;
+  const url = `${URL_DIETA_ESPECIAL}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
