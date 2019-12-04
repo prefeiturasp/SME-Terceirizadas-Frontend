@@ -12,7 +12,7 @@ export const TIPO_SOLICITACAO = [
 ];
 
 export const STATUS_SOLICITACAO = [
-  { nome: "todos", uuid: "TODOS" },
+  { nome: "Todos", uuid: "TODOS" },
   { nome: "Autorizados", uuid: "AUTORIZADOS" },
   { nome: "Negados", uuid: "NEGADOS" },
   { nome: "Cancelados", uuid: "CANCELADOS" },
@@ -23,5 +23,5 @@ export const ENTER = 13;
 
 const dataMin = moment();
 const dataMax = moment();
-export const DATA_MINIMA = dataMin.subtract(400, "days")["_d"];
+export const DATA_MINIMA = dataMin.subtract(365, "days")["_d"];
 export const DATA_MAXIMA = dataMax.add(0, "days")["_d"];
