@@ -57,7 +57,7 @@ class Container extends Component {
   }
 
   render() {
-    return <CadastroLote {...this.state} />;
+    return <CadastroLote {...this.state} {...this.props} />;
   }
 }
 

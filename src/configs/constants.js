@@ -17,6 +17,7 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
 export const RELATORIO = "relatorio";
 export const RELATORIOS = "relatorios";

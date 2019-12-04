@@ -9,7 +9,7 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
-import { required } from "../../helpers/fieldValidators";
+import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { montaPeriodoDeAlteracao } from "./helper";
@@ -208,7 +208,7 @@ class AlteracaoCardapio extends Component {
     if (!erros) {
       this.resetaTodoPeriodoCheck();
       if (!values.uuid) {
-        createAlteracaoCardapio(JSON.stringify(values))
+        createAlteracaoCardapio(values)
           .then(async response => {
             if (response.status === HTTP_STATUS.CREATED) {
               if (status === STATUS_DRE_A_VALIDAR) {
@@ -548,6 +548,7 @@ class AlteracaoCardapio extends Component {
                   component={TextAreaWYSIWYG}
                   label="Observações"
                   name="observacao"
+                  validate={textAreaRequired}
                 />
               </article>
               <article className="card-body footer-button">

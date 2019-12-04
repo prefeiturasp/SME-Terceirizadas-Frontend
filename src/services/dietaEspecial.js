@@ -24,3 +24,19 @@ export const criaDietaEspecial = async payload => {
     console.log(error);
   }
 };
+
+export const getDietaEspecial = async uuid => {
+  const url = `${URL_DIETA_ESPECIAL}/${uuid}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const response = await fetch(url, OBJ_REQUEST);
+    const status = response.status;
+    const json = await response.json();
+    return { data: json, status: status };
+  } catch (error) {
+    console.log(error);
+  }
+};

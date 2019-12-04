@@ -49,7 +49,7 @@ class DashboardTerceirizadaContainer extends Component {
   }
 
   render() {
-    return <DashboardTerceirizada {...this.state} />;
+    return <DashboardTerceirizada {...this.state} {...this.props} />;
   }
 }
 

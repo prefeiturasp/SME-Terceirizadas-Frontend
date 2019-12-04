@@ -3,9 +3,9 @@ import React, { Component } from "react";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import {
-  length,
   minLength,
-  required
+  required,
+  length
 } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
 import { criaDietaEspecial } from "../../../../services/dietaEspecial";
@@ -19,6 +19,11 @@ import InputFile from "../../../Shareable/Input/InputFile";
 import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import "./style.scss";
+import {
+  DIETA_ESPECIAL,
+  ESCOLA,
+  RELATORIO
+} from "../../../../configs/constants";
 
 const minLength6 = minLength(6);
 
@@ -28,7 +33,8 @@ class solicitacaoDietaEspecial extends Component {
     this.state = {
       quantidadeAlunos: "...",
       files: null,
-      submitted: false
+      submitted: false,
+      resumo: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -58,7 +64,12 @@ class solicitacaoDietaEspecial extends Component {
     const response = await criaDietaEspecial(payload);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Solicitação realizada com sucesso.");
-      this.setState({ submitted: !this.state.submitted });
+      this.setState({
+        submitted: !this.state.submitted,
+        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+          response.data.uuid
+        }`
+      });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
@@ -80,7 +91,7 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const { quantidadeAlunos, submitted } = this.state;
+    const { quantidadeAlunos, resumo, submitted } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -90,15 +101,22 @@ class solicitacaoDietaEspecial extends Component {
             Descrição da Solicitação
           </span>
           <div className="grid-container">
-            <div className="ajuste-fonte">Cód. EOL do Aluno</div>
-            <div className="ajuste-fonte">Nome completo do Aluno</div>
-            <div className="ajuste-fonte">Data de Nascimento</div>
+            <div className="ajuste-fonte">
+              <span>* </span>Cód. EOL do Aluno
+            </div>
+            <div className="ajuste-fonte">
+              <span>* </span>Nome completo do Aluno
+            </div>
+            <div className="ajuste-fonte">
+              <span>* </span>Data de Nascimento
+            </div>
             <Field
               component={InputText}
               name="codigo_eol_aluno"
               placeholder="Insira o Código"
               className="form-control"
               type="number"
+              required
               validate={[required, length(6)]}
             />
             <Field
@@ -106,6 +124,7 @@ class solicitacaoDietaEspecial extends Component {
               name="nome_completo_aluno"
               placeholder="Insira o Nome do Aluno"
               className="form-control"
+              required
               validate={[required, minLength6]}
             />
             <Field
@@ -117,6 +136,7 @@ class solicitacaoDietaEspecial extends Component {
               maxDate={dateDelta(-1)}
               showMonthDropdown
               showYearDropdown
+              required
               validate={required}
             />
           </div>
@@ -128,7 +148,7 @@ class solicitacaoDietaEspecial extends Component {
                 name="nome_completo_pescritor"
                 placeholder="Insira o Nome do Prescritor"
                 className="form-control"
-                validate={[required, minLength6]}
+                validate={minLength6}
               />
             </div>
             <div className="col-5">
@@ -138,7 +158,7 @@ class solicitacaoDietaEspecial extends Component {
                 name="registro_funcional_pescritor"
                 placeholder="Insira o Registro Funcional"
                 className="form-control"
-                validate={[required, minLength6]}
+                validate={minLength6}
               />
             </div>
           </section>
@@ -183,6 +203,11 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </section>
+          {resumo && (
+            <a href={resumo}>
+              Clique aqui para visualizar o resumo da solicitação
+            </a>
+          )}
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"

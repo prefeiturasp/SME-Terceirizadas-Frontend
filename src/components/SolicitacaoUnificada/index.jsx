@@ -51,16 +51,6 @@ class SolicitacaoUnificada extends Component {
       kitsTotal: 0,
       collapsed: true,
       kitsChecked: [],
-      lotes: [
-        {
-          nome: "7A IP I IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        },
-        {
-          nome: "7A IP II IPIRANGA",
-          tipo_de_gestao: "TERC TOTAL"
-        }
-      ],
       studentsTotal: 0,
       unifiedSolicitationList: []
     };
@@ -501,7 +491,8 @@ class SolicitacaoUnificada extends Component {
       meusDados,
       proximos_dois_dias_uteis,
       multipleOrder,
-      prosseguir
+      prosseguir,
+      lotes
     } = this.props;
     const {
       loading,
@@ -509,7 +500,6 @@ class SolicitacaoUnificada extends Component {
       schoolsExistArray,
       showModal,
       schoolsFiltered,
-      lotes,
       studentsTotal,
       schoolsTotal,
       unifiedSolicitationList,

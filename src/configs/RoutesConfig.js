@@ -49,6 +49,7 @@ import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
+import RelatorioDietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/RelatorioPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -97,10 +98,18 @@ const routesConfig = [
     exact: true
   },
   {
+    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}/${
+      constants.RELATORIO
+    }`,
+    component: RelatorioDietaEspecialEscolaPage,
+    exact: false
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialEscolaPage,
     exact: false
   },
+
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
