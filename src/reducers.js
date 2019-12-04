@@ -9,6 +9,7 @@ import loteReducer from "./reducers/lote.reducer";
 import { tourRequestReducer } from "./reducers/tourRequest.reducer";
 import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
 import editalReducer from "./reducers/edital.reducer";
+import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
 import loadEmpresa from "./reducers/empresa.reducer";
 import loadFiltroBusca from "./reducers/loadFiltroBusca";
 
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
   cadastroEditaisForm: editalReducer,
+  TipoDeAlimentacaoForm: loadTipoAlimentacao,
   cadastroEmpresaForm: loadEmpresa,
   FiltrosDeBuscaForm: loadFiltroBusca
 });

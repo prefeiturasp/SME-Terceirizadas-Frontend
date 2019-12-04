@@ -6,6 +6,7 @@ import IconeUnidadeEscolar from "../../Shareable/Icones/Cadastros/IconeUnidadeEs
 import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
 import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";
+import IconeTipoAlimentacao from "../../Shareable/Icones/Cadastros/IconeTipoAlimentacao";
 import "./style.scss";
 
 class Cadastros extends Component {
@@ -24,6 +25,7 @@ class Cadastros extends Component {
     const {
       hoverEdital,
       hoverEmpresas,
+      hoverTipoAlimentacao,
       hoverLotes,
       gestaoDeAlimentacao
     } = this.state;
@@ -77,6 +79,18 @@ class Cadastros extends Component {
             <Link to="/configuracoes/cadastros/editais-contratos">
               <CardLogo titulo={"Cadastro de Editais e Contratos"}>
                 <IconeEdital hover={hoverEdital} />
+              </CardLogo>
+            </Link>
+          </div>
+
+          <div
+            onMouseEnter={() => this.setState({ hoverTipoAlimentacao: true })}
+            onMouseLeave={() => this.setState({ hoverTipoAlimentacao: false })}
+            className="linked-card col-4"
+          >
+            <Link to="/configuracoes/cadastros/tipos-alimentacao">
+              <CardLogo titulo={"Cadastro de Tipos de Alimentações"}>
+                <IconeTipoAlimentacao hover={hoverTipoAlimentacao} />
               </CardLogo>
             </Link>
           </div>

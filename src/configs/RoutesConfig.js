@@ -4,6 +4,7 @@ import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -447,6 +448,11 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/lote`,
     component: CadastroLotePage,
+    exact: false
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao`,
+    component: CadastroTipoAlimentacaoPage,
     exact: false
   },
   {

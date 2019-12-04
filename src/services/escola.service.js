@@ -6,7 +6,7 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getPeriods = () => {
+export const buscaPeriodosEscolares = () => {
   // TODO: pegar periodos escolares da escola ex: escolas/periodos
   const url = `${API_URL}/periodos-escolares/`;
   const OBJ_REQUEST = {
