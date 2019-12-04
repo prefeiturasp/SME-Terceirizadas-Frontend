@@ -1,7 +1,7 @@
 export const mesInteiro = mes => {
   const mesInteiro = {
     Jan: "Janeiro",
-    Dev: "Fevereiro",
+    Fev: "Fevereiro",
     Mar: "Março",
     Abr: "Abril",
     Mai: "Maio",

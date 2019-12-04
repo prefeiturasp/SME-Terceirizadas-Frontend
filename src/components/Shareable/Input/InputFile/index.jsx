@@ -51,7 +51,7 @@ export class InputFile extends Component {
     Array.from(event.target.files).forEach(file => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
       if (!["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(extensao)) {
-        toastError(`Extensão não suportada: ${extensao}`);
+        toastError(`Extensão do arquivo não suportada: ${extensao}`);
         valido = false;
       } else if (file.size > DOIS_MB) {
         toastError(`Tamanho máximo: 2MB`);

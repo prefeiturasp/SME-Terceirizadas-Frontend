@@ -98,12 +98,6 @@ class Relatorio extends Component {
                 )}
                 <hr />
                 <div className="row">
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos matriculados total</span>
-                    <span>{dietaEspecial.escola.quantidade_alunos}</span>
-                  </div>
-                </div>
-                <div className="row">
                   <div className="col-12 report-label-value">
                     <p className="value">Descrição da Dieta Especial</p>
                   </div>
@@ -166,7 +160,7 @@ class Relatorio extends Component {
                             href={anexo.arquivo}
                             className="value-important link"
                           >
-                            {`Anexo ${key}`}
+                            {`Anexo ${key + 1}`}
                           </a>
                         </div>
                       );
