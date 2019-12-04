@@ -30,7 +30,8 @@ class FiltrosDeBusca extends Component {
       meusDados: null,
       dadosEscola: null,
       dataDe: null,
-      dataPara: null
+      dataPara: null,
+      dataAte: null
     };
   }
 
@@ -92,6 +93,24 @@ class FiltrosDeBusca extends Component {
     }
   }
 
+  setaLimiteDeData(dataDe) {
+    this.props.change("data_ate", null);
+    const dataSelecionada = moment(dataDe, "DD/MM/YYYY");
+    const hoje = moment(new Date());
+    const diferencaDeDias = moment.duration(hoje.diff(dataSelecionada))._data
+      .days;
+    const diferencaDeMeses = moment.duration(hoje.diff(dataSelecionada))._data
+      .months;
+
+    if (diferencaDeDias <= 30 && diferencaDeMeses === 0) {
+      this.setState({ dataAte: moment(new Date())._d });
+    } else {
+      this.setState({
+        dataAte: moment(dataDe, "DD/MM/YYYY").add(30, "days")["_d"]
+      });
+    }
+  }
+
   onRequest = values => {
     const dataDe = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
     const dataAte = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
@@ -106,7 +125,7 @@ class FiltrosDeBusca extends Component {
   };
 
   render() {
-    const { meusDados, dataDe } = this.state;
+    const { meusDados, dataDe, dataAte } = this.state;
     const { handleSubmit } = this.props;
     return (
       <section className="card mb-3 mt-2">
@@ -142,6 +161,7 @@ class FiltrosDeBusca extends Component {
                   maxDate={DATA_MAXIMA}
                   onChange={value => {
                     this.setState({ dataDe: value });
+                    this.setaLimiteDeData(value);
                   }}
                 />
                 <Field
@@ -150,7 +170,7 @@ class FiltrosDeBusca extends Component {
                   disabled={dataDe !== null ? false : true}
                   validate={required}
                   minDate={moment(dataDe, "DD/MM/YYYY")._d}
-                  maxDate={moment(dataDe, "DD/MM/YYYY").add(30, "days")["_d"]}
+                  maxDate={dataAte}
                 />
                 <Field
                   name="status_solicitacao"

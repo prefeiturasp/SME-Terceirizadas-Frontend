@@ -79,7 +79,7 @@ class ResultadoFiltro extends Component {
           <section className="total-pedidos">
             {`${
               resultadosFiltro ? resultadosFiltro.length : 0
-            } pedidos no período`}
+            } solicitações no período`}
           </section>
           <section className="grid-listagem-itens mb-5">
             <div
@@ -124,12 +124,12 @@ class ResultadoFiltro extends Component {
                       </div>
                       <div className="grid-detalhe-item">
                         <div>{item.data_evento}</div>
-                        <div>dffdf</div>
+                        <div>{item.id_externo}</div>
                         <div>{item.desc_doc}</div>
                         <div>
                           {item.tipo_doc === "SUSP_ALIMENTACAO"
                             ? "------"
-                            : 150}
+                            : item.numero_alunos}
                         </div>
                       </div>
                     </div>

@@ -23,6 +23,7 @@ class Relatorios extends Component {
   }
 
   renderizarRelatorio = resultado => {
+    let renderizaConteudoPadrao = this.state.renderizaConteudoPadrao;
     if (resultado === "sair") {
       this.setState({
         renderizaConteudoPadrao: !this.state.renderizaConteudoPadrao,
@@ -30,8 +31,10 @@ class Relatorios extends Component {
         limpaForm: true
       });
     } else {
+      renderizaConteudoPadrao &&
+        (renderizaConteudoPadrao = resultado.length > 0 ? false : true);
       this.setState({
-        renderizaConteudoPadrao: false,
+        renderizaConteudoPadrao,
         resultadosFiltro: resultado
       });
     }
