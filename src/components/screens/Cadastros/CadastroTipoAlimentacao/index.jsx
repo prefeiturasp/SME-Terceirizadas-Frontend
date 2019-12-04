@@ -7,7 +7,10 @@ import { Select } from "../../../Shareable/Select";
 import { Botao } from "../../../Shareable/Botao";
 import Wizard from "../../../Shareable/Wizard";
 import { ModalCadastroTipoAlimentacao } from "./components/ModalCadastroTipoAlimentacao";
-import { getVinculosTipoAlimentacao } from "../../../../services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacao,
+  alteraVinculosTipoAlimentacao
+} from "../../../../services/cadastroTipoAlimentacao.service";
 import "./style.scss";
 
 import {
@@ -18,6 +21,7 @@ import {
   pegaDadosdeUnidadeEscolarOriginal
 } from "./helper";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 
 class CadastroTipoAlimentacao extends Component {
   constructor(props) {
@@ -198,10 +202,12 @@ class CadastroTipoAlimentacao extends Component {
   }
 
   onSubmit() {
+    let count = 0;
+    let uuidUnidadeEscolar = this.state.uuidUnidadeEscolar;
     let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
     dadosTipoAlimentacaoPorUe.forEach(tipoAlimentacao => {
       let data = {
-        tipo_unidade_escolar: tipoAlimentacao.uuid,
+        tipo_unidade_escolar: uuidUnidadeEscolar,
         periodo_escolar: tipoAlimentacao.periodo_escolar.uuid,
         substituicoes: [
           {
@@ -231,7 +237,22 @@ class CadastroTipoAlimentacao extends Component {
       substituicoesArray.forEach(substituicao => {
         data.substituicoes[0].substituicoes.push(substituicao.uuid);
       });
+      alteraVinculosTipoAlimentacao(tipoAlimentacao.uuid, data);
+      count += 1;
     });
+
+    if (count === dadosTipoAlimentacaoPorUe.length) {
+      toastSuccess("Tipo de Alimentação Salva com sucesso!");
+      this.props.change("tipos_unidades", null);
+      this.setState({
+        uuidUnidadeEscolar: null,
+        currentStep: 0,
+        currentTipoAlimentacao: 0,
+        showModal: false
+      });
+    } else {
+      toastError("Houve um erro ao salvar tipo de alimentação!");
+    }
   }
 
   render() {
