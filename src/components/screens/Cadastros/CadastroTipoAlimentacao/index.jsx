@@ -231,8 +231,6 @@ class CadastroTipoAlimentacao extends Component {
       substituicoesArray.forEach(substituicao => {
         data.substituicoes[0].substituicoes.push(substituicao.uuid);
       });
-
-      console.log(data);
     });
   }
 
