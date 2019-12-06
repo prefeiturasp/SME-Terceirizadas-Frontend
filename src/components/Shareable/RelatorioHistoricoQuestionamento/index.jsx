@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.scss";
 import { TIPO_USUARIO } from "../../../constants";
+import { ESTA_NO_LOG_DE_QUESTIONAMENTO } from "./constants";
 
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
@@ -26,7 +27,7 @@ export const RelatorioHistoricoQuestionamento = props => {
                       ? "CODAE"
                       : "TERCEIRIZADA"}
                   </div>
-                  {key === 2 && (
+                  {key === ESTA_NO_LOG_DE_QUESTIONAMENTO && (
                     <div className="is-it-possible">
                       <div className="title">
                         É possível atender a solicitação com todos os itens
