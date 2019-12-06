@@ -292,3 +292,22 @@ div.datepicker {
     }
   }
 }
+
+.corpo-listagem {
+  max-width: 500px;
+  overflow-x: auto;
+}
+
+.footer-paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+
+  .pagina {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0 0.5em;
+    margin: 0 0.3em;
+  }
+}

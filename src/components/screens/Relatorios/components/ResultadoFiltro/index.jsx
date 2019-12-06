@@ -42,7 +42,7 @@ class ResultadoFiltro extends Component {
   }
 
   render() {
-    const { resultadosFiltro } = this.props;
+    const { resultadosFiltro, values, paginacao } = this.props;
     const { checkTodos, listaSolicitacoes } = this.state;
     return (
       <section className="card">
@@ -136,6 +136,11 @@ class ResultadoFiltro extends Component {
                   );
                 })
               )}
+            </section>
+            <section className="footer-paginacao">
+              {paginacao.map((pagina, index) => {
+                return <div key={index}>{index + 1}</div>;
+              })}
             </section>
           </section>
         </section>
