@@ -77,6 +77,8 @@ export const tipoDeStatus = status => {
     case "CODAE negou":
     case "Terceirizada recusou":
       return "reprovado";
+    case "Questionamento pela CODAE":
+      return "questionado";
     default:
       return "";
   }
@@ -87,6 +89,8 @@ export const tipoDeStatusClasse = status => {
     ? "active"
     : tipoDeStatus(status.status_evento_explicacao) === "reprovado"
     ? "disapproved"
+    : tipoDeStatus(status.status_evento_explicacao) === "questionado"
+    ? "questioned"
     : tipoDeStatus(status.status_evento_explicacao) === "cancelado"
     ? "cancelled"
     : "pending";
