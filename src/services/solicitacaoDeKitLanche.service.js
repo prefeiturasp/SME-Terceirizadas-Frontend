@@ -369,6 +369,27 @@ export const naoValidaDeKitLancheAvulsoDiretoriaRegional = async (
   }
 };
 
+export const CODAEquestionaKitLancheAvulso = async (
+  uuid,
+  observacao_questionamento_codae
+) => {
+  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ observacao_questionamento_codae })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const cancelaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   const OBJ_REQUEST = {

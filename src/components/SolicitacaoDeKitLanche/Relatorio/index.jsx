@@ -14,7 +14,10 @@ import { statusEnum, escolaPodeCancelar } from "../../../constants/statusEnum";
 import { dataParaUTC } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { meusDados } from "../../../services/perfil.service";
-import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import {
+  getDetalheKitLancheAvulsa,
+  CODAEquestionaKitLancheAvulso
+} from "../../../services/solicitacaoDeKitLanche.service";
 import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -28,6 +31,8 @@ import {
 } from "../../Shareable/ModalCancelarSolicitacao";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
+import { ModalCODAEQuestiona } from "../../Shareable/ModalCODAEQuestiona";
+import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -38,10 +43,13 @@ class Relatorio extends Component {
       meusDados: { diretorias_regionais: [{ nome: "" }] },
       redirect: false,
       showModal: false,
+      showQuestionarModal: false,
       solicitacaoKitLanche: null,
       prazoDoPedidoMensagem: null
     };
     this.closeModal = this.closeModal.bind(this);
+    this.closeQuestionarModal = this.closeQuestionarModal.bind(this);
+    this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
   setRedirect() {
@@ -94,6 +102,22 @@ class Relatorio extends Component {
     this.setState({ showModal: false });
   }
 
+  showQuestionarModal() {
+    this.setState({ showQuestionarModal: true });
+  }
+
+  loadSolicitacao(uuid) {
+    getDetalheKitLancheAvulsa(uuid).then(solicitacaoKitLanche => {
+      this.setState({
+        solicitacaoKitLanche
+      });
+    });
+  }
+
+  closeQuestionarModal() {
+    this.setState({ showQuestionarModal: false });
+  }
+
   handleSubmit() {
     const { toastSucessoMensagem } = this.props;
     const uuid = this.state.uuid;
@@ -120,10 +144,11 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
+      showQuestionarModal,
       prazoDoPedidoMensagem,
       uuid
     } = this.state;
-    const { justificativa } = this.props;
+    const { justificativa, observacao_questionamento_codae } = this.props;
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
@@ -136,13 +161,14 @@ class Relatorio extends Component {
           origemSolicitacao={ORIGEM_SOLICITACAO.ESCOLA}
           solicitacaoKitLanche={solicitacaoKitLanche}
         />
-        {/* <ModalNegarSolicitacao
-          closeModal={this.closeModal}
-          showModal={showModal}
+        <ModalCODAEQuestiona
+          closeModal={this.closeQuestionarModal}
+          showModal={showQuestionarModal}
+          observacao_questionamento_codae={observacao_questionamento_codae}
           uuid={uuid}
-          justificativa={justificativa}
-          negarEndpoint={this.props.negarEndpoint}
-        /> */}
+          loadSolicitacao={this.loadSolicitacao}
+          endpointCODAEQuestiona={CODAEquestionaKitLancheAvulso}
+        />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">
@@ -310,7 +336,9 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-
+                <RelatorioHistoricoQuestionamento
+                  solicitacao={solicitacaoKitLanche}
+                />
                 {(() => {
                   switch (this.props.VISAO) {
                     case ESCOLA:
@@ -363,9 +391,17 @@ class Relatorio extends Component {
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
-                              texto="Autorizar"
+                              texto={
+                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo
+                                  ? "Questionar"
+                                  : "Autorizar"
+                              }
                               type={BUTTON_TYPE.SUBMIT}
-                              onClick={() => this.handleSubmit()}
+                              onClick={() =>
+                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo
+                                  ? this.showQuestionarModal()
+                                  : this.handleSubmit()
+                              }
                               style={BUTTON_STYLE.GREEN}
                               className="ml-3"
                             />
@@ -404,7 +440,11 @@ const formName = "kitLancheAvulsoRelatorioForm";
 const selector = formValueSelector(formName);
 const mapStateToProps = state => {
   return {
-    justificativa: selector(state, "justificativa")
+    justificativa: selector(state, "justificativa"),
+    observacao_questionamento_codae: selector(
+      state,
+      "observacao_questionamento_codae"
+    )
   };
 };
 
