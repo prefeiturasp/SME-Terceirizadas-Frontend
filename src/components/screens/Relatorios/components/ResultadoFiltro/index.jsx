@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 import { Botao } from "../../../../Shareable/Botao";
+import moment from "moment";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
   BUTTON_ICON
 } from "../../../../Shareable/Botao/constants";
+import { getPedidosESolicitacoesFiltroPaginacao } from "../../../../../services/filtroSolicitacoes.service";
+import { toastError } from "../../../../Shareable/Toast/dialogs";
 
 class ResultadoFiltro extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checkTodos: false,
-      listaSolicitacoes: null
+      listaSolicitacoes: null,
+      pagina: false,
+      index: 0
     };
   }
 
@@ -21,7 +26,9 @@ class ResultadoFiltro extends Component {
 
   componentDidUpdate() {
     if (this.props.resultadosFiltro !== this.state.listaSolicitacoes) {
-      this.setState({ listaSolicitacoes: this.props.resultadosFiltro });
+      if (!this.state.pagina) {
+        this.setState({ listaSolicitacoes: this.props.resultadosFiltro });
+      }
     }
   }
 
@@ -41,9 +48,32 @@ class ResultadoFiltro extends Component {
     this.setState({ listaSolicitacoes });
   }
 
+  navegacaoPagina = pagina => {
+    this.setState({ pagina: true });
+    const dataDe = moment(this.props.values.data_de, "DD/MM/YYYY").format(
+      "DD-MM-YYYY"
+    );
+    const dataAte = moment(this.props.values.data_ate, "DD/MM/YYYY").format(
+      "DD-MM-YYYY"
+    );
+    getPedidosESolicitacoesFiltroPaginacao(
+      this.props.values,
+      dataDe,
+      dataAte,
+      pagina
+    ).then(response => {
+      if (response.results.length > 0) {
+        this.setState({ listaSolicitacoes: response.results });
+      } else {
+        toastError("Nenhum resultado encontrado!");
+        this.props.renderizarRelatorio(response.results);
+      }
+    });
+  };
+
   render() {
-    const { resultadosFiltro } = this.props;
-    const { checkTodos, listaSolicitacoes } = this.state;
+    const { resultadosFiltro, paginacao } = this.props;
+    const { checkTodos, listaSolicitacoes, index } = this.state;
     return (
       <section className="card">
         <section className="card-body realtorio-filtro">
@@ -99,7 +129,7 @@ class ResultadoFiltro extends Component {
               <div>Data</div>
               <div>N° solicitação</div>
               <div>Tipo de solicitação</div>
-              <div>Quantidade de alimentações solicitadas</div>
+              <div>Quantidade de alunos</div>
             </section>
             <section className="corpo-listagem mt-2">
               {listaSolicitacoes === null ? (
@@ -135,6 +165,44 @@ class ResultadoFiltro extends Component {
                     </div>
                   );
                 })
+              )}
+            </section>
+            <section className="footer-paginacao">
+              {index === 0 ? (
+                <div className={`pagina atual`}>
+                  <i className="fas fa-angle-double-left" />
+                </div>
+              ) : (
+                <div
+                  className={`pagina`}
+                  onClick={() => {
+                    this.navegacaoPagina(paginacao[index]);
+                    this.setState({ index: index - 1 });
+                  }}
+                >
+                  <i className="fas fa-angle-double-left" />
+                </div>
+              )}
+              <div>
+                {`pagina ${index + 1} de ${paginacao[paginacao.length - 1] /
+                  100 +
+                  1}`}
+              </div>
+
+              {index === paginacao[paginacao.length - 1] / 100 ? (
+                <div className={`pagina atual`}>
+                  <i className="fas fa-angle-double-right" />
+                </div>
+              ) : (
+                <div
+                  className={`pagina`}
+                  onClick={() => {
+                    this.navegacaoPagina(paginacao[index]);
+                    this.setState({ index: index + 1 });
+                  }}
+                >
+                  <i className="fas fa-angle-double-right" />
+                </div>
               )}
             </section>
           </section>

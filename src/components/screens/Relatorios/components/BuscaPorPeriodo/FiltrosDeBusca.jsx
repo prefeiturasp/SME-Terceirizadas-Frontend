@@ -31,7 +31,9 @@ class FiltrosDeBusca extends Component {
       dadosEscola: null,
       dataDe: null,
       dataPara: null,
-      dataAte: null
+      dataAte: null,
+      paginacao: null,
+      values: null
     };
   }
 
@@ -112,9 +114,11 @@ class FiltrosDeBusca extends Component {
   }
 
   onRequest = values => {
+    this.props.setaValuesForm(values);
     const dataDe = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
     const dataAte = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
     getPedidosESolicitacoesFiltro(values, dataDe, dataAte).then(response => {
+      this.props.setaPaginacao(response.count);
       if (response.results.length > 0) {
         this.props.renderizarRelatorio(response.results);
       } else {
