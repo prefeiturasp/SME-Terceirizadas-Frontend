@@ -19,7 +19,7 @@ export const getTiposUnidadeEscolar = async () => {
   });
 };
 
-export const getVinculosTipoAlimentacao = async () => {
+export const getVinculosTipoAlimentacaoPorUnidadeEscolar = async uuid => {
   const OBJ_REQUEST = {
     headers: authHeader,
     method: "GET"
@@ -27,7 +27,7 @@ export const getVinculosTipoAlimentacao = async () => {
 
   const url = `${
     CONFIG.API_URL
-  }/vinculos-tipo-alimentacao-u-e-periodo-escolar/`;
+  }/vinculos-tipo-alimentacao-u-e-periodo-escolar/tipo_unidade_escolar/${uuid}/`;
   OBJ_REQUEST["method"] = "GET";
   return await fetch(url, OBJ_REQUEST).then(response => {
     return response.json();
