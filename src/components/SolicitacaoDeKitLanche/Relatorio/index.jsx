@@ -170,8 +170,8 @@ class Relatorio extends Component {
     );
   }
 
-  showResponderQuestionamentoModal(resposta) {
-    this.setState({ resposta });
+  showResponderQuestionamentoModal(resposta_sim_nao) {
+    this.setState({ resposta_sim_nao });
     this.showTerceirizadaQuestionaModal();
   }
 
@@ -184,7 +184,7 @@ class Relatorio extends Component {
       showQuestionarModal,
       showTerceirizadaRespondeQuestionamentoModal,
       prazoDoPedidoMensagem,
-      resposta,
+      resposta_sim_nao,
       uuid,
       CODAE_DEVE_QUESTIONAR
     } = this.state;
@@ -226,7 +226,7 @@ class Relatorio extends Component {
             observacao_questionamento_terceirizada
           }
           uuid={uuid}
-          resposta={resposta}
+          resposta_sim_nao={resposta_sim_nao}
           loadSolicitacao={this.loadSolicitacao}
           endpointTerceirizadaRespondeQuestionamento={
             terceirizadaRespondeQuestionamentoKitLancheAvulso

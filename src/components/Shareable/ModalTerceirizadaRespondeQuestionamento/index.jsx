@@ -19,9 +19,9 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
 
   async responderQuestionamento(uuid) {
     const { observacao_questionamento_terceirizada } = this.state;
-    const { resposta } = this.props;
+    const { resposta_sim_nao } = this.props;
     const payload = {
-      resposta: resposta === "Sim",
+      resposta_sim_nao: resposta_sim_nao === "Sim",
       justificativa: observacao_questionamento_terceirizada
     };
     let resp = "";
@@ -55,7 +55,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
       closeModal,
       uuid,
       observacao_questionamento_terceirizada,
-      resposta
+      resposta_sim_nao
     } = this.props;
     return (
       <Modal
@@ -64,7 +64,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
         onHide={closeModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Resposta: {resposta}</Modal.Title>
+          <Modal.Title>Resposta: {resposta_sim_nao}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
