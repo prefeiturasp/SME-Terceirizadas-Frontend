@@ -26,6 +26,8 @@ class BuscaPorPeriodo extends Component {
         meusDados={meusDados}
         renderizarRelatorio={this.props.renderizarRelatorio}
         setaFalseLimpaForm={this.props.setaFalseLimpaForm}
+        setaValuesForm={this.props.setaValuesForm}
+        setaPaginacao={this.props.setaPaginacao}
         limpaForm={limpaForm}
       />
     );
