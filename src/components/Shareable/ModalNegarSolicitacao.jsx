@@ -24,7 +24,9 @@ export class ModalNegarSolicitacao extends Component {
       if (resp.status === HTTP_STATUS.OK) {
         this.props.closeModal();
         toastSuccess("Solicitação negada com sucesso!");
-        this.props.updateLogs();
+        if (this.props.loadSolicitacao) {
+          this.props.loadSolicitacao(this.props.uuid);
+        }
       } else {
         toastError(resp.detail);
       }

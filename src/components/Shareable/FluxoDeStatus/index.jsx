@@ -4,14 +4,18 @@ import {
   fluxoPartindoEscola,
   fluxoPartindoDRE,
   fluxoInformativoPartindoEscola,
-  tipoDeStatusClasse
+  tipoDeStatusClasse,
+  formatarLogs
 } from "./helper";
 import "./style.scss";
+import { deepCopy } from "../../../helpers/utilities";
 
 export const FluxoDeStatus = props => {
   const { listaDeStatus, tipoDeFluxo } = props;
+  let cloneListaDeStatus = deepCopy(listaDeStatus);
+  cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
-    listaDeStatus && existeAlgumStatusFimDeFluxo(listaDeStatus);
+    cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
   const fluxo =
     tipoDeFluxo === "informativo"
       ? fluxoInformativoPartindoEscola
@@ -19,7 +23,7 @@ export const FluxoDeStatus = props => {
       ? fluxoPartindoDRE
       : fluxoPartindoEscola;
   const fluxoUtilizado =
-    fluxo.length > listaDeStatus.length ? fluxo : listaDeStatus;
+    fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
   return (
     <div className="w-100">
       <div className="row">
@@ -31,8 +35,8 @@ export const FluxoDeStatus = props => {
             {fluxoUtilizado.map((status, key) => {
               return (
                 <li key={key}>
-                  {listaDeStatus[key]
-                    ? listaDeStatus[key].status_evento_explicacao
+                  {cloneListaDeStatus[key]
+                    ? cloneListaDeStatus[key].status_evento_explicacao
                     : status.titulo}
                 </li>
               );
@@ -40,7 +44,7 @@ export const FluxoDeStatus = props => {
           </ul>
           <ul className="progressbar">
             {fluxoUtilizado.map((status, key) => {
-              let novoStatus = listaDeStatus[key] || status;
+              let novoStatus = cloneListaDeStatus[key] || status;
               return (
                 <li
                   key={key}

@@ -518,27 +518,3 @@ div.caption-choices {
     position: relative;
   }
 }
-
-.question-history {
-  font-size: 14px;
-  .title {
-    p {
-      color: $gray;
-      font-weight: bold;
-    }
-  }
-  .question-log {
-    .is-it-possible {
-      padding-top: 5px;
-      color: $blackSubtle;
-      .title {
-        font-size: 14px;
-        font-weight: bold;
-      }
-      .obs {
-        padding-top: 10px;
-        font-size: 13px;
-      }
-    }
-  }
-}

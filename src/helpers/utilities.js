@@ -203,3 +203,7 @@ export const truncarString = (str, numeroMaximoChars) => {
     return str;
   }
 };
+
+export const deepCopy = obj => {
+  return JSON.parse(JSON.stringify(obj));
+};

@@ -1,1 +1,0 @@
-export const ESTA_NO_LOG_DE_QUESTIONAMENTO = 2;

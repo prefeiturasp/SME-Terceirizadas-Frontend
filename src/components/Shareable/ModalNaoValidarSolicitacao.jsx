@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import { Modal } from "react-bootstrap";
-import { DREnaoValidarKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastSuccess, toastError } from "./Toast/dialogs";
 import Botao from "./Botao";
@@ -15,15 +14,19 @@ export class ModalNaoValidarSolicitacao extends Component {
     super(props);
     this.state = { justificativa: "", motivoCancelamento: "" };
   }
-  async cancelarSolicitacaoDaEscola(uuid) {
+  async naoValidarSolicitacao(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
-    const resp = await DREnaoValidarKitLancheAvulsoEscola(
+    const { naoValidaEndpoint } = this.props;
+    const resp = await naoValidaEndpoint(
       uuid,
       `${motivoCancelamento} - ${justificativa}`
     );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação não validada com sucesso!");
+      if (this.props.loadSolicitacao) {
+        this.props.loadSolicitacao(uuid);
+      }
     } else {
       toastError(resp.detail);
     }
@@ -88,7 +91,7 @@ export class ModalNaoValidarSolicitacao extends Component {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              this.cancelarSolicitacaoDaEscola(uuid);
+              this.naoValidarSolicitacao(uuid);
             }}
             style={BUTTON_STYLE.BLUE}
             className="ml-3"

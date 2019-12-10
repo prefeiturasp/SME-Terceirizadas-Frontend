@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
   SOLICITACAO_KIT_LANCHE,
@@ -16,7 +16,10 @@ import { getDiasUteis } from "../../../services/diasUteis.service";
 import { meusDados } from "../../../services/perfil.service";
 import {
   getDetalheKitLancheAvulsa,
-  CODAEquestionaKitLancheAvulso
+  CODAEquestionaKitLancheAvulso,
+  terceirizadaRespondeQuestionamentoKitLancheAvulso,
+  CODAENegaKitLancheAvulsoEscola,
+  DREnaoValidarKitLancheAvulsoEscola
 } from "../../../services/solicitacaoDeKitLanche.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -33,6 +36,9 @@ import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { prazoDoPedidoMensagem, corDaMensagem } from "./helper";
 import { ModalCODAEQuestiona } from "../../Shareable/ModalCODAEQuestiona";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { ModalTerceirizadaRespondeQuestionamento } from "../../Shareable/ModalTerceirizadaRespondeQuestionamento";
+import { ModalNegarSolicitacao } from "../../Shareable/ModalNegarSolicitacao";
+import { ModalNaoValidarSolicitacao } from "../../Shareable/ModalNaoValidarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -41,28 +47,27 @@ class Relatorio extends Component {
       unifiedSolicitationList: [],
       uuid: null,
       meusDados: { diretorias_regionais: [{ nome: "" }] },
-      redirect: false,
       showModal: false,
+      showNaoValidarModal: false,
+      showNegarModal: false,
       showQuestionarModal: false,
+      showTerceirizadaRespondeQuestionamentoModal: false,
       solicitacaoKitLanche: null,
-      prazoDoPedidoMensagem: null
+      prazoDoPedidoMensagem: null,
+      CODAE_DEVE_QUESTIONAR: false
     };
     this.closeModal = this.closeModal.bind(this);
+    this.closeNaoValidarModal = this.closeNaoValidarModal.bind(this);
+    this.closeNegarModal = this.closeNegarModal.bind(this);
     this.closeQuestionarModal = this.closeQuestionarModal.bind(this);
+    this.closeTerceirizadaRespondeQuestionamentoModal = this.closeTerceirizadaRespondeQuestionamentoModal.bind(
+      this
+    );
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.showResponderQuestionamentoModal = this.showResponderQuestionamentoModal.bind(
+      this
+    );
   }
-
-  setRedirect() {
-    this.setState({
-      redirect: true
-    });
-  }
-
-  renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
-    if (this.state.redirect) {
-      return <Redirect to={`/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`} />;
-    }
-  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -82,6 +87,7 @@ class Relatorio extends Component {
           const data = solicitacaoKitLanche.solicitacao_kit_lanche.data;
           this.setState({
             solicitacaoKitLanche,
+            CODAE_DEVE_QUESTIONAR: solicitacaoKitLanche.logs.length === 2,
             uuid,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               data,
@@ -98,12 +104,40 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
-  closeModal() {
-    this.setState({ showModal: false });
+  showNaoValidarModal() {
+    this.setState({ showNaoValidarModal: true });
+  }
+
+  showNegarModal() {
+    this.setState({ showNegarModal: true });
   }
 
   showQuestionarModal() {
     this.setState({ showQuestionarModal: true });
+  }
+
+  showTerceirizadaQuestionaModal() {
+    this.setState({ showTerceirizadaRespondeQuestionamentoModal: true });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  closeNaoValidarModal() {
+    this.setState({ showNaoValidarModal: false });
+  }
+
+  closeNegarModal() {
+    this.setState({ showNegarModal: false });
+  }
+
+  closeQuestionarModal() {
+    this.setState({ showQuestionarModal: false });
+  }
+
+  closeTerceirizadaRespondeQuestionamentoModal() {
+    this.setState({ showTerceirizadaRespondeQuestionamentoModal: false });
   }
 
   loadSolicitacao(uuid) {
@@ -114,10 +148,6 @@ class Relatorio extends Component {
     });
   }
 
-  closeQuestionarModal() {
-    this.setState({ showQuestionarModal: false });
-  }
-
   handleSubmit() {
     const { toastSucessoMensagem } = this.props;
     const uuid = this.state.uuid;
@@ -125,7 +155,7 @@ class Relatorio extends Component {
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastSucessoMensagem);
-          this.setRedirect();
+          this.loadSolicitacao(uuid);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
             "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
@@ -140,18 +170,31 @@ class Relatorio extends Component {
     );
   }
 
+  showResponderQuestionamentoModal(resposta) {
+    this.setState({ resposta });
+    this.showTerceirizadaQuestionaModal();
+  }
+
   render() {
     const {
       solicitacaoKitLanche,
       showModal,
+      showNaoValidarModal,
+      showNegarModal,
       showQuestionarModal,
+      showTerceirizadaRespondeQuestionamentoModal,
       prazoDoPedidoMensagem,
-      uuid
+      resposta,
+      uuid,
+      CODAE_DEVE_QUESTIONAR
     } = this.state;
-    const { justificativa, observacao_questionamento_codae } = this.props;
+    const {
+      justificativa,
+      observacao_questionamento_codae,
+      observacao_questionamento_terceirizada
+    } = this.props;
     return (
       <div className="report">
-        {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
@@ -161,6 +204,13 @@ class Relatorio extends Component {
           origemSolicitacao={ORIGEM_SOLICITACAO.ESCOLA}
           solicitacaoKitLanche={solicitacaoKitLanche}
         />
+        <ModalNegarSolicitacao
+          closeModal={this.closeNegarModal}
+          showModal={showNegarModal}
+          uuid={uuid}
+          loadSolicitacao={this.loadSolicitacao}
+          negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+        />
         <ModalCODAEQuestiona
           closeModal={this.closeQuestionarModal}
           showModal={showQuestionarModal}
@@ -168,6 +218,27 @@ class Relatorio extends Component {
           uuid={uuid}
           loadSolicitacao={this.loadSolicitacao}
           endpointCODAEQuestiona={CODAEquestionaKitLancheAvulso}
+        />
+        <ModalTerceirizadaRespondeQuestionamento
+          closeModal={this.closeTerceirizadaRespondeQuestionamentoModal}
+          showModal={showTerceirizadaRespondeQuestionamentoModal}
+          observacao_questionamento_terceirizada={
+            observacao_questionamento_terceirizada
+          }
+          uuid={uuid}
+          resposta={resposta}
+          loadSolicitacao={this.loadSolicitacao}
+          endpointTerceirizadaRespondeQuestionamento={
+            terceirizadaRespondeQuestionamentoKitLancheAvulso
+          }
+        />
+        <ModalNaoValidarSolicitacao
+          closeModal={this.closeNaoValidarModal}
+          showModal={showNaoValidarModal}
+          justificativa={justificativa}
+          uuid={uuid}
+          loadSolicitacao={this.loadSolicitacao}
+          naoValidaEndpoint={DREnaoValidarKitLancheAvulsoEscola}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -364,7 +435,7 @@ class Relatorio extends Component {
                             <Botao
                               texto={"Não Validar"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showNaoValidarModal()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
@@ -380,25 +451,29 @@ class Relatorio extends Component {
                       );
                     case CODAE:
                       return (
-                        solicitacaoKitLanche.status ===
-                          statusEnum.DRE_VALIDADO && (
+                        [
+                          statusEnum.DRE_VALIDADO,
+                          statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO
+                        ].includes(solicitacaoKitLanche.status) && (
                           <div className="form-group row float-right mt-4">
                             <Botao
                               texto={"Negar"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showNegarModal()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
                               texto={
-                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo
+                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
+                                CODAE_DEVE_QUESTIONAR
                                   ? "Questionar"
                                   : "Autorizar"
                               }
                               type={BUTTON_TYPE.SUBMIT}
                               onClick={() =>
-                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo
+                                solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
+                                CODAE_DEVE_QUESTIONAR
                                   ? this.showQuestionarModal()
                                   : this.handleSubmit()
                               }
@@ -409,7 +484,7 @@ class Relatorio extends Component {
                         )
                       );
                     case TERCEIRIZADA:
-                      return (
+                      return [
                         solicitacaoKitLanche.status ===
                           statusEnum.CODAE_AUTORIZADO && (
                           <div className="form-group row float-right mt-4">
@@ -421,8 +496,31 @@ class Relatorio extends Component {
                               className="ml-3"
                             />
                           </div>
+                        ),
+                        solicitacaoKitLanche.status ===
+                          statusEnum.CODAE_QUESTIONADO && (
+                          <div className="form-group row float-right mt-4">
+                            <Botao
+                              texto={"Não"}
+                              className="ml-3"
+                              onClick={() =>
+                                this.showResponderQuestionamentoModal("Não")
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto={"Sim"}
+                              className="ml-3"
+                              onClick={() =>
+                                this.showResponderQuestionamentoModal("Sim")
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                            />
+                          </div>
                         )
-                      );
+                      ];
                     default:
                       return "AQUI";
                   }
@@ -444,6 +542,10 @@ const mapStateToProps = state => {
     observacao_questionamento_codae: selector(
       state,
       "observacao_questionamento_codae"
+    ),
+    observacao_questionamento_terceirizada: selector(
+      state,
+      "observacao_questionamento_terceirizada"
     )
   };
 };
