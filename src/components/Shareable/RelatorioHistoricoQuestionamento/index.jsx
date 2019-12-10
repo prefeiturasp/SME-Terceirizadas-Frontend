@@ -1,7 +1,6 @@
 import React from "react";
-import "./style.scss";
 import { TIPO_USUARIO } from "../../../constants";
-import { ESTA_NO_LOG_DE_QUESTIONAMENTO } from "./constants";
+import "./style.scss";
 
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
@@ -17,8 +16,11 @@ export const RelatorioHistoricoQuestionamento = props => {
           </div>
           {solicitacao.logs.map((log, key) => {
             return (
-              log.usuario.tipo_usuario ===
-                TIPO_USUARIO.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
+              [
+                TIPO_USUARIO.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+                TIPO_USUARIO.TERCEIRIZADA
+              ].includes(log.usuario.tipo_usuario) &&
+              log.status_evento_explicacao !== "Terceirizada tomou ciência" && (
                 <div key={key} className="question-log">
                   <div>
                     {log.criado_em} -{" "}
@@ -27,7 +29,8 @@ export const RelatorioHistoricoQuestionamento = props => {
                       ? "CODAE"
                       : "TERCEIRIZADA"}
                   </div>
-                  {key === ESTA_NO_LOG_DE_QUESTIONAMENTO && (
+                  {log.status_evento_explicacao ===
+                    "Questionamento pela CODAE" && (
                     <div className="is-it-possible">
                       <div className="title">
                         É possível atender a solicitação com todos os itens
@@ -38,6 +41,29 @@ export const RelatorioHistoricoQuestionamento = props => {
                         {log.justificativa ||
                           "Sem observações por parte da CODAE"}
                       </div>
+                    </div>
+                  )}
+                  {log.status_evento_explicacao ===
+                    "Terceirizada respondeu questionamento" && (
+                    <div className="is-it-possible">
+                      <div className="title">
+                        {log.resposta_sim_nao ? "Aceitou" : "Não aceitou"}
+                      </div>
+                      <div className="obs">
+                        Observação da Terceirizada:{" "}
+                        {log.justificativa ||
+                          "Sem observações por parte da Terceirizada"}
+                      </div>
+                    </div>
+                  )}
+                  {log.status_evento_explicacao === "CODAE autorizou" && (
+                    <div className="is-it-possible">
+                      <div className="title">Autorizou</div>
+                    </div>
+                  )}
+                  {log.status_evento_explicacao === "CODAE negou" && (
+                    <div className="is-it-possible">
+                      <div className="title">Negou</div>
                     </div>
                   )}
                 </div>

@@ -1,3 +1,5 @@
+import { deepCopy } from "../../../helpers/utilities";
+
 export const fluxoPartindoEscola = [
   {
     titulo: "Solicitação Realizada",
@@ -105,4 +107,25 @@ export const existeAlgumStatusFimDeFluxo = logs => {
         log.status_evento_explicacao.includes("cancel")
     ) === -1
   );
+};
+
+export const formatarLogs = logs => {
+  let novoLogs = deepCopy(logs);
+  let indexLogQuestionamento = -1;
+  logs.forEach((log, index) => {
+    if (log.status_evento_explicacao === "Questionamento pela CODAE") {
+      indexLogQuestionamento = index;
+    } else if (
+      log.status_evento_explicacao === "Terceirizada respondeu questionamento"
+    ) {
+      novoLogs.splice(index, 1);
+    } else if (
+      (log.status_evento_explicacao === "CODAE autorizou" ||
+        log.status_evento_explicacao === "CODAE negou") &&
+      indexLogQuestionamento !== -1
+    ) {
+      novoLogs.splice(indexLogQuestionamento, 1);
+    }
+  });
+  return novoLogs;
 };
