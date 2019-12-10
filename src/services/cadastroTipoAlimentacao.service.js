@@ -54,3 +54,55 @@ export const alteraVinculosTipoAlimentacao = async (uuid, values) => {
     return err;
   }
 };
+
+export const getTiposDeAlimentacao = async () => {
+  const OBJ_REQUEST = {
+    headers: authHeader,
+    method: "GET"
+  };
+
+  const url = `${CONFIG.API_URL}/tipos-alimentacao/`;
+  OBJ_REQUEST["method"] = "GET";
+  return await fetch(url, OBJ_REQUEST).then(response => {
+    return response.json();
+  });
+};
+
+export const createVinculoTipoAlimentacaoPeriodoEscolar = payload => {
+  const url = `${
+    CONFIG.API_URL
+  }/combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/`;
+
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authHeader
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const deleteVinculoTipoAlimentacaoPeriodoEscolar = uuid => {
+  const url = `${
+    CONFIG.API_URL
+  }/combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/${uuid}`;
+  return fetch(url, {
+    method: "DELETE",
+    headers: authHeader
+  })
+    .then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
