@@ -8,7 +8,9 @@ export const FLUXO = {
   DRE_VALIDA: "diretoria-regional-valida-pedido",
   ESCOLA_CANCELA: "escola-cancela-pedido-48h-antes",
   DRE_CANCELA: "diretoria-regional-cancela",
-  CODAE_NEGA: "codae-cancela-pedido"
+  CODAE_NEGA: "codae-cancela-pedido",
+  CODAE_QUESTIONA: "codae-questiona-pedido",
+  TERCEIRIZADA_RESPONDE_QUESTIONAMENTO: "terceirizada-responde-questionamento"
 };
 
 export const PEDIDOS = {

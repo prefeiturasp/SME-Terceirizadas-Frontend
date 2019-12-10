@@ -178,7 +178,7 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Solicitação de Kit Lanche Passeio"}
+              titulo={"Kit Lanche Passeio"}
               nome="card-kit-lanche"
               texto={
                 "Quando houver necessidade da solicitação de Kit Lanche Passeio para consumo durante " +

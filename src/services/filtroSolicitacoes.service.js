@@ -25,3 +25,28 @@ export const getPedidosESolicitacoesFiltro = (valores, dataDe, dataAte) => {
       return error.json();
     });
 };
+
+export const getPedidosESolicitacoesFiltroPaginacao = (
+  valores,
+  dataDe,
+  dataAte,
+  pagina
+) => {
+  const url = `${API_URL}/escola-solicitacoes/pesquisa/${
+    valores.unidade_escolar
+  }/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
+    valores.status_solicitacao
+  }&tipo_solicitacao=${valores.tipo_de__solicitacao}`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

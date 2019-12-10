@@ -18,6 +18,14 @@ export const TIPO_PERFIL = {
   TERCEIRIZADA: `"terceirizada"`
 };
 
+export const TIPO_USUARIO = {
+  ESCOLA: `escola`,
+  DIRETORIA_REGIONAL: `diretoriaregional`,
+  GESTAO_ALIMENTACAO_TERCEIRIZADA: `gestao_alimentacao_terceirizada`,
+  DIETA_ESPECIAL: `dieta_especial`,
+  TERCEIRIZADA: `terceirizada`
+};
+
 export const ENTER = 13;
 
 export const DOIS_MB = 2097152;
