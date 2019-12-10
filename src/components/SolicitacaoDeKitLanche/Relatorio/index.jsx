@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
   SOLICITACAO_KIT_LANCHE,
@@ -18,7 +18,8 @@ import {
   getDetalheKitLancheAvulsa,
   CODAEquestionaKitLancheAvulso,
   terceirizadaRespondeQuestionamentoKitLancheAvulso,
-  CODAENegaKitLancheAvulsoEscola
+  CODAENegaKitLancheAvulsoEscola,
+  DREnaoValidarKitLancheAvulsoEscola
 } from "../../../services/solicitacaoDeKitLanche.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -37,6 +38,7 @@ import { ModalCODAEQuestiona } from "../../Shareable/ModalCODAEQuestiona";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalNegarSolicitacao } from "../../Shareable/ModalNegarSolicitacao";
+import { ModalNaoValidarSolicitacao } from "../../Shareable/ModalNaoValidarSolicitacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -45,8 +47,8 @@ class Relatorio extends Component {
       unifiedSolicitationList: [],
       uuid: null,
       meusDados: { diretorias_regionais: [{ nome: "" }] },
-      redirect: false,
       showModal: false,
+      showNaoValidarModal: false,
       showNegarModal: false,
       showQuestionarModal: false,
       showTerceirizadaRespondeQuestionamentoModal: false,
@@ -55,6 +57,7 @@ class Relatorio extends Component {
       CODAE_DEVE_QUESTIONAR: false
     };
     this.closeModal = this.closeModal.bind(this);
+    this.closeNaoValidarModal = this.closeNaoValidarModal.bind(this);
     this.closeNegarModal = this.closeNegarModal.bind(this);
     this.closeQuestionarModal = this.closeQuestionarModal.bind(this);
     this.closeTerceirizadaRespondeQuestionamentoModal = this.closeTerceirizadaRespondeQuestionamentoModal.bind(
@@ -65,18 +68,6 @@ class Relatorio extends Component {
       this
     );
   }
-
-  setRedirect() {
-    this.setState({
-      redirect: true
-    });
-  }
-
-  renderizarRedirecionamentoParaPedidosDeSolicitacao = () => {
-    if (this.state.redirect) {
-      return <Redirect to={`/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`} />;
-    }
-  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -113,6 +104,10 @@ class Relatorio extends Component {
     this.setState({ showModal: true });
   }
 
+  showNaoValidarModal() {
+    this.setState({ showNaoValidarModal: true });
+  }
+
   showNegarModal() {
     this.setState({ showNegarModal: true });
   }
@@ -127,6 +122,10 @@ class Relatorio extends Component {
 
   closeModal() {
     this.setState({ showModal: false });
+  }
+
+  closeNaoValidarModal() {
+    this.setState({ showNaoValidarModal: false });
   }
 
   closeNegarModal() {
@@ -156,7 +155,7 @@ class Relatorio extends Component {
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastSucessoMensagem);
-          this.setRedirect();
+          this.loadSolicitacao(uuid);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
             "Houve um erro ao autorizar a Solicitação de Kit Lanche Passeio"
@@ -180,6 +179,7 @@ class Relatorio extends Component {
     const {
       solicitacaoKitLanche,
       showModal,
+      showNaoValidarModal,
       showNegarModal,
       showQuestionarModal,
       showTerceirizadaRespondeQuestionamentoModal,
@@ -195,7 +195,6 @@ class Relatorio extends Component {
     } = this.props;
     return (
       <div className="report">
-        {this.renderizarRedirecionamentoParaPedidosDeSolicitacao()}
         <ModalCancelarSolicitacao
           closeModal={this.closeModal}
           showModal={showModal}
@@ -232,6 +231,14 @@ class Relatorio extends Component {
           endpointTerceirizadaRespondeQuestionamento={
             terceirizadaRespondeQuestionamentoKitLancheAvulso
           }
+        />
+        <ModalNaoValidarSolicitacao
+          closeModal={this.closeNaoValidarModal}
+          showModal={showNaoValidarModal}
+          justificativa={justificativa}
+          uuid={uuid}
+          loadSolicitacao={this.loadSolicitacao}
+          naoValidaEndpoint={DREnaoValidarKitLancheAvulsoEscola}
         />
         {solicitacaoKitLanche && (
           <form onSubmit={this.props.handleSubmit}>
@@ -428,7 +435,7 @@ class Relatorio extends Component {
                             <Botao
                               texto={"Não Validar"}
                               className="ml-3"
-                              onClick={() => this.showModal()}
+                              onClick={() => this.showNaoValidarModal()}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />

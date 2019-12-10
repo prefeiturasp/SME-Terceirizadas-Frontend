@@ -7,6 +7,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { TextArea } from "../TextArea/TextArea";
 import { toastError, toastSuccess } from "../Toast/dialogs";
 import "./style.scss";
+import { required } from "../../../helpers/fieldValidators";
 
 export class ModalTerceirizadaRespondeQuestionamento extends Component {
   constructor(props) {
@@ -49,7 +50,13 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
     }
   }
   render() {
-    const { showModal, closeModal, uuid, resposta } = this.props;
+    const {
+      showModal,
+      closeModal,
+      uuid,
+      observacao_questionamento_terceirizada,
+      resposta
+    } = this.props;
     return (
       <Modal
         dialogClassName="modal-50w modal-question"
@@ -72,6 +79,8 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
                 label="Observação"
                 placeholder="Qual a sua justificativa para a resposta acima?"
                 name="observacao_questionamento_terceirizada"
+                validate={required}
+                required
               />
             </div>
           </div>
@@ -92,6 +101,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
                 onClick={() => {
                   this.responderQuestionamento(uuid);
                 }}
+                disabled={observacao_questionamento_terceirizada === undefined}
                 style={BUTTON_STYLE.BLUE}
                 className="ml-3"
               />
