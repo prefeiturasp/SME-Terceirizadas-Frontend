@@ -3,10 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  ALTERACAO_CARDAPIO,
-  ESCOLA
-} from "../../configs/constants";
+import { ALTERACAO_CARDAPIO, ESCOLA } from "../../configs/constants";
 
 import { escolaCancelaAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao";

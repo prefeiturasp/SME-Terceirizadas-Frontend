@@ -35,12 +35,7 @@ export class ModalCancelarSolicitacao extends Component {
     }
   }
   render() {
-    const {
-      showModal,
-      closeModal,
-      uuid,
-      solicitacao
-    } = this.props;
+    const { showModal, closeModal, uuid, solicitacao } = this.props;
     const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
@@ -52,8 +47,7 @@ export class ModalCancelarSolicitacao extends Component {
             <div className="row">
               <div className="col-12">
                 <p className="label--red">
-                  {solicitacao &&
-                    mensagemCancelamento(solicitacao.status)}
+                  {solicitacao && mensagemCancelamento(solicitacao.status)}
                   Deseja seguir em frente com o cancelamento?
                 </p>
               </div>

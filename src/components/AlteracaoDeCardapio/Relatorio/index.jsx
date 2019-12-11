@@ -74,10 +74,7 @@ class Relatorio extends Component {
   }
 
   render() {
-    const {
-      alteracaoDeCardapio,
-      prazoDoPedidoMensagem
-    } = this.state;
+    const { alteracaoDeCardapio, prazoDoPedidoMensagem } = this.state;
     return (
       <div>
         {this.renderizarRedirecionamentoParaPedidos()}
