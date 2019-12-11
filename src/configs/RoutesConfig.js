@@ -1,4 +1,9 @@
-import { painelHome, permissoes, relatorios } from "./helper";
+import {
+  painelHome,
+  permissoes,
+  relatorios,
+  relatoriosAlteracaoDeCardapio
+} from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
@@ -488,6 +493,11 @@ const routesConfig = [
   {
     path: `/configuracoes`,
     component: ConfigEmailPage,
+    exact: false
+  },
+  {
+    path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
+    component: relatoriosAlteracaoDeCardapio(),
     exact: false
   },
   {

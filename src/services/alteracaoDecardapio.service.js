@@ -218,7 +218,7 @@ export const DRENaoValidaAlteracaoCardapio = (uuid, justificativa) => {
     });
 };
 
-export const EscolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
+export const escolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   let status = 0;
   return fetch(url, {

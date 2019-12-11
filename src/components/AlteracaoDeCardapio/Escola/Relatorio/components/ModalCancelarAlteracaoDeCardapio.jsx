@@ -7,7 +7,7 @@ import {
   textAreaRequired
 } from "../../../../../helpers/fieldValidators";
 import { mensagemCancelamento } from "../../../../../helpers/utilities";
-import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
+import { escolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -26,7 +26,7 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
   async negarAlteracaoCardapio(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
 
-    const function_CancelaAlteracaoCardapio = EscolaCancelaAlteracaoCardapio;
+    const function_CancelaAlteracaoCardapio = escolaCancelaAlteracaoCardapio;
 
     const resp = await function_CancelaAlteracaoCardapio(
       uuid,
