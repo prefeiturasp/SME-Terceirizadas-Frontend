@@ -1,67 +1,60 @@
-const setaCheckEmPossibilidades = possibilidades => {
-  possibilidades.forEach(possibilidade => {
-    possibilidade["check"] = false;
-  });
-};
+export const montaTipoUnidadeEscolar = tiposUnidades => {
+  let unidadesEscolares = [{ nome: "Selecione a unidade", uuid: "" }];
 
-const setaCheckEmSubstituicoes = substituicoes => {
-  substituicoes.forEach(substituicao => {
-    substituicao["check"] = false;
-  });
-};
-
-const buscaPorPossibilidades = substituicoes => {
-  substituicoes.forEach(substituicao => {
-    setaCheckEmPossibilidades(substituicao.possibilidades);
-    setaCheckEmSubstituicoes(substituicao.substituicoes);
-  });
-};
-
-export const pegaDadosdeUnidadeEscolarOriginal = (uuid, dadosDaRequisicao) => {
-  let dadoDeUnidadeEscolar = [];
-
-  dadosDaRequisicao.forEach(dadoReq => {
-    uuid === dadoReq.tipo_unidade_escolar.uuid &&
-      dadoDeUnidadeEscolar.push(dadoReq);
-  });
-
-  return dadoDeUnidadeEscolar;
-};
-
-export const pegaDadosdeUnidadeEscolar = (uuid, dadosDaRequisicao) => {
-  let dadoDeUnidadeEscolar = [];
-
-  dadosDaRequisicao.forEach(dadoReq => {
-    uuid === dadoReq.tipo_unidade_escolar.uuid &&
-      dadoDeUnidadeEscolar.push(dadoReq);
-  });
-
-  return dadoDeUnidadeEscolar;
-};
-
-export const criaArraydePeriodosEscolares = dadosDeUnidadeEscolar => {
-  let periodosEscolares = [];
-  dadosDeUnidadeEscolar.forEach(dadosUnidade => {
-    periodosEscolares.push(dadosUnidade.periodo_escolar);
-  });
-  return periodosEscolares;
-};
-
-export const criaArrayDeTiposAlimentacao = dadosDeUnidadeEscolar => {
-  let tiposAlimentcao = [];
-  dadosDeUnidadeEscolar.forEach(dadosUnidade => {
-    tiposAlimentcao.push({
-      turno: "manha",
-      tipo_alimentacao: dadosUnidade.substituicoes
+  tiposUnidades &&
+    tiposUnidades.forEach(tipoUnidade => {
+      unidadesEscolares.push({
+        nome: tipoUnidade.iniciais,
+        uuid: tipoUnidade.uuid
+      });
     });
-  });
-  return tiposAlimentcao;
+
+  return unidadesEscolares;
 };
 
-export const adicionaCheckAObjetos = dadosTipoAlimentacaoPorUe => {
-  dadosTipoAlimentacaoPorUe.forEach(dadoEscolar => {
-    buscaPorPossibilidades(dadoEscolar.substituicoes);
+export const adicionarComboVazio = (combosAtuaisTemp, uuidVinculo) => {
+  if (combosAtuaisTemp.length === 0) {
+    let combo = [];
+    combo.push({
+      label: "",
+      tipos_alimentacao: [],
+      vinculo: uuidVinculo,
+      adicionar: true
+    });
+    return combo;
+  }
+  if (!combosAtuaisTemp[combosAtuaisTemp.length - 1].adicionar) {
+    combosAtuaisTemp.forEach(combo => {
+      combo.adicionar = false;
+    });
+    combosAtuaisTemp.push({
+      label: "",
+      tipos_alimentacao: [],
+      vinculo: uuidVinculo,
+      adicionar: true
+    });
+    return combosAtuaisTemp;
+  }
+  combosAtuaisTemp.forEach(combo => {
+    combo.adicionar = false;
   });
+  return combosAtuaisTemp;
+};
 
-  return dadosTipoAlimentacaoPorUe;
+export const podeAdicionarElemento = (combo, alimentacao) => {
+  let condicao = true;
+  combo.tipos_alimentacao.forEach(tipo_alimentacao => {
+    if (tipo_alimentacao === alimentacao.uuid) {
+      condicao = false;
+    }
+  });
+  return condicao;
+};
+
+export const montaLabelCombo = (combo, nome) => {
+  if (combo.label === "") {
+    combo.label = combo.label.concat(nome);
+  } else {
+    combo.label = combo.label.concat(` e ${nome}`);
+  }
 };

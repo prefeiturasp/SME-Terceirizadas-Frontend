@@ -1,278 +1,263 @@
 import React, { Component, Fragment } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadTipoAlimentacao } from "../../../../reducers/tipoAlimentacaoReducer";
 import { Select } from "../../../Shareable/Select";
-import { Botao } from "../../../Shareable/Botao";
 import Wizard from "../../../Shareable/Wizard";
-import { ModalCadastroTipoAlimentacao } from "./components/ModalCadastroTipoAlimentacao";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import {
-  getVinculosTipoAlimentacao,
-  alteraVinculosTipoAlimentacao
+  getVinculosTipoAlimentacaoPorUnidadeEscolar,
+  getTiposDeAlimentacao,
+  createVinculoTipoAlimentacaoPeriodoEscolar,
+  deleteVinculoTipoAlimentacaoPeriodoEscolar,
+  createVinculoSubstituicaoPeriodoEscolar
 } from "../../../../services/cadastroTipoAlimentacao.service";
-import "./style.scss";
-
 import {
-  pegaDadosdeUnidadeEscolar,
-  criaArraydePeriodosEscolares,
-  criaArrayDeTiposAlimentacao,
-  adicionaCheckAObjetos,
-  pegaDadosdeUnidadeEscolarOriginal
+  montaTipoUnidadeEscolar,
+  adicionarComboVazio,
+  montaLabelCombo,
+  podeAdicionarElemento
 } from "./helper";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
-import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
+import "./style.scss";
+import { toastError } from "../../../Shareable/Toast/dialogs";
 
 class CadastroTipoAlimentacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      load: false,
-
-      dadosEscolares: null,
-      tipoUnidadeSelect: null,
-      currentTipoAlimentacao: 0,
-      showModal: false,
-      dadosWizard: null,
-      redirect: false,
-
-      dadosTipoAlimentacaoPorUe: null,
-      dadosTipoAlimentacaoOriginal: null,
       currentStep: 0,
       unidadesEscolares: null,
-      meusDados: null,
       uuidUnidadeEscolar: null,
-      periodosEscolares: null,
-      tiposAlimentacao: null
+      vinculosTiposAlimentacao: null,
+      combosAtuais: null,
+
+      tiposAlimentacao: null,
+      formComboAlimentacao: true,
+
+      tipoAlimentacaoAtual: 0
     };
-    this.closeModal = this.closeModal.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  montaTipoUnidadeEscolar = tiposUnidades => {
-    let unidadesEscolares = [{ nome: "Selecione a unidade", uuid: "" }];
-
-    tiposUnidades &&
-      tiposUnidades.forEach(tipoUnidade => {
-        unidadesEscolares.push({
-          nome: tipoUnidade.iniciais,
-          uuid: tipoUnidade.uuid
-        });
-      });
-
-    if (this.state.unidadesEscolares === null) {
-      this.setState({
-        unidadesEscolares
+  componentDidMount() {
+    let tiposAlimentacao = this.state.tiposAlimentacao;
+    if (!tiposAlimentacao) {
+      getTiposDeAlimentacao().then(response => {
+        this.setState({ tiposAlimentacao: response.results });
       });
     }
-  };
+  }
 
   componentDidUpdate(prevProps, prevState) {
     let unidadesEscolares = this.state.unidadesEscolares;
-    const { meusDados } = this.props;
-    if (meusDados !== prevState.meusDados) {
-      this.setState({ meusDados });
-      if (this.state.load === false) {
-        this.setState({ load: true });
-      }
-    }
-
-    if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
-      this.montaTipoUnidadeEscolar(this.props.tiposUnidadesEscolar);
-    }
-  }
-
-  getDadosTipoUnidadeEscolar = uuid => {
-    getVinculosTipoAlimentacao().then(response => {
-      const dadosTipoAlimentacaoOriginal = pegaDadosdeUnidadeEscolarOriginal(
-        uuid,
-        response.results
-      );
-      let dadosTipoAlimentacaoPorUe = pegaDadosdeUnidadeEscolar(
-        uuid,
-        response.results
-      );
-      let periodosEscolares = criaArraydePeriodosEscolares(
-        dadosTipoAlimentacaoPorUe
-      );
-
-      let tiposAlimentacao = criaArrayDeTiposAlimentacao(
-        dadosTipoAlimentacaoPorUe
-      );
-
-      dadosTipoAlimentacaoPorUe = adicionaCheckAObjetos(
-        dadosTipoAlimentacaoPorUe
-      );
-
-      this.setState({
-        dadosTipoAlimentacaoOriginal,
-        dadosTipoAlimentacaoPorUe,
-        periodosEscolares,
-        uuidUnidadeEscolar: uuid,
-        tiposAlimentacao
-      });
-    });
-  };
-
-  setaIndiceTipoAlimentacao = indice => {
-    let currentTipoAlimentacao = this.state.currentTipoAlimentacao;
-    if (indice !== currentTipoAlimentacao) {
-      this.setState({ currentTipoAlimentacao: indice });
-    }
-  };
-
-  adicionaItemASubstituicoes = (currentStep, currentTipoAlimentacao) => {
-    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
-    let arrayPossibilidades = [];
-    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-      currentTipoAlimentacao
-    ].possibilidades.forEach((possibilidade, index) => {
-      if (possibilidade.check) {
-        possibilidade.check = false;
-
-        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-          currentTipoAlimentacao
-        ].substituicoes.push(possibilidade);
-
-        arrayPossibilidades.push(possibilidade);
-
-        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-          currentTipoAlimentacao
-        ].possibilidades.splice(index, 1);
-      }
-    });
-
-    this.setState({ dadosTipoAlimentacaoPorUe });
-  };
-
-  adicionaItemAPossibilidades = (currentStep, currentTipoAlimentacao) => {
-    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
-    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-      currentTipoAlimentacao
-    ].substituicoes.forEach((combinacao, index) => {
-      if (combinacao.check) {
-        combinacao.check = false;
-
-        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-          currentTipoAlimentacao
-        ].possibilidades.push(combinacao);
-
-        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-          currentTipoAlimentacao
-        ].substituicoes.splice(index, 1);
-      }
-    });
-    this.setState({ dadosTipoAlimentacaoPorUe });
-  };
-
-  setaCheckTipoAlimentacao = (
-    currentStep,
-    currentTipoAlimentacao,
-    indice,
-    condicao
-  ) => {
-    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
-    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-      currentTipoAlimentacao
-    ].possibilidades[indice].check = !condicao;
-
-    this.setState({ dadosTipoAlimentacaoPorUe });
-  };
-
-  setaCheckCombinacaoAlimentacao = (
-    currentStep,
-    currentTipoAlimentacao,
-    indice,
-    condicao
-  ) => {
-    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
-    dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-      currentTipoAlimentacao
-    ].substituicoes[indice].check = !condicao;
-
-    this.setState({ dadosTipoAlimentacaoPorUe });
-  };
-
-  showModal() {
-    this.setState({ showModal: true });
-  }
-
-  closeModal() {
-    this.setState({ showModal: false });
-  }
-
-  onSubmit() {
-    let count = 0;
     let uuidUnidadeEscolar = this.state.uuidUnidadeEscolar;
-    let dadosTipoAlimentacaoPorUe = this.state.dadosTipoAlimentacaoPorUe;
-    dadosTipoAlimentacaoPorUe.forEach(tipoAlimentacao => {
-      let data = {
-        tipo_unidade_escolar: uuidUnidadeEscolar,
-        periodo_escolar: tipoAlimentacao.periodo_escolar.uuid,
-        substituicoes: [
-          {
-            tipo_alimentacao: null,
-            substituicoes: [],
-            possibilidades: []
-          }
-        ]
-      };
-
-      let possibilidadesArray = [];
-      let substituicoesArray = [];
-
-      tipoAlimentacao.substituicoes.forEach(substituicao => {
-        data.substituicoes[0].tipo_alimentacao =
-          substituicao.tipo_alimentacao.uuid;
-        substituicoesArray = substituicao.substituicoes;
-        possibilidadesArray = substituicao.substituicoes.concat(
-          substituicao.possibilidades
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    let combosAtuais = this.state.combosAtuais;
+    const currentStep = this.state.currentStep;
+    if (this.state.formComboAlimentacao) {
+      if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
+        unidadesEscolares = montaTipoUnidadeEscolar(
+          this.props.tiposUnidadesEscolar
         );
-      });
+        this.setState({ unidadesEscolares });
+      }
 
-      possibilidadesArray.forEach(possibilidade => {
-        data.substituicoes[0].possibilidades.push(possibilidade.uuid);
-      });
-
-      substituicoesArray.forEach(substituicao => {
-        data.substituicoes[0].substituicoes.push(substituicao.uuid);
-      });
-      alteraVinculosTipoAlimentacao(tipoAlimentacao.uuid, data);
-      count += 1;
-    });
-
-    if (count === dadosTipoAlimentacaoPorUe.length) {
-      toastSuccess("Tipo de Alimentação Salva com sucesso!");
-      this.props.change("tipos_unidades", null);
-      this.setState({
-        uuidUnidadeEscolar: null,
-        currentStep: 0,
-        currentTipoAlimentacao: 0,
-        showModal: false
-      });
+      if (
+        uuidUnidadeEscolar !== prevState.uuidUnidadeEscolar &&
+        vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao
+      ) {
+        getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
+          response => {
+            vinculosTiposAlimentacao = response.results;
+            if (response.results.length === 0) {
+              this.setState({ uuidUnidadeEscolar: null });
+              toastError(
+                "Nenhum registro associado ao tipo de unidade escolar"
+              );
+            } else {
+              combosAtuais = adicionarComboVazio(
+                vinculosTiposAlimentacao[currentStep].combos,
+                vinculosTiposAlimentacao[currentStep].uuid
+              );
+              this.setState({
+                vinculosTiposAlimentacao,
+                combosAtuais
+              });
+            }
+          }
+        );
+      }
     } else {
-      toastError("Houve um erro ao salvar tipo de alimentação!");
+      if (vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao) {
+        getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
+          response => {
+            vinculosTiposAlimentacao = response.results;
+
+            vinculosTiposAlimentacao[currentStep].combos.forEach(combo => {
+              combo.substituicoes.push({
+                uuid: null,
+                combo: combo.uuid,
+                label: "",
+                tipos_alimentacao: [],
+                adicionar: true
+              });
+            });
+            if (
+              this.state.formComboAlimentacao !== prevState.formComboAlimentacao
+            ) {
+              this.setState({ vinculosTiposAlimentacao });
+            }
+          }
+        );
+      }
     }
   }
+
+  adicionaTipoAlimentacaoAoCombo = tipoAlimentacao => {
+    let combosAtuais = this.state.combosAtuais;
+    combosAtuais.forEach(combo => {
+      if (combo.adicionar && podeAdicionarElemento(combo, tipoAlimentacao)) {
+        combo.tipos_alimentacao.push(tipoAlimentacao.uuid);
+        montaLabelCombo(combo, tipoAlimentacao.nome);
+      }
+    });
+    this.setState({ combosAtuais });
+  };
+
+  adicionaSubstituicaoAoCombo = tipoAlimentacao => {
+    const currentStep = this.state.currentStep;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    vinculosTiposAlimentacao[currentStep].combos[
+      tipoAlimentacaoAtual
+    ].substituicoes.forEach(combo => {
+      if (combo.adicionar && podeAdicionarElemento(combo, tipoAlimentacao)) {
+        combo.tipos_alimentacao.push(tipoAlimentacao.uuid);
+        montaLabelCombo(combo, tipoAlimentacao.nome);
+      }
+    });
+    this.setState({ vinculosTiposAlimentacao });
+  };
+
+  enviarComboTipoAlimentacao = combo => {
+    let combosAtuais = this.state.combosAtuais;
+    const request = {
+      tipos_alimentacao: combo.tipos_alimentacao,
+      vinculo: combo.vinculo
+    };
+    createVinculoTipoAlimentacaoPeriodoEscolar(request).then(response => {
+      if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(response.data.tipos_alimentacao[0]);
+      } else {
+        combo.adicionar = false;
+        combo.uuid = response.data.uuid;
+        combosAtuais.push({
+          label: "",
+          tipos_alimentacao: [],
+          vinculo: combo.vinculo,
+          adicionar: true
+        });
+        this.setState({ combosAtuais });
+      }
+    });
+  };
+
+  enviarComboSubstituicao = combo => {
+    const currentStep = this.state.currentStep;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const request = {
+      tipos_alimentacao: combo.tipos_alimentacao,
+      combo: combo.combo
+    };
+    createVinculoSubstituicaoPeriodoEscolar(request).then(response => {
+      if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(response.data.tipos_alimentacao[0]);
+      } else {
+        combo.adicionar = false;
+        combo.uuid = response.data.uuid;
+        vinculosTiposAlimentacao[currentStep].combos[
+          tipoAlimentacaoAtual
+        ].substituicoes.push({
+          label: "",
+          tipos_alimentacao: [],
+          combo: combo.uuid,
+          adicionar: true
+        });
+        this.setState({ vinculosTiposAlimentacao });
+      }
+    });
+  };
+
+  deletaComboTipoAlimentacao = (combo, indice) => {
+    let combosAtuais = this.state.combosAtuais;
+    if (!combo.uuid) {
+      combosAtuais.splice(indice, 1);
+      this.setState({ combosAtuais });
+    } else {
+      deleteVinculoTipoAlimentacaoPeriodoEscolar(combo.uuid).then(response => {
+        if (
+          response === HTTP_STATUS.BAD_REQUEST ||
+          response === HTTP_STATUS.FORBIDDEN
+        ) {
+          toastError("Tipo de alimentação já está vinculado a um registro");
+        } else {
+          combosAtuais.splice(indice, 1);
+          this.setState({ combosAtuais });
+        }
+      });
+    }
+  };
+  apagarCampoComboTipoAlimentacao = indice => {
+    let combosAtuais = this.state.combosAtuais;
+    combosAtuais[indice].label = "";
+    combosAtuais[indice].tipos_alimentacao = [];
+    this.setState({ combosAtuais });
+  };
+
+  validaESalvaOUltimoElemento = combosAtuais => {
+    combosAtuais.forEach(combo => {
+      if (combo.adicionar) {
+        const request = {
+          tipos_alimentacao: combo.tipos_alimentacao,
+          vinculo: combo.vinculo
+        };
+        createVinculoTipoAlimentacaoPeriodoEscolar(request).then(response => {
+          if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(response.data.tipos_alimentacao[0]);
+          } else {
+            combo.adicionar = false;
+            combo.uuid = response.data.uuid;
+            combosAtuais.push({
+              label: "",
+              tipos_alimentacao: [],
+              vinculo: combo.vinculo,
+              adicionar: true
+            });
+            this.setState({ combosAtuais, formComboAlimentacao: false });
+          }
+        });
+      }
+    });
+  };
 
   render() {
     const {
-      dadosTipoAlimentacaoPorUe,
       uuidUnidadeEscolar,
       unidadesEscolares,
       currentStep,
-      currentTipoAlimentacao,
-      showModal
+      vinculosTiposAlimentacao,
+      combosAtuais,
+      tiposAlimentacao,
+      formComboAlimentacao,
+      tipoAlimentacaoAtual
     } = this.state;
     const { handleSubmit } = this.props;
+    console.log(vinculosTiposAlimentacao);
     return (
       <Fragment>
-        <ModalCadastroTipoAlimentacao
-          closeModal={this.closeModal}
-          showModal={showModal}
-          onSubmit={this.onSubmit}
-          tiposAlimentacoes={dadosTipoAlimentacaoPorUe}
-        />
         <div className="card mt-3">
           <div className="card-body formulario-tipo-alimentacao">
             <form onSubmit={handleSubmit}>
@@ -287,7 +272,7 @@ class CadastroTipoAlimentacao extends Component {
                     name="tipos_unidades"
                     options={unidadesEscolares ? unidadesEscolares : []}
                     onChange={event => {
-                      this.getDadosTipoUnidadeEscolar(event.target.value);
+                      this.setState({ uuidUnidadeEscolar: event.target.value });
                     }}
                   />
                 </article>
@@ -295,373 +280,213 @@ class CadastroTipoAlimentacao extends Component {
               {uuidUnidadeEscolar !== null && (
                 <Fragment>
                   <Wizard
-                    arrayOfObjects={dadosTipoAlimentacaoPorUe}
+                    arrayOfObjects={vinculosTiposAlimentacao}
                     currentStep={currentStep}
                     nameItem="nome"
                   />
-                  <section className="conteudo-step">
-                    <nav>Tipo de alimentos atuais </nav>
-                    <nav>Possibilidade</nav>
-                    <nav />
-                    <nav>Combinação</nav>
-
-                    <div className="itens-tipo-alimentacao">
-                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes.map(
-                        (alimento, indice) => {
-                          return indice === 0 ? (
-                            alimento.substituicoes.length > 0 ? (
-                              <a
-                                className="passou"
-                                key={indice}
-                                href={`#${indice}`}
-                                onClick={event => {
-                                  event.preventDefault();
-                                  this.setaIndiceTipoAlimentacao(indice);
-                                }}
-                              >
-                                <span>
-                                  {alimento.tipo_alimentacao.nome}{" "}
-                                  <i className="fas fa-check" />
-                                </span>
-                              </a>
-                            ) : (
-                              <Fragment>
-                                {this.setaIndiceTipoAlimentacao(indice)}
-                                <a
-                                  className="ativo"
+                  {formComboAlimentacao ? (
+                    <section className="conteudo-wizard">
+                      <div className="titulo-combo">Todos Alimentos</div>
+                      <div className="titulo-combo">Combinacoes</div>
+                      <div className="conteudo-tipo-alimentacao">
+                        <ul>
+                          {tiposAlimentacao &&
+                            tiposAlimentacao.map((tipo, indice) => {
+                              return (
+                                <li
                                   key={indice}
-                                  href={`#${indice}`}
-                                  onClick={event => {
-                                    event.preventDefault();
-                                  }}
+                                  onClick={() =>
+                                    this.adicionaTipoAlimentacaoAoCombo(tipo)
+                                  }
                                 >
-                                  <span>{alimento.tipo_alimentacao.nome}</span>
-                                </a>
-                              </Fragment>
-                            )
-                          ) : dadosTipoAlimentacaoPorUe[currentStep]
-                              .substituicoes[indice - 1].substituicoes
-                              .length === 0 ? (
-                            <a
-                              className="inativo"
-                              key={indice}
-                              href={`#${indice}`}
-                              onClick={event => {
-                                event.preventDefault();
-                              }}
-                            >
-                              <span>{alimento.tipo_alimentacao.nome}</span>
-                            </a>
-                          ) : dadosTipoAlimentacaoPorUe[currentStep]
-                              .substituicoes[indice].substituicoes.length >
-                            0 ? (
-                            <a
-                              className="passou"
-                              key={indice}
-                              href={`#${indice}`}
-                              onClick={event => {
-                                event.preventDefault();
-                                this.setaIndiceTipoAlimentacao(indice);
-                              }}
-                            >
-                              <span>
-                                {alimento.tipo_alimentacao.nome}{" "}
-                                <i className="fas fa-check" />
-                              </span>
-                            </a>
-                          ) : (
-                            <Fragment>
-                              <a
-                                className="ativo"
-                                key={indice}
-                                href={`#${indice}`}
-                                onClick={event => {
-                                  event.preventDefault();
-                                  this.setaIndiceTipoAlimentacao(indice);
-                                }}
-                              >
-                                <span>{alimento.tipo_alimentacao.nome}</span>
-                              </a>
-                            </Fragment>
-                          );
-                        }
-                      )}
-                    </div>
-
-                    <div className="itens-possibilidades">
-                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                        currentTipoAlimentacao
-                      ].possibilidades.map((possibilidade, indice) => {
-                        return (
-                          <div
-                            key={indice}
-                            className="input-possibilidade"
-                            onClick={event => {
-                              event.preventDefault();
-                              this.setaCheckTipoAlimentacao(
-                                currentStep,
-                                currentTipoAlimentacao,
-                                indice,
-                                possibilidade.check
+                                  {tipo.nome}
+                                </li>
                               );
-                            }}
-                          >
-                            <input
-                              type="checkbox"
-                              name={possibilidade.nome}
-                              value={possibilidade.uuid}
-                              checked={possibilidade.check}
-                            />
-                            <label>{possibilidade.nome}</label>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="funcoes">
-                      {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                        currentTipoAlimentacao
-                      ].possibilidades.filter(v => v.check).length > 0 ? (
-                        dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                          currentTipoAlimentacao
-                        ].substituicoes.filter(v => v.check).length > 0 ? (
-                          <Fragment>
-                            <a
-                              href="#0"
-                              className="ativo-pass"
-                              onClick={event => {
-                                event.preventDefault();
-                                this.adicionaItemASubstituicoes(
-                                  currentStep,
-                                  currentTipoAlimentacao
-                                );
-                              }}
-                            >
-                              <i className="fas fa-chevron-right" />
-                            </a>
-                            <a
-                              href="#1"
-                              className="ativo-pass"
-                              onClick={event => {
-                                event.preventDefault();
-                                this.adicionaItemAPossibilidades(
-                                  currentStep,
-                                  currentTipoAlimentacao
-                                );
-                              }}
-                            >
-                              <i className="fas fa-chevron-left" />
-                            </a>
-                          </Fragment>
-                        ) : (
-                          <Fragment>
-                            <a
-                              href="#0"
-                              className="ativo-pass"
-                              onClick={event => {
-                                event.preventDefault();
-                                this.adicionaItemASubstituicoes(
-                                  currentStep,
-                                  currentTipoAlimentacao
-                                );
-                              }}
-                            >
-                              <i className="fas fa-chevron-right" />
-                            </a>
-                            <a
-                              href="#1"
-                              onClick={event => {
-                                event.preventDefault();
-                              }}
-                            >
-                              <i className="fas fa-chevron-left" />
-                            </a>
-                          </Fragment>
-                        )
-                      ) : dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                          currentTipoAlimentacao
-                        ].substituicoes.filter(v => v.check).length > 0 ? (
-                        <Fragment>
-                          <a
-                            href="#1"
-                            onClick={event => {
-                              event.preventDefault();
-                            }}
-                          >
-                            <i className="fas fa-chevron-right" />
-                          </a>
-                          <a
-                            href="#1"
-                            className="ativo-pass"
-                            onClick={event => {
-                              event.preventDefault();
-                              this.adicionaItemAPossibilidades(
-                                currentStep,
-                                currentTipoAlimentacao
-                              );
-                            }}
-                          >
-                            <i className="fas fa-chevron-left" />
-                          </a>
-                        </Fragment>
-                      ) : (
-                        <Fragment>
-                          <a
-                            href="#1"
-                            onClick={event => {
-                              event.preventDefault();
-                            }}
-                          >
-                            <i className="fas fa-chevron-right" />
-                          </a>
-                          <a
-                            href="#1"
-                            onClick={event => {
-                              event.preventDefault();
-                            }}
-                          >
-                            <i className="fas fa-chevron-left" />
-                          </a>
-                        </Fragment>
-                      )}
-                    </div>
-
-                    {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                      currentTipoAlimentacao
-                    ].substituicoes.length > 0 ? (
-                      <div className="itens-combinacoes-check">
-                        {dadosTipoAlimentacaoPorUe[currentStep].substituicoes[
-                          currentTipoAlimentacao
-                        ].substituicoes.map((substituicao, indice) => {
-                          return (
-                            <div
-                              key={indice}
-                              className="input-possibilidade"
-                              onClick={event => {
-                                event.preventDefault();
-                                this.setaCheckCombinacaoAlimentacao(
-                                  currentStep,
-                                  currentTipoAlimentacao,
-                                  indice,
-                                  substituicao.check
-                                );
-                              }}
-                            >
-                              <input
-                                type="checkbox"
-                                name={substituicao.nome}
-                                value={substituicao.uuid}
-                                checked={substituicao.check}
-                              />
-                              <label>{substituicao.nome}</label>
-                            </div>
-                          );
-                        })}
+                            })}
+                        </ul>
                       </div>
-                    ) : (
-                      <div className="itens-combinacoes" />
-                    )}
-                  </section>
-                  <section className="adicionar-alimentacao">
-                    <a href="#0" onClick={event => event.preventDefault()}>
-                      <span>
-                        <u>Adicionar Alimentação</u>
-                      </span>
-                    </a>
-                  </section>
+                      <div className="combo-tipo-alimentacao">
+                        {combosAtuais &&
+                          combosAtuais.map((combo, indice) => {
+                            return (
+                              <div key={indice} className="item-combo">
+                                <div
+                                  className={
+                                    combo.adicionar
+                                      ? "descricao"
+                                      : "descricao-desabilitado"
+                                  }
+                                >
+                                  <nav>{combo.label}</nav>
+                                </div>
+                                <div
+                                  className={`acao ${!combo.adicionar &&
+                                    "impedir-adicionar"}`}
+                                >
+                                  <i
+                                    className="fas fa-plus-circle"
+                                    onClick={() => {
+                                      combo.adicionar &&
+                                        this.enviarComboTipoAlimentacao(combo);
+                                    }}
+                                  />
+                                  <i
+                                    className="fas fa-trash-alt"
+                                    onClick={() => {
+                                      combo.adicionar
+                                        ? this.apagarCampoComboTipoAlimentacao(
+                                            indice
+                                          )
+                                        : this.deletaComboTipoAlimentacao(
+                                            combo,
+                                            indice
+                                          );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </section>
+                  ) : (
+                    <section className="conteudo-wizard-substituicoes">
+                      <div className="titulo-combo-substituicoes">Combos</div>
+                      <div className="titulo-combo-substituicoes">
+                        Tipos de Alimentação
+                      </div>
+                      <div className="titulo-combo-substituicoes">
+                        Substituições
+                      </div>
+                      <ul className="lista-combo-alimentacoes">
+                        {vinculosTiposAlimentacao &&
+                          vinculosTiposAlimentacao[currentStep].combos.map(
+                            (tipoAlimentacao, indice) => {
+                              return indice === tipoAlimentacaoAtual ? (
+                                <li key={indice}>{tipoAlimentacao.label}</li>
+                              ) : vinculosTiposAlimentacao[currentStep].combos[
+                                  indice - 1
+                                ].substituicoes.length > 1 ? (
+                                <Fragment>
+                                  <li key={indice}>{tipoAlimentacao.label}</li>
+                                </Fragment>
+                              ) : (
+                                <Fragment>
+                                  <li
+                                    className="tipo-alimentacao-inativo"
+                                    key={indice}
+                                  >
+                                    {tipoAlimentacao.label}
+                                  </li>
+                                </Fragment>
+                              );
+                            }
+                          )}
+                      </ul>
+                      <ul className="tipos-alimentacao-substituicoes">
+                        {tiposAlimentacao &&
+                          tiposAlimentacao.map((tipo, indice) => {
+                            return (
+                              <li
+                                key={indice}
+                                onClick={() =>
+                                  this.adicionaSubstituicaoAoCombo(tipo)
+                                }
+                              >
+                                {tipo.nome}
+                              </li>
+                            );
+                          })}
+                      </ul>
+                      <div className="combo-tipo-alimentacao">
+                        {vinculosTiposAlimentacao &&
+                          vinculosTiposAlimentacao[currentStep].combos[
+                            tipoAlimentacaoAtual
+                          ].substituicoes.map((substituicao, indice) => {
+                            return (
+                              <div key={indice} className="item-combo">
+                                <div
+                                  className={
+                                    substituicao.adicionar
+                                      ? "descricao"
+                                      : "descricao-desabilitado"
+                                  }
+                                >
+                                  <nav>{substituicao.label}</nav>
+                                </div>
+                                <div
+                                  className={`acao ${!substituicao.adicionar &&
+                                    "impedir-adicionar"}`}
+                                >
+                                  <i
+                                    className="fas fa-plus-circle"
+                                    onClick={() => {
+                                      substituicao.adicionar &&
+                                        this.enviarComboSubstituicao(
+                                          substituicao
+                                        );
+                                    }}
+                                  />
+                                  <i
+                                    className="fas fa-trash-alt"
+                                    onClick={() => {
+                                      substituicao.adicionar
+                                        ? this.apagarCampoComboTipoAlimentacao(
+                                            indice
+                                          )
+                                        : this.deletaComboTipoAlimentacao(
+                                            substituicao,
+                                            indice
+                                          );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </section>
+                  )}
 
-                  <section className="botao-footer">
-                    {currentStep === 0 ? (
-                      dadosTipoAlimentacaoPorUe[
-                        currentStep
-                      ].substituicoes.filter(v => v.substituicoes.length)
-                        .length ===
-                      dadosTipoAlimentacaoPorUe[currentStep].substituicoes
-                        .length ? (
-                        <Fragment>
-                          <Botao
-                            texto={"Próximo"}
-                            onClick={() => {
-                              this.setState({
-                                currentStep: currentStep + 1,
-                                currentTipoAlimentacao: 0
-                              });
-                            }}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                          />
-                        </Fragment>
+                  <section className="rodape-botoes">
+                    {formComboAlimentacao ? (
+                      combosAtuais && combosAtuais.length === 1 ? (
+                        <Botao
+                          texto={"Formar Combos"}
+                          className="botao-desabilitado"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
                       ) : (
                         <Fragment>
                           <Botao
-                            texto={"Próximo"}
-                            className="desabilitado"
+                            texto={"Formar Combos"}
+                            onClick={() => {
+                              // this.setState({ formComboAlimentacao: false })
+                              this.validaESalvaOUltimoElemento(combosAtuais);
+                            }}
                             type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
                           />
                         </Fragment>
                       )
                     ) : (
                       <Fragment>
                         <Botao
-                          texto={"Anterior"}
-                          onClick={() => {
-                            this.setState({
-                              currentStep: currentStep - 1,
-                              currentTipoAlimentacao: 0
-                            });
-                          }}
+                          texto={"Voltar"}
+                          onClick={() =>
+                            this.setState({ formComboAlimentacao: true })
+                          }
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="mr-2"
                         />
-                        {dadosTipoAlimentacaoPorUe[
-                          currentStep
-                        ].substituicoes.filter(v => v.substituicoes.length)
-                          .length ===
-                        dadosTipoAlimentacaoPorUe[currentStep].substituicoes
-                          .length ? (
-                          currentStep + 1 < dadosTipoAlimentacaoPorUe.length ? (
-                            <Botao
-                              texto={"Próximo"}
-                              className="ml-3"
-                              onClick={() => {
-                                this.setState({
-                                  currentStep: currentStep + 1,
-                                  currentTipoAlimentacao: 0
-                                });
-                              }}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN}
-                            />
-                          ) : (
-                            <Botao
-                              texto={"Finalizar"}
-                              className="ml-3"
-                              onClick={() => this.showModal()}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN}
-                            />
-                          )
-                        ) : currentStep + 1 <
-                          dadosTipoAlimentacaoPorUe.length ? (
-                          <Fragment>
-                            <Botao
-                              texto={"Próximo"}
-                              className="desabilitado ml-3"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN}
-                            />
-                          </Fragment>
-                        ) : (
-                          <Fragment>
-                            <Botao
-                              texto={"Finalizar"}
-                              className="desabilitado ml-3"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN}
-                            />
-                          </Fragment>
-                        )}
+                        <Botao
+                          texto={"Confirmar"}
+                          // onClick={() => this.setState({ formComboAlimentacao: true })}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                        />
                       </Fragment>
                     )}
                   </section>
