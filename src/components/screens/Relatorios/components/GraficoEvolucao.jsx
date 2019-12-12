@@ -35,10 +35,20 @@ function CardTotalSolicitacaoPorStatus(props) {
       cardClass = "card-authorized";
       break;
     case TIPO_CARD.NEGADO:
-        texto = "Negadas";
-        icon = ICON_CARD_TYPE_ENUM.NEGADO;
-        cardClass = "card-denied";
-        break;
+      texto = "Negadas";
+      icon = ICON_CARD_TYPE_ENUM.NEGADO;
+      cardClass = "card-denied";
+      break;
+    case TIPO_CARD.PENDENTE:
+      texto = "Pendentes de aprovação";
+      icon = ICON_CARD_TYPE_ENUM.PENDENTE;
+      cardClass = "card-pending";
+      break;
+    case TIPO_CARD.CANCELADO:
+      texto = "Canceladas";
+      icon = ICON_CARD_TYPE_ENUM.CANCELADO;
+      cardClass = "card-cancelled";
+      break;
 
     default:
       texto = "Autorizadas";
@@ -116,10 +126,24 @@ class GraficoEvolucao extends Component {
     return (
       <div className="evolution">
         <div className="card">
-          <CardTotalSolicitacaoPorStatus
-            quantidade={totais_tipo_solicitacao.total_autorizados}
-            tipo={TIPO_CARD.AUTORIZADO}
-          />
+          <div className="row">
+            <CardTotalSolicitacaoPorStatus
+              quantidade={totais_tipo_solicitacao.total_autorizados}
+              tipo={TIPO_CARD.AUTORIZADO}
+            />
+            <CardTotalSolicitacaoPorStatus
+              quantidade={totais_tipo_solicitacao.total_negados}
+              tipo={TIPO_CARD.NEGADO}
+            />
+            <CardTotalSolicitacaoPorStatus
+              quantidade={totais_tipo_solicitacao.total_pendentes}
+              tipo={TIPO_CARD.PENDENTE}
+            />
+            <CardTotalSolicitacaoPorStatus
+              quantidade={totais_tipo_solicitacao.total_cancelados}
+              tipo={TIPO_CARD.CANCELADO}
+            />
+          </div>
           {this.graficoEcolucao(data, graficoEvolucao)}
         </div>
       </div>

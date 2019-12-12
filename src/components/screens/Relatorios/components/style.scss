@@ -15,6 +15,17 @@ p {
   }
 }
 
+.card-pending {
+  i {
+    color: $orange;
+  }
+}
+.card-cancelled {
+  i {
+    color: $black;
+  }
+}
+
 .fonte-grande {
   font-style: normal;
   font-weight: bold;
