@@ -2,12 +2,12 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { textAreaRequired } from "../../helpers/fieldValidators";
-import { mensagemCancelamento } from "../../helpers/utilities";
-import Botao from "./Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "./Botao/constants";
-import { TextArea } from "./TextArea/TextArea";
-import { toastError, toastSuccess } from "./Toast/dialogs";
+import { textAreaRequired } from "../../../helpers/fieldValidators";
+import { mensagemCancelamento } from "../../../helpers/utilities";
+import Botao from "../Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
+import { TextArea } from "../TextArea/TextArea";
+import { toastError, toastSuccess } from "../Toast/dialogs";
 
 export class ModalCancelarSolicitacao extends Component {
   constructor(props) {
@@ -20,12 +20,14 @@ export class ModalCancelarSolicitacao extends Component {
   async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
     let resp = "";
-    resp = await this.props.endpointCancelarSolicitacao(uuid, justificativa);
+    resp = await this.props.endpoint(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação cancelada com sucesso!");
+      if (this.props.loadSolicitacao) this.props.loadSolicitacao(uuid);
     } else {
-      toastError(resp.detail);
+      this.props.closeModal();
+      toastError(resp.data.detail);
     }
   }
 

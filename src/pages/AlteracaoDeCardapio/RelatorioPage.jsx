@@ -6,7 +6,7 @@ import { HOME } from "../../constants/config.constants";
 import { ALTERACAO_CARDAPIO, ESCOLA } from "../../configs/constants";
 
 import { escolaCancelaAlteracaoCardapio } from "../../services/alteracaoDecardapio.service";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao";
+import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 
 class RelatorioBase extends React.Component {
   render() {

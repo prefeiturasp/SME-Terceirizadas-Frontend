@@ -161,7 +161,7 @@ class AlteracaoCardapio extends Component {
     this.props.change("data_inicial", null);
     this.props.change("data_final", null);
     this.props.change("motivo", null);
-    this.props.change("observacao", null);
+    this.props.change("observacao", "<p><p/>\n");
     periodos.forEach(periodo => {
       periodo.checado = false;
       this.props.change(`substituicoes_${periodo.nome}.check`, false);
@@ -191,7 +191,7 @@ class AlteracaoCardapio extends Component {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
         } else {
-          toastError(res.error);
+          toastError("Houve um erro ao enviar a Alteração de Cardápio");
         }
       },
       function() {

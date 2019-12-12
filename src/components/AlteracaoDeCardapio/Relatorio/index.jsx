@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
-import { Redirect } from "react-router-dom";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import {
+  getAlteracaoCardapio,
+  escolaCancelaAlteracaoCardapio
+} from "../../../services/alteracaoDecardapio.service";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { dataParaUTC } from "../../../helpers/utilities";
-import { ESCOLA, ALTERACAO_CARDAPIO } from "../../../configs/constants";
 import { escolaPodeCancelar } from "../../../constants/statusEnum";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -17,25 +18,15 @@ class Relatorio extends Component {
     super(props);
     this.state = {
       uuid: null,
-      showModal: false,
+      showNaoModalAprova: false,
+      showModalAprova: false,
       alteracaoDecardapio: null,
-      prazoDoPedidoMensagem: null,
-      listaDeStatus: []
+      prazoDoPedidoMensagem: null
     };
-    this.closeModal = this.closeModal.bind(this);
+    this.closeAprovaModal = this.closeAprovaModal.bind(this);
+    this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
-
-  setRedirect() {
-    this.setState({
-      redirect: true
-    });
-  }
-
-  renderizarRedirecionamentoParaPedidos = () => {
-    if (this.state.redirect) {
-      return <Redirect to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`} />;
-    }
-  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -49,13 +40,11 @@ class Relatorio extends Component {
       );
       if (uuid) {
         getAlteracaoCardapio(uuid).then(response => {
-          const dataMaisProxima =
-            response.inclusoes && response.inclusoes[0].data;
           this.setState({
             alteracaoDeCardapio: response,
             uuid,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial || dataMaisProxima,
+              response.data_inicial,
               proximos_dois_dias_uteis,
               proximos_cinco_dias_uteis
             )
@@ -65,19 +54,50 @@ class Relatorio extends Component {
     });
   }
 
-  showModal() {
-    this.setState({ showModal: true });
+  showAprovaModal() {
+    this.setState({ showAprovaModal: true });
   }
 
-  closeModal() {
-    this.setState({ showModal: false });
+  closeAprovaModal() {
+    this.setState({ showAprovaModal: false });
+  }
+
+  showNaoAprovaModal() {
+    this.setState({ showNaoAprovaModal: true });
+  }
+
+  closeNaoAprovaModal() {
+    this.setState({ showNaoAprovaModal: false });
+  }
+
+  loadSolicitacao(uuid) {
+    getAlteracaoCardapio(uuid).then(response => {
+      this.setState({
+        alteracaoDeCardapio: response
+      });
+    });
   }
 
   render() {
-    const { alteracaoDeCardapio, prazoDoPedidoMensagem } = this.state;
+    const {
+      showNaoAprovaModal,
+      alteracaoDeCardapio,
+      prazoDoPedidoMensagem,
+      uuid
+    } = this.state;
+    const { justificativa } = this.props;
+    const ModalNaoAprova = this.props.modalNaoAprova;
     return (
       <div>
-        {this.renderizarRedirecionamentoParaPedidos()}
+        <ModalNaoAprova
+          showModal={showNaoAprovaModal}
+          closeModal={this.closeNaoAprovaModal}
+          endpoint={escolaCancelaAlteracaoCardapio}
+          solicitacao={alteracaoDeCardapio}
+          loadSolicitacao={this.loadSolicitacao}
+          justificativa={justificativa}
+          uuid={uuid}
+        />
         {!alteracaoDeCardapio ? (
           <div>Carregando...</div>
         ) : (
@@ -96,7 +116,7 @@ class Relatorio extends Component {
                     <div className="col-12 text-right">
                       <Botao
                         texto={"Cancelar"}
-                        onClick={() => this.showModal()}
+                        onClick={() => this.showNaoAprovaModal()}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
