@@ -26,6 +26,16 @@ export const adicionarComboVazio = (combosAtuaisTemp, uuidVinculo) => {
   return combosAtuaisTemp;
 };
 
+export const podeAdicionarElementoSubstituicao = (combo, alimentacao) => {
+  let condicao = true;
+  combo.tipos_alimentacao.forEach(tipo_alimentacao => {
+    if (tipo_alimentacao.uuid === alimentacao.uuid) {
+      condicao = false;
+    }
+  });
+  return condicao;
+};
+
 export const podeAdicionarElemento = (combo, alimentacao) => {
   let condicao = true;
   combo.tipos_alimentacao.forEach(tipo_alimentacao => {

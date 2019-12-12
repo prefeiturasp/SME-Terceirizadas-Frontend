@@ -129,3 +129,19 @@ export const deleteVinculoTipoAlimentacaoPeriodoEscolar = uuid => {
       return error.json();
     });
 };
+
+export const deleteSubstituicaoTipoAlimentacaoPeriodoEscolar = uuid => {
+  const url = `${
+    CONFIG.API_URL
+  }/substituicoes-combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/${uuid}/`;
+  return fetch(url, {
+    method: "DELETE",
+    headers: authHeader
+  })
+    .then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

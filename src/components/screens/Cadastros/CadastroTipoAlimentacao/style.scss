@@ -168,26 +168,64 @@
     li {
       display: flex;
       align-items: center;
-      padding-left: 1em;
+      justify-content: space-between;
+      padding: 0 1em;
       height: 40px;
-      background: #ffffff;
-      border: 1px solid #82b7e8;
-      box-sizing: border-box;
       border-radius: 5px;
       margin-bottom: 0.5em;
-
-      font-weight: 500;
       font-size: 14px;
       line-height: 16px;
-      /* identical to box height */
+    }
 
-      display: flex;
-      align-items: center;
+    .passou_atual {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
+      color: #42474a;
+      div {
+        padding: 0.5px 3px;
+        border: 1px solid #52c41a;
+        border-radius: 50%;
+        background: #52c41a;
+        i {
+          font-size: 10px;
+          color: #ffffff;
+        }
+      }
+    }
 
+    .nao_passou_atual {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
       color: #42474a;
     }
 
-    .tipo-alimentacao-inativo {
+    .passou_anterior {
+      background: #ffffff;
+      border: 1px solid #dadada;
+      font-weight: 500;
+      color: #42474a;
+      div {
+        padding: 0.5px 3px;
+        border: 1px solid #52c41a;
+        border-radius: 50%;
+        background: #52c41a;
+        i {
+          font-size: 10px;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .nao_passou_proximo {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
+      color: #42474a;
+    }
+
+    .proximos_itens {
       background: #f5f6f8;
       border: 1px solid #dadada;
       box-sizing: border-box;
@@ -231,6 +269,7 @@
       grid-template-columns: 76% 20%;
       column-gap: 4%;
       margin-top: 0.8em;
+      height: 38px;
 
       &:first-child {
         margin-top: 0;
@@ -286,6 +325,7 @@
         column-gap: 20%;
 
         i {
+          width: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
