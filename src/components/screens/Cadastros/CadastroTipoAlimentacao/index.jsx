@@ -6,11 +6,14 @@ import { bindActionCreators } from "redux";
 import { loadTipoAlimentacao } from "../../../../reducers/tipoAlimentacaoReducer";
 import { Select } from "../../../Shareable/Select";
 import Wizard from "../../../Shareable/Wizard";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import {
   getVinculosTipoAlimentacaoPorUnidadeEscolar,
   getTiposDeAlimentacao,
   createVinculoTipoAlimentacaoPeriodoEscolar,
-  deleteVinculoTipoAlimentacaoPeriodoEscolar
+  deleteVinculoTipoAlimentacaoPeriodoEscolar,
+  createVinculoSubstituicaoPeriodoEscolar
 } from "../../../../services/cadastroTipoAlimentacao.service";
 import {
   montaTipoUnidadeEscolar,
@@ -30,7 +33,11 @@ class CadastroTipoAlimentacao extends Component {
       uuidUnidadeEscolar: null,
       vinculosTiposAlimentacao: null,
       combosAtuais: null,
-      tiposAlimentacao: null
+
+      tiposAlimentacao: null,
+      formComboAlimentacao: true,
+
+      tipoAlimentacaoAtual: 0
     };
   }
 
@@ -49,45 +56,62 @@ class CadastroTipoAlimentacao extends Component {
     let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
     let combosAtuais = this.state.combosAtuais;
     const currentStep = this.state.currentStep;
+    if (this.state.formComboAlimentacao) {
+      if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
+        unidadesEscolares = montaTipoUnidadeEscolar(
+          this.props.tiposUnidadesEscolar
+        );
+        this.setState({ unidadesEscolares });
+      }
 
-    if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
-      unidadesEscolares = montaTipoUnidadeEscolar(
-        this.props.tiposUnidadesEscolar
-      );
-      this.setState({ unidadesEscolares });
-    }
-
-    if (
-      uuidUnidadeEscolar !== prevState.uuidUnidadeEscolar &&
-      vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao
-    ) {
-      getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
-        response => {
-          vinculosTiposAlimentacao = response.results;
-          if (response.results.length === 0) {
-            this.setState({ uuidUnidadeEscolar: null });
-            toastError("Nenhum registro associado ao tipo de unidade escolar");
-          } else {
-            combosAtuais = adicionarComboVazio(
-              vinculosTiposAlimentacao[currentStep].combos,
-              vinculosTiposAlimentacao[currentStep].uuid
-            );
-            this.setState({
-              vinculosTiposAlimentacao,
-              combosAtuais
-            });
+      if (
+        uuidUnidadeEscolar !== prevState.uuidUnidadeEscolar &&
+        vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao
+      ) {
+        getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
+          response => {
+            vinculosTiposAlimentacao = response.results;
+            if (response.results.length === 0) {
+              this.setState({ uuidUnidadeEscolar: null });
+              toastError(
+                "Nenhum registro associado ao tipo de unidade escolar"
+              );
+            } else {
+              combosAtuais = adicionarComboVazio(
+                vinculosTiposAlimentacao[currentStep].combos,
+                vinculosTiposAlimentacao[currentStep].uuid
+              );
+              this.setState({
+                vinculosTiposAlimentacao,
+                combosAtuais
+              });
+            }
           }
-        }
-      );
-    }
-
-    // TODO: MONTAR LOGICA PARA ATUALIZAÇÃO DE PERIODO
-    if (currentStep !== prevState.currentStep) {
-      let combosAtuais = null;
-      combosAtuais = adicionarComboVazio(
-        vinculosTiposAlimentacao[currentStep].combos || []
-      );
-      this.setState({ combosAtuais });
+        );
+      }
+    } else {
+      if (vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao) {
+        getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
+          response => {
+            vinculosTiposAlimentacao = response.results;
+            vinculosTiposAlimentacao[currentStep].combos.forEach(combo => {
+              combo.substituicoes.push({
+                uuid: null,
+                combo: combo.uuid,
+                label: "",
+                tipos_alimentacao: [],
+                adicionar: true
+              });
+            });
+            if (
+              this.state.vinculosTiposAlimentacao !==
+              prevState.vinculosTiposAlimentacao
+            ) {
+              this.setState({ vinculosTiposAlimentacao });
+            }
+          }
+        );
+      }
     }
   }
 
@@ -98,6 +122,32 @@ class CadastroTipoAlimentacao extends Component {
         combo.tipos_alimentacao.push(tipoAlimentacao.uuid);
         montaLabelCombo(combo, tipoAlimentacao.nome);
       }
+    });
+    this.setState({ combosAtuais });
+  };
+
+  adicionaSubstituicaoAoCombo = tipoAlimentacao => {
+    const currentStep = this.state.currentStep;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    vinculosTiposAlimentacao[currentStep].combos[
+      tipoAlimentacaoAtual
+    ].substituicoes.forEach(combo => {
+      if (combo.adicionar && podeAdicionarElemento(combo, tipoAlimentacao)) {
+        combo.tipos_alimentacao.push(tipoAlimentacao.uuid);
+        montaLabelCombo(combo, tipoAlimentacao.nome);
+      }
+    });
+    this.setState({ vinculosTiposAlimentacao });
+  };
+
+  acescentaCampoVazio = combo => {
+    let combosAtuais = this.state.combosAtuais;
+    combosAtuais.push({
+      label: "",
+      tipos_alimentacao: [],
+      vinculo: combo.vinculo,
+      adicionar: true
     });
     this.setState({ combosAtuais });
   };
@@ -125,6 +175,33 @@ class CadastroTipoAlimentacao extends Component {
     });
   };
 
+  enviarComboSubstituicao = combo => {
+    const currentStep = this.state.currentStep;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const request = {
+      tipos_alimentacao: combo.tipos_alimentacao,
+      combo: combo.combo
+    };
+    createVinculoSubstituicaoPeriodoEscolar(request).then(response => {
+      if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(response.data.tipos_alimentacao[0]);
+      } else {
+        combo.adicionar = false;
+        combo.uuid = response.data.uuid;
+        vinculosTiposAlimentacao[currentStep].combos[
+          tipoAlimentacaoAtual
+        ].substituicoes.push({
+          label: "",
+          tipos_alimentacao: [],
+          combo: combo.uuid,
+          adicionar: true
+        });
+        this.setState({ vinculosTiposAlimentacao });
+      }
+    });
+  };
+
   deletaComboTipoAlimentacao = (combo, indice) => {
     let combosAtuais = this.state.combosAtuais;
     if (!combo.uuid) {
@@ -132,8 +209,11 @@ class CadastroTipoAlimentacao extends Component {
       this.setState({ combosAtuais });
     } else {
       deleteVinculoTipoAlimentacaoPeriodoEscolar(combo.uuid).then(response => {
-        if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(response.data.detail);
+        if (
+          response === HTTP_STATUS.BAD_REQUEST ||
+          response === HTTP_STATUS.FORBIDDEN
+        ) {
+          toastError("Tipo de alimentação já está vinculado a um registro");
         } else {
           combosAtuais.splice(indice, 1);
           this.setState({ combosAtuais });
@@ -143,9 +223,34 @@ class CadastroTipoAlimentacao extends Component {
   };
   apagarCampoComboTipoAlimentacao = indice => {
     let combosAtuais = this.state.combosAtuais;
-    combosAtuais[indice].label = "";
-    combosAtuais[indice].tipos_alimentacao = [];
+    if (combosAtuais[indice].tipos_alimentacao.length === 0) {
+      combosAtuais.splice(indice, 1);
+    } else {
+      combosAtuais[indice].label = "";
+      combosAtuais[indice].tipos_alimentacao = [];
+    }
     this.setState({ combosAtuais });
+  };
+
+  validaESalvaOUltimoElemento = combosAtuais => {
+    combosAtuais.forEach(combo => {
+      if (combo.adicionar) {
+        const request = {
+          tipos_alimentacao: combo.tipos_alimentacao,
+          vinculo: combo.vinculo
+        };
+        createVinculoTipoAlimentacaoPeriodoEscolar(request).then(response => {
+          if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(response.data.tipos_alimentacao[0]);
+          } else {
+            combo.adicionar = false;
+            combo.uuid = response.data.uuid;
+            this.setState({ combosAtuais });
+          }
+        });
+      }
+    });
+    this.setState({ formComboAlimentacao: false });
   };
 
   render() {
@@ -155,7 +260,9 @@ class CadastroTipoAlimentacao extends Component {
       currentStep,
       vinculosTiposAlimentacao,
       combosAtuais,
-      tiposAlimentacao
+      tiposAlimentacao,
+      formComboAlimentacao,
+      tipoAlimentacaoAtual
     } = this.state;
     const { handleSubmit } = this.props;
     return (
@@ -186,18 +293,133 @@ class CadastroTipoAlimentacao extends Component {
                     currentStep={currentStep}
                     nameItem="nome"
                   />
-                  <section className="conteudo-wizard">
-                    <div className="titulo-combo">Todos Alimentos</div>
-                    <div className="titulo-combo">Combinacoes</div>
-                    <div className="conteudo-tipo-alimentacao">
-                      <ul>
+                  {formComboAlimentacao ? (
+                    <section className="conteudo-wizard">
+                      <div className="titulo-combo">Todos Alimentos</div>
+                      <div className="titulo-combo">Combinacoes</div>
+                      <div className="conteudo-tipo-alimentacao">
+                        <ul>
+                          {tiposAlimentacao &&
+                            tiposAlimentacao.map((tipo, indice) => {
+                              return (
+                                <li
+                                  key={indice}
+                                  onClick={() =>
+                                    this.adicionaTipoAlimentacaoAoCombo(tipo)
+                                  }
+                                >
+                                  {tipo.nome}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      </div>
+                      <div className="combo-tipo-alimentacao">
+                        {combosAtuais &&
+                          combosAtuais.map((combo, indice) => {
+                            return (
+                              <div key={indice} className="item-combo">
+                                <div
+                                  className={
+                                    combosAtuais[combosAtuais.length - 1] ===
+                                    combosAtuais[indice]
+                                      ? "descricao"
+                                      : "descricao-desabilitado"
+                                  }
+                                >
+                                  <nav>{combo.label}</nav>
+                                </div>
+                                <div
+                                  className={`acao ${
+                                    combosAtuais[combosAtuais.length - 1] ===
+                                    combosAtuais[indice]
+                                      ? ""
+                                      : "impedir-adicionar"
+                                  }`}
+                                >
+                                  <i
+                                    className="fas fa-plus-circle"
+                                    onClick={() => {
+                                      combosAtuais[combosAtuais.length - 1] ===
+                                        combosAtuais[indice] &&
+                                        (combo.adicionar
+                                          ? this.enviarComboTipoAlimentacao(
+                                              combo
+                                            )
+                                          : this.acescentaCampoVazio(combo));
+                                    }}
+                                  />
+                                  <i
+                                    className="fas fa-trash-alt"
+                                    onClick={() => {
+                                      combo.adicionar
+                                        ? this.apagarCampoComboTipoAlimentacao(
+                                            indice
+                                          )
+                                        : this.deletaComboTipoAlimentacao(
+                                            combo,
+                                            indice
+                                          );
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </section>
+                  ) : (
+                    <section className="conteudo-wizard-substituicoes">
+                      <div className="titulo-combo-substituicoes">Combos</div>
+                      <div className="titulo-combo-substituicoes">
+                        Tipos de Alimentação
+                      </div>
+                      <div className="titulo-combo-substituicoes">
+                        Substituições
+                      </div>
+                      <ul className="lista-combo-alimentacoes">
+                        {vinculosTiposAlimentacao &&
+                          vinculosTiposAlimentacao[currentStep].combos.map(
+                            (tipoAlimentacao, indice) => {
+                              return indice === tipoAlimentacaoAtual ? (
+                                <li key={indice}>{tipoAlimentacao.label}</li>
+                              ) : vinculosTiposAlimentacao[currentStep].combos[
+                                  indice === 0 ? 0 : indice - 1
+                                ].substituicoes &&
+                                vinculosTiposAlimentacao[currentStep].combos[
+                                  indice === 0 ? 0 : indice - 1
+                                ].substituicoes.length >= 1 ? (
+                                <li
+                                  key={indice}
+                                  onClick={() =>
+                                    this.setState({
+                                      tipoAlimentacaoAtual: indice
+                                    })
+                                  }
+                                >
+                                  {tipoAlimentacao.label}
+                                </li>
+                              ) : (
+                                <Fragment>
+                                  <li
+                                    className="tipo-alimentacao-inativo"
+                                    key={indice}
+                                  >
+                                    {tipoAlimentacao.label}
+                                  </li>
+                                </Fragment>
+                              );
+                            }
+                          )}
+                      </ul>
+                      <ul className="tipos-alimentacao-substituicoes">
                         {tiposAlimentacao &&
                           tiposAlimentacao.map((tipo, indice) => {
                             return (
                               <li
                                 key={indice}
                                 onClick={() =>
-                                  this.adicionaTipoAlimentacaoAoCombo(tipo)
+                                  this.adicionaSubstituicaoAoCombo(tipo)
                                 }
                               >
                                 {tipo.nome}
@@ -205,50 +427,113 @@ class CadastroTipoAlimentacao extends Component {
                             );
                           })}
                       </ul>
-                    </div>
-                    <div className="combo-tipo-alimentacao">
-                      {combosAtuais &&
-                        combosAtuais.map((combo, indice) => {
-                          return (
-                            <div key={indice} className="item-combo">
-                              <div
-                                className={
-                                  combo.adicionar
-                                    ? "descricao"
-                                    : "descricao-desabilitado"
-                                }
-                              >
-                                <nav>{combo.label}</nav>
-                              </div>
-                              <div
-                                className={`acao ${!combo.adicionar &&
-                                  "impedir-adicionar"}`}
-                              >
-                                <i
-                                  className="fas fa-plus-circle"
-                                  onClick={() => {
-                                    combo.adicionar &&
-                                      this.enviarComboTipoAlimentacao(combo);
-                                  }}
-                                />
-                                <i
-                                  className="fas fa-trash-alt"
-                                  onClick={() => {
-                                    combo.adicionar
-                                      ? this.apagarCampoComboTipoAlimentacao(
-                                          indice
-                                        )
-                                      : this.deletaComboTipoAlimentacao(
-                                          combo,
-                                          indice
+                      <div className="combo-tipo-alimentacao">
+                        {vinculosTiposAlimentacao[currentStep].combos.length >
+                          0 &&
+                          vinculosTiposAlimentacao[currentStep].combos[
+                            tipoAlimentacaoAtual
+                          ].substituicoes.map((substituicao, indice) => {
+                            return (
+                              <div key={indice} className="item-combo">
+                                <div
+                                  className={
+                                    substituicao.adicionar
+                                      ? "descricao"
+                                      : "descricao-desabilitado"
+                                  }
+                                >
+                                  <nav>{substituicao.label}</nav>
+                                </div>
+                                <div
+                                  className={`acao ${!substituicao.adicionar &&
+                                    "impedir-adicionar"}`}
+                                >
+                                  <i
+                                    className="fas fa-plus-circle"
+                                    onClick={() => {
+                                      substituicao.adicionar &&
+                                        this.enviarComboSubstituicao(
+                                          substituicao
                                         );
-                                  }}
-                                />
+                                    }}
+                                  />
+                                  <i
+                                    className="fas fa-trash-alt"
+                                    onClick={() => {
+                                      substituicao.adicionar
+                                        ? this.apagarCampoComboTipoAlimentacao(
+                                            indice
+                                          )
+                                        : this.deletaComboTipoAlimentacao(
+                                            substituicao,
+                                            indice
+                                          );
+                                    }}
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                    </div>
+                            );
+                          })}
+                      </div>
+                    </section>
+                  )}
+
+                  <section className="rodape-botoes">
+                    {formComboAlimentacao ? (
+                      combosAtuais && combosAtuais.length === 0 ? (
+                        <Botao
+                          texto={"Formar Combos"}
+                          className="botao-desabilitado"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      ) : combosAtuais &&
+                        combosAtuais[combosAtuais.length - 1].tipos_alimentacao
+                          .length > 0 &&
+                        combosAtuais &&
+                        combosAtuais.length > 0 ? (
+                        <Fragment>
+                          <Botao
+                            texto={"Formar Combos"}
+                            onClick={() => {
+                              this.validaESalvaOUltimoElemento(combosAtuais);
+                            }}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </Fragment>
+                      ) : (
+                        <Botao
+                          texto={"Formar Combos"}
+                          className="botao-desabilitado"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      )
+                    ) : (
+                      <Fragment>
+                        <Botao
+                          texto={"Voltar"}
+                          onClick={() =>
+                            this.setState({ formComboAlimentacao: true })
+                          }
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="mr-2"
+                        />
+                        <Botao
+                          texto={"Confirmar"}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                          onClick={() =>
+                            this.setState({
+                              currentStep: currentStep + 1,
+                              formComboAlimentacao: true
+                            })
+                          }
+                        />
+                      </Fragment>
+                    )}
                   </section>
                 </Fragment>
               )}

@@ -91,6 +91,29 @@ export const createVinculoTipoAlimentacaoPeriodoEscolar = payload => {
     });
 };
 
+export const createVinculoSubstituicaoPeriodoEscolar = payload => {
+  const url = `${
+    CONFIG.API_URL
+  }/substituicoes-combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/`;
+
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authHeader
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const deleteVinculoTipoAlimentacaoPeriodoEscolar = uuid => {
   const url = `${
     CONFIG.API_URL

@@ -23,21 +23,6 @@ export const adicionarComboVazio = (combosAtuaisTemp, uuidVinculo) => {
     });
     return combo;
   }
-  if (!combosAtuaisTemp[combosAtuaisTemp.length - 1].adicionar) {
-    combosAtuaisTemp.forEach(combo => {
-      combo.adicionar = false;
-    });
-    combosAtuaisTemp.push({
-      label: "",
-      tipos_alimentacao: [],
-      vinculo: uuidVinculo,
-      adicionar: true
-    });
-    return combosAtuaisTemp;
-  }
-  combosAtuaisTemp.forEach(combo => {
-    combo.adicionar = false;
-  });
   return combosAtuaisTemp;
 };
 
