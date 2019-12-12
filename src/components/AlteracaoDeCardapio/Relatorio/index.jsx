@@ -1,29 +1,34 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import {
-  getAlteracaoCardapio,
-  escolaCancelaAlteracaoCardapio
-} from "../../../services/alteracaoDecardapio.service";
+import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import { getDiasUteis } from "../../../services/diasUteis.service";
-import { dataParaUTC } from "../../../helpers/utilities";
-import { escolaPodeCancelar } from "../../../constants/statusEnum";
+import {
+  dataParaUTC,
+  visualizaBotoesDoFluxo
+} from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
+import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
+import { TIPO_PERFIL } from "../../../constants";
+import { statusEnum } from "../../../constants/statusEnum";
+import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uuid: null,
-      showNaoModalAprova: false,
-      showModalAprova: false,
+      showNaoAprovaModal: false,
+      showModal: false,
       alteracaoDecardapio: null,
-      prazoDoPedidoMensagem: null
+      prazoDoPedidoMensagem: null,
+      resposta_sim_nao: null
     };
-    this.closeAprovaModal = this.closeAprovaModal.bind(this);
+    this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
@@ -54,16 +59,16 @@ class Relatorio extends Component {
     });
   }
 
-  showAprovaModal() {
-    this.setState({ showAprovaModal: true });
+  showQuestionamentoModal(resposta_sim_nao) {
+    this.setState({ resposta_sim_nao, showQuestionamentoModal: true });
   }
 
-  closeAprovaModal() {
-    this.setState({ showAprovaModal: false });
+  closeQuestionamentoModal() {
+    this.setState({ showQuestionamentoModal: false });
   }
 
-  showNaoAprovaModal() {
-    this.setState({ showNaoAprovaModal: true });
+  showNaoAprovaModal(resposta_sim_nao) {
+    this.setState({ resposta_sim_nao, showNaoAprovaModal: true });
   }
 
   closeNaoAprovaModal() {
@@ -78,26 +83,97 @@ class Relatorio extends Component {
     });
   }
 
+  handleSubmit() {
+    const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
+    const uuid = this.state.uuid;
+    this.props.endpointAprovaSolicitacao(uuid).then(
+      response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess(toastAprovaMensagem);
+          this.loadSolicitacao(uuid);
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(toastAprovaMensagemErro);
+        }
+      },
+      function() {
+        toastError(toastAprovaMensagemErro);
+      }
+    );
+  }
+
   render() {
     const {
+      resposta_sim_nao,
       showNaoAprovaModal,
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
+      showQuestionamentoModal,
       uuid
     } = this.state;
-    const { justificativa } = this.props;
-    const ModalNaoAprova = this.props.modalNaoAprova;
+    const {
+      justificativa,
+      textoBotaoNaoAprova,
+      textoBotaoAprova,
+      endpointNaoAprovaSolicitacao,
+      endpointQuestionamento,
+      ModalNaoAprova,
+      ModalQuestionamento
+    } = this.props;
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    const EXIBIR_BOTAO_NAO_APROVAR =
+      tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
+      (alteracaoDeCardapio &&
+        alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+        alteracaoDeCardapio.status === statusEnum.CODAE_QUESTIONADO &&
+        textoBotaoNaoAprova);
+    const EXIBIR_BOTAO_APROVAR =
+      (![
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.TERCEIRIZADA
+      ].includes(tipoPerfil) &&
+        textoBotaoAprova) ||
+      (alteracaoDeCardapio &&
+        (!alteracaoDeCardapio.foi_solicitado_fora_do_prazo ||
+          [
+            statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
+            statusEnum.CODAE_AUTORIZADO
+          ].includes(alteracaoDeCardapio.status)) &&
+        textoBotaoAprova);
+    const EXIBIR_BOTAO_QUESTIONAMENTO =
+      [
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.TERCEIRIZADA
+      ].includes(tipoPerfil) &&
+      alteracaoDeCardapio &&
+      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+        alteracaoDeCardapio.status
+      );
     return (
       <div>
-        <ModalNaoAprova
-          showModal={showNaoAprovaModal}
-          closeModal={this.closeNaoAprovaModal}
-          endpoint={escolaCancelaAlteracaoCardapio}
-          solicitacao={alteracaoDeCardapio}
-          loadSolicitacao={this.loadSolicitacao}
-          justificativa={justificativa}
-          uuid={uuid}
-        />
+        {ModalNaoAprova && (
+          <ModalNaoAprova
+            showModal={showNaoAprovaModal}
+            closeModal={this.closeNaoAprovaModal}
+            endpoint={endpointNaoAprovaSolicitacao}
+            solicitacao={alteracaoDeCardapio}
+            loadSolicitacao={this.loadSolicitacao}
+            justificativa={justificativa}
+            resposta_sim_nao={resposta_sim_nao}
+            uuid={uuid}
+          />
+        )}
+        {ModalQuestionamento && (
+          <ModalQuestionamento
+            closeModal={this.closeQuestionamentoModal}
+            showModal={showQuestionamentoModal}
+            justificativa={justificativa}
+            uuid={uuid}
+            loadSolicitacao={this.loadSolicitacao}
+            resposta_sim_nao={resposta_sim_nao}
+            endpoint={endpointQuestionamento}
+          />
+        )}
         {!alteracaoDeCardapio ? (
           <div>Carregando...</div>
         ) : (
@@ -111,16 +187,43 @@ class Relatorio extends Component {
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                 />
-                {escolaPodeCancelar(alteracaoDeCardapio.status) && (
-                  <div className="form-group row mt-4">
-                    <div className="col-12 text-right">
+                <RelatorioHistoricoQuestionamento
+                  solicitacao={alteracaoDeCardapio}
+                />
+                {visualizaBotoesDoFluxo(alteracaoDeCardapio) && (
+                  <div className="form-group row float-right mt-4">
+                    {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
-                        texto={"Cancelar"}
-                        onClick={() => this.showNaoAprovaModal()}
+                        texto={textoBotaoNaoAprova}
+                        className="ml-3"
+                        onClick={() => this.showNaoAprovaModal("Não")}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
-                    </div>
+                    )}
+                    {EXIBIR_BOTAO_APROVAR && (
+                      <Botao
+                        texto={textoBotaoAprova}
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.handleSubmit()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
+                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                      <Botao
+                        texto={
+                          tipoPerfil ===
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                            ? "Questionar"
+                            : "Sim"
+                        }
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.showQuestionamentoModal("Sim")}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -132,7 +235,7 @@ class Relatorio extends Component {
   }
 }
 
-const formName = "relatorioAlteracaoDeCardapioDre";
+const formName = "relatorioAlteracaoDeCardapio";
 const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true

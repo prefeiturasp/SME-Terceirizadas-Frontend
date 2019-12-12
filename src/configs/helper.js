@@ -49,11 +49,11 @@ export const relatorios = () => {
 export const relatoriosAlteracaoDeCardapio = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
-      return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
+      return RelatoriosAlteracaoDeCardapio.RelatorioDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
+      return RelatoriosAlteracaoDeCardapio.RelatorioCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
-      return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
+      return RelatoriosAlteracaoDeCardapio.RelatorioTerceirizada;
     default:
       return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
   }

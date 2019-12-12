@@ -11,7 +11,6 @@ import {
   formatarPedidos
 } from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
-import { DRE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -90,7 +89,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -102,7 +100,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -115,7 +112,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -126,7 +122,6 @@ class PainelPedidos extends Component {
                       <CardHistorico
                         pedidos={formatarPedidos(pedidosAutorizados)}
                         ultimaColunaLabel={"Data(s)"}
-                        parametroURL={DRE}
                         titulo={
                           "Histórico de Alterações de Cardápio Autorizadas"
                         }
@@ -143,7 +138,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Alterações de Cardápio Reprovadas"
                         }
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>

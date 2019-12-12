@@ -15,7 +15,6 @@ import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
-import AlteracaoDeCardapioRelatorioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/RelatorioPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
@@ -27,8 +26,6 @@ import SolicitacaoUnificadaRelatorioDREPage from "../pages/DRE/SolicitacaoUnific
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
-import AlteracaoDeCardapioRelatorioDREPage from "../pages/DRE/AlteracaoDeCardapio/RelatorioPage";
-import AlteracaoDeCardapioRelatorioEscolaPage from "../pages/Escola/AlteracaoDeCardapio/RelatorioPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -61,7 +58,6 @@ import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicit
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
-import AlteracaoDeCardapioRelatorioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/RelatorioPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
@@ -150,13 +146,6 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
-    exact: false
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: AlteracaoDeCardapioRelatorioEscolaPage,
     exact: false
   },
   {
@@ -267,13 +256,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: AlteracaoDeCardapioRelatorioDREPage,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasCODAEPage,
     exact: false
@@ -303,13 +285,6 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
-    exact: false
-  },
-  {
-    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: AlteracaoDeCardapioRelatorioCODAEPage,
     exact: false
   },
   {
@@ -376,13 +351,6 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
-    exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: AlteracaoDeCardapioRelatorioDREPage,
     exact: false
   },
   {
@@ -515,13 +483,6 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.DETALHE_DASHBOARD_DRE}`,
     component: DashboardCODAEDetailDRE,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: AlteracaoDeCardapioRelatorioTerceirizadaPage,
     exact: false
   },
   {

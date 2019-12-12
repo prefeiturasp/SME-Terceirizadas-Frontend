@@ -548,6 +548,7 @@ class AlteracaoCardapio extends Component {
                   component={TextAreaWYSIWYG}
                   label="Observações"
                   name="observacao"
+                  required
                   validate={textAreaRequired}
                 />
               </article>
