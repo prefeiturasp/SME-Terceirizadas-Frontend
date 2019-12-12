@@ -179,7 +179,7 @@ export const getCODAEPedidosDeAlteracaoCardapio = filtroAplicado => {
     });
 };
 
-export const DREConfirmaAlteracaoCardapio = uuid => {
+export const DREValidaAlteracaoCardapio = uuid => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   let status = 0;
   return fetch(url, {
@@ -218,7 +218,7 @@ export const DRENaoValidaAlteracaoCardapio = (uuid, justificativa) => {
     });
 };
 
-export const EscolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
+export const escolaCancelaAlteracaoCardapio = (uuid, justificativa) => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   let status = 0;
   return fetch(url, {
@@ -283,7 +283,7 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const CODAEConfirmaAlteracaoDeCardapio = uuid => {
+export const CODAEAutorizaAlteracaoDeCardapio = uuid => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
@@ -322,6 +322,29 @@ export const CODAENegaAlteracaoCardapio = (uuid, justificativa) => {
     });
 };
 
+export const CODAEquestionaAlteracaoCardapio = async (
+  uuid,
+  observacao_questionamento_codae
+) => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${
+    FLUXO.CODAE_QUESTIONA
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ observacao_questionamento_codae })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const getTerceirizadaPedidosAutorizados = () => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-terceirizada/`;
   const OBJ_REQUEST = {
@@ -352,7 +375,7 @@ export const getTerceirizadaPedidosReprovados = () => {
     });
 };
 
-export const TerceirizadaTomaCiencia = uuid => {
+export const TerceirizadaTomaCienciaAlteracaoCardapio = uuid => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
@@ -369,6 +392,29 @@ export const TerceirizadaTomaCiencia = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const terceirizadaRespondeQuestionamentoAlteracaoCardapio = async (
+  uuid,
+  payload
+) => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const getCODAEPedidosAlteracaoCardapio = filtroAplicado => {

@@ -4,6 +4,7 @@ import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
+import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import { TIPO_PERFIL } from "../constants";
 
 export const painelHome = () => {
@@ -42,5 +43,18 @@ export const relatorios = () => {
       return RelatoriosPage.RelatoriosEscola;
     default:
       return RelatoriosPage.RelatoriosEscola;
+  }
+};
+
+export const relatoriosAlteracaoDeCardapio = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosAlteracaoDeCardapio.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosAlteracaoDeCardapio.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosAlteracaoDeCardapio.RelatorioTerceirizada;
+    default:
+      return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
   }
 };

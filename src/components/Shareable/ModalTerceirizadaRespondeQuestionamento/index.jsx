@@ -13,22 +13,19 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      observacao_questionamento_terceirizada: ""
+      justificativa: ""
     };
   }
 
   async responderQuestionamento(uuid) {
-    const { observacao_questionamento_terceirizada } = this.state;
+    const { justificativa } = this.state;
     const { resposta_sim_nao } = this.props;
     const payload = {
       resposta_sim_nao: resposta_sim_nao === "Sim",
-      justificativa: observacao_questionamento_terceirizada
+      justificativa: justificativa
     };
     let resp = "";
-    resp = await this.props.endpointTerceirizadaRespondeQuestionamento(
-      uuid,
-      payload
-    );
+    resp = await this.props.endpoint(uuid, payload);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
@@ -39,13 +36,9 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.observacao_questionamento_terceirizada !==
-      this.props.observacao_questionamento_terceirizada
-    ) {
+    if (prevProps.justificativa !== this.props.justificativa) {
       this.setState({
-        observacao_questionamento_terceirizada: this.props
-          .observacao_questionamento_terceirizada
+        justificativa: this.props.justificativa
       });
     }
   }
@@ -54,7 +47,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
       showModal,
       closeModal,
       uuid,
-      observacao_questionamento_terceirizada,
+      justificativa,
       resposta_sim_nao
     } = this.props;
     return (
@@ -78,7 +71,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
                 component={TextArea}
                 label="Observação"
                 placeholder="Qual a sua justificativa para a resposta acima?"
-                name="observacao_questionamento_terceirizada"
+                name="justificativa"
                 validate={required}
                 required
               />
@@ -101,7 +94,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
                 onClick={() => {
                   this.responderQuestionamento(uuid);
                 }}
-                disabled={observacao_questionamento_terceirizada === undefined}
+                disabled={justificativa === undefined}
                 style={BUTTON_STYLE.BLUE}
                 className="ml-3"
               />

@@ -209,7 +209,7 @@ class Relatorio extends Component {
           showModal={showNegarModal}
           uuid={uuid}
           loadSolicitacao={this.loadSolicitacao}
-          negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+          endpoint={CODAENegaKitLancheAvulsoEscola}
         />
         <ModalCODAEQuestiona
           closeModal={this.closeQuestionarModal}
@@ -217,7 +217,7 @@ class Relatorio extends Component {
           observacao_questionamento_codae={observacao_questionamento_codae}
           uuid={uuid}
           loadSolicitacao={this.loadSolicitacao}
-          endpointCODAEQuestiona={CODAEquestionaKitLancheAvulso}
+          endpoint={CODAEquestionaKitLancheAvulso}
         />
         <ModalTerceirizadaRespondeQuestionamento
           closeModal={this.closeTerceirizadaRespondeQuestionamentoModal}
@@ -228,9 +228,7 @@ class Relatorio extends Component {
           uuid={uuid}
           resposta_sim_nao={resposta_sim_nao}
           loadSolicitacao={this.loadSolicitacao}
-          endpointTerceirizadaRespondeQuestionamento={
-            terceirizadaRespondeQuestionamentoKitLancheAvulso
-          }
+          endpoint={terceirizadaRespondeQuestionamentoKitLancheAvulso}
         />
         <ModalNaoValidarSolicitacao
           closeModal={this.closeNaoValidarModal}

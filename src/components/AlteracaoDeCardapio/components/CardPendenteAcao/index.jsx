@@ -32,13 +32,7 @@ export class CardPendenteAcao extends Component {
   }
 
   render() {
-    const {
-      pedidos,
-      titulo,
-      tipoDeCard,
-      ultimaColunaLabel,
-      parametroURL
-    } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval">
@@ -115,7 +109,7 @@ export class CardPendenteAcao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={`/${parametroURL}/${ALTERACAO_CARDAPIO}/relatorio?uuid=${
+                      to={`/${ALTERACAO_CARDAPIO}/relatorio?uuid=${
                         pedido.uuid
                       }&ehInclusaoContinua=${pedido.data_inicial !==
                         undefined}`}
