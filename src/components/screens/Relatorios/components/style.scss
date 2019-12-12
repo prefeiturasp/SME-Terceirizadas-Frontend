@@ -1,0 +1,28 @@
+@import "../../../../styles/variables.scss";
+
+p {
+  color: $black;
+}
+.card-authorized {
+  i {
+    color: $green;
+  }
+}
+
+.card-denied {
+  i {
+    color: $red;
+  }
+}
+
+.fonte-grande {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.alinha-centro {
+  text-align: center;
+}

@@ -6,17 +6,55 @@ import {
   getResumoTotaisPorMesEscola
 } from "../../../../services/relatorios.service";
 import { chartData, DATA_DEFAULT_SOLICITACAO, OPTIONS } from "../constants";
+import "./style.scss";
+
+export const ICON_CARD_TYPE_ENUM = {
+  CANCELADO: "fa-times-circle",
+  PENDENTE: "fa-exclamation-triangle",
+  AUTORIZADO: "fa-check",
+  NEGADO: "fa-ban"
+};
+
+const TIPO_CARD = {
+  CANCELADO: 0,
+  PENDENTE: 1,
+  AUTORIZADO: 2,
+  NEGADO: 3
+};
 
 function CardTotalSolicitacaoPorStatus(props) {
   const { quantidade, tipo } = props;
-  const TIPO = { AUTORIZADOS: { ICONE: "fa fa-check", TEXTO: "Autorizadas" } };
+  let texto = "Autorizadas";
+  let icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
+  let color = "";
+  let cardClass = "";
+  switch (tipo) {
+    case TIPO_CARD.AUTORIZADO:
+      texto = "Autorizadas";
+      icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
+      cardClass = "card-authorized";
+      break;
+    case TIPO_CARD.NEGADO:
+        texto = "Negadas";
+        icon = ICON_CARD_TYPE_ENUM.NEGADO;
+        cardClass = "card-denied";
+        break;
+
+    default:
+      texto = "Autorizadas";
+      icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
+      break;
+  }
   return (
-    <div className="card col-4">
-      <div className="card-bod">
-        <i className={TIPO[tipo].ICONE} />
-        <h5 className="card-title">{TIPO[tipo].TEXTO}</h5>
-        <p className="card-text">{quantidade} Pedidos do último mês.</p>
-        <a href="#" className="card-link">
+    <div className={`card col-4 ${cardClass}`}>
+      <div className="card-body">
+        <div className="row">
+          <i className={`fas ${icon} ${color}`} />
+          <p className="ml-2">{texto}</p>
+        </div>
+
+        <p className="card-text fonte-grande">{quantidade} pedidos.</p>
+        <a href="#" className="card-link alinha-centro">
           Ver mais
         </a>
       </div>
@@ -80,7 +118,7 @@ class GraficoEvolucao extends Component {
         <div className="card">
           <CardTotalSolicitacaoPorStatus
             quantidade={totais_tipo_solicitacao.total_autorizados}
-            tipo="AUTORIZADOS"
+            tipo={TIPO_CARD.AUTORIZADO}
           />
           {this.graficoEcolucao(data, graficoEvolucao)}
         </div>
