@@ -60,6 +60,22 @@ class CadastroTipoAlimentacao extends Component {
     let combosAtuais = this.state.combosAtuais;
     let atualizaCombo = this.state.atualizaCombo;
     const currentStep = this.state.currentStep;
+    let formComboAlimentacao = this.state.formComboAlimentacao;
+    let tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+
+    if (currentStep !== prevState.currentStep) {
+      combosAtuais = combosAtuais = adicionarComboVazio(
+        vinculosTiposAlimentacao[currentStep].combos,
+        vinculosTiposAlimentacao[currentStep].uuid
+      );
+      formComboAlimentacao = true;
+      tipoAlimentacaoAtual = 0;
+      this.setState({
+        combosAtuais,
+        formComboAlimentacao,
+        tipoAlimentacaoAtual
+      });
+    }
     if (this.state.formComboAlimentacao) {
       if (unidadesEscolares === null && this.props.tiposUnidadesEscolar) {
         unidadesEscolares = montaTipoUnidadeEscolar(
@@ -106,7 +122,7 @@ class CadastroTipoAlimentacao extends Component {
             comboAtual.substituicoes.push({
               uuid: null,
               tipos_alimentacao: [],
-              combo: null,
+              combo: comboAtual.uuid,
               label: ""
             });
           }
@@ -160,7 +176,7 @@ class CadastroTipoAlimentacao extends Component {
     if (podeAdicionarElementoSubstituicao(combo, tipoAlimentacao)) {
       combosAtuais[tipoAlimentacaoAtual].substituicoes[
         combosAtuais[tipoAlimentacaoAtual].substituicoes.length - 1
-      ].tipos_alimentacao.push(tipoAlimentacao);
+      ].tipos_alimentacao.push(tipoAlimentacao.uuid);
       montaLabelCombo(combo, tipoAlimentacao.nome);
       this.setState({ combosAtuais });
     }
@@ -175,6 +191,21 @@ class CadastroTipoAlimentacao extends Component {
       adicionar: true
     });
     this.setState({ combosAtuais });
+  };
+
+  acrescentaCompoVazioASubstituicoes = (tipoAlimentacaoAtual, combo) => {
+    let combosAtuais = this.state.combosAtuais;
+    if (combo.uuid) {
+      combosAtuais[tipoAlimentacaoAtual].substituicoes.push({
+        uuid: null,
+        tipos_alimentacao: [],
+        combo: combo.vinculo,
+        label: ""
+      });
+      this.setState({ combosAtuais });
+    } else if (!combo.uuid) {
+      this.enviarComboSubstituicao(combo);
+    }
   };
 
   enviarComboTipoAlimentacao = combo => {
@@ -219,7 +250,7 @@ class CadastroTipoAlimentacao extends Component {
         ].substituicoes.push({
           label: "",
           tipos_alimentacao: [],
-          combo: combo.uuid,
+          combo: combo.vinculo,
           adicionar: true
         });
         this.setState({ vinculosTiposAlimentacao });
@@ -296,6 +327,24 @@ class CadastroTipoAlimentacao extends Component {
             combo: null,
             label: ""
           });
+          this.setState({ combosAtuais });
+        }
+      }
+    );
+  };
+
+  apagaSubstituicao = (substituicao, indice) => {
+    let combosAtuais = this.state.combosAtuais;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    deleteSubstituicaoTipoAlimentacaoPeriodoEscolar(substituicao.uuid).then(
+      response => {
+        if (
+          response === HTTP_STATUS.BAD_REQUEST ||
+          response === HTTP_STATUS.FORBIDDEN
+        ) {
+          toastError("Não foi possivel deletar registro do sistema!");
+        } else {
+          combosAtuais[tipoAlimentacaoAtual].substituicoes.splice(indice, 1);
           this.setState({ combosAtuais });
         }
       }
@@ -491,11 +540,11 @@ class CadastroTipoAlimentacao extends Component {
                                   <li
                                     className="nao_passou_proximo"
                                     key={indice}
-                                    onClick={() =>
+                                    onClick={() => {
                                       this.setState({
                                         tipoAlimentacaoAtual: indice
-                                      })
-                                    }
+                                      });
+                                    }}
                                   >
                                     <nav>{combo.label}</nav> <div />
                                   </li>
@@ -549,18 +598,57 @@ class CadastroTipoAlimentacao extends Component {
                         {combosAtuais &&
                           combosAtuais[tipoAlimentacaoAtual].substituicoes.map(
                             (substituicao, indice) => {
-                              return (
+                              return combosAtuais[tipoAlimentacaoAtual]
+                                .substituicoes.length === 1 ? (
                                 <div className="item-combo" key={indice}>
                                   <div className="descricao">
                                     <nav>{substituicao.label}</nav>
                                   </div>
                                   <div className="acao">
-                                    <i className="fas fa-plus-circle" />
+                                    <i
+                                      className="fas fa-plus-circle"
+                                      onClick={() => {
+                                        substituicao.tipos_alimentacao.length >
+                                          0 &&
+                                          this.acrescentaCompoVazioASubstituicoes(
+                                            tipoAlimentacaoAtual,
+                                            substituicao
+                                          );
+                                      }}
+                                    />
                                     <i
                                       className="fas fa-trash-alt"
                                       onClick={() =>
                                         this.apagaUnicaSubstituicao(
                                           substituicao
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="item-combo" key={indice}>
+                                  <div className="descricao">
+                                    <nav>{substituicao.label}</nav>
+                                  </div>
+                                  <div className="acao">
+                                    <i
+                                      className="fas fa-plus-circle"
+                                      onClick={() => {
+                                        substituicao.tipos_alimentacao.length >
+                                          0 &&
+                                          this.acrescentaCompoVazioASubstituicoes(
+                                            tipoAlimentacaoAtual,
+                                            substituicao
+                                          );
+                                      }}
+                                    />
+                                    <i
+                                      className="fas fa-trash-alt"
+                                      onClick={() =>
+                                        this.apagaSubstituicao(
+                                          substituicao,
+                                          indice
                                         )
                                       }
                                     />
@@ -623,7 +711,8 @@ class CadastroTipoAlimentacao extends Component {
                           onClick={() =>
                             this.setState({
                               currentStep: currentStep + 1,
-                              formComboAlimentacao: true
+                              formComboAlimentacao: true,
+                              atualizaCombo: false
                             })
                           }
                         />
