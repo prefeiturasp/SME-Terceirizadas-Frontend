@@ -23,10 +23,9 @@ const TIPO_CARD = {
 };
 
 function CardTotalSolicitacaoPorStatus(props) {
-  const { quantidade, tipo } = props;
+  const { quantidade, quantidadeMesPassado, tipo } = props;
   let texto = "Autorizadas";
   let icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
-  let color = "";
   let cardClass = "";
   switch (tipo) {
     case TIPO_CARD.AUTORIZADO:
@@ -60,7 +59,7 @@ function CardTotalSolicitacaoPorStatus(props) {
       <div className="header-card">
         <i className={`fas ${icon} ${cardClass}`} />{" "}
         <nav className="titulo-texto">{texto}</nav>{" "}
-        <div className="bandeira">+ 12%</div>
+        <div className="bandeira">{quantidade - quantidadeMesPassado}</div>
       </div>
       <div className="fonte-grande">{quantidade} pedidos.</div>
       <a href="#" className="card-link alinha-centro">
@@ -81,14 +80,17 @@ class GraficoEvolucao extends Component {
         total_autorizados: "...",
         total_cancelados: "...",
         total_negados: "...",
-        total_pendentes: "..."
+        total_pendentes: "...",
+        total_autorizados_mes_passado: "...",
+        total_negados_mes_passado: "...",
+        total_cancelados_mes_passado: "...",
+        total_pendentes_mes_passado: "..."
       }
     };
   }
 
   componentDidMount() {
     getResumoTotaisPorMesEscola().then(totais => {
-      console.log(totais);
       this.setState({ totais_tipo_solicitacao: totais.data });
     });
 
@@ -128,24 +130,36 @@ class GraficoEvolucao extends Component {
             <div className="col-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_autorizados}
+                quantidadeMesPassado={
+                  totais_tipo_solicitacao.total_autorizados_mes_passado
+                }
                 tipo={TIPO_CARD.AUTORIZADO}
               />
             </div>
             <div className="col-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_negados}
+                quantidadeMesPassado={
+                  totais_tipo_solicitacao.total_negados_mes_passado
+                }
                 tipo={TIPO_CARD.NEGADO}
               />
             </div>
             <div className="col-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_pendentes}
+                quantidadeMesPassado={
+                  totais_tipo_solicitacao.total_pendentes_mes_passado
+                }
                 tipo={TIPO_CARD.PENDENTE}
               />
             </div>
             <div className="col-4 pt-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_cancelados}
+                quantidadeMesPassado={
+                  totais_tipo_solicitacao.total_cancelados_mes_passado
+                }
                 tipo={TIPO_CARD.CANCELADO}
               />
             </div>
