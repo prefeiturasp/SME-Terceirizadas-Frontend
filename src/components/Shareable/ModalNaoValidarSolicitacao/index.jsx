@@ -1,41 +1,32 @@
-import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import {
-  required,
-  textAreaRequired
-} from "../../../../../helpers/fieldValidators";
-import { mensagemCancelamento } from "../../../../../helpers/utilities";
-import { EscolaCancelaAlteracaoCardapio } from "../../../../../services/alteracaoDecardapio.service";
-import Botao from "../../../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "../../../../Shareable/Botao/constants";
-import { Select } from "../../../../Shareable/Select";
-import { TextArea } from "../../../../Shareable/TextArea/TextArea";
-import { toastError, toastSuccess } from "../../../../Shareable/Toast/dialogs";
+import { required } from "../../../helpers/fieldValidators";
+import { Modal } from "react-bootstrap";
+import HTTP_STATUS from "http-status-codes";
+import { toastSuccess, toastError } from "../Toast/dialogs";
+import Botao from "../Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../Botao/constants";
+import Select from "../Select";
+import { TextArea } from "../TextArea/TextArea";
 
-export class ModalCancelarAlteracaoDeCardapio extends Component {
+export class ModalNaoValidarSolicitacao extends Component {
   constructor(props) {
     super(props);
     this.state = { justificativa: "", motivoCancelamento: "" };
   }
-
-  async negarAlteracaoCardapio(uuid) {
+  async naoValidarSolicitacao(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
-
-    const function_CancelaAlteracaoCardapio = EscolaCancelaAlteracaoCardapio;
-
-    const resp = await function_CancelaAlteracaoCardapio(
+    const { endpoint } = this.props;
+    const resp = await endpoint(
       uuid,
       `${motivoCancelamento} - ${justificativa}`
     );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      toastSuccess("Alteração de Cardápio cancelada com sucesso!");
-      this.props.setRedirect();
+      toastSuccess("Solicitação não validada com sucesso!");
+      if (this.props.loadSolicitacao) {
+        this.props.loadSolicitacao(uuid);
+      }
     } else {
       toastError(resp.detail);
     }
@@ -51,24 +42,13 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
   }
 
   render() {
-    const { showModal, closeModal, uuid, alteracaoDeCardapio } = this.props;
-
-    const { justificativa } = this.state;
+    const { showModal, closeModal, uuid } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+          <Modal.Title>Deseja não validar solicitação?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="row">
-            <div className="col-12">
-              <p className="label--red">
-                {alteracaoDeCardapio &&
-                  mensagemCancelamento(alteracaoDeCardapio.status)}
-                Deseja seguir em frente com o cancelamento?
-              </p>
-            </div>
-          </div>
           <div className="form-row">
             <div className="form-group col-12">
               <Field
@@ -95,7 +75,6 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"
-                validate={[required, textAreaRequired]}
               />
             </div>
           </div>
@@ -112,10 +91,9 @@ export class ModalCancelarAlteracaoDeCardapio extends Component {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              this.negarAlteracaoCardapio(uuid);
+              this.naoValidarSolicitacao(uuid);
             }}
             style={BUTTON_STYLE.BLUE}
-            disabled={justificativa === "" || justificativa === undefined}
             className="ml-3"
           />
         </Modal.Footer>

@@ -188,11 +188,7 @@ class Relatorio extends Component {
       uuid,
       CODAE_DEVE_QUESTIONAR
     } = this.state;
-    const {
-      justificativa,
-      observacao_questionamento_codae,
-      observacao_questionamento_terceirizada
-    } = this.props;
+    const { justificativa } = this.props;
     return (
       <div className="report">
         <ModalCancelarSolicitacao
@@ -209,28 +205,24 @@ class Relatorio extends Component {
           showModal={showNegarModal}
           uuid={uuid}
           loadSolicitacao={this.loadSolicitacao}
-          negarEndpoint={CODAENegaKitLancheAvulsoEscola}
+          endpoint={CODAENegaKitLancheAvulsoEscola}
         />
         <ModalCODAEQuestiona
           closeModal={this.closeQuestionarModal}
           showModal={showQuestionarModal}
-          observacao_questionamento_codae={observacao_questionamento_codae}
+          justificativa={justificativa}
           uuid={uuid}
           loadSolicitacao={this.loadSolicitacao}
-          endpointCODAEQuestiona={CODAEquestionaKitLancheAvulso}
+          endpoint={CODAEquestionaKitLancheAvulso}
         />
         <ModalTerceirizadaRespondeQuestionamento
           closeModal={this.closeTerceirizadaRespondeQuestionamentoModal}
           showModal={showTerceirizadaRespondeQuestionamentoModal}
-          observacao_questionamento_terceirizada={
-            observacao_questionamento_terceirizada
-          }
+          justificativa={justificativa}
           uuid={uuid}
           resposta_sim_nao={resposta_sim_nao}
           loadSolicitacao={this.loadSolicitacao}
-          endpointTerceirizadaRespondeQuestionamento={
-            terceirizadaRespondeQuestionamentoKitLancheAvulso
-          }
+          endpoint={terceirizadaRespondeQuestionamentoKitLancheAvulso}
         />
         <ModalNaoValidarSolicitacao
           closeModal={this.closeNaoValidarModal}
@@ -538,15 +530,7 @@ const formName = "kitLancheAvulsoRelatorioForm";
 const selector = formValueSelector(formName);
 const mapStateToProps = state => {
   return {
-    justificativa: selector(state, "justificativa"),
-    observacao_questionamento_codae: selector(
-      state,
-      "observacao_questionamento_codae"
-    ),
-    observacao_questionamento_terceirizada: selector(
-      state,
-      "observacao_questionamento_terceirizada"
-    )
+    justificativa: selector(state, "justificativa")
   };
 };
 

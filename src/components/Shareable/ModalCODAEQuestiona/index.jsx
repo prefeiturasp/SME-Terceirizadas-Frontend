@@ -12,17 +12,14 @@ export class ModalCODAEQuestiona extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      observacao_questionamento_codae: ""
+      justificativa: ""
     };
   }
 
   async enviarQuestionamento(uuid) {
-    const { observacao_questionamento_codae } = this.state;
+    const { justificativa } = this.state;
     let resp = "";
-    resp = await this.props.endpointCODAEQuestiona(
-      uuid,
-      observacao_questionamento_codae
-    );
+    resp = await this.props.endpoint(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
@@ -33,13 +30,9 @@ export class ModalCODAEQuestiona extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.observacao_questionamento_codae !==
-      this.props.observacao_questionamento_codae
-    ) {
+    if (prevProps.justificativa !== this.props.justificativa) {
       this.setState({
-        observacao_questionamento_codae: this.props
-          .observacao_questionamento_codae
+        justificativa: this.props.justificativa
       });
     }
   }
@@ -69,7 +62,7 @@ export class ModalCODAEQuestiona extends Component {
                 component={TextArea}
                 label="Observação"
                 placeholder="Alguma observação para a Terceirizada?"
-                name="observacao_questionamento_codae"
+                name="justificativa"
               />
             </div>
           </div>
