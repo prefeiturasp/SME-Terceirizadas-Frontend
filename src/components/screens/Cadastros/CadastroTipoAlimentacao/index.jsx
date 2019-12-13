@@ -428,68 +428,106 @@ class CadastroTipoAlimentacao extends Component {
                       </div>
                       <ul className="lista-combo-alimentacoes">
                         {combosAtuais &&
-                          combosAtuais.map((combo, index) => {
-                            return tipoAlimentacaoAtual === index ? (
-                              combosAtuais &&
+                          combosAtuais.map((combo, indice) => {
+                            return indice === tipoAlimentacaoAtual ? (
                               combosAtuais[tipoAlimentacaoAtual].substituicoes
                                 .length > 0 &&
                               combosAtuais[tipoAlimentacaoAtual].substituicoes[
                                 combosAtuais[tipoAlimentacaoAtual].substituicoes
                                   .length - 1
                               ].tipos_alimentacao.length > 0 ? (
-                                <li className="passou_atual" key={index}>
+                                <li className="passou_atual" key={indice}>
                                   <nav>{combo.label}</nav>{" "}
                                   <div>
                                     <i className="fas fa-check" />
                                   </div>
                                 </li>
                               ) : (
-                                <li className="nao_passou_atual" key={index}>
+                                <li className="nao_passou_atual" key={indice}>
                                   <nav>{combo.label}</nav> <div> </div>
                                 </li>
                               )
-                            ) : // implementar logica para itens anteriores e proximos
-                            //  implementando logica para itens passados
-                            tipoAlimentacaoAtual > index ? (
+                            ) : indice < tipoAlimentacaoAtual ? (
                               <li
                                 className="passou_anterior"
-                                key={index}
-                                onClick={() =>
-                                  this.setState({ tipoAlimentacaoAtual: index })
-                                }
+                                key={indice}
+                                onClick={() => {
+                                  this.setState({
+                                    tipoAlimentacaoAtual: indice
+                                  });
+                                }}
                               >
                                 <nav>{combo.label}</nav>{" "}
                                 <div>
                                   <i className="fas fa-check" />
                                 </div>
                               </li>
-                            ) : // aqui import a logica de proximo item ao index atual
-                            // console.log(combosAtuais[tipoAlimentacaoAtual].substituicoes[index - 1] && combosAtuais[tipoAlimentacaoAtual].substituicoes[index - 1].tipos_alimentacao. length > 0)
-                            index - 1 === tipoAlimentacaoAtual &&
+                            ) : indice - 1 === tipoAlimentacaoAtual ? (
                               combosAtuais[tipoAlimentacaoAtual].substituicoes
                                 .length > 0 &&
                               combosAtuais[tipoAlimentacaoAtual].substituicoes[
-                                index - 1
-                              ] &&
-                              combosAtuais[tipoAlimentacaoAtual].substituicoes[
-                                index - 1
+                                combosAtuais[tipoAlimentacaoAtual].substituicoes
+                                  .length - 1
+                              ].tipos_alimentacao.length > 0 ? (
+                                combosAtuais[indice].substituicoes.length > 0 &&
+                                combosAtuais[indice].substituicoes[
+                                  combosAtuais[indice].substituicoes.length - 1
+                                ].tipos_alimentacao.length > 0 ? (
+                                  <li
+                                    className="passou_anterior"
+                                    key={indice}
+                                    onClick={() => {
+                                      this.setState({
+                                        tipoAlimentacaoAtual: indice
+                                      });
+                                    }}
+                                  >
+                                    <nav>{combo.label}</nav>{" "}
+                                    <div>
+                                      <i className="fas fa-check" />
+                                    </div>
+                                  </li>
+                                ) : (
+                                  <li
+                                    className="nao_passou_proximo"
+                                    key={indice}
+                                    onClick={() =>
+                                      this.setState({
+                                        tipoAlimentacaoAtual: indice
+                                      })
+                                    }
+                                  >
+                                    <nav>{combo.label}</nav> <div />
+                                  </li>
+                                )
+                              ) : (
+                                <li className="proximos_itens" key={indice}>
+                                  <nav>{combo.label}</nav> <div> </div>
+                                </li>
+                              )
+                            ) : combosAtuais[indice].substituicoes.length > 0 &&
+                              combosAtuais[indice].substituicoes[
+                                combosAtuais[indice].substituicoes.length - 1
                               ].tipos_alimentacao.length > 0 ? (
                               <li
-                                className="nao_passou_proximo"
-                                key={index}
-                                onClick={() =>
-                                  this.setState({ tipoAlimentacaoAtual: index })
-                                }
+                                className="passou_anterior"
+                                key={indice}
+                                onClick={() => {
+                                  this.setState({
+                                    tipoAlimentacaoAtual: indice
+                                  });
+                                }}
                               >
-                                <nav>{combo.label}</nav> <div />
+                                <nav>{combo.label}</nav>{" "}
+                                <div>
+                                  <i className="fas fa-check" />
+                                </div>
                               </li>
                             ) : (
-                              // aqui vao as logicas para proximos itens normais
-                              <li className="proximos_itens" key={index}>
+                              <li className="proximos_itens" key={indice}>
                                 <nav>{combo.label}</nav> <div> </div>
                               </li>
                             );
-                            // fim
                           })}
                       </ul>
                       <ul className="tipos-alimentacao-substituicoes">
