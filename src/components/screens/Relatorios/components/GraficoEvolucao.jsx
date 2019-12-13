@@ -56,19 +56,17 @@ function CardTotalSolicitacaoPorStatus(props) {
       break;
   }
   return (
-    <div className={`card col-4 ${cardClass}`}>
-      <div className="card-body">
-        <div className="row">
-          <i className={`fas ${icon} ${color}`} />
-          <p className="ml-2">{texto}</p>
-        </div>
-
-        <p className="card-text fonte-grande">{quantidade} pedidos.</p>
-        <a href="#" className="card-link alinha-centro">
-          Ver mais
-        </a>
+    <section className="card-solicitacoes">
+      <div className="header-card">
+        <i className={`fas ${icon} ${cardClass}`} />{" "}
+        <nav className="titulo-texto">{texto}</nav>{" "}
+        <div className="bandeira">+ 12%</div>
       </div>
-    </div>
+      <div className="fonte-grande">{quantidade} pedidos.</div>
+      <a href="#" className="card-link alinha-centro">
+        Ver mais
+      </a>
+    </section>
   );
 }
 
@@ -126,23 +124,31 @@ class GraficoEvolucao extends Component {
     return (
       <div className="evolution">
         <div className="card">
-          <div className="row">
-            <CardTotalSolicitacaoPorStatus
-              quantidade={totais_tipo_solicitacao.total_autorizados}
-              tipo={TIPO_CARD.AUTORIZADO}
-            />
-            <CardTotalSolicitacaoPorStatus
-              quantidade={totais_tipo_solicitacao.total_negados}
-              tipo={TIPO_CARD.NEGADO}
-            />
-            <CardTotalSolicitacaoPorStatus
-              quantidade={totais_tipo_solicitacao.total_pendentes}
-              tipo={TIPO_CARD.PENDENTE}
-            />
-            <CardTotalSolicitacaoPorStatus
-              quantidade={totais_tipo_solicitacao.total_cancelados}
-              tipo={TIPO_CARD.CANCELADO}
-            />
+          <div className="row p-4">
+            <div className="col-4">
+              <CardTotalSolicitacaoPorStatus
+                quantidade={totais_tipo_solicitacao.total_autorizados}
+                tipo={TIPO_CARD.AUTORIZADO}
+              />
+            </div>
+            <div className="col-4">
+              <CardTotalSolicitacaoPorStatus
+                quantidade={totais_tipo_solicitacao.total_negados}
+                tipo={TIPO_CARD.NEGADO}
+              />
+            </div>
+            <div className="col-4">
+              <CardTotalSolicitacaoPorStatus
+                quantidade={totais_tipo_solicitacao.total_pendentes}
+                tipo={TIPO_CARD.PENDENTE}
+              />
+            </div>
+            <div className="col-4 pt-4">
+              <CardTotalSolicitacaoPorStatus
+                quantidade={totais_tipo_solicitacao.total_cancelados}
+                tipo={TIPO_CARD.CANCELADO}
+              />
+            </div>
           </div>
           {this.graficoEcolucao(data, graficoEvolucao)}
         </div>
