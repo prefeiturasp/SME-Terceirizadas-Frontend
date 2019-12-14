@@ -53,3 +53,76 @@ export const montaLabelCombo = (combo, nome) => {
     combo.label = combo.label.concat(` e ${nome}`);
   }
 };
+
+// novas modificacoes
+const verificaSeComboPossuiSubstituicoes = combo => {
+  if (combo.substituicoes.length === 0) {
+    combo.substituicoes.push({
+      uuid: null,
+      tipos_alimentacao: [],
+      combo: combo.vinculo,
+      label: "",
+      adicionar: true
+    });
+  } else {
+    combo.substituicoes.forEach(substituicao => {
+      substituicao["adicionar"] = false;
+    });
+  }
+};
+
+const verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes = combo => {
+  if (combo.tipos_alimentacao.length === 0) {
+    return false;
+  } else {
+    verificaSeComboPossuiSubstituicoes(combo);
+    return true;
+  }
+};
+
+const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
+  if (vinculoTipoAlimentacao.combos.length === 0) {
+    vinculoTipoAlimentacao.combos.push({
+      uuid: null,
+      tipos_alimentacao: [],
+      vinculo: null,
+      substituicoes: [
+        {
+          uuid: null,
+          tipos_alimentacao: [],
+          combo: null,
+          label: "",
+          adicionar: true
+        }
+      ],
+      label: "",
+      adicionar: true
+    });
+    vinculoTipoAlimentacao.periodo_escolar["editado"] = false;
+  } else {
+    vinculoTipoAlimentacao.combos.forEach(combo => {
+      combo["adicionar"] = false;
+      vinculoTipoAlimentacao.periodo_escolar[
+        "editado"
+      ] = verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes(combo);
+    });
+  }
+};
+
+export const estruturarDadosTiposDeAlimentacao = vinculosTiposAlimentacao => {
+  vinculosTiposAlimentacao.forEach(vinculoTipoAlimentacao => {
+    verificaCombosDoTipoDeAlimentacao(vinculoTipoAlimentacao);
+  });
+  return vinculosTiposAlimentacao;
+};
+
+export const verificaSeFormularioOuRelatorioEhApresentado = vinculosTiposAlimentacao => {
+  let arrayComparar = vinculosTiposAlimentacao.filter(
+    vinculo => vinculo.periodo_escolar.editado === true
+  );
+  if (arrayComparar.length === vinculosTiposAlimentacao.length) {
+    return true;
+  } else {
+    return false;
+  }
+};
