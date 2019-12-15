@@ -60,7 +60,7 @@ const verificaSeComboPossuiSubstituicoes = combo => {
     combo.substituicoes.push({
       uuid: null,
       tipos_alimentacao: [],
-      combo: combo.vinculo,
+      combo: combo.uuid,
       label: "",
       adicionar: true
     });
@@ -85,12 +85,12 @@ const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
     vinculoTipoAlimentacao.combos.push({
       uuid: null,
       tipos_alimentacao: [],
-      vinculo: null,
+      vinculo: vinculoTipoAlimentacao.uuid,
       substituicoes: [
         {
           uuid: null,
           tipos_alimentacao: [],
-          combo: null,
+          combo: vinculoTipoAlimentacao.uuid,
           label: "",
           adicionar: true
         }
