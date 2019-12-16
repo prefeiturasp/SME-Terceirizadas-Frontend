@@ -13,6 +13,13 @@ import {
   BUTTON_ICON,
   BUTTON_TYPE
 } from "../../../Shareable/Botao/constants";
+import {
+  SOLICITACOES_AUTORIZADAS,
+  ESCOLA,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_CANCELADAS
+} from "../../../../configs/constants";
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
@@ -29,7 +36,7 @@ const TIPO_CARD = {
 };
 
 function CardTotalSolicitacaoPorStatus(props) {
-  const { quantidade, quantidadeMesPassado, tipo } = props;
+  const { quantidade, quantidadeMesPassado, tipo, href } = props;
   let texto = "Autorizadas";
   let icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
   let cardClass = "";
@@ -68,7 +75,7 @@ function CardTotalSolicitacaoPorStatus(props) {
         <div className="bandeira">{quantidade - quantidadeMesPassado}</div>
       </div>
       <div className="fonte-grande">{quantidade} pedidos.</div>
-      <a href="#" className="card-link alinha-centro">
+      <a href={href} className="card-link alinha-centro">
         Ver mais
       </a>
     </section>
@@ -133,7 +140,7 @@ class GraficoEvolucao extends Component {
       <div className="evolution">
         <div className="card">
           <div className="row p-4">
-            <div className="col-12">
+            {/* <div className="col-12">
               <p className="float-right">
                 <Botao
                   style={BUTTON_STYLE.BLUE_OUTLINE}
@@ -149,7 +156,7 @@ class GraficoEvolucao extends Component {
                   type={BUTTON_TYPE.BUTTON}
                 />
               </p>
-            </div>
+            </div> */}
             <div className="col-12">
               <p className="fonte-titulo">Solicitações por status</p>
             </div>
@@ -159,6 +166,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_autorizados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
                 tipo={TIPO_CARD.AUTORIZADO}
               />
             </div>
@@ -168,6 +176,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_negados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
                 tipo={TIPO_CARD.NEGADO}
               />
             </div>
@@ -177,6 +186,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_pendentes_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
                 tipo={TIPO_CARD.PENDENTE}
               />
             </div>
@@ -186,6 +196,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_cancelados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
                 tipo={TIPO_CARD.CANCELADO}
               />
             </div>
