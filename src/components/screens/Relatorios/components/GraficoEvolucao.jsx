@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 import { Line as LineChart } from "react-chartjs-2";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
+} from "../../../../configs/constants";
 import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants/tiposSolicitacao.constants";
 import {
   getEvolucaoSolicitacoes,
@@ -7,19 +14,6 @@ import {
 } from "../../../../services/relatorios.service";
 import { chartData, DATA_DEFAULT_SOLICITACAO, OPTIONS } from "../constants";
 import "./style.scss";
-import Botao from "../../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_ICON,
-  BUTTON_TYPE
-} from "../../../Shareable/Botao/constants";
-import {
-  SOLICITACOES_AUTORIZADAS,
-  ESCOLA,
-  SOLICITACOES_PENDENTES,
-  SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
-} from "../../../../configs/constants";
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
