@@ -372,8 +372,9 @@ class CadastroTipoAlimentacao extends Component {
           ].substituicoes.push({
             uuid: null,
             tipos_alimentacao: [],
-            combo: null,
-            label: ""
+            combo: substituicao.combo,
+            label: "",
+            adicionar: true
           });
           this.setState({ vinculosTiposAlimentacao });
         }
@@ -804,6 +805,7 @@ class CadastroTipoAlimentacao extends Component {
                                 vinculosTiposAlimentacao[periodoEscolar].combos[
                                   tipoAlimentacaoAtual
                                 ].substituicoes.map((substituicao, indice) => {
+                                  console.log(substituicao);
                                   return vinculosTiposAlimentacao[
                                     periodoEscolar
                                   ].combos[tipoAlimentacaoAtual].substituicoes

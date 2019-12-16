@@ -133,6 +133,11 @@
           border-radius: 3px;
           border: 1px solid #086397;
           cursor: pointer;
+
+          &:hover {
+            background-color: #086397;
+            color: #ffffff;
+          }
         }
       }
 
@@ -143,6 +148,11 @@
           border-radius: 3px;
           cursor: default;
           color: #dadada;
+
+          &:hover {
+            color: #dadada;
+            background-color: transparent;
+          }
         }
       }
     }
@@ -325,7 +335,6 @@
         column-gap: 20%;
 
         i {
-          width: 38px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -333,6 +342,11 @@
           border-radius: 3px;
           border: 1px solid #086397;
           cursor: pointer;
+
+          &:hover {
+            background-color: #086397;
+            color: #ffffff;
+          }
         }
       }
 
@@ -343,6 +357,11 @@
           border-radius: 3px;
           cursor: default;
           color: #dadada;
+
+          &:hover {
+            color: #dadada;
+            background-color: transparent;
+          }
         }
       }
     }
