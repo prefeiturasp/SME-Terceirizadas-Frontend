@@ -26,6 +26,7 @@ import "./style.scss";
 import { toastError } from "../../../Shareable/Toast/dialogs";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import ModalExcluirComboTipoAlimentacao from "./components/ModalExcluirComboTipoAlimentacao";
 
 class CadastroTipoAlimentacao extends Component {
   constructor(props) {
@@ -39,8 +40,18 @@ class CadastroTipoAlimentacao extends Component {
       tiposAlimentacao: null,
       tipoAlimentacaoAtual: 0,
       exibeFormularioInicial: true,
-      vinculoCombo: null
+      vinculoCombo: null,
+      // excluir Combo Tipo Alimentacao
+      showModalExcluirTipoAlimentacao: false,
+      comboParaExcluir: null,
+      indiceParaExcluir: null
     };
+    this.closeModalExcluirTipoAlimentacao = this.closeModalExcluirTipoAlimentacao.bind(
+      this
+    );
+    this.deletaComboTipoAlimentacao = this.deletaComboTipoAlimentacao.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -90,6 +101,18 @@ class CadastroTipoAlimentacao extends Component {
         }
       );
     }
+  }
+
+  showModalExcluirTipoAlimentacao(combo, indice) {
+    this.setState({
+      comboParaExcluir: combo,
+      indiceParaExcluir: indice,
+      showModalExcluirTipoAlimentacao: true
+    });
+  }
+
+  closeModalExcluirTipoAlimentacao() {
+    this.setState({ showModalExcluirTipoAlimentacao: false });
   }
 
   acrescentaCompoVazioASubstituicoes = substituicaoAtual => {
@@ -400,11 +423,21 @@ class CadastroTipoAlimentacao extends Component {
       periodoEscolar,
       tiposAlimentacao,
       exibeFormularioInicial,
-      tipoAlimentacaoAtual
+      tipoAlimentacaoAtual,
+      showModalExcluirTipoAlimentacao,
+      comboParaExcluir,
+      indiceParaExcluir
     } = this.state;
     const { handleSubmit } = this.props;
     return (
       <Fragment>
+        <ModalExcluirComboTipoAlimentacao
+          closeModal={this.closeModalExcluirTipoAlimentacao}
+          showModal={showModalExcluirTipoAlimentacao}
+          deletaComboTipoAlimentacao={this.deletaComboTipoAlimentacao}
+          combo={comboParaExcluir && comboParaExcluir}
+          indice={indiceParaExcluir && indiceParaExcluir}
+        />
         <div className="card mt-3">
           <div className="card-body formulario-tipo-alimentacao">
             <form onSubmit={handleSubmit}>
@@ -595,7 +628,7 @@ class CadastroTipoAlimentacao extends Component {
                                                   indice,
                                                   combo
                                                 )
-                                              : this.deletaComboTipoAlimentacao(
+                                              : this.showModalExcluirTipoAlimentacao(
                                                   combo,
                                                   indice
                                                 );
