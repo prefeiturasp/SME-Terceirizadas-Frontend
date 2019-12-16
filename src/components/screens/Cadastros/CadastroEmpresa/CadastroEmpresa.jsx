@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required, tamanhoCnpj } from "../../../../helpers/fieldValidators";
 import "../style.scss";
+import "./style.scss";
 import { getLotes } from "../../../../services/diretoriaRegional.service";
 import {
   createTerceirizada,
@@ -17,7 +18,8 @@ import {
   transformaObjetos,
   fieldCnpj,
   fieldCep,
-  retornaJsonDaRequisisicao
+  retornaJsonDaRequisisicao,
+  validarSubmissao
 } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import TelefoneOuCelular from "./InputTelefone";
@@ -58,7 +60,8 @@ class CadastroEmpresa extends Component {
           telefone: null,
           responsavel: null,
           crn: null,
-          email: null
+          email: null,
+          super_admin_terceirizadas: false
         }
       ],
 
@@ -131,6 +134,14 @@ class CadastroEmpresa extends Component {
   setaContatosNutricionista(input, event, indice) {
     let contatosNutricionista = this.state.contatosNutricionista;
     contatosNutricionista[indice][input] = event;
+    this.setState({ contatosNutricionista });
+  }
+
+  setAdminNutricionista(indice) {
+    let contatosNutricionista = this.state.contatosNutricionista;
+    contatosNutricionista.forEach((contato, key) => {
+      contato.super_admin_terceirizadas = key === indice;
+    });
     this.setState({ contatosNutricionista });
   }
 
@@ -213,6 +224,8 @@ class CadastroEmpresa extends Component {
         nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
       contatosNutricionista[indice]["responsavel"] = nutri.nome;
       contatosNutricionista[indice]["crn"] = nutri.crn_numero;
+      contatosNutricionista[indice]["super_admin_terceirizadas"] =
+        nutri.super_admin_terceirizadas;
       contatosNutricionista[indice]["email"] =
         nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
 
@@ -328,30 +341,35 @@ class CadastroEmpresa extends Component {
 
   onSubmit(values) {
     const uuid = this.state.uuid;
-    const request = JSON.stringify(
-      retornaJsonDaRequisisicao(values, this.state)
-    );
-
-    if (uuid !== null) {
-      updateTerceirizada(uuid, request).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Empresa atualizada com sucesso!");
-          this.setRedirect();
-          this.resetForm();
-        } else {
-          toastError("Erro ao atualizar cadastro de empresa");
-        }
-      });
+    const erro = validarSubmissao(this.state);
+    if (erro) {
+      toastError(erro);
     } else {
-      createTerceirizada(request).then(response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          toastSuccess("Empresa cadastrada com sucesso!");
-          this.setRedirect();
-          this.resetForm();
-        } else {
-          toastError("Erro ao cadastrar empresa");
-        }
-      });
+      const request = JSON.stringify(
+        retornaJsonDaRequisisicao(values, this.state)
+      );
+
+      if (uuid !== null) {
+        updateTerceirizada(uuid, request).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Empresa atualizada com sucesso!");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Erro ao atualizar cadastro de empresa");
+          }
+        });
+      } else {
+        createTerceirizada(request).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Empresa cadastrada com sucesso!");
+            this.setRedirect();
+            this.resetForm();
+          } else {
+            toastError("Erro ao cadastrar empresa");
+          }
+        });
+      }
     }
   }
 
@@ -366,6 +384,7 @@ class CadastroEmpresa extends Component {
     const {
       contatosEmpresaForm,
       contatosTerceirizadaForm,
+      contatosNutricionista,
       lotes,
       lotesSelecionados,
       lotesNomesSelecionados,
@@ -598,6 +617,31 @@ class CadastroEmpresa extends Component {
                                     />
                                   </div>
                                 </div>
+                                {contatosNutricionista.length > 1 && (
+                                  <div className="pt-2">
+                                    <label className="container-radio">
+                                      Principal administrador do sistema
+                                      <Field
+                                        component={"input"}
+                                        type="radio"
+                                        value={indiceTerceirizada.toString()}
+                                        data-cy="radio-5-7h"
+                                        name={"super_admin_terceirizadas"}
+                                        onChange={() =>
+                                          this.setAdminNutricionista(
+                                            indiceTerceirizada
+                                          )
+                                        }
+                                        checked={
+                                          contatosNutricionista[
+                                            indiceTerceirizada
+                                          ]["super_admin_terceirizadas"]
+                                        }
+                                      />
+                                      <span className="checkmark" />
+                                    </label>
+                                  </div>
+                                )}
                                 <div className="section-nutri-contato pt-2">
                                   <div>
                                     <Field
@@ -609,12 +653,15 @@ class CadastroEmpresa extends Component {
                                         this.setaContatosNutricionista
                                       }
                                       indice={indiceTerceirizada}
+                                      required
+                                      validate={required}
                                     />
                                   </div>
                                   <div>
                                     <Field
                                       name={`email_terceirizada_${indiceTerceirizada}`}
                                       label="E-mail"
+                                      type={"email"}
                                       component={InputText}
                                       required
                                       validate={required}

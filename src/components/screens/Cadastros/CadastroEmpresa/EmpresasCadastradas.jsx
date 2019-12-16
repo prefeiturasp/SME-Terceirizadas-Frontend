@@ -158,6 +158,11 @@ class EmpresasCadastradas extends Component {
                                   <br />
                                   <span className="valor-desc">
                                     {nutri.nome}
+                                    {nutri.super_admin_terceirizadas && (
+                                      <span className="ml-1 badge badge-secondary">
+                                        Admin
+                                      </span>
+                                    )}
                                   </span>
                                 </div>
                                 <div>
