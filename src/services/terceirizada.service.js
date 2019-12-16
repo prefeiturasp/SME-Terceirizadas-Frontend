@@ -71,7 +71,7 @@ export const updateTerceirizada = (uuid, payload) => {
   let status = 0;
   return fetch(url, {
     method: "PUT",
-    body: payload,
+    body: JSON.stringify(payload),
     headers: authToken
   })
     .then(res => {
