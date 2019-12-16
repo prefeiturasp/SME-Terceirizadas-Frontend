@@ -112,7 +112,7 @@ export const validarSubmissao = state => {
   return erro;
 };
 
-export const retornaJsonDaRequisisicao = (valoresForm, valoresState) => {
+export const formataJsonParaEnvio = (valoresForm, valoresState) => {
   let contatosNutri = [];
   valoresState.contatosNutricionista.forEach(nutri => {
     contatosNutri.push({

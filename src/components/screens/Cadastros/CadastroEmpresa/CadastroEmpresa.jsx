@@ -18,7 +18,7 @@ import {
   transformaObjetos,
   fieldCnpj,
   fieldCep,
-  retornaJsonDaRequisisicao,
+  formataJsonParaEnvio,
   validarSubmissao
 } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
@@ -345,9 +345,7 @@ class CadastroEmpresa extends Component {
     if (erro) {
       toastError(erro);
     } else {
-      const request = JSON.stringify(
-        retornaJsonDaRequisisicao(values, this.state)
-      );
+      const request = formataJsonParaEnvio(values, this.state);
 
       if (uuid !== null) {
         updateTerceirizada(uuid, request).then(response => {
