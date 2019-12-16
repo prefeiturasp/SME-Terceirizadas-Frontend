@@ -282,19 +282,39 @@ class CadastroTipoAlimentacao extends Component {
     this.setState({ vinculosTiposAlimentacao });
   };
 
-  apagarCampoComboTipoAlimentacao = indice => {
+  apagarCampoComboTipoAlimentacao = (indice, combo) => {
     let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
     const periodoEscolar = this.state.periodoEscolar;
-    vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
+    if (vinculosTiposAlimentacao[periodoEscolar].combos.length === 1) {
+      combo.tipos_alimentacao = [];
+      combo.label = "";
+      vinculosTiposAlimentacao[periodoEscolar].combos.push(combo);
+      vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
+    } else {
+      vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
+    }
+    this.setState({ vinculosTiposAlimentacao });
+  };
+
+  deletarCombo = (combo, indice) => {
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const periodoEscolar = this.state.periodoEscolar;
+    if (vinculosTiposAlimentacao[periodoEscolar].combos.length === 1) {
+      combo.tipos_alimentacao = [];
+      combo.label = "";
+      combo.uuid = null;
+      combo.adicionar = true;
+      vinculosTiposAlimentacao[periodoEscolar].combos.push(combo);
+      vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
+    } else {
+      vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
+    }
     this.setState({ vinculosTiposAlimentacao });
   };
 
   deletaComboTipoAlimentacao = (combo, indice) => {
-    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
-    const periodoEscolar = this.state.periodoEscolar;
     if (!combo.uuid) {
-      vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
-      this.setState({ vinculosTiposAlimentacao });
+      this.deletarCombo(combo, indice);
     } else {
       deleteVinculoTipoAlimentacaoPeriodoEscolar(combo.uuid).then(response => {
         if (
@@ -303,8 +323,7 @@ class CadastroTipoAlimentacao extends Component {
         ) {
           toastError("Tipo de alimentação já está vinculado a um registro");
         } else {
-          vinculosTiposAlimentacao[periodoEscolar].combos.splice(indice, 1);
-          this.setState({ vinculosTiposAlimentacao });
+          this.deletarCombo(combo, indice);
         }
       });
     }
@@ -360,6 +379,18 @@ class CadastroTipoAlimentacao extends Component {
     );
   };
 
+  setaColapsoRelatorio = indice => {
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    vinculosTiposAlimentacao.forEach((vinculo, indiceVinculo) => {
+      if (indiceVinculo !== indice) {
+        vinculo.periodo_escolar.ativo = false;
+      } else {
+        vinculo.periodo_escolar.ativo = !vinculo.periodo_escolar.ativo;
+      }
+    });
+    this.setState({ vinculosTiposAlimentacao });
+  };
+
   render() {
     const {
       unidadesEscolares,
@@ -377,29 +408,112 @@ class CadastroTipoAlimentacao extends Component {
         <div className="card mt-3">
           <div className="card-body formulario-tipo-alimentacao">
             <form onSubmit={handleSubmit}>
-              <section className="header">
-                Cruzamento das possibilidades
-              </section>
-              <section className="tipos-de-unidade">
-                <header>Tipos de Unidades</header>
-                <article>
-                  <Field
-                    component={Select}
-                    name="tipos_unidades"
-                    options={unidadesEscolares ? unidadesEscolares : []}
-                    onChange={event => {
-                      this.setState({ uuidUnidadeEscolar: event.target.value });
-                    }}
-                    disabled={uuidUnidadeEscolar}
-                  />
-                </article>
-              </section>
+              {!exibirRelatorio && (
+                <Fragment>
+                  <section className="header">
+                    Cruzamento das possibilidades
+                  </section>
+                  <section className="tipos-de-unidade">
+                    <header>Tipos de Unidades</header>
+                    <article>
+                      <Field
+                        component={Select}
+                        name="tipos_unidades"
+                        options={unidadesEscolares ? unidadesEscolares : []}
+                        onChange={event => {
+                          this.setState({
+                            uuidUnidadeEscolar: event.target.value
+                          });
+                        }}
+                        disabled={uuidUnidadeEscolar}
+                      />
+                    </article>
+                  </section>
+                </Fragment>
+              )}
               <section>
                 {uuidUnidadeEscolar !== null &&
                   vinculosTiposAlimentacao !== null &&
                   (exibirRelatorio !== null ? (
                     exibirRelatorio ? (
-                      <div>relatorio</div>
+                      <section className="relatorio-tipos-alimentacoes">
+                        <header>Resumo do cadastro</header>
+                        <article>
+                          <header>Tipos de períodos</header>
+                          {vinculosTiposAlimentacao.map((vinculo, indice) => {
+                            return (
+                              <div key={indice} className="periodo-fechado">
+                                <header
+                                  className={`titulo-periodo-tipo-ue ${vinculo
+                                    .periodo_escolar.ativo && "titulo-ativo"}`}
+                                >
+                                  <div className="descricao-periodo-tipo-ue">
+                                    {vinculo.periodo_escolar.nome}
+                                  </div>{" "}
+                                  <nav>
+                                    {vinculo.periodo_escolar.ativo ? (
+                                      <div
+                                        onClick={() => {
+                                          this.setState({
+                                            periodoEscolar: indice,
+                                            exibirRelatorio: false
+                                          });
+                                        }}
+                                      >
+                                        <i className="fas fa-pen editar" />
+                                      </div>
+                                    ) : (
+                                      <div />
+                                    )}
+                                    <div
+                                      onClick={() =>
+                                        this.setaColapsoRelatorio(indice)
+                                      }
+                                    >
+                                      {vinculo.periodo_escolar.ativo ? (
+                                        <i className="fas fa-angle-up" />
+                                      ) : (
+                                        <i className="fas fa-angle-down" />
+                                      )}
+                                    </div>
+                                  </nav>
+                                </header>
+                                {vinculo.periodo_escolar.ativo && (
+                                  <section className="detalhamento-vinculo-periodo-escolar">
+                                    <div className="titulo-tipo-alimentacao">
+                                      Tipos de alimentação
+                                    </div>
+                                    <div className="tipos-alimentacoes-periodo">
+                                      {vinculo.combos.map(combo => {
+                                        return (
+                                          <Fragment key={indice}>
+                                            <nav>De:</nav>
+                                            <nav>Para:</nav>
+                                            <div className="dado-tipo-alimentacao mb-2">
+                                              {combo.label}
+                                            </div>
+                                            <div className="dado-tipo-alimentacao mb-2">
+                                              {combo.substituicoes.map(
+                                                substituicao => {
+                                                  return (
+                                                    <div key={substituicao}>
+                                                      {substituicao.label}
+                                                    </div>
+                                                  );
+                                                }
+                                              )}
+                                            </div>
+                                          </Fragment>
+                                        );
+                                      })}
+                                    </div>
+                                  </section>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </article>
+                      </section>
                     ) : (
                       <Fragment>
                         <Wizard
@@ -478,7 +592,8 @@ class CadastroTipoAlimentacao extends Component {
                                           onClick={() => {
                                             combo.adicionar
                                               ? this.apagarCampoComboTipoAlimentacao(
-                                                  indice
+                                                  indice,
+                                                  combo
                                                 )
                                               : this.deletaComboTipoAlimentacao(
                                                   combo,
@@ -493,7 +608,6 @@ class CadastroTipoAlimentacao extends Component {
                             </div>
                           </section>
                         ) : (
-                          // --------------------LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
                           <section className="conteudo-wizard-substituicoes">
                             <div className="titulo-combo-substituicoes">
                               Combos
@@ -765,18 +879,43 @@ class CadastroTipoAlimentacao extends Component {
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="mr-2"
                         />
-                        <Botao
-                          texto={"Confirmar"}
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN}
-                          onClick={() =>
-                            this.setState({
-                              periodoEscolar: periodoEscolar + 1,
-                              exibeFormularioInicial: true,
-                              tipoAlimentacaoAtual: 0
-                            })
-                          }
-                        />
+                        {vinculosTiposAlimentacao[periodoEscolar].combos[
+                          vinculosTiposAlimentacao[periodoEscolar].combos
+                            .length - 1
+                        ].substituicoes[
+                          vinculosTiposAlimentacao[periodoEscolar].combos[
+                            vinculosTiposAlimentacao[periodoEscolar].combos
+                              .length - 1
+                          ].substituicoes.length - 1
+                        ].tipos_alimentacao.length > 0 ? (
+                          <Botao
+                            texto={"Confirmar"}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() => {
+                              vinculosTiposAlimentacao.length ===
+                              periodoEscolar + 1
+                                ? this.setState({
+                                    exibirRelatorio: true,
+                                    periodoEscolar: 0,
+                                    exibeFormularioInicial: true,
+                                    tipoAlimentacaoAtual: 0
+                                  })
+                                : this.setState({
+                                    periodoEscolar: periodoEscolar + 1,
+                                    exibeFormularioInicial: true,
+                                    tipoAlimentacaoAtual: 0
+                                  });
+                            }}
+                          />
+                        ) : (
+                          <Botao
+                            texto={"Confirmar"}
+                            className="botao-desabilitado"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
+                          />
+                        )}
                       </Fragment>
                     )}
               </section>

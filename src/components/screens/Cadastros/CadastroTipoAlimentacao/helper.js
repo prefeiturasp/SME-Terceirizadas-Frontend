@@ -111,6 +111,7 @@ const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
 
 export const estruturarDadosTiposDeAlimentacao = vinculosTiposAlimentacao => {
   vinculosTiposAlimentacao.forEach(vinculoTipoAlimentacao => {
+    vinculoTipoAlimentacao.periodo_escolar["ativo"] = false;
     verificaCombosDoTipoDeAlimentacao(vinculoTipoAlimentacao);
   });
   return vinculosTiposAlimentacao;
