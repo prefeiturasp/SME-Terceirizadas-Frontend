@@ -7,6 +7,12 @@ import {
 } from "../../../../services/relatorios.service";
 import { chartData, DATA_DEFAULT_SOLICITACAO, OPTIONS } from "../constants";
 import "./style.scss";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_ICON,
+  BUTTON_TYPE
+} from "../../../Shareable/Botao/constants";
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
@@ -127,6 +133,26 @@ class GraficoEvolucao extends Component {
       <div className="evolution">
         <div className="card">
           <div className="row p-4">
+            <div className="col-12">
+              <p className="float-right">
+                <Botao
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  texto={"Exportar Planilha"}
+                  icon={BUTTON_ICON.FILE_PDF}
+                  type={BUTTON_TYPE.BUTTON}
+                />
+                <Botao
+                  className="ml-2"
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  icon={BUTTON_ICON.PRINT}
+                  texto={"Imprimir"}
+                  type={BUTTON_TYPE.BUTTON}
+                />
+              </p>
+            </div>
+            <div className="col-12">
+              <p className="fonte-titulo">Solicitações por status</p>
+            </div>
             <div className="col-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_autorizados}
