@@ -805,7 +805,6 @@ class CadastroTipoAlimentacao extends Component {
                                 vinculosTiposAlimentacao[periodoEscolar].combos[
                                   tipoAlimentacaoAtual
                                 ].substituicoes.map((substituicao, indice) => {
-                                  console.log(substituicao);
                                   return vinculosTiposAlimentacao[
                                     periodoEscolar
                                   ].combos[tipoAlimentacaoAtual].substituicoes
