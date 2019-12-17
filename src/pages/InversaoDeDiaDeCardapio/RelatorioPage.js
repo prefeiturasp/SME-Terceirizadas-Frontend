@@ -16,10 +16,14 @@ import {
   CODAEAutorizaPedidoDRE,
   dreValidaPedidoEscola,
   terceirizadaTomaCiencia,
-  DRENegaInversaoDeDiaDeCardapio
+  DRENegaInversaoDeDiaDeCardapio,
+  CODAEQuestionaInversaoDeDiaDeCardapio,
+  TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
+import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -74,40 +78,44 @@ export const RelatorioDRE = () => (
   />
 );
 
-// VISAO={DRE}
-// ModalNaoAprova={ModalNaoValidarSolicitacao}
-// toastAprovaMensagem={"Alteração de Cardápio validada com sucesso!"}
-// toastAprovaMensagemErro={"Houve um erro ao validar a Alteração de Cardápio"}
-// endpointNaoAprovaSolicitacao={DRENaoValidaAlteracaoCardapio}
-// endpointAprovaSolicitacao={DREValidaAlteracaoCardapio}
-// textoBotaoNaoAprova="Não Validar"
-// textoBotaoAprova="Validar"
-// CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
     VISAO={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
+    ModalQuestionamento={ModalCODAEQuestiona}
     toastAprovaMensagem={"Inversão de Cardápio autorizada com sucesso!"}
     toastAprovaMensagemErro={
       "Houve um erro ao autorizar a Inversão de Cardápio"
     }
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
-    // endpointNaoAprovaSolicitacao={CODAENegaAlteracaoCardapio}
     endpointAprovaSolicitacao={CODAEAutorizaPedidoDRE}
-    // endpointQuestionamento={CODAEquestionaAlteracaoCardapio}
+    endpointQuestionamento={CODAEQuestionaInversaoDeDiaDeCardapio}
   />
 );
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     VISAO={TERCEIRIZADA}
-    HandleAprovaPedido={terceirizadaTomaCiencia}
-    toastSucessoMensagem={
-      "Ciência de Inversão de dias de cardápio enviada com sucesso!"
+    ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
+    ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
+    endpointQuestionamento={
+      TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
+    }
+    toastAprovaMensagem={
+      "Ciência de Alteração de Cardápio enviado com sucesso!"
+    }
+    toastAprovaMensagemErro={
+      "Houve um erro ao tomar ciência da Alteração de Cardápio"
     }
     textoBotaoNaoAprova="Não"
     textoBotaoAprova="Ciente"
+    endpointAprovaSolicitacao={terceirizadaTomaCiencia}
   />
 );
+// endpointAprovaSolicitacao={terceirizadaTomaCiencia}
+// endpointReprovaSolicitacao={
+//   terceirizadaRespondeQuestionamentoAlteracaoCardapio
+// }
+// endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}
