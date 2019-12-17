@@ -12,7 +12,10 @@ import {
   TERCEIRIZADA
 } from "../../../configs/constants";
 import { statusEnum } from "../../../constants/statusEnum";
-import { dataParaUTC } from "../../../helpers/utilities";
+import {
+  dataParaUTC,
+  visualizaBotoesDoFluxo
+} from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -27,6 +30,7 @@ import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
+import { TIPO_PERFIL } from "../../../constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -71,12 +75,10 @@ class Relatorio extends Component {
       if (uuid) {
         getInversaoDeDiaDeCardapio(uuid).then(response => {
           const InversaoCardapio = response.data;
-          const data_de = moment(InversaoCardapio.data_de, "DD/MM/YYYY");
-          const data_para = moment(InversaoCardapio.data_para, "DD/MM/YYYY");
-          let dataMaisProxima = data_de;
-          if (dataMaisProxima < data_para) {
-            dataMaisProxima = data_para;
-          }
+          const dataMaisProxima = moment(
+            InversaoCardapio.data_de,
+            "DD/MM/YYYY"
+          );
 
           this.setState({
             InversaoCardapio,
@@ -135,9 +137,53 @@ class Relatorio extends Component {
       InversaoCardapio,
       prazoDoPedidoMensagem,
       escolaDaInversao,
-      uuid
+      uuid,
+
+      resposta_sim_nao,
+      showNaoAprovaModal,
+      showQuestionamentoModal
     } = this.state;
-    const { justificativa, motivo_cancelamento } = this.props;
+    const {
+      justificativa,
+      motivo_cancelamento,
+      textoBotaoNaoAprova,
+      textoBotaoAprova,
+      endpointNaoAprovaSolicitacao,
+      endpointQuestionamento,
+      ModalNaoAprova,
+      ModalQuestionamento
+    } = this.props;
+
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    const EXIBIR_BOTAO_NAO_APROVAR =
+      tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
+      (InversaoCardapio &&
+        InversaoCardapio.foi_solicitado_fora_do_prazo &&
+        InversaoCardapio.status === statusEnum.CODAE_QUESTIONADO &&
+        textoBotaoNaoAprova);
+    const EXIBIR_BOTAO_APROVAR =
+      (![
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.TERCEIRIZADA
+      ].includes(tipoPerfil) &&
+        textoBotaoAprova) ||
+      (InversaoCardapio &&
+        (!InversaoCardapio.foi_solicitado_fora_do_prazo ||
+          [
+            statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
+            statusEnum.CODAE_AUTORIZADO
+          ].includes(InversaoCardapio.status)) &&
+        textoBotaoAprova);
+    const EXIBIR_BOTAO_QUESTIONAMENTO =
+      [
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.TERCEIRIZADA
+      ].includes(tipoPerfil) &&
+      InversaoCardapio &&
+      InversaoCardapio.foi_solicitado_fora_do_prazo &&
+      [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+        InversaoCardapio.status
+      );
     return (
       <div className="report">
         <ModalNegarInversaoDiaCardapio
@@ -286,83 +332,42 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
-
-                {(() => {
-                  switch (this.props.VISAO) {
-                    case ESCOLA:
-                      return (
-                        <div className="form-group row float-right mt-4">
-                          <Botao
-                            texto={"Cancelar"}
-                            className="ml-3"
-                            onClick={() => this.showModalCancelar()}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                          />
-                        </div>
-                      );
-                    case DRE:
-                      return (
-                        InversaoCardapio.status ===
-                          statusEnum.DRE_A_VALIDAR && (
-                          <div className="form-group row float-right mt-4">
-                            <Botao
-                              texto={"Não Validar"}
-                              className="ml-3"
-                              onClick={() => this.showModalNegar()}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                            />
-                            <Botao
-                              texto="Validar"
-                              type={BUTTON_TYPE.SUBMIT}
-                              onClick={() => this.handleSubmit()}
-                              style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
-                            />
-                          </div>
-                        )
-                      );
-                    case CODAE:
-                      return (
-                        InversaoCardapio.status === statusEnum.DRE_VALIDADO && (
-                          <div className="form-group row float-right mt-4">
-                            <Botao
-                              texto={"Negar"}
-                              className="ml-3"
-                              onClick={() => this.showModalNegar()}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                            />
-                            <Botao
-                              texto="Autorizar"
-                              type={BUTTON_TYPE.SUBMIT}
-                              onClick={() => this.handleSubmit()}
-                              style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
-                            />
-                          </div>
-                        )
-                      );
-                    case TERCEIRIZADA:
-                      return (
-                        InversaoCardapio.status ===
-                          statusEnum.CODAE_AUTORIZADO && (
-                          <div className="form-group row float-right mt-4">
-                            <Botao
-                              texto="Ciente"
-                              type={BUTTON_TYPE.SUBMIT}
-                              onClick={() => this.handleSubmit()}
-                              style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
-                            />
-                          </div>
-                        )
-                      );
-                    default:
-                      return "AQUI";
-                  }
-                })()}
+                {visualizaBotoesDoFluxo(InversaoCardapio) && (
+                  <div className="form-group row float-right mt-4">
+                    {EXIBIR_BOTAO_NAO_APROVAR && (
+                      <Botao
+                        texto={textoBotaoNaoAprova}
+                        className="ml-3"
+                        onClick={() => this.showNaoAprovaModal("Não")}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    )}
+                    {EXIBIR_BOTAO_APROVAR && (
+                      <Botao
+                        texto={textoBotaoAprova}
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.handleSubmit()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
+                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                      <Botao
+                        texto={
+                          tipoPerfil ===
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                            ? "Questionar"
+                            : "Sim"
+                        }
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.showQuestionamentoModal("Sim")}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </form>

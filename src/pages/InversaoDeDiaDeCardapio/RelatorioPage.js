@@ -38,6 +38,8 @@ class RelatorioBase extends React.Component {
           VISAO={this.props.VISAO}
           HandleAprovaPedido={this.props.HandleAprovaPedido}
           toastSucessoMensagem={this.props.toastSucessoMensagem}
+          textoBotaoNaoAprova={this.props.textoBotaoNaoAprova}
+          textoBotaoAprova={this.props.textoBotaoAprova}
         />
       </Page>
     );
@@ -77,6 +79,8 @@ export const RelatorioCODAE = () => (
     toastSucessoMensagem={
       "Inversão de dias de cardápio autorizada com sucesso!"
     }
+    textoBotaoNaoAprova="Negar"
+    textoBotaoAprova="Autorizar"
   />
 );
 // TERCEIRIZADA
@@ -87,5 +91,7 @@ export const RelatorioTerceirizada = () => (
     toastSucessoMensagem={
       "Ciência de Inversão de dias de cardápio enviada com sucesso!"
     }
+    textoBotaoNaoAprova="Não"
+    textoBotaoAprova="Ciente"
   />
 );
