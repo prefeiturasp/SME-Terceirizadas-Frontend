@@ -101,7 +101,7 @@ export class Login extends Component {
             }`
           );
           this.setState({ bloquearBotao: false });
-          setTimeout(() => window.location.reload(), 2000);
+          setTimeout(() => (window.location.href = "/login"));
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
           this.setState({ bloquearBotao: false });

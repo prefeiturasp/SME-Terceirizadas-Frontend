@@ -27,7 +27,7 @@ export const permissoes = () => {
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return PermissoesPage.PermissoesCODAEGestaoAlimentacaoTerceirizada;
     case TIPO_PERFIL.TERCEIRIZADA:
-      return PermissoesPage.PermissoesEscola;
+      return PermissoesPage.PermissoesTerceirizada;
     default:
       return PermissoesPage.PermissoesEscola;
   }

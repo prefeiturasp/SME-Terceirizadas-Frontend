@@ -1,6 +1,7 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Permissoes from "../../components/Permissoes";
+import PermissoesTerceirizadas from "../../components/Permissoes/PermissoesTerceirizadas";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
 import {
@@ -12,9 +13,12 @@ import {
   finalizarVinculoDiretoriaRegional,
   criarEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada,
   getEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada,
-  finalizarVinculoCODAEGestaoAlimentacaoTerceirizada
+  finalizarVinculoCODAEGestaoAlimentacaoTerceirizada,
+  criarEquipeAdministradoraTerceirizadas,
+  getEquipeAdministradoraTerceirizadas,
+  finalizarVinculoTerceirizadas
 } from "../../services/permissoes.service";
-import { CODAE, DRE, ESCOLA } from "../../configs/constants";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 
 class PermissoesBase extends React.Component {
   render() {
@@ -23,10 +27,13 @@ class PermissoesBase extends React.Component {
       titulo: "Permissões"
     };
 
+    const ComponenteBase =
+      this.props.visao === TERCEIRIZADA ? PermissoesTerceirizadas : Permissoes;
+
     return (
       <Page titulo={atual.titulo} botaoVoltar voltarPara={`/`}>
         <Breadcrumb home={HOME} atual={atual} />
-        <Permissoes {...this.props} />
+        <ComponenteBase {...this.props} />
       </Page>
     );
   }
@@ -63,5 +70,15 @@ export const PermissoesCODAEGestaoAlimentacaoTerceirizada = () => (
     }
     finalizarVinculo={finalizarVinculoCODAEGestaoAlimentacaoTerceirizada}
     visao={CODAE}
+  />
+);
+
+// Terceirizada
+export const PermissoesTerceirizada = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraTerceirizadas}
+    getEquipeAdministradora={getEquipeAdministradoraTerceirizadas}
+    finalizarVinculo={finalizarVinculoTerceirizadas}
+    visao={TERCEIRIZADA}
   />
 );
