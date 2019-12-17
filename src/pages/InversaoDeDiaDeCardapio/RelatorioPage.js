@@ -17,6 +17,7 @@ import {
   dreValidaPedidoEscola,
   terceirizadaTomaCiencia
 } from "../../services/inversaoDeDiaDeCardapio.service";
+import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -34,13 +35,7 @@ class RelatorioBase extends React.Component {
     return (
       <Page>
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
-        <Relatorio
-          VISAO={this.props.VISAO}
-          HandleAprovaPedido={this.props.HandleAprovaPedido}
-          toastSucessoMensagem={this.props.toastSucessoMensagem}
-          textoBotaoNaoAprova={this.props.textoBotaoNaoAprova}
-          textoBotaoAprova={this.props.textoBotaoAprova}
-        />
+        <Relatorio {...this.props} />
       </Page>
     );
   }
@@ -75,6 +70,7 @@ export const RelatorioDRE = () => (
 export const RelatorioCODAE = () => (
   <RelatorioBase
     VISAO={CODAE}
+    ModalNaoAprova={ModalNegarSolicitacao}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
     toastSucessoMensagem={
       "Inversão de dias de cardápio autorizada com sucesso!"

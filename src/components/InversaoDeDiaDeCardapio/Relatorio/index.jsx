@@ -4,19 +4,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import {
-  INVERSAO_CARDAPIO,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../../configs/constants";
+import { INVERSAO_CARDAPIO } from "../../../configs/constants";
+import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants/statusEnum";
 import {
   dataParaUTC,
   visualizaBotoesDoFluxo
 } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
+import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -24,13 +20,8 @@ import {
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
-import { ModalCancelarInversaoDiaCardapio } from "../../Shareable/ModalCancelarInversaoDiaCardapio";
-import { ModalNegarInversaoDiaCardapio } from "../../Shareable/ModalNegarInversaoDiaCardapio";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-
-import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
-import { TIPO_PERFIL } from "../../../constants";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -39,15 +30,15 @@ class Relatorio extends Component {
       unifiedSolicitationList: [],
       uuid: null,
       redirect: false,
-      showModalCancelar: false,
-      showModalNegar: false,
-      ehInclusaoContinua: false,
+      showNaoAprovaModal: false,
+      showModal: false,
       InversaoCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
-    this.closeModalCancelar = this.closeModalCancelar.bind(this);
-    this.closeModalNegar = this.closeModalNegar.bind(this);
+    this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
+    this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
   setRedirect() {
@@ -95,20 +86,28 @@ class Relatorio extends Component {
     });
   }
 
-  showModalCancelar() {
-    this.setState({ showModalCancelar: true });
+  showQuestionamentoModal(resposta_sim_nao) {
+    this.setState({ resposta_sim_nao, showQuestionamentoModal: true });
   }
 
-  closeModalCancelar() {
-    this.setState({ showModalCancelar: false });
+  closeQuestionamentoModal() {
+    this.setState({ showQuestionamentoModal: false });
   }
 
-  showModalNegar() {
-    this.setState({ showModalNegar: true });
+  showNaoAprovaModal(resposta_sim_nao) {
+    this.setState({ resposta_sim_nao, showNaoAprovaModal: true });
   }
 
-  closeModalNegar() {
-    this.setState({ showModalNegar: false });
+  closeNaoAprovaModal() {
+    this.setState({ showNaoAprovaModal: false });
+  }
+
+  loadSolicitacao(uuid) {
+    getInversaoDeDiaDeCardapio(uuid).then(response => {
+      this.setState({
+        alteracaoDeCardapio: response
+      });
+    });
   }
 
   handleSubmit() {
@@ -132,20 +131,16 @@ class Relatorio extends Component {
 
   render() {
     const {
-      showModalCancelar,
-      showModalNegar,
       InversaoCardapio,
       prazoDoPedidoMensagem,
       escolaDaInversao,
       uuid,
-
       resposta_sim_nao,
       showNaoAprovaModal,
       showQuestionamentoModal
     } = this.state;
     const {
       justificativa,
-      motivo_cancelamento,
       textoBotaoNaoAprova,
       textoBotaoAprova,
       endpointNaoAprovaSolicitacao,
@@ -153,7 +148,8 @@ class Relatorio extends Component {
       ModalNaoAprova,
       ModalQuestionamento
     } = this.props;
-
+    console.log(showNaoAprovaModal, ModalNaoAprova);
+    console.log(this.props.VISAO);
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
@@ -186,23 +182,29 @@ class Relatorio extends Component {
       );
     return (
       <div className="report">
-        <ModalNegarInversaoDiaCardapio
-          closeModal={this.closeModalNegar}
-          showModal={showModalNegar}
-          uuid={uuid}
-          justificativa={justificativa}
-          motivoCancelamento={motivo_cancelamento}
-          inversaoDeDiaDeCardapio={InversaoCardapio}
-          setRedirect={this.setRedirect.bind(this)}
-        />
-        <ModalCancelarInversaoDiaCardapio
-          showModal={showModalCancelar}
-          closeModal={this.closeModalCancelar}
-          uuid={uuid}
-          justificativa={justificativa}
-          solicitacaoInversaoDeDiaDeCardapio={InversaoCardapio}
-        />
-        {this.renderizarRedirecionamentoParaInversoesDeCardapio()}
+        {ModalNaoAprova && (
+          <ModalNaoAprova
+            showModal={showNaoAprovaModal}
+            closeModal={this.closeNaoAprovaModal}
+            endpoint={endpointNaoAprovaSolicitacao}
+            solicitacao={InversaoCardapio}
+            loadSolicitacao={this.loadSolicitacao}
+            justificativa={justificativa}
+            resposta_sim_nao={resposta_sim_nao}
+            uuid={uuid}
+          />
+        )}
+        {ModalQuestionamento && (
+          <ModalQuestionamento
+            closeModal={this.closeQuestionamentoModal}
+            showModal={showQuestionamentoModal}
+            justificativa={justificativa}
+            uuid={uuid}
+            loadSolicitacao={this.loadSolicitacao}
+            resposta_sim_nao={resposta_sim_nao}
+            endpoint={endpointQuestionamento}
+          />
+        )}
         {!InversaoCardapio ? (
           <div>Carregando...</div>
         ) : (
