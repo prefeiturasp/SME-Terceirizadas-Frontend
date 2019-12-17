@@ -630,7 +630,8 @@ class CadastroTipoAlimentacao extends Component {
                                         onClick={() => {
                                           this.setState({
                                             periodoEscolar: indice,
-                                            exibirRelatorio: false
+                                            exibirRelatorio: false,
+                                            exibeFormularioInicial: true
                                           });
                                         }}
                                       >
