@@ -15,9 +15,11 @@ import {
 import {
   CODAEAutorizaPedidoDRE,
   dreValidaPedidoEscola,
-  terceirizadaTomaCiencia
+  terceirizadaTomaCiencia,
+  DRENegaInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -62,10 +64,24 @@ export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
 export const RelatorioDRE = () => (
   <RelatorioBase
     VISAO={DRE}
-    HandleAprovaPedido={dreValidaPedidoEscola}
-    toastSucessoMensagem={"Inversão de dias de cardápio validada com sucesso!"}
+    endpointAprovaSolicitacao={dreValidaPedidoEscola}
+    endpointNaoAprovaSolicitacao={DRENegaInversaoDeDiaDeCardapio}
+    ModalNaoAprova={ModalNaoValidarSolicitacao}
+    toastAprovaMensagem={"Inversão de Cardápio validada com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao validar a Inversão de Cardápio"}
+    textoBotaoNaoAprova="Não Validar"
+    textoBotaoAprova="Validar"
   />
 );
+
+// VISAO={DRE}
+// ModalNaoAprova={ModalNaoValidarSolicitacao}
+// toastAprovaMensagem={"Alteração de Cardápio validada com sucesso!"}
+// toastAprovaMensagemErro={"Houve um erro ao validar a Alteração de Cardápio"}
+// endpointNaoAprovaSolicitacao={DRENaoValidaAlteracaoCardapio}
+// endpointAprovaSolicitacao={DREValidaAlteracaoCardapio}
+// textoBotaoNaoAprova="Não Validar"
+// textoBotaoAprova="Validar"
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase

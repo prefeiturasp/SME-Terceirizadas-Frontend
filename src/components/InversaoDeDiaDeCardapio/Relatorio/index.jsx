@@ -105,7 +105,7 @@ class Relatorio extends Component {
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
-        InversaoCardapio: response
+        InversaoCardapio: response.data
       });
     });
   }
