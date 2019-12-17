@@ -105,9 +105,6 @@ export const RelatorioTerceirizada = () => (
     endpointQuestionamento={
       TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
     }
-    endpointReprovaSolicitacao={
-      TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
-    }
     toastAprovaMensagem={
       "Ciência de Alteração de Cardápio enviado com sucesso!"
     }
@@ -117,5 +114,8 @@ export const RelatorioTerceirizada = () => (
     textoBotaoNaoAprova="Não"
     textoBotaoAprova="Ciente"
     endpointAprovaSolicitacao={terceirizadaTomaCiencia}
+    endpointNaoAprovaSolicitacao={
+      TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
+    }
   />
 );

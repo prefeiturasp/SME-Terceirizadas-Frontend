@@ -148,8 +148,6 @@ class Relatorio extends Component {
       ModalNaoAprova,
       ModalQuestionamento
     } = this.props;
-    console.log(showNaoAprovaModal, ModalNaoAprova);
-    console.log(this.props.VISAO);
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
