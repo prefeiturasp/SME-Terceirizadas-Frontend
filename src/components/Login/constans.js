@@ -8,3 +8,8 @@ export const TIPOS_EMAIL_CADASTRO = [
     uuid: 1
   }
 ];
+
+export const TABS = {
+  ESCOLA_DRE_CODAE: "escola/dre/codae",
+  TERCEIRIZADAS: "terceirizadas"
+};
