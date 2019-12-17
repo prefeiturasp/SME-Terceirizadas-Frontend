@@ -9,7 +9,7 @@
     background-color: #e4e4e4;
     display: inline;
     position: relative;
-    width: 25%;
+    flex-grow: 1;
     height: 41px;
 
     &:first-child {
