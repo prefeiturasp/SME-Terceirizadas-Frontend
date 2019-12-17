@@ -41,7 +41,6 @@ class CadastroTipoAlimentacao extends Component {
       tipoAlimentacaoAtual: 0,
       exibeFormularioInicial: true,
       vinculoCombo: null,
-      // excluir Combo Tipo Alimentacao
       showModalExcluirTipoAlimentacao: false,
       comboParaExcluir: null,
       indiceParaExcluir: null
@@ -415,6 +414,134 @@ class CadastroTipoAlimentacao extends Component {
     this.setState({ vinculosTiposAlimentacao });
   };
 
+  enviaUltimoComboSubstituicao = indice => {
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const periodoEscolar = this.state.periodoEscolar;
+    const substituicao =
+      vinculosTiposAlimentacao[periodoEscolar].combos[indice - 1].substituicoes[
+        vinculosTiposAlimentacao[periodoEscolar].combos[indice - 1]
+          .substituicoes.length - 1
+      ];
+
+    const request = {
+      tipos_alimentacao: substituicao.tipos_alimentacao,
+      combo: substituicao.combo
+    };
+    createVinculoSubstituicaoPeriodoEscolar(request).then(response => {
+      if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(response.data.tipos_alimentacao[0]);
+      } else {
+        substituicao.adicionar = false;
+        substituicao.uuid = response.data.uuid;
+        this.setState({
+          vinculosTiposAlimentacao,
+          tipoAlimentacaoAtual: indice
+        });
+      }
+    });
+  };
+
+  ultimaSubstituicaoCompleta = indice => {
+    const vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const periodoEscolar = this.state.periodoEscolar;
+    return (
+      vinculosTiposAlimentacao[periodoEscolar].combos[indice].substituicoes
+        .length > 0 &&
+      vinculosTiposAlimentacao[periodoEscolar].combos[indice].substituicoes[
+        vinculosTiposAlimentacao[periodoEscolar].combos[indice].substituicoes
+          .length - 1
+      ].adicionar === false
+    );
+  };
+
+  enviaSubstituicaoEPassaParaOProximoTipoDeAlimentacao = acao => {
+    let vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const periodoEscolar = this.state.periodoEscolar;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    const substituicao =
+      vinculosTiposAlimentacao[periodoEscolar].combos[tipoAlimentacaoAtual]
+        .substituicoes[
+        vinculosTiposAlimentacao[periodoEscolar].combos[tipoAlimentacaoAtual]
+          .substituicoes.length - 1
+      ];
+    const request = {
+      tipos_alimentacao: substituicao.tipos_alimentacao,
+      combo: substituicao.combo
+    };
+
+    if (!substituicao.uuid) {
+      createVinculoSubstituicaoPeriodoEscolar(request).then(response => {
+        if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(response.data.tipos_alimentacao[0]);
+        } else {
+          substituicao.adicionar = false;
+          substituicao.uuid = response.data.uuid;
+          if (acao === "finalizar") {
+            this.setState({
+              vinculosTiposAlimentacao,
+              exibirRelatorio: true,
+              tipoAlimentacaoAtual: 0,
+              periodoEscolar: 0
+            });
+          } else {
+            if (
+              tipoAlimentacaoAtual + 1 ===
+              vinculosTiposAlimentacao[periodoEscolar].combos.length
+            ) {
+              this.setState({
+                vinculosTiposAlimentacao,
+                tipoAlimentacaoAtual: 0,
+                exibeFormularioInicial: true,
+                periodoEscolar: periodoEscolar + 1
+              });
+            } else {
+              this.setState({
+                vinculosTiposAlimentacao,
+                tipoAlimentacaoAtual: tipoAlimentacaoAtual + 1
+              });
+            }
+          }
+        }
+      });
+    } else {
+      if (acao === "finalizar") {
+        this.setState({
+          exibirRelatorio: true,
+          tipoAlimentacaoAtual: 0,
+          periodoEscolar: 0
+        });
+      } else {
+        if (
+          tipoAlimentacaoAtual + 1 ===
+          vinculosTiposAlimentacao[periodoEscolar].combos.length
+        ) {
+          this.setState({
+            tipoAlimentacaoAtual: 0,
+            exibeFormularioInicial: true,
+            periodoEscolar: periodoEscolar + 1
+          });
+        } else {
+          this.setState({
+            tipoAlimentacaoAtual: tipoAlimentacaoAtual + 1
+          });
+        }
+      }
+    }
+  };
+
+  exibeBotaoConfirmarSubstituicao = () => {
+    const vinculosTiposAlimentacao = this.state.vinculosTiposAlimentacao;
+    const periodoEscolar = this.state.periodoEscolar;
+    const tipoAlimentacaoAtual = this.state.tipoAlimentacaoAtual;
+    return (
+      vinculosTiposAlimentacao[periodoEscolar].combos[tipoAlimentacaoAtual]
+        .substituicoes[
+        vinculosTiposAlimentacao[periodoEscolar].combos[tipoAlimentacaoAtual]
+          .substituicoes.length - 1
+      ].tipos_alimentacao.length > 0
+    );
+  };
+
   render() {
     const {
       unidadesEscolares,
@@ -657,126 +784,43 @@ class CadastroTipoAlimentacao extends Component {
                                 vinculosTiposAlimentacao[
                                   periodoEscolar
                                 ].combos.map((combo, indice) => {
-                                  return indice === tipoAlimentacaoAtual ? (
-                                    vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[tipoAlimentacaoAtual]
-                                      .substituicoes.length > 0 &&
-                                    vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[tipoAlimentacaoAtual]
-                                      .substituicoes[
-                                      vinculosTiposAlimentacao[periodoEscolar]
-                                        .combos[tipoAlimentacaoAtual]
-                                        .substituicoes.length - 1
-                                    ].tipos_alimentacao.length > 0 ? (
-                                      <li className="passou_atual" key={indice}>
-                                        <nav>{combo.label}</nav>{" "}
+                                  const comboAtivo = combo => {
+                                    combo.substituicoes.forEach(
+                                      substituicao => {
+                                        combo.completo = !substituicao.adicionar;
+                                      }
+                                    );
+                                  };
+                                  comboAtivo(combo);
+                                  return (
+                                    <li
+                                      key={indice}
+                                      className={`${
+                                        indice === tipoAlimentacaoAtual
+                                          ? this.ultimaSubstituicaoCompleta(
+                                              indice
+                                            )
+                                            ? "atual-completo"
+                                            : "atual-nao-passou"
+                                          : indice < tipoAlimentacaoAtual
+                                          ? this.ultimaSubstituicaoCompleta(
+                                              indice
+                                            )
+                                            ? "anterior-completo"
+                                            : "anterior-incompleto"
+                                          : this.ultimaSubstituicaoCompleta(
+                                              indice
+                                            )
+                                          ? "proximo-completo"
+                                          : "proximo-incompleto"
+                                      }`}
+                                    >
+                                      <nav>{combo.label}</nav>{" "}
+                                      {combo.completo && (
                                         <div>
                                           <i className="fas fa-check" />
                                         </div>
-                                      </li>
-                                    ) : (
-                                      <li
-                                        className="nao_passou_atual"
-                                        key={indice}
-                                      >
-                                        <nav>{combo.label}</nav> <div> </div>
-                                      </li>
-                                    )
-                                  ) : indice < tipoAlimentacaoAtual ? (
-                                    <li
-                                      className="passou_anterior"
-                                      key={indice}
-                                      onClick={() => {
-                                        this.setState({
-                                          tipoAlimentacaoAtual: indice
-                                        });
-                                      }}
-                                    >
-                                      <nav>{combo.label}</nav>{" "}
-                                      <div>
-                                        <i className="fas fa-check" />
-                                      </div>
-                                    </li>
-                                  ) : indice - 1 === tipoAlimentacaoAtual ? (
-                                    vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[tipoAlimentacaoAtual]
-                                      .substituicoes.length > 0 &&
-                                    vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[tipoAlimentacaoAtual]
-                                      .substituicoes[
-                                      vinculosTiposAlimentacao[periodoEscolar]
-                                        .combos[tipoAlimentacaoAtual]
-                                        .substituicoes.length - 1
-                                    ].tipos_alimentacao.length > 0 ? (
-                                      vinculosTiposAlimentacao[periodoEscolar]
-                                        .combos[indice].substituicoes.length >
-                                        0 &&
-                                      vinculosTiposAlimentacao[periodoEscolar]
-                                        .combos[indice].substituicoes[
-                                        vinculosTiposAlimentacao[periodoEscolar]
-                                          .combos[indice].substituicoes.length -
-                                          1
-                                      ].tipos_alimentacao.length > 0 ? (
-                                        <li
-                                          className="passou_anterior"
-                                          key={indice}
-                                          onClick={() => {
-                                            this.setState({
-                                              tipoAlimentacaoAtual: indice
-                                            });
-                                          }}
-                                        >
-                                          <nav>{combo.label}</nav>{" "}
-                                          <div>
-                                            <i className="fas fa-check" />
-                                          </div>
-                                        </li>
-                                      ) : (
-                                        <li
-                                          className="nao_passou_proximo"
-                                          key={indice}
-                                          onClick={() => {
-                                            this.setState({
-                                              tipoAlimentacaoAtual: indice
-                                            });
-                                          }}
-                                        >
-                                          <nav>{combo.label}</nav> <div />
-                                        </li>
-                                      )
-                                    ) : (
-                                      <li
-                                        className="proximos_itens"
-                                        key={indice}
-                                      >
-                                        <nav>{combo.label}</nav> <div> </div>
-                                      </li>
-                                    )
-                                  ) : vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[indice].substituicoes.length >
-                                      0 &&
-                                    vinculosTiposAlimentacao[periodoEscolar]
-                                      .combos[indice].substituicoes[
-                                      vinculosTiposAlimentacao[periodoEscolar]
-                                        .combos[indice].substituicoes.length - 1
-                                    ].tipos_alimentacao.length > 0 ? (
-                                    <li
-                                      className="passou_anterior"
-                                      key={indice}
-                                      onClick={() => {
-                                        this.setState({
-                                          tipoAlimentacaoAtual: indice
-                                        });
-                                      }}
-                                    >
-                                      <nav>{combo.label}</nav>{" "}
-                                      <div>
-                                        <i className="fas fa-check" />
-                                      </div>
-                                    </li>
-                                  ) : (
-                                    <li className="proximos_itens" key={indice}>
-                                      <nav>{combo.label}</nav> <div> </div>
+                                      )}
                                     </li>
                                   );
                                 })}
@@ -907,41 +951,62 @@ class CadastroTipoAlimentacao extends Component {
                         <Botao
                           texto={"Voltar"}
                           onClick={() =>
-                            this.setState({ exibeFormularioInicial: true })
+                            this.setState({
+                              exibeFormularioInicial: true,
+                              tipoAlimentacaoAtual: 0
+                            })
                           }
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="mr-2"
                         />
-                        {vinculosTiposAlimentacao[periodoEscolar].combos[
-                          vinculosTiposAlimentacao[periodoEscolar].combos
-                            .length - 1
-                        ].substituicoes[
-                          vinculosTiposAlimentacao[periodoEscolar].combos[
+                        {this.exibeBotaoConfirmarSubstituicao() ? (
+                          periodoEscolar + 1 ===
+                          vinculosTiposAlimentacao.length ? (
                             vinculosTiposAlimentacao[periodoEscolar].combos
-                              .length - 1
-                          ].substituicoes.length - 1
-                        ].tipos_alimentacao.length > 0 ? (
-                          <Botao
-                            texto={"Confirmar"}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            onClick={() => {
-                              vinculosTiposAlimentacao.length ===
-                              periodoEscolar + 1
-                                ? this.setState({
-                                    exibirRelatorio: true,
-                                    periodoEscolar: 0,
-                                    exibeFormularioInicial: true,
-                                    tipoAlimentacaoAtual: 0
-                                  })
-                                : this.setState({
-                                    periodoEscolar: periodoEscolar + 1,
-                                    exibeFormularioInicial: true,
-                                    tipoAlimentacaoAtual: 0
-                                  });
-                            }}
-                          />
+                              .length ===
+                            tipoAlimentacaoAtual + 1 ? (
+                              <Botao
+                                texto={"Finalizar"}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN}
+                                onClick={() =>
+                                  this.enviaSubstituicaoEPassaParaOProximoTipoDeAlimentacao(
+                                    "finalizar"
+                                  )
+                                }
+                              />
+                            ) : (
+                              <Botao
+                                texto={"Confirmar"}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN}
+                                onClick={() =>
+                                  this.enviaSubstituicaoEPassaParaOProximoTipoDeAlimentacao()
+                                }
+                              />
+                            )
+                          ) : vinculosTiposAlimentacao[periodoEscolar].combos
+                              .length ===
+                            tipoAlimentacaoAtual + 1 ? (
+                            <Botao
+                              texto={"Proximo"}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                              onClick={() =>
+                                this.enviaSubstituicaoEPassaParaOProximoTipoDeAlimentacao()
+                              }
+                            />
+                          ) : (
+                            <Botao
+                              texto={"Confirmar"}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                              onClick={() =>
+                                this.enviaSubstituicaoEPassaParaOProximoTipoDeAlimentacao()
+                              }
+                            />
+                          )
                         ) : (
                           <Botao
                             texto={"Confirmar"}

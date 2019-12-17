@@ -187,7 +187,7 @@
       line-height: 16px;
     }
 
-    .passou_atual {
+    .atual-completo {
       background: #ffffff;
       border: 1px solid #82b7e8;
       font-weight: 500;
@@ -204,14 +204,14 @@
       }
     }
 
-    .nao_passou_atual {
+    .atual-nao-passou {
       background: #ffffff;
       border: 1px solid #82b7e8;
       font-weight: 500;
       color: #42474a;
     }
 
-    .passou_anterior {
+    .anterior-completo {
       background: #ffffff;
       border: 1px solid #dadada;
       font-weight: 500;
@@ -235,13 +235,26 @@
       color: #42474a;
     }
 
-    .proximos_itens {
+    .proximo-incompleto {
       background: #f5f6f8;
       border: 1px solid #dadada;
       box-sizing: border-box;
       border-radius: 4px;
 
       color: #dadada;
+    }
+
+    .proximo-completo {
+      background: #f5f6f8;
+      border: 1px solid #dadada;
+      box-sizing: border-box;
+      border-radius: 4px;
+
+      color: #dadada;
+
+      div {
+        display: none;
+      }
     }
   }
 

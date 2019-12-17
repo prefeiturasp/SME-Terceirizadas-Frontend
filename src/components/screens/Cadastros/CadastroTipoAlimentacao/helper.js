@@ -102,6 +102,7 @@ const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
   } else {
     vinculoTipoAlimentacao.combos.forEach(combo => {
       combo["adicionar"] = false;
+      combo["completo"] = false;
       vinculoTipoAlimentacao.periodo_escolar[
         "editado"
       ] = verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes(combo);
