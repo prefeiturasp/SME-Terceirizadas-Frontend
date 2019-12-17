@@ -18,7 +18,8 @@ import {
   terceirizadaTomaCiencia,
   DRENegaInversaoDeDiaDeCardapio,
   CODAEQuestionaInversaoDeDiaDeCardapio,
-  TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
+  TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio,
+  CODAENegaInversaoDeDiaDeCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
@@ -90,6 +91,7 @@ export const RelatorioCODAE = () => (
     }
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
+    endpointNaoAprovaSolicitacao={CODAENegaInversaoDeDiaDeCardapio}
     endpointAprovaSolicitacao={CODAEAutorizaPedidoDRE}
     endpointQuestionamento={CODAEQuestionaInversaoDeDiaDeCardapio}
   />
@@ -103,6 +105,9 @@ export const RelatorioTerceirizada = () => (
     endpointQuestionamento={
       TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
     }
+    endpointReprovaSolicitacao={
+      TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
+    }
     toastAprovaMensagem={
       "Ciência de Alteração de Cardápio enviado com sucesso!"
     }
@@ -114,8 +119,3 @@ export const RelatorioTerceirizada = () => (
     endpointAprovaSolicitacao={terceirizadaTomaCiencia}
   />
 );
-// endpointAprovaSolicitacao={terceirizadaTomaCiencia}
-// endpointReprovaSolicitacao={
-//   terceirizadaRespondeQuestionamentoAlteracaoCardapio
-// }
-// endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}

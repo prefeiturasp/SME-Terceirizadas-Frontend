@@ -22,6 +22,7 @@ import {
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
+import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -333,6 +334,9 @@ class Relatorio extends Component {
                     />
                   </div>
                 </div>
+                <RelatorioHistoricoQuestionamento
+                  solicitacao={InversaoCardapio}
+                />
                 {visualizaBotoesDoFluxo(InversaoCardapio) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
