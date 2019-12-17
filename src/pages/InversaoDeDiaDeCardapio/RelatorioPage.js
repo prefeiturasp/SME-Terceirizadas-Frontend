@@ -72,11 +72,15 @@ export const RelatorioCODAE = () => (
     VISAO={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
-    toastSucessoMensagem={
-      "Inversão de dias de cardápio autorizada com sucesso!"
+    toastAprovaMensagem={"Inversão de Cardápio autorizada com sucesso!"}
+    toastAprovaMensagemErro={
+      "Houve um erro ao autorizar a Inversão de Cardápio"
     }
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
+    // endpointNaoAprovaSolicitacao={CODAENegaAlteracaoCardapio}
+    endpointAprovaSolicitacao={CODAEAutorizaPedidoDRE}
+    // endpointQuestionamento={CODAEquestionaAlteracaoCardapio}
   />
 );
 // TERCEIRIZADA

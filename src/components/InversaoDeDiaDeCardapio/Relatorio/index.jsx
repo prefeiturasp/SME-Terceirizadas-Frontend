@@ -105,26 +105,25 @@ class Relatorio extends Component {
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
-        alteracaoDeCardapio: response
+        InversaoCardapio: response
       });
     });
   }
 
   handleSubmit() {
+    const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.HandleAprovaPedido(uuid).then(
+    this.props.endpointAprovaSolicitacao(uuid).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(this.props.toastSucessoMensagem);
-          this.setRedirect();
+          toastSuccess(toastAprovaMensagem);
+          this.loadSolicitacao(uuid);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            "Houve um erro ao autorizar a Inversão de dias de cardápio"
-          );
+          toastError(toastAprovaMensagemErro);
         }
       },
       function() {
-        toastError("Houve um erro ao autorizar a Inversão de dias de cardápio");
+        toastError(toastAprovaMensagemErro);
       }
     );
   }
