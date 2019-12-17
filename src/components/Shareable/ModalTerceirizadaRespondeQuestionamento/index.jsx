@@ -20,12 +20,12 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
   async responderQuestionamento(uuid) {
     const { justificativa } = this.state;
     const { resposta_sim_nao } = this.props;
-    const payload = {
-      resposta_sim_nao: resposta_sim_nao === "Sim",
-      justificativa: justificativa
-    };
     let resp = "";
-    resp = await this.props.endpoint(uuid, payload);
+    resp = await this.props.endpoint(
+      uuid,
+      resposta_sim_nao === "Sim",
+      justificativa
+    );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);

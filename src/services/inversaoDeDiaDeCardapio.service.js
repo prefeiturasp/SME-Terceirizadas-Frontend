@@ -225,6 +225,7 @@ export const CODAEQuestionaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
 
 export const TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio = (
   uuid,
+  resposta_sim_nao,
   justificativa
 ) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
@@ -234,7 +235,7 @@ export const TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio = (
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa, resposta_sim_nao })
   })
     .then(res => {
       status = res.status;
