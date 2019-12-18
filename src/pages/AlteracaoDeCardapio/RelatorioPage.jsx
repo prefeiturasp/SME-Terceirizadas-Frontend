@@ -104,7 +104,7 @@ export const RelatorioTerceirizada = () => (
       "Houve um erro ao tomar ciência da Alteração de Cardápio"
     }
     endpointAprovaSolicitacao={TerceirizadaTomaCienciaAlteracaoCardapio}
-    endpointReprovaSolicitacao={
+    endpointNaoAprovaSolicitacao={
       terceirizadaRespondeQuestionamentoAlteracaoCardapio
     }
     endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}
