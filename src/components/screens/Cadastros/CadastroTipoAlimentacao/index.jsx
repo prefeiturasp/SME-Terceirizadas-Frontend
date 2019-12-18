@@ -561,7 +561,6 @@ class CadastroTipoAlimentacao extends Component {
       indiceSubstituicaoParaExcluir
     } = this.state;
     const { handleSubmit } = this.props;
-    console.log(vinculosTiposAlimentacao);
     return (
       <Fragment>
         <ModalExcluirComboTipoAlimentacao
