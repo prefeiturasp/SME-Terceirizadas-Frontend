@@ -143,7 +143,8 @@ class PermissoesTerceirizadas extends Component {
                       <div key={key} className="row values">
                         <div className="col-3">{vinculo.usuario.nome}</div>
                         <div className="col-3">
-                          {formatarCPFouCNPJ(vinculo.usuario.cpf)}
+                          {vinculo.usuario.cpf &&
+                            formatarCPFouCNPJ(vinculo.usuario.cpf)}
                         </div>
                         <div className="col-5">{vinculo.usuario.email}</div>
                         <div className="col-1 trash">
