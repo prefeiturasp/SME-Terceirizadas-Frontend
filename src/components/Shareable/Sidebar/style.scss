@@ -39,80 +39,85 @@ body {
     padding-right: 10px;
     color: white;
   }
-  .nav-item {
-    text-align: -webkit-center;
-    .bg-white.collapse-inner.rounded {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      border-top-left-radius: 0 !important;
-      border-top-right-radius: 0 !important;
-      width: 14rem;
-      .submenu {
-        max-height: 70px;
-        overflow-y: auto;
-        overflow-x: hidden;
+  .sidebar-wrapper {
+    &.div-submenu {
+      overflow-x: auto;
+      height: max-content;
+    }
+    .nav-item {
+      position: relative;
+      text-align: -webkit-center;
+      .bg-white.collapse-inner.rounded {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        width: 14rem;
+        .submenu {
+          .collapse-item {
+            padding-left: 2rem;
+            &:not(:last-child) {
+              border-bottom: none !important;
+            }
+          }
+        }
         .collapse-item {
-          padding-left: 2rem;
-          &:not(:last-child) {
-            border-bottom: none !important;
+          color: $gray;
+          text-align: left;
+          word-break: break-all;
+          margin-left: 0;
+          margin-right: 0;
+          border-radius: 0;
+          &:hover {
+            border-left: 10px solid $greenHover;
+          }
+          &:not(:hover):not(:last-child) {
+            border-bottom: 1px solid $greenHover;
+          }
+          i {
+            padding-left: 20px;
+            font-size: 12px;
           }
         }
       }
-      .collapse-item {
-        color: $gray;
-        text-align: left;
-        word-break: break-all;
-        margin-left: 0;
-        margin-right: 0;
-        border-radius: 0;
-        &:hover {
-          border-left: 10px solid $greenHover;
-        }
-        &:not(:hover):not(:last-child) {
-          border-bottom: 1px solid $greenHover;
-        }
-        i {
-          padding-left: 20px;
-          font-size: 12px;
-        }
-      }
-    }
-    .nav-link {
-      font-weight: bold;
-      span {
-        color: white !important;
-        letter-spacing: 0.14px;
-      }
-      i {
-        color: white !important;
-        &.fa-file-alt {
-          padding-left: 5px;
-        }
-      }
-      &:hover,
-      &:not(.collapsed) {
-        border-radius: 5px;
-        background-color: white !important;
+      .nav-link {
+        font-weight: bold;
         span {
-          color: $green !important;
+          color: white !important;
+          letter-spacing: 0.14px;
         }
         i {
-          color: $green !important;
+          color: white !important;
+          &.fa-file-alt {
+            padding-left: 5px;
+          }
         }
-        &.nav-link[data-toggle="collapse"]::after {
-          color: $green !important;
+        &:hover,
+        &:not(.collapsed) {
+          border-radius: 5px;
+          background-color: white !important;
+          span {
+            color: $green !important;
+          }
+          i {
+            color: $green !important;
+          }
+          &.nav-link[data-toggle="collapse"]::after {
+            color: $green !important;
+          }
         }
-      }
-      &.keep-hover-settings,
-      &:not(.collapsed) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        &.keep-hover-settings,
+        &:not(.collapsed) {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
       }
     }
   }
   .sidebar-brand-text {
     .nav-item {
       .profile {
+        text-align: center;
         i,
         span {
           font-size: 8px;
@@ -122,14 +127,6 @@ body {
           padding-left: 5px;
         }
       }
-    }
-  }
-  .sidebar-wrapper {
-    //height: 12rem;
-    //overflow-y: hidden;
-    //overflow-x: hidden;
-    &:hover {
-      //overflow-y: auto;
     }
   }
   .page-footer {
@@ -159,7 +156,7 @@ body {
 
 .sidebar-dark:not(.toggled) {
   .nav-item {
-    height: 35px;
+    //height: 35px;
     .nav-link {
       span {
         font-size: 14px !important;
@@ -169,7 +166,7 @@ body {
       }
       &:hover,
       &:not(.collapsed) {
-        height: 35px;
+        //height: 35px;
         padding-top: 0.4rem;
       }
     }
