@@ -7,7 +7,6 @@ import {
   SUSPENSAO_ALIMENTACAO
 } from "./configs/constants";
 
-
 export const ENTER = 13;
 export const TAMANHO_RF = 7;
 export const TAMANHO_CPF = 11;
