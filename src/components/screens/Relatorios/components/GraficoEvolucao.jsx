@@ -1,5 +1,12 @@
 import React, { Component } from "react";
 import { Line as LineChart } from "react-chartjs-2";
+import {
+  ESCOLA,
+  SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_PENDENTES,
+  SOLICITACOES_RECUSADAS
+} from "../../../../configs/constants";
 import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants/tiposSolicitacao.constants";
 import {
   getEvolucaoSolicitacoes,
@@ -23,7 +30,7 @@ const TIPO_CARD = {
 };
 
 function CardTotalSolicitacaoPorStatus(props) {
-  const { quantidade, quantidadeMesPassado, tipo } = props;
+  const { quantidade, quantidadeMesPassado, tipo, href } = props;
   let texto = "Autorizadas";
   let icon = ICON_CARD_TYPE_ENUM.AUTORIZADO;
   let cardClass = "";
@@ -62,7 +69,7 @@ function CardTotalSolicitacaoPorStatus(props) {
         <div className="bandeira">{quantidade - quantidadeMesPassado}</div>
       </div>
       <div className="fonte-grande">{quantidade} pedidos.</div>
-      <a href="#" className="card-link alinha-centro">
+      <a href={href} className="card-link alinha-centro">
         Ver mais
       </a>
     </section>
@@ -127,12 +134,33 @@ class GraficoEvolucao extends Component {
       <div className="evolution">
         <div className="card">
           <div className="row p-4">
+            {/* <div className="col-12">
+              <p className="float-right">
+                <Botao
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  texto={"Exportar Planilha"}
+                  icon={BUTTON_ICON.FILE_PDF}
+                  type={BUTTON_TYPE.BUTTON}
+                />
+                <Botao
+                  className="ml-2"
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  icon={BUTTON_ICON.PRINT}
+                  texto={"Imprimir"}
+                  type={BUTTON_TYPE.BUTTON}
+                />
+              </p>
+            </div> */}
+            <div className="col-12">
+              <p className="fonte-titulo">Solicitações por status</p>
+            </div>
             <div className="col-4">
               <CardTotalSolicitacaoPorStatus
                 quantidade={totais_tipo_solicitacao.total_autorizados}
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_autorizados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
                 tipo={TIPO_CARD.AUTORIZADO}
               />
             </div>
@@ -142,6 +170,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_negados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
                 tipo={TIPO_CARD.NEGADO}
               />
             </div>
@@ -151,6 +180,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_pendentes_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
                 tipo={TIPO_CARD.PENDENTE}
               />
             </div>
@@ -160,6 +190,7 @@ class GraficoEvolucao extends Component {
                 quantidadeMesPassado={
                   totais_tipo_solicitacao.total_cancelados_mes_passado
                 }
+                href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
                 tipo={TIPO_CARD.CANCELADO}
               />
             </div>

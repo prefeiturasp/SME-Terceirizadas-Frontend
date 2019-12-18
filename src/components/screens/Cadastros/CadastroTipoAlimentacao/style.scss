@@ -133,6 +133,11 @@
           border-radius: 3px;
           border: 1px solid #086397;
           cursor: pointer;
+
+          &:hover {
+            background-color: #086397;
+            color: #ffffff;
+          }
         }
       }
 
@@ -143,6 +148,11 @@
           border-radius: 3px;
           cursor: default;
           color: #dadada;
+
+          &:hover {
+            color: #dadada;
+            background-color: transparent;
+          }
         }
       }
     }
@@ -168,32 +178,83 @@
     li {
       display: flex;
       align-items: center;
-      padding-left: 1em;
+      justify-content: space-between;
+      padding: 0 1em;
       height: 40px;
-      background: #ffffff;
-      border: 1px solid #82b7e8;
-      box-sizing: border-box;
       border-radius: 5px;
       margin-bottom: 0.5em;
-
-      font-weight: 500;
       font-size: 14px;
       line-height: 16px;
-      /* identical to box height */
+    }
 
-      display: flex;
-      align-items: center;
+    .atual-completo {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
+      color: #42474a;
+      div {
+        padding: 0.5px 3px;
+        border: 1px solid #52c41a;
+        border-radius: 50%;
+        background: #52c41a;
+        i {
+          font-size: 10px;
+          color: #ffffff;
+        }
+      }
+    }
 
+    .atual-nao-passou {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
       color: #42474a;
     }
 
-    .tipo-alimentacao-inativo {
+    .anterior-completo {
+      background: #ffffff;
+      border: 1px solid #dadada;
+      font-weight: 500;
+      color: #42474a;
+      div {
+        padding: 0.5px 3px;
+        border: 1px solid #52c41a;
+        border-radius: 50%;
+        background: #52c41a;
+        i {
+          font-size: 10px;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .nao_passou_proximo {
+      background: #ffffff;
+      border: 1px solid #82b7e8;
+      font-weight: 500;
+      color: #42474a;
+    }
+
+    .proximo-incompleto {
       background: #f5f6f8;
       border: 1px solid #dadada;
       box-sizing: border-box;
       border-radius: 4px;
 
       color: #dadada;
+    }
+
+    .proximo-completo {
+      background: #f5f6f8;
+      border: 1px solid #dadada;
+      box-sizing: border-box;
+      border-radius: 4px;
+
+      color: #dadada;
+
+      div {
+        display: none;
+      }
     }
   }
 
@@ -231,6 +292,7 @@
       grid-template-columns: 76% 20%;
       column-gap: 4%;
       margin-top: 0.8em;
+      height: 38px;
 
       &:first-child {
         margin-top: 0;
@@ -293,6 +355,11 @@
           border-radius: 3px;
           border: 1px solid #086397;
           cursor: pointer;
+
+          &:hover {
+            background-color: #086397;
+            color: #ffffff;
+          }
         }
       }
 
@@ -303,6 +370,11 @@
           border-radius: 3px;
           cursor: default;
           color: #dadada;
+
+          &:hover {
+            color: #dadada;
+            background-color: transparent;
+          }
         }
       }
     }
@@ -317,10 +389,124 @@
   .botao-desabilitado {
     border: 1px solid #dadada !important;
     color: #dadada !important;
+    background-color: transparent !important;
 
     &:hover {
       background-color: transparent !important;
       cursor: default;
+    }
+  }
+}
+
+.relatorio-tipos-alimentacoes {
+  header {
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    box-sizing: border-box;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 1em 0;
+
+    header {
+      padding: 1.5em 1.5em;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 0.01em;
+      color: #686868;
+      border-bottom: 1px solid #ebeff2;
+    }
+
+    .periodo-fechado {
+      .detalhamento-vinculo-periodo-escolar {
+        background: #f2fbfe;
+        border-bottom: 1px solid #dadada;
+        padding: 1.5em;
+
+        .titulo-tipo-alimentacao {
+          font-weight: bold;
+          font-size: 14px;
+          padding-bottom: 1em;
+          color: #686868;
+        }
+
+        .tipos-alimentacoes-periodo {
+          display: grid;
+          grid-template-columns: 50% 50%;
+
+          nav {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            color: #686868;
+          }
+
+          .dado-tipo-alimentacao {
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 18px;
+            color: #686868;
+          }
+        }
+      }
+
+      .titulo-periodo-tipo-ue {
+        border-bottom: 1px solid #ebeff2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1em 0 1.5em;
+        height: 50px;
+
+        .descricao-periodo-tipo-ue {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 18px;
+          /* or 129% */
+
+          display: flex;
+          align-items: center;
+
+          /* table_black */
+
+          color: #323c47;
+        }
+
+        nav {
+          width: 70px;
+          display: grid;
+          grid-template-columns: 50% 50%;
+
+          i {
+            font-weight: 900;
+            font-size: 16px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #a4a4a4;
+            cursor: pointer;
+          }
+
+          .editar {
+            color: #035d96;
+          }
+        }
+      }
+      .titulo-ativo {
+        background: #f2fbfe;
+        border-bottom: 1px solid #dadada;
+
+        .descricao-periodo-tipo-ue {
+          font-weight: bold;
+        }
+      }
     }
   }
 }

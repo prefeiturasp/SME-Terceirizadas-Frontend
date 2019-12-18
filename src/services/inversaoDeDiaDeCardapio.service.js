@@ -201,6 +201,54 @@ export const CODAENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
     });
 };
 
+export const CODAEQuestionaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.CODAE_QUESTIONA
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio = (
+  uuid,
+  resposta_sim_nao,
+  justificativa
+) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa, resposta_sim_nao })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const terceirizadaTomaCiencia = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;

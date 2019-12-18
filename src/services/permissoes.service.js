@@ -228,3 +228,65 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
       return error.json();
     });
 };
+
+export const criarEquipeAdministradoraTerceirizadas = (uuid, payload) => {
+  const url = `${API_URL}/vinculos-terceirizadas/${uuid}/criar_equipe_administradora/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getEquipeAdministradoraTerceirizadas = uuid => {
+  const url = `${API_URL}/vinculos-terceirizadas/${uuid}/get_equipe_administradora/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const finalizarVinculoTerceirizadas = (uuid, vinculoUuid) => {
+  const url = `${API_URL}/vinculos-terceirizadas/${uuid}/finalizar_vinculo/`;
+  let status = 0;
+  const body = {
+    vinculo_uuid: vinculoUuid
+  };
+  return fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

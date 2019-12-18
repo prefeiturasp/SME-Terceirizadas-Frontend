@@ -18,6 +18,18 @@ body {
 }
 
 .sidebar-dark {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: $grayDisabled;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: $grayHeader;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: $gray;
+  }
   height: 100%;
   position: fixed;
   z-index: 1;
@@ -36,6 +48,9 @@ body {
       border-top-right-radius: 0 !important;
       width: 14rem;
       .submenu {
+        max-height: 70px;
+        overflow-y: auto;
+        overflow-x: hidden;
         .collapse-item {
           padding-left: 2rem;
           &:not(:last-child) {

@@ -10,7 +10,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
 import Select from "../Shareable/Select";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
-import { TIPOS_EMAIL_CADASTRO } from "./constans";
+import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
 import { validarForm } from "./validar";
 
@@ -24,7 +24,8 @@ export class Login extends Component {
       email_recuperacao: "",
       bloquearBotao: false,
       width: null,
-      componenteAtivo: this.COMPONENTE.LOGIN
+      componenteAtivo: this.COMPONENTE.LOGIN,
+      tab: TABS.ESCOLA_DRE_CODAE
     };
     this.emailInput = React.createRef();
   }
@@ -36,6 +37,18 @@ export class Login extends Component {
     RECUPERACAO_SENHA_OK: 3,
     RECUPERACAO_SENHA_NAO_OK: 4
   };
+
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get("tab") || TABS.ESCOLA_DRE_CODAE;
+    this.setState({
+      tab,
+      componenteAtivo:
+        tab === TABS.TERCEIRIZADAS
+          ? this.COMPONENTE.CADASTRAR
+          : this.COMPONENTE.LOGIN
+    });
+  }
 
   componentDidUpdate() {
     if (this.emailInput.current && !this.state.width) {
@@ -73,7 +86,7 @@ export class Login extends Component {
   };
 
   handleSubmitCadastro = values => {
-    const erro = validarForm(values);
+    const erro = validarForm(values, this.state);
     if (erro) {
       toastError(erro);
     } else {
@@ -81,10 +94,14 @@ export class Login extends Component {
       setUsuario(values).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
-            "Cadastro efetuado com sucesso! Confirme seu e-mail para poder se logar."
+            `Cadastro efetuado com sucesso!${
+              this.state.tab === TABS.ESCOLA_DRE_CODAE
+                ? " Confirme seu e-mail para poder se logar."
+                : ""
+            }`
           );
           this.setState({ bloquearBotao: false });
-          setTimeout(() => window.location.reload(), 2000);
+          setTimeout(() => (window.location.href = "/login"));
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
           this.setState({ bloquearBotao: false });
@@ -92,6 +109,10 @@ export class Login extends Component {
       });
     }
   };
+
+  switchTab(tab) {
+    this.setState({ tab });
+  }
 
   renderLogin() {
     const { handleSubmit, pristine, submitting } = this.props;
@@ -157,112 +178,185 @@ export class Login extends Component {
 
   renderCadastro() {
     const { handleSubmit } = this.props;
-    const { bloquearBotao } = this.state;
+    const { bloquearBotao, tab } = this.state;
     return (
-      <div className="form">
-        <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
+      <div className="signup-form">
+        <div className="tabs">
           <div className="row">
-            <div className="input-group email-sme">
-              <div ref={this.emailInput} className="col-6">
+            <div
+              onClick={() => this.switchTab("escola/dre/codae")}
+              className={`tab col-6 ${
+                tab === "escola/dre/codae" ? "active" : "inactive"
+              }`}
+            >
+              ESCOLA/DRE/CODAE
+            </div>
+            <div
+              onClick={() => this.switchTab("terceirizadas")}
+              className={`tab col-6 ${
+                tab === "terceirizadas" ? "active" : "inactive"
+              }`}
+            >
+              TERCEIRIZADAS
+            </div>
+          </div>
+        </div>
+        <div className="form">
+          <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
+            {tab === TABS.TERCEIRIZADAS && (
+              <div className="row">
+                <div className="col-12">
+                  <Field
+                    component={InputText}
+                    label="Nome Completo"
+                    name="nome"
+                    placeholder={"Nome Completo"}
+                    required
+                    type="text"
+                    validate={required}
+                  />
+                </div>
+              </div>
+            )}
+            {tab === TABS.ESCOLA_DRE_CODAE && (
+              <div className="row">
+                <div className="input-group email-sme">
+                  <div ref={this.emailInput} className="col-6">
+                    <Field
+                      component={InputText}
+                      placeholder={"seu.nome"}
+                      label="E-mail"
+                      name="email"
+                      required
+                      type="text"
+                      validate={[required]}
+                    />
+                  </div>
+                  <div className="input-group-append col-6">
+                    <Field
+                      component={Select}
+                      name="tipo_email"
+                      options={TIPOS_EMAIL_CADASTRO}
+                      required
+                      validate={required}
+                      naoDesabilitarPrimeiraOpcao
+                      width={this.state.width}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {tab === TABS.TERCEIRIZADAS && (
+              <div className="row">
+                <div className="col-12">
+                  <Field
+                    component={InputText}
+                    placeholder={"seu_email@dominio.com"}
+                    label="E-mail"
+                    name="email"
+                    required
+                    type="email"
+                    validate={[required]}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="row">
+              <div className="col-6">
                 <Field
                   component={InputText}
-                  placeholder={"seu.nome"}
-                  label="E-mail"
-                  name="email"
+                  label="CPF"
+                  name="cpf"
+                  placeholder={"Digite o seu CPF"}
                   required
                   type="text"
-                  validate={[required]}
+                  helpText="Somente números"
+                  pattern="\d*"
+                  maxlength="11"
+                  validate={[required, length(11)]}
                 />
               </div>
-              <div className="input-group-append col-6">
+              {tab === TABS.ESCOLA_DRE_CODAE && (
+                <div className="col-6">
+                  <Field
+                    component={InputText}
+                    label="Nº RF"
+                    name="registro_funcional"
+                    placeholder={"Digite o RF"}
+                    required
+                    type="text"
+                    pattern="\d*"
+                    title="somente números"
+                    helpText="Somente números"
+                    maxlength="7"
+                    validate={[required, length(7)]}
+                  />
+                </div>
+              )}
+              {tab === TABS.TERCEIRIZADAS && (
+                <div className="col-6">
+                  <Field
+                    component={InputText}
+                    label="CNPJ"
+                    name="cnpj"
+                    placeholder={"Digite o CNPJ da Empresa"}
+                    required
+                    type="text"
+                    pattern="\d*"
+                    title="somente números"
+                    helpText="Somente números"
+                    maxlength="14"
+                    validate={[required, length(14)]}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="row">
+              <div className="col-6">
                 <Field
-                  component={Select}
-                  name="tipo_email"
-                  options={TIPOS_EMAIL_CADASTRO}
+                  component={InputText}
+                  label="Senha"
+                  name="password"
+                  placeholder={"******"}
                   required
+                  type="password"
                   validate={required}
-                  naoDesabilitarPrimeiraOpcao
-                  width={this.state.width}
+                  pattern="(?=.*\d)(?=.*[a-z]).{8,}"
+                  title="Pelo menos 8 caracteres, uma letra e um número"
+                  helpText="Pelo menos 8 caracteres, uma letra e um número"
+                />
+              </div>
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Confirme sua senha"
+                  name="confirmar_password"
+                  placeholder={"******"}
+                  required
+                  type="password"
+                  validate={required}
                 />
               </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Nº RF"
-                name="registro_funcional"
-                placeholder={"Digite o RF"}
-                required
-                type="text"
-                pattern="\d*"
-                title="somente números"
-                helpText="Somente números"
-                maxlength="7"
-                validate={[required, length(7)]}
+            <div
+              onClick={() =>
+                this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+              }
+              className="text-right back"
+            >
+              voltar
+            </div>
+            <div className="pt-2">
+              <Botao
+                type={BUTTON_TYPE.SUBMIT}
+                style={BUTTON_STYLE.GREEN}
+                texto="Cadastrar"
+                className="col-12"
+                disabled={bloquearBotao}
               />
             </div>
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="CPF"
-                name="cpf"
-                placeholder={"Digite o seu CPF"}
-                required
-                type="text"
-                helpText="Somente números"
-                pattern="\d*"
-                maxlength="11"
-                validate={[required, length(11)]}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Senha"
-                name="password"
-                placeholder={"******"}
-                required
-                type="password"
-                validate={required}
-                pattern="(?=.*\d)(?=.*[a-z]).{8,}"
-                title="Pelo menos 8 caracteres, uma letra e um número"
-                helpText="Pelo menos 8 caracteres, uma letra e um número"
-              />
-            </div>
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Confirme sua senha"
-                name="confirmar_password"
-                placeholder={"******"}
-                required
-                type="password"
-                validate={required}
-              />
-            </div>
-          </div>
-          <div
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-            }
-            className="text-right back"
-          >
-            voltar
-          </div>
-          <div className="pt-2">
-            <Botao
-              type={BUTTON_TYPE.SUBMIT}
-              style={BUTTON_STYLE.GREEN}
-              texto="Cadastrar"
-              className="col-12"
-              disabled={bloquearBotao}
-            />
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     );
   }

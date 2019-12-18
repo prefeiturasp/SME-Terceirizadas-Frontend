@@ -50,7 +50,8 @@ a.hyperlink {
         }
       }
       @media screen and (min-height: 611px) {
-        padding-top: 5rem;
+        padding-top: 2rem;
+        padding-bottom: 1rem;
         img {
           height: 105px;
           width: 427px;
@@ -194,6 +195,28 @@ div.input-group.email-sme {
 
     &:first-child {
       width: 50%;
+    }
+  }
+}
+
+.signup-form {
+  .tabs {
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 1em;
+    margin-right: 1em;
+    .tab {
+      padding-bottom: 5px;
+      &.active {
+        color: $green;
+        border-bottom: 3px solid $green;
+      }
+      &.inactive {
+        color: $grayDisabled;
+        border-bottom: 3px solid $grayDisabled;
+      }
     }
   }
 }
