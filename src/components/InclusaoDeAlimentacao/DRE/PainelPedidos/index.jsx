@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { DRE } from "../../../../configs/constants";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";

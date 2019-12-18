@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { getTerceirizadaPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { TIPODECARD } from "../../../../constants";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,

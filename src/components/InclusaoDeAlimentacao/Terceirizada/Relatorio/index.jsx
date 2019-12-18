@@ -21,7 +21,7 @@ import {
   TERCEIRIZADA,
   INCLUSAO_ALIMENTACAO
 } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,

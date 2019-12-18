@@ -19,7 +19,7 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   TERCEIRIZADA
 } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,

@@ -7,7 +7,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS
 } from "../../../../configs/constants";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants/tiposSolicitacao.constants";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants";
 import {
   getEvolucaoSolicitacoes,
   getResumoTotaisPorMesEscola

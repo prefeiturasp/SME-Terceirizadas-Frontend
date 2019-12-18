@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
+import { visaoPorComboSomenteDatas } from "../../../../constants";
 import {
   getCodaePedidosAutorizados as pedidosAutorizadosContinuos,
   getCodaePedidosReprovados as pedidosReprovadosContinuos

@@ -6,7 +6,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA
 } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,

@@ -26,7 +26,7 @@ import {
   dataParaUTC,
   stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 
 class Relatorio extends Component {

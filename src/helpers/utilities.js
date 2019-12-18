@@ -1,6 +1,6 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants/statusEnum";
+import { statusEnum } from "../constants";
 import { TIPO_PERFIL } from "../constants";
 
 export const showResults = values =>

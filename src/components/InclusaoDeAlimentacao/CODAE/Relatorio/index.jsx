@@ -17,7 +17,7 @@ import { getDiasUteis } from "../../../../services/diasUteis.service";
 import { dataParaUTC } from "../../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { CODAE, INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import Botao from "../../../Shareable/Botao";
 import { ModalNegarInclusaoAlimentacao } from "./components/ModalNegarInclusaoAlimentacao";
 import {
