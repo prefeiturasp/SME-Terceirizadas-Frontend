@@ -13,6 +13,10 @@ import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
 import { validarForm } from "./validar";
+import {
+  fieldCnpj,
+  fieldCpf
+} from "../screens/Cadastros/CadastroEmpresa/helper";
 
 export class Login extends Component {
   constructor(props) {
@@ -264,16 +268,14 @@ export class Login extends Component {
             <div className="row">
               <div className="col-6">
                 <Field
+                  {...fieldCpf}
                   component={InputText}
                   label="CPF"
                   name="cpf"
                   placeholder={"Digite o seu CPF"}
                   required
                   type="text"
-                  helpText="Somente números"
-                  pattern="\d*"
-                  maxlength="11"
-                  validate={[required, length(11)]}
+                  validate={required}
                 />
               </div>
               {tab === TABS.ESCOLA_DRE_CODAE && (
@@ -296,17 +298,14 @@ export class Login extends Component {
               {tab === TABS.TERCEIRIZADAS && (
                 <div className="col-6">
                   <Field
+                    {...fieldCnpj}
                     component={InputText}
                     label="CNPJ"
                     name="cnpj"
                     placeholder={"Digite o CNPJ da Empresa"}
                     required
                     type="text"
-                    pattern="\d*"
-                    title="somente números"
-                    helpText="Somente números"
-                    maxlength="14"
-                    validate={[required, length(14)]}
+                    validate={[required]}
                   />
                 </div>
               )}
