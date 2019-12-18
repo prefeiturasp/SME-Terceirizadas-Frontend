@@ -117,7 +117,7 @@ export const createVinculoSubstituicaoPeriodoEscolar = payload => {
 export const deleteVinculoTipoAlimentacaoPeriodoEscolar = uuid => {
   const url = `${
     CONFIG.API_URL
-  }/combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/${uuid}`;
+  }/combos-vinculos-tipo-alimentacao-u-e-periodo-escolar/${uuid}/`;
   return fetch(url, {
     method: "DELETE",
     headers: authHeader
