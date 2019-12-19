@@ -23,6 +23,12 @@ export const fieldCnpj = createTextMask({
   guide: false
 });
 
+export const fieldCpf = createTextMask({
+  pattern: "999.999.999-99",
+  allowEmpty: false,
+  guide: false
+});
+
 export const fieldCep = createTextMask({
   pattern: "99999-999",
   allowEmpty: false,
@@ -39,6 +45,7 @@ const retornaNutricionistas = nutricionistas => {
     return {
       nome: nutri.nome,
       crn: nutri.crn_numero,
+      super_admin_terceirizadas: nutri.super_admin_terceirizadas,
       telefone: nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone,
       email: nutri.contatos.length === 0 ? null : nutri.contatos[0].email
     };
@@ -95,12 +102,32 @@ export const retornArrayTerceirizadas = response => {
   return listaTerceirizadas;
 };
 
-export const retornaJsonDaRequisisicao = (valoresForm, valoresState) => {
+export const validarSubmissao = state => {
+  let erro = false;
+  if (state.contatosNutricionista.length > 1) {
+    let aoMenosUmAdministrador = false;
+    state.contatosNutricionista.forEach(contato => {
+      if (contato.super_admin_terceirizadas) {
+        aoMenosUmAdministrador = true;
+      }
+    });
+    if (!aoMenosUmAdministrador) {
+      erro = "É necessário selecionar ao menos um administrador";
+    }
+  }
+  return erro;
+};
+
+export const formataJsonParaEnvio = (valoresForm, valoresState) => {
   let contatosNutri = [];
   valoresState.contatosNutricionista.forEach(nutri => {
     contatosNutri.push({
       nome: nutri.responsavel,
       crn_numero: nutri.crn,
+      super_admin_terceirizadas:
+        valoresState.contatosNutricionista.length === 1
+          ? true
+          : nutri.super_admin_terceirizadas,
       contatos: [
         {
           telefone: nutri.telefone,

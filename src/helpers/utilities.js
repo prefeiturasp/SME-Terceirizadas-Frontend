@@ -1,6 +1,7 @@
 import moment from "moment";
 import "moment/locale/pt-br";
 import { statusEnum } from "../constants/statusEnum";
+import { TIPO_PERFIL } from "../constants";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -202,4 +203,45 @@ export const truncarString = (str, numeroMaximoChars) => {
   } else {
     return str;
   }
+};
+
+export const deepCopy = obj => {
+  return JSON.parse(JSON.stringify(obj));
+};
+
+export const visualizaBotoesDoFluxo = solicitacao => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  switch (solicitacao.status) {
+    case statusEnum.DRE_A_VALIDAR:
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
+        tipoPerfil
+      );
+    case statusEnum.DRE_VALIDADO:
+    case statusEnum.CODAE_A_AUTORIZAR:
+    case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
+      return [
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.ESCOLA
+      ].includes(tipoPerfil);
+    case statusEnum.CODAE_AUTORIZADO:
+    case statusEnum.CODAE_QUESTIONADO:
+      return [TIPO_PERFIL.TERCEIRIZADA, TIPO_PERFIL.ESCOLA].includes(
+        tipoPerfil
+      );
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+      return tipoPerfil === TIPO_PERFIL.ESCOLA;
+    default:
+      return false;
+  }
+};
+
+export const formatarCPFouCNPJ = value => {
+  const cnpjCpf = value.replace(/\D/g, "");
+  if (cnpjCpf.length === 11) {
+    return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+  }
+  return cnpjCpf.replace(
+    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
+    "$1.$2.$3/$4-$5"
+  );
 };

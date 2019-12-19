@@ -55,6 +55,9 @@
       + li.cancelled:after {
         background-color: $black !important;
       }
+      + li.questioned:after {
+        background-color: $yellow !important;
+      }
     }
     &:first-child:after {
       content: none;
@@ -109,6 +112,16 @@
         font-weight: 900;
         background-color: #000;
         color: #fff;
+      }
+    }
+    &.questioned {
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        font-size: 18px;
+        content: "\f12a";
+        font-weight: 900;
+        background-color: $yellow;
+        color: #000;
       }
     }
   }

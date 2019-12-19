@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { TERCEIRIZADA } from "../../../../configs/constants";
+import { PERFIL } from "../../../../constants";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {
@@ -245,13 +246,16 @@ export class SidebarTerceirizada extends Component {
                 </NavLink>
               </div>
             )}
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes/permissoes"
-            >
-              Permissões
-            </NavLink>
+            {localStorage.getItem("perfil") ===
+              PERFIL.NUTRI_ADMIN_RESPONSAVEL && (
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to="/configuracoes/permissoes"
+              >
+                Permissões
+              </NavLink>
+            )}
           </div>
         </div>
       </li>

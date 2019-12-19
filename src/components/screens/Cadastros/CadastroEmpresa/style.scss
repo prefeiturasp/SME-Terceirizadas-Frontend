@@ -1,0 +1,12 @@
+@import "../../../../styles/variables.scss";
+
+.form-section-terceirizada {
+  label.container-radio {
+    color: $gray;
+    input {
+      &:checked ~ .checkmark {
+        background-color: $green;
+      }
+    }
+  }
+}
