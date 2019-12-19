@@ -698,8 +698,10 @@ class CadastroTipoAlimentacao extends Component {
                         />
                         {exibeFormularioInicial ? (
                           <section className="conteudo-wizard">
-                            <div className="titulo-combo">Todos Alimentos</div>
-                            <div className="titulo-combo">Combinacoes</div>
+                            <div className="titulo-combo">
+                              Tipos de Alimentação
+                            </div>
+                            <div className="titulo-combo">Combinações</div>
                             <div className="conteudo-tipo-alimentacao">
                               <ul>
                                 {tiposAlimentacao &&
