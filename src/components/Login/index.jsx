@@ -207,21 +207,6 @@ export class Login extends Component {
         </div>
         <div className="form">
           <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
-            {tab === TABS.TERCEIRIZADAS && (
-              <div className="row">
-                <div className="col-12">
-                  <Field
-                    component={InputText}
-                    label="Nome Completo"
-                    name="nome"
-                    placeholder={"Nome Completo"}
-                    required
-                    type="text"
-                    validate={required}
-                  />
-                </div>
-              </div>
-            )}
             {tab === TABS.ESCOLA_DRE_CODAE && (
               <div className="row">
                 <div className="input-group email-sme">
