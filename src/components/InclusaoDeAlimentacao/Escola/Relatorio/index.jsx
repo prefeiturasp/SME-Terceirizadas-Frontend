@@ -17,7 +17,7 @@ import {
   stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
-import { escolaPodeCancelar } from "../../../../constants/statusEnum";
+import { escolaPodeCancelar } from "../../../../constants";
 import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 

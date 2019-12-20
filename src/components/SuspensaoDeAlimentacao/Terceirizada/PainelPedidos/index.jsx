@@ -15,8 +15,8 @@ import {
 } from "../../../../helpers/painelPedidos";
 import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { FiltroEnum } from "../../../../constants";
+import { TIPODECARD } from "../../../../constants";
 import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {

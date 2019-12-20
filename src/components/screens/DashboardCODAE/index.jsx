@@ -15,7 +15,7 @@ import {
   SOLICITACOES_PENDENTES,
   SUSPENSAO_ALIMENTACAO
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import { FILTRO_VISAO } from "../../../constants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getResumoPendenciasAlteracaoCardapio,

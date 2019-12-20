@@ -10,7 +10,7 @@ import {
   CODAE,
   TERCEIRIZADA
 } from "../../../configs/constants";
-import { statusEnum, escolaPodeCancelar } from "../../../constants/statusEnum";
+import { statusEnum, escolaPodeCancelar } from "../../../constants";
 import { dataParaUTC } from "../../../helpers/utilities";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { meusDados } from "../../../services/perfil.service";
