@@ -145,3 +145,18 @@ export const deleteSubstituicaoTipoAlimentacaoPeriodoEscolar = uuid => {
       return error.json();
     });
 };
+
+export const getHorariosCombosPorEscola = async uuid => {
+  const OBJ_REQUEST = {
+    headers: authHeader,
+    method: "GET"
+  };
+
+  const url = `${
+    CONFIG.API_URL
+  }/horario-do-combo-tipo-de-alimentacao-por-unidade-escolar/escola/${uuid}/`;
+  OBJ_REQUEST["method"] = "GET";
+  return await fetch(url, OBJ_REQUEST).then(response => {
+    return response.json();
+  });
+};
