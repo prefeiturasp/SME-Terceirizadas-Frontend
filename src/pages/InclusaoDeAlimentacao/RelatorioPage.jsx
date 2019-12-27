@@ -10,13 +10,6 @@ import {
   CODAE,
   TERCEIRIZADA
 } from "../../configs/constants";
-import {
-  CODAEAutorizaAlteracaoDeCardapio,
-  CODAENegaAlteracaoCardapio,
-  CODAEquestionaAlteracaoCardapio,
-  TerceirizadaTomaCienciaAlteracaoCardapio,
-  terceirizadaRespondeQuestionamentoAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -25,12 +18,21 @@ import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Sharea
 import {
   escolaCancelaInclusaoDeAlimentacaoContinua,
   DREValidaInclusaoDeAlimentacaoContinua,
-  DRENaoValidaInclusaoDeAlimentacaoContinua
+  DRENaoValidaInclusaoDeAlimentacaoContinua,
+  CODAENegaInclusaoDeAlimentacaoContinua,
+  CODAEAutorizaInclusaoDeAlimentacaoContinua,
+  terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua,
+  TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import {
   escolaCancelaInclusaoDeAlimentacaoAvulsa,
   DREValidaInclusaoDeAlimentacaoAvulsa,
-  DRENaoValidaInclusaoDeAlimentacaoAvulsa
+  DRENaoValidaInclusaoDeAlimentacaoAvulsa,
+  CODAENegaInclusaoDeAlimentacaoAvulsa,
+  CODAEAutorizaInclusaoDeAlimentacaoAvulsa,
+  CODAEQuestionaInclusaoDeAlimentacaoAvulsa,
+  terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa,
+  TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 
 class RelatorioBase extends Component {
@@ -141,41 +143,95 @@ export class RelatorioDRE extends Component {
 }
 
 // CODAE
-export const RelatorioCODAE = () => (
-  <RelatorioBase
-    VISAO={CODAE}
-    ModalNaoAprova={ModalNegarSolicitacao}
-    ModalQuestionamento={ModalCODAEQuestiona}
-    toastAprovaMensagem={"Inclusão de Alimentação autorizada com sucesso!"}
-    toastAprovaMensagemErro={
-      "Houve um erro ao autorizar a Inclusão de Alimentação"
-    }
-    endpointNaoAprovaSolicitacao={CODAENegaAlteracaoCardapio}
-    endpointAprovaSolicitacao={CODAEAutorizaAlteracaoDeCardapio}
-    endpointQuestionamento={CODAEquestionaAlteracaoCardapio}
-    textoBotaoNaoAprova="Negar"
-    textoBotaoAprova="Autorizar"
-  />
-);
+export class RelatorioCODAE extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ehInclusaoContinua: false
+    };
+  }
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+  }
+
+  render() {
+    return (
+      <RelatorioBase
+        VISAO={CODAE}
+        ModalNaoAprova={ModalNegarSolicitacao}
+        ModalQuestionamento={ModalCODAEQuestiona}
+        toastAprovaMensagem={"Inclusão de Alimentação autorizada com sucesso!"}
+        toastAprovaMensagemErro={
+          "Houve um erro ao autorizar a Inclusão de Alimentação"
+        }
+        endpointNaoAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? CODAENegaInclusaoDeAlimentacaoContinua
+            : CODAENegaInclusaoDeAlimentacaoAvulsa
+        }
+        endpointAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? CODAEAutorizaInclusaoDeAlimentacaoContinua
+            : CODAEAutorizaInclusaoDeAlimentacaoAvulsa
+        }
+        endpointQuestionamento={
+          this.state.ehInclusaoContinua
+            ? CODAEAutorizaInclusaoDeAlimentacaoContinua
+            : CODAEQuestionaInclusaoDeAlimentacaoAvulsa
+        }
+        textoBotaoNaoAprova="Negar"
+        textoBotaoAprova="Autorizar"
+      />
+    );
+  }
+}
 
 // Terceirizada
-export const RelatorioTerceirizada = () => (
-  <RelatorioBase
-    VISAO={TERCEIRIZADA}
-    ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
-    ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
-    toastAprovaMensagem={
-      "Ciência de Inclusão de Alimentação enviado com sucesso!"
-    }
-    toastAprovaMensagemErro={
-      "Houve um erro ao tomar ciência da Inclusão de Alimentação"
-    }
-    endpointAprovaSolicitacao={TerceirizadaTomaCienciaAlteracaoCardapio}
-    endpointNaoAprovaSolicitacao={
-      terceirizadaRespondeQuestionamentoAlteracaoCardapio
-    }
-    endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}
-    textoBotaoNaoAprova="Não"
-    textoBotaoAprova="Ciente"
-  />
-);
+export class RelatorioTerceirizada extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ehInclusaoContinua: false
+    };
+  }
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+  }
+
+  render() {
+    return (
+      <RelatorioBase
+        VISAO={TERCEIRIZADA}
+        ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
+        ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
+        toastAprovaMensagem={
+          "Ciência de Inclusão de Alimentação enviado com sucesso!"
+        }
+        toastAprovaMensagemErro={
+          "Houve um erro ao tomar ciência da Inclusão de Alimentação"
+        }
+        endpointAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
+            : TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
+        }
+        endpointNaoAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua
+            : terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa
+        }
+        endpointQuestionamento={
+          this.state.ehInclusaoContinua
+            ? terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua
+            : terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa
+        }
+        textoBotaoNaoAprova="Não"
+        textoBotaoAprova="Ciente"
+      />
+    );
+  }
+}

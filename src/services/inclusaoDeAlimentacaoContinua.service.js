@@ -312,12 +312,32 @@ export const DRENaoValidaInclusaoDeAlimentacaoContinua = (
     });
 };
 
-export const CODAEConfirmaInclusaoDeAlimentacaoContinua = uuid => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/codae-autoriza-pedido/`;
+export const CODAEAutorizaInclusaoDeAlimentacaoContinua = uuid => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAENegaInclusaoDeAlimentacaoContinua = (uuid, justificativa) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
@@ -369,6 +389,29 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua = async (
+  uuid,
+  payload
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const getCODAEPedidosInclusaoContinuosPendentes = filtroAplicado => {
