@@ -16,7 +16,7 @@ import {
   CODAE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA
 } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants/statusEnum";
+import { statusEnum } from "../../../../constants";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,

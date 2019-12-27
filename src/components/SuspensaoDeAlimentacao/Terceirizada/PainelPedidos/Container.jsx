@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
+import { visaoPorComboSomenteDatas } from "../../../../constants";
 import PainelPedidos from "../PainelPedidos";
 
 class Container extends Component {

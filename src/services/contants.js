@@ -26,7 +26,8 @@ export const SOLICITACOES = {
   PENDENTES_CIENCIA: "pendentes-ciencia",
   NEGADOS: "negados",
   CANCELADOS: "cancelados",
-  PENDENTES_VALIDACAO_DRE: "pendentes-validacao"
+  PENDENTES_VALIDACAO_DRE: "pendentes-validacao",
+  QUESTIONAMENTOS: "questionamentos"
 };
 
 export const AUTH_TOKEN = {

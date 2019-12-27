@@ -7,7 +7,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS
 } from "../../../../configs/constants";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants/tiposSolicitacao.constants";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../../constants";
 import {
   getEvolucaoSolicitacoes,
   getResumoTotaisPorMesEscola
@@ -41,12 +41,12 @@ function CardTotalSolicitacaoPorStatus(props) {
       cardClass = "card-authorized";
       break;
     case TIPO_CARD.NEGADO:
-      texto = "Negadas";
+      texto = "Recusadas";
       icon = ICON_CARD_TYPE_ENUM.NEGADO;
       cardClass = "card-denied";
       break;
     case TIPO_CARD.PENDENTE:
-      texto = "Pendentes de aprovação";
+      texto = "Aguardando Autorização";
       icon = ICON_CARD_TYPE_ENUM.PENDENTE;
       cardClass = "card-pending";
       break;
@@ -68,7 +68,7 @@ function CardTotalSolicitacaoPorStatus(props) {
         <nav className="titulo-texto">{texto}</nav>{" "}
         <div className="bandeira">{quantidade - quantidadeMesPassado}</div>
       </div>
-      <div className="fonte-grande">{quantidade} pedidos.</div>
+      <div className="fonte-grande">{quantidade} solicitações.</div>
       <a href={href} className="card-link alinha-centro">
         Ver mais
       </a>

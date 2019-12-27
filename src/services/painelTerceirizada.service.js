@@ -325,3 +325,10 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
   return retornoBase(url);
 };
+
+export const getSolicitacoesComQuestionamento = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.QUESTIONAMENTOS
+  }/${TerceirizadaUuid}/`;
+  return retornoBase(url);
+};

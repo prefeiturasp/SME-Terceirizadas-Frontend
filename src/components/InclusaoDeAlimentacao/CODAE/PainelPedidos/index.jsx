@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { Select } from "../../../Shareable/Select";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
@@ -15,7 +15,7 @@ import {
 import CardHistorico from "../../components/CardHistorico";
 import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { TIPODECARD } from "../../../../constants";
 
 class PainelPedidos extends Component {
   constructor(props) {

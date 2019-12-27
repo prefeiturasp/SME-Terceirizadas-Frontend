@@ -1,5 +1,5 @@
 import { mensagemCancelamento } from "../../utilities";
-import { statusEnum } from "../../../constants/statusEnum";
+import { statusEnum } from "../../../constants";
 
 describe("Teste mensagemCancelamento", () => {
   it("retorna mensagem dre a validar", () => {
