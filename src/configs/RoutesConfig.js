@@ -2,7 +2,8 @@ import {
   painelHome,
   permissoes,
   relatorios,
-  relatoriosAlteracaoDeCardapio
+  relatoriosAlteracaoDeCardapio,
+  relatoriosInclusaoDeAlimentacao
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -17,7 +18,6 @@ import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
@@ -27,7 +27,6 @@ import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
 
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
@@ -59,7 +58,6 @@ import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
@@ -69,7 +67,6 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
 
-import * as InclusaoDeAlimentacaoPaginas from "./imports/InclusaoDeAlimentacaoPaginas";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
@@ -137,13 +134,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoPaginas.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
     exact: false
@@ -208,13 +198,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioDREPage,
-    exact: false
-  },
-  {
     path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
     exact: false
@@ -273,13 +256,6 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasCODAEPage,
-    exact: false
-  },
-  {
-    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioCODAEPage,
     exact: false
   },
   {
@@ -356,13 +332,6 @@ const routesConfig = [
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES}`,
     component: StatusSolicitacoesTerceirizadaPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
     exact: false
   },
   {
@@ -466,6 +435,11 @@ const routesConfig = [
   {
     path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
     component: relatoriosAlteracaoDeCardapio(),
+    exact: false
+  },
+  {
+    path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacao(),
     exact: false
   },
   {

@@ -5,6 +5,7 @@ import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceiriza
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
+import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import { TIPO_PERFIL } from "../constants";
 
 export const painelHome = () => {
@@ -56,5 +57,18 @@ export const relatoriosAlteracaoDeCardapio = () => {
       return RelatoriosAlteracaoDeCardapio.RelatorioTerceirizada;
     default:
       return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
+  }
+};
+
+export const relatoriosInclusaoDeAlimentacao = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosInclusaoDeAlimentacao.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosInclusaoDeAlimentacao.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosInclusaoDeAlimentacao.RelatorioTerceirizada;
+    default:
+      return RelatoriosInclusaoDeAlimentacao.RelatorioEscola;
   }
 };

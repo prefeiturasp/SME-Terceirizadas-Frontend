@@ -124,60 +124,6 @@ class Relatorio extends Component {
     );
   }
 
-  renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
-    return (
-      !ehInclusaoContinua && (
-        <table className="table-periods">
-          <tr>
-            <th>Data</th>
-            <th>Motivo</th>
-          </tr>
-          {inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
-            return (
-              <tr key={key}>
-                <td>{inclusao.data}</td>
-                <td>{inclusao.motivo.nome}</td>
-              </tr>
-            );
-          })}
-        </table>
-      )
-    );
-  }
-
-  renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
-    return (
-      ehInclusaoContinua && (
-        <div>
-          <div className="row">
-            <div className="col-4 report-label-value">
-              <p>Data do evento</p>
-              <p className="value">
-                {`${inclusaoDeAlimentacao.data_inicial} - ${
-                  inclusaoDeAlimentacao.data_final
-                }`}
-              </p>
-            </div>
-            <div className="col-4 report-label-value">
-              <p>Dias da Semana</p>
-              <p className="value">
-                {inclusaoDeAlimentacao.dias_semana_explicacao}
-              </p>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 report-label-value">
-              <p>Motivo</p>
-              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
-            </div>
-          </div>
-        </div>
-      )
-    );
-  }
-
   render() {
     const {
       showModal,
