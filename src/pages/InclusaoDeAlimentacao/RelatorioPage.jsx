@@ -22,7 +22,8 @@ import {
   CODAENegaInclusaoDeAlimentacaoContinua,
   CODAEAutorizaInclusaoDeAlimentacaoContinua,
   terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua,
-  TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
+  TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua,
+  CODAEQuestionaInclusaoDeAlimentacaoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import {
   escolaCancelaInclusaoDeAlimentacaoAvulsa,
@@ -178,7 +179,7 @@ export class RelatorioCODAE extends Component {
         }
         endpointQuestionamento={
           this.state.ehInclusaoContinua
-            ? CODAEAutorizaInclusaoDeAlimentacaoContinua
+            ? CODAEQuestionaInclusaoDeAlimentacaoContinua
             : CODAEQuestionaInclusaoDeAlimentacaoAvulsa
         }
         textoBotaoNaoAprova="Negar"

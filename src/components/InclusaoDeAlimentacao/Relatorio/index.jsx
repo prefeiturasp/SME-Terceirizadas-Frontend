@@ -68,7 +68,7 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    const { ehInclusaoContinua } = this.props;
+    const { ehInclusaoContinua } = this.state;
     const getInclusaoDeAlimentacao = ehInclusaoContinua
       ? getInclusaoDeAlimentacaoContinua
       : getInclusaoDeAlimentacaoAvulsa;
