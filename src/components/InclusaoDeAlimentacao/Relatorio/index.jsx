@@ -4,7 +4,7 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import { getInclusaoDeAlimentacaoAvulsa } from "../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -12,6 +12,7 @@ import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { getInclusaoDeAlimentacaoContinua } from "../../../services/inclusaoDeAlimentacaoContinua.service";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -19,8 +20,9 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       showNaoAprovaModal: false,
+      ehInclusaoContinua: false,
       showModal: false,
-      alteracaoDecardapio: null,
+      inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null
     };
@@ -32,11 +34,17 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    const getInclusaoDeAlimentacao =
+      ehInclusaoContinua === "true"
+        ? getInclusaoDeAlimentacaoContinua
+        : getInclusaoDeAlimentacaoAvulsa;
     if (uuid) {
-      getAlteracaoCardapio(uuid).then(response => {
+      getInclusaoDeAlimentacao(uuid).then(response => {
         this.setState({
-          alteracaoDeCardapio: response,
+          inclusaoDeAlimentacao: response,
           uuid,
+          ehInclusaoContinua: ehInclusaoContinua === "true",
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
         });
       });
@@ -60,9 +68,13 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getAlteracaoCardapio(uuid).then(response => {
+    const { ehInclusaoContinua } = this.state;
+    const getInclusaoDeAlimentacao = ehInclusaoContinua
+      ? getInclusaoDeAlimentacaoContinua
+      : getInclusaoDeAlimentacaoAvulsa;
+    getInclusaoDeAlimentacao(uuid).then(response => {
       this.setState({
-        alteracaoDeCardapio: response
+        inclusaoDeAlimentacao: response
       });
     });
   }
@@ -89,8 +101,9 @@ class Relatorio extends Component {
     const {
       resposta_sim_nao,
       showNaoAprovaModal,
-      alteracaoDeCardapio,
+      inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
+      ehInclusaoContinua,
       showQuestionamentoModal,
       uuid
     } = this.state;
@@ -106,9 +119,9 @@ class Relatorio extends Component {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
-      (alteracaoDeCardapio &&
-        alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
-        alteracaoDeCardapio.status === statusEnum.CODAE_QUESTIONADO &&
+      (inclusaoDeAlimentacao &&
+        inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
+        inclusaoDeAlimentacao.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
       (![
@@ -116,22 +129,22 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
-      (alteracaoDeCardapio &&
-        (!alteracaoDeCardapio.foi_solicitado_fora_do_prazo ||
+      (inclusaoDeAlimentacao &&
+        (!inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
-          ].includes(alteracaoDeCardapio.status)) &&
+          ].includes(inclusaoDeAlimentacao.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
-      alteracaoDeCardapio &&
-      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      inclusaoDeAlimentacao &&
+      inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
-        alteracaoDeCardapio.status
+        inclusaoDeAlimentacao.status
       );
     return (
       <div>
@@ -140,7 +153,7 @@ class Relatorio extends Component {
             showModal={showNaoAprovaModal}
             closeModal={this.closeNaoAprovaModal}
             endpoint={endpointNaoAprovaSolicitacao}
-            solicitacao={alteracaoDeCardapio}
+            solicitacao={inclusaoDeAlimentacao}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
@@ -158,23 +171,24 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!alteracaoDeCardapio ? (
+        {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
-              alteracaoDeCardapio.id_externo
+            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
+              inclusaoDeAlimentacao.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
-                  alteracaoDeCardapio={alteracaoDeCardapio}
+                  inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  ehInclusaoContinua={ehInclusaoContinua}
                 />
                 <RelatorioHistoricoQuestionamento
-                  solicitacao={alteracaoDeCardapio}
+                  solicitacao={inclusaoDeAlimentacao}
                 />
-                {visualizaBotoesDoFluxo(alteracaoDeCardapio) && (
+                {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
@@ -219,7 +233,7 @@ class Relatorio extends Component {
   }
 }
 
-const formName = "relatorioAlteracaoDeCardapio";
+const formName = "relatorioInclusaoDeAlimentacao";
 const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true

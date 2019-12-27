@@ -15,7 +15,8 @@ import {
   getSolicitacoesCanceladasTerceirizada,
   getSolicitacoesComQuestionamento,
   getSolicitacoesNegadasTerceirizada,
-  getSolicitacoesAutorizadasTerceirizada
+  getSolicitacoesAutorizadasTerceirizada,
+  getSolicitacoesPendenteCienciaTerceirizada
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardBody from "../../Shareable/CardBody";
@@ -100,7 +101,7 @@ class DashboardTerceirizada extends Component {
   async carregaResumosQuestionamentos() {
     const { minhaTerceirizada, visao, filtroPorVencimento } = this.state;
     this.setState({ loadingPainelSolicitacoes: true });
-    const resumo = await getSolicitacoesComQuestionamento(
+    const resumo = await getSolicitacoesPendenteCienciaTerceirizada(
       minhaTerceirizada,
       filtroPorVencimento,
       visao

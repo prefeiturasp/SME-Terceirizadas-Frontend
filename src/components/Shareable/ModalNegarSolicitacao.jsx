@@ -28,7 +28,7 @@ export class ModalNegarSolicitacao extends Component {
           this.props.loadSolicitacao(this.props.uuid);
         }
       } else {
-        toastError(resp.detail);
+        toastError(resp.data.detail);
       }
     }
   }

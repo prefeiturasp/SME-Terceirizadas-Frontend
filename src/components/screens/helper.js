@@ -11,6 +11,7 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
 } from "../../configs/constants";
+import { truncarString } from "../../helpers/utilities";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const INC_ALIMENTA = "INC_ALIMENTA";
@@ -78,14 +79,13 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
         break;
     }
     return {
-      text: log.descricao,
+      text: truncarString(log.descricao, 48),
       date: log.data_log,
-      link:
-        solicitacao === ALTERACAO_CARDAPIO
-          ? `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
-          : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${
-              log.uuid
-            }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      link: [ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO].includes(solicitacao)
+        ? `/${solicitacao}/${RELATORIO}?uuid=${
+            log.uuid
+          }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+        : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
     };
   });
 };
