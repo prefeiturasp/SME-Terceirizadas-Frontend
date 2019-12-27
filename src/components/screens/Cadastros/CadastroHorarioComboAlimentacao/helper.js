@@ -116,9 +116,39 @@ export const verificaSeCampoEhValido = (
     vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
     "h:mm:ss A"
   );
-  return (
-    hora_inicial < hora_final ||
-    hora_inicial === "00:00:00" ||
-    hora_final === "00:00:00"
+  return hora_inicial <= hora_final;
+};
+
+export const todosOsCamposValidos = (
+  vinculosDeCombos,
+  periodoEscolar,
+  comboAlimentacaoAtual
+) => {
+  const hora_inicial = moment(
+    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_inicial,
+    "HH:mm:ss A"
   );
+  const hora_final = moment(
+    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
+    "HH:mm:ss A"
+  );
+  const horaZero = moment("00:00:00", "HH:mm:ss A");
+  return (
+    hora_final > horaZero &&
+    hora_inicial > horaZero &&
+    hora_inicial < hora_final
+  );
+};
+
+export const ultimoComboDisponivel = (
+  vinculosDeCombos,
+  periodoEscolar,
+  comboAlimentacaoAtual
+) => {
+  const quantidadeDeCombos = vinculosDeCombos[periodoEscolar].combos.length;
+  return quantidadeDeCombos === comboAlimentacaoAtual + 1;
+};
+
+export const ultimoPeriodoDaEscola = (vinculosDeCombos, periodoEscolar) => {
+  return vinculosDeCombos.length === periodoEscolar + 1;
 };

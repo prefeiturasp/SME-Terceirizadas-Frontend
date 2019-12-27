@@ -160,3 +160,46 @@ export const getHorariosCombosPorEscola = async uuid => {
     return response.json();
   });
 };
+
+export const postHorariosCombosPorEscola = payload => {
+  const url = `${
+    CONFIG.API_URL
+  }/horario-do-combo-tipo-de-alimentacao-por-unidade-escolar/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authHeader
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const putHorariosCombosPorEscola = async (payload, uuid) => {
+  try {
+    const response = await fetch(
+      `${
+        CONFIG.API_URL
+      }/horario-do-combo-tipo-de-alimentacao-por-unidade-escolar/${uuid}/`,
+      {
+        method: "PUT",
+        headers: authHeader,
+        body: JSON.stringify(payload)
+      }
+    );
+    let json = await response.json();
+    const status = await response.status;
+    json.status = status;
+    return json;
+  } catch (err) {
+    return err;
+  }
+};

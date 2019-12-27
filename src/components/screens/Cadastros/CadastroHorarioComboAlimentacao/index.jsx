@@ -2,7 +2,15 @@ import React, { Component, Fragment } from "react";
 import { Field, reduxForm } from "redux-form";
 import { InputText } from "../../../Shareable/Input/InputText";
 import { InputHorario } from "../../../Shareable/Input/InputHorario";
-import { verificaSeCampoEhValido } from "./helper";
+import {
+  todosOsCamposValidos,
+  ultimoComboDisponivel,
+  ultimoPeriodoDaEscola
+} from "./helper";
+import {
+  postHorariosCombosPorEscola,
+  putHorariosCombosPorEscola
+} from "../../../../services/cadastroTipoAlimentacao.service";
 import Wizard from "../../../Shareable/Wizard";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
@@ -53,12 +61,88 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ vinculosDeCombos });
   };
 
+  enviarComboDeHorarios = () => {
+    let {
+      vinculosDeCombos,
+      periodoEscolar,
+      comboAlimentacaoAtual
+    } = this.state;
+    const comboHorario =
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+    const request = {
+      combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
+      escola: comboHorario.escola,
+      hora_inicial: comboHorario.hora_inicial,
+      hora_final: comboHorario.hora_final
+    };
+    if (!comboHorario.uuid) {
+      postHorariosCombosPorEscola(request).then(response => {
+        if (response.status === 201) {
+          vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
+            response.uuid;
+          !ultimoComboDisponivel(
+            vinculosDeCombos,
+            periodoEscolar,
+            comboAlimentacaoAtual
+          )
+            ? this.setState({
+                comboAlimentacaoAtual: comboAlimentacaoAtual + 1,
+                vinculosDeCombos
+              })
+            : ultimoPeriodoDaEscola(vinculosDeCombos, periodoEscolar)
+            ? this.setState({
+                periodoEscolar: 0,
+                comboAlimentacaoAtual: 0,
+                vinculosDeCombos
+              })
+            : this.setState({
+                periodoEscolar: periodoEscolar + 1,
+                comboAlimentacaoAtual: 0,
+                vinculosDeCombos
+              });
+        }
+      });
+    } else {
+      const uuid = comboHorario.uuid;
+      putHorariosCombosPorEscola(request, uuid).then(response => {
+        if (response.status === 200) {
+          !ultimoComboDisponivel(
+            vinculosDeCombos,
+            periodoEscolar,
+            comboAlimentacaoAtual
+          )
+            ? this.setState({
+                comboAlimentacaoAtual: comboAlimentacaoAtual + 1,
+                vinculosDeCombos
+              })
+            : ultimoPeriodoDaEscola(vinculosDeCombos, periodoEscolar)
+            ? this.setState({
+                periodoEscolar: 0,
+                comboAlimentacaoAtual: 0,
+                vinculosDeCombos
+              })
+            : this.setState({
+                periodoEscolar: periodoEscolar + 1,
+                comboAlimentacaoAtual: 0,
+                vinculosDeCombos
+              });
+        }
+      });
+    }
+  };
+
   render() {
     const {
       vinculosDeCombos,
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
+    vinculosDeCombos &&
+      ultimoComboDisponivel(
+        vinculosDeCombos,
+        periodoEscolar,
+        comboAlimentacaoAtual
+      );
     const { naoPermitido } = this.props;
     return !vinculosDeCombos ? (
       !naoPermitido ? (
@@ -93,11 +177,6 @@ class CadastroHorarioComboAlimentacao extends Component {
               <nav className="mb-2">Horário Início</nav>
               <nav className="mb-2">Horário de Término </nav>
               {vinculosDeCombos[periodoEscolar].combos.map((combo, index) => {
-                const campoValido = verificaSeCampoEhValido(
-                  vinculosDeCombos,
-                  periodoEscolar,
-                  comboAlimentacaoAtual
-                );
                 return (
                   <Fragment key={index}>
                     <div
@@ -118,9 +197,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                           : "combo-inativo"
                       }`}
                       nameEmpty={
-                        !combo.uuid
-                          ? "Informe a hora inicial"
-                          : "---------------------"
+                        !combo.uuid ? "Hora Inicial" : combo.hora_inicial
                       }
                       component={InputHorario}
                       onChange={date => this.obterHoraInicio(date)}
@@ -131,15 +208,11 @@ class CadastroHorarioComboAlimentacao extends Component {
                       name={`hora_final_${index}`}
                       className={`${
                         comboAlimentacaoAtual === index
-                          ? campoValido
-                            ? "combo-ativo"
-                            : "combo-ativo-invalido"
+                          ? "combo-ativo"
                           : "combo-inativo"
                       }`}
                       nameEmpty={
-                        !combo.uuid
-                          ? "Informe a hora inicial"
-                          : "----------------------"
+                        !combo.uuid ? "Hora Término" : combo.hora_final
                       }
                       component={InputHorario}
                       hora={combo.hora_final}
@@ -152,12 +225,47 @@ class CadastroHorarioComboAlimentacao extends Component {
             </article>
           </section>
           <section className="mt-5 footer-botoes">
-            <Botao
-              texto={"Confirmar"}
-              className="botao-desabilitado"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-            />
+            {todosOsCamposValidos(
+              vinculosDeCombos,
+              periodoEscolar,
+              comboAlimentacaoAtual
+            ) ? (
+              ultimoComboDisponivel(
+                vinculosDeCombos,
+                periodoEscolar,
+                comboAlimentacaoAtual
+              ) ? (
+                ultimoPeriodoDaEscola(vinculosDeCombos, periodoEscolar) ? (
+                  <Botao
+                    texto={"Finalizar"}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => this.enviarComboDeHorarios()}
+                  />
+                ) : (
+                  <Botao
+                    texto={"Próximo"}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => this.enviarComboDeHorarios()}
+                  />
+                )
+              ) : (
+                <Botao
+                  texto={"Confirmar"}
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => this.enviarComboDeHorarios()}
+                />
+              )
+            ) : (
+              <Botao
+                texto={"Confirmar"}
+                className="desativado"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+              />
+            )}
           </section>
         </article>
       </form>
