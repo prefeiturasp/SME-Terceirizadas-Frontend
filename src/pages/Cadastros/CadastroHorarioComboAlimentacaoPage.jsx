@@ -10,7 +10,7 @@ import {
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`,
-  titulo: "Cadastro de Lote"
+  titulo: "Horário de fornecimento de alimentação"
 };
 
 const anteriores = [

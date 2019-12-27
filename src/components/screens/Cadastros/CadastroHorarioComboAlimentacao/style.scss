@@ -1,0 +1,128 @@
+.grid-box {
+  display: grid;
+  padding: 1em !important;
+
+  header {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+
+    color: #42474a;
+  }
+
+  .wizard {
+    margin-top: 1.5em;
+  }
+
+  .footer-botoes {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .conteudo-wizard {
+    display: grid;
+    grid-template-columns: 30% 0.1% 68%;
+    column-gap: 0.9%;
+    margin-top: 2em;
+
+    .borda {
+      border-right: 1px solid #ced4da;
+    }
+
+    .numero-alunos {
+      .form-qtd-alunos {
+        header {
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 16px;
+          /* identical to box height */
+
+          color: #42474a;
+        }
+
+        .grid-form-alunos {
+          display: grid;
+          grid-template-columns: 77% 19%;
+          column-gap: 4%;
+
+          div {
+            i {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: #086397;
+              width: 38px;
+              height: 38px;
+              border: 1px solid #086397;
+              box-sizing: border-box;
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+    }
+
+    .horarios-alimentacao {
+      margin-left: 10px;
+      display: grid;
+      grid-template-columns: 38% 29% 29%;
+      column-gap: 2%;
+
+      nav {
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        /* identical to box height */
+
+        color: #42474a;
+      }
+
+      .combo-tipo-alimentacao {
+        border: 1px solid transparent;
+        box-sizing: border-box;
+        border-radius: 4px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5px;
+      }
+
+      .combo-atual {
+        background: #ffffff;
+        border-color: #82b7e8;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        color: #42474a;
+      }
+
+      .proximo-combo {
+        background: #f5f6f8;
+        border-color: #dadada;
+
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+
+        nav {
+          color: #dadada !important;
+        }
+      }
+
+      .combo-ativo {
+        .ant-time-picker-input {
+          border-color: #82b7e8;
+        }
+      }
+
+      .combo-ativo-invalido {
+        .ant-time-picker-input {
+          border-color: #ff0000;
+        }
+      }
+    }
+  }
+}

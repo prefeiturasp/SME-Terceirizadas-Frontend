@@ -16,7 +16,8 @@ class Container extends Component {
       vinculosTipoDeAlimentacao: null,
       horariosDosCombos: null,
       vinculosDeCombos: null,
-      uuidEscola: null
+      uuidEscola: null,
+      naoPermitido: false
     };
   }
 
@@ -31,29 +32,38 @@ class Container extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { meusDados } = this.state;
     let {
-      vinculosDeCombos,
       vinculosTipoDeAlimentacao,
       horariosDosCombos,
-      uuidEscola
+      uuidEscola,
+      vinculosDeCombos
     } = this.state;
     if (meusDados !== prevState.meusDados) {
+      const uuidDaEscola =
+        meusDados.vinculo_atual.instituicao.tipo_unidade_escolar;
       this.buscaHorariosDosCombos(meusDados.vinculo_atual.instituicao.uuid);
-      this.buscaVinculosTipoAlimentacaoPorUnidadeEscolar(
-        meusDados.vinculo_atual.instituicao.tipo_unidade_escolar
-      );
+      if (uuidDaEscola !== null) {
+        this.buscaVinculosTipoAlimentacaoPorUnidadeEscolar(
+          meusDados.vinculo_atual.instituicao.tipo_unidade_escolar
+        );
+      } else {
+        this.setState({ naoPermitido: true });
+      }
+
       this.setState({
         uuidEscola: meusDados.vinculo_atual.instituicao.uuid
       });
     } else {
-      if (vinculosDeCombos === prevState.vinculosDeCombos) {
+      if (
+        !vinculosDeCombos &&
         vinculosTipoDeAlimentacao &&
-          horariosDosCombos &&
-          uuidEscola &&
-          (vinculosDeCombos = montavinculosDeCombosInicial(
-            vinculosTipoDeAlimentacao,
-            horariosDosCombos,
-            uuidEscola
-          ));
+        horariosDosCombos &&
+        uuidEscola
+      ) {
+        vinculosDeCombos = montavinculosDeCombosInicial(
+          vinculosTipoDeAlimentacao,
+          horariosDosCombos,
+          uuidEscola
+        );
         this.setState({ vinculosDeCombos });
       }
     }

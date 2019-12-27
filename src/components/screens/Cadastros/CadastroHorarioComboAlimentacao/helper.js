@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const temHorariosDeCombosParaEscola = horariosDosCombos => {
   return horariosDosCombos.length > 0;
 };
@@ -99,4 +101,24 @@ export const montavinculosDeCombosInicial = (
         uuidEscola
       ));
   return vinculosDeCombos;
+};
+
+export const verificaSeCampoEhValido = (
+  vinculosDeCombos,
+  periodoEscolar,
+  comboAlimentacaoAtual
+) => {
+  const hora_inicial = moment(
+    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_inicial,
+    "HH:mm:ss A"
+  );
+  const hora_final = moment(
+    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
+    "h:mm:ss A"
+  );
+  return (
+    hora_inicial < hora_final ||
+    hora_inicial === "00:00:00" ||
+    hora_final === "00:00:00"
+  );
 };
