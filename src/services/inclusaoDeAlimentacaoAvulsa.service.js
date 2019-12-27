@@ -294,12 +294,35 @@ export const escolaCancelaInclusaoDeAlimentacaoAvulsa = async (
   }
 };
 
-export const DREConfirmaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/diretoria-regional-valida-pedido/`;
+export const DREValidaInclusaoDeAlimentacaoAvulsa = uuid => {
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const DRENaoValidaInclusaoDeAlimentacaoAvulsa = (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;

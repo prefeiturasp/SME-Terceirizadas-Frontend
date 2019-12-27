@@ -11,8 +11,6 @@ import {
   TERCEIRIZADA
 } from "../../configs/constants";
 import {
-  DRENaoValidaAlteracaoCardapio,
-  DREValidaAlteracaoCardapio,
   CODAEAutorizaAlteracaoDeCardapio,
   CODAENegaAlteracaoCardapio,
   CODAEquestionaAlteracaoCardapio,
@@ -24,8 +22,16 @@ import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoV
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
-import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
-import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import {
+  escolaCancelaInclusaoDeAlimentacaoContinua,
+  DREValidaInclusaoDeAlimentacaoContinua,
+  DRENaoValidaInclusaoDeAlimentacaoContinua
+} from "../../services/inclusaoDeAlimentacaoContinua.service";
+import {
+  escolaCancelaInclusaoDeAlimentacaoAvulsa,
+  DREValidaInclusaoDeAlimentacaoAvulsa,
+  DRENaoValidaInclusaoDeAlimentacaoAvulsa
+} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 
 class RelatorioBase extends Component {
   constructor(props) {
@@ -95,20 +101,44 @@ export class RelatorioEscola extends Component {
 }
 
 // DRE
-export const RelatorioDRE = () => (
-  <RelatorioBase
-    VISAO={DRE}
-    ModalNaoAprova={ModalNaoValidarSolicitacao}
-    toastAprovaMensagem={"Inclusão de Alimentação validada com sucesso!"}
-    toastAprovaMensagemErro={
-      "Houve um erro ao validar a Inclusão de Alimentação"
-    }
-    endpointNaoAprovaSolicitacao={DRENaoValidaAlteracaoCardapio}
-    endpointAprovaSolicitacao={DREValidaAlteracaoCardapio}
-    textoBotaoNaoAprova="Não Validar"
-    textoBotaoAprova="Validar"
-  />
-);
+export class RelatorioDRE extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ehInclusaoContinua: false
+    };
+  }
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+  }
+
+  render() {
+    return (
+      <RelatorioBase
+        VISAO={DRE}
+        ModalNaoAprova={ModalNaoValidarSolicitacao}
+        toastAprovaMensagem={"Inclusão de Alimentação validada com sucesso!"}
+        toastAprovaMensagemErro={
+          "Houve um erro ao validar a Inclusão de Alimentação"
+        }
+        endpointAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? DREValidaInclusaoDeAlimentacaoContinua
+            : DREValidaInclusaoDeAlimentacaoAvulsa
+        }
+        endpointNaoAprovaSolicitacao={
+          this.state.ehInclusaoContinua
+            ? DRENaoValidaInclusaoDeAlimentacaoContinua
+            : DRENaoValidaInclusaoDeAlimentacaoAvulsa
+        }
+        textoBotaoNaoAprova="Não Validar"
+        textoBotaoAprova="Validar"
+      />
+    );
+  }
+}
 
 // CODAE
 export const RelatorioCODAE = () => (

@@ -99,7 +99,9 @@ export class CorpoRelatorio extends Component {
         <div className="row">
           <div className="col-2 report-label-value">
             <p>DRE</p>
-            <p className="value-important" />
+            <p className="value-important">
+              {inclusaoDeAlimentacao.escola.nome}
+            </p>
           </div>
           <div className="col-2 report-label-value">
             <p>Lote</p>

@@ -68,7 +68,11 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getInclusaoDeAlimentacaoAvulsa(uuid).then(response => {
+    const { ehInclusaoContinua } = this.props;
+    const getInclusaoDeAlimentacao = ehInclusaoContinua
+      ? getInclusaoDeAlimentacaoContinua
+      : getInclusaoDeAlimentacaoAvulsa;
+    getInclusaoDeAlimentacao(uuid).then(response => {
       this.setState({
         inclusaoDeAlimentacao: response
       });

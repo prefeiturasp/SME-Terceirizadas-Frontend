@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { DRE } from "../../../../configs/constants";
 import { FiltroEnum } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
@@ -102,7 +101,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -114,7 +112,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -127,7 +124,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -138,7 +134,6 @@ class PainelPedidos extends Component {
                       <CardHistorico
                         pedidos={formatarPedidos(pedidosAutorizados)}
                         ultimaColunaLabel={"Data(s)"}
-                        parametroURL={DRE}
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }

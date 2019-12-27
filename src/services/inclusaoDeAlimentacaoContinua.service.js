@@ -270,12 +270,35 @@ export const inicioPedidoContinua = uuid => {
     });
 };
 
-export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
+export const DREValidaInclusaoDeAlimentacaoContinua = uuid => {
   const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const DRENaoValidaInclusaoDeAlimentacaoContinua = (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
