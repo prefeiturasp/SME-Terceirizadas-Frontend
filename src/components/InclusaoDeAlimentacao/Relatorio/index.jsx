@@ -20,6 +20,7 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       showNaoAprovaModal: false,
+      ehInclusaoContinua: false,
       showModal: false,
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
@@ -43,6 +44,7 @@ class Relatorio extends Component {
         this.setState({
           inclusaoDeAlimentacao: response,
           uuid,
+          ehInclusaoContinua: ehInclusaoContinua === "true",
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
         });
       });
@@ -97,6 +99,7 @@ class Relatorio extends Component {
       showNaoAprovaModal,
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
+      ehInclusaoContinua,
       showQuestionamentoModal,
       uuid
     } = this.state;
@@ -168,7 +171,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Alteração de Cardápio - Pedido # ${
+            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
               inclusaoDeAlimentacao.id_externo
             }`}</span>
             <div className="card mt-3">
@@ -176,6 +179,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  ehInclusaoContinua={ehInclusaoContinua}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inclusaoDeAlimentacao}

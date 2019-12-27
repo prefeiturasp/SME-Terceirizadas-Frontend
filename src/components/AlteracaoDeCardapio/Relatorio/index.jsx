@@ -162,7 +162,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Alteração de Cardápio - Pedido # ${
+            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
             <div className="card mt-3">

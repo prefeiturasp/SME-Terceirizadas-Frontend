@@ -80,12 +80,11 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
     return {
       text: log.descricao,
       date: log.data_log,
-      link:
-        solicitacao === ALTERACAO_CARDAPIO
-          ? `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
-          : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${
-              log.uuid
-            }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      link: [ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO].includes(solicitacao)
+        ? `/${solicitacao}/${RELATORIO}?uuid=${
+            log.uuid
+          }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+        : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
     };
   });
 };

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Component } from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
+import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
 import {
@@ -11,7 +11,6 @@ import {
   TERCEIRIZADA
 } from "../../configs/constants";
 import {
-  escolaCancelaAlteracaoCardapio,
   DRENaoValidaAlteracaoCardapio,
   DREValidaAlteracaoCardapio,
   CODAEAutorizaAlteracaoDeCardapio,
@@ -25,8 +24,22 @@ import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoV
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
+import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 
-class RelatorioBase extends React.Component {
+class RelatorioBase extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ehInclusaoContinua: false
+    };
+  }
+
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+  }
   render() {
     const atual = {
       href: "#",
@@ -49,15 +62,37 @@ class RelatorioBase extends React.Component {
 }
 
 // Escola
-export const RelatorioEscola = () => (
-  <RelatorioBase
-    VISAO={ESCOLA}
-    ModalNaoAprova={ModalCancelarSolicitacao}
-    toastNaoAprovaMensagem={"Inclusão de Alimentação cancelada com sucesso!"}
-    endpointNaoAprovaSolicitacao={escolaCancelaAlteracaoCardapio}
-    textoBotaoNaoAprova="Cancelar"
-  />
-);
+export class RelatorioEscola extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ehInclusaoContinua: false
+    };
+  }
+  componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+  }
+
+  render() {
+    return (
+      <RelatorioBase
+        VISAO={ESCOLA}
+        ModalNaoAprova={ModalCancelarSolicitacao}
+        toastNaoAprovaMensagem={
+          "Inclusão de Alimentação cancelada com sucesso!"
+        }
+        endpointNaoAprovaSolicitacao={
+          !this.state.ehInclusaoContinua
+            ? escolaCancelaInclusaoDeAlimentacaoAvulsa
+            : escolaCancelaInclusaoDeAlimentacaoContinua
+        }
+        textoBotaoNaoAprova="Cancelar"
+      />
+    );
+  }
+}
 
 // DRE
 export const RelatorioDRE = () => (

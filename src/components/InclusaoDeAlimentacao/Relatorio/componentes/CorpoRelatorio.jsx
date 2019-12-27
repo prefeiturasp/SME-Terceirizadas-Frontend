@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import {
+  corDaMensagem,
+  stringSeparadaPorVirgulas
+} from "../../../../helpers/utilities";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
@@ -68,6 +71,13 @@ export class CorpoRelatorio extends Component {
             )}`}
           >
             {prazoDoPedidoMensagem}
+            {/*<Botao
+              type={BUTTON_TYPE.BUTTON}
+              titulo="imprimir"
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />*/}
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
@@ -89,11 +99,7 @@ export class CorpoRelatorio extends Component {
         <div className="row">
           <div className="col-2 report-label-value">
             <p>DRE</p>
-            <p className="value-important">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.diretoria_regional &&
-                inclusaoDeAlimentacao.escola.diretoria_regional.nome}
-            </p>
+            <p className="value-important" />
           </div>
           <div className="col-2 report-label-value">
             <p>Lote</p>
@@ -127,26 +133,18 @@ export class CorpoRelatorio extends Component {
         </div>
         <div className="row">
           <div className="col-12 report-label-value">
-            <p className="value">Descrição da Alteração de Cardápio</p>
+            <p className="value">Descrição da Inclusão de Alimentação</p>
           </div>
         </div>
-        <table className="table-periods">
-          <tr>
-            <th>Data Inicial</th>
-            <th>Data Final</th>
-          </tr>
-          <tr>
-            <td>{inclusaoDeAlimentacao.data_inicial}</td>
-            <td>{inclusaoDeAlimentacao.data_final}</td>
-          </tr>
-        </table>
+        {this.renderParteContinua()}
+        {this.renderParteAvulsa()}
         <table className="table-periods">
           <tr>
             <th>Período</th>
-            <th>Tipos de Alimentação de</th>
-            <th>Tipos de Alimentação para</th>
+            <th>Tipos de Alimentação</th>
+            <th>Quantidade de Alunos</th>
           </tr>
-          {inclusaoDeAlimentacao.substituicoes.map(
+          {inclusaoDeAlimentacao.quantidades_periodo.map(
             (quantidade_por_periodo, key) => {
               return (
                 <tr key={key}>
@@ -154,38 +152,29 @@ export class CorpoRelatorio extends Component {
                     {quantidade_por_periodo.periodo_escolar &&
                       quantidade_por_periodo.periodo_escolar.nome}
                   </td>
-                  <td>{quantidade_por_periodo.tipo_alimentacao_de.nome}</td>
-                  <td>{quantidade_por_periodo.tipo_alimentacao_para.nome}</td>
+                  <td>
+                    {stringSeparadaPorVirgulas(
+                      quantidade_por_periodo.tipos_alimentacao,
+                      "nome"
+                    )}
+                  </td>
+                  <td>{quantidade_por_periodo.numero_alunos}</td>
                 </tr>
               );
             }
           )}
         </table>
-
-        <table className="table-periods">
-          <tr>
-            <th>Motivo</th>
-          </tr>
-          <tr>
-            <td>{inclusaoDeAlimentacao.motivo.nome}</td>
-          </tr>
-        </table>
-
-        <table className="table-periods">
-          <tr>
-            <th>Observações</th>
-          </tr>
-          <tr>
-            <td>
-              <p
-                className="value"
-                dangerouslySetInnerHTML={{
-                  __html: inclusaoDeAlimentacao.observacao
-                }}
-              />
-            </td>
-          </tr>
-        </table>
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Observações</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: inclusaoDeAlimentacao.descricao
+              }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
