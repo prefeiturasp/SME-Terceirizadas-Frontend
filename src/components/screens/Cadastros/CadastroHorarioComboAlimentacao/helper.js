@@ -1,4 +1,5 @@
 import moment from "moment";
+import { postHorariosCombosPorEscola } from "../../../../services/cadastroTipoAlimentacao.service";
 
 const temHorariosDeCombosParaEscola = horariosDosCombos => {
   return horariosDosCombos.length > 0;
@@ -151,4 +152,24 @@ export const ultimoComboDisponivel = (
 
 export const ultimoPeriodoDaEscola = (vinculosDeCombos, periodoEscolar) => {
   return vinculosDeCombos.length === periodoEscolar + 1;
+};
+
+export const salvaComboEHorarios = (
+  vinculosDeCombos,
+  periodoEscolar,
+  comboAlimentacaoAtual
+) => {
+  const comboHorario =
+    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+  const request = {
+    combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
+    escola: comboHorario.escola,
+    hora_inicial: comboHorario.hora_inicial,
+    hora_final: comboHorario.hora_final
+  };
+  let response = null;
+  postHorariosCombosPorEscola(request).then(resp => {
+    response = resp;
+  });
+  return response;
 };

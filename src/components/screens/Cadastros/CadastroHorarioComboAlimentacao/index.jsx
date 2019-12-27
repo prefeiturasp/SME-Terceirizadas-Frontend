@@ -5,17 +5,16 @@ import { InputHorario } from "../../../Shareable/Input/InputHorario";
 import {
   todosOsCamposValidos,
   ultimoComboDisponivel,
-  ultimoPeriodoDaEscola
+  ultimoPeriodoDaEscola,
+  salvaComboEHorarios
 } from "./helper";
-import {
-  postHorariosCombosPorEscola,
-  putHorariosCombosPorEscola
-} from "../../../../services/cadastroTipoAlimentacao.service";
+import HTTP_STATUS from "http-status-codes";
 import Wizard from "../../../Shareable/Wizard";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import "./style.scss";
 import moment from "moment";
+import { toastError } from "../../../Shareable/Toast/dialogs";
 
 class CadastroHorarioComboAlimentacao extends Component {
   constructor(props) {
@@ -61,73 +60,40 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ vinculosDeCombos });
   };
 
+  retornaUuidDoCombo = () => {
+    let {
+      vinculosDeCombos,
+      periodoEscolar,
+      comboAlimentacaoAtual
+    } = this.state;
+    return vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid;
+  };
+
   enviarComboDeHorarios = () => {
     let {
       vinculosDeCombos,
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
-    const comboHorario =
-      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
-    const request = {
-      combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
-      escola: comboHorario.escola,
-      hora_inicial: comboHorario.hora_inicial,
-      hora_final: comboHorario.hora_final
-    };
-    if (!comboHorario.uuid) {
-      postHorariosCombosPorEscola(request).then(response => {
-        if (response.status === 201) {
-          vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
-            response.uuid;
-          !ultimoComboDisponivel(
-            vinculosDeCombos,
-            periodoEscolar,
-            comboAlimentacaoAtual
-          )
-            ? this.setState({
-                comboAlimentacaoAtual: comboAlimentacaoAtual + 1,
-                vinculosDeCombos
-              })
-            : ultimoPeriodoDaEscola(vinculosDeCombos, periodoEscolar)
-            ? this.setState({
-                periodoEscolar: 0,
-                comboAlimentacaoAtual: 0,
-                vinculosDeCombos
-              })
-            : this.setState({
-                periodoEscolar: periodoEscolar + 1,
-                comboAlimentacaoAtual: 0,
-                vinculosDeCombos
-              });
-        }
-      });
+    const uuidCombo = this.retornaUuidDoCombo();
+    let response = null;
+    if (uuidCombo === null) {
+      response = salvaComboEHorarios(
+        vinculosDeCombos,
+        periodoEscolar,
+        comboAlimentacaoAtual
+      );
     } else {
-      const uuid = comboHorario.uuid;
-      putHorariosCombosPorEscola(request, uuid).then(response => {
-        if (response.status === 200) {
-          !ultimoComboDisponivel(
-            vinculosDeCombos,
-            periodoEscolar,
-            comboAlimentacaoAtual
-          )
-            ? this.setState({
-                comboAlimentacaoAtual: comboAlimentacaoAtual + 1,
-                vinculosDeCombos
-              })
-            : ultimoPeriodoDaEscola(vinculosDeCombos, periodoEscolar)
-            ? this.setState({
-                periodoEscolar: 0,
-                comboAlimentacaoAtual: 0,
-                vinculosDeCombos
-              })
-            : this.setState({
-                periodoEscolar: periodoEscolar + 1,
-                comboAlimentacaoAtual: 0,
-                vinculosDeCombos
-              });
-        }
-      });
+      // console.log("kfdjkfdjkfjsdksdf");
+    }
+
+    if (response.status === HTTP_STATUS.CREATED) {
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
+        response.uuid;
+    } else if (response.status === HTTP_STATUS.OK) {
+      // console.log("kfdjkfdjkfjsdksdf");
+    } else {
+      toastError("Erro ao salvar combo");
     }
   };
 
