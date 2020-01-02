@@ -6,6 +6,7 @@ import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
+import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
 import { TIPO_PERFIL } from "../constants";
 
@@ -71,6 +72,19 @@ export const relatoriosInclusaoDeAlimentacao = () => {
       return RelatoriosInclusaoDeAlimentacao.RelatorioTerceirizada;
     default:
       return RelatoriosInclusaoDeAlimentacao.RelatorioEscola;
+  }
+};
+
+export const relatoriosSolicitacaoKitLanche = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosSolicitacaoKitLanche.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosSolicitacaoKitLanche.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosSolicitacaoKitLanche.RelatorioTerceirizada;
+    default:
+      return RelatoriosSolicitacaoKitLanche.RelatorioEscola;
   }
 };
 

@@ -12,7 +12,6 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./../../../../helpers/painelPedidos";
-import { DRE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -108,7 +107,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Solicitação"}
-                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -120,7 +118,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Solicitação"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -133,7 +130,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Solicitação"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -147,7 +143,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Solicitações de Kit Lanche Passeio Autorizadas"
                         }
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>

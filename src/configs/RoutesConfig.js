@@ -4,7 +4,8 @@ import {
   relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosInclusaoDeAlimentacao,
-  relatoriosSolicitacaoUnificada
+  relatoriosSolicitacaoUnificada,
+  relatoriosSolicitacaoKitLanche
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -69,7 +70,6 @@ import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas"
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
-import * as RelatorioPageKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 
 const routesConfig = [
   {
@@ -142,13 +142,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false
@@ -210,13 +203,6 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioDREPage,
-    exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioDRE,
     exact: false
   },
   {
@@ -324,13 +310,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioTerceirizada,
-    exact: false
-  },
-  {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosTerceirizada,
     exact: false
@@ -420,17 +399,15 @@ const routesConfig = [
     exact: false
   },
   {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLanche(),
+    exact: false
+  },
+  {
     path: `/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
       constants.RELATORIO
     }`,
     component: relatoriosSolicitacaoUnificada(),
-    exact: false
-  },
-  {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioCODAE,
     exact: false
   },
   {
