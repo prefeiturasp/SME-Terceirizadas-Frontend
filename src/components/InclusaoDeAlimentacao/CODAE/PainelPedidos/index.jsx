@@ -13,7 +13,6 @@ import {
   formatarPedidos
 } from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
-import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { TIPODECARD } from "../../../../constants";
 
@@ -103,7 +102,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -115,7 +113,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -128,7 +125,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -142,7 +138,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -153,7 +148,6 @@ class PainelPedidos extends Component {
                       <CardHistorico
                         pedidos={formatarPedidos(pedidosReprovados)}
                         ultimaColunaLabel={"Data(s)"}
-                        parametroURL={CODAE}
                         titulo={
                           "Histórico de Inclusões de Alimentação Reprovadas"
                         }

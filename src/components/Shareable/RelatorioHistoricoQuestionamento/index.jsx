@@ -1,10 +1,13 @@
 import React from "react";
 import { TIPO_USUARIO } from "../../../constants";
 import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "./helper";
 
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
-  const EXIBIR_HISTORICO = solicitacao.foi_solicitado_fora_do_prazo;
+  const EXIBIR_HISTORICO =
+    solicitacao.foi_solicitado_fora_do_prazo &&
+    existeLogDeQuestionamentoDaCODAE(solicitacao.logs);
   return (
     <div>
       {EXIBIR_HISTORICO && (

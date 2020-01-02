@@ -84,6 +84,7 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
       link: [
         ALTERACAO_CARDAPIO,
         INCLUSAO_ALIMENTACAO,
+        SOLICITACAO_KIT_LANCHE,
         SOLICITACAO_KIT_LANCHE_UNIFICADA
       ].includes(solicitacao)
         ? `/${solicitacao}/${RELATORIO}?uuid=${
