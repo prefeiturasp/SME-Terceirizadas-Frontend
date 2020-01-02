@@ -81,7 +81,11 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
     return {
       text: truncarString(log.descricao, 48),
       date: log.data_log,
-      link: [ALTERACAO_CARDAPIO, INCLUSAO_ALIMENTACAO].includes(solicitacao)
+      link: [
+        ALTERACAO_CARDAPIO,
+        INCLUSAO_ALIMENTACAO,
+        SOLICITACAO_KIT_LANCHE_UNIFICADA
+      ].includes(solicitacao)
         ? `/${solicitacao}/${RELATORIO}?uuid=${
             log.uuid
           }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`

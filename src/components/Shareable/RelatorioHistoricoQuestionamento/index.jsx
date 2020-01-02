@@ -4,9 +4,10 @@ import "./style.scss";
 
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
+  const EXIBIR_HISTORICO = solicitacao.foi_solicitado_fora_do_prazo;
   return (
     <div>
-      {solicitacao.foi_solicitado_fora_do_prazo && solicitacao.logs.length > 2 && (
+      {EXIBIR_HISTORICO && (
         <div className="question-history">
           <hr />
           <div className="row title">

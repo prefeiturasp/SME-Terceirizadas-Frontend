@@ -212,6 +212,27 @@ export const CODAENegaKitLancheUnificadoEscola = async (
   }
 };
 
+export const CODAEquestionaSolicitacaoUnificada = async (
+  uuid,
+  observacao_questionamento_codae
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ observacao_questionamento_codae })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
@@ -231,6 +252,29 @@ export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
+  uuid,
+  payload
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const getTerceirizadaPedidosAutorizadosKitLancheUnificado = () => {
