@@ -6,6 +6,7 @@ import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
+import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
 import { TIPO_PERFIL } from "../constants";
 
 export const painelHome = () => {
@@ -70,5 +71,16 @@ export const relatoriosInclusaoDeAlimentacao = () => {
       return RelatoriosInclusaoDeAlimentacao.RelatorioTerceirizada;
     default:
       return RelatoriosInclusaoDeAlimentacao.RelatorioEscola;
+  }
+};
+
+export const relatoriosSolicitacaoUnificada = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosSolicitacaoUnificada.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosSolicitacaoUnificada.RelatorioTerceirizada;
+    default:
+      return RelatoriosSolicitacaoUnificada.RelatorioDRE;
   }
 };
