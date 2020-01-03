@@ -272,6 +272,7 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

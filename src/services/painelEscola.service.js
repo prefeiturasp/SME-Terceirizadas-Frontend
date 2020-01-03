@@ -3,6 +3,7 @@ import { AUTH_TOKEN, SOLICITACOES } from "./contants";
 
 const SOLICITACOES_ESCOLA = `${API_URL}/escola-solicitacoes`;
 
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
