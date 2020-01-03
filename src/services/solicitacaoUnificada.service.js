@@ -172,11 +172,15 @@ export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
     });
 };
 
-export const CODAEAutorizaPedidoKitLancheUnificado = uuid => {
+export const CODAEAutorizaPedidoKitLancheUnificado = (
+  uuid,
+  justificativa = {}
+) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {

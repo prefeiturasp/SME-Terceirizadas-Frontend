@@ -51,7 +51,7 @@ class RelatorioBase extends React.Component {
 // Escola
 export const RelatorioEscola = () => (
   <RelatorioBase
-    VISAO={ESCOLA}
+    visao={ESCOLA}
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Kit Lanche Passeio cancelado com sucesso!"}
     endpointNaoAprovaSolicitacao={cancelaKitLancheAvulsoEscola}
@@ -62,7 +62,7 @@ export const RelatorioEscola = () => (
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
+    visao={DRE}
     ModalNaoAprova={ModalNaoValidarSolicitacao}
     toastAprovaMensagem={"Kit Lanche Passeio validado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao validar o Kit Lanche Passeio"}
@@ -76,7 +76,7 @@ export const RelatorioDRE = () => (
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
+    visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
     toastAprovaMensagem={"Kit Lanche Passeio autorizado com sucesso!"}
@@ -92,7 +92,7 @@ export const RelatorioCODAE = () => (
 // Terceirizada
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
+    visao={TERCEIRIZADA}
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     toastAprovaMensagem={"Ciência de Kit Lanche Passeio enviado com sucesso!"}

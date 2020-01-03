@@ -446,10 +446,11 @@ export const CODAENegaKitLancheAvulso = async (uuid, justificativa) => {
   }
 };
 
-export const CODAEAutorizaKitLancheAvulso = uuid => {
+export const CODAEAutorizaKitLancheAvulso = (uuid, justificativa = {}) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
+    body: JSON.stringify(justificativa),
     method: "PATCH"
   };
   let status = 0;
