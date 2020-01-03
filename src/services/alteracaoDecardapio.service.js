@@ -283,11 +283,12 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const CODAEAutorizaAlteracaoDeCardapio = uuid => {
+export const CODAEAutorizaAlteracaoDeCardapio = (uuid, justificativa = {}) => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
