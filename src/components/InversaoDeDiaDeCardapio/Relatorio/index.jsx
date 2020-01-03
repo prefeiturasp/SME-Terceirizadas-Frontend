@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { INVERSAO_CARDAPIO } from "../../../configs/constants";
+import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import {
@@ -23,6 +23,7 @@ import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,12 +34,14 @@ class Relatorio extends Component {
       redirect: false,
       showNaoAprovaModal: false,
       showModal: false,
+      showAutorizarModal: false,
       InversaoCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
@@ -103,6 +106,14 @@ class Relatorio extends Component {
     this.setState({ showNaoAprovaModal: false });
   }
 
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
+  }
+
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
@@ -137,12 +148,15 @@ class Relatorio extends Component {
       uuid,
       resposta_sim_nao,
       showNaoAprovaModal,
-      showQuestionamentoModal
+      showQuestionamentoModal,
+      showAutorizarModal
     } = this.state;
     const {
+      visao,
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
+      endpointAprovaSolicitacao,
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
@@ -178,6 +192,11 @@ class Relatorio extends Component {
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         InversaoCardapio.status
       );
+    const EXIBIR_MODAL_AUTORIZACAO =
+      visao === CODAE &&
+      InversaoCardapio &&
+      InversaoCardapio.foi_solicitado_fora_do_prazo &&
+      !InversaoCardapio.logs[InversaoCardapio.logs.length - 2].resposta_sim_nao;
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -207,6 +226,16 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
+            {endpointAprovaSolicitacao && (
+              <ModalAutorizarAposQuestionamento
+                showModal={showAutorizarModal}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            )}
             <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
               InversaoCardapio.id_externo
             }`}</span>
@@ -350,7 +379,11 @@ class Relatorio extends Component {
                       <Botao
                         texto={textoBotaoAprova}
                         type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
+                        onClick={() =>
+                          EXIBIR_MODAL_AUTORIZACAO
+                            ? this.showAutorizarModal()
+                            : this.handleSubmit()
+                        }
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />
