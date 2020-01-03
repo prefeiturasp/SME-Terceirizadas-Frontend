@@ -2,12 +2,11 @@ import React, { Component } from "react";
 import {
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
-  getSolicitacoesNegadasNutricionista,
+  getSolicitacoesNegadasNutricionista
 } from "../../../services/painelNutricionista.service";
 import * as constants from "../../../configs/constants";
 import { meusDados } from "../../../services/perfil.service";
 import { truncarString } from "../../../helpers/utilities";
-//import { ajustarFormatoLog } from "../helper";
 import DashboardNutricionista from "./DashboardNutricionista";
 
 export default class DashboardNutricionistaContainer extends Component {
@@ -17,19 +16,21 @@ export default class DashboardNutricionistaContainer extends Component {
       meusDados: {},
       autorizadas: [],
       pendentes: [],
-      negadas: [],
+      negadas: []
     };
   }
 
   ajustaSolicitacoes(solicitacoes) {
-    return solicitacoes.map((s) => {
-      const ultimoLog = s.logs[s.logs.length - 1]
+    return solicitacoes.map(s => {
+      const ultimoLog = s.logs[s.logs.length - 1];
       return {
         text: truncarString(`${s.id_externo} - ${s.nome_completo_aluno}`, 48),
         date: ultimoLog.criado_em.slice(0, ultimoLog.criado_em.length - 3),
-        link: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}/?uuid=${s.uuid}`
+        link: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}/?uuid=${
+          s.uuid
+        }`
       };
-    })
+    });
   }
 
   async componentDidMount() {
@@ -46,16 +47,12 @@ export default class DashboardNutricionistaContainer extends Component {
     this.setState({
       autorizadas,
       pendentes,
-      negadas,
+      negadas
     });
   }
 
   render() {
-    const {
-      autorizadas,
-      pendentes,
-      negadas,
-    } = this.state;
+    const { autorizadas, pendentes, negadas } = this.state;
     return (
       <div>
         <DashboardNutricionista

@@ -70,6 +70,8 @@ import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas"
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
+import * as RelatorioPageKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
+import RelatorioDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
 
 const routesConfig = [
   {
@@ -399,7 +401,14 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
+    component: RelatorioDietaEspecial,
+    exact: false
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
+      constants.RELATORIO
+    }`,
     component: relatoriosSolicitacaoKitLanche(),
     exact: false
   },

@@ -22,7 +22,7 @@ export default class DashboardNutricionista extends Component {
       collapsed: true,
       autorizadasListFiltered: [],
       pendentesListFiltered: [],
-      negadasListFiltered: [],
+      negadasListFiltered: []
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -62,7 +62,7 @@ export default class DashboardNutricionista extends Component {
     this.setState({
       autorizadasListFiltered,
       pendentesListFiltered,
-      negadasListFiltered,
+      negadasListFiltered
     });
   }
 
@@ -82,11 +82,8 @@ export default class DashboardNutricionista extends Component {
     const {
       pendentesListFiltered,
       autorizadasListFiltered,
-      negadasListFiltered,
+      negadasListFiltered
     } = this.state;
-    console.log('pendentesListFiltered', pendentesListFiltered)
-    console.log('autorizadasListFiltered', autorizadasListFiltered)
-    console.log('negadasListFiltered', negadasListFiltered)
     return (
       <div className="dashboard-school">
         <CardBody

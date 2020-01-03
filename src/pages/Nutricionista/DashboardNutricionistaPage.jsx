@@ -7,7 +7,7 @@ import Page from "../../components/Shareable/Page/Page";
 export default () => (
   <div>
     <Page>
-      <Breadcrumb home={'/'} />
+      <Breadcrumb home={"/"} />
       <DashboardNutricionistaContainer />
     </Page>
   </div>
