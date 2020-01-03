@@ -12,6 +12,8 @@ import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { CODAE } from "../../../configs/constants";
+import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -19,6 +21,7 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       showNaoAprovaModal: false,
+      showAutorizarModal: false,
       showModal: false,
       solicitacaoKitLanche: null,
       prazoDoPedidoMensagem: null,
@@ -26,6 +29,7 @@ class Relatorio extends Component {
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
@@ -57,6 +61,14 @@ class Relatorio extends Component {
 
   closeNaoAprovaModal() {
     this.setState({ showNaoAprovaModal: false });
+  }
+
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
   }
 
   loadSolicitacao(uuid) {
@@ -92,9 +104,12 @@ class Relatorio extends Component {
       solicitacaoKitLanche,
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
-      uuid
+      uuid,
+      showAutorizarModal
     } = this.state;
     const {
+      visao,
+      endpointAprovaSolicitacao,
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
@@ -133,8 +148,14 @@ class Relatorio extends Component {
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         solicitacaoKitLanche.status
       );
+    const EXIBIR_MODAL_AUTORIZACAO =
+      visao === CODAE &&
+      solicitacaoKitLanche &&
+      solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
+      !solicitacaoKitLanche.logs[solicitacaoKitLanche.logs.length - 1]
+        .resposta_sim_nao;
     return (
-      <div>
+      <div className="report">
         {ModalNaoAprova && (
           <ModalNaoAprova
             showModal={showNaoAprovaModal}
@@ -162,6 +183,16 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
+            {endpointAprovaSolicitacao && (
+              <ModalAutorizarAposQuestionamento
+                showModal={showAutorizarModal}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
               solicitacaoKitLanche.id_externo
             }`}</span>
@@ -189,7 +220,11 @@ class Relatorio extends Component {
                       <Botao
                         texto={textoBotaoAprova}
                         type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
+                        onClick={() =>
+                          EXIBIR_MODAL_AUTORIZACAO
+                            ? this.showAutorizarModal()
+                            : this.handleSubmit()
+                        }
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />

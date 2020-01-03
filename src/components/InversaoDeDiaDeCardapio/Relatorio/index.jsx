@@ -196,7 +196,7 @@ class Relatorio extends Component {
       visao === CODAE &&
       InversaoCardapio &&
       InversaoCardapio.foi_solicitado_fora_do_prazo &&
-      !InversaoCardapio.logs[InversaoCardapio.logs.length - 2].resposta_sim_nao;
+      !InversaoCardapio.logs[InversaoCardapio.logs.length - 1].resposta_sim_nao;
     return (
       <div className="report">
         {ModalNaoAprova && (

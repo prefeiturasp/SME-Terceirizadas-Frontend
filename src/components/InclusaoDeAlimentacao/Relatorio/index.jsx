@@ -165,7 +165,7 @@ class Relatorio extends Component {
       visao === CODAE &&
       inclusaoDeAlimentacao &&
       inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
-      !inclusaoDeAlimentacao.logs[inclusaoDeAlimentacao.logs.length - 2]
+      !inclusaoDeAlimentacao.logs[inclusaoDeAlimentacao.logs.length - 1]
         .resposta_sim_nao;
     return (
       <div className="report">
