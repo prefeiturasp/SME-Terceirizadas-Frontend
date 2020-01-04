@@ -136,3 +136,150 @@
     }
   }
 }
+
+.combo-passado {
+  border: 1px solid #dadada !important;
+}
+
+.check-item {
+  height: 50%;
+  padding: 0px 3px;
+  border: 1px solid #52c41a;
+  border-radius: 50%;
+  background: #52c41a;
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 10px;
+    color: #ffffff;
+  }
+}
+
+.horario-confirmado {
+  .ant-time-picker-input[disabled] {
+    color: rgba(0, 0, 0, 0.25);
+    background-color: #ffffff !important;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .ant-time-picker-icon {
+    // background-color: #52c41a;
+    i {
+      color: #52c41a;
+    }
+  }
+
+  .input-horario .ant-time-picker .ant-time-picker-input {
+    color: black;
+  }
+}
+
+.grid-relatorio {
+  padding: 1em;
+  margin-bottom: 5em;
+  header {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin: 1em;
+  }
+
+  article {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    box-sizing: border-box;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 1em;
+
+    .tipo-periodos {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      border-bottom: 1px solid #a8a8a8;
+      letter-spacing: 0.01em;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+      color: #686868;
+    }
+
+    .teste {
+      height: 45px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ebeff2;
+
+      .periodo-escolar {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        display: flex;
+        align-items: center;
+        color: #323c47;
+      }
+
+      .icons-action {
+        width: 100px;
+        display: grid;
+        grid-template-columns: 50% 50%;
+
+        .fas {
+          line-height: 18px;
+          color: #a4a4a4;
+          font-weight: 900;
+
+          cursor: pointer;
+        }
+
+        .fa-angle-up,
+        .fa-angle-down {
+          font-size: 17px;
+        }
+
+        .fa-pen {
+          font-size: 14px;
+        }
+      }
+
+      &.ativo {
+        background-color: #f2fbfe;
+      }
+    }
+
+    main {
+      &.ativo-conteudo {
+        background-color: #f2fbfe;
+      }
+
+      &.grid-conteudo-periodo {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 40% 20% 40%;
+        margin-bottom: 0.5em;
+
+        nav {
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 188.62%;
+          margin-bottom: 0.5em;
+
+          color: #353535;
+        }
+        div {
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 188.62%;
+          margin-bottom: 0.5em;
+
+          color: #353535;
+        }
+      }
+    }
+  }
+}

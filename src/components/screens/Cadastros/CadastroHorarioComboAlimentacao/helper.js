@@ -1,5 +1,4 @@
 import moment from "moment";
-import { postHorariosCombosPorEscola } from "../../../../services/cadastroTipoAlimentacao.service";
 
 const temHorariosDeCombosParaEscola = horariosDosCombos => {
   return horariosDosCombos.length > 0;
@@ -12,8 +11,8 @@ const retornaArrayDeCombosComHorarios = (combos, uuidEscola) => {
       uuid: null,
       combo_tipos_alimentacao: combo.uuid,
       escola: uuidEscola,
-      hora_inicial: "00:00:00",
-      hora_final: "00:00:00",
+      hora_inicial: "00:00",
+      hora_final: "00:00",
       label: combo.label
     });
   });
@@ -27,6 +26,7 @@ const montaVinculosDeCombosIniciais = (
   let arrayVinculos = [];
   vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
     arrayVinculos.push({
+      ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
       combos: retornaArrayDeCombosComHorarios(vinculo.combos, uuidEscola)
     });
@@ -62,8 +62,8 @@ const montaArrayDeCombos = (combos, horariosDosCombos, uuidEscola) => {
           uuid: null,
           combo_tipos_alimentacao: combo.uuid,
           escola: uuidEscola,
-          hora_inicial: "00:00:00",
-          hora_final: "00:00:00",
+          hora_inicial: "00:00",
+          hora_final: "00:00",
           label: combo.label
         });
   });
@@ -78,6 +78,7 @@ const montaVinculosDeCombosExistentes = (
   let arrayVinculos = [];
   vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
     arrayVinculos.push({
+      ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
       combos: montaArrayDeCombos(vinculo.combos, horariosDosCombos, uuidEscola)
     });
@@ -111,11 +112,11 @@ export const verificaSeCampoEhValido = (
 ) => {
   const hora_inicial = moment(
     vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_inicial,
-    "HH:mm:ss A"
+    "HH:mm"
   );
   const hora_final = moment(
     vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
-    "h:mm:ss A"
+    "h:mm"
   );
   return hora_inicial <= hora_final;
 };
@@ -125,20 +126,23 @@ export const todosOsCamposValidos = (
   periodoEscolar,
   comboAlimentacaoAtual
 ) => {
-  const hora_inicial = moment(
-    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_inicial,
-    "HH:mm:ss A"
-  );
-  const hora_final = moment(
-    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
-    "HH:mm:ss A"
-  );
-  const horaZero = moment("00:00:00", "HH:mm:ss A");
-  return (
-    hora_final > horaZero &&
-    hora_inicial > horaZero &&
-    hora_inicial < hora_final
-  );
+  if (vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]) {
+    const hora_inicial = moment(
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]
+        .hora_inicial,
+      "HH:mm"
+    );
+    const hora_final = moment(
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
+      "HH:mm"
+    );
+    const horaZero = moment("00:00", "HH:mm");
+    return (
+      hora_final > horaZero &&
+      hora_inicial > horaZero &&
+      hora_inicial < hora_final
+    );
+  }
 };
 
 export const ultimoComboDisponivel = (
@@ -152,24 +156,4 @@ export const ultimoComboDisponivel = (
 
 export const ultimoPeriodoDaEscola = (vinculosDeCombos, periodoEscolar) => {
   return vinculosDeCombos.length === periodoEscolar + 1;
-};
-
-export const salvaComboEHorarios = (
-  vinculosDeCombos,
-  periodoEscolar,
-  comboAlimentacaoAtual
-) => {
-  const comboHorario =
-    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
-  const request = {
-    combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
-    escola: comboHorario.escola,
-    hora_inicial: comboHorario.hora_inicial,
-    hora_final: comboHorario.hora_final
-  };
-  let response = null;
-  postHorariosCombosPorEscola(request).then(resp => {
-    response = resp;
-  });
-  return response;
 };

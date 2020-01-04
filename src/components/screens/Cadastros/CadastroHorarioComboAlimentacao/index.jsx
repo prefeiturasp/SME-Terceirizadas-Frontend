@@ -5,8 +5,7 @@ import { InputHorario } from "../../../Shareable/Input/InputHorario";
 import {
   todosOsCamposValidos,
   ultimoComboDisponivel,
-  ultimoPeriodoDaEscola,
-  salvaComboEHorarios
+  ultimoPeriodoDaEscola
 } from "./helper";
 import HTTP_STATUS from "http-status-codes";
 import Wizard from "../../../Shareable/Wizard";
@@ -15,6 +14,10 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import "./style.scss";
 import moment from "moment";
 import { toastError } from "../../../Shareable/Toast/dialogs";
+import {
+  postHorariosCombosPorEscola,
+  putHorariosCombosPorEscola
+} from "../../../../services/cadastroTipoAlimentacao.service";
 
 class CadastroHorarioComboAlimentacao extends Component {
   constructor(props) {
@@ -22,14 +25,29 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.state = {
       vinculosDeCombos: null,
       periodoEscolar: 0,
-      comboAlimentacaoAtual: 0
+      comboAlimentacaoAtual: 0,
+      meusDados: null,
+      exibirRelatorio: null
     };
   }
 
   componentDidUpdate(prevProps) {
-    const { vinculosDeCombos } = this.props;
+    const { vinculosDeCombos, meusDados, horariosDosCombos } = this.props;
     if (prevProps.vinculosDeCombos !== this.props.vinculosDeCombos) {
-      this.setState({ vinculosDeCombos });
+      if (meusDados) {
+        let todosOsCombos = [];
+        vinculosDeCombos.forEach(vinculo => {
+          vinculo.combos.forEach(combo => {
+            todosOsCombos.push(combo);
+          });
+        });
+        if (todosOsCombos.length === horariosDosCombos.length) {
+          this.setState({ exibirRelatorio: true });
+        } else {
+          this.setState({ exibirRelatorio: false });
+        }
+      }
+      this.setState({ vinculosDeCombos, meusDados });
     }
     this.props.change("quantidade_alunos", 54);
   }
@@ -60,13 +78,92 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ vinculosDeCombos });
   };
 
-  retornaUuidDoCombo = () => {
+  enviarETrocaDePeriodo = () => {
     let {
       vinculosDeCombos,
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
-    return vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid;
+    const combo =
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+    const request = {
+      combo_tipos_alimentacao: combo.combo_tipos_alimentacao,
+      escola: combo.escola,
+      hora_inicial: combo.hora_inicial,
+      hora_final: combo.hora_final
+    };
+    if (!combo.uuid) {
+      postHorariosCombosPorEscola(request).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
+            response.uuid;
+          this.setState({
+            vinculosDeCombos,
+            comboAlimentacaoAtual: 0,
+            periodoEscolar: periodoEscolar + 1
+          });
+        } else {
+          toastError("Erro ao salvar combo");
+        }
+      });
+    } else {
+      putHorariosCombosPorEscola(request, combo.uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          this.setState({
+            vinculosDeCombos,
+            comboAlimentacaoAtual: 0,
+            periodoEscolar: periodoEscolar + 1
+          });
+        } else {
+          toastError("Erro ao alterar combo");
+        }
+      });
+    }
+  };
+
+  enviarEFinalizar = () => {
+    let {
+      vinculosDeCombos,
+      periodoEscolar,
+      comboAlimentacaoAtual
+    } = this.state;
+    const combo =
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+    const request = {
+      combo_tipos_alimentacao: combo.combo_tipos_alimentacao,
+      escola: combo.escola,
+      hora_inicial: combo.hora_inicial,
+      hora_final: combo.hora_final
+    };
+    if (!combo.uuid) {
+      postHorariosCombosPorEscola(request).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
+            response.uuid;
+          this.setState({
+            exibirRelatorio: true,
+            vinculosDeCombos,
+            comboAlimentacaoAtual: 0,
+            periodoEscolar: 0
+          });
+        } else {
+          toastError("Erro ao salvar combo");
+        }
+      });
+    } else {
+      putHorariosCombosPorEscola(request, combo.uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          this.setState({
+            exibirRelatorio: true,
+            vinculosDeCombos,
+            comboAlimentacaoAtual: 0,
+            periodoEscolar: 0
+          });
+        } else {
+          toastError("Erro ao alterar combo");
+        }
+      });
+    }
   };
 
   enviarComboDeHorarios = () => {
@@ -75,33 +172,90 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
-    const uuidCombo = this.retornaUuidDoCombo();
-    let response = null;
-    if (uuidCombo === null) {
-      response = salvaComboEHorarios(
-        vinculosDeCombos,
-        periodoEscolar,
-        comboAlimentacaoAtual
-      );
+    const combo =
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+    const request = {
+      combo_tipos_alimentacao: combo.combo_tipos_alimentacao,
+      escola: combo.escola,
+      hora_inicial: combo.hora_inicial,
+      hora_final: combo.hora_final
+    };
+    if (!combo.uuid) {
+      postHorariosCombosPorEscola(request).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
+            response.uuid;
+          this.setState({
+            vinculosDeCombos,
+            comboAlimentacaoAtual: comboAlimentacaoAtual + 1
+          });
+        } else {
+          toastError("Erro ao salvar combo");
+        }
+      });
     } else {
-      // console.log("kfdjkfdjkfjsdksdf");
+      putHorariosCombosPorEscola(request, combo.uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          this.setState({
+            vinculosDeCombos,
+            comboAlimentacaoAtual: comboAlimentacaoAtual + 1
+          });
+        } else {
+          toastError("Erro ao alterar combo");
+        }
+      });
     }
+  };
 
-    if (response.status === HTTP_STATUS.CREATED) {
-      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
-        response.uuid;
-    } else if (response.status === HTTP_STATUS.OK) {
-      // console.log("kfdjkfdjkfjsdksdf");
-    } else {
-      toastError("Erro ao salvar combo");
-    }
+  salvaComboEHorarios = (
+    vinculosDeCombos,
+    periodoEscolar,
+    comboAlimentacaoAtual
+  ) => {
+    const comboHorario =
+      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual];
+    const request = {
+      combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
+      escola: comboHorario.escola,
+      hora_inicial: comboHorario.hora_inicial,
+      hora_final: comboHorario.hora_final
+    };
+    postHorariosCombosPorEscola(request).then(resp => {
+      return resp;
+    });
+  };
+
+  detalhesPeriodo = (index, ativo) => {
+    let { vinculosDeCombos } = this.state;
+    vinculosDeCombos.forEach((vinculo, indice) => {
+      if (index === indice) {
+        vinculo.ativo = !ativo;
+      } else {
+        vinculo.ativo = false;
+      }
+    });
+    this.setState({ vinculosDeCombos });
+  };
+
+  getPeriodoHorario = index => {
+    let { vinculosDeCombos } = this.state;
+    vinculosDeCombos.forEach(vinculo => {
+      vinculo.ativo = false;
+    });
+    this.setState({
+      periodoEscolar: index,
+      exibirRelatorio: false,
+      vinculosDeCombos
+    });
   };
 
   render() {
     const {
       vinculosDeCombos,
       periodoEscolar,
-      comboAlimentacaoAtual
+      comboAlimentacaoAtual,
+      meusDados,
+      exibirRelatorio
     } = this.state;
     vinculosDeCombos &&
       ultimoComboDisponivel(
@@ -111,11 +265,79 @@ class CadastroHorarioComboAlimentacao extends Component {
       );
     const { naoPermitido } = this.props;
     return !vinculosDeCombos ? (
-      !naoPermitido ? (
+      !naoPermitido && !meusDados ? (
         <div>Carregando...</div>
       ) : (
         <div>Voce não tem permissão</div>
       )
+    ) : exibirRelatorio ? (
+      <section className="card mt-3">
+        <main className="grid-relatorio">
+          <header>Resumo do cadastro</header>
+
+          <article>
+            <nav className="tipo-periodos">Tipos de períodos</nav>
+            <section>
+              {vinculosDeCombos.map((element, index) => {
+                return (
+                  <Fragment key={index}>
+                    <div className={`teste ${element.ativo && "ativo"}`}>
+                      <div className="periodo-escolar">
+                        {element.periodo_escolar.nome}
+                      </div>
+                      <div className="icons-action">
+                        {element.ativo ? (
+                          <Fragment>
+                            <i
+                              className="fas fa-pen"
+                              onClick={() => this.getPeriodoHorario(index)}
+                            />
+                            <i
+                              className="fas fa-angle-up"
+                              onClick={() =>
+                                this.detalhesPeriodo(index, element.ativo)
+                              }
+                            />
+                          </Fragment>
+                        ) : (
+                          <Fragment>
+                            <i />
+                            <i
+                              className="fas fa-angle-down"
+                              onClick={() =>
+                                this.detalhesPeriodo(index, element.ativo)
+                              }
+                            />
+                          </Fragment>
+                        )}
+                      </div>
+                    </div>
+                    {element.ativo && (
+                      <main
+                        className={`grid-conteudo-periodo ${element.ativo &&
+                          "ativo-conteudo"}`}
+                      >
+                        <nav>Tipos de alimentos atuais</nav>
+                        <nav>Horário Inicio</nav>
+                        <nav>Horário Término</nav>
+                        {element.combos.map((combo, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <div>{combo.label}</div>
+                              <div>{combo.hora_inicial}</div>
+                              <div>{combo.hora_final}</div>
+                            </Fragment>
+                          );
+                        })}
+                      </main>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </section>
+          </article>
+        </main>
+      </section>
     ) : (
       <form className="card mt-3">
         <article className="grid-box">
@@ -150,24 +372,37 @@ class CadastroHorarioComboAlimentacao extends Component {
                         ${
                           comboAlimentacaoAtual === index
                             ? "combo-atual"
+                            : comboAlimentacaoAtual > index
+                            ? "combo-passado"
                             : "proximo-combo"
                         }`}
                     >
-                      <nav>{combo.label}</nav> <div />
+                      <nav>{combo.label}</nav>{" "}
+                      <div
+                        className={
+                          comboAlimentacaoAtual > index && "check-item"
+                        }
+                      >
+                        {comboAlimentacaoAtual > index && (
+                          <i className="fas fa-check" />
+                        )}
+                      </div>
                     </div>
                     <Field
                       name={`hora_inicial_${index}`}
                       className={`${
                         comboAlimentacaoAtual === index
                           ? "combo-ativo"
+                          : comboAlimentacaoAtual > index
+                          ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
                       nameEmpty={
                         !combo.uuid ? "Hora Inicial" : combo.hora_inicial
                       }
+                      horaAtual={combo.hora_inicial}
                       component={InputHorario}
                       onChange={date => this.obterHoraInicio(date)}
-                      hora={combo.hora_inicial}
                       disabled={comboAlimentacaoAtual !== index ? true : false}
                     />
                     <Field
@@ -175,13 +410,15 @@ class CadastroHorarioComboAlimentacao extends Component {
                       className={`${
                         comboAlimentacaoAtual === index
                           ? "combo-ativo"
+                          : comboAlimentacaoAtual > index
+                          ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
                       nameEmpty={
                         !combo.uuid ? "Hora Término" : combo.hora_final
                       }
+                      horaAtual={combo.hora_final}
                       component={InputHorario}
-                      hora={combo.hora_final}
                       onChange={date => this.obterHoraFim(date)}
                       disabled={comboAlimentacaoAtual !== index ? true : false}
                     />
@@ -206,14 +443,14 @@ class CadastroHorarioComboAlimentacao extends Component {
                     texto={"Finalizar"}
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => this.enviarComboDeHorarios()}
+                    onClick={() => this.enviarEFinalizar()}
                   />
                 ) : (
                   <Botao
                     texto={"Próximo"}
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => this.enviarComboDeHorarios()}
+                    onClick={() => this.enviarETrocaDePeriodo()}
                   />
                 )
               ) : (
