@@ -16,7 +16,8 @@ class Cadastros extends Component {
       gestaoDeAlimentacao: false,
       hoverLotes: false,
       hoverEmpresas: false,
-      hoverEdital: false
+      hoverEdital: false,
+      hoverHorarios: false
     };
     this.cardEdital = React.createRef();
   }
@@ -27,6 +28,7 @@ class Cadastros extends Component {
       hoverEmpresas,
       hoverTipoAlimentacao,
       hoverLotes,
+      hoverHorarios,
       gestaoDeAlimentacao
     } = this.state;
     return (
@@ -91,6 +93,22 @@ class Cadastros extends Component {
             <Link to="/configuracoes/cadastros/tipos-alimentacao">
               <CardLogo titulo={"Cadastro de Tipos de Alimentações"}>
                 <IconeTipoAlimentacao hover={hoverTipoAlimentacao} />
+              </CardLogo>
+            </Link>
+          </div>
+        </div>
+
+        <div className="row mt-3">
+          <div
+            onMouseEnter={() => this.setState({ hoverHorarios: true })}
+            onMouseLeave={() => this.setState({ hoverHorarios: false })}
+            className="linked-card col-4"
+          >
+            <Link to="/configuracoes/cadastros/horario-combos-alimentacao">
+              <CardLogo
+                titulo={"Cadastro de Horários dos tipos de alimentação"}
+              >
+                <IconeTipoAlimentacao hover={hoverHorarios} />
               </CardLogo>
             </Link>
           </div>
