@@ -4,7 +4,7 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import { getSolicitacaoUnificada } from "../../../services/solicitacaoUnificada.service";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -20,7 +20,7 @@ class Relatorio extends Component {
       uuid: null,
       showNaoAprovaModal: false,
       showModal: false,
-      solicitacaoKitLanche: null,
+      solicitacaoUnificada: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null
     };
@@ -33,9 +33,9 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getDetalheKitLancheAvulsa(uuid).then(response => {
+      getSolicitacaoUnificada(uuid).then(response => {
         this.setState({
-          solicitacaoKitLanche: response,
+          solicitacaoUnificada: response.data,
           uuid,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
         });
@@ -60,9 +60,9 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getDetalheKitLancheAvulsa(uuid).then(response => {
+    getSolicitacaoUnificada(uuid).then(response => {
       this.setState({
-        solicitacaoKitLanche: response
+        solicitacaoUnificada: response.data
       });
     });
   }
@@ -89,7 +89,7 @@ class Relatorio extends Component {
     const {
       resposta_sim_nao,
       showNaoAprovaModal,
-      solicitacaoKitLanche,
+      solicitacaoUnificada,
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
       uuid
@@ -106,9 +106,9 @@ class Relatorio extends Component {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
-      (solicitacaoKitLanche &&
-        solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
-        solicitacaoKitLanche.status === statusEnum.CODAE_QUESTIONADO &&
+      (solicitacaoUnificada &&
+        solicitacaoUnificada.foi_solicitado_fora_do_prazo &&
+        solicitacaoUnificada.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
       (![
@@ -116,22 +116,22 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
-      (solicitacaoKitLanche &&
-        (!solicitacaoKitLanche.foi_solicitado_fora_do_prazo ||
+      (solicitacaoUnificada &&
+        (!solicitacaoUnificada.foi_solicitado_fora_do_prazo ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
-          ].includes(solicitacaoKitLanche.status)) &&
+          ].includes(solicitacaoUnificada.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
-      solicitacaoKitLanche &&
-      solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
-      [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
-        solicitacaoKitLanche.status
+      solicitacaoUnificada &&
+      solicitacaoUnificada.foi_solicitado_fora_do_prazo &&
+      [statusEnum.CODAE_A_AUTORIZAR, statusEnum.CODAE_QUESTIONADO].includes(
+        solicitacaoUnificada.status
       );
     return (
       <div>
@@ -140,7 +140,7 @@ class Relatorio extends Component {
             showModal={showNaoAprovaModal}
             closeModal={this.closeNaoAprovaModal}
             endpoint={endpointNaoAprovaSolicitacao}
-            solicitacao={solicitacaoKitLanche}
+            solicitacao={solicitacaoUnificada}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
@@ -158,23 +158,23 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!solicitacaoKitLanche ? (
+        {!solicitacaoUnificada ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
-              solicitacaoKitLanche.id_externo
+            <span className="page-title">{`Solicitação Unificada - Solicitação # ${
+              solicitacaoUnificada.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
-                  solicitacaoKitLanche={solicitacaoKitLanche}
+                  solicitacaoUnificada={solicitacaoUnificada}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                 />
                 <RelatorioHistoricoQuestionamento
-                  solicitacao={solicitacaoKitLanche}
+                  solicitacao={solicitacaoUnificada}
                 />
-                {visualizaBotoesDoFluxo(solicitacaoKitLanche) && (
+                {visualizaBotoesDoFluxo(solicitacaoUnificada) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
@@ -219,7 +219,7 @@ class Relatorio extends Component {
   }
 }
 
-const formName = "relatorioKitLanchePasseio";
+const formName = "relatorioSolicitacaoUnificada";
 const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true

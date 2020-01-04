@@ -5,11 +5,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
-import { getDiasUteis } from "../../../services/diasUteis.service";
-import {
-  dataParaUTC,
-  visualizaBotoesDoFluxo
-} from "../../../helpers/utilities";
+import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
@@ -36,27 +32,15 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getAlteracaoCardapio(uuid).then(response => {
-          this.setState({
-            alteracaoDeCardapio: response,
-            uuid,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+    if (uuid) {
+      getAlteracaoCardapio(uuid).then(response => {
+        this.setState({
+          alteracaoDeCardapio: response,
+          uuid,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
         });
-      }
-    });
+      });
+    }
   }
 
   showQuestionamentoModal(resposta_sim_nao) {
@@ -178,7 +162,7 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Alteração de Cardápio - Pedido # ${
+            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
             <div className="card mt-3">

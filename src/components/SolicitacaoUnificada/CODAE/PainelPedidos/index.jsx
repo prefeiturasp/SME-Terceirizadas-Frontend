@@ -12,7 +12,6 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -98,7 +97,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -110,7 +108,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -122,7 +119,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -135,7 +131,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
