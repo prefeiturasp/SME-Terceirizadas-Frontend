@@ -58,7 +58,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
-    const horario = moment(hora).format("HH:mm:ss");
+    const horario = moment(hora).format("HH:mm");
     vinculosDeCombos[periodoEscolar].combos[
       comboAlimentacaoAtual
     ].hora_inicial = horario;
@@ -71,7 +71,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodoEscolar,
       comboAlimentacaoAtual
     } = this.state;
-    const horario = moment(hora).format("HH:mm:ss");
+    const horario = moment(hora).format("HH:mm");
     vinculosDeCombos[periodoEscolar].combos[
       comboAlimentacaoAtual
     ].hora_final = horario;
@@ -96,7 +96,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       postHorariosCombosPorEscola(request).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
-            response.uuid;
+            response.data.uuid;
           this.setState({
             vinculosDeCombos,
             comboAlimentacaoAtual: 0,
@@ -139,7 +139,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       postHorariosCombosPorEscola(request).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
-            response.uuid;
+            response.data.uuid;
           this.setState({
             exibirRelatorio: true,
             vinculosDeCombos,
@@ -184,7 +184,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       postHorariosCombosPorEscola(request).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].uuid =
-            response.uuid;
+            response.data.uuid;
           this.setState({
             vinculosDeCombos,
             comboAlimentacaoAtual: comboAlimentacaoAtual + 1
@@ -397,9 +397,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                           ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
-                      nameEmpty={
-                        !combo.uuid ? "Hora Inicial" : combo.hora_inicial
-                      }
+                      nameEmpty={"Hora Inicial"}
                       horaAtual={combo.hora_inicial}
                       component={InputHorario}
                       onChange={date => this.obterHoraInicio(date)}
@@ -414,9 +412,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                           ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
-                      nameEmpty={
-                        !combo.uuid ? "Hora Término" : combo.hora_final
-                      }
+                      nameEmpty={"Hora Término"}
                       horaAtual={combo.hora_final}
                       component={InputHorario}
                       onChange={date => this.obterHoraFim(date)}
