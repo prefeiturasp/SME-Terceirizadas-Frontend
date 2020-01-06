@@ -336,11 +336,15 @@ export const DRENaoValidaInclusaoDeAlimentacaoAvulsa = (
     });
 };
 
-export const CODAEAutorizaInclusaoDeAlimentacaoAvulsa = uuid => {
+export const CODAEAutorizaInclusaoDeAlimentacaoAvulsa = (
+  uuid,
+  justificativa = {}
+) => {
   const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {

@@ -1,17 +1,16 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { INVERSAO_CARDAPIO } from "../../../configs/constants";
+import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import {
-  dataParaUTC,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
+  prazoDoPedidoMensagem,
+  corDaMensagem
 } from "../../../helpers/utilities";
-import { getDiasUteis } from "../../../services/diasUteis.service";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -21,8 +20,8 @@ import {
 } from "../../Shareable/Botao/constants";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,12 +32,14 @@ class Relatorio extends Component {
       redirect: false,
       showNaoAprovaModal: false,
       showModal: false,
+      showAutorizarModal: false,
       InversaoCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
@@ -57,34 +58,19 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const dataMaisProxima = moment(
-            InversaoCardapio.data_de,
-            "DD/MM/YYYY"
-          );
-
-          this.setState({
-            InversaoCardapio,
-            uuid,
-            escolaDaInversao: InversaoCardapio.escola,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+    if (uuid) {
+      getInversaoDeDiaDeCardapio(uuid).then(response => {
+        const InversaoCardapio = response.data;
+        this.setState({
+          InversaoCardapio,
+          uuid,
+          escolaDaInversao: InversaoCardapio.escola,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+            InversaoCardapio.prioridade
+          )
         });
-      }
-    });
+      });
+    }
   }
 
   showQuestionamentoModal(resposta_sim_nao) {
@@ -101,6 +87,14 @@ class Relatorio extends Component {
 
   closeNaoAprovaModal() {
     this.setState({ showNaoAprovaModal: false });
+  }
+
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
   }
 
   loadSolicitacao(uuid) {
@@ -137,12 +131,15 @@ class Relatorio extends Component {
       uuid,
       resposta_sim_nao,
       showNaoAprovaModal,
-      showQuestionamentoModal
+      showQuestionamentoModal,
+      showAutorizarModal
     } = this.state;
     const {
+      visao,
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
+      endpointAprovaSolicitacao,
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
@@ -178,6 +175,11 @@ class Relatorio extends Component {
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         InversaoCardapio.status
       );
+    const EXIBIR_MODAL_AUTORIZACAO =
+      visao === CODAE &&
+      InversaoCardapio &&
+      InversaoCardapio.foi_solicitado_fora_do_prazo &&
+      !InversaoCardapio.logs[InversaoCardapio.logs.length - 1].resposta_sim_nao;
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -207,6 +209,16 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
+            {endpointAprovaSolicitacao && (
+              <ModalAutorizarAposQuestionamento
+                showModal={showAutorizarModal}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            )}
             <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
               InversaoCardapio.id_externo
             }`}</span>
@@ -350,7 +362,11 @@ class Relatorio extends Component {
                       <Botao
                         texto={textoBotaoAprova}
                         type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
+                        onClick={() =>
+                          EXIBIR_MODAL_AUTORIZACAO
+                            ? this.showAutorizarModal()
+                            : this.handleSubmit()
+                        }
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />

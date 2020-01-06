@@ -7,39 +7,47 @@ import {
 } from "../../../Shareable/Botao/constants";
 import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
+import { corDaMensagem } from "../../../../helpers/utilities";
 
 export const CorpoRelatorio = props => {
-  const { solicitacaoUnificada } = props;
+  const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
   return (
     <div>
       <div className="container-detail">
-        <div className="container-title">
-          <div className="identificador">
-            <div># {solicitacaoUnificada.id_externo}</div>
-            <div>ID DA SOLICITAÇÃO</div>
+        <div className="row">
+          <p
+            className={`col-12 title-message ${corDaMensagem(
+              prazoDoPedidoMensagem
+            )}`}
+          >
+            {prazoDoPedidoMensagem}
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />
+          </p>
+          <div className="col-2">
+            <span className="badge-sme badge-secondary-sme">
+              <span className="id-of-solicitation-dre">
+                # {solicitacaoUnificada.id_externo}
+              </span>
+              <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
+            </span>
           </div>
-          <div className="titulo-descricao">
-            <div className="titulo-solicitante-lote">
-              <div>
-                <div className="solicitante">Solicitante</div>
-                <div className="lote">Lote</div>
-              </div>
-              <div>
-                <div className="prop-solicitante">{`DRE ${
-                  solicitacaoUnificada.diretoria_regional.nome
-                }`}</div>
-                <div className="prop-lote">
-                  {solicitacaoUnificada.lote_nome}
-                </div>
-              </div>
-            </div>
+          <div className="my-auto col-6 pl-5">
+            <span className="requester">Diretoria Regional Solicitante</span>
+            <br />
+            <span className="dre-name">
+              {solicitacaoUnificada.diretoria_regional.nome}
+            </span>
           </div>
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right"
-          />
+          <div className="my-auto col-4">
+            <span className="requester">Lote</span>
+            <br />
+            <span className="dre-name">{solicitacaoUnificada.lote_nome}</span>
+          </div>
         </div>
 
         <hr />

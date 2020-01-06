@@ -47,7 +47,7 @@ class RelatorioBase extends React.Component {
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
+    visao={DRE}
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Solicitação Unificada cancelada com sucesso!"}
     endpointNaoAprovaSolicitacao={cancelaKitLancheUnificadoDre}
@@ -58,7 +58,7 @@ export const RelatorioDRE = () => (
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
+    visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
     toastAprovaMensagem={"Solicitação Unificada autorizada com sucesso!"}
@@ -76,7 +76,7 @@ export const RelatorioCODAE = () => (
 // Terceirizada
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
+    visao={TERCEIRIZADA}
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     toastAprovaMensagem={

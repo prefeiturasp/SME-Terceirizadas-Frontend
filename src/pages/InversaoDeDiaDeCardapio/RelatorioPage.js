@@ -64,11 +64,11 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
 }
 
 // Escola
-export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
+export const RelatorioEscola = () => <RelatorioBase visao={ESCOLA} />;
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
+    visao={DRE}
     endpointAprovaSolicitacao={dreValidaPedidoEscola}
     endpointNaoAprovaSolicitacao={DRENegaInversaoDeDiaDeCardapio}
     ModalNaoAprova={ModalNaoValidarSolicitacao}
@@ -81,7 +81,7 @@ export const RelatorioDRE = () => (
 
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
+    visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
     ModalQuestionamento={ModalCODAEQuestiona}
@@ -99,7 +99,7 @@ export const RelatorioCODAE = () => (
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
+    visao={TERCEIRIZADA}
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     endpointQuestionamento={
