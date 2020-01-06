@@ -37,6 +37,7 @@ export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
+export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
 export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
   "tipo-alimentacao-unidade-escolar";
 

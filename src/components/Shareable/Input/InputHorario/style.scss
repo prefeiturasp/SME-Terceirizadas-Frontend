@@ -1,0 +1,10 @@
+.input-horario {
+  height: 32px;
+  .ant-time-picker {
+    width: 100%;
+
+    .ant-time-picker-input {
+      height: 38px;
+    }
+  }
+}
