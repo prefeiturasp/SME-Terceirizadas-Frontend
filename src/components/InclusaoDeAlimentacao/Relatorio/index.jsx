@@ -49,7 +49,7 @@ class Relatorio extends Component {
           inclusaoDeAlimentacao: response,
           uuid,
           ehInclusaoContinua: ehInclusaoContinua === "true",
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
     }

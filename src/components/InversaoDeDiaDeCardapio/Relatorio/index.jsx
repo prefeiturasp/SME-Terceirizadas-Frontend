@@ -1,5 +1,4 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
@@ -8,10 +7,10 @@ import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import {
-  dataParaUTC,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
+  prazoDoPedidoMensagem,
+  corDaMensagem
 } from "../../../helpers/utilities";
-import { getDiasUteis } from "../../../services/diasUteis.service";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -21,7 +20,6 @@ import {
 } from "../../Shareable/Botao/constants";
 import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
@@ -60,34 +58,19 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const dataMaisProxima = moment(
-            InversaoCardapio.data_de,
-            "DD/MM/YYYY"
-          );
-
-          this.setState({
-            InversaoCardapio,
-            uuid,
-            escolaDaInversao: InversaoCardapio.escola,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+    if (uuid) {
+      getInversaoDeDiaDeCardapio(uuid).then(response => {
+        const InversaoCardapio = response.data;
+        this.setState({
+          InversaoCardapio,
+          uuid,
+          escolaDaInversao: InversaoCardapio.escola,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+            InversaoCardapio.prioridade
+          )
         });
-      }
-    });
+      });
+    }
   }
 
   showQuestionamentoModal(resposta_sim_nao) {

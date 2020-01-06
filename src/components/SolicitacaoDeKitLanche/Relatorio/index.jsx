@@ -41,7 +41,7 @@ class Relatorio extends Component {
         this.setState({
           solicitacaoKitLanche: response,
           uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
     }

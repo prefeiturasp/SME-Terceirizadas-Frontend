@@ -41,7 +41,7 @@ class Relatorio extends Component {
         this.setState({
           solicitacaoUnificada: response.data,
           uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data_inicial)
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data.prioridade)
         });
       });
     }

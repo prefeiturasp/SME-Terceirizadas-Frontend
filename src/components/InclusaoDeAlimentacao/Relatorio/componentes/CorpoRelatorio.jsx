@@ -4,6 +4,12 @@ import {
   corDaMensagem,
   stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
@@ -71,13 +77,13 @@ export class CorpoRelatorio extends Component {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            {/*<Botao
+            <Botao
               type={BUTTON_TYPE.BUTTON}
               titulo="imprimir"
               style={BUTTON_STYLE.BLUE}
               icon={BUTTON_ICON.PRINT}
               className="float-right"
-            />*/}
+            />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
