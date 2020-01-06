@@ -6,8 +6,8 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getEvolucaoSolicitacoes = () => {
-  const url = `${API_URL}/escola-relatorio/evolucao_solicitacoes/`;
+export const getEvolucaoSolicitacoesEscola = () => {
+  const url = `${API_URL}/escola-solicitacoes/evolucao_solicitacoes/`;
   let status = 0;
   return fetch(url, {
     method: "GET",

@@ -380,7 +380,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                       <nav>{combo.label}</nav>{" "}
                       <div
                         className={
-                          comboAlimentacaoAtual > index && "check-item"
+                          comboAlimentacaoAtual > index && "checado-item-ok"
                         }
                       >
                         {comboAlimentacaoAtual > index && (

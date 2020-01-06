@@ -8,6 +8,7 @@ import {
 } from "../../../../Shareable/Botao/constants";
 import { getPedidosESolicitacoesFiltroPaginacao } from "../../../../../services/filtroSolicitacoes.service";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
+import "./style.scss";
 
 class ResultadoFiltro extends Component {
   constructor(props) {
@@ -76,7 +77,7 @@ class ResultadoFiltro extends Component {
     const { checkTodos, listaSolicitacoes, index } = this.state;
     return (
       <section className="card">
-        <section className="card-body realtorio-filtro">
+        <section className="card-body relatorio-filtro">
           <header>Resultado</header>
           <section className="cabecalho">
             <div className="cabecalho-esquerdo">Solicitações por status</div>

@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import GraficoEvolucao from "./components/GraficoEvolucao";
 import BuscaPorPeriodo from "./components/BuscaPorPeriodo";
 import ResultadoFiltro from "./components/ResultadoFiltro";
-import "./style.scss";
+import CardsComBandeira from "./components/CardsComBandeira";
 
 class Relatorios extends Component {
   constructor(props) {
@@ -50,7 +50,7 @@ class Relatorios extends Component {
       });
     } else {
       renderizaConteudoPadrao &&
-        (renderizaConteudoPadrao = resultado.length > 0 ? false : true);
+        (renderizaConteudoPadrao = resultado.length <= 0);
       this.setState({
         renderizaConteudoPadrao,
         resultadosFiltro: resultado
@@ -76,7 +76,10 @@ class Relatorios extends Component {
           setaPaginacao={this.setaPaginacao}
         />
         {renderizaConteudoPadrao ? (
-          <GraficoEvolucao />
+          <div className="card">
+            <CardsComBandeira {...this.props} />
+            <GraficoEvolucao {...this.props} />
+          </div>
         ) : (
           <ResultadoFiltro
             values={values}

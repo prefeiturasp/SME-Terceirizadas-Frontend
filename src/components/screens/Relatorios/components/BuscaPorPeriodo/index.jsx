@@ -20,17 +20,7 @@ class BuscaPorPeriodo extends Component {
 
   render() {
     const { meusDados } = this.state;
-    const { limpaForm } = this.props;
-    return (
-      <FiltrosDeBusca
-        meusDados={meusDados}
-        renderizarRelatorio={this.props.renderizarRelatorio}
-        setaFalseLimpaForm={this.props.setaFalseLimpaForm}
-        setaValuesForm={this.props.setaValuesForm}
-        setaPaginacao={this.props.setaPaginacao}
-        limpaForm={limpaForm}
-      />
-    );
+    return <FiltrosDeBusca meusDados={meusDados} {...this.props} />;
   }
 }
 

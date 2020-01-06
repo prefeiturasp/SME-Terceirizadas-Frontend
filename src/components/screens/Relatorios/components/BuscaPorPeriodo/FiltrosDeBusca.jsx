@@ -22,6 +22,7 @@ import {
 } from "./constantes";
 import { getPedidosESolicitacoesFiltro } from "../../../../../services/filtroSolicitacoes.service";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
+import "./style.scss";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {
@@ -146,11 +147,7 @@ class FiltrosDeBusca extends Component {
                   name="unidade_escolar"
                   component={Select}
                   options={this.renderizaSelectTipoUnidade()}
-                  disabled={
-                    meusDados && meusDados.tipo_usuario === "escola"
-                      ? true
-                      : false
-                  }
+                  disabled={meusDados && meusDados.tipo_usuario === "escola"}
                 />
               </div>
               <div className="container-left-bottom">
@@ -180,7 +177,7 @@ class FiltrosDeBusca extends Component {
                   name="status_solicitacao"
                   component={Select}
                   options={STATUS_SOLICITACAO}
-                  naoDesabilitarPrimeiraOpcao={true}
+                  naoDesabilitarPrimeiraOpcao
                 />
               </div>
             </div>
@@ -191,11 +188,7 @@ class FiltrosDeBusca extends Component {
                   name="diretoria_regional"
                   component={Select}
                   options={this.renderizaSelectDRE()}
-                  disabled={
-                    meusDados && meusDados.tipo_usuario === "escola"
-                      ? true
-                      : false
-                  }
+                  disabled={meusDados && meusDados.tipo_usuario === "escola"}
                 />
               </div>
               <div className="container-right-bottom">
@@ -205,7 +198,7 @@ class FiltrosDeBusca extends Component {
                   name="tipo_de__solicitacao"
                   component={Select}
                   options={TIPO_SOLICITACAO}
-                  naoDesabilitarPrimeiraOpcao={true}
+                  naoDesabilitarPrimeiraOpcao
                 />
                 <div className="filtrar">
                   <Botao
