@@ -3,6 +3,11 @@ import React, { Component } from "react";
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
 
+import Botao from "../../components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../components/Shareable/Botao/constants";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
@@ -15,6 +20,7 @@ class Relatorio extends Component {
     this.state = {
       uuid: null
     };
+    this.abrirLaudo = this.abrirLaudo.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +33,14 @@ class Relatorio extends Component {
           uuid
         });
       });
+    }
+  }
+
+  abrirLaudo() {
+    const { dietaEspecial } = this.state;
+    const win = window.open(dietaEspecial.anexos[0].arquivo, "_blank");
+    if (win !== null) {
+      win.focus();
     }
   }
 
@@ -147,11 +161,25 @@ class Relatorio extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-10 report-label-value">
+          <div className="col-9 report-label-value">
             <p>
               O laudo fornecido pelo médico deve ter sido emitido há, no máximo,
               3 meses.
             </p>
+          </div>
+          <div className="col-3">
+            <Botao
+              texto="Visualizar Anexo"
+              icon={BUTTON_ICON.ATTACH}
+              onClick={() => this.abrirLaudo()}
+              disabled={dietaEspecial.anexos.length === 0}
+              style={BUTTON_STYLE.BLUE_OUTLINE}
+            />
+            {dietaEspecial.anexos.length > 0 ? (
+              <p>{dietaEspecial.anexos[0].nome}</p>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <hr />
