@@ -35,4 +35,10 @@ export const RelatoriosEscola = () => (
 );
 
 // DRE
-export const RelatoriosDRE = () => <RelatoriosBase visao={DRE} />;
+export const RelatoriosDRE = () => (
+  <RelatoriosBase
+    visao={DRE}
+    getEvolucaoSolicitacoes={getEvolucaoSolicitacoesEscola}
+    getResumoTotaisPorMes={getResumoTotaisPorMesEscola}
+  />
+);
