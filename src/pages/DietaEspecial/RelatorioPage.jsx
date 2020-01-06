@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { reduxForm } from "redux-form";
 
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
+
+import Diagnosticos from "../../components/DietaEspecial/Diagnosticos";
 
 import Botao from "../../components/Shareable/Botao";
 import {
@@ -18,9 +21,19 @@ class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      uuid: null
+      uuid: null,
+      diagnosticos: [
+        { uuid: "asdf", nome: "Diagnóstico A" },
+        { uuid: "qwer", nome: "Diagnóstico B" },
+        { uuid: "zxcv", nome: "Diagnóstico C" },
+        { uuid: "1234", nome: "Diagnóstico D" }
+      ],
+      diagnosticosSelecionados: ["asdf"]
     };
     this.abrirLaudo = this.abrirLaudo.bind(this);
+    this.onSelect = this.onSelect.bind(this);
+    this.addOption = this.addOption.bind(this);
+    this.removeOption = this.removeOption.bind(this);
   }
 
   componentDidMount() {
@@ -34,6 +47,26 @@ class Relatorio extends Component {
         });
       });
     }
+  }
+
+  onSelect(index, value) {
+    this.setState({
+      diagnosticosSelecionados: this.state.diagnosticosSelecionados.map(
+        (mapValue, mapIndex) => (mapIndex === index ? value : mapValue)
+      )
+    });
+  }
+  addOption() {
+    this.setState({
+      diagnosticosSelecionados: this.state.diagnosticosSelecionados.concat("")
+    });
+  }
+  removeOption(index) {
+    const diagnosticosSelecionados =
+      this.state.diagnosticosSelecionados.length === 1
+        ? [""]
+        : this.state.diagnosticosSelecionados.filter((v, i) => i !== index);
+    this.setState({ diagnosticosSelecionados });
   }
 
   abrirLaudo() {
@@ -199,10 +232,27 @@ class Relatorio extends Component {
           </div>
         </div>
         <hr />
+        <div className="row title">
+          <div className="col-12">
+            <p>Relação por Diagnóstico</p>
+          </div>
+        </div>
+        <Diagnosticos
+          diagnosticos={this.state.diagnosticos}
+          selecionados={this.state.diagnosticosSelecionados}
+          addOption={this.addOption}
+          removeOption={this.removeOption}
+          onSelect={this.onSelect}
+        />
       </div>
     );
   }
 }
+
+const RelatorioForm = reduxForm({
+  form: "painelPedidos",
+  enableReinitialize: true
+})(Relatorio);
 
 export default class RelatorioPage extends Component {
   render() {
@@ -220,7 +270,7 @@ export default class RelatorioPage extends Component {
     return (
       <Page>
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
-        <Relatorio {...this.props} />
+        <RelatorioForm {...this.props} />
       </Page>
     );
   }

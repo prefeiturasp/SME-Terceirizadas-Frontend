@@ -1,0 +1,64 @@
+import React, { Component } from "react";
+import { Field } from "redux-form";
+
+import Select from "../../Shareable/Select";
+import Botao from "../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_ICON } from "../../Shareable/Botao/constants";
+
+export default class Diagnosticos extends Component {
+  render() {
+    const fieldProps = {
+      component: Select,
+      name: "diagnosticos"
+    };
+    const { selecionados, diagnosticos } = this.props;
+    return (
+      <div>
+        {selecionados.map((opcao, key) => {
+          const options =
+            opcao !== ""
+              ? diagnosticos.map(d =>
+                  opcao === d.uuid ? Object.assign({ selected: true }, d) : d
+                )
+              : [{ uuid: "", nome: "Selecione" }].concat(diagnosticos);
+          return (
+            <div key={key} className="row">
+              <div className="col-7">
+                <Field
+                  naoDesabilitarPrimeiraOpcao={opcao !== ""}
+                  onChange={event =>
+                    this.props.onSelect(key, event.target.value)
+                  }
+                  options={options}
+                  {...fieldProps}
+                />
+              </div>
+              {opcao === "" ? (
+                ""
+              ) : (
+                <div className="col-5">
+                  {key < selecionados.length - 1 ? (
+                    ""
+                  ) : (
+                    <Botao
+                      texto="Adicionar alergia/intolerância"
+                      icon={BUTTON_ICON.PLUS}
+                      onClick={() => this.props.addOption()}
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                    />
+                  )}
+                  <Botao
+                    icon={BUTTON_ICON.TRASH}
+                    onClick={() => this.props.removeOption(key)}
+                    style={BUTTON_STYLE.RED_OUTLINE}
+                    className="float-right"
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+}

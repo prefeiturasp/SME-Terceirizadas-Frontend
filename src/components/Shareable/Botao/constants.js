@@ -2,7 +2,8 @@ export const BUTTON_STYLE = {
   BLUE: "blue-button",
   BLUE_OUTLINE: "blue-button-outline",
   GREEN: "green-button",
-  GREEN_OUTLINE: "green-button-outline"
+  GREEN_OUTLINE: "green-button-outline",
+  RED_OUTLINE: "red-button-outline"
 };
 
 export const BUTTON_ICON = {
@@ -13,7 +14,9 @@ export const BUTTON_ICON = {
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
   SAIR: "fas fa-door-open",
-  ATTACH: "fas fa-paperclip"
+  ATTACH: "fas fa-paperclip",
+  PLUS: "fas fa-plus",
+  TRASH: "fas fa-trash"
 };
 
 export const BUTTON_TYPE = {
