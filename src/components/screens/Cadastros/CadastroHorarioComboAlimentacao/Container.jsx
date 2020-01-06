@@ -7,6 +7,7 @@ import {
 import { montavinculosDeCombosInicial } from "./helper";
 
 import CadastroHorarioComboAlimentacao from ".";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../../../services/escola.service";
 
 class Container extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class Container extends Component {
       horariosDosCombos: null,
       vinculosDeCombos: null,
       uuidEscola: null,
-      naoPermitido: false
+      naoPermitido: false,
+      periodosEQuantidadeAlunos: null
     };
   }
 
@@ -38,10 +40,12 @@ class Container extends Component {
       vinculosDeCombos
     } = this.state;
     if (meusDados !== prevState.meusDados) {
-      const uuidDaEscola =
+      const TipoUnidadeEscolar =
         meusDados.vinculo_atual.instituicao.tipo_unidade_escolar;
+      const uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
       this.buscaHorariosDosCombos(meusDados.vinculo_atual.instituicao.uuid);
-      if (uuidDaEscola !== null) {
+      if (TipoUnidadeEscolar !== null) {
+        this.buscaQuantidadeDosAlunosPorPeriodoEscolar(uuidEscola);
         this.buscaVinculosTipoAlimentacaoPorUnidadeEscolar(
           meusDados.vinculo_atual.instituicao.tipo_unidade_escolar
         );
@@ -68,6 +72,15 @@ class Container extends Component {
       }
     }
   }
+
+  buscaQuantidadeDosAlunosPorPeriodoEscolar = uuidEscola => {
+    getQuantidaDeAlunosPorPeriodoEEscola(uuidEscola).then(response => {
+      let { periodosEQuantidadeAlunos } = this.state;
+      if (!periodosEQuantidadeAlunos) {
+        this.setState({ periodosEQuantidadeAlunos: response.results });
+      }
+    });
+  };
 
   buscaVinculosTipoAlimentacaoPorUnidadeEscolar = tipoUnidadeUuid => {
     let vinculosTipoDeAlimentacao = this.state.vinculosTipoDeAlimentacao;

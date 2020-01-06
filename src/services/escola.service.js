@@ -96,3 +96,18 @@ export const getSubprefeituras = () => {
       return error.json();
     });
 };
+
+export const getQuantidaDeAlunosPorPeriodoEEscola = uuidEscola => {
+  const url = `${API_URL}/quantidade-alunos-por-periodo/escola/${uuidEscola}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
