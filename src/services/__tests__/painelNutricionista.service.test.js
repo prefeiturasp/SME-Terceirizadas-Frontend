@@ -2,6 +2,7 @@ import fetchMock from "fetch-mock";
 
 import { SOLICITACOES, SOLICITACOES_DIETA } from "../contants";
 import {
+  getAlergiasIntolerancias,
   getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
@@ -16,6 +17,9 @@ fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.AUTORIZADOS}/`, {
 });
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.NEGADOS}/`, {
   results: ["resultados", "negados"]
+});
+fetchMock.get("alergias-intolerancias", {
+  results: ["alergias", "intolerancias"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
 
@@ -45,6 +49,13 @@ describe("test painelNutricionista.service", () => {
     const response = await getSolicitacaoDietaEspecial();
     expect(response).toEqual({
       results: { resultado: "dieta-especial" },
+      status: 200
+    });
+  });
+  it("getAlergiasIntolerancias", async () => {
+    const response = await getAlergiasIntolerancias();
+    expect(response).toEqual({
+      results: ["alergias", "intolerancias"],
       status: 200
     });
   });

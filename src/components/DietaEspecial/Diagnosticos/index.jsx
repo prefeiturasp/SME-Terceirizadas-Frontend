@@ -1,3 +1,5 @@
+import "./style.scss";
+
 import React, { Component } from "react";
 import { Field } from "redux-form";
 
@@ -22,8 +24,8 @@ export default class Diagnosticos extends Component {
                 )
               : [{ uuid: "", nome: "Selecione" }].concat(diagnosticos);
           return (
-            <div key={key} className="row">
-              <div className="col-7">
+            <div key={key} className="row" id="diagnosticos">
+              <div className="col-8">
                 <Field
                   naoDesabilitarPrimeiraOpcao={opcao !== ""}
                   onChange={event =>
@@ -33,28 +35,31 @@ export default class Diagnosticos extends Component {
                   {...fieldProps}
                 />
               </div>
-              {opcao === "" ? (
-                ""
-              ) : (
-                <div className="col-5">
-                  {key < selecionados.length - 1 ? (
-                    ""
-                  ) : (
-                    <Botao
-                      texto="Adicionar alergia/intolerância"
-                      icon={BUTTON_ICON.PLUS}
-                      onClick={() => this.props.addOption()}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
-                    />
-                  )}
+              <div className="col-2">
+                {opcao === "" || key < selecionados.length - 1 ? (
+                  ""
+                ) : (
                   <Botao
+                    texto="Adicionar"
+                    icon={BUTTON_ICON.PLUS}
+                    onClick={() => this.props.addOption()}
+                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                  />
+                )}
+              </div>
+              <div className="col-2">
+                {opcao === "" ? (
+                  ""
+                ) : (
+                  <Botao
+                    texto="Excluir"
                     icon={BUTTON_ICON.TRASH}
                     onClick={() => this.props.removeOption(key)}
-                    style={BUTTON_STYLE.RED_OUTLINE}
+                    style={BUTTON_STYLE.BLUE_OUTLINE}
                     className="float-right"
                   />
-                </div>
-              )}
+                )}
+              </div>
             </div>
           );
         })}

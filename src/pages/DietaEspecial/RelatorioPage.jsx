@@ -15,20 +15,18 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
-import { getSolicitacaoDietaEspecial } from "../../services/painelNutricionista.service";
+import {
+  getAlergiasIntolerancias,
+  getSolicitacaoDietaEspecial
+} from "../../services/painelNutricionista.service";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uuid: null,
-      diagnosticos: [
-        { uuid: "asdf", nome: "Diagnóstico A" },
-        { uuid: "qwer", nome: "Diagnóstico B" },
-        { uuid: "zxcv", nome: "Diagnóstico C" },
-        { uuid: "1234", nome: "Diagnóstico D" }
-      ],
-      diagnosticosSelecionados: ["asdf"]
+      diagnosticos: [],
+      diagnosticosSelecionados: [""]
     };
     this.abrirLaudo = this.abrirLaudo.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -36,23 +34,25 @@ class Relatorio extends Component {
     this.removeOption = this.removeOption.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getSolicitacaoDietaEspecial(uuid).then(response => {
-        this.setState({
-          dietaEspecial: response.results,
-          uuid
-        });
+      const alergiasIntolerancias = await getAlergiasIntolerancias();
+      const dietaEspecial = await getSolicitacaoDietaEspecial(uuid);
+      this.setState({
+        diagnosticos: alergiasIntolerancias,
+        dietaEspecial: dietaEspecial.results,
+        uuid
       });
     }
-  }
+  };
 
   onSelect(index, value) {
     this.setState({
       diagnosticosSelecionados: this.state.diagnosticosSelecionados.map(
-        (mapValue, mapIndex) => (mapIndex === index ? value : mapValue)
+        (mapValue, mapIndex) =>
+          mapIndex === index ? parseInt(value) : mapValue
       )
     });
   }

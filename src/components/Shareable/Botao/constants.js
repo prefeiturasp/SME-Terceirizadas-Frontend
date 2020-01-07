@@ -15,8 +15,8 @@ export const BUTTON_ICON = {
   SEARCH: "fas fa-search",
   SAIR: "fas fa-door-open",
   ATTACH: "fas fa-paperclip",
-  PLUS: "fas fa-plus",
-  TRASH: "fas fa-trash"
+  PLUS: "fas fa-plus-circle",
+  TRASH: "fas fa-trash-alt"
 };
 
 export const BUTTON_TYPE = {

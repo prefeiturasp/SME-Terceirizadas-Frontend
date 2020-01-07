@@ -1,3 +1,4 @@
+import { API_URL } from "../constants/config.constants";
 import { AUTH_TOKEN, SOLICITACOES, SOLICITACOES_DIETA } from "./contants";
 
 // TODO: colocar essa função num arquivo separado, está sendo copiada/colada
@@ -37,4 +38,15 @@ export const getSolicitacoesAutorizadasNutricionista = async () => {
 export const getSolicitacoesNegadasNutricionista = async () => {
   const url = `${SOLICITACOES_DIETA}/${SOLICITACOES.NEGADOS}/`;
   return retornoBase(url);
+};
+
+export const getAlergiasIntolerancias = async () => {
+  const url = `${API_URL}/alergias-intolerancias`;
+  const response = await retornoBase(url);
+  return response.results.map(r => {
+    return {
+      uuid: parseInt(r.id),
+      nome: r.descricao
+    };
+  });
 };
