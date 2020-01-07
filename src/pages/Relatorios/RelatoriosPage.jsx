@@ -6,7 +6,15 @@ import { HOME } from "../../constants/config.constants";
 import { ESCOLA, DRE } from "../../configs/constants";
 import {
   getEvolucaoSolicitacoesEscola,
-  getResumoTotaisPorMesEscola
+  getResumoTotaisPorMesEscola,
+  getPedidosESolicitacoesFiltroEscola,
+  getPedidosESolicitacoesFiltroPaginacaoEscola,
+  getEvolucaoSolicitacoesDiretoriaRegional,
+  getResumoTotaisPorMesDiretoriaRegional,
+  getPedidosESolicitacoesFiltroDiretoriaRegional,
+  getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional,
+  getEvolucaoSolicitacoesCODAE,
+  getResumoTotaisPorMesCODAE
 } from "../../services/relatorios.service";
 
 class RelatoriosBase extends React.Component {
@@ -31,6 +39,10 @@ export const RelatoriosEscola = () => (
     visao={ESCOLA}
     getEvolucaoSolicitacoes={getEvolucaoSolicitacoesEscola}
     getResumoTotaisPorMes={getResumoTotaisPorMesEscola}
+    getPedidosESolicitacoesFiltro={getPedidosESolicitacoesFiltroEscola}
+    getPedidosESolicitacoesFiltroPaginacao={
+      getPedidosESolicitacoesFiltroPaginacaoEscola
+    }
   />
 );
 
@@ -38,7 +50,22 @@ export const RelatoriosEscola = () => (
 export const RelatoriosDRE = () => (
   <RelatoriosBase
     visao={DRE}
-    getEvolucaoSolicitacoes={getEvolucaoSolicitacoesEscola}
-    getResumoTotaisPorMes={getResumoTotaisPorMesEscola}
+    getEvolucaoSolicitacoes={getEvolucaoSolicitacoesDiretoriaRegional}
+    getResumoTotaisPorMes={getResumoTotaisPorMesDiretoriaRegional}
+    getPedidosESolicitacoesFiltro={
+      getPedidosESolicitacoesFiltroDiretoriaRegional
+    }
+    getPedidosESolicitacoesFiltroPaginacao={
+      getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional
+    }
+  />
+);
+
+// CODAE
+export const RelatoriosCODAE = () => (
+  <RelatoriosBase
+    visao={DRE}
+    getEvolucaoSolicitacoes={getEvolucaoSolicitacoesCODAE}
+    getResumoTotaisPorMes={getResumoTotaisPorMesCODAE}
   />
 );

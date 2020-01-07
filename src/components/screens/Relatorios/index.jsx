@@ -74,6 +74,7 @@ class Relatorios extends Component {
           setaFalseLimpaForm={this.setaFalseLimpaForm}
           setaValuesForm={this.setaValuesForm}
           setaPaginacao={this.setaPaginacao}
+          {...this.props}
         />
         {renderizaConteudoPadrao ? (
           <div className="card">
@@ -86,6 +87,7 @@ class Relatorios extends Component {
             paginacao={paginacao}
             resultadosFiltro={resultadosFiltro}
             renderizarRelatorio={this.renderizarRelatorio}
+            {...this.props}
           />
         )}
       </Fragment>

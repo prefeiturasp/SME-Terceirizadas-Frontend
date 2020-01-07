@@ -245,3 +245,26 @@ export const formatarCPFouCNPJ = value => {
     "$1.$2.$3/$4-$5"
   );
 };
+
+export const usuarioEscola = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
+};
+
+export const usuarioDiretoriaRegional = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
+};
+
+export const usuarioCODAEGestaoAlimentacao = () => {
+  return (
+    localStorage.getItem("tipo_perfil") ===
+    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioCODAEDietaEspecial = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
+};
+
+export const usuarioTerceirizada = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
+};

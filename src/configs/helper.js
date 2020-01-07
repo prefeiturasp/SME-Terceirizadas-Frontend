@@ -41,7 +41,7 @@ export const relatorios = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return RelatoriosPage.RelatoriosDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return RelatoriosPage.RelatoriosEscola;
+      return RelatoriosPage.RelatoriosCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return RelatoriosPage.RelatoriosEscola;
     default:

@@ -6,7 +6,6 @@ import {
   BUTTON_TYPE,
   BUTTON_ICON
 } from "../../../../Shareable/Botao/constants";
-import { getPedidosESolicitacoesFiltroPaginacao } from "../../../../../services/filtroSolicitacoes.service";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 
@@ -57,19 +56,21 @@ class ResultadoFiltro extends Component {
     const dataAte = moment(this.props.values.data_ate, "DD/MM/YYYY").format(
       "DD-MM-YYYY"
     );
-    getPedidosESolicitacoesFiltroPaginacao(
-      this.props.values,
-      dataDe,
-      dataAte,
-      pagina
-    ).then(response => {
-      if (response.results.length > 0) {
-        this.setState({ listaSolicitacoes: response.results });
-      } else {
-        toastError("Nenhum resultado encontrado!");
-        this.props.renderizarRelatorio(response.results);
-      }
-    });
+    this.props
+      .getPedidosESolicitacoesFiltroPaginacao(
+        this.props.values,
+        dataDe,
+        dataAte,
+        pagina
+      )
+      .then(response => {
+        if (response.results.length > 0) {
+          this.setState({ listaSolicitacoes: response.results });
+        } else {
+          toastError("Nenhum resultado encontrado!");
+          this.props.renderizarRelatorio(response.results);
+        }
+      });
   };
 
   render() {
