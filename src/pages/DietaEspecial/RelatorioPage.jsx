@@ -6,11 +6,6 @@ import * as constants from "../../configs/constants";
 
 import Diagnosticos from "../../components/DietaEspecial/Diagnosticos";
 
-import Botao from "../../components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "../../components/Shareable/Botao/constants";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
@@ -189,8 +184,11 @@ class Relatorio extends Component {
         </div>
         <hr />
         <div className="row title">
-          <div className="col-12">
-            <p>Laudo Médico</p>
+          <div className="col-9">
+            <p>Laudo</p>
+          </div>
+          <div className="col-3">
+            <p>Anexos</p>
           </div>
         </div>
         <div className="row">
@@ -201,18 +199,16 @@ class Relatorio extends Component {
             </p>
           </div>
           <div className="col-3">
-            <Botao
-              texto="Visualizar Anexo"
-              icon={BUTTON_ICON.ATTACH}
-              onClick={() => this.abrirLaudo()}
-              disabled={dietaEspecial.anexos.length === 0}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
-            />
-            {dietaEspecial.anexos.length > 0 ? (
-              <p>{dietaEspecial.anexos[0].nome}</p>
-            ) : (
-              ""
-            )}
+            {dietaEspecial.anexos.map((a, key) => (
+              <a
+                key={key}
+                target="_blank"
+                rel="noopener noreferrer"
+                href={a.arquivo}
+              >
+                {a.nome}
+              </a>
+            ))}
           </div>
         </div>
         <hr />
