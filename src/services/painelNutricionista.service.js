@@ -58,3 +58,8 @@ export const getTiposDietaEspecial = async () => {
   const url = `${API_URL}/tipos-dieta-especial`;
   return retornoBase(url);
 };
+
+export const getClassificacoesDietaEspecial = async () => {
+  const url = `${API_URL}/classificacoes-dieta`;
+  return retornoBase(url);
+};

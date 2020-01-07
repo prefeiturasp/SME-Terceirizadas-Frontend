@@ -16,7 +16,9 @@ export const field = ({ input, meta, options }) => {
       onBlur(selected);
       return onChange(selected);
     };
-    const checked = inputValue.includes(value);
+    const checked = Array.isArray(inputValue)
+      ? inputValue.includes(value)
+      : inputValue === value;
     const style = {
       width: "2em",
       height: "2em"

@@ -8,10 +8,12 @@ import Diagnosticos from "../../components/DietaEspecial/Diagnosticos";
 
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
+import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
 import {
   getAlergiasIntolerancias,
+  getClassificacoesDietaEspecial,
   getSolicitacaoDietaEspecial
 } from "../../services/painelNutricionista.service";
 
@@ -21,11 +23,13 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       diagnosticos: [],
-      diagnosticosSelecionados: [""]
+      diagnosticosSelecionados: [""],
+      classificacaoDieta: undefined
     };
     this.onSelect = this.onSelect.bind(this);
     this.addOption = this.addOption.bind(this);
     this.removeOption = this.removeOption.bind(this);
+    this.onClassificacaoChange = this.onClassificacaoChange.bind(this);
   }
 
   componentDidMount = async () => {
@@ -34,9 +38,11 @@ class Relatorio extends Component {
     if (uuid) {
       const alergiasIntolerancias = await getAlergiasIntolerancias();
       const dietaEspecial = await getSolicitacaoDietaEspecial(uuid);
+      const classificacoesDieta = await getClassificacoesDietaEspecial();
       this.setState({
         diagnosticos: alergiasIntolerancias.results,
         dietaEspecial: dietaEspecial.results,
+        classificacoesDieta: classificacoesDieta.results,
         uuid
       });
     }
@@ -63,8 +69,18 @@ class Relatorio extends Component {
     this.setState({ diagnosticosSelecionados });
   }
 
+  onClassificacaoChange(value) {
+    this.setState({
+      classificacaoDieta: value
+    });
+  }
+
   render() {
-    const { dietaEspecial } = this.state;
+    const {
+      dietaEspecial,
+      classificacoesDieta,
+      classificacaoDieta
+    } = this.state;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
@@ -231,6 +247,26 @@ class Relatorio extends Component {
           removeOption={this.removeOption}
           onSelect={this.onSelect}
         />
+        <hr />
+        <div className="row title">
+          <div className="col-12">
+            <p>Classificação da Dieta</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <RadioboxGroup
+              onChange={this.onClassificacaoChange}
+              value={classificacaoDieta}
+              options={classificacoesDieta.map(cd => {
+                return {
+                  value: cd.id,
+                  label: cd.nome
+                };
+              })}
+            />
+          </div>
+        </div>
       </div>
     );
   }

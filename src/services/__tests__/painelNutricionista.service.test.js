@@ -4,6 +4,7 @@ import { SOLICITACOES, SOLICITACOES_DIETA } from "../contants";
 import { API_URL } from "../../constants/config.constants";
 import {
   getAlergiasIntolerancias,
+  getClassificacoesDietaEspecial,
   getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
@@ -28,6 +29,9 @@ fetchMock.get(`${API_URL}/alergias-intolerancias`, {
 });
 fetchMock.get(`${API_URL}/tipos-dieta-especial`, {
   results: ["tipos", "dieta", "especial"]
+});
+fetchMock.get(`${API_URL}/classificacoes-dieta`, {
+  results: ["classificacoes", "dieta"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
 
@@ -71,6 +75,13 @@ describe("test painelNutricionista.service", () => {
     const response = await getTiposDietaEspecial();
     expect(response).toEqual({
       results: ["tipos", "dieta", "especial"],
+      status: 200
+    });
+  });
+  it("getClassificacoesDietaEspecial", async () => {
+    const response = await getClassificacoesDietaEspecial();
+    expect(response).toEqual({
+      results: ["classificacoes", "dieta"],
       status: 200
     });
   });
