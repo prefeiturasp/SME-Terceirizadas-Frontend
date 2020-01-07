@@ -43,10 +43,18 @@ export const getSolicitacoesNegadasNutricionista = async () => {
 export const getAlergiasIntolerancias = async () => {
   const url = `${API_URL}/alergias-intolerancias`;
   const response = await retornoBase(url);
-  return response.results.map(r => {
-    return {
-      uuid: parseInt(r.id),
-      nome: r.descricao
-    };
-  });
+  return {
+    status: response.status,
+    results: response.results.map(r => {
+      return {
+        uuid: parseInt(r.id),
+        nome: r.descricao
+      };
+    })
+  };
+};
+
+export const getTiposDietaEspecial = async () => {
+  const url = `${API_URL}/tipos-dieta-especial`;
+  return retornoBase(url);
 };

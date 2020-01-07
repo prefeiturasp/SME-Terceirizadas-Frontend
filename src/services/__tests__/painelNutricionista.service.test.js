@@ -1,12 +1,14 @@
 import fetchMock from "fetch-mock";
 
 import { SOLICITACOES, SOLICITACOES_DIETA } from "../contants";
+import { API_URL } from "../../constants/config.constants";
 import {
   getAlergiasIntolerancias,
   getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
-  getSolicitacoesNegadasNutricionista
+  getSolicitacoesNegadasNutricionista,
+  getTiposDietaEspecial
 } from "../painelNutricionista.service";
 
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.PENDENTES}/`, {
@@ -18,8 +20,14 @@ fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.AUTORIZADOS}/`, {
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.NEGADOS}/`, {
   results: ["resultados", "negados"]
 });
-fetchMock.get("alergias-intolerancias", {
-  results: ["alergias", "intolerancias"]
+fetchMock.get(`${API_URL}/alergias-intolerancias`, {
+  results: [
+    { descricao: "asdf", id: "1234" },
+    { descricao: "qwer", id: "5678" }
+  ]
+});
+fetchMock.get(`${API_URL}/tipos-dieta-especial`, {
+  results: ["tipos", "dieta", "especial"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
 
@@ -55,7 +63,14 @@ describe("test painelNutricionista.service", () => {
   it("getAlergiasIntolerancias", async () => {
     const response = await getAlergiasIntolerancias();
     expect(response).toEqual({
-      results: ["alergias", "intolerancias"],
+      results: [{ nome: "asdf", uuid: 1234 }, { nome: "qwer", uuid: 5678 }],
+      status: 200
+    });
+  });
+  it("getTiposDietaEspecial", async () => {
+    const response = await getTiposDietaEspecial();
+    expect(response).toEqual({
+      results: ["tipos", "dieta", "especial"],
       status: 200
     });
   });

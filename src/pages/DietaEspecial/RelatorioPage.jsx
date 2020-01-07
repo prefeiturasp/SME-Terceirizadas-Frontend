@@ -23,7 +23,6 @@ class Relatorio extends Component {
       diagnosticos: [],
       diagnosticosSelecionados: [""]
     };
-    this.abrirLaudo = this.abrirLaudo.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.addOption = this.addOption.bind(this);
     this.removeOption = this.removeOption.bind(this);
@@ -36,7 +35,7 @@ class Relatorio extends Component {
       const alergiasIntolerancias = await getAlergiasIntolerancias();
       const dietaEspecial = await getSolicitacaoDietaEspecial(uuid);
       this.setState({
-        diagnosticos: alergiasIntolerancias,
+        diagnosticos: alergiasIntolerancias.results,
         dietaEspecial: dietaEspecial.results,
         uuid
       });
@@ -62,14 +61,6 @@ class Relatorio extends Component {
         ? [""]
         : this.state.diagnosticosSelecionados.filter((v, i) => i !== index);
     this.setState({ diagnosticosSelecionados });
-  }
-
-  abrirLaudo() {
-    const { dietaEspecial } = this.state;
-    const win = window.open(dietaEspecial.anexos[0].arquivo, "_blank");
-    if (win !== null) {
-      win.focus();
-    }
   }
 
   render() {
