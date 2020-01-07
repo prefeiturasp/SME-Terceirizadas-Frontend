@@ -136,10 +136,9 @@ export const getPedidosESolicitacoesFiltroDiretoriaRegional = (
 ) => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${
     values.unidade_escolar
-  }/?tipo_solicitacao=${values.tipo_de__solicitacao}&status_solicitacao=${
+  }?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${
     values.status_solicitacao
   }&data_inicial=${dataDe}&data_final=${dataAte}`;
-
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -161,9 +160,9 @@ export const getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional = (
 ) => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${
     values.unidade_escolar
-  }/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
+  }?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
     values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de__solicitacao}`;
+  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
 
   const OBJ_REQUEST = {
     headers: authToken,

@@ -25,6 +25,7 @@ import {
   usuarioEscola,
   usuarioDiretoriaRegional
 } from "../../../../../helpers/utilities";
+import { formataValues } from "./helper";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {
@@ -81,11 +82,11 @@ class FiltrosDeBusca extends Component {
   }
 
   onRequest = values => {
+    const data_de = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
+    const data_ate = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
     this.props.setaValuesForm(values);
-    const dataDe = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
-    const dataAte = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
     this.props
-      .getPedidosESolicitacoesFiltro(values, dataDe, dataAte)
+      .getPedidosESolicitacoesFiltro(formataValues(values), data_de, data_ate)
       .then(response => {
         this.props.setaPaginacao(response.count);
         if (response.results.length > 0) {
