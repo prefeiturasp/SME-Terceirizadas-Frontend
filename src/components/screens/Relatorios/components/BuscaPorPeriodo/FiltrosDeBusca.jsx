@@ -52,8 +52,6 @@ class FiltrosDeBusca extends Component {
   resetForm() {
     this.props.change("status_solicitacao", STATUS_SOLICITACAO[0].uuid);
     this.props.change("tipo_de_solicitacao", TIPO_SOLICITACAO[0].uuid);
-    this.props.change("data_de", null);
-    this.props.change("data_ate", null);
     this.props.setaFalseLimpaForm();
   }
 
@@ -82,8 +80,8 @@ class FiltrosDeBusca extends Component {
   }
 
   onRequest = values => {
-    const data_de = moment(values.data_de, "DD/MM/YYYY").format("DD-MM-YYYY");
-    const data_ate = moment(values.data_ate, "DD/MM/YYYY").format("DD-MM-YYYY");
+    const data_de = moment(values.data_de, "DD/MM/YYYY").format("YYYY-MM-DD");
+    const data_ate = moment(values.data_ate, "DD/MM/YYYY").format("YYYY-MM-DD");
     this.props.setaValuesForm(values);
     this.props
       .getPedidosESolicitacoesFiltro(formataValues(values), data_de, data_ate)
@@ -100,15 +98,10 @@ class FiltrosDeBusca extends Component {
 
   render() {
     const { dataDe, dataAte } = this.state;
-    const {
-      handleSubmit,
-      meusDados,
-      escolas,
-      diretoriasRegionais
-    } = this.props;
+    const { handleSubmit, escolas, diretoriasRegionais } = this.props;
     return (
       <div>
-        {!meusDados ? (
+        {!escolas ? (
           <div>Carregando...</div>
         ) : (
           <section className="card mb-3 mt-2">

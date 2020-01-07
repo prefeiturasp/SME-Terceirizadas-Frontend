@@ -1,8 +1,17 @@
-import { usuarioDiretoriaRegional } from "../../../../../helpers/utilities";
+import {
+  usuarioDiretoriaRegional,
+  usuarioCODAEGestaoAlimentacao
+} from "../../../../../helpers/utilities";
 
 export const formataValues = values => {
-  if (usuarioDiretoriaRegional() && !values.unidade_escolar) {
+  if (
+    (usuarioDiretoriaRegional() || usuarioCODAEGestaoAlimentacao()) &&
+    !values.unidade_escolar
+  ) {
     values.unidade_escolar = "TODOS";
+  }
+  if (usuarioCODAEGestaoAlimentacao() && !values.diretoria_regional) {
+    values.diretoria_regional = "TODOS";
   }
   return values;
 };

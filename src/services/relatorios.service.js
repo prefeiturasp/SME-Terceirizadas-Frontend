@@ -214,3 +214,51 @@ export const getResumoTotaisPorMesCODAE = () => {
       return error.json();
     });
 };
+
+export const getPedidosESolicitacoesFiltroCODAE = (values, dataDe, dataAte) => {
+  const url = `${API_URL}/codae-solicitacoes/pesquisa/${
+    values.diretoria_regional
+  }/${values.unidade_escolar}?tipo_solicitacao=${
+    values.tipo_de_solicitacao
+  }&status_solicitacao=${
+    values.status_solicitacao
+  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getPedidosESolicitacoesFiltroPaginacaoCODAE = (
+  values,
+  dataDe,
+  dataAte,
+  pagina
+) => {
+  const url = `${API_URL}/codae-solicitacoes/pesquisa/${
+    values.diretoria_regional
+  }/${
+    values.unidade_escolar
+  }?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
+    values.status_solicitacao
+  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

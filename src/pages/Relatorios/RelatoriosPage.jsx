@@ -14,7 +14,9 @@ import {
   getPedidosESolicitacoesFiltroDiretoriaRegional,
   getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional,
   getEvolucaoSolicitacoesCODAE,
-  getResumoTotaisPorMesCODAE
+  getResumoTotaisPorMesCODAE,
+  getPedidosESolicitacoesFiltroCODAE,
+  getPedidosESolicitacoesFiltroPaginacaoCODAE
 } from "../../services/relatorios.service";
 
 class RelatoriosBase extends React.Component {
@@ -67,5 +69,9 @@ export const RelatoriosCODAE = () => (
     visao={DRE}
     getEvolucaoSolicitacoes={getEvolucaoSolicitacoesCODAE}
     getResumoTotaisPorMes={getResumoTotaisPorMesCODAE}
+    getPedidosESolicitacoesFiltro={getPedidosESolicitacoesFiltroCODAE}
+    getPedidosESolicitacoesFiltroPaginacao={
+      getPedidosESolicitacoesFiltroPaginacaoCODAE
+    }
   />
 );
