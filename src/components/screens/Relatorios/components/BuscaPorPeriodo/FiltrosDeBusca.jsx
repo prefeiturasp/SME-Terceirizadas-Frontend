@@ -126,6 +126,7 @@ class FiltrosDeBusca extends Component {
                       component={Select}
                       options={diretoriasRegionais}
                       disabled={usuarioEscola() || usuarioDiretoriaRegional()}
+                      naoDesabilitarPrimeiraOpcao
                     />
                   </div>
                   <div className="container-left-bottom">
@@ -142,6 +143,7 @@ class FiltrosDeBusca extends Component {
                         this.setState({ dataDe: value });
                         this.setaLimiteDeData(value);
                       }}
+                      required
                     />
                     <Field
                       name="data_ate"
@@ -150,6 +152,7 @@ class FiltrosDeBusca extends Component {
                       validate={required}
                       minDate={moment(dataDe, "DD/MM/YYYY")._d}
                       maxDate={dataAte}
+                      required
                     />
                     <Field
                       name="status_solicitacao"
@@ -167,13 +170,14 @@ class FiltrosDeBusca extends Component {
                       component={Select}
                       options={escolas}
                       disabled={usuarioEscola()}
+                      naoDesabilitarPrimeiraOpcao
                     />
                   </div>
                   <div className="container-right-bottom">
                     <label>Tipo de solicitação</label>
                     <div />
                     <Field
-                      name="tipo_de__solicitacao"
+                      name="tipo_de_solicitacao"
                       component={Select}
                       options={TIPO_SOLICITACAO}
                       naoDesabilitarPrimeiraOpcao

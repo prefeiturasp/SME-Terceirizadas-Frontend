@@ -31,7 +31,9 @@ class BuscaPorPeriodo extends Component {
           meusDados.vinculo_atual.instituicao.diretoria_regional
         ];
       } else if (usuarioDiretoriaRegional()) {
-        escolas = meusDados.vinculo_atual.instituicao.escolas;
+        escolas = [{ nome: "TODOS", uuid: "TODOS" }].concat(
+          meusDados.vinculo_atual.instituicao.escolas
+        );
         diretoriasRegionais = [
           {
             nome: meusDados.vinculo_atual.instituicao.nome,
