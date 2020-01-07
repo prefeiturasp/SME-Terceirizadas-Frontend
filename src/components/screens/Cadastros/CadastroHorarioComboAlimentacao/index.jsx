@@ -32,6 +32,7 @@ class CadastroHorarioComboAlimentacao extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { periodoEscolar } = this.state;
     const { vinculosDeCombos, meusDados, horariosDosCombos } = this.props;
     if (prevProps.vinculosDeCombos !== this.props.vinculosDeCombos) {
       if (meusDados) {
@@ -49,7 +50,12 @@ class CadastroHorarioComboAlimentacao extends Component {
       }
       this.setState({ vinculosDeCombos, meusDados });
     }
-    this.props.change("quantidade_alunos", 54);
+    if (vinculosDeCombos) {
+      this.props.change(
+        "quantidade_alunos",
+        vinculosDeCombos[periodoEscolar].alunos.quantidade_alunos
+      );
+    }
   }
 
   obterHoraInicio = hora => {

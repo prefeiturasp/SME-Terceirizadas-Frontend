@@ -37,7 +37,8 @@ class Container extends Component {
       vinculosTipoDeAlimentacao,
       horariosDosCombos,
       uuidEscola,
-      vinculosDeCombos
+      vinculosDeCombos,
+      periodosEQuantidadeAlunos
     } = this.state;
     if (meusDados !== prevState.meusDados) {
       const TipoUnidadeEscolar =
@@ -61,12 +62,14 @@ class Container extends Component {
         !vinculosDeCombos &&
         vinculosTipoDeAlimentacao &&
         horariosDosCombos &&
-        uuidEscola
+        uuidEscola &&
+        periodosEQuantidadeAlunos
       ) {
         vinculosDeCombos = montavinculosDeCombosInicial(
           vinculosTipoDeAlimentacao,
           horariosDosCombos,
-          uuidEscola
+          uuidEscola,
+          periodosEQuantidadeAlunos
         );
         this.setState({ vinculosDeCombos });
       }
