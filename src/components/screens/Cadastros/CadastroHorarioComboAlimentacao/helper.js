@@ -60,13 +60,16 @@ const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
   periodosEQuantidadeAlunos
 ) => {
   let periodo_alunos = {
+    quantidade_alunos_atual: 0,
     quantidade_alunos: 0,
+    justificativa: null,
     escola: null,
-    periodo_escolar: null
+    periodo_escolar: null,
+    ativo: true
   };
   periodosEQuantidadeAlunos.forEach(periodo => {
     if (periodo.periodo_escolar.uuid === uuidPeriodo) {
-      periodo_alunos.quantidade_alunos = periodo.quantidade_alunos;
+      periodo_alunos.quantidade_alunos_atual = periodo.quantidade_alunos;
       periodo_alunos.escola = periodo.escola.uuid;
       periodo_alunos.periodo_escolar = periodo.periodo_escolar.uuid;
     }
@@ -89,7 +92,7 @@ const montaVinculosDeCombosIniciais = (
       ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
       combos: retornaArrayDeCombosComHorarios(vinculo.combos, uuidEscola),
-      alunos: info_alunos
+      quantidade_alunos: info_alunos
     });
   });
   return arrayVinculos;
@@ -111,7 +114,7 @@ const montaVinculosDeCombosExistentes = (
       ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
       combos: montaArrayDeCombos(vinculo.combos, horariosDosCombos, uuidEscola),
-      alunos: info_alunos
+      quantidade_alunos: info_alunos
     });
   });
   return arrayVinculos;
