@@ -27,7 +27,7 @@ class ResultadoFiltro extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.resultadosFiltro !== this.state.listaSolicitacoes) {
       if (this.props.count !== prevProps.count) {
-        this.setState({ index: 0 });
+        this.setState({ index: 0, pagina: false });
       }
       if (!this.state.pagina) {
         this.setState({
