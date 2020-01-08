@@ -1,7 +1,8 @@
 import moment from "moment";
+import { TODOS } from "../../../../../constants";
 
 export const TIPO_SOLICITACAO = [
-  { nome: "Todos", uuid: "TODOS" },
+  { nome: "Todos", uuid: TODOS },
   { nome: "Alteração de Cardapio", uuid: "ALT_CARDAPIO" },
   { nome: "Inversão de Cardapio", uuid: "INV_CARDAPIO" },
   { nome: "Inclusão de Alimentação", uuid: "INC_ALIMENTA" },
@@ -12,7 +13,7 @@ export const TIPO_SOLICITACAO = [
 ];
 
 export const STATUS_SOLICITACAO = [
-  { nome: "Todos", uuid: "TODOS" },
+  { nome: "Todos", uuid: TODOS },
   { nome: "Autorizados", uuid: "AUTORIZADOS" },
   { nome: "Negados", uuid: "NEGADOS" },
   { nome: "Cancelados", uuid: "CANCELADOS" },

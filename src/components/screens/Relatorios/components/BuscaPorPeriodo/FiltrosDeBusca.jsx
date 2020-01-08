@@ -24,10 +24,12 @@ import "./style.scss";
 import {
   usuarioEscola,
   usuarioDiretoriaRegional,
-  usuarioCODAEGestaoAlimentacao
+  usuarioCODAEGestaoAlimentacao,
+  converterDDMMYYYYparaYYYYMMDD
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
 import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
+import { TODOS } from "../../../../../constants";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {
@@ -53,8 +55,8 @@ class FiltrosDeBusca extends Component {
   }
 
   resetForm() {
-    this.props.change("status_solicitacao", STATUS_SOLICITACAO[0].uuid);
-    this.props.change("tipo_de_solicitacao", TIPO_SOLICITACAO[0].uuid);
+    this.props.change("status_solicitacao", TODOS);
+    this.props.change("tipo_de_solicitacao", TODOS);
     this.props.setaFalseLimpaForm();
   }
 
@@ -83,8 +85,8 @@ class FiltrosDeBusca extends Component {
   }
 
   onRequest = values => {
-    const data_de = moment(values.data_de, "DD/MM/YYYY").format("YYYY-MM-DD");
-    const data_ate = moment(values.data_ate, "DD/MM/YYYY").format("YYYY-MM-DD");
+    const data_de = converterDDMMYYYYparaYYYYMMDD(values.data_de);
+    const data_ate = converterDDMMYYYYparaYYYYMMDD(values.data_ate);
     this.props.setaValuesForm(values);
     this.props
       .getPedidosESolicitacoesFiltro(formataValues(values), data_de, data_ate)
@@ -100,9 +102,9 @@ class FiltrosDeBusca extends Component {
   };
 
   onDiretoriaRegionalChanged(value) {
-    if (value === "TODOS") {
-      this.setState({ escolasState: [{ nome: "TODOS", uuid: "TODOS" }] });
-      this.props.change("unidade_escolar", "TODOS");
+    if (value === TODOS) {
+      this.setState({ escolasState: [{ nome: TODOS, uuid: TODOS }] });
+      this.props.change("unidade_escolar", TODOS);
     } else {
       this.setState({
         escolasState: [{ nome: "Carregando...", uuid: "Carregando..." }]
@@ -110,9 +112,7 @@ class FiltrosDeBusca extends Component {
       getEscolasSimplissimaPorDiretoriaRegional(value).then(escolasState => {
         if (escolasState.length > 0)
           this.setState({
-            escolasState: [{ nome: "TODOS", uuid: "TODOS" }].concat(
-              escolasState
-            )
+            escolasState: [{ nome: TODOS, uuid: TODOS }].concat(escolasState)
           });
         else
           this.setState({
@@ -201,8 +201,7 @@ class FiltrosDeBusca extends Component {
                       disabled={
                         usuarioEscola() ||
                         (usuarioCODAEGestaoAlimentacao() &&
-                          (!diretoria_regional ||
-                            diretoria_regional === "TODOS"))
+                          (!diretoria_regional || diretoria_regional === TODOS))
                       }
                       naoDesabilitarPrimeiraOpcao
                     />

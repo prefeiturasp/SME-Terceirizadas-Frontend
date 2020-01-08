@@ -268,3 +268,7 @@ export const usuarioCODAEDietaEspecial = () => {
 export const usuarioTerceirizada = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
 };
+
+export const converterDDMMYYYYparaYYYYMMDD = data => {
+  return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
+};

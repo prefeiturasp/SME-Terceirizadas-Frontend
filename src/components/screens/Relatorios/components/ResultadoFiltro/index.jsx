@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Botao } from "../../../../Shareable/Botao";
-import moment from "moment";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
@@ -8,6 +7,8 @@ import {
 } from "../../../../Shareable/Botao/constants";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
+import { converterDDMMYYYYparaYYYYMMDD } from "../../../../../helpers/utilities";
+import { SUSPENSAO_ALIMENTACAO } from "../../../../../configs/constants";
 
 class ResultadoFiltro extends Component {
   constructor(props) {
@@ -55,12 +56,8 @@ class ResultadoFiltro extends Component {
 
   navegacaoPagina = pagina => {
     this.setState({ pagina: true });
-    const dataDe = moment(this.props.values.data_de, "DD/MM/YYYY").format(
-      "YYYY-MM-DD"
-    );
-    const dataAte = moment(this.props.values.data_ate, "DD/MM/YYYY").format(
-      "YYYY-MM-DD"
-    );
+    const dataDe = converterDDMMYYYYparaYYYYMMDD(this.props.values.data_de);
+    const dataAte = converterDDMMYYYYparaYYYYMMDD(this.props.values.data_ate);
     this.props
       .getPedidosESolicitacoesFiltroPaginacao(
         this.props.values,
@@ -166,7 +163,7 @@ class ResultadoFiltro extends Component {
                             <div>{item.id_externo}</div>
                             <div>{item.desc_doc}</div>
                             <div>
-                              {item.tipo_doc === "SUSP_ALIMENTACAO"
+                              {item.tipo_doc === SUSPENSAO_ALIMENTACAO
                                 ? "------"
                                 : item.numero_alunos}
                             </div>

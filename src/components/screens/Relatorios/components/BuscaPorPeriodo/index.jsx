@@ -7,6 +7,7 @@ import {
   usuarioCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "../../../../../services/diretoriaRegional.service";
+import { TODOS } from "../../../../../constants";
 
 class BuscaPorPeriodo extends Component {
   constructor(props) {
@@ -23,10 +24,10 @@ class BuscaPorPeriodo extends Component {
     let diretoriasRegionais = null;
     if (usuarioCODAEGestaoAlimentacao()) {
       getDiretoriaregionalSimplissima().then(response => {
-        diretoriasRegionais = [{ nome: "TODOS", uuid: "TODOS" }].concat(
+        diretoriasRegionais = [{ nome: TODOS, uuid: TODOS }].concat(
           response.data.results
         );
-        escolas = [{ nome: "TODOS", uuid: "TODOS" }];
+        escolas = [{ nome: TODOS, uuid: TODOS }];
         this.setState({
           diretoriasRegionais,
           escolas
@@ -45,7 +46,7 @@ class BuscaPorPeriodo extends Component {
             meusDados.vinculo_atual.instituicao.diretoria_regional
           ];
         } else if (usuarioDiretoriaRegional()) {
-          escolas = [{ nome: "TODOS", uuid: "TODOS" }].concat(
+          escolas = [{ nome: TODOS, uuid: TODOS }].concat(
             meusDados.vinculo_atual.instituicao.escolas
           );
           diretoriasRegionais = [
