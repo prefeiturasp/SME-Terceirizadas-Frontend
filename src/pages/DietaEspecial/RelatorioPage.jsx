@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { reduxForm } from "redux-form";
+import { reduxForm, Field } from "redux-form";
 
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
@@ -8,6 +8,8 @@ import Diagnosticos from "../../components/DietaEspecial/Diagnosticos";
 
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
+import InputText from "../../components/Shareable/Input/InputText";
+import InputFile from "../../components/Shareable/Input/InputFile";
 import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
@@ -24,12 +26,23 @@ class Relatorio extends Component {
       uuid: null,
       diagnosticos: [],
       diagnosticosSelecionados: [""],
-      classificacaoDieta: undefined
+      classificacaoDieta: undefined,
+      descricaoProtocolo: "",
+      files: [],
+      showModalAjudaDescricaoProtocolo: false
     };
     this.onSelect = this.onSelect.bind(this);
     this.addOption = this.addOption.bind(this);
     this.removeOption = this.removeOption.bind(this);
+    this.removeFile = this.removeFile.bind(this);
+    this.setFiles = this.setFiles.bind(this);
     this.onClassificacaoChange = this.onClassificacaoChange.bind(this);
+    this.onDescricaoProtocoloChange = this.onDescricaoProtocoloChange.bind(
+      this
+    );
+    this.isDescricaoProtocoloValido = this.onDescricaoProtocoloChange.bind(
+      this
+    );
   }
 
   componentDidMount = async () => {
@@ -69,22 +82,42 @@ class Relatorio extends Component {
     this.setState({ diagnosticosSelecionados });
   }
 
+  removeFile(index) {
+    let files = this.state.files;
+    files.splice(index, 1);
+    this.setState({ files });
+  }
+  setFiles(files) {
+    this.setState({ files: this.state.files.concat(files) });
+    this.props.initialize({
+      "descricao-protocolo": "",
+      "classificacao-dieta": this.state.classificacaoDieta
+    });
+  }
+
   onClassificacaoChange(value) {
     this.setState({
       classificacaoDieta: value
     });
   }
 
+  onDescricaoProtocoloChange(event) {
+    this.setState({
+      descricaoProtocolo: event.target.value
+    });
+  }
+
   render() {
     const {
-      dietaEspecial,
       classificacoesDieta,
-      classificacaoDieta
+      classificacaoDieta,
+      descricaoProtocolo,
+      dietaEspecial
     } = this.state;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
-      <div>
+      <form>
         <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
           dietaEspecial.id_externo
         }`}</span>
@@ -206,16 +239,19 @@ class Relatorio extends Component {
             </p>
           </div>
           <div className="col-3">
-            {dietaEspecial.anexos.map((a, key) => (
-              <a
-                key={key}
-                target="_blank"
-                rel="noopener noreferrer"
-                href={a.arquivo}
-              >
-                {a.nome}
-              </a>
-            ))}
+            {dietaEspecial.anexos
+              .filter(a => a.eh_laudo_medico)
+              .map((a, key) => (
+                <a
+                  key={key}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={a.arquivo}
+                >
+                  {a.nome.split("/").pop()}
+                  {key < dietaEspecial.anexos.length - 1 ? <br /> : ""}
+                </a>
+              ))}
           </div>
         </div>
         <hr />
@@ -258,6 +294,7 @@ class Relatorio extends Component {
             <RadioboxGroup
               onChange={this.onClassificacaoChange}
               value={classificacaoDieta}
+              name="classificacao-dieta"
               options={classificacoesDieta.map(cd => {
                 return {
                   value: cd.id,
@@ -267,7 +304,39 @@ class Relatorio extends Component {
             />
           </div>
         </div>
-      </div>
+        <hr />
+        <div className="row title">
+          <div className="col-12">
+            <p>Protocolo da Dieta Especial</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-9">
+            <Field
+              component={InputText}
+              name="descricao-protocolo"
+              placeholder="Digite o nome do protocolo"
+              onChange={this.onDescricaoProtocoloChange}
+              submitted={descricaoProtocolo === ""}
+            />
+          </div>
+          <div className="col-3">
+            <Field
+              component={InputFile}
+              className="inputfile"
+              texto="Anexar Protocolo"
+              name="files"
+              icone={undefined}
+              accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
+              setFiles={this.setFiles}
+              removeFile={this.removeFile}
+              concatenarNovosArquivos
+              nomeNovoArquivo={descricaoProtocolo}
+              disabled={this.state.descricaoProtocolo.length < 3}
+            />
+          </div>
+        </div>
+      </form>
     );
   }
 }
