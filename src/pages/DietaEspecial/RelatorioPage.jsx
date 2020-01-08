@@ -13,6 +13,8 @@ import InputFile from "../../components/Shareable/Input/InputFile";
 import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
+import "./style.scss";
+
 import {
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial,
@@ -319,6 +321,10 @@ class Relatorio extends Component {
               onChange={this.onDescricaoProtocoloChange}
               submitted={descricaoProtocolo === ""}
             />
+            <div className="alert alert-importante" role="alert">
+              <b>IMPORTANTE:</b> Envie um arquivo formato .doc, .docx, .pdf,
+              .png, .jpg ou .jpeg, com até 2Mb.
+            </div>
           </div>
           <div className="col-3">
             <Field

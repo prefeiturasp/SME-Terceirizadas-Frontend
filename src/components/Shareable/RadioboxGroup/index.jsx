@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { ErrorAlert } from "./Alert";
+import { ErrorAlert } from "../Alert";
+
+import "./style.scss";
 
 export const field = ({ input, meta, options }) => {
   const { name, onChange, onBlur, onFocus } = input;
@@ -19,17 +21,12 @@ export const field = ({ input, meta, options }) => {
     const checked = Array.isArray(inputValue)
       ? inputValue.includes(value)
       : inputValue === value;
-    const style = {
-      width: "2em",
-      height: "2em"
-    };
     return (
       <div className="form-check  form-check-inline" key={index}>
         <input
           className="form-check-input"
           type="radio"
           value={value}
-          style={style}
           name={`${name}[${index}]`}
           id={`radio-${index}`}
           checked={checked}

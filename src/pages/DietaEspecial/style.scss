@@ -1,0 +1,21 @@
+$redAlert: #b40c02;
+
+.alert.alert-importante {
+  border: 1px solid $redAlert;
+  font-size: 0.7em;
+  color: $redAlert;
+}
+
+.form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-left: 0em !important;
+}
+.form-check-label {
+  margin-right: 3em !important;
+}
+
+.ml-2,
+.mx-2 {
+  margin-left: 0em !important;
+}
