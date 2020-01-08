@@ -7,6 +7,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoKitLanche, prazoDoPedidoMensagem } = props;
@@ -31,14 +32,23 @@ export const CorpoRelatorio = props => {
             <span className="id-of-solicitation-dre">
               # {solicitacaoKitLanche.id_externo}
             </span>
-            <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
+            <br />{" "}
+            <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="report-div-beside-order my-auto col-8">
+        <div className="pl-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
             {solicitacaoKitLanche.escola && solicitacaoKitLanche.escola.nome}
+          </span>
+        </div>
+        <div className="my-auto col-4">
+          <span className="requester">Código EOL</span>
+          <br />
+          <span className="dre-name">
+            {solicitacaoKitLanche.escola &&
+              solicitacaoKitLanche.escola.codigo_eol}
           </span>
         </div>
       </div>
@@ -74,20 +84,6 @@ export const CorpoRelatorio = props => {
       </div>
       <hr />
       <div className="row">
-        <div className="report-students-div col-3">
-          <span>Nº de alunos matriculados total</span>
-          <span>
-            {solicitacaoKitLanche.escola &&
-              solicitacaoKitLanche.escola.alunos_total}
-          </span>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 report-label-value">
-          <p className="value">Descrição da Solicitação</p>
-        </div>
-      </div>
-      <div className="row">
         <div className="col-4 report-label-value">
           <p>Data do evento</p>
           <p className="value">
@@ -100,48 +96,33 @@ export const CorpoRelatorio = props => {
           <p className="value">{solicitacaoKitLanche.local}</p>
         </div>
       </div>
-      <div className="row">
-        <div className="col-4 report-label-value">
-          <p>Nº de alunos participantes</p>
-          <p className="value">
-            {solicitacaoKitLanche.quantidade_alunos} alunos
-          </p>
-        </div>
-        <div className="col-8 report-label-value">
-          <p>Tempo previsto do passeio</p>
-          <p className="value">
-            {solicitacaoKitLanche.solicitacao_kit_lanche &&
+      <table className="table-report">
+        <tr>
+          <th>Nº de Alunos</th>
+          <th>Tempo Previsto de Passeio</th>
+          <th>Opção Desejada</th>
+          <th>Nº Total de Kits</th>
+        </tr>
+        <tr>
+          <td>{solicitacaoKitLanche.quantidade_alunos}</td>
+          <td>
+            {
               solicitacaoKitLanche.solicitacao_kit_lanche
-                .tempo_passeio_explicacao}
-          </p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 float-right report-label-value">
-          <p>Opção desejada</p>
-          {solicitacaoKitLanche.solicitacao_kit_lanche &&
-            solicitacaoKitLanche.solicitacao_kit_lanche.kits.map((kit, key) => {
-              return (
-                <p key={key} className="value">
-                  Modelo {kit.nome}
-                </p>
-              );
-            })}
-        </div>
-      </div>
-      {solicitacaoKitLanche.solicitacao_kit_lanche &&
-        solicitacaoKitLanche.solicitacao_kit_lanche.kits && (
-          <div className="row">
-            <div className="col-12 float-right report-label-value">
-              <p>Nº total de kits</p>
-              <p className="value">
-                {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
-                  solicitacaoKitLanche.quantidade_alunos}{" "}
-                kits
-              </p>
-            </div>
-          </div>
-        )}
+                .tempo_passeio_explicacao
+            }
+          </td>
+          <td>
+            {stringSeparadaPorVirgulas(
+              solicitacaoKitLanche.solicitacao_kit_lanche.kits,
+              "nome"
+            )}
+          </td>
+          <td>
+            {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
+              solicitacaoKitLanche.quantidade_alunos}
+          </td>
+        </tr>
+      </table>
       <div className="row">
         <div className="col-12 report-label-value">
           <p>Observações</p>

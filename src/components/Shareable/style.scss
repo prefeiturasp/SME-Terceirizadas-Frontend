@@ -523,9 +523,13 @@ table.table-report {
   width: 100%;
   font-size: 14px;
   tr {
+    border-bottom: 1px solid $blackSubtle;
     &:first-child {
       color: white;
       background-color: $blackSubtle;
+    }
+    &:last-child {
+      border-bottom: 2px solid $blackSubtle;
     }
     th,
     td {
