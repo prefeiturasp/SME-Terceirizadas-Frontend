@@ -164,8 +164,19 @@ class Relatorio extends Component {
               {escola && escola.tipo_gestao && escola.tipo_gestao.nome}
             </p>
           </div>
+          <div className="col-2 report-label-value">
+            <p>Telefone</p>
+            <p className="value-important">
+              {escola && escola.contato && escola.contato.telefone}
+            </p>
+          </div>
+          <div className="col-2 report-label-value">
+            <p>E-mail</p>
+            <p className="value-important">
+              {escola && escola.contato && escola.contato.email}
+            </p>
+          </div>
         </div>
-        {/* TODO: Falta telefone e e-mail */}
         <hr />
         {dietaEspecial.logs && (
           <div className="row">
@@ -175,14 +186,6 @@ class Relatorio extends Component {
             />
           </div>
         )}
-        <hr />
-        <div className="row">
-          <div className="report-students-div col-3">
-            <span>Nº de alunos matriculados total</span>
-            <span>{escola.quantidade_alunos}</span>
-          </div>
-          {/* TODO: Falta quantidade de alunos em cada período */}
-        </div>
         <hr />
         <div className="row title">
           <div className="col-12">
@@ -194,12 +197,12 @@ class Relatorio extends Component {
             <p>Cód. EOL do Aluno</p>
             <p className="value">{dietaEspecial.codigo_eol_aluno}</p>
           </div>
-          <div className="col-6 report-label-value">
+          <div className="col-5 report-label-value">
             <p>Nome Completo do Aluno</p>
             <p className="value">{dietaEspecial.nome_completo_aluno}</p>
           </div>
-          <div className="col-3 report-label-value">
-            <p>Data de Nascimento do Aluno</p>
+          <div className="col-4 report-label-value">
+            <p>Data de Nascimento</p>
             <p className="value">{dietaEspecial.data_nascimento_aluno}</p>
           </div>
         </div>
@@ -210,25 +213,13 @@ class Relatorio extends Component {
               Nome do Prescritor da receita (médico, nutricionista,
               fonoaudiólogo)
             </p>
-            {/* TODO: Incluir nome do prescritor */}
-            <p className="value" />
+            <p className="value">{dietaEspecial.nome_completo_pescritor}</p>
           </div>
           <div className="col-4 report-label-value">
-            <p>Registro Funcional (CRM/CRN/CRFa)</p>
+            <p>Registro Funcional</p>
             <p className="value">
-              {dietaEspecial.registro_funcional_pescritor}
+              CRM {dietaEspecial.registro_funcional_pescritor}
             </p>
-          </div>
-        </div>
-        <hr />
-        <div className="row">
-          <div className="col-12 report-label-value">
-            <p>
-              CID-10 (Classificação Internacional de Doenças e Problemas
-              Relacionados à Saúde)
-            </p>
-            {/* TODO: Incluir Denominação CID */}
-            <p className="value" />
           </div>
         </div>
         <hr />
@@ -241,13 +232,13 @@ class Relatorio extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-9 report-label-value">
+          <div className="col-8 report-label-value">
             <p>
-              O laudo fornecido pelo médico deve ter sido emitido há, no máximo,
-              3 meses.
+              Para visualizar o(s) laudo(s) fornecido(s) pelo prescritor, clique
+              nos anexo(s).
             </p>
           </div>
-          <div className="col-3">
+          <div className="col-4">
             {dietaEspecial.anexos
               .filter(a => a.eh_laudo_medico)
               .map((a, key) => (
