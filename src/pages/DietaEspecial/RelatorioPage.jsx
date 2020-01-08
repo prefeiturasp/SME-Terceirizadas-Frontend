@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { reduxForm, Field } from "redux-form";
+import { connect } from "react-redux";
+import { reduxForm, Field, formValueSelector } from "redux-form";
 
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
@@ -26,25 +27,13 @@ class Relatorio extends Component {
     super(props);
     this.state = {
       uuid: null,
-      diagnosticos: [],
-      diagnosticosSelecionados: [""],
-      classificacaoDieta: undefined,
-      descricaoProtocolo: "",
-      files: [],
-      showModalAjudaDescricaoProtocolo: false
+      diagnosticos: []
     };
     this.onSelect = this.onSelect.bind(this);
     this.addOption = this.addOption.bind(this);
     this.removeOption = this.removeOption.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.setFiles = this.setFiles.bind(this);
-    this.onClassificacaoChange = this.onClassificacaoChange.bind(this);
-    this.onDescricaoProtocoloChange = this.onDescricaoProtocoloChange.bind(
-      this
-    );
-    this.isDescricaoProtocoloValido = this.onDescricaoProtocoloChange.bind(
-      this
-    );
   }
 
   componentDidMount = async () => {
@@ -61,68 +50,43 @@ class Relatorio extends Component {
         uuid
       });
     }
-    this.props.initialize({
-      "descricao-protocolo": "",
-      "classificacao-dieta": this.state.classificacaoDieta,
-      "identificacao-nutricionista": `ELABORADO por ${localStorage.getItem(
-        "nome"
-      )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
-    });
   };
 
   onSelect(index, value) {
-    this.setState({
-      diagnosticosSelecionados: this.state.diagnosticosSelecionados.map(
-        (mapValue, mapIndex) =>
-          mapIndex === index ? parseInt(value) : mapValue
+    this.props.change(
+      "diagnosticosSelecionados",
+      this.props.diagnosticosSelecionados.map((mapValue, mapIndex) =>
+        mapIndex === index ? parseInt(value) : mapValue
       )
-    });
+    );
   }
   addOption() {
-    this.setState({
-      diagnosticosSelecionados: this.state.diagnosticosSelecionados.concat("")
-    });
+    this.props.change(
+      "diagnosticosSelecionados",
+      this.props.diagnosticosSelecionados.concat("")
+    );
   }
   removeOption(index) {
     const diagnosticosSelecionados =
-      this.state.diagnosticosSelecionados.length === 1
+      this.props.diagnosticosSelecionados.length === 1
         ? [""]
-        : this.state.diagnosticosSelecionados.filter((v, i) => i !== index);
-    this.setState({ diagnosticosSelecionados });
+        : this.props.diagnosticosSelecionados.filter((v, i) => i !== index);
+    this.props.change("diagnosticosSelecionados", diagnosticosSelecionados);
   }
 
   removeFile(index) {
-    let files = this.state.files;
-    files.splice(index, 1);
-    this.setState({ files });
+    let anexos = this.props.anexos;
+    anexos.splice(index, 1);
+    this.props.change("anexos", anexos);
   }
   setFiles(files) {
-    this.setState({ files: this.state.files.concat(files) });
-    this.props.initialize({
-      "descricao-protocolo": "",
-      "classificacao-dieta": this.state.classificacaoDieta
-    });
-  }
-
-  onClassificacaoChange(value) {
-    this.setState({
-      classificacaoDieta: value
-    });
-  }
-
-  onDescricaoProtocoloChange(event) {
-    this.setState({
-      descricaoProtocolo: event.target.value
-    });
+    this.props.change("descricaoProtocolo", "");
+    this.props.change("anexos", files);
   }
 
   render() {
-    const {
-      classificacoesDieta,
-      classificacaoDieta,
-      descricaoProtocolo,
-      dietaEspecial
-    } = this.state;
+    const { classificacoesDieta, diagnosticos, dietaEspecial } = this.state;
+    const { descricaoProtocolo, diagnosticosSelecionados } = this.props;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
@@ -206,7 +170,6 @@ class Relatorio extends Component {
             <p className="value">{dietaEspecial.data_nascimento_aluno}</p>
           </div>
         </div>
-        <hr />
         <div className="row">
           <div className="col-8 report-label-value">
             <p>
@@ -222,7 +185,6 @@ class Relatorio extends Component {
             </p>
           </div>
         </div>
-        <hr />
         <div className="row title">
           <div className="col-9">
             <p>Laudo</p>
@@ -254,7 +216,6 @@ class Relatorio extends Component {
               ))}
           </div>
         </div>
-        <hr />
         <div className="row title">
           <div className="col-12">
             <p>Observações</p>
@@ -270,20 +231,18 @@ class Relatorio extends Component {
             />
           </div>
         </div>
-        <hr />
         <div className="row title">
           <div className="col-12">
             <p>Relação por Diagnóstico</p>
           </div>
         </div>
         <Diagnosticos
-          diagnosticos={this.state.diagnosticos}
-          selecionados={this.state.diagnosticosSelecionados}
+          diagnosticos={diagnosticos}
+          selecionados={diagnosticosSelecionados}
           addOption={this.addOption}
           removeOption={this.removeOption}
           onSelect={this.onSelect}
         />
-        <hr />
         <div className="row title">
           <div className="col-12">
             <p>Classificação da Dieta</p>
@@ -293,9 +252,8 @@ class Relatorio extends Component {
           <div className="col-12">
             {/* TODO: não usar state e sim dados do redux-form */}
             <RadioboxGroup
-              onChange={this.onClassificacaoChange}
-              value={classificacaoDieta}
-              name="classificacao-dieta"
+              //value={classificacaoDieta}
+              name="classificacaoDieta"
               options={classificacoesDieta.map(cd => {
                 return {
                   value: cd.id,
@@ -305,7 +263,6 @@ class Relatorio extends Component {
             />
           </div>
         </div>
-        <hr />
         <div className="row title">
           <div className="col-12">
             <p>Protocolo da Dieta Especial</p>
@@ -315,10 +272,8 @@ class Relatorio extends Component {
           <div className="col-9">
             <Field
               component={InputText}
-              name="descricao-protocolo"
+              name="descricaoProtocolo"
               placeholder="Digite o nome do protocolo"
-              onChange={this.onDescricaoProtocoloChange}
-              submitted={descricaoProtocolo === ""}
             />
             <div className="alert alert-importante" role="alert">
               <b>IMPORTANTE:</b> Envie um arquivo formato .doc, .docx, .pdf,
@@ -330,18 +285,18 @@ class Relatorio extends Component {
               component={InputFile}
               className="inputfile"
               texto="Anexar Protocolo"
-              name="files"
               icone={undefined}
               accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
               setFiles={this.setFiles}
               removeFile={this.removeFile}
               concatenarNovosArquivos
-              nomeNovoArquivo={descricaoProtocolo}
-              disabled={this.state.descricaoProtocolo.length < 3}
+              disabled={
+                descricaoProtocolo === undefined ||
+                descricaoProtocolo.length < 3
+              }
             />
           </div>
         </div>
-        <hr />
         <div className="row title">
           <div className="col-12">
             <p>Identificação do Nutricionista</p>
@@ -361,10 +316,25 @@ class Relatorio extends Component {
   }
 }
 
-const RelatorioForm = reduxForm({
-  form: "painelPedidos",
-  enableReinitialize: true
+let RelatorioForm = reduxForm({
+  form: "autorizacao-dieta-especial",
+  enableReinitialize: true,
+  initialValues: {
+    diagnosticosSelecionados: [""],
+    "identificacao-nutricionista": `ELABORADO por ${localStorage.getItem(
+      "nome"
+    )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
+  }
 })(Relatorio);
+const selector = formValueSelector("autorizacao-dieta-especial");
+RelatorioForm = connect(state => {
+  return selector(
+    state,
+    "anexos",
+    "descricaoProtocolo",
+    "diagnosticosSelecionados"
+  );
+})(RelatorioForm);
 
 export default class RelatorioPage extends Component {
   render() {

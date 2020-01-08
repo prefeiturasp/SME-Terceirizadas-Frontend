@@ -1,5 +1,9 @@
 $redAlert: #b40c02;
 
+.row {
+  margin-top: 0.5em;
+}
+
 .alert.alert-importante {
   border: 1px solid $redAlert;
   font-size: 0.7em;
