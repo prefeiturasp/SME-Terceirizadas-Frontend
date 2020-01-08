@@ -8,7 +8,6 @@ import {
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../../../helpers/utilities";
-import { SUSPENSAO_ALIMENTACAO } from "../../../../../configs/constants";
 
 class ResultadoFiltro extends Component {
   constructor(props) {
@@ -163,7 +162,7 @@ class ResultadoFiltro extends Component {
                             <div>{item.id_externo}</div>
                             <div>{item.desc_doc}</div>
                             <div>
-                              {item.tipo_doc === SUSPENSAO_ALIMENTACAO
+                              {item.tipo_doc === "SUSP_ALIMENTACAO"
                                 ? "------"
                                 : item.numero_alunos}
                             </div>
