@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import GraficoEvolucao from "./components/GraficoEvolucao";
 import BuscaPorPeriodo from "./components/BuscaPorPeriodo";
 import ResultadoFiltro from "./components/ResultadoFiltro";
-import "./style.scss";
+import CardsComBandeira from "./components/CardsComBandeira";
 
 class Relatorios extends Component {
   constructor(props) {
@@ -12,7 +12,8 @@ class Relatorios extends Component {
       resultadosFiltro: null,
       limpaForm: false,
       values: null,
-      paginacao: []
+      paginacao: [],
+      count: 0
     };
     this.renderizarRelatorio = this.renderizarRelatorio.bind(this);
     this.setaFalseLimpaForm = this.setaFalseLimpaForm.bind(this);
@@ -40,7 +41,7 @@ class Relatorios extends Component {
     this.setState({ paginacao });
   };
 
-  renderizarRelatorio = resultado => {
+  renderizarRelatorio = (resultado, count) => {
     let renderizaConteudoPadrao = this.state.renderizaConteudoPadrao;
     if (resultado === "sair") {
       this.setState({
@@ -50,10 +51,11 @@ class Relatorios extends Component {
       });
     } else {
       renderizaConteudoPadrao &&
-        (renderizaConteudoPadrao = resultado.length > 0 ? false : true);
+        (renderizaConteudoPadrao = resultado.length <= 0);
       this.setState({
         renderizaConteudoPadrao,
-        resultadosFiltro: resultado
+        resultadosFiltro: resultado,
+        count: count
       });
     }
   };
@@ -64,7 +66,8 @@ class Relatorios extends Component {
       resultadosFiltro,
       limpaForm,
       values,
-      paginacao
+      paginacao,
+      count
     } = this.state;
     return (
       <Fragment>
@@ -74,15 +77,21 @@ class Relatorios extends Component {
           setaFalseLimpaForm={this.setaFalseLimpaForm}
           setaValuesForm={this.setaValuesForm}
           setaPaginacao={this.setaPaginacao}
+          {...this.props}
         />
         {renderizaConteudoPadrao ? (
-          <GraficoEvolucao />
+          <div className="card">
+            <CardsComBandeira {...this.props} />
+            <GraficoEvolucao {...this.props} />
+          </div>
         ) : (
           <ResultadoFiltro
             values={values}
             paginacao={paginacao}
             resultadosFiltro={resultadosFiltro}
             renderizarRelatorio={this.renderizarRelatorio}
+            count={count}
+            {...this.props}
           />
         )}
       </Fragment>

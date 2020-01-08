@@ -5,7 +5,8 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  RELATORIOS
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -83,136 +84,10 @@ export class SidebarCODAE extends Component {
         </div>
       </li>,
       <li key={2} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapseRelatorio"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
+        <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
           <i className="fas fa-file-alt" />
-          <span>Relatório</span>
+          <span>Relatórios</span>
         </NavLink>
-        <div
-          id="collapseRelatorio"
-          className={`collapse`}
-          aria-labelledby="headingSchool"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white collapse-inner rounded">
-            <NavLink
-              onClick={() => this.onSubmenuClick("solicitacoes")}
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
-              Por tipo de Solicitação
-              <i className="fas fa-chevron-down" />
-            </NavLink>
-            {subMenu === "solicitacoes" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inclusão de Alimentação
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Alteração de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação de Kit <br />
-                  Lanche Passeio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação Unificada
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inversão de Dia de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Suspensão de Alimentação
-                </NavLink>
-              </div>
-            )}
-            <NavLink
-              onClick={() => this.onSubmenuClick("status")}
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
-              Por tipo de Status
-              <i className="fas fa-chevron-down" />
-            </NavLink>
-            {subMenu === "status" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inclusão de Alimentação
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Alteração de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação de Kit Lanche Passeio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação Unificada
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inversão de Dia de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Suspensão de Alimentação
-                </NavLink>
-              </div>
-            )}
-          </div>
-        </div>
       </li>,
       <li key={3} className="nav-item">
         <Link
