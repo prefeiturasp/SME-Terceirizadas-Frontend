@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Select } from "../../../../Shareable/Select";
 import moment from "moment";
-import { reduxForm, Field } from "redux-form";
+import { reduxForm, Field, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { loadFiltroBusca } from "../../../../../reducers/loadFiltroBusca";
@@ -23,9 +23,11 @@ import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import {
   usuarioEscola,
-  usuarioDiretoriaRegional
+  usuarioDiretoriaRegional,
+  usuarioCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
+import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {
@@ -35,7 +37,8 @@ class FiltrosDeBusca extends Component {
       dataPara: null,
       dataAte: null,
       paginacao: null,
-      values: null
+      values: null,
+      escolasState: null
     };
   }
 
@@ -88,7 +91,7 @@ class FiltrosDeBusca extends Component {
       .then(response => {
         this.props.setaPaginacao(response.count);
         if (response.results.length > 0) {
-          this.props.renderizarRelatorio(response.results);
+          this.props.renderizarRelatorio(response.results, response.count);
         } else {
           toastError("Nenhum resultado encontrado!");
           this.props.renderizarRelatorio(response.results);
@@ -96,9 +99,39 @@ class FiltrosDeBusca extends Component {
       });
   };
 
+  onDiretoriaRegionalChanged(value) {
+    if (value === "TODOS") {
+      this.setState({ escolasState: [{ nome: "TODOS", uuid: "TODOS" }] });
+      this.props.change("unidade_escolar", "TODOS");
+    } else {
+      this.setState({
+        escolasState: [{ nome: "Carregando...", uuid: "Carregando..." }]
+      });
+      getEscolasSimplissimaPorDiretoriaRegional(value).then(escolasState => {
+        if (escolasState.length > 0)
+          this.setState({
+            escolasState: [{ nome: "TODOS", uuid: "TODOS" }].concat(
+              escolasState
+            )
+          });
+        else
+          this.setState({
+            escolasState: [
+              { nome: "Nenhum resultado", uuid: "Nenhum resultado" }
+            ]
+          });
+      });
+    }
+  }
+
   render() {
-    const { dataDe, dataAte } = this.state;
-    const { handleSubmit, escolas, diretoriasRegionais } = this.props;
+    const { dataDe, dataAte, escolasState } = this.state;
+    const {
+      handleSubmit,
+      escolas,
+      diretoriasRegionais,
+      diretoria_regional
+    } = this.props;
     return (
       <div>
         {!escolas ? (
@@ -117,6 +150,9 @@ class FiltrosDeBusca extends Component {
                     <Field
                       name="diretoria_regional"
                       component={Select}
+                      onChange={event =>
+                        this.onDiretoriaRegionalChanged(event.target.value)
+                      }
                       options={diretoriasRegionais}
                       disabled={usuarioEscola() || usuarioDiretoriaRegional()}
                       naoDesabilitarPrimeiraOpcao
@@ -161,8 +197,13 @@ class FiltrosDeBusca extends Component {
                     <Field
                       name="unidade_escolar"
                       component={Select}
-                      options={escolas}
-                      disabled={usuarioEscola()}
+                      options={escolasState || escolas}
+                      disabled={
+                        usuarioEscola() ||
+                        (usuarioCODAEGestaoAlimentacao() &&
+                          (!diretoria_regional ||
+                            diretoria_regional === "TODOS"))
+                      }
                       naoDesabilitarPrimeiraOpcao
                     />
                   </div>
@@ -199,9 +240,11 @@ const FiltrosDeBuscaForm = reduxForm({
   form: "filtrosDeBuscaForm",
   enableReinitialize: true
 })(FiltrosDeBusca);
+const selector = formValueSelector("filtrosDeBuscaForm");
 const mapStateToProps = state => {
   return {
-    initialValues: state.FiltrosDeBuscaForm.data
+    initialValues: state.FiltrosDeBuscaForm.data,
+    diretoria_regional: selector(state, "diretoria_regional")
   };
 };
 const mapDispatchToProps = dispatch => {
