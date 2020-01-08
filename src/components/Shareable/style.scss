@@ -518,3 +518,21 @@ div.caption-choices {
     position: relative;
   }
 }
+
+table.table-report {
+  width: 100%;
+  font-size: 14px;
+  tr {
+    &:first-child {
+      color: white;
+      background-color: $blackSubtle;
+    }
+    th,
+    td {
+      padding: 15px 30px;
+    }
+    td {
+      color: $blackInput;
+    }
+  }
+}

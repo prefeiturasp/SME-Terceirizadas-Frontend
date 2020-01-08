@@ -19,14 +19,23 @@ export const CorpoRelatorio = props => {
             <span className="id-of-solicitation-dre">
               # {alteracaoDeCardapio.id_externo}
             </span>
-            <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
+            <br />{" "}
+            <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="report-div-beside-order my-auto col-8">
+        <div className="pl-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
             {alteracaoDeCardapio.escola && alteracaoDeCardapio.escola.nome}
+          </span>
+        </div>
+        <div className="my-auto col-4">
+          <span className="requester">Código EOL</span>
+          <br />
+          <span className="dre-name">
+            {alteracaoDeCardapio.escola &&
+              alteracaoDeCardapio.escola.codigo_eol}
           </span>
         </div>
       </div>
@@ -63,32 +72,34 @@ export const CorpoRelatorio = props => {
         </div>
       )}
       <hr />
-      <div className="row">
-        <div className="report-students-div col-3">
-          <span>Nº de alunos matriculados total</span>
-          <span>{alteracaoDeCardapio.escola.quantidade_alunos}</span>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 report-label-value">
-          <p className="value">Descrição da Alteração de Cardápio</p>
-        </div>
-      </div>
       <table className="table-periods">
         <tr>
-          <th>Data Inicial</th>
-          <th>Data Final</th>
+          <th>Motivo</th>
+          {alteracaoDeCardapio.data_inicial ===
+          alteracaoDeCardapio.data_final ? (
+            <th>Alterar dia</th>
+          ) : (
+            [<th key={0}>Data Inicial</th>, <th key={1}>Data Final</th>]
+          )}
         </tr>
         <tr>
-          <td>{alteracaoDeCardapio.data_inicial}</td>
-          <td>{alteracaoDeCardapio.data_final}</td>
+          <td>{alteracaoDeCardapio.motivo.nome}</td>
+          {alteracaoDeCardapio.data_inicial ===
+          alteracaoDeCardapio.data_final ? (
+            <td>{alteracaoDeCardapio.data_inicial}</td>
+          ) : (
+            [
+              <td key={0}>{alteracaoDeCardapio.data_inicial}</td>,
+              <td key={1}>{alteracaoDeCardapio.data_final}</td>
+            ]
+          )}
         </tr>
       </table>
-      <table className="table-periods">
+      <table className="table-report mt-4">
         <tr>
           <th>Período</th>
-          <th>Tipos de Alimentação de</th>
-          <th>Tipos de Alimentação para</th>
+          <th>Alteração alimentação de:</th>
+          <th>Alteração alimentação para:</th>
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
           (quantidade_por_periodo, key) => {
@@ -105,16 +116,6 @@ export const CorpoRelatorio = props => {
           }
         )}
       </table>
-
-      <table className="table-periods">
-        <tr>
-          <th>Motivo</th>
-        </tr>
-        <tr>
-          <td>{alteracaoDeCardapio.motivo.nome}</td>
-        </tr>
-      </table>
-
       <table className="table-periods">
         <tr>
           <th>Observações</th>
