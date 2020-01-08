@@ -25,6 +25,12 @@ export default class Page extends Component {
     if (!localStorage.getItem("meusDados")) {
       const meusDados = await getMeusDados();
       localStorage.setItem("nome", JSON.stringify(meusDados.nome));
+      if (meusDados.tipo_usuario === "dieta_especial") {
+        localStorage.setItem(
+          "crn_numero",
+          JSON.stringify(meusDados.crn_numero)
+        );
+      }
       this.setState({
         nome: meusDados.nome,
         nome_instituicao:

@@ -61,6 +61,13 @@ class Relatorio extends Component {
         uuid
       });
     }
+    this.props.initialize({
+      "descricao-protocolo": "",
+      "classificacao-dieta": this.state.classificacaoDieta,
+      "identificacao-nutricionista": `ELABORADO por ${localStorage.getItem(
+        "nome"
+      )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
+    });
   };
 
   onSelect(index, value) {
@@ -293,6 +300,7 @@ class Relatorio extends Component {
         </div>
         <div className="row">
           <div className="col-12">
+            {/* TODO: não usar state e sim dados do redux-form */}
             <RadioboxGroup
               onChange={this.onClassificacaoChange}
               value={classificacaoDieta}
@@ -339,6 +347,21 @@ class Relatorio extends Component {
               concatenarNovosArquivos
               nomeNovoArquivo={descricaoProtocolo}
               disabled={this.state.descricaoProtocolo.length < 3}
+            />
+          </div>
+        </div>
+        <hr />
+        <div className="row title">
+          <div className="col-12">
+            <p>Identificação do Nutricionista</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-9" id="identificacao-nutricionista">
+            <Field
+              component={InputText}
+              name="identificacao-nutricionista"
+              disabled
             />
           </div>
         </div>
