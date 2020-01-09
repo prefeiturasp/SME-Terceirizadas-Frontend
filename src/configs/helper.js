@@ -5,6 +5,7 @@ import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceiriza
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
+import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
@@ -72,6 +73,19 @@ export const relatoriosInclusaoDeAlimentacao = () => {
       return RelatoriosInclusaoDeAlimentacao.RelatorioTerceirizada;
     default:
       return RelatoriosInclusaoDeAlimentacao.RelatorioEscola;
+  }
+};
+
+export const relatoriosInversaoDiaCardapio = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosInversaoDiaCardapio.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosInversaoDiaCardapio.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosInversaoDiaCardapio.RelatorioTerceirizada;
+    default:
+      return RelatoriosInversaoDiaCardapio.RelatorioEscola;
   }
 };
 

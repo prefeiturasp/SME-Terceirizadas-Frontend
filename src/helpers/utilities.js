@@ -123,11 +123,11 @@ export const getDataObj = data => {
 export const prazoDoPedidoMensagem = prioridade => {
   switch (prioridade) {
     case "REGULAR":
-      return "Pedido no prazo regular";
+      return "Solicitação no prazo regular";
     case "LIMITE":
-      return "Pedido no prazo limite";
+      return "Solicitação no prazo limite";
     case "PRIORITARIO":
-      return "Pedido próximo ao prazo de vencimento";
+      return "Solicitação próxima ao prazo de vencimento";
     default:
       return "";
   }

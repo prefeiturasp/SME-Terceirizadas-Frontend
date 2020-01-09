@@ -192,7 +192,7 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Inversão de Dias de Cardapio"}
+              titulo={"Inversão de dia de Cardápio"}
               nome="card-inversao"
               texto={
                 "Quando houver necessidade da inversão de todo cardápio de um dia do mês por " +
