@@ -47,7 +47,7 @@ export const getAlergiasIntolerancias = async () => {
     status: response.status,
     results: response.results.map(r => {
       return {
-        uuid: parseInt(r.id),
+        uuid: r.id.toString(),
         nome: r.descricao
       };
     })
