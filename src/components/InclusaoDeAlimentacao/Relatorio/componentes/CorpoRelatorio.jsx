@@ -11,7 +11,6 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 import { formatarDiasMotivos, MOTIVOS } from "./helper";
-import "./style.scss";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {

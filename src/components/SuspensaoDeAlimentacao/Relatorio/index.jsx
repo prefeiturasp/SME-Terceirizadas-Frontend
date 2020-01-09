@@ -7,10 +7,7 @@ import {
   TERCEIRIZADA
 } from "../../../configs/constants";
 import { statusEnum } from "../../../constants";
-import {
-  stringSeparadaPorVirgulas,
-  usuarioTerceirizada
-} from "../../../helpers/utilities";
+import { usuarioTerceirizada } from "../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -21,8 +18,8 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import "./style.scss";
 
 class RelatorioSuspensaoAlimentacao extends Component {
@@ -107,102 +104,10 @@ class RelatorioSuspensaoAlimentacao extends Component {
             </Link>
             <div className="card mt-3">
               <div className="card-body">
-                <div className="row">
-                  <div className="col-2">
-                    <span className="badge-sme badge-secondary-sme">
-                      <span className="id-of-solicitation-dre">
-                        # {suspensaoAlimentacao.id_externo}
-                      </span>
-                      <br />{" "}
-                      <span className="number-of-order-label">
-                        Nº DA SOLICITAÇÂO
-                      </span>
-                    </span>
-                  </div>
-                  <div className="pl-2 my-auto offset-1 col-5">
-                    <span className="requester">Escola Solicitante</span>
-                    <br />
-                    <span className="dre-name">
-                      {suspensaoAlimentacao.escola &&
-                        suspensaoAlimentacao.escola.nome}
-                    </span>
-                  </div>
-                  <div className="my-auto col-4">
-                    <span className="requester">Código EOL</span>
-                    <br />
-                    <span className="dre-name">
-                      {suspensaoAlimentacao.escola &&
-                        suspensaoAlimentacao.escola.codigo_eol}
-                    </span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-2 report-label-value">
-                    <p>DRE</p>
-                    <p className="value-important">
-                      {dadosEscola && dadosEscola.diretoria_regional.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Lote</p>
-                    <p className="value-important">
-                      {dadosEscola && dadosEscola.lote.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Tipo de Gestão</p>
-                    <p className="value-important">
-                      {dadosEscola && dadosEscola.tipo_gestao.nome}
-                    </p>
-                  </div>
-                </div>
-                <hr />
-                {suspensaoAlimentacao.logs && (
-                  <div className="row">
-                    <FluxoDeStatus
-                      listaDeStatus={suspensaoAlimentacao.logs}
-                      tipoDeFluxo={"informativo"}
-                    />
-                  </div>
-                )}
-                <hr />
-                <table className="table-periods">
-                  <tr>
-                    <th>Período</th>
-                    <th>Tipos de Alimentação</th>
-                    <th>Quantidade de Alunos</th>
-                  </tr>
-                  {suspensaoAlimentacao.quantidades_por_periodo.map(
-                    (quantidade_por_periodo, key) => {
-                      return (
-                        <tr key={key}>
-                          <td>
-                            {quantidade_por_periodo.periodo_escolar &&
-                              quantidade_por_periodo.periodo_escolar.nome}
-                          </td>
-                          <td>
-                            {stringSeparadaPorVirgulas(
-                              quantidade_por_periodo.tipos_alimentacao,
-                              "nome"
-                            )}
-                          </td>
-                          <td>{quantidade_por_periodo.numero_alunos}</td>
-                        </tr>
-                      );
-                    }
-                  )}
-                </table>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Observações</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: suspensaoAlimentacao.observacao
-                      }}
-                    />
-                  </div>
-                </div>
+                <CorpoRelatorio
+                  suspensaoAlimentacao={suspensaoAlimentacao}
+                  dadosEscola={dadosEscola}
+                />
                 {suspensaoAlimentacao.status === statusEnum.INFORMADO &&
                   usuarioTerceirizada() && (
                     <div className="form-group row float-right mt-4">

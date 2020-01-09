@@ -540,3 +540,28 @@ table.table-report {
     }
   }
 }
+
+table.table-reasons {
+  width: 100%;
+  tr {
+    padding: 5px 0;
+    color: $gray;
+    font-size: 14px;
+    &:nth-child(even):not(:last-child) {
+      border-bottom: 1px solid #c0c0c0;
+    }
+    th {
+      font-weight: normal;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+    td {
+      font-weight: bold;
+      color: $blackInput;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+  }
+}

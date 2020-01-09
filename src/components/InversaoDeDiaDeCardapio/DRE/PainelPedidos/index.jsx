@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { DRE } from "../../../../configs/constants";
 import { TIPODECARD } from "../../../../constants";
 import { FiltroEnum } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
@@ -110,7 +109,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -122,7 +120,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -135,7 +132,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -149,7 +145,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inversões de cardápio Autorizadas"
                         }
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -161,7 +156,6 @@ class PainelPedidos extends Component {
                         pedidos={formatarPedidos(pedidosReprovados)}
                         ultimaColunaLabel={"Data(s)"}
                         titulo={"Histórico de Inversões de cardápio reprovadas"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
