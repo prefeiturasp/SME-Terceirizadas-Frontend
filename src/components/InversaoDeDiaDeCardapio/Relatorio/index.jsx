@@ -8,8 +8,7 @@ import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import {
   visualizaBotoesDoFluxo,
-  prazoDoPedidoMensagem,
-  corDaMensagem
+  prazoDoPedidoMensagem
 } from "../../../helpers/utilities";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
@@ -18,10 +17,10 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import CorpoRelatorio from "./componentes/CorpoRelatorio";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,7 +32,7 @@ class Relatorio extends Component {
       showNaoAprovaModal: false,
       showModal: false,
       showAutorizarModal: false,
-      InversaoCardapio: null,
+      inversaoDiaCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null
     };
@@ -60,13 +59,13 @@ class Relatorio extends Component {
     const uuid = urlParams.get("uuid");
     if (uuid) {
       getInversaoDeDiaDeCardapio(uuid).then(response => {
-        const InversaoCardapio = response.data;
+        const inversaoDiaCardapio = response.data;
         this.setState({
-          InversaoCardapio,
+          inversaoDiaCardapio,
           uuid,
-          escolaDaInversao: InversaoCardapio.escola,
+          escolaDaInversao: inversaoDiaCardapio.escola,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-            InversaoCardapio.prioridade
+            inversaoDiaCardapio.prioridade
           )
         });
       });
@@ -100,7 +99,7 @@ class Relatorio extends Component {
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
-        InversaoCardapio: response.data
+        inversaoDiaCardapio: response.data
       });
     });
   }
@@ -125,7 +124,7 @@ class Relatorio extends Component {
 
   render() {
     const {
-      InversaoCardapio,
+      inversaoDiaCardapio,
       prazoDoPedidoMensagem,
       escolaDaInversao,
       uuid,
@@ -148,9 +147,9 @@ class Relatorio extends Component {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
-      (InversaoCardapio &&
-        InversaoCardapio.foi_solicitado_fora_do_prazo &&
-        InversaoCardapio.status === statusEnum.CODAE_QUESTIONADO &&
+      (inversaoDiaCardapio &&
+        inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+        inversaoDiaCardapio.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
       (![
@@ -158,28 +157,29 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
-      (InversaoCardapio &&
-        (!InversaoCardapio.foi_solicitado_fora_do_prazo ||
+      (inversaoDiaCardapio &&
+        (!inversaoDiaCardapio.foi_solicitado_fora_do_prazo ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
-          ].includes(InversaoCardapio.status)) &&
+          ].includes(inversaoDiaCardapio.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
-      InversaoCardapio &&
-      InversaoCardapio.foi_solicitado_fora_do_prazo &&
+      inversaoDiaCardapio &&
+      inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
-        InversaoCardapio.status
+        inversaoDiaCardapio.status
       );
     const EXIBIR_MODAL_AUTORIZACAO =
       visao === CODAE &&
-      InversaoCardapio &&
-      InversaoCardapio.foi_solicitado_fora_do_prazo &&
-      !InversaoCardapio.logs[InversaoCardapio.logs.length - 1].resposta_sim_nao;
+      inversaoDiaCardapio &&
+      inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+      !inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
+        .resposta_sim_nao;
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -187,7 +187,7 @@ class Relatorio extends Component {
             showModal={showNaoAprovaModal}
             closeModal={this.closeNaoAprovaModal}
             endpoint={endpointNaoAprovaSolicitacao}
-            solicitacao={InversaoCardapio}
+            solicitacao={inversaoDiaCardapio}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
@@ -205,7 +205,7 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!InversaoCardapio ? (
+        {!inversaoDiaCardapio ? (
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
@@ -219,8 +219,8 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
-              InversaoCardapio.id_externo
+            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
+              inversaoDiaCardapio.id_externo
             }`}</span>
             <Link to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`}>
               <Botao
@@ -234,120 +234,15 @@ class Relatorio extends Component {
             </Link>
             <div className="card mt-3">
               <div className="card-body">
-                <div className="row">
-                  <p
-                    className={`col-12 title-message ${corDaMensagem(
-                      prazoDoPedidoMensagem
-                    )}`}
-                  >
-                    {prazoDoPedidoMensagem}
-                    <Botao
-                      type={BUTTON_TYPE.BUTTON}
-                      titulo="imprimir"
-                      style={BUTTON_STYLE.BLUE}
-                      icon={BUTTON_ICON.PRINT}
-                      className="float-right"
-                    />
-                  </p>
-                  <div className="col-2">
-                    <span className="badge-sme badge-secondary-sme">
-                      <span className="id-of-solicitation-dre">
-                        # {InversaoCardapio.id_externo}
-                      </span>
-                      <br />{" "}
-                      <span className="number-of-order-label">
-                        ID DO PEDIDO
-                      </span>
-                    </span>
-                  </div>
-                  <div className="report-div-beside-order my-auto col-8">
-                    <span className="requester">Escola Solicitante</span>
-                    <br />
-                    <span className="dre-name">
-                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
-                    </span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-2 report-label-value">
-                    <p>DRE</p>
-                    <p className="value-important">
-                      {InversaoCardapio.escola &&
-                        InversaoCardapio.escola.diretoria_regional &&
-                        InversaoCardapio.escola.diretoria_regional.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Lote</p>
-                    <p className="value-important">
-                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Tipo de Gestão</p>
-                    <p className="value-important">
-                      {escolaDaInversao &&
-                        escolaDaInversao.tipo_gestao &&
-                        escolaDaInversao.tipo_gestao.nome}
-                    </p>
-                  </div>
-                </div>
-                <hr />
-                {InversaoCardapio.logs && (
-                  <div className="row">
-                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
-                  </div>
-                )}
-                <hr />
-                <div className="row">
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos matriculados total</span>
-                    <span>{escolaDaInversao.quantidade_alunos}</span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p className="value">
-                      Descrição da inversão de dias de cardápio
-                    </p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-3 report-label-value">
-                    <p>De:</p>
-                    <p className="value">{InversaoCardapio.data_de}</p>
-                  </div>
-                  <div className="col-3 report-label-value">
-                    <p>Para:</p>
-                    <p className="value">{InversaoCardapio.data_para}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Motivo</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.motivo
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Observações</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.observacao
-                      }}
-                    />
-                  </div>
-                </div>
-                <RelatorioHistoricoQuestionamento
-                  solicitacao={InversaoCardapio}
+                <CorpoRelatorio
+                  inversaoDiaCardapio={inversaoDiaCardapio}
+                  escolaDaInversao={escolaDaInversao}
+                  prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                 />
-                {visualizaBotoesDoFluxo(InversaoCardapio) && (
+                <RelatorioHistoricoQuestionamento
+                  solicitacao={inversaoDiaCardapio}
+                />
+                {visualizaBotoesDoFluxo(inversaoDiaCardapio) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao

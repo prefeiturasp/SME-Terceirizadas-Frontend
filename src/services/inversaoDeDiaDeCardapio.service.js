@@ -390,7 +390,7 @@ export const getTerceirizadaPedidosAutorizados = () => {
     });
 };
 
-export const cancelaInversaoDiaCardapioEscola = uuid => {
+export const escolaCancelaInversaoDiaCardapio = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.ESCOLA_CANCELA
   }/`;
