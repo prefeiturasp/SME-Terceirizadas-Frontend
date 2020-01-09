@@ -6,7 +6,7 @@ import { reduxForm, Field, formValueSelector } from "redux-form";
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
 
-import Diagnosticos from "../../components/DietaEspecial/Diagnosticos";
+import DiagnosticosField from "../../components/DietaEspecial/Diagnosticos/Field";
 
 import Botao from "../../components/Shareable/Botao";
 import {
@@ -36,9 +36,6 @@ class Relatorio extends Component {
       uuid: null,
       diagnosticos: []
     };
-    this.onSelect = this.onSelect.bind(this);
-    this.addOption = this.addOption.bind(this);
-    this.removeOption = this.removeOption.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.setFiles = this.setFiles.bind(this);
   }
@@ -60,28 +57,6 @@ class Relatorio extends Component {
     }
   };
 
-  onSelect(index, value) {
-    this.props.change(
-      "diagnosticosSelecionados",
-      this.props.diagnosticosSelecionados.map((mapValue, mapIndex) =>
-        mapIndex === index ? parseInt(value) : mapValue
-      )
-    );
-  }
-  addOption() {
-    this.props.change(
-      "diagnosticosSelecionados",
-      this.props.diagnosticosSelecionados.concat("")
-    );
-  }
-  removeOption(index) {
-    const diagnosticosSelecionados =
-      this.props.diagnosticosSelecionados.length === 1
-        ? [""]
-        : this.props.diagnosticosSelecionados.filter((v, i) => i !== index);
-    this.props.change("diagnosticosSelecionados", diagnosticosSelecionados);
-  }
-
   removeFile(index) {
     let anexos = this.props.anexos;
     anexos.splice(index, 1);
@@ -94,11 +69,7 @@ class Relatorio extends Component {
 
   render() {
     const { classificacoesDieta, diagnosticos, dietaEspecial } = this.state;
-    const {
-      descricaoProtocolo,
-      diagnosticosSelecionados,
-      handleSubmit
-    } = this.props;
+    const { descricaoProtocolo, handleSubmit } = this.props;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
@@ -252,13 +223,11 @@ class Relatorio extends Component {
               <p>Relação por Diagnóstico</p>
             </div>
           </div>
-          <Diagnosticos
+          <Field
+            component={DiagnosticosField}
             name="diagnosticosSelecionados"
             diagnosticos={diagnosticos}
-            selecionados={diagnosticosSelecionados}
-            addOption={this.addOption}
-            removeOption={this.removeOption}
-            onSelect={this.onSelect}
+            required
           />
           <div className="row title">
             <div className="col-12">
@@ -358,7 +327,7 @@ let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
-    diagnosticosSelecionados: [""],
+    //diagnosticosSelecionados: [""],
     identificacaoNutricionista: `ELABORADO por ${localStorage.getItem(
       "nome"
     )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
@@ -370,6 +339,7 @@ let RelatorioForm = reduxForm({
     }
     if (
       diagnosticosSelecionados === undefined ||
+      diagnosticosSelecionados === "" ||
       (diagnosticosSelecionados.length === 1 &&
         diagnosticosSelecionados[0] === "")
     ) {
@@ -379,6 +349,7 @@ let RelatorioForm = reduxForm({
     if (classificacaoDieta === undefined) {
       errors.classificacaoDieta = "Selecione a classificação da dieta";
     }
+    //console.log('validate.errors', errors)
     return errors;
   }
 })(Relatorio);
