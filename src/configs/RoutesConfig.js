@@ -5,7 +5,8 @@ import {
   relatoriosAlteracaoDeCardapio,
   relatoriosInclusaoDeAlimentacao,
   relatoriosSolicitacaoUnificada,
-  relatoriosSolicitacaoKitLanche
+  relatoriosSolicitacaoKitLanche,
+  relatoriosInversaoDiaCardapio
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -148,13 +149,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false
@@ -192,13 +186,6 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
-    exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioDRE,
     exact: false
   },
   {
@@ -247,13 +234,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioCODAE,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false
@@ -261,13 +241,6 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioTerceirizada,
     exact: false
   },
   {
@@ -323,9 +296,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
@@ -402,6 +373,11 @@ const routesConfig = [
   {
     path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosInclusaoDeAlimentacao(),
+    exact: false
+  },
+  {
+    path: `/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
+    component: relatoriosInversaoDiaCardapio(),
     exact: false
   },
   {

@@ -79,7 +79,7 @@ export const CorpoRelatorio = props => {
           alteracaoDeCardapio.data_final ? (
             <th>Alterar dia</th>
           ) : (
-            [<th key={0}>Data Inicial</th>, <th key={1}>Data Final</th>]
+            [<th key={0}>Alterar de</th>, <th key={1}>Até</th>]
           )}
         </tr>
         <tr>

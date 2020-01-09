@@ -5,21 +5,24 @@ import { reduxForm } from "redux-form";
 import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA
-} from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+} from "../../../configs/constants";
+import { statusEnum } from "../../../constants";
+import {
+  stringSeparadaPorVirgulas,
+  usuarioTerceirizada
+} from "../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
-} from "../../../../services/suspensaoDeAlimentacao.service";
-import Botao from "../../../Shareable/Botao";
+} from "../../../services/suspensaoDeAlimentacao.service";
+import Botao from "../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
-} from "../../../Shareable/Botao/constants";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+} from "../../Shareable/Botao/constants";
+import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
+import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import "./style.scss";
 
 class RelatorioSuspensaoAlimentacao extends Component {
@@ -112,16 +115,24 @@ class RelatorioSuspensaoAlimentacao extends Component {
                       </span>
                       <br />{" "}
                       <span className="number-of-order-label">
-                        ID DA SOLICITAÇÂO
+                        Nº DA SOLICITAÇÂO
                       </span>
                     </span>
                   </div>
-                  <div className="report-div-beside-order suspension col-8">
+                  <div className="pl-2 my-auto offset-1 col-5">
                     <span className="requester">Escola Solicitante</span>
                     <br />
                     <span className="dre-name">
                       {suspensaoAlimentacao.escola &&
                         suspensaoAlimentacao.escola.nome}
+                    </span>
+                  </div>
+                  <div className="my-auto col-4">
+                    <span className="requester">Código EOL</span>
+                    <br />
+                    <span className="dre-name">
+                      {suspensaoAlimentacao.escola &&
+                        suspensaoAlimentacao.escola.codigo_eol}
                     </span>
                   </div>
                 </div>
@@ -155,18 +166,6 @@ class RelatorioSuspensaoAlimentacao extends Component {
                   </div>
                 )}
                 <hr />
-                <div className="row">
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos matriculados total</span>
-                    <span>{dadosEscola.quantidade_alunos}</span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p className="value">Descrição da Suspensão</p>
-                  </div>
-                </div>
-                {/* {this.renderDetalheInversao()} */}
                 <table className="table-periods">
                   <tr>
                     <th>Período</th>
@@ -204,17 +203,18 @@ class RelatorioSuspensaoAlimentacao extends Component {
                     />
                   </div>
                 </div>
-                {suspensaoAlimentacao.status === statusEnum.INFORMADO && (
-                  <div className="form-group row float-right mt-4">
-                    <Botao
-                      texto="Ciente"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={() => this.handleSubmit()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                )}
+                {suspensaoAlimentacao.status === statusEnum.INFORMADO &&
+                  usuarioTerceirizada() && (
+                    <div className="form-group row float-right mt-4">
+                      <Botao
+                        texto="Ciente"
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.handleSubmit()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    </div>
+                  )}
               </div>
             </div>
           </form>
