@@ -7,6 +7,7 @@ import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
 import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";
 import IconeTipoAlimentacao from "../../Shareable/Icones/Cadastros/IconeTipoAlimentacao";
+import IconeHorarioCombo from "../../Shareable/Icones/Cadastros/IconeCadastroHorarioComboAlimentacao";
 import "./style.scss";
 
 class Cadastros extends Component {
@@ -105,10 +106,8 @@ class Cadastros extends Component {
             className="linked-card col-4"
           >
             <Link to="/configuracoes/cadastros/horario-combos-alimentacao">
-              <CardLogo
-                titulo={"Cadastro de Horários dos tipos de alimentação"}
-              >
-                <IconeTipoAlimentacao hover={hoverHorarios} />
+              <CardLogo titulo={"Horários de alimentações"}>
+                <IconeHorarioCombo hover={hoverHorarios} />
               </CardLogo>
             </Link>
           </div>

@@ -166,6 +166,12 @@ export const todosOsCamposValidos = (
   comboAlimentacaoAtual
 ) => {
   if (vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]) {
+    const ultimo_horario = moment(
+      vinculosDeCombos[periodoEscolar].combos[
+        comboAlimentacaoAtual === 0 ? 0 : comboAlimentacaoAtual - 1
+      ].hora_final,
+      "HH:mm"
+    );
     const hora_inicial = moment(
       vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]
         .hora_inicial,
@@ -176,11 +182,21 @@ export const todosOsCamposValidos = (
       "HH:mm"
     );
     const horaZero = moment("00:00", "HH:mm");
-    return (
-      hora_final > horaZero &&
-      hora_inicial > horaZero &&
-      hora_inicial < hora_final
-    );
+
+    if (comboAlimentacaoAtual === 0) {
+      return (
+        hora_final > horaZero &&
+        hora_inicial > horaZero &&
+        hora_inicial < hora_final
+      );
+    } else {
+      return (
+        hora_final > horaZero &&
+        hora_inicial > horaZero &&
+        hora_inicial < hora_final &&
+        hora_inicial > ultimo_horario
+      );
+    }
   }
 };
 

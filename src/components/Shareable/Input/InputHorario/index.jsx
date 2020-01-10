@@ -14,7 +14,7 @@ export const InputHorario = props => {
   } = props;
   const {
     disabled,
-    nameEmpty,
+    placeholder,
     size,
     className,
     helpText,
@@ -24,9 +24,10 @@ export const InputHorario = props => {
   return (
     <div className={`input-horario ${className}`}>
       <TimePicker
+        defaultOpenValue={moment("00:00", "HH:mm")}
         size={size}
         onChange={onChange}
-        placeholder={nameEmpty}
+        placeholder={placeholder}
         onBlur={onBlur}
         disabled={disabled}
         format={format}
