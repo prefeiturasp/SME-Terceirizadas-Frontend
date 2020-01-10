@@ -19,21 +19,6 @@ const retornaArrayDeCombosComHorarios = (combos, uuidEscola) => {
   return arrayCombos;
 };
 
-const montaVinculosDeCombosIniciais = (
-  vinculosTipoAlimentacaoDaEscola,
-  uuidEscola
-) => {
-  let arrayVinculos = [];
-  vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
-    arrayVinculos.push({
-      ativo: false,
-      periodo_escolar: vinculo.periodo_escolar,
-      combos: retornaArrayDeCombosComHorarios(vinculo.combos, uuidEscola)
-    });
-  });
-  return arrayVinculos;
-};
-
 const comboPossuiHorario = (combo, horariosDosCombos) => {
   let arrayHorario = [];
   horariosDosCombos.forEach(horario => {
@@ -70,17 +55,68 @@ const montaArrayDeCombos = (combos, horariosDosCombos, uuidEscola) => {
   return arrayDosCombos;
 };
 
-const montaVinculosDeCombosExistentes = (
+const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
+  uuidPeriodo,
+  periodosEQuantidadeAlunos
+) => {
+  let periodo_alunos = {
+    uuid: null,
+    quantidade_alunos_anterior: 0,
+    quantidade_alunos: 0,
+    justificativa: null,
+    escola: null,
+    periodo_escolar: null,
+    ativo: true
+  };
+  periodosEQuantidadeAlunos.forEach(periodo => {
+    if (periodo.periodo_escolar.uuid === uuidPeriodo) {
+      periodo_alunos.quantidade_alunos_anterior = periodo.quantidade_alunos;
+      periodo_alunos.escola = periodo.escola.uuid;
+      periodo_alunos.periodo_escolar = periodo.periodo_escolar.uuid;
+      periodo_alunos.uuid = periodo.uuid;
+    }
+  });
+  return periodo_alunos;
+};
+
+const montaVinculosDeCombosIniciais = (
   vinculosTipoAlimentacaoDaEscola,
-  horariosDosCombos,
-  uuidEscola
+  uuidEscola,
+  periodosEQuantidadeAlunos
 ) => {
   let arrayVinculos = [];
   vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
+    const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
+      vinculo.periodo_escolar.uuid,
+      periodosEQuantidadeAlunos
+    );
     arrayVinculos.push({
       ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
-      combos: montaArrayDeCombos(vinculo.combos, horariosDosCombos, uuidEscola)
+      combos: retornaArrayDeCombosComHorarios(vinculo.combos, uuidEscola),
+      quantidade_alunos: info_alunos
+    });
+  });
+  return arrayVinculos;
+};
+
+const montaVinculosDeCombosExistentes = (
+  vinculosTipoAlimentacaoDaEscola,
+  horariosDosCombos,
+  uuidEscola,
+  periodosEQuantidadeAlunos
+) => {
+  let arrayVinculos = [];
+  vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
+    const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
+      vinculo.periodo_escolar.uuid,
+      periodosEQuantidadeAlunos
+    );
+    arrayVinculos.push({
+      ativo: false,
+      periodo_escolar: vinculo.periodo_escolar,
+      combos: montaArrayDeCombos(vinculo.combos, horariosDosCombos, uuidEscola),
+      quantidade_alunos: info_alunos
     });
   });
   return arrayVinculos;
@@ -89,18 +125,21 @@ const montaVinculosDeCombosExistentes = (
 export const montavinculosDeCombosInicial = (
   vinculosTipoAlimentacaoDaEscola,
   horariosDosCombos,
-  uuidEscola
+  uuidEscola,
+  periodosEQuantidadeAlunos
 ) => {
   let vinculosDeCombos = null;
   temHorariosDeCombosParaEscola(horariosDosCombos)
     ? (vinculosDeCombos = montaVinculosDeCombosExistentes(
         vinculosTipoAlimentacaoDaEscola,
         horariosDosCombos,
-        uuidEscola
+        uuidEscola,
+        periodosEQuantidadeAlunos
       ))
     : (vinculosDeCombos = montaVinculosDeCombosIniciais(
         vinculosTipoAlimentacaoDaEscola,
-        uuidEscola
+        uuidEscola,
+        periodosEQuantidadeAlunos
       ));
   return vinculosDeCombos;
 };

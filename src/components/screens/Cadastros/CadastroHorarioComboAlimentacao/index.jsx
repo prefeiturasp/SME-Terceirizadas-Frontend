@@ -18,6 +18,7 @@ import {
   postHorariosCombosPorEscola,
   putHorariosCombosPorEscola
 } from "../../../../services/cadastroTipoAlimentacao.service";
+import ModalAlterarQuantidadeAlunos from "./components/ModalAlterarQuantidadeAlunos";
 
 class CadastroHorarioComboAlimentacao extends Component {
   constructor(props) {
@@ -27,11 +28,26 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodoEscolar: 0,
       comboAlimentacaoAtual: 0,
       meusDados: null,
-      exibirRelatorio: null
+      exibirRelatorio: null,
+      showModal: false
     };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.atualizaQauntidadeDosAlunos = this.atualizaQauntidadeDosAlunos.bind(
+      this
+    );
+  }
+
+  showModal() {
+    this.setState({ showModal: true });
+  }
+
+  closeModal() {
+    this.setState({ showModal: false });
   }
 
   componentDidUpdate(prevProps) {
+    const { periodoEscolar } = this.state;
     const { vinculosDeCombos, meusDados, horariosDosCombos } = this.props;
     if (prevProps.vinculosDeCombos !== this.props.vinculosDeCombos) {
       if (meusDados) {
@@ -49,8 +65,34 @@ class CadastroHorarioComboAlimentacao extends Component {
       }
       this.setState({ vinculosDeCombos, meusDados });
     }
-    this.props.change("quantidade_alunos", 54);
+    if (vinculosDeCombos) {
+      if (
+        vinculosDeCombos[periodoEscolar].quantidade_alunos
+          .quantidade_alunos_anterior
+      ) {
+        this.props.change(
+          "quantidade_alunos",
+          vinculosDeCombos[periodoEscolar].quantidade_alunos
+            .quantidade_alunos_anterior
+        );
+      } else {
+        this.props.change(
+          "quantidade_alunos",
+          vinculosDeCombos[periodoEscolar].quantidade_alunos
+            .quantidade_alunos_atual
+        );
+      }
+    }
   }
+
+  atualizaQauntidadeDosAlunos = quantidadeAlunos => {
+    let { vinculosDeCombos, periodoEscolar } = this.state;
+    vinculosDeCombos[
+      periodoEscolar
+    ].quantidade_alunos.quantidade_alunos_anterior = quantidadeAlunos;
+    this.props.change("quantidade_alunos_atualizada", null);
+    this.setState({ vinculosDeCombos, showModal: false });
+  };
 
   obterHoraInicio = hora => {
     let {
@@ -255,7 +297,8 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodoEscolar,
       comboAlimentacaoAtual,
       meusDados,
-      exibirRelatorio
+      exibirRelatorio,
+      showModal
     } = this.state;
     vinculosDeCombos &&
       ultimoComboDisponivel(
@@ -263,7 +306,7 @@ class CadastroHorarioComboAlimentacao extends Component {
         periodoEscolar,
         comboAlimentacaoAtual
       );
-    const { naoPermitido } = this.props;
+    const { naoPermitido, handleSubmit } = this.props;
     return !vinculosDeCombos ? (
       !naoPermitido && !meusDados ? (
         <div>Carregando...</div>
@@ -339,7 +382,14 @@ class CadastroHorarioComboAlimentacao extends Component {
         </main>
       </section>
     ) : (
-      <form className="card mt-3">
+      <form className="card mt-3" onSubmit={this.props.handleSubmit}>
+        <ModalAlterarQuantidadeAlunos
+          showModal={showModal}
+          closeModal={this.closeModal}
+          infoAlunos={vinculosDeCombos[periodoEscolar].quantidade_alunos}
+          handleSubmit={handleSubmit}
+          atualizaQauntidadeDosAlunos={this.atualizaQauntidadeDosAlunos}
+        />
         <article className="grid-box">
           <header>Cruzamento das possibilidades</header>
           <Wizard
@@ -353,8 +403,11 @@ class CadastroHorarioComboAlimentacao extends Component {
                 <header className="mb-2">N° de alunos</header>
                 <article className="grid-form-alunos">
                   <Field name="quantidade_alunos" component={InputText} />
-                  <div>
-                    <i className="fas fa-pen" />
+                  <div className="botao-alterar-qtd-alunos">
+                    <i
+                      className="fas fa-pen"
+                      onClick={() => this.showModal()}
+                    />
                   </div>
                 </article>
               </section>
