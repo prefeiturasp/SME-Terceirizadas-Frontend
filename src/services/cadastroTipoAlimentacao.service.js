@@ -203,3 +203,22 @@ export const putHorariosCombosPorEscola = async (payload, uuid) => {
     return err;
   }
 };
+
+export const atualizaQuantidadeDeAlunos = async (payload, uuid) => {
+  try {
+    const response = await fetch(
+      `${CONFIG.API_URL}/quantidade-alunos-por-periodo/${uuid}/`,
+      {
+        method: "PUT",
+        headers: authHeader,
+        body: JSON.stringify(payload)
+      }
+    );
+    let json = await response.json();
+    const status = await response.status;
+    json.status = status;
+    return json;
+  } catch (err) {
+    return err;
+  }
+};

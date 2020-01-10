@@ -1,3 +1,4 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import Botao from "../../../../Shareable/Botao";
@@ -13,6 +14,7 @@ import {
   textAreaRequired
 } from "../../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import { atualizaQuantidadeDeAlunos } from "../../../../../services/cadastroTipoAlimentacao.service";
 
 class ModalAlterarQuantidadeAlunos extends Component {
   constructor(props) {
@@ -22,16 +24,32 @@ class ModalAlterarQuantidadeAlunos extends Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     let infoAlunos = this.props.infoAlunos;
     if (infoAlunos === prevProps.infoAlunos && !this.state.infoAlunos) {
       this.setState({ infoAlunos });
     }
+    if (infoAlunos !== prevState.infoAlunos) {
+      this.setState({ infoAlunos });
+    }
   }
 
-  // onSubmit = values => {
-  //   // console.log(values);
-  // };
+  onSubmit = values => {
+    const { infoAlunos } = this.state;
+    const payload = {
+      escola: infoAlunos.escola,
+      periodo_escolar: infoAlunos.periodo_escolar,
+      quantidade_alunos: values.quantidade_alunos_atualizada,
+      quantidade_alunos_anterior: infoAlunos.quantidade_alunos_anterior,
+      justificativa: values.observacao,
+      ativo: true
+    };
+    atualizaQuantidadeDeAlunos(payload, infoAlunos.uuid).then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        this.props.atualizaQauntidadeDosAlunos(response.quantidade_alunos);
+      }
+    });
+  };
 
   render() {
     const { showModal, closeModal, handleSubmit } = this.props;
@@ -51,7 +69,7 @@ class ModalAlterarQuantidadeAlunos extends Component {
                 component={InputText}
                 label="Nº de Alunos"
                 className="form-control"
-                name="qtd-alunos"
+                name="quantidade_alunos_atualizada"
                 validate={[required, numericInteger]}
               />
             </section>

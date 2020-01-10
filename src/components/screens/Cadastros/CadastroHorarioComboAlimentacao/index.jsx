@@ -33,6 +33,9 @@ class CadastroHorarioComboAlimentacao extends Component {
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.atualizaQauntidadeDosAlunos = this.atualizaQauntidadeDosAlunos.bind(
+      this
+    );
   }
 
   showModal() {
@@ -64,11 +67,13 @@ class CadastroHorarioComboAlimentacao extends Component {
     }
     if (vinculosDeCombos) {
       if (
-        vinculosDeCombos[periodoEscolar].quantidade_alunos.quantidade_alunos
+        vinculosDeCombos[periodoEscolar].quantidade_alunos
+          .quantidade_alunos_anterior
       ) {
         this.props.change(
           "quantidade_alunos",
-          vinculosDeCombos[periodoEscolar].quantidade_alunos.quantidade_alunos
+          vinculosDeCombos[periodoEscolar].quantidade_alunos
+            .quantidade_alunos_anterior
         );
       } else {
         this.props.change(
@@ -79,6 +84,15 @@ class CadastroHorarioComboAlimentacao extends Component {
       }
     }
   }
+
+  atualizaQauntidadeDosAlunos = quantidadeAlunos => {
+    let { vinculosDeCombos, periodoEscolar } = this.state;
+    vinculosDeCombos[
+      periodoEscolar
+    ].quantidade_alunos.quantidade_alunos_anterior = quantidadeAlunos;
+    this.props.change("quantidade_alunos_atualizada", null);
+    this.setState({ vinculosDeCombos, showModal: false });
+  };
 
   obterHoraInicio = hora => {
     let {
@@ -374,6 +388,7 @@ class CadastroHorarioComboAlimentacao extends Component {
           closeModal={this.closeModal}
           infoAlunos={vinculosDeCombos[periodoEscolar].quantidade_alunos}
           handleSubmit={handleSubmit}
+          atualizaQauntidadeDosAlunos={this.atualizaQauntidadeDosAlunos}
         />
         <article className="grid-box">
           <header>Cruzamento das possibilidades</header>
@@ -418,7 +433,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                       <nav>{combo.label}</nav>{" "}
                       <div
                         className={
-                          comboAlimentacaoAtual > index && "check-item"
+                          comboAlimentacaoAtual > index && "checado-item-ok"
                         }
                       >
                         {comboAlimentacaoAtual > index && (

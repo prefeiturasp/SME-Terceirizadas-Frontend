@@ -60,7 +60,8 @@ const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
   periodosEQuantidadeAlunos
 ) => {
   let periodo_alunos = {
-    quantidade_alunos_atual: 0,
+    uuid: null,
+    quantidade_alunos_anterior: 0,
     quantidade_alunos: 0,
     justificativa: null,
     escola: null,
@@ -69,9 +70,10 @@ const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
   };
   periodosEQuantidadeAlunos.forEach(periodo => {
     if (periodo.periodo_escolar.uuid === uuidPeriodo) {
-      periodo_alunos.quantidade_alunos_atual = periodo.quantidade_alunos;
+      periodo_alunos.quantidade_alunos_anterior = periodo.quantidade_alunos;
       periodo_alunos.escola = periodo.escola.uuid;
       periodo_alunos.periodo_escolar = periodo.periodo_escolar.uuid;
+      periodo_alunos.uuid = periodo.uuid;
     }
   });
   return periodo_alunos;
