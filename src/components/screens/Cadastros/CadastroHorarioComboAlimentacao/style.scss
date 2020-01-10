@@ -59,6 +59,15 @@
           grid-template-columns: 77% 19%;
           column-gap: 4%;
 
+          .quantidade-alunos-box {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 0.5em;
+            height: 38px;
+          }
+
           div {
             i {
               display: flex;

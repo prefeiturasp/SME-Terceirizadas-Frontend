@@ -6,5 +6,15 @@
     .ant-time-picker-input {
       height: 38px;
     }
+
+    span {
+      cursor: normal !important;
+      pointer-events: none !important;
+    }
+
+    i {
+      cursor: normal !important;
+      pointer-events: none !important;
+    }
   }
 }
