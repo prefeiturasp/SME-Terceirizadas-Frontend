@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { Field, reduxForm } from "redux-form";
-import { InputText } from "../../../Shareable/Input/InputText";
 import { InputHorario } from "../../../Shareable/Input/InputHorario";
 import {
   todosOsCamposValidos,
@@ -13,7 +12,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import "./style.scss";
 import moment from "moment";
-import { toastError } from "../../../Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import {
   postHorariosCombosPorEscola,
   putHorariosCombosPorEscola
@@ -29,7 +28,8 @@ class CadastroHorarioComboAlimentacao extends Component {
       comboAlimentacaoAtual: 0,
       meusDados: null,
       exibirRelatorio: null,
-      showModal: false
+      showModal: false,
+      quantidadeAlunos: null
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -46,7 +46,7 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ showModal: false });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { periodoEscolar } = this.state;
     const { vinculosDeCombos, meusDados, horariosDosCombos } = this.props;
     if (prevProps.vinculosDeCombos !== this.props.vinculosDeCombos) {
@@ -66,21 +66,25 @@ class CadastroHorarioComboAlimentacao extends Component {
       this.setState({ vinculosDeCombos, meusDados });
     }
     if (vinculosDeCombos) {
+      let qtdAlunos = null;
+      let { quantidadeAlunos } = this.state;
       if (
         vinculosDeCombos[periodoEscolar].quantidade_alunos
           .quantidade_alunos_anterior
       ) {
-        this.props.change(
-          "quantidade_alunos",
+        qtdAlunos =
           vinculosDeCombos[periodoEscolar].quantidade_alunos
-            .quantidade_alunos_anterior
-        );
+            .quantidade_alunos_anterior;
       } else {
-        this.props.change(
-          "quantidade_alunos",
+        qtdAlunos =
           vinculosDeCombos[periodoEscolar].quantidade_alunos
-            .quantidade_alunos_atual
-        );
+            .quantidade_alunos_atual;
+      }
+      if (
+        quantidadeAlunos === prevState.quantidadeAlunos &&
+        quantidadeAlunos !== qtdAlunos
+      ) {
+        this.setState({ quantidadeAlunos: qtdAlunos });
       }
     }
   }
@@ -188,6 +192,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             comboAlimentacaoAtual: 0,
             periodoEscolar: 0
           });
+          toastSuccess("Cadastrado efetuado com sucesso");
         } else {
           toastError("Erro ao salvar combo");
         }
@@ -201,6 +206,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             comboAlimentacaoAtual: 0,
             periodoEscolar: 0
           });
+          toastSuccess("Cadastrado efetuado com sucesso");
         } else {
           toastError("Erro ao alterar combo");
         }
@@ -298,7 +304,8 @@ class CadastroHorarioComboAlimentacao extends Component {
       comboAlimentacaoAtual,
       meusDados,
       exibirRelatorio,
-      showModal
+      showModal,
+      quantidadeAlunos
     } = this.state;
     vinculosDeCombos &&
       ultimoComboDisponivel(
@@ -402,7 +409,9 @@ class CadastroHorarioComboAlimentacao extends Component {
               <section className="form-qtd-alunos">
                 <header className="mb-2">N° de alunos</header>
                 <article className="grid-form-alunos">
-                  <Field name="quantidade_alunos" component={InputText} />
+                  <div className="quantidade-alunos-box">
+                    {quantidadeAlunos}
+                  </div>
                   <div className="botao-alterar-qtd-alunos">
                     <i
                       className="fas fa-pen"
@@ -450,7 +459,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                           ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
-                      nameEmpty={"Hora Inicial"}
+                      placeholder={"Hora Inicial"}
                       horaAtual={combo.hora_inicial}
                       component={InputHorario}
                       onChange={date => this.obterHoraInicio(date)}
@@ -465,7 +474,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                           ? "combo-inativo horario-confirmado"
                           : "combo-inativo"
                       }`}
-                      nameEmpty={"Hora Término"}
+                      placeholder={"Hora Término"}
                       horaAtual={combo.hora_final}
                       component={InputHorario}
                       onChange={date => this.obterHoraFim(date)}
