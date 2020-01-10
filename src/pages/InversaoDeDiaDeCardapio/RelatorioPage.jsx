@@ -19,12 +19,14 @@ import {
   DRENegaInversaoDeDiaDeCardapio,
   CODAEQuestionaInversaoDeDiaDeCardapio,
   TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio,
-  CODAENegaInversaoDeDiaDeCardapio
+  CODAENegaInversaoDeDiaDeCardapio,
+  escolaCancelaInversaoDiaCardapio
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
+import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -35,7 +37,7 @@ class RelatorioBase extends React.Component {
     const anteriores = [
       {
         href: `/${this.props.VISAO}/${INVERSAO_CARDAPIO}`,
-        titulo: "Solicitações de Inversao de Dia do Cardapio"
+        titulo: "Inversões de dia de Cardápio"
       }
     ];
 
@@ -64,16 +66,28 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
 }
 
 // Escola
-export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
+export const RelatorioEscola = () => (
+  <RelatorioBase
+    visao={ESCOLA}
+    ModalNaoAprova={ModalCancelarSolicitacao}
+    toastNaoAprovaMensagem={
+      "Inversão de dia de Cardápio cancelada com sucesso!"
+    }
+    endpointNaoAprovaSolicitacao={escolaCancelaInversaoDiaCardapio}
+    textoBotaoNaoAprova="Cancelar"
+  />
+);
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
+    visao={DRE}
     endpointAprovaSolicitacao={dreValidaPedidoEscola}
     endpointNaoAprovaSolicitacao={DRENegaInversaoDeDiaDeCardapio}
     ModalNaoAprova={ModalNaoValidarSolicitacao}
-    toastAprovaMensagem={"Inversão de Cardápio validada com sucesso!"}
-    toastAprovaMensagemErro={"Houve um erro ao validar a Inversão de Cardápio"}
+    toastAprovaMensagem={"Inversão de dia de Cardápio validada com sucesso!"}
+    toastAprovaMensagemErro={
+      "Houve um erro ao validar a Inversão de dia de Cardápio"
+    }
     textoBotaoNaoAprova="Não Validar"
     textoBotaoAprova="Validar"
   />
@@ -81,13 +95,13 @@ export const RelatorioDRE = () => (
 
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
+    visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
     ModalQuestionamento={ModalCODAEQuestiona}
-    toastAprovaMensagem={"Inversão de Cardápio autorizada com sucesso!"}
+    toastAprovaMensagem={"Inversão de dia de Cardápio autorizada com sucesso!"}
     toastAprovaMensagemErro={
-      "Houve um erro ao autorizar a Inversão de Cardápio"
+      "Houve um erro ao autorizar a Inversão de dia de Cardápio"
     }
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
@@ -99,17 +113,17 @@ export const RelatorioCODAE = () => (
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
+    visao={TERCEIRIZADA}
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     endpointQuestionamento={
       TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio
     }
     toastAprovaMensagem={
-      "Ciência de Alteração de Cardápio enviado com sucesso!"
+      "Ciência de Inversão de dia de Cardápio enviado com sucesso!"
     }
     toastAprovaMensagemErro={
-      "Houve um erro ao tomar ciência da Alteração de Cardápio"
+      "Houve um erro ao tomar ciência da Inversão de dia de Cardápio"
     }
     textoBotaoNaoAprova="Não"
     textoBotaoAprova="Ciente"

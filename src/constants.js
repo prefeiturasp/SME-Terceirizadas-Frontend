@@ -11,6 +11,7 @@ export const ENTER = 13;
 export const TAMANHO_RF = 7;
 export const TAMANHO_CPF = 11;
 export const DOIS_MB = 2097152;
+export const TODOS = "TODOS";
 
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,

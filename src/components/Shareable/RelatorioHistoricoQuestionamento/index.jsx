@@ -63,11 +63,21 @@ export const RelatorioHistoricoQuestionamento = props => {
                   {log.status_evento_explicacao === "CODAE autorizou" && (
                     <div className="is-it-possible">
                       <div className="title">Autorizou</div>
+                      {log.justificativa && (
+                        <div className="obs">
+                          Observação da CODAE: {log.justificativa}
+                        </div>
+                      )}
                     </div>
                   )}
                   {log.status_evento_explicacao === "CODAE negou" && (
                     <div className="is-it-possible">
                       <div className="title">Negou</div>
+                      {log.justificativa && (
+                        <div className="obs">
+                          Observação da CODAE: {log.justificativa}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

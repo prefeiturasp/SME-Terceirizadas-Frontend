@@ -1,9 +1,5 @@
 import {
   ALTERACAO_CARDAPIO,
-  CODAE,
-  DRE,
-  ESCOLA,
-  TERCEIRIZADA,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   RELATORIO,
@@ -28,24 +24,7 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
-export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
-  let tipoRelatorio = "";
-  switch (visao) {
-    case LOG_PARA.ESCOLA:
-      tipoRelatorio = ESCOLA;
-      break;
-    case LOG_PARA.DRE:
-      tipoRelatorio = DRE;
-      break;
-    case LOG_PARA.CODAE:
-      tipoRelatorio = CODAE;
-      break;
-    case LOG_PARA.TERCEIRIZADA:
-      tipoRelatorio = TERCEIRIZADA;
-      break;
-    default:
-      break;
-  }
+export const ajustarFormatoLog = logs => {
   return logs.map(log => {
     let solicitacao = "falta-implementar";
     switch (log.tipo_doc) {
@@ -81,16 +60,9 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
     return {
       text: truncarString(log.descricao, 48),
       date: log.data_log,
-      link: [
-        ALTERACAO_CARDAPIO,
-        INCLUSAO_ALIMENTACAO,
-        SOLICITACAO_KIT_LANCHE,
-        SOLICITACAO_KIT_LANCHE_UNIFICADA
-      ].includes(solicitacao)
-        ? `/${solicitacao}/${RELATORIO}?uuid=${
-            log.uuid
-          }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
-        : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
+      link: `/${solicitacao}/${RELATORIO}?uuid=${
+        log.uuid
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
     };
   });
 };

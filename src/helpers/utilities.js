@@ -123,11 +123,11 @@ export const getDataObj = data => {
 export const prazoDoPedidoMensagem = prioridade => {
   switch (prioridade) {
     case "REGULAR":
-      return "Pedido no prazo regular";
+      return "Solicitação no prazo regular";
     case "LIMITE":
-      return "Pedido no prazo limite";
+      return "Solicitação no prazo limite";
     case "PRIORITARIO":
-      return "Pedido próximo ao prazo de vencimento";
+      return "Solicitação próxima ao prazo de vencimento";
     default:
       return "";
   }
@@ -244,4 +244,31 @@ export const formatarCPFouCNPJ = value => {
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
     "$1.$2.$3/$4-$5"
   );
+};
+
+export const usuarioEscola = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
+};
+
+export const usuarioDiretoriaRegional = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
+};
+
+export const usuarioCODAEGestaoAlimentacao = () => {
+  return (
+    localStorage.getItem("tipo_perfil") ===
+    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioCODAEDietaEspecial = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
+};
+
+export const usuarioTerceirizada = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
+};
+
+export const converterDDMMYYYYparaYYYYMMDD = data => {
+  return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };

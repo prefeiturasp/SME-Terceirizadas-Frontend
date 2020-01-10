@@ -162,11 +162,14 @@ export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
     });
 };
 
-export const CODAEAutorizaPedidoDRE = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-autoriza-pedido/`;
+export const CODAEAutorizaPedidoDRE = (uuid, justificativa = {}) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.CODAE_AUTORIZA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
@@ -387,7 +390,7 @@ export const getTerceirizadaPedidosAutorizados = () => {
     });
 };
 
-export const cancelaInversaoDiaCardapioEscola = uuid => {
+export const escolaCancelaInversaoDiaCardapio = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.ESCOLA_CANCELA
   }/`;

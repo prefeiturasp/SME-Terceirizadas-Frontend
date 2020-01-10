@@ -4,64 +4,80 @@ import {
   corDaMensagem,
   stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
+import { formatarDiasMotivos, MOTIVOS } from "./helper";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    const { inclusaoDeAlimentacao } = this.props;
+    const diasMotivosFormatados = formatarDiasMotivos(
+      inclusaoDeAlimentacao.inclusoes
+    );
     return (
-      !ehInclusaoContinua && (
-        <table className="table-periods">
-          <tr>
-            <th>Data</th>
-            <th>Motivo</th>
-          </tr>
-          {inclusaoDeAlimentacao.inclusoes.map((inclusao, key) => {
-            return (
-              <tr key={key}>
-                <td>{inclusao.data}</td>
-                <td>{inclusao.motivo.nome}</td>
+      <table className="table-reasons">
+        {MOTIVOS.map(motivo => {
+          return (
+            diasMotivosFormatados[motivo].length > 0 && [
+              <tr className="row" key={0}>
+                <th className="col-2">Motivo</th>
+                <th className="col-10">Dia(s) de inclusão</th>
+              </tr>,
+              <tr className="row" key={1}>
+                <td className="col-2">{motivo}</td>
+                {diasMotivosFormatados[motivo].map((dia, key) => {
+                  return (
+                    <td key={key} className="col-2">
+                      {dia}
+                    </td>
+                  );
+                })}
               </tr>
-            );
-          })}
-        </table>
-      )
+            ]
+          );
+        })}
+      </table>
     );
   }
 
   renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    const { inclusaoDeAlimentacao } = this.props;
     return (
-      ehInclusaoContinua && (
-        <div>
-          <div className="row">
-            <div className="col-4 report-label-value">
-              <p>Data do evento</p>
-              <p className="value">
-                {`${inclusaoDeAlimentacao.data_inicial} - ${
-                  inclusaoDeAlimentacao.data_final
-                }`}
-              </p>
-            </div>
-            <div className="col-4 report-label-value">
-              <p>Dias da Semana</p>
-              <p className="value">
-                {inclusaoDeAlimentacao.dias_semana_explicacao}
-              </p>
-            </div>
+      <div>
+        <div className="row">
+          <div className="col-4 report-label-value">
+            <p>Período</p>
+            <p className="value">
+              {`${inclusaoDeAlimentacao.data_inicial} - ${
+                inclusaoDeAlimentacao.data_final
+              }`}
+            </p>
           </div>
-          <div className="row">
-            <div className="col-12 report-label-value">
-              <p>Motivo</p>
-              <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
-            </div>
+          <div className="col-4 report-label-value">
+            <p>Motivo</p>
+            <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+          </div>
+          <div className="col-4 report-label-value">
+            <p>Dias da Semana</p>
+            <p className="value">
+              {inclusaoDeAlimentacao.dias_semana_explicacao}
+            </p>
           </div>
         </div>
-      )
+      </div>
     );
   }
 
   render() {
-    const { inclusaoDeAlimentacao, prazoDoPedidoMensagem } = this.props;
+    const {
+      ehInclusaoContinua,
+      inclusaoDeAlimentacao,
+      prazoDoPedidoMensagem
+    } = this.props;
     return (
       <div>
         <div className="row">
@@ -71,28 +87,37 @@ export class CorpoRelatorio extends Component {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            {/*<Botao
+            <Botao
               type={BUTTON_TYPE.BUTTON}
               titulo="imprimir"
               style={BUTTON_STYLE.BLUE}
               icon={BUTTON_ICON.PRINT}
               className="float-right"
-            />*/}
+            />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
               <span className="id-of-solicitation-dre">
                 # {inclusaoDeAlimentacao.id_externo}
               </span>
-              <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
+              <br />{" "}
+              <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
             </span>
           </div>
-          <div className="report-div-beside-order my-auto col-8">
+          <div className="pl-2 my-auto offset-1 col-5">
             <span className="requester">Escola Solicitante</span>
             <br />
             <span className="dre-name">
               {inclusaoDeAlimentacao.escola &&
                 inclusaoDeAlimentacao.escola.nome}
+            </span>
+          </div>
+          <div className="my-auto col-4">
+            <span className="requester">Código EOL</span>
+            <br />
+            <span className="dre-name">
+              {inclusaoDeAlimentacao.escola &&
+                inclusaoDeAlimentacao.escola.codigo_eol}
             </span>
           </div>
         </div>
@@ -127,24 +152,14 @@ export class CorpoRelatorio extends Component {
           </div>
         )}
         <hr />
-        <div className="row">
-          <div className="report-students-div col-3">
-            <span>Nº de alunos matriculados total</span>
-            <span>{inclusaoDeAlimentacao.escola.quantidade_alunos}</span>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 report-label-value">
-            <p className="value">Descrição da Inclusão de Alimentação</p>
-          </div>
-        </div>
-        {this.renderParteContinua()}
-        {this.renderParteAvulsa()}
-        <table className="table-periods">
+        {ehInclusaoContinua
+          ? this.renderParteContinua()
+          : this.renderParteAvulsa()}
+        <table className="table-report mt-3">
           <tr>
             <th>Período</th>
             <th>Tipos de Alimentação</th>
-            <th>Quantidade de Alunos</th>
+            <th>Nº de Alunos</th>
           </tr>
           {inclusaoDeAlimentacao.quantidades_periodo.map(
             (quantidade_por_periodo, key) => {

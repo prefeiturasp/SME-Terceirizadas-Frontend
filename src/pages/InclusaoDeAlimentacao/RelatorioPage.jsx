@@ -87,7 +87,7 @@ export class RelatorioEscola extends Component {
   render() {
     return (
       <RelatorioBase
-        VISAO={ESCOLA}
+        visao={ESCOLA}
         ModalNaoAprova={ModalCancelarSolicitacao}
         toastNaoAprovaMensagem={
           "Inclusão de Alimentação cancelada com sucesso!"
@@ -120,7 +120,7 @@ export class RelatorioDRE extends Component {
   render() {
     return (
       <RelatorioBase
-        VISAO={DRE}
+        visao={DRE}
         ModalNaoAprova={ModalNaoValidarSolicitacao}
         toastAprovaMensagem={"Inclusão de Alimentação validada com sucesso!"}
         toastAprovaMensagemErro={
@@ -160,7 +160,7 @@ export class RelatorioCODAE extends Component {
   render() {
     return (
       <RelatorioBase
-        VISAO={CODAE}
+        visao={CODAE}
         ModalNaoAprova={ModalNegarSolicitacao}
         ModalQuestionamento={ModalCODAEQuestiona}
         toastAprovaMensagem={"Inclusão de Alimentação autorizada com sucesso!"}
@@ -206,7 +206,7 @@ export class RelatorioTerceirizada extends Component {
   render() {
     return (
       <RelatorioBase
-        VISAO={TERCEIRIZADA}
+        visao={TERCEIRIZADA}
         ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
         ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
         toastAprovaMensagem={

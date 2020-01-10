@@ -5,7 +5,8 @@ import {
   relatoriosAlteracaoDeCardapio,
   relatoriosInclusaoDeAlimentacao,
   relatoriosSolicitacaoUnificada,
-  relatoriosSolicitacaoKitLanche
+  relatoriosSolicitacaoKitLanche,
+  relatoriosInversaoDiaCardapio
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -13,6 +14,7 @@ import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -148,13 +150,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false
@@ -192,13 +187,6 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
-    exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioDRE,
     exact: false
   },
   {
@@ -247,13 +235,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioCODAE,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false
@@ -261,13 +242,6 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioTerceirizada,
     exact: false
   },
   {
@@ -323,9 +297,7 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
@@ -352,6 +324,11 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
+    exact: false
+  },
+  {
+    path: `/configuracoes/cadastros/horario-combos-alimentacao`,
+    component: CadastroHorarioComboAlimentacaoPage,
     exact: false
   },
   {
@@ -405,9 +382,12 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
+    component: relatoriosInversaoDiaCardapio(),
+    exact: false
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
     component: relatoriosSolicitacaoKitLanche(),
     exact: false
   },
