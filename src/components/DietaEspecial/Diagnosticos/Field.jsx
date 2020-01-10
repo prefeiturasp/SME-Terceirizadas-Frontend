@@ -39,7 +39,6 @@ export default class DiagnosticosField extends Component {
     onChange(diagnosticosSelecionados);
   }
   render() {
-    console.log("DiagnosticosField", this.props);
     const {
       diagnosticos,
       input: { value },
