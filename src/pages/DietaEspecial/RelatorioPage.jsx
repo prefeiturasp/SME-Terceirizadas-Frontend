@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { connect } from "react-redux";
-import { reduxForm, Field, formValueSelector } from "redux-form";
+import { reduxForm, Field } from "redux-form";
 
 import { HOME } from "../../constants/config.constants";
 import * as constants from "../../configs/constants";
 
 import DiagnosticosField from "../../components/DietaEspecial/Diagnosticos/Field";
+import ProtocolosField from "../../components/DietaEspecial/ProtocolosField";
 
 import Botao from "../../components/Shareable/Botao";
 import {
@@ -17,7 +17,6 @@ import {
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import InputText from "../../components/Shareable/Input/InputText";
-import InputFile from "../../components/Shareable/Input/InputFile";
 import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
@@ -36,8 +35,6 @@ class Relatorio extends Component {
       uuid: null,
       diagnosticos: []
     };
-    this.removeFile = this.removeFile.bind(this);
-    this.setFiles = this.setFiles.bind(this);
   }
 
   componentDidMount = async () => {
@@ -57,24 +54,13 @@ class Relatorio extends Component {
     }
   };
 
-  removeFile(index) {
-    let anexos = this.props.anexos;
-    anexos.splice(index, 1);
-    this.props.change("anexos", anexos);
-  }
-  setFiles(files) {
-    this.props.change("descricaoProtocolo", "");
-    this.props.change("anexos", files);
-  }
-
   render() {
     const { classificacoesDieta, diagnosticos, dietaEspecial } = this.state;
-    const { descricaoProtocolo, handleSubmit } = this.props;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={this.props.handleSubmit}>
           <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
             dietaEspecial.id_externo
           }`}</span>
@@ -236,9 +222,7 @@ class Relatorio extends Component {
           </div>
           <div className="row">
             <div className="col-12">
-              {/* TODO: não usar state e sim dados do redux-form */}
               <RadioboxGroup
-                //value={classificacaoDieta}
                 name="classificacaoDieta"
                 required
                 options={classificacoesDieta.map(cd => {
@@ -255,37 +239,7 @@ class Relatorio extends Component {
               <p>Protocolo da Dieta Especial</p>
             </div>
           </div>
-          <div className="row">
-            <div className="col-9">
-              <Field
-                component={InputText}
-                name="descricaoProtocolo"
-                placeholder="Digite o nome do protocolo"
-              />
-              <div className="alert alert-importante" role="alert">
-                <b>IMPORTANTE:</b> Envie um arquivo formato .doc, .docx, .pdf,
-                .png, .jpg ou .jpeg, com até 2Mb.
-              </div>
-            </div>
-            <div className="col-3">
-              <Field
-                component={InputFile}
-                className="inputfile"
-                name="inputfile"
-                texto="Anexar Protocolo"
-                icone={undefined}
-                accept=".doc, .docx, .pdf, .png, .jpg, .jpeg"
-                setFiles={this.setFiles}
-                removeFile={this.removeFile}
-                concatenarNovosArquivos
-                nomeNovoArquivo={descricaoProtocolo}
-                disabled={
-                  descricaoProtocolo === undefined ||
-                  descricaoProtocolo.length < 3
-                }
-              />
-            </div>
-          </div>
+          <Field component={ProtocolosField} name="protocolos" required />
           <div className="row title">
             <div className="col-12">
               <p>Identificação do Nutricionista</p>
@@ -307,8 +261,6 @@ class Relatorio extends Component {
                 className="float-right"
                 texto="Autorizar"
                 type={BUTTON_TYPE.SUBMIT}
-                // disabled={invalid}
-                // onClick={handleSubmit(data => this.props.change('acao', 'autoriza'))}
               />
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -327,15 +279,14 @@ let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
-    //diagnosticosSelecionados: [""],
     identificacaoNutricionista: `ELABORADO por ${localStorage.getItem(
       "nome"
     )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
   },
-  validate: ({ anexos, classificacaoDieta, diagnosticosSelecionados }) => {
+  validate: ({ protocolos, classificacaoDieta, diagnosticosSelecionados }) => {
     let errors = {};
-    if (anexos === undefined || anexos.length === 0) {
-      errors.anexos = "Pelo menos um protocolo deve ser anexado";
+    if (protocolos === undefined || protocolos.length === 0) {
+      errors.protocolos = "Pelo menos um protocolo deve ser anexado";
     }
     if (
       diagnosticosSelecionados === undefined ||
@@ -349,20 +300,9 @@ let RelatorioForm = reduxForm({
     if (classificacaoDieta === undefined) {
       errors.classificacaoDieta = "Selecione a classificação da dieta";
     }
-    //console.log('validate.errors', errors)
     return errors;
   }
 })(Relatorio);
-const selector = formValueSelector("autorizacao-dieta-especial");
-RelatorioForm = connect(state => {
-  return selector(
-    state,
-    "acao",
-    "anexos",
-    "descricaoProtocolo",
-    "diagnosticosSelecionados"
-  );
-})(RelatorioForm);
 
 export default class RelatorioPage extends Component {
   constructor(props) {
