@@ -290,15 +290,6 @@ let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
-    // diagnosticosSelecionados: ["4"],
-    // classificacaoDieta: "2",
-    // protocolos: [
-    //   {
-    //     nome: "Teste",
-    //     base64:
-    //       "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABj8AAANnCAIAAADhvd3MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAP+6SURBVHhe7N0HoGRVfT/w026Z9vq+7QV22QLL0pZeBJEiYEfsXUxiTGJi7xo1CTHG6N/E2GKJBQs2DCpNQTosvSx12V7evn1t2r33lP/53Zm3LCBNdtlZ+H64zJty587tM+e755zLxUnftiJhNhAutKLOmGIAAAAAAAAAAACdQbT/AgAAAAAAAAAAdB6kVwAAAAAAAAAA0LmQXgEAAAAAAAAAQOdCegUAAAAAAAAAAJ0L6RUAAAAAAAAAAHQupFcAAAAAAAAAANC5kF4BAAAAAAAAAEDnQnoFAAAAAAAAAACdC+kVAAAAAAAAAAB0LqRXAAAAAAAAAADQuZBeAQAAAAAAAABA50J6BQAAAAAAAAAAnQvpFQAAAAAAAAAAdC6kVwAAAA..."
-    //   }
-    // ],
     identificacaoNutricionista: `ELABORADO por ${localStorage.getItem(
       "nome"
     )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
@@ -338,9 +329,19 @@ export default class RelatorioPage extends Component {
   submit = async formData => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const {
+      classificacaoDieta,
+      diagnosticosSelecionados,
+      identificacaoNutricionista,
+      protocolos
+    } = formData;
+    let diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
     const resposta = await autorizaSolicitacaoDietaEspecial({
       uuid,
-      ...formData
+      classificacaoDieta,
+      diagnosticosSelecionados: diagnosticos,
+      identificacaoNutricionista,
+      protocolos
     });
     if (resposta.status === 200) {
       toastSuccess(resposta.data.mensagem);

@@ -20,7 +20,7 @@ export default class DiagnosticosField extends Component {
       value === ""
         ? [newValue]
         : value.map((mapValue, mapIndex) =>
-            mapIndex === index ? parseInt(newValue) : mapValue
+            mapIndex === index ? newValue : mapValue
           )
     );
   }
