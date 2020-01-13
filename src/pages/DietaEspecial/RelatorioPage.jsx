@@ -20,6 +20,8 @@ import InputText from "../../components/Shareable/Input/InputText";
 import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 import { FluxoDeStatus } from "../../components/Shareable/FluxoDeStatus";
 
+import ModalNegaSolicitacao from "./ModalNegaSolicitacao";
+
 import "./style.scss";
 
 import {
@@ -60,6 +62,11 @@ class Relatorio extends Component {
     const { escola } = dietaEspecial;
     return (
       <div>
+        <ModalNegaSolicitacao
+          show={this.state.showModalNegacao}
+          onClose={this.fechaModalNegacao}
+          dietaEspecial={dietaEspecial}
+        />
         <form onSubmit={this.props.handleSubmit}>
           <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
             dietaEspecial.id_externo
@@ -266,6 +273,7 @@ class Relatorio extends Component {
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right"
                 texto="Negar"
+                onClick={this.props.abreModalNegacao}
               />
             </div>
           </div>
@@ -274,11 +282,19 @@ class Relatorio extends Component {
     );
   }
 }
-
 let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
+    diagnosticosSelecionados: ["4"],
+    classificacaoDieta: "2",
+    protocolos: [
+      {
+        nome: "Teste",
+        base64:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABj8AAANnCAIAAADhvd3MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAP+6SURBVHhe7N0HoGRVfT/w026Z9vq+7QV22QLL0pZeBJEiYEfsXUxiTGJi7xo1CTHG6N/E2GKJBQs2DCpNQTosvSx12V7evn1t2r33lP/53Zm3LCBNdtlZ+H64zJty587tM+e755zLxUnftiJhNhAutKLOmGIAAAAAAAAAAACdQbT/AgAAAAAAAAAAdB6kVwAAAAAAAAAA0LmQXgEAAAAAAAAAQOdCegUAAAAAAAAAAJ0L6RUAAAAAAAAAAHQupFcAAAAAAAAAANC5kF4BAAAAAAAAAEDnQnoFAAAAAAAAAACdC+kVAAAAAAAAAAB0LqRXAAAAAAAAAADQuZBeAQAAAAAAAABA50J6BQAAAAAAAAAAnQvpFQAAAAAAAAAAdC6kVwAAAA..."
+      }
+    ],
     identificacaoNutricionista: `ELABORADO por ${localStorage.getItem(
       "nome"
     )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
@@ -307,26 +323,37 @@ let RelatorioForm = reduxForm({
 export default class RelatorioPage extends Component {
   constructor(props) {
     super(props);
-    this.submit = this.submit.bind(this);
     this.state = {
-      showModalConfirmacao: false
+      showModalConfirmacao: false,
+      showModalNegacao: false
     };
+    this.submit = this.submit.bind(this);
+    this.fechaModalConfirmacao = this.fechaModalConfirmacao.bind(this);
+    this.abreModalNegacao = this.abreModalNegacao.bind(this);
+    this.fechaModalNegacao = this.fechaModalNegacao.bind(this);
+    this.atualizaSolicitacao = this.atualizaSolicitacao.bind(this);
   }
+
   submit(formData) {
     this.setState({
       showModalConfirmacao: true,
       formData
     });
-    this.fechaModalConfirmacao = this.fechaModalConfirmacao.bind(this);
-    this.atualizaSolicitacao = this.atualizaSolicitacao.bind(this);
   }
 
   fechaModalConfirmacao() {
     this.setState({ showModalConfirmacao: false });
   }
+  abreModalNegacao() {
+    this.setState({ showModalNegacao: true });
+  }
+  fechaModalNegacao() {
+    this.setState({ showModalNegacao: false });
+  }
   atualizaSolicitacao() {
     this.setState({
-      showModalConfirmacao: false
+      showModalConfirmacao: false,
+      showModalNegacao: false
     });
   }
 
@@ -345,6 +372,10 @@ export default class RelatorioPage extends Component {
     return (
       <Page>
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <ModalNegaSolicitacao
+          show={this.state.showModalNegacao}
+          onClose={this.fechaModalNegacao}
+        />
         <Modal
           show={this.state.showModalConfirmacao}
           onHide={this.fechaModalConfirmacao}
@@ -366,7 +397,11 @@ export default class RelatorioPage extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <RelatorioForm onSubmit={this.submit} {...this.props} />
+        <RelatorioForm
+          onSubmit={this.submit}
+          abreModalNegacao={this.abreModalNegacao}
+          {...this.props}
+        />
       </Page>
     );
   }

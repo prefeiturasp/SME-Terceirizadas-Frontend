@@ -5,11 +5,13 @@ import { API_URL } from "../../constants/config.constants";
 import {
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial,
+  getMotivosNegacaoDietaEspecial,
   getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
   getSolicitacoesNegadasNutricionista,
-  getTiposDietaEspecial
+  getTiposDietaEspecial,
+  negaSolicitacaoDietaEspecial
 } from "../painelNutricionista.service";
 
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.PENDENTES}/`, {
@@ -33,7 +35,13 @@ fetchMock.get(`${API_URL}/tipos-dieta-especial`, {
 fetchMock.get(`${API_URL}/classificacoes-dieta`, {
   results: ["classificacoes", "dieta"]
 });
+fetchMock.get(`${API_URL}/motivos-negacao`, {
+  results: ["motivos", "negacao"]
+});
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
+fetchMock.post(`begin:${SOLICITACOES_DIETA}/1234/negar/`, {
+  mensagem: "Solicitação de dieta especial negada."
+});
 
 describe("test painelNutricionista.service", () => {
   it("getSolicitacoesPendentesNutricionista", async () => {
@@ -67,7 +75,7 @@ describe("test painelNutricionista.service", () => {
   it("getAlergiasIntolerancias", async () => {
     const response = await getAlergiasIntolerancias();
     expect(response).toEqual({
-      results: [{ nome: "asdf", uuid: 1234 }, { nome: "qwer", uuid: 5678 }],
+      results: [{ nome: "asdf", uuid: "1234" }, { nome: "qwer", uuid: "5678" }],
       status: 200
     });
   });
@@ -82,6 +90,24 @@ describe("test painelNutricionista.service", () => {
     const response = await getClassificacoesDietaEspecial();
     expect(response).toEqual({
       results: ["classificacoes", "dieta"],
+      status: 200
+    });
+  });
+  it("getMotivosNegacaoDietaEspecial", async () => {
+    const response = await getMotivosNegacaoDietaEspecial();
+    expect(response).toEqual({
+      results: ["motivos", "negacao"],
+      status: 200
+    });
+  });
+  it("negaSolicitacaoDietaEspecial", async () => {
+    const response = await negaSolicitacaoDietaEspecial({
+      uuid: 1234,
+      motivo: 1,
+      justificativa: "Justificando porque foi negado"
+    });
+    expect(response).toEqual({
+      data: { mensagem: "Solicitação de dieta especial negada." },
       status: 200
     });
   });

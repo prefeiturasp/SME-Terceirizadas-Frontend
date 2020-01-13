@@ -63,3 +63,32 @@ export const getClassificacoesDietaEspecial = async () => {
   const url = `${API_URL}/classificacoes-dieta`;
   return retornoBase(url);
 };
+
+export const getMotivosNegacaoDietaEspecial = async () => {
+  const url = `${API_URL}/motivos-negacao`;
+  return retornoBase(url);
+};
+
+export const negaSolicitacaoDietaEspecial = async ({
+  uuid,
+  motivo,
+  justificativa
+}) => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify({ motivo, justificativa }),
+    headers: AUTH_TOKEN
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
