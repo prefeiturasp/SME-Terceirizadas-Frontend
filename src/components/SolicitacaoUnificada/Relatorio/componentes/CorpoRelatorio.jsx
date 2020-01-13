@@ -8,6 +8,7 @@ import {
 import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
 import { corDaMensagem } from "../../../../helpers/utilities";
+import { getDetalheKitLancheUnificado } from "../../../../services/relatorios";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
@@ -21,12 +22,14 @@ export const CorpoRelatorio = props => {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right"
-            />
+            <a href={getDetalheKitLancheUnificado(solicitacaoUnificada.uuid)}>
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+                className="float-right"
+              />
+            </a>
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
