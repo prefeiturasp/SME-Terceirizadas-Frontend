@@ -131,7 +131,7 @@ class ResultadoFiltro extends Component {
                 </div>
 
                 <section className="cabecalho-listagem mt-2">
-                  <div>Data</div>
+                  <div>Data/Hora da solicitação</div>
                   <div>N° solicitação</div>
                   <div>Tipo de solicitação</div>
                   <div>Quantidade de alunos</div>
@@ -158,7 +158,7 @@ class ResultadoFiltro extends Component {
                             </div>
                           </div>
                           <div className="grid-detalhe-item">
-                            <div>{item.data_evento}</div>
+                            <div>{item.criado_em}</div>
                             <div>{item.id_externo}</div>
                             <div>{item.desc_doc}</div>
                             <div>

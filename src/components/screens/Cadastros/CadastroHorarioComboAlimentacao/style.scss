@@ -59,6 +59,15 @@
           grid-template-columns: 77% 19%;
           column-gap: 4%;
 
+          .quantidade-alunos-box {
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding: 0.5em;
+            height: 38px;
+          }
+
           div {
             i {
               display: flex;
@@ -70,6 +79,12 @@
               border: 1px solid #086397;
               box-sizing: border-box;
               border-radius: 3px;
+              cursor: pointer;
+
+              &:hover {
+                color: #ffffff;
+                background-color: #086397;
+              }
             }
           }
         }
@@ -134,6 +149,31 @@
         }
       }
     }
+  }
+}
+
+.modal-form-att-alunos {
+  .input-qtd-alunos {
+    margin-bottom: 1em;
+
+    .input {
+      width: 180px;
+    }
+  }
+
+  .aviso-modal {
+    border: 1px solid #b40c02;
+    border-radius: 4px;
+    padding: 1em;
+
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 14px;
+    color: #b40c02;
+  }
+
+  .justificatica-quantidade-alunos {
+    margin-bottom: 4em;
   }
 }
 

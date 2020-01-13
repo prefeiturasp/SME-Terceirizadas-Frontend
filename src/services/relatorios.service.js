@@ -138,7 +138,7 @@ export const getPedidosESolicitacoesFiltroDiretoriaRegional = (
     values.unidade_escolar
   }?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${
     values.status_solicitacao
-  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  }&data_inicial=${dataDe}&data_final=${dataAte}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -162,7 +162,7 @@ export const getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional = (
     values.unidade_escolar
   }?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
     values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+  }&tipo_solicitacao=${values.tipo_de_solicitacao}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -222,7 +222,7 @@ export const getPedidosESolicitacoesFiltroCODAE = (values, dataDe, dataAte) => {
     values.tipo_de_solicitacao
   }&status_solicitacao=${
     values.status_solicitacao
-  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  }&data_inicial=${dataDe}&data_final=${dataAte}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -248,7 +248,7 @@ export const getPedidosESolicitacoesFiltroPaginacaoCODAE = (
     values.unidade_escolar
   }?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
     values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+  }&tipo_solicitacao=${values.tipo_de_solicitacao}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
