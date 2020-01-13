@@ -34,7 +34,7 @@ function CardTotalSolicitacaoPorStatus(props) {
       cardClass = "card-authorized";
       break;
     case TIPO_CARD.NEGADO:
-      texto = "Recusadas";
+      texto = "Negadas";
       icon = ICON_CARD_TYPE_ENUM.NEGADO;
       cardClass = "card-denied";
       break;

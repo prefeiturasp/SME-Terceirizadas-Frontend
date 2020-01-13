@@ -132,7 +132,7 @@ export class StatusSolicitacoesTodos extends Component {
 
           {recusadasListFiltered && recusadasListFiltered.length > 0 && (
             <CardStatusDeSolicitacaoLargo
-              titulo={"Recusadas"}
+              titulo={"Negadas"}
               solicitacoes={recusadasListFiltered}
               tipo={"card-denied"}
               icone={"fa-check"}
