@@ -69,6 +69,37 @@ export const getMotivosNegacaoDietaEspecial = async () => {
   return retornoBase(url);
 };
 
+export const autorizaSolicitacaoDietaEspecial = async ({
+  uuid,
+  classificacaoDieta,
+  diagnosticosSelecionados,
+  identificacaoNutricionista,
+  protocolos
+}) => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/autoriza/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify({
+      classificacaoDieta,
+      diagnosticosSelecionados,
+      identificacaoNutricionista,
+      protocolos
+    }),
+    headers: AUTH_TOKEN
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const negaSolicitacaoDietaEspecial = async ({
   uuid,
   motivo,

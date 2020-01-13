@@ -3,6 +3,7 @@ import fetchMock from "fetch-mock";
 import { SOLICITACOES, SOLICITACOES_DIETA } from "../contants";
 import { API_URL } from "../../constants/config.constants";
 import {
+  autorizaSolicitacaoDietaEspecial,
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial,
   getMotivosNegacaoDietaEspecial,
@@ -39,8 +40,11 @@ fetchMock.get(`${API_URL}/motivos-negacao`, {
   results: ["motivos", "negacao"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
-fetchMock.post(`begin:${SOLICITACOES_DIETA}/1234/negar/`, {
-  mensagem: "Solicitação de dieta especial negada."
+fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/negar/`, {
+  mensagem: "Solicitação de Dieta Especial Negada"
+});
+fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/autoriza/`, {
+  mensagem: "Autorização de dieta especial realizada com sucesso"
 });
 
 describe("test painelNutricionista.service", () => {
@@ -107,7 +111,21 @@ describe("test painelNutricionista.service", () => {
       justificativa: "Justificando porque foi negado"
     });
     expect(response).toEqual({
-      data: { mensagem: "Solicitação de dieta especial negada." },
+      data: { mensagem: "Solicitação de Dieta Especial Negada" },
+      status: 200
+    });
+  });
+  it("autorizaSolicitacaoDietaEspecial", async () => {
+    const response = await autorizaSolicitacaoDietaEspecial({
+      uuid: 1234,
+      classificacaoDieta: 1,
+      diagnosticosSelecionados: [2, 3, 4],
+      identificacaoNutricionista:
+        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN null",
+      protocolos: ["asdf", "qwer"]
+    });
+    expect(response).toEqual({
+      data: { mensagem: "Autorização de dieta especial realizada com sucesso" },
       status: 200
     });
   });
