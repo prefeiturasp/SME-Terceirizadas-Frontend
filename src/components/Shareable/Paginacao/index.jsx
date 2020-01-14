@@ -1,28 +1,19 @@
 import React from "react";
-
-//TODO: fazer componente de paginacao
+import "antd/dist/antd.css";
+import "./style.scss";
+import { Pagination } from "antd";
 
 export const Paginacao = props => {
-  const { tamanho } = props;
+  const { totalResponse, onChange } = props;
   return (
-    <nav aria-label="...">
-      <ul className={`pagination pagination-${tamanho}`}>
-        <li className="page-item disabled">
-          <a className="page-link" href="#" tabIndex="-1">
-            1
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            2
-          </a>
-        </li>
-        <li className="page-item">
-          <a className="page-link" href="#">
-            3
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <section className="footer-paginacao-componente pt-3">
+      <Pagination
+        defaultCurrent={1}
+        defaultPageSize={100}
+        onChange={onChange}
+        total={totalResponse}
+        size="medium"
+      />
+    </section>
   );
 };
