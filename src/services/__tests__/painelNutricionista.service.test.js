@@ -43,7 +43,7 @@ fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
 fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/negar/`, {
   mensagem: "Solicitação de Dieta Especial Negada"
 });
-fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/autoriza/`, {
+fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/autorizar/`, {
   mensagem: "Autorização de dieta especial realizada com sucesso"
 });
 

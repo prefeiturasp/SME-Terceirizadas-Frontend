@@ -76,14 +76,14 @@ export const autorizaSolicitacaoDietaEspecial = async ({
   identificacaoNutricionista,
   protocolos
 }) => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/autoriza/`;
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/autorizar/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: JSON.stringify({
-      classificacaoDieta,
-      diagnosticosSelecionados,
-      identificacaoNutricionista,
+      classificacao: classificacaoDieta,
+      alergias_intolerancias: diagnosticosSelecionados,
+      registro_funcional_nutricionista: identificacaoNutricionista,
       protocolos
     }),
     headers: AUTH_TOKEN
@@ -109,7 +109,10 @@ export const negaSolicitacaoDietaEspecial = async ({
   let status = 0;
   return fetch(url, {
     method: "POST",
-    body: JSON.stringify({ motivo, justificativa }),
+    body: JSON.stringify({
+      motivo_negacao: motivo,
+      justificativa_negacao: justificativa
+    }),
     headers: AUTH_TOKEN
   })
     .then(res => {
