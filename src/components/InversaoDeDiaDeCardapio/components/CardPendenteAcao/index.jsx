@@ -40,13 +40,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
   }
 
   render() {
-    const {
-      pedidos,
-      titulo,
-      tipoDeCard,
-      ultimaColunaLabel,
-      parametroURL
-    } = this.props;
+    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval food-inversion">
@@ -116,7 +110,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                     return (
                       <Link
                         key={key}
-                        to={`/${parametroURL}/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
+                        to={`/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
                           pedido.uuid
                         }`}
                       >

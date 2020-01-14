@@ -17,6 +17,8 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_COM_QUESTIONAMENTO =
+  "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
 export const RELATORIO = "relatorio";
@@ -35,6 +37,7 @@ export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
+export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
 export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
   "tipo-alimentacao-unidade-escolar";
 

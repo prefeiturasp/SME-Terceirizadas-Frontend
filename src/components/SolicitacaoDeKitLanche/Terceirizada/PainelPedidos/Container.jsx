@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
-import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
+import { visaoPorComboSomenteDatas } from "../../../../constants";
 import { getPedidosDeKitLancheAutorizadosTerceirizada } from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { TIPODECARD } from "../../../../constants";
 import CardHistorico from "../../components/CardHistorico";
 import { filtraPrioritarios } from "../../../../helpers/painelPedidos";
 import {
@@ -12,7 +12,6 @@ import {
   filtraRegular
 } from "../../../SolicitacaoDeKitLanche/Container/helper";
 import { formatarPedidos } from "./helper";
-import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -96,7 +95,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -108,7 +106,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -120,7 +117,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -133,7 +129,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -147,7 +142,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Reprovadas"
                         }
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>

@@ -1,20 +1,18 @@
-const obtemDadosEscolares = vinculo => {
-  let escola = [
-    {
-      nome: `${vinculo.codigo_eol} ${vinculo.nome}`,
-      uuid: vinculo.uuid
-    }
-  ];
-  let dadosEscola = {
-    instituicao: escola,
-    diretoria_regional: [vinculo.diretoria_regional]
-  };
-  return dadosEscola;
-};
+import {
+  usuarioDiretoriaRegional,
+  usuarioCODAEGestaoAlimentacao
+} from "../../../../../helpers/utilities";
+import { TODOS } from "../../../../../constants";
 
-export const estruturaDadosDeUsuario = dadosUsuario => {
-  const vinculo = dadosUsuario.vinculo_atual.instituicao;
-  if (dadosUsuario.tipo_usuario === "escola") {
-    return obtemDadosEscolares(vinculo);
+export const formataValues = values => {
+  if (
+    (usuarioDiretoriaRegional() || usuarioCODAEGestaoAlimentacao()) &&
+    !values.unidade_escolar
+  ) {
+    values.unidade_escolar = TODOS;
   }
+  if (usuarioCODAEGestaoAlimentacao() && !values.diretoria_regional) {
+    values.diretoria_regional = TODOS;
+  }
+  return values;
 };

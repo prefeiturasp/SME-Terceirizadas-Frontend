@@ -108,7 +108,7 @@ export class StatusSolicitacoes extends Component {
       case STATUS.RECUSADAS:
         tipoCard = CARD_TYPE_ENUM.NEGADO;
         icone = ICON_CARD_TYPE_ENUM.NEGADO;
-        titulo = "Recusadas";
+        titulo = "Negadas";
         solicitacoes = await getSolicitacoesNegadasCodae();
         break;
       default:

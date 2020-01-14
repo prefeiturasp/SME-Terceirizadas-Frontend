@@ -25,10 +25,15 @@ class ResultadoFiltro extends Component {
     this.setState({ listaSolicitacoes: this.props.resultadosFiltro });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.props.resultadosFiltro !== this.state.listaSolicitacoes) {
+      if (this.props.count !== prevProps.count) {
+        this.setState({ index: 0, pagina: false });
+      }
       if (!this.state.pagina) {
-        this.setState({ listaSolicitacoes: this.props.resultadosFiltro });
+        this.setState({
+          listaSolicitacoes: this.props.resultadosFiltro
+        });
       }
     }
   }

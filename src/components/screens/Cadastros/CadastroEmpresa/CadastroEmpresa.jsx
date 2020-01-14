@@ -28,6 +28,7 @@ import { Botao } from "../../../Shareable/Botao";
 import { InputText } from "../../../Shareable/Input/InputText";
 import { loadEmpresa } from "../../../../reducers/empresa.reducer";
 import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
+import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -57,6 +58,7 @@ class CadastroEmpresa extends Component {
 
       contatosNutricionista: [
         {
+          vinculo_atual: null,
           telefone: null,
           responsavel: null,
           crn: null,
@@ -97,6 +99,33 @@ class CadastroEmpresa extends Component {
       return <Redirect to="/configuracoes/cadastros/empresas-cadastradas" />;
     }
   };
+
+  excluirNutricionista(indice) {
+    if (this.state.contatosNutricionista[indice].vinculo_atual) {
+      if (window.confirm("Deseja realmente desativar este nutricionista?")) {
+        const { uuid } = this.state;
+        finalizarVinculoTerceirizadas(
+          uuid,
+          this.state.contatosNutricionista[indice].vinculo_atual.uuid
+        ).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Vínculo finalizado com sucesso!");
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            toastError(response.data.detail);
+          }
+        });
+      }
+    } else {
+      let contatosNutricionista = this.state.contatosNutricionista;
+      let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
+      contatosNutricionista.splice(indice, 1);
+      contatosTerceirizadaForm.splice(indice, 1);
+      this.setState({ contatosNutricionista, contatosTerceirizadaForm });
+    }
+  }
 
   nomeFormContatoEmpresa() {
     const indiceDoFormAtual = `contatoEmpresa_${
@@ -166,6 +195,7 @@ class CadastroEmpresa extends Component {
     this.setState({
       contatosNutricionista: this.state.contatosNutricionista.concat([
         {
+          vinculo_atual: null,
           telefone: null,
           responsavel: null,
           crn: null,
@@ -224,6 +254,7 @@ class CadastroEmpresa extends Component {
         nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
       contatosNutricionista[indice]["responsavel"] = nutri.nome;
       contatosNutricionista[indice]["crn"] = nutri.crn_numero;
+      contatosNutricionista[indice]["vinculo_atual"] = nutri.vinculo_atual;
       contatosNutricionista[indice]["super_admin_terceirizadas"] =
         nutri.super_admin_terceirizadas;
       contatosNutricionista[indice]["email"] =
@@ -267,6 +298,13 @@ class CadastroEmpresa extends Component {
     getLotes().then(response => {
       let lotes = transformaObjetos(response);
       this.setState({ lotes });
+    });
+  }
+
+  loadTerceirizada() {
+    const { uuid } = this.state;
+    getTerceirizadaUUID(uuid).then(response => {
+      this.setaValoresForm(response.data);
     });
   }
 
@@ -580,6 +618,7 @@ class CadastroEmpresa extends Component {
                               name={contatoTerceirizada}
                               key={indiceTerceirizada}
                             >
+                              {indiceTerceirizada > 0 && <hr />}
                               <div className="form-section-terceirizada">
                                 <div className="section-nutri-crn">
                                   <div>
@@ -614,6 +653,18 @@ class CadastroEmpresa extends Component {
                                       validate={required}
                                     />
                                   </div>
+                                  {contatosNutricionista.length > 1 && (
+                                    <div className="trash">
+                                      <i
+                                        onClick={() =>
+                                          this.excluirNutricionista(
+                                            indiceTerceirizada
+                                          )
+                                        }
+                                        className="fas fa-trash"
+                                      />
+                                    </div>
+                                  )}
                                 </div>
                                 {contatosNutricionista.length > 1 && (
                                   <div className="pt-2">

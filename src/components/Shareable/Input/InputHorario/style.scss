@@ -1,0 +1,20 @@
+.input-horario {
+  height: 32px;
+  .ant-time-picker {
+    width: 100%;
+
+    .ant-time-picker-input {
+      height: 38px;
+    }
+
+    span {
+      cursor: normal !important;
+      pointer-events: none !important;
+    }
+
+    i {
+      cursor: normal !important;
+      pointer-events: none !important;
+    }
+  }
+}

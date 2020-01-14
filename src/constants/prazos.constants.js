@@ -1,6 +1,0 @@
-export const PRAZOS = {
-  PRIORIDADE: "PRIORIDADE",
-  LIMITE: "LIMITE",
-  REGULAR: "REGULAR",
-  TOTAL: "TOTAL"
-};

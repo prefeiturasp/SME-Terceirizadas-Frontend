@@ -53,7 +53,22 @@ export const getEscolasSimples = () => {
 };
 
 export const getEscolasSimplissima = () => {
-  const url = `${API_URL}/escolas-simplissima/?limit=1034`;
+  const url = `${API_URL}/escolas-simplissima/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getEscolasSimplissimaPorDiretoriaRegional = dre_uuid => {
+  const url = `${API_URL}/escolas-simplissima/${dre_uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -84,6 +99,21 @@ export const getTiposGestao = () => {
 
 export const getSubprefeituras = () => {
   const url = `${API_URL}/subprefeituras/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getQuantidaDeAlunosPorPeriodoEEscola = uuidEscola => {
+  const url = `${API_URL}/quantidade-alunos-por-periodo/escola/${uuidEscola}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

@@ -13,10 +13,9 @@ import {
   filtraRegular,
   formatarPedidos
 } from "../../../../helpers/painelPedidos";
-import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { FiltroEnum } from "../../../../constants";
+import { TIPODECARD } from "../../../../constants";
 import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {
@@ -109,7 +108,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -121,7 +119,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -132,7 +129,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>

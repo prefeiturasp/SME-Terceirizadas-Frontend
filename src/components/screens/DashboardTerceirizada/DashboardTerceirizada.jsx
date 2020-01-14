@@ -5,16 +5,16 @@ import { Field, reduxForm } from "redux-form";
 import {
   TERCEIRIZADA,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_PENDENTES,
+  SOLICITACOES_COM_QUESTIONAMENTO,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import { FILTRO_VISAO } from "../../../constants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,
+  getSolicitacoesComQuestionamento,
   getSolicitacoesNegadasTerceirizada,
-  getSolicitacoesPendentesTerceirizada,
   getSolicitacoesAutorizadasTerceirizada,
   getSolicitacoesPendenteCienciaTerceirizada
 } from "../../../services/painelTerceirizada.service";
@@ -39,7 +39,7 @@ class DashboardTerceirizada extends Component {
     this.state = {
       secao: null,
       cards: this.props.cards,
-      pendentesListFiltered: [],
+      questionamentosListFiltered: [],
       canceladasListFiltered: [],
       negadasListFiltered: [],
       autorizadasListFiltered: [],
@@ -48,7 +48,7 @@ class DashboardTerceirizada extends Component {
       resumo: [],
 
       collapsed: true,
-      pendentesListSolicitacao: [],
+      questionamentosListSolicitacao: [],
       canceladasListSolicitacao: [],
       loadingPainelSolicitacoes: true,
 
@@ -80,7 +80,7 @@ class DashboardTerceirizada extends Component {
 
   setfiltroPorVencimento(filtroPorVencimento) {
     this.setState({ filtroPorVencimento }, () => {
-      this.carregaResumosPendencias();
+      this.carregaResumosQuestionamentos();
     });
   }
 
@@ -93,12 +93,12 @@ class DashboardTerceirizada extends Component {
           visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
       },
       () => {
-        this.carregaResumosPendencias();
+        this.carregaResumosQuestionamentos();
       }
     );
   }
 
-  async carregaResumosPendencias() {
+  async carregaResumosQuestionamentos() {
     const { minhaTerceirizada, visao, filtroPorVencimento } = this.state;
     this.setState({ loadingPainelSolicitacoes: true });
     const resumo = await getSolicitacoesPendenteCienciaTerceirizada(
@@ -127,16 +127,16 @@ class DashboardTerceirizada extends Component {
       minhaTerceirizada = response.vinculo_atual.instituicao.uuid;
       this.setState({ minhaTerceirizada });
 
-      this.carregaResumosPendencias();
+      this.carregaResumosQuestionamentos();
 
-      getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(request => {
-        let pendentesListSolicitacao = ajustarFormatoLog(
+      getSolicitacoesComQuestionamento(minhaTerceirizada).then(request => {
+        let questionamentosListSolicitacao = ajustarFormatoLog(
           request.results,
           LOG_PARA.TERCEIRIZADA
         );
         this.setState({
-          pendentesListSolicitacao,
-          pendentesListFiltered: pendentesListSolicitacao
+          questionamentosListSolicitacao,
+          questionamentosListFiltered: questionamentosListSolicitacao
         });
       });
 
@@ -180,14 +180,17 @@ class DashboardTerceirizada extends Component {
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
     const {
-      pendentesListSolicitacao,
+      questionamentosListSolicitacao,
       canceladasListSolicitacao,
       autorizadasListSolicitacao,
       negadasListSolicitacao
     } = this.state;
 
     this.setState({
-      pendentesListFiltered: this.filtrarNome(pendentesListSolicitacao, event),
+      questionamentosListFiltered: this.filtrarNome(
+        questionamentosListSolicitacao,
+        event
+      ),
       autorizadasListFiltered: this.filtrarNome(
         autorizadasListSolicitacao,
         event
@@ -205,7 +208,7 @@ class DashboardTerceirizada extends Component {
       collapsed,
       secao,
       visao,
-      pendentesListFiltered,
+      questionamentosListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
       autorizadasListFiltered,
@@ -243,11 +246,11 @@ class DashboardTerceirizada extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Autorização"}
+                  cardTitle={"Questionamentos da CODAE"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={pendentesListFiltered}
+                  solicitations={questionamentosListFiltered}
                   icon={"fa-exclamation-triangle"}
-                  href={`/${TERCEIRIZADA}/${SOLICITACOES_PENDENTES}`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
                 />
               </div>
               <div className="col-6">

@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
-import Relatorio from "../../../components/SuspensaoDeAlimentacao/Terceirizada/Relatorio";
+import Relatorio from "../../../components/SuspensaoDeAlimentacao/Relatorio";
 import { HOME } from "../constants";
 import {
   TERCEIRIZADA,
