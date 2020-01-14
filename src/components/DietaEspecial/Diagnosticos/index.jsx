@@ -55,7 +55,7 @@ export default class Diagnosticos extends Component {
                     texto="Excluir"
                     icon={BUTTON_ICON.TRASH}
                     onClick={() => this.props.removeOption(key)}
-                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                    style={BUTTON_STYLE.BLUE}
                     className="float-right"
                   />
                 )}

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { reduxForm, Field, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 
+import Botao from "../../components/Shareable/Botao";
+import { BUTTON_STYLE } from "../../components/Shareable/Botao/constants";
 import Select from "../../components/Shareable/Select";
 import {
   toastSuccess,
@@ -53,15 +55,11 @@ class ModalNegaSolicitacaoForm extends Component {
 
         <Modal.Body>
           <form>
-            <div className="row title">
-              <div className="col-12">
-                <p>Motivo</p>
-              </div>
-            </div>
             <div className="row">
               <div className="col-12">
                 <Field
                   component={Select}
+                  label="Motivo"
                   name="motivo"
                   options={opcoesMotivo}
                   onChange={event => {
@@ -86,12 +84,12 @@ class ModalNegaSolicitacaoForm extends Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => onClose()}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleSubmit}>
-            Negar Solicitação
-          </Button>
+          <Botao
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            onClick={() => onClose()}
+            texto="Cancelar"
+          />
+          <Botao onClick={handleSubmit} texto="Confirmar" />
         </Modal.Footer>
       </Modal>
     );

@@ -61,17 +61,13 @@ class Relatorio extends Component {
   };
 
   render() {
+    const { abreModalNegacao, handleSubmit, invalid } = this.props;
     const { classificacoesDieta, diagnosticos, dietaEspecial } = this.state;
     if (!dietaEspecial) return <div>Carregando...</div>;
     const { escola } = dietaEspecial;
     return (
       <div>
-        <ModalNegaSolicitacao
-          show={this.state.showModalNegacao}
-          onClose={this.fechaModalNegacao}
-          dietaEspecial={dietaEspecial}
-        />
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
             dietaEspecial.id_externo
           }`}</span>
@@ -86,6 +82,10 @@ class Relatorio extends Component {
               </span>
             </div>
             <div className="offset-2 col-8">
+              <div className="beside-text mt-auto">
+                Informação automática disponibilizada pelo Cadastro da Unidade
+                Escolar <br />
+              </div>
               <span className="requester">Escola Solicitante</span>
               <br />
               <span className="dre-name">{escola && escola.nome}</span>
@@ -272,12 +272,13 @@ class Relatorio extends Component {
                 className="float-right"
                 texto="Autorizar"
                 type={BUTTON_TYPE.SUBMIT}
+                disabled={invalid}
               />
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right"
                 texto="Negar"
-                onClick={this.props.abreModalNegacao}
+                onClick={abreModalNegacao}
               />
             </div>
           </div>
@@ -290,7 +291,7 @@ let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
-    identificacaoNutricionista: `ELABORADO por ${localStorage.getItem(
+    identificacaoNutricionista: `Elaborado por ${localStorage.getItem(
       "nome"
     )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
   },
