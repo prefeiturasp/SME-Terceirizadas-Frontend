@@ -6,6 +6,7 @@ import {
   BUTTON_ICON
 } from "../../../../Shareable/Botao/constants";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
+import { Paginacao } from "../../../../Shareable/Paginacao";
 import "./style.scss";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../../../helpers/utilities";
 
@@ -52,31 +53,48 @@ class ResultadoFiltro extends Component {
     listaSolicitacoes[index].check = !listaSolicitacoes[index].check;
     this.setState({ listaSolicitacoes });
   }
-
-  navegacaoPagina = pagina => {
-    this.setState({ pagina: true });
+  navegacaoPage = (paginaSelecionanda, rangeQuantidade) => {
     const dataDe = converterDDMMYYYYparaYYYYMMDD(this.props.values.data_de);
     const dataAte = converterDDMMYYYYparaYYYYMMDD(this.props.values.data_ate);
-    this.props
-      .getPedidosESolicitacoesFiltroPaginacao(
-        this.props.values,
-        dataDe,
-        dataAte,
-        pagina
-      )
-      .then(response => {
-        if (response.results.length > 0) {
-          this.setState({ listaSolicitacoes: response.results });
-        } else {
-          toastError("Nenhum resultado encontrado!");
-          this.props.renderizarRelatorio(response.results);
-        }
-      });
+    if (paginaSelecionanda === 1) {
+      this.props
+        .getPedidosESolicitacoesFiltro(this.props.values, dataDe, dataAte)
+        .then(response => {
+          if (response.results.length > 0) {
+            this.setState({
+              listaSolicitacoes: response.results,
+              pagina: true
+            });
+          } else {
+            toastError("Nenhum resultado encontrado!");
+            this.props.renderizarRelatorio(response.results);
+          }
+        });
+    } else {
+      this.props
+        .getPedidosESolicitacoesFiltroPaginacao(
+          this.props.values,
+          dataDe,
+          dataAte,
+          rangeQuantidade
+        )
+        .then(response => {
+          if (response.results.length > 0) {
+            this.setState({
+              listaSolicitacoes: response.results,
+              pagina: true
+            });
+          } else {
+            toastError("Nenhum resultado encontrado!");
+            this.props.renderizarRelatorio(response.results);
+          }
+        });
+    }
   };
 
   render() {
-    const { paginacao, count } = this.props;
-    const { checkTodos, listaSolicitacoes, index } = this.state;
+    const { count } = this.props;
+    const { checkTodos, listaSolicitacoes } = this.state;
     return (
       <section className="card">
         <section className="card-body relatorio-filtro">
@@ -172,44 +190,7 @@ class ResultadoFiltro extends Component {
                     })
                   )}
                 </section>
-                <section className="footer-paginacao">
-                  {index === 0 ? (
-                    <div className={`pagina atual`}>
-                      <i className="fas fa-angle-double-left" />
-                    </div>
-                  ) : (
-                    <div
-                      className={`pagina`}
-                      onClick={() => {
-                        this.navegacaoPagina((index - 1) * 100);
-                        this.setState({ index: index - 1 });
-                      }}
-                    >
-                      <i className="fas fa-angle-double-left" />
-                    </div>
-                  )}
-                  <div>
-                    {`pagina ${index + 1} de ${paginacao[paginacao.length - 1] /
-                      100 +
-                      1}`}
-                  </div>
-
-                  {index === paginacao[paginacao.length - 1] / 100 ? (
-                    <div className={`pagina atual`}>
-                      <i className="fas fa-angle-double-right" />
-                    </div>
-                  ) : (
-                    <div
-                      className={`pagina`}
-                      onClick={() => {
-                        this.navegacaoPagina((index + 1) * 100);
-                        this.setState({ index: index + 1 });
-                      }}
-                    >
-                      <i className="fas fa-angle-double-right" />
-                    </div>
-                  )}
-                </section>
+                <Paginacao onChange={this.navegacaoPage} total={count} />
               </section>
             </div>
           )}
