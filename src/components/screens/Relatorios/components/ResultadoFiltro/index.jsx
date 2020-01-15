@@ -109,13 +109,13 @@ class ResultadoFiltro extends Component {
                   icon={BUTTON_ICON.FILE_PDF}
                   type={BUTTON_TYPE.BUTTON}
                 />
-                <Botao
+                {/*<Botao
                   className="ml-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
                   type={BUTTON_TYPE.BUTTON}
-                />
+                />*/}
                 <Botao
                   className="ml-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
