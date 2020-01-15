@@ -36,43 +36,45 @@ export class OpcoesCustomizadas extends Component {
     return (
       <div className="variables my-auto">
         <div
-          className={this.variavelUtilizada("@id") && "used"}
+          className={this.variavelUtilizada("@id") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@id")}
         >
           Id
         </div>
         <div
-          className={this.variavelUtilizada("@nome") && "used"}
+          className={this.variavelUtilizada("@nome") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@nome")}
         >
           Nome
         </div>
         <div
-          className={this.variavelUtilizada("@criado_em") && "used"}
+          className={this.variavelUtilizada("@criado_em") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@criado_em")}
         >
           Criado em
         </div>
         <div
-          className={this.variavelUtilizada("@criado_por") && "used"}
+          className={this.variavelUtilizada("@criado_por") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@criado_por")}
         >
           Criado por
         </div>
         <div
-          className={this.variavelUtilizada("@status") && "used"}
+          className={this.variavelUtilizada("@status") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@status")}
         >
           Status
         </div>
         <div
-          className={this.variavelUtilizada("@data_inicial") && "used"}
+          className={
+            this.variavelUtilizada("@data_inicial") ? "used" : undefined
+          }
           onClick={() => this.adicionarVariavel("@data_inicial")}
         >
           Data inicial
         </div>
         <div
-          className={this.variavelUtilizada("@link") && "used"}
+          className={this.variavelUtilizada("@link") ? "used" : undefined}
           onClick={() => this.adicionarVariavel("@link")}
         >
           Link

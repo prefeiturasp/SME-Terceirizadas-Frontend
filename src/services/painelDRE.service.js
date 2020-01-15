@@ -282,6 +282,7 @@ export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
   return resumoPorLote;
 };
 
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

@@ -3,8 +3,8 @@ export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
 export const deveSerNoAnoCorrente = value => {
-  const dataSelecionada = moment(value, "DD/MM/YYYY").years();
-  const dataAtual = moment().years();
+  const dataSelecionada = moment(value, "DD/MM/YYYY").year();
+  const dataAtual = moment().year();
   return dataSelecionada === dataAtual ? undefined : "Deve ser no mesmo ano";
 };
 

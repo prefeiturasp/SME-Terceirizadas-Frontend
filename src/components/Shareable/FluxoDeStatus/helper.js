@@ -27,6 +27,27 @@ export const fluxoPartindoEscola = [
   }
 ];
 
+export const fluxoDietaEspecialPartindoEscola = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "Terceirizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  }
+];
+
 export const fluxoPartindoDRE = [
   {
     titulo: "Solicitação Realizada",

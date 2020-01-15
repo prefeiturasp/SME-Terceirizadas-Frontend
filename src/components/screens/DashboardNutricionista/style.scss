@@ -1,0 +1,47 @@
+@import "../../../styles/variables.scss";
+
+.form-control:focus {
+  outline: 0 !important;
+  border-color: initial;
+  box-shadow: none;
+}
+
+/* webkit solution */
+::-webkit-input-placeholder {
+  text-align: right;
+}
+/* mozilla solution */
+input:-moz-placeholder {
+  text-align: right;
+}
+
+.card-body-sme {
+  padding: 0% !important;
+  max-height: 13rem;
+}
+.row-shortcuts {
+  .col-3:last-child {
+    .card {
+      margin-left: auto;
+    }
+  }
+}
+
+.dashboard-school {
+  .ReactCollapse--collapse {
+    width: 100%;
+    .user-data {
+      padding-top: 2rem;
+      .form-group {
+        padding: 0;
+        .fa-pen {
+          z-index: 1;
+          padding-top: 12px;
+          color: $grayIcon;
+          position: relative;
+          margin-left: -30px;
+        }
+      }
+    }
+  }
+}

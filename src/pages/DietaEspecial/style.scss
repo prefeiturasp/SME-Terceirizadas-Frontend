@@ -1,0 +1,43 @@
+$redAlert: #b40c02;
+
+.row {
+  margin-top: 0.5em;
+}
+
+.alert.alert-importante {
+  border: 1px solid $redAlert;
+  font-size: 0.7em;
+  color: $redAlert;
+}
+
+.form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-left: 0em !important;
+}
+.form-check-label {
+  margin-right: 3em !important;
+}
+
+.ml-2,
+.mx-2 {
+  margin-left: 0em !important;
+}
+
+#identificacao-nutricionista .form-control {
+  background-color: transparent;
+  font-size: 0.8em;
+}
+
+.modal-footer {
+  margin-top: 0.5em;
+}
+
+.mt-auto {
+  font-size: 0.65em;
+  margin-bottom: 0.7em;
+}
+
+.general-button {
+  margin-left: 1em;
+}

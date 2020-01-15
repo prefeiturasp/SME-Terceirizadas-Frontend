@@ -89,7 +89,11 @@ export class TextAreaWYSIWYG extends Component {
     return (
       <div className="textarea" id="react-wysiwyg">
         {label && [
-          required && <span className="required-asterisk">*</span>,
+          required && (
+            <span key={0} className="required-asterisk">
+              *
+            </span>
+          ),
           <label key={1} htmlFor={name} className="col-form-label">
             {label}
           </label>

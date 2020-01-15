@@ -10,6 +10,7 @@ import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import { TIPO_PERFIL } from "../../../constants";
+import { SidebarCODAEDietaEspecial } from "./SidebarCODAEDietaEspecial";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -52,9 +53,10 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
-                <AvatarCODAE />
-              )}
+              {[
+                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+                TIPO_PERFIL.DIETA_ESPECIAL
+              ].includes(tipo_perfil) && <AvatarCODAE />}
               {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <AvatarDRE />}
               {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
               {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
@@ -90,6 +92,9 @@ export class Sidebar extends Component {
           <div className="sidebar-wrapper div-submenu">
             {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
               <SidebarCODAE />
+            )}
+            {tipo_perfil === TIPO_PERFIL.DIETA_ESPECIAL && (
+              <SidebarCODAEDietaEspecial />
             )}
             {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <SidebarDRE />}
             {tipo_perfil === TIPO_PERFIL.ESCOLA && <SidebarEscola />}

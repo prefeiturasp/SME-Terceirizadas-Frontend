@@ -19,10 +19,23 @@ export const Select = props => {
     required,
     width
   } = props;
+  const selected = options.filter(o => o.selected);
+  let value;
+  if (selected.length > 1) {
+    value = selected;
+  } else if (selected.length === 1) {
+    value = selected[0].uuid;
+  } else {
+    value = options[0].uuid;
+  }
   return (
     <div className="select">
       {label && [
-        required && <span className="required-asterisk">*</span>,
+        required && (
+          <span key={0} className="required-asterisk">
+            *
+          </span>
+        ),
         <label key={1} htmlFor={name} className="col-form-label">
           {label}
         </label>
@@ -39,13 +52,14 @@ export const Select = props => {
         name={name}
         required={required}
         style={width && { width: width - 12 }}
+        value={value}
+        multiple={selected.length > 1}
       >
         {options.map((e, key) => {
           return (
             <option
               key={key}
               value={e.uuid}
-              selected={key === 0}
               disabled={
                 e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
               }
