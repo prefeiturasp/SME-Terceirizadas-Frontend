@@ -46,3 +46,6 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
+
+export const VISUALIZAR = "visualizar";
+export const EDITAR = "editar";

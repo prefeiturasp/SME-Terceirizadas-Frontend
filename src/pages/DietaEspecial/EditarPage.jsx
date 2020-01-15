@@ -316,7 +316,7 @@ let RelatorioForm = reduxForm({
   }
 })(Relatorio);
 
-export default class RelatorioPage extends Component {
+export default class EditarPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
