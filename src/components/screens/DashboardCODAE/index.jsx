@@ -273,70 +273,6 @@ class DashboardCODAE extends Component {
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
-                Acompanhamento de solicitações
-                <span className="float-right">
-                  <input
-                    className="input-search"
-                    placeholder="Pesquisar"
-                    onChange={this.filterList}
-                  />
-                  <i className="fas fa-search" />
-                </span>
-              </div>
-              <div>
-                <p className="current-date">
-                  Data: <span>{dataAtual()}</span>
-                </p>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Autorização"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={solicitacoesPendentesFiltradas}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
-                    loading={loadingPainelSolicitacoes}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={solicitacoesAutorizadasFiltradas}
-                    icon={"fa-check"}
-                    href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
-                    loading={loadingPainelSolicitacoes}
-                  />
-                </div>
-              </div>
-              <div className="row pt-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={solicitacoesNegadasFiltradas}
-                    icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
-                    loading={loadingPainelSolicitacoes}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={solicitacoesCanceladasFiltradas}
-                    icon={"fa-times-circle"}
-                    href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
-                    loading={loadingPainelSolicitacoes}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
                 <div className="row">
                   <div className="col-3 mt-3 color-black">Pendências</div>
                   <div className="offset-3 col-3 text-right my-auto">
@@ -539,6 +475,70 @@ class DashboardCODAE extends Component {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+          <div className="card mt-3">
+            <div className="card-body">
+              <div className="card-title font-weight-bold dashboard-card-title">
+                Acompanhamento de solicitações
+                <span className="float-right">
+                  <input
+                    className="input-search"
+                    placeholder="Pesquisar"
+                    onChange={this.filterList}
+                  />
+                  <i className="fas fa-search" />
+                </span>
+              </div>
+              <div>
+                <p className="current-date">
+                  Data: <span>{dataAtual()}</span>
+                </p>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Autorização"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesPendentesFiltradas}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={solicitacoesAutorizadasFiltradas}
+                    icon={"fa-check"}
+                    href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesNegadasFiltradas}
+                    icon={"fa-times-circle"}
+                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={solicitacoesCanceladasFiltradas}
+                    icon={"fa-times-circle"}
+                    href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
+                    loading={loadingPainelSolicitacoes}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </form>
