@@ -9,6 +9,8 @@ import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
+import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DietaEspecialPage";
+
 import { TIPO_PERFIL } from "../constants";
 
 export const painelHome = () => {
@@ -47,6 +49,19 @@ export const relatorios = () => {
       return RelatoriosPage.RelatoriosEscola;
     default:
       return RelatoriosPage.RelatoriosEscola;
+  }
+};
+
+export const dashBoardDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return DashBoardDietaEspecial.DietaEspecialDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return DashBoardDietaEspecial.DietaEspecialCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return DashBoardDietaEspecial.DietaEspecialTerceirizada;
+    default:
+      return DashBoardDietaEspecial.DietaEspecialEscola;
   }
 };
 

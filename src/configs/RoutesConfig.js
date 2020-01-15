@@ -6,7 +6,8 @@ import {
   relatoriosInclusaoDeAlimentacao,
   relatoriosSolicitacaoUnificada,
   relatoriosSolicitacaoKitLanche,
-  relatoriosInversaoDiaCardapio
+  relatoriosInversaoDiaCardapio,
+  dashBoardDietaEspecial
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -406,6 +407,11 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
+  },
+  {
+    path: `/painel-dieta-especial`,
+    component: dashBoardDietaEspecial(),
+    exact: true
   }
 ];
 
