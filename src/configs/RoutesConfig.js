@@ -73,6 +73,7 @@ import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas"
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
 import EditarPage from "../pages/DietaEspecial/EditarPage";
+import VisualizarPage from "../pages/DietaEspecial/VisualizarPage";
 
 const routesConfig = [
   {
@@ -379,6 +380,11 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.EDITAR}`,
     component: EditarPage,
+    exact: false
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.VISUALIZAR}`,
+    component: VisualizarPage,
     exact: false
   },
   {
