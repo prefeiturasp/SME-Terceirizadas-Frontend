@@ -20,13 +20,15 @@ export default class DashboardNutricionistaContainer extends Component {
     };
   }
 
-  ajustaSolicitacoes(solicitacoes, caminho) {
+  ajustaSolicitacoes(solicitacoes) {
     return solicitacoes.map(s => {
       const ultimoLog = s.logs[s.logs.length - 1];
       return {
         text: truncarString(`${s.id_externo} - ${s.nome_completo_aluno}`, 48),
         date: ultimoLog.criado_em.slice(0, ultimoLog.criado_em.length - 3),
-        link: `/${constants.DIETA_ESPECIAL}/${caminho}/?uuid=${s.uuid}`
+        link: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}/?uuid=${
+          s.uuid
+        }`
       };
     });
   }
@@ -43,8 +45,8 @@ export default class DashboardNutricionistaContainer extends Component {
       autorizadas.results,
       constants.VISUALIZAR
     );
-    pendentes = this.ajustaSolicitacoes(pendentes.results, constants.EDITAR);
-    negadas = this.ajustaSolicitacoes(negadas.results, constants.VISUALIZAR);
+    pendentes = this.ajustaSolicitacoes(pendentes.results);
+    negadas = this.ajustaSolicitacoes(negadas.results);
     this.setState({
       autorizadas,
       pendentes,

@@ -378,19 +378,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.EDITAR}`,
-    component: DietaRelatorioRouter,
-    exact: false
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.VISUALIZAR}`,
-    component: DietaRelatorioRouter,
-    exact: false
-  },
-  {
-    // TODO: Criar um componente que centralize todas as requisições
-    //       Esse componente vai mostrar página de edição/visualização
-    //       Dependendo do perfil do usuário e do estado da solicitação
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
     component: DietaRelatorioRouter,
     exact: false
