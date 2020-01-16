@@ -137,6 +137,7 @@ export default class ModalNegaSolicitacao extends Component {
     if (resposta.status === 200) {
       this.props.onClose();
       toastSuccess(resposta.data.mensagem);
+      this.props.onNegaSolicitacao();
     } else {
       toastError(`Erro ao negar solicitação: ${resposta}`);
     }

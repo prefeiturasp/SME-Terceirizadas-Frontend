@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
 
-import { HOME } from "../../constants/config.constants";
-import * as constants from "../../configs/constants";
-
 import DiagnosticosField from "../../components/DietaEspecial/Diagnosticos/Field";
 import ProtocolosField from "../../components/DietaEspecial/ProtocolosField";
 
@@ -17,8 +14,6 @@ import {
   toastSuccess,
   toastError
 } from "../../components/Shareable/Toast/dialogs";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Page from "../../components/Shareable/Page/Page";
 import InputText from "../../components/Shareable/Input/InputText";
 import RadioboxGroup from "../../components/Shareable/RadioboxGroup";
 
@@ -31,8 +26,7 @@ import "./style.scss";
 import {
   autorizaSolicitacaoDietaEspecial,
   getAlergiasIntolerancias,
-  getClassificacoesDietaEspecial,
-  getSolicitacaoDietaEspecial
+  getClassificacoesDietaEspecial
 } from "../../services/painelNutricionista.service";
 
 class Relatorio extends Component {
@@ -40,30 +34,28 @@ class Relatorio extends Component {
     super(props);
     this.state = {
       uuid: null,
+      classificacoesDieta: [],
       diagnosticos: []
     };
   }
 
   componentDidMount = async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) {
-      this.props.change("uuid", uuid);
-      const alergiasIntolerancias = await getAlergiasIntolerancias();
-      const dietaEspecial = await getSolicitacaoDietaEspecial(uuid);
-      const classificacoesDieta = await getClassificacoesDietaEspecial();
-      this.setState({
-        diagnosticos: alergiasIntolerancias.results,
-        dietaEspecial: dietaEspecial.results,
-        classificacoesDieta: classificacoesDieta.results,
-        uuid
-      });
-    }
+    const alergiasIntolerancias = await getAlergiasIntolerancias();
+    const classificacoesDieta = await getClassificacoesDietaEspecial();
+    this.setState({
+      diagnosticos: alergiasIntolerancias.results,
+      classificacoesDieta: classificacoesDieta.results
+    });
   };
 
   render() {
-    const { abreModalNegacao, handleSubmit, invalid } = this.props;
-    const { classificacoesDieta, diagnosticos, dietaEspecial } = this.state;
+    const {
+      abreModalNegacao,
+      dietaEspecial,
+      handleSubmit,
+      invalid
+    } = this.props;
+    const { classificacoesDieta, diagnosticos } = this.state;
     if (!dietaEspecial) return <div>Carregando...</div>;
     return (
       <div>
@@ -158,9 +150,15 @@ export default class EditarPage extends Component {
     this.state = {
       showModalNegacao: false
     };
-    this.submit = this.submit.bind(this);
     this.abreModalNegacao = this.abreModalNegacao.bind(this);
     this.fechaModalNegacao = this.fechaModalNegacao.bind(this);
+  }
+
+  abreModalNegacao() {
+    this.setState({ showModalNegacao: true });
+  }
+  fechaModalNegacao() {
+    this.setState({ showModalNegacao: false });
   }
 
   submit = async formData => {
@@ -182,43 +180,27 @@ export default class EditarPage extends Component {
     });
     if (resposta.status === 200) {
       toastSuccess(resposta.data.mensagem);
+      this.props.onModificaSolicitacao();
     } else {
       toastError(`Erro ao autorizar solicitação: ${resposta}`);
     }
   };
 
-  abreModalNegacao() {
-    this.setState({ showModalNegacao: true });
-  }
-  fechaModalNegacao() {
-    this.setState({ showModalNegacao: false });
-  }
-
   render() {
-    const atual = {
-      href: "#",
-      titulo: "Relatório"
-    };
-    const anteriores = [
-      {
-        href: `/${constants.RELATORIOS}`,
-        titulo: "Dietas Especiais"
-      }
-    ];
-
     return (
-      <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+      <div>
         <ModalNegaSolicitacao
           show={this.state.showModalNegacao}
           onClose={this.fechaModalNegacao}
+          onNegaSolicitacao={this.props.onModificaSolicitacao}
         />
         <RelatorioForm
           onSubmit={this.submit}
+          dietaEspecial={this.props.dietaEspecial}
           abreModalNegacao={this.abreModalNegacao}
           {...this.props}
         />
-      </Page>
+      </div>
     );
   }
 }

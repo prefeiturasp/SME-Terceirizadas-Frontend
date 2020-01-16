@@ -1,5 +1,6 @@
 import {
   ALTERACAO_CARDAPIO,
+  DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   RELATORIO,
@@ -10,6 +11,7 @@ import {
 import { truncarString } from "../../helpers/utilities";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
+const DIETA_ESP = "DIETA_ESPECIAL";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
 const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
@@ -30,6 +32,10 @@ export const ajustarFormatoLog = logs => {
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
         solicitacao = ALTERACAO_CARDAPIO;
+        break;
+
+      case DIETA_ESP:
+        solicitacao = DIETA_ESPECIAL;
         break;
 
       case KIT_LANCHE_AVULSA:

@@ -12,7 +12,8 @@ import {
   getSolicitacoesAutorizadasNutricionista,
   getSolicitacoesNegadasNutricionista,
   getTiposDietaEspecial,
-  negaSolicitacaoDietaEspecial
+  negaSolicitacaoDietaEspecial,
+  terceirizadaTomarCiencia
 } from "../painelNutricionista.service";
 
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.PENDENTES}/`, {
@@ -46,6 +47,12 @@ fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/negar/`, {
 fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/autorizar/`, {
   mensagem: "Autorização de dieta especial realizada com sucesso"
 });
+fetchMock.post(
+  `begin:${API_URL}/solicitacoes-dieta-especial/1234/tomar_ciencia/`,
+  {
+    mensagem: "Ciente da solicitação de dieta especial"
+  }
+);
 
 describe("test painelNutricionista.service", () => {
   it("getSolicitacoesPendentesNutricionista", async () => {
@@ -126,6 +133,13 @@ describe("test painelNutricionista.service", () => {
     });
     expect(response).toEqual({
       data: { mensagem: "Autorização de dieta especial realizada com sucesso" },
+      status: 200
+    });
+  });
+  it("terceirizadaTomarCiencia", async () => {
+    const response = await terceirizadaTomarCiencia(1234);
+    expect(response).toEqual({
+      data: { mensagem: "Ciente da solicitação de dieta especial" },
       status: 200
     });
   });

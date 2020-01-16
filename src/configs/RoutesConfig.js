@@ -72,8 +72,8 @@ import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas"
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
-import EditarPage from "../pages/DietaEspecial/EditarPage";
-import VisualizarPage from "../pages/DietaEspecial/VisualizarPage";
+
+import DietaRelatorioRouter from "../pages/DietaEspecial/RelatorioRouter.jsx";
 
 const routesConfig = [
   {
@@ -379,12 +379,20 @@ const routesConfig = [
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.EDITAR}`,
-    component: EditarPage,
+    component: DietaRelatorioRouter,
     exact: false
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.VISUALIZAR}`,
-    component: VisualizarPage,
+    component: DietaRelatorioRouter,
+    exact: false
+  },
+  {
+    // TODO: Criar um componente que centralize todas as requisições
+    //       Esse componente vai mostrar página de edição/visualização
+    //       Dependendo do perfil do usuário e do estado da solicitação
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
+    component: DietaRelatorioRouter,
     exact: false
   },
   {

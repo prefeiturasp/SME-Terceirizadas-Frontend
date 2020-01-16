@@ -105,6 +105,7 @@ export const negaSolicitacaoDietaEspecial = async ({
   motivo,
   justificativa
 }) => {
+  // TODO: Incluir identificação do nutricionista na negação da dieta
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
   let status = 0;
   return fetch(url, {
@@ -113,6 +114,25 @@ export const negaSolicitacaoDietaEspecial = async ({
       motivo_negacao: motivo,
       justificativa_negacao: justificativa
     }),
+    headers: AUTH_TOKEN
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const terceirizadaTomarCiencia = async uuid => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
     headers: AUTH_TOKEN
   })
     .then(res => {
