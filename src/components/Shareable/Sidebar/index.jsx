@@ -81,14 +81,16 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          <div className="sidebar-wrapper">
-            <div className="text-center mx-auto justify-content-center p-2">
-              <span className="text-bold text-white small">
-                RF: {registro_funcional} <br />
-                {nome_instituicao}
-              </span>
+          {!toggled && (
+            <div className="sidebar-wrapper">
+              <div className="text-center mx-auto justify-content-center p-2">
+                <span className="text-bold text-white small">
+                  RF: {registro_funcional} <br />
+                  {nome_instituicao}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div className="sidebar-wrapper div-submenu">
             {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
               <SidebarCODAE />
