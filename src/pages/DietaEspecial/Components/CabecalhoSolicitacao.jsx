@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { TIPO_PERFIL } from "../../../constants";
+
 import { FluxoDeStatus } from "../../../components/Shareable/FluxoDeStatus";
 import LinhaSolicitacao from "./LinhaSolicitacao";
 
@@ -102,37 +104,43 @@ export default class CabecalhoSolicitacao extends Component {
             </p>
           </div>
         </div>
-        <div className="row title">
-          <div className="col-9">
-            <p>Laudo</p>
+        {localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA ? (
+          ""
+        ) : (
+          <div>
+            <div className="row title">
+              <div className="col-9">
+                <p>Laudo</p>
+              </div>
+              <div className="col-3">
+                <p>Anexos</p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-8 report-label-value">
+                <p>
+                  Para visualizar o(s) laudo(s) fornecido(s) pelo prescritor,
+                  clique nos anexo(s).
+                </p>
+              </div>
+              <div className="col-4">
+                {dietaEspecial.anexos
+                  .filter(a => a.eh_laudo_medico)
+                  .map((a, key) => (
+                    <a
+                      key={key}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={a.arquivo}
+                    >
+                      {a.nome.split("/").pop()}
+                      {key < dietaEspecial.anexos.length - 1 ? <br /> : ""}
+                    </a>
+                  ))}
+              </div>
+            </div>
           </div>
-          <div className="col-3">
-            <p>Anexos</p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-8 report-label-value">
-            <p>
-              Para visualizar o(s) laudo(s) fornecido(s) pelo prescritor, clique
-              nos anexo(s).
-            </p>
-          </div>
-          <div className="col-4">
-            {dietaEspecial.anexos
-              .filter(a => a.eh_laudo_medico)
-              .map((a, key) => (
-                <a
-                  key={key}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={a.arquivo}
-                >
-                  {a.nome.split("/").pop()}
-                  {key < dietaEspecial.anexos.length - 1 ? <br /> : ""}
-                </a>
-              ))}
-          </div>
-        </div>
+        )}
         <LinhaSolicitacao titulo="Observações">
           <div className="col-12 report-label-value">
             <p

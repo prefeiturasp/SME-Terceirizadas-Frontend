@@ -16,8 +16,7 @@ export default class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      classificacoesDieta: [],
-      mostrarBotaoTomarCiencia: true
+      classificacoesDieta: []
     };
   }
 
