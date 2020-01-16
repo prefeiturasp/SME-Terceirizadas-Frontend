@@ -115,7 +115,9 @@ describe("test painelNutricionista.service", () => {
     const response = await negaSolicitacaoDietaEspecial({
       uuid: 1234,
       motivo: 1,
-      justificativa: "Justificando porque foi negado"
+      justificativa: "Justificando porque foi negado",
+      identificacaoNutricionista:
+        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN 15615645"
     });
     expect(response).toEqual({
       data: { mensagem: "Solicitação de Dieta Especial Negada" },
@@ -128,7 +130,7 @@ describe("test painelNutricionista.service", () => {
       classificacaoDieta: 1,
       diagnosticosSelecionados: [2, 3, 4],
       identificacaoNutricionista:
-        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN null",
+        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN 15615645",
       protocolos: ["asdf", "qwer"]
     });
     expect(response).toEqual({

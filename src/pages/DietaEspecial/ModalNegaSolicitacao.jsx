@@ -3,6 +3,8 @@ import { Modal } from "react-bootstrap";
 import { reduxForm, Field, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 
+import { obtemIdentificacaoNutricionista } from "../../helpers/utilities";
+
 import Botao from "../../components/Shareable/Botao";
 import { BUTTON_STYLE } from "../../components/Shareable/Botao/constants";
 import Select from "../../components/Shareable/Select";
@@ -133,7 +135,11 @@ export default class ModalNegaSolicitacao extends Component {
   submit = async formData => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const resposta = await negaSolicitacaoDietaEspecial({ uuid, ...formData });
+    const resposta = await negaSolicitacaoDietaEspecial({
+      uuid,
+      identificacaoNutricionista: obtemIdentificacaoNutricionista(),
+      ...formData
+    });
     if (resposta.status === 200) {
       this.props.onClose();
       toastSuccess(resposta.data.mensagem);

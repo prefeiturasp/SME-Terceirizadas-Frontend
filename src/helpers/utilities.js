@@ -272,3 +272,8 @@ export const usuarioTerceirizada = () => {
 export const converterDDMMYYYYparaYYYYMMDD = data => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
+
+export const obtemIdentificacaoNutricionista = () =>
+  `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
+    "crn_numero"
+  )}`.replace(/[^\w\s-]/g, "");

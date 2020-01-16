@@ -103,7 +103,8 @@ export const autorizaSolicitacaoDietaEspecial = async ({
 export const negaSolicitacaoDietaEspecial = async ({
   uuid,
   motivo,
-  justificativa
+  justificativa,
+  identificacaoNutricionista
 }) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
@@ -112,7 +113,8 @@ export const negaSolicitacaoDietaEspecial = async ({
     method: "POST",
     body: JSON.stringify({
       motivo_negacao: motivo,
-      justificativa_negacao: justificativa
+      justificativa_negacao: justificativa,
+      registro_funcional_nutricionista: identificacaoNutricionista
     }),
     headers: AUTH_TOKEN
   })

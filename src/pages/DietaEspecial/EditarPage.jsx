@@ -3,6 +3,7 @@ import { reduxForm, Field } from "redux-form";
 
 import DiagnosticosField from "../../components/DietaEspecial/Diagnosticos/Field";
 import ProtocolosField from "../../components/DietaEspecial/ProtocolosField";
+import { obtemIdentificacaoNutricionista } from "../../helpers/utilities";
 
 import Botao from "../../components/Shareable/Botao";
 import {
@@ -119,9 +120,7 @@ let RelatorioForm = reduxForm({
   form: "autorizacao-dieta-especial",
   enableReinitialize: true,
   initialValues: {
-    identificacaoNutricionista: `Elaborado por ${localStorage.getItem(
-      "nome"
-    )} - CRN ${localStorage.getItem("crn_numero")}`.replace(/[^\w\s-]/g, "")
+    identificacaoNutricionista: obtemIdentificacaoNutricionista()
   },
   validate: ({ protocolos, classificacaoDieta, diagnosticosSelecionados }) => {
     let errors = {};
