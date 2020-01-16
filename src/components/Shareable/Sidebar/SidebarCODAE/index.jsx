@@ -9,6 +9,10 @@ import {
   RELATORIOS
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
+import {
+  usuarioCODAEGestaoAlimentacao,
+  usuarioCODAEDietaEspecial
+} from "../../../../helpers/utilities";
 
 export class SidebarCODAE extends Component {
   constructor(props) {
@@ -27,69 +31,189 @@ export class SidebarCODAE extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li key={1} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapsePainel"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fas fa-sliders-h" />
+      <li key={0} className="nav-item">
+        <NavLink className={`nav-link collapsed`} to="/">
+          <i className="fas fa-file-alt" />
           <span>Painel Inicial</span>
         </NavLink>
-        <div
-          id="collapsePainel"
-          className={`collapse`}
-          aria-labelledby="headingPainel"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/`}
-            >
-              Home
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
-            >
-              Autorizadas
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
-            >
-              Pendentes de Autorização
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
-            >
-              Negadas
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
-            >
-              Canceladas
-            </NavLink>
-          </div>
-        </div>
       </li>,
-      <li key={2} className="nav-item">
+      usuarioCODAEGestaoAlimentacao() && (
+        <li key={1} className="nav-item">
+          <Link
+            className={`nav-link collapsed`}
+            href="#teste"
+            data-toggle="collapse"
+            data-target="#collapseGestaoAlimentacao"
+            aria-expanded="false"
+            aria-controls="collapseOne"
+          >
+            <i className="fas fa-utensils" />
+            <span>Gestão de Alimentação</span>
+          </Link>
+          <div
+            id="collapseGestaoAlimentacao"
+            className={`collapse`}
+            aria-labelledby="headingConfig"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to="/"
+              >
+                Painel de Solicitações
+              </NavLink>
+              <NavLink
+                onClick={() => this.onSubmenuClick("consulta-solicitacoes")}
+                activeClassName="active"
+                className="collapse-item"
+                to="#"
+              >
+                Consulta de Solicitações
+                <i className="fas fa-chevron-down" />
+              </NavLink>
+              {subMenu === "consulta-solicitacoes" && (
+                <div className="submenu">
+                  <NavLink
+                    activeClassName="active"
+                    className="collapse-item"
+                    to={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
+                  >
+                    Aguardando autorização
+                  </NavLink>
+                  <NavLink
+                    activeClassName="active"
+                    className="collapse-item"
+                    to={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
+                  >
+                    Autorizadas
+                  </NavLink>
+                  <NavLink
+                    activeClassName="active"
+                    className="collapse-item"
+                    to={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
+                  >
+                    Negadas
+                  </NavLink>
+                  <NavLink
+                    activeClassName="active"
+                    className="collapse-item"
+                    to={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
+                  >
+                    Canceladas
+                  </NavLink>
+                </div>
+              )}
+            </div>
+          </div>
+        </li>
+      ),
+      usuarioCODAEDietaEspecial() && (
+        <li key={2} className="nav-item">
+          <Link
+            className={`nav-link collapsed`}
+            href="#teste"
+            data-toggle="collapse"
+            data-target="#collapseDietaEspecial"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <i className="fas fa-carrot" />
+            <span>Dieta Especial</span>
+          </Link>
+          <div
+            id="collapseDietaEspecial"
+            className={`collapse`}
+            aria-labelledby="headingConfig"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to={`/`}
+              >
+                Painel Inicial
+              </NavLink>
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to={`/`}
+              >
+                Consulta Dieta de Alunos
+              </NavLink>
+            </div>
+          </div>
+        </li>
+      ),
+      <li key={3} className="nav-item">
         <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
           <i className="fas fa-file-alt" />
           <span>Relatórios</span>
         </NavLink>
       </li>,
-      <li key={3} className="nav-item">
+      <li key={4} className="nav-item">
+        <Link
+          className={`nav-link collapsed`}
+          href="#teste"
+          data-toggle="collapse"
+          data-target="#collapseCadastros"
+          aria-expanded="false"
+          aria-controls="collapseTwo"
+        >
+          <i className="fas fa-user-plus" />
+          <span>Cadastros</span>
+        </Link>
+        <div
+          id="collapseCadastros"
+          className={`collapse`}
+          aria-labelledby="headingConfig"
+          data-parent="#accordionSidebar"
+        >
+          <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/configuracoes/cadastros"
+            >
+              Perfil
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/configuracoes/cadastros"
+            >
+              Unidades Escolares
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/configuracoes/cadastros/lote"
+            >
+              Lotes
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/configuracoes/cadastros/empresa"
+            >
+              Empresas
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/configuracoes/cadastros/editais-contratos"
+            >
+              Editais e Contratos
+            </NavLink>
+            <NavLink activeClassName="active" className="collapse-item" to="#">
+              Tipos de Alimentações
+            </NavLink>
+          </div>
+        </div>
+      </li>,
+      <li key={5} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"
@@ -108,61 +232,6 @@ export class SidebarCODAE extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink
-              onClick={() => this.onSubmenuClick("cadastros")}
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
-              Cadastros
-              <i className="fas fa-chevron-down" />
-            </NavLink>
-            {subMenu === "cadastros" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros"
-                >
-                  Perfil
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros"
-                >
-                  Unidades Escolares
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros/lote"
-                >
-                  Lotes
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros/empresa"
-                >
-                  Empresas
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros/editais-contratos"
-                >
-                  Editais e Contratos
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Tipos de Alimentações
-                </NavLink>
-              </div>
-            )}
             {[
               PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA,
               PERFIL.COORDENADOR_DIETA_ESPECIAL

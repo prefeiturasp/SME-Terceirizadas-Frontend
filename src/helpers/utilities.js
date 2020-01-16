@@ -229,7 +229,9 @@ export const visualizaBotoesDoFluxo = solicitacao => {
         tipoPerfil
       );
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
-      return tipoPerfil === TIPO_PERFIL.ESCOLA;
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
+        tipoPerfil
+      );
     default:
       return false;
   }
