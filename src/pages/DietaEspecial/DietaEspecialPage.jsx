@@ -8,7 +8,16 @@ import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
   getDietaEspecialPendenteAutorizacaoEscola,
   getDietaEspecialAutorizadasEscola,
-  getDietaEspecialNegadasEscola
+  getDietaEspecialNegadasEscola,
+  getDietaEspecialPendenteAutorizacaoDRE,
+  getDietaEspecialAutorizadasDRE,
+  getDietaEspecialNegadasDRE,
+  getDietaEspecialPendenteAutorizacaoCODAE,
+  getDietaEspecialAutorizadasCODAE,
+  getDietaEspecialNegadasCODAE,
+  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialAutorizadasTerceirizada,
+  getDietaEspecialNegadasTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -38,9 +47,9 @@ export const DietaEspecialEscola = () => (
 export const DietaEspecialDRE = () => (
   <DietaEspecialBase
     visao={DRE}
-    getDietaEspecialPendenteAutorizacao={"dre"}
-    getDietaEspecialAutorizadas={null}
-    getDietaEspecialNegadas={null}
+    getDietaEspecialPendenteAutorizacao={getDietaEspecialPendenteAutorizacaoDRE}
+    getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
+    getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
   />
 );
 
@@ -48,9 +57,11 @@ export const DietaEspecialDRE = () => (
 export const DietaEspecialCODAE = () => (
   <DietaEspecialBase
     visao={CODAE}
-    getDietaEspecialPendenteAutorizacao={"codae"}
-    getDietaEspecialAutorizadas={null}
-    getDietaEspecialNegadas={null}
+    getDietaEspecialPendenteAutorizacao={
+      getDietaEspecialPendenteAutorizacaoCODAE
+    }
+    getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
+    getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
   />
 );
 
@@ -58,8 +69,10 @@ export const DietaEspecialCODAE = () => (
 export const DietaEspecialTerceirizada = () => (
   <DietaEspecialBase
     visao={TERCEIRIZADA}
-    getDietaEspecialPendenteAutorizacao={"terc"}
-    getDietaEspecialAutorizadas={null}
-    getDietaEspecialNegadas={null}
+    getDietaEspecialPendenteAutorizacao={
+      getDietaEspecialPendenteAutorizacaoTerceirizada
+    }
+    getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
+    getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
   />
 );
