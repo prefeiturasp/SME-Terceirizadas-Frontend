@@ -94,7 +94,7 @@ export default class Relatorio extends Component {
                       rel="noopener noreferrer"
                       href={a.arquivo}
                     >
-                      {a.nome.split("/").pop()}
+                      {a.nome}
                       {key < dietaEspecial.anexos.length - 1 ? <br /> : ""}
                     </a>
                   ))}
