@@ -6,7 +6,14 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  RELATORIOS
+  RELATORIOS,
+  CONFIGURACOES,
+  MENSAGEM,
+  PERMISSOES,
+  CADASTROS,
+  LOTE,
+  EMPRESA,
+  EDITAIS_CONTRATOS
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 import {
@@ -175,35 +182,35 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/cadastros"
+              to={`/${CONFIGURACOES}/${CADASTROS}`}
             >
               Perfil
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/cadastros"
+              to={`/${CONFIGURACOES}/${CADASTROS}`}
             >
               Unidades Escolares
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/cadastros/lote"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${LOTE}`}
             >
               Lotes
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/cadastros/empresa"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`}
             >
               Empresas
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/cadastros/editais-contratos"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CONTRATOS}`}
             >
               Editais e Contratos
             </NavLink>
@@ -239,7 +246,7 @@ export class SidebarCODAE extends Component {
               <NavLink
                 activeClassName="active"
                 className="collapse-item"
-                to="/configuracoes/permissoes"
+                to={`/${CONFIGURACOES}/${PERMISSOES}`}
               >
                 Permissões
               </NavLink>
@@ -247,14 +254,14 @@ export class SidebarCODAE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes"
+              to={`/${CONFIGURACOES}`}
             >
               Disparo de E-mail
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to="/configuracoes/mensagem"
+              to={`/${CONFIGURACOES}/${MENSAGEM}`}
             >
               Configuração de Mensagem
             </NavLink>
