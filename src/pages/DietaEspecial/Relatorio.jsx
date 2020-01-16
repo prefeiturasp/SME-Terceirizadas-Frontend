@@ -34,7 +34,27 @@ export default class Relatorio extends Component {
     return (
       <div>
         <CabecalhoSolicitacao dietaEspecial={dietaEspecial} />
-        {dietaEspecial.status_solicitacao !== statusEnum.CODAE_NEGOU_PEDIDO ? (
+        {dietaEspecial.status_solicitacao === statusEnum.CODAE_NEGOU_PEDIDO ? (
+          <div>
+            <LinhaSolicitacao titulo="Motivo da Negação">
+              <div className="col-12">
+                <p className="alergia-descricao">
+                  {dietaEspecial.motivo_negacao.descricao}
+                </p>
+              </div>
+            </LinhaSolicitacao>
+            <LinhaSolicitacao titulo="Justificativa da Negação">
+              <div className="col-12">
+                <p
+                  className="alergia-descricao"
+                  dangerouslySetInnerHTML={{
+                    __html: dietaEspecial.justificativa_negacao
+                  }}
+                />
+              </div>
+            </LinhaSolicitacao>
+          </div>
+        ) : (
           <div>
             <LinhaSolicitacao titulo="Relação por Diagnóstico">
               <div className="col-12">
@@ -91,8 +111,6 @@ export default class Relatorio extends Component {
               </div>
             </LinhaSolicitacao>
           </div>
-        ) : (
-          ""
         )}
         {this.props.botoes}
       </div>
