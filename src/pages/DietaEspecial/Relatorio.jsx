@@ -85,7 +85,7 @@ const CamposSolicitacaoAprovada = ({ classificacoesDieta, dietaEspecial }) => (
 
 const IdenticacaoNutricionista = ({ dietaEspecial }) => (
   <LinhaSolicitacao titulo="Identificação do Nutricionista">
-    <div className="col-9" id="identificacaoNutricionista">
+    <div className="col-9" id="identificacao-nutricionista">
       <InputText
         input={{
           value: dietaEspecial.registro_funcional_nutricionista

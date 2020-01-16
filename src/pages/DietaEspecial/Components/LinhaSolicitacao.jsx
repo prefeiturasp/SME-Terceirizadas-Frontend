@@ -6,9 +6,7 @@ export default class LinhaSolicitacao extends Component {
     return (
       <div>
         <div className="row title">
-          <div className="col-12">
-            <p>{titulo}</p>
-          </div>
+          <div className="col-12">{titulo}</div>
         </div>
         {children ? <div className="row">{children}</div> : ""}
       </div>

@@ -109,15 +109,15 @@ export default class CabecalhoSolicitacao extends Component {
         ) : (
           <div>
             <div className="row title">
-              <div className="col-9">
+              <div className="col-8">
                 <p>Laudo</p>
               </div>
-              <div className="col-3">
+              <div className="col-4">
                 <p>Anexos</p>
               </div>
             </div>
             <div className="row">
-              <div className="col-8 report-label-value">
+              <div className="col-8">
                 <p>
                   Para visualizar o(s) laudo(s) fornecido(s) pelo prescritor,
                   clique nos anexo(s).
