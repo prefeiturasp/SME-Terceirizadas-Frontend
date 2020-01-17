@@ -150,7 +150,7 @@ class DashBoardDietaEspecial extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={negadasListFiltered}
                     icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`fdfddffd`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-recusadas`}
                   />
                 </div>
               </div>
