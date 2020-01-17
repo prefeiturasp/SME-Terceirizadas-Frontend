@@ -114,6 +114,7 @@ export class StatusSolicitacoes extends Component {
       default:
         break;
     }
+
     solicitacoes = ajustarFormatoLog(solicitacoes, LOG_PARA.CODAE);
     this.setState({
       solicitacoes,

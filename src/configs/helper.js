@@ -10,6 +10,7 @@ import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
 import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DietaEspecialPage";
+import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
 import { TIPO_PERFIL } from "../constants";
 
@@ -125,5 +126,18 @@ export const relatoriosSolicitacaoUnificada = () => {
       return RelatoriosSolicitacaoUnificada.RelatorioTerceirizada;
     default:
       return RelatoriosSolicitacaoUnificada.RelatorioDRE;
+  }
+};
+
+export const StatusSolicitacoesDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialTerceirizada;
+    default:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialEscola;
   }
 };

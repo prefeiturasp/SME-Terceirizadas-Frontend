@@ -16,6 +16,7 @@ const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
 const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
+const DIETA_ESPECIAL = "DIETA_ESPECIAL";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -52,6 +53,9 @@ export const ajustarFormatoLog = logs => {
         break;
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
+        break;
+      case DIETA_ESPECIAL:
+        solicitacao = DIETA_ESPECIAL;
         break;
       default:
         solicitacao = "FALTA_IMPLEMENTAR";
