@@ -41,7 +41,10 @@ export default class DashboardNutricionistaContainer extends Component {
     let autorizadas = await getSolicitacoesAutorizadasNutricionista();
     let negadas = await getSolicitacoesNegadasNutricionista();
 
-    autorizadas = this.ajustaSolicitacoes(autorizadas.results);
+    autorizadas = this.ajustaSolicitacoes(
+      autorizadas.results,
+      constants.VISUALIZAR
+    );
     pendentes = this.ajustaSolicitacoes(pendentes.results);
     negadas = this.ajustaSolicitacoes(negadas.results);
     this.setState({
