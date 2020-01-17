@@ -12,7 +12,7 @@ import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
 import { TIPO_PERFIL } from "../constants";
 
-export const painelHome = () => {
+export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIETA_ESPECIAL:
       return DashboardNutricionistaPage;
