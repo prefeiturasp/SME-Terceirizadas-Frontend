@@ -19,15 +19,6 @@ export const Select = props => {
     required,
     width
   } = props;
-  const selected = options.filter(o => o.selected);
-  let value;
-  if (selected.length > 1) {
-    value = selected;
-  } else if (selected.length === 1) {
-    value = selected[0].uuid;
-  } else {
-    value = options[0].uuid;
-  }
   return (
     <div className="select">
       {label && [
@@ -52,8 +43,6 @@ export const Select = props => {
         name={name}
         required={required}
         style={width && { width: width - 12 }}
-        value={value}
-        multiple={selected.length > 1}
       >
         {options.map((e, key) => {
           return (
