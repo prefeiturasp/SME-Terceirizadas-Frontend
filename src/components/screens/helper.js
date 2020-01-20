@@ -26,8 +26,24 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
+export const ajustaFormatoLogPainelDietaEspecial = logs => {
+  return logs.map(log => {
+    let tamanhoString = 48;
+    let descricao = log.descricao;
+    return {
+      text: truncarString(descricao, tamanhoString),
+      date: log.data_log,
+      link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+        log.uuid
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+    };
+  });
+};
+
 export const ajustarFormatoLog = logs => {
   return logs.map(log => {
+    let tamanhoString = 48;
+    let descricao = log.descricao;
     let solicitacao = "falta-implementar";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
@@ -36,6 +52,8 @@ export const ajustarFormatoLog = logs => {
 
       case DIETA_ESP:
         solicitacao = DIETA_ESPECIAL;
+        descricao = log.descricao_dieta_especial;
+        tamanhoString = 150;
         break;
 
       case KIT_LANCHE_AVULSA:
@@ -64,7 +82,7 @@ export const ajustarFormatoLog = logs => {
         break;
     }
     return {
-      text: truncarString(log.descricao, 48),
+      text: truncarString(descricao, tamanhoString),
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid

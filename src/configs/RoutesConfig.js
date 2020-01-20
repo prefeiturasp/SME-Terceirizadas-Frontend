@@ -6,7 +6,9 @@ import {
   relatoriosInclusaoDeAlimentacao,
   relatoriosSolicitacaoUnificada,
   relatoriosSolicitacaoKitLanche,
-  relatoriosInversaoDiaCardapio
+  relatoriosInversaoDiaCardapio,
+  dashBoardDietaEspecial,
+  StatusSolicitacoesDietaEspecial
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -413,6 +415,32 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
+  },
+  {
+    path: `/painel-dieta-especial`,
+    component: dashBoardDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_PENDENTES
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_NEGADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_AUTORIZADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
   }
 ];
 

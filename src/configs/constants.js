@@ -21,6 +21,20 @@ export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
+export const AUTORIZADOS_DIETA = "autorizados-dieta";
+export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";
+export const NEGADOS_DIETA = "negados-dieta";
+export const CANCELADOS_DIETA = "cancelados-dieta";
+
+export const DIETA_ESPECIAL_SOLICITACOES = {
+  CODAE: "codae-solicitacoes",
+  ESCOLA: "escola-solicitacoes",
+  TERCEIRIZADA: "terceirizada-solicitacoes",
+  DRE: "diretoria-regional-solicitacoes"
+};
+
+export const SOLICITACOES_CODAE = "codae-solicitacoes";
+
 export const RELATORIO = "relatorio";
 export const RELATORIOS = "relatorios";
 export const HISTORICO = "historico";

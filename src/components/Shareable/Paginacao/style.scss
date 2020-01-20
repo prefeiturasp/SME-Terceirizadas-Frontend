@@ -1,0 +1,10 @@
+.footer-pagination-default {
+  display: flex;
+  justify-content: flex-end;
+
+  a.ant-pagination-item-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
