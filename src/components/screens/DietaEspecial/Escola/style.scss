@@ -37,3 +37,9 @@ form.special-diet {
     }
   }
 }
+div.datepicker
+  div.react-datepicker-wrapper
+  .react-datepicker__input-container
+  input {
+  background-color: #dadada;
+}
