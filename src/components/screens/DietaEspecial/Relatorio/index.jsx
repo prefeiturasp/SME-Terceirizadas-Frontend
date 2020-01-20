@@ -106,19 +106,19 @@ class Relatorio extends Component {
                   <div className="col-3 report-label-value">
                     <p>Cód. EOL do ALuno</p>
                     <p className="value-important">
-                      {dietaEspecial.codigo_eol_aluno}
+                      {dietaEspecial.aluno.codigo_eol}
                     </p>
                   </div>
                   <div className="col-5 report-label-value">
                     <p>Nome Completo do Aluno</p>
                     <p className="value-important">
-                      {dietaEspecial.nome_completo_aluno}
+                      {dietaEspecial.aluno.nome}
                     </p>
                   </div>
                   <div className="col-4 report-label-value">
                     <p>Data de Nascimento</p>
                     <p className="value-important">
-                      {dietaEspecial.data_nascimento_aluno}
+                      {dietaEspecial.aluno.data_nascimento}
                     </p>
                   </div>
                 </div>

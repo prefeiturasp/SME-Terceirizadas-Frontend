@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
 import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
@@ -64,16 +64,16 @@ class solicitacaoDietaEspecial extends Component {
 
   onEolBlur = async event => {
     const { change } = this.props;
-    change("nome_completo_aluno", "");
-    change("data_nascimento_aluno", "");
+    change("aluno.nome", "");
+    change("aluno.data_nascimento", "");
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
     if (!resposta) return;
     if (resposta.status === 400) {
       toastError("Aluno não encontrado no EOL.");
     } else {
-      change("nome_completo_aluno", resposta.detail.nm_aluno);
+      change("aluno.nome", resposta.detail.nm_aluno);
       change(
-        "data_nascimento_aluno",
+        "aluno.data_nascimento",
         moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
       );
     }
@@ -94,6 +94,12 @@ class solicitacaoDietaEspecial extends Component {
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
         toastError("Por favor anexe o laudo médico");
+      } else if (response.data["registro_funcional_pescritor"]) {
+        toastError(
+          `Registro funcional: ${
+            response.data["registro_funcional_pescritor"][0]
+          }`
+        );
       } else if (response.data["anexos"][0]["nome"][0]) {
         const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
         toastError(erroExtensaoInvalida);
@@ -120,43 +126,45 @@ class solicitacaoDietaEspecial extends Component {
           <span className="card-title font-weight-bold cinza-escuro">
             Descrição da Solicitação
           </span>
-          <div className="grid-container">
-            <div className="ajuste-fonte">
-              <span>* </span>Cód. EOL do Aluno
+          <FormSection name="aluno">
+            <div className="grid-container">
+              <div className="ajuste-fonte">
+                <span>* </span>Cód. EOL do Aluno
+              </div>
+              <div className="ajuste-fonte">Nome completo do Aluno</div>
+              <div className="ajuste-fonte">Data de Nascimento</div>
+              <Field
+                component={InputText}
+                name="codigo_eol"
+                placeholder="Insira o Código"
+                className="form-control"
+                type="number"
+                required
+                onBlur={this.onEolBlur}
+              />
+              <Field
+                component={InputText}
+                name="nome"
+                placeholder="Insira o Nome do Aluno"
+                className="form-control"
+                required
+                disabled
+                validate={[required, minLength6]}
+              />
+              <Field
+                component={InputComData}
+                name="data_nascimento"
+                className="form-control"
+                minDate={dateDelta(-360 * 99)}
+                maxDate={dateDelta(-1)}
+                showMonthDropdown
+                showYearDropdown
+                required
+                disabled
+                validate={required}
+              />
             </div>
-            <div className="ajuste-fonte">Nome completo do Aluno</div>
-            <div className="ajuste-fonte">Data de Nascimento</div>
-            <Field
-              component={InputText}
-              name="codigo_eol_aluno"
-              placeholder="Insira o Código"
-              className="form-control"
-              type="number"
-              required
-              onBlur={this.onEolBlur}
-            />
-            <Field
-              component={InputText}
-              name="nome_completo_aluno"
-              placeholder="Insira o Nome do Aluno"
-              className="form-control"
-              required
-              disabled
-              validate={[required, minLength6]}
-            />
-            <Field
-              component={InputComData}
-              name="data_nascimento_aluno"
-              className="form-control"
-              minDate={dateDelta(-360 * 99)}
-              maxDate={dateDelta(-1)}
-              showMonthDropdown
-              showYearDropdown
-              required
-              disabled
-              validate={required}
-            />
-          </div>
+          </FormSection>
           <section className="row">
             <div className="col-7">
               <Field
@@ -251,13 +259,10 @@ class solicitacaoDietaEspecial extends Component {
 
 const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial",
-  validate: ({ nome_completo_aluno, data_nascimento_aluno }) => {
+  validate: ({ nome, data_nascimento }) => {
     const errors = {};
-    if (
-      nome_completo_aluno === undefined &&
-      data_nascimento_aluno === undefined
-    ) {
-      errors.codigo_eol_aluno =
+    if (nome === undefined && data_nascimento === undefined) {
+      errors.codigo_eol =
         "É necessário preencher este campo com um código EOL válido";
     }
     return errors;
