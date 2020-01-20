@@ -9,7 +9,7 @@ import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { dataAtual } from "../../../helpers/utilities";
 
-import { ajustarFormatoLog } from "../helper";
+import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
 
 class DashBoardDietaEspecial extends Component {
   constructor(props) {
@@ -47,7 +47,9 @@ class DashBoardDietaEspecial extends Component {
         .getDietaEspecialAutorizadas(instituicao.uuid)
         .then(response => {
           this.setState({
-            autorizadasListFiltered: ajustarFormatoLog(response.results)
+            autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            )
           });
         });
     }
@@ -59,7 +61,9 @@ class DashBoardDietaEspecial extends Component {
         .getDietaEspecialPendenteAutorizacao(instituicao.uuid)
         .then(response => {
           this.setState({
-            pendentesListFiltered: ajustarFormatoLog(response.results)
+            pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            )
           });
         });
     }
@@ -69,7 +73,9 @@ class DashBoardDietaEspecial extends Component {
     ) {
       this.props.getDietaEspecialNegadas(instituicao.uuid).then(response => {
         this.setState({
-          negadasListFiltered: ajustarFormatoLog(response.results)
+          negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results
+          )
         });
       });
     }
@@ -130,7 +136,7 @@ class DashBoardDietaEspecial extends Component {
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={pendentesListFiltered}
                     icon={ICON_CARD_TYPE_ENUM.PENDENTE}
-                    href={`dfdfddfd`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}
                   />
                 </div>
                 <div className="col-6">
@@ -139,7 +145,7 @@ class DashBoardDietaEspecial extends Component {
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={autorizadasListFiltered}
                     icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`dffdfddf`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas`}
                   />
                 </div>
               </div>
@@ -150,7 +156,7 @@ class DashBoardDietaEspecial extends Component {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={negadasListFiltered}
                     icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/solicitacoes-dieta-especial/solicitacoes-recusadas`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-negadas`}
                   />
                 </div>
               </div>

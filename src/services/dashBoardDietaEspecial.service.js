@@ -201,3 +201,25 @@ export const getDietaEspecialNegadasTerceirizada = uuid => {
       console.log(error);
     });
 };
+
+export const getPaginacaoSolicitacoesDietaEspecial = (
+  urlPaginacao,
+  uuidInstituicao,
+  offSet
+) => {
+  const url = `${API_URL}/${urlPaginacao}/${uuidInstituicao}/?limit=100${
+    offSet > 0 ? `&offset=${offSet}` : "/"
+  }`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

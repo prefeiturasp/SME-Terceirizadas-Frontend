@@ -2,11 +2,20 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
+import { getPaginacaoSolicitacoesDietaEspecial } from "../../../services/dashBoardDietaEspecial.service";
 import { extrairStatusDaSolicitacaoURL } from "./helpers";
 import {
+  CODAE,
+  TERCEIRIZADA,
+  ESCOLA,
+  DRE,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_AUTORIZADAS
+  SOLICITACOES_AUTORIZADAS,
+  AUTORIZADOS_DIETA,
+  PENDENTES_DIETA,
+  NEGADOS_DIETA,
+  DIETA_ESPECIAL_SOLICITACOES
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -15,20 +24,26 @@ import {
 import { ajustarFormatoLog } from "../helper";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
-import CardLegendas from "../../Shareable/CardLegendas";
+import { Paginacao } from "../../Shareable/Paginacao";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       instituicao: null,
+      count: 0,
       tipoSolicitacao: null,
       solicitacoes: null,
       tipoCard: null,
       icone: null,
       titulo: null,
-      solicitacoesFiltrados: null
+      solicitacoesFiltrados: null,
+      urlPaginacao: null,
+      selecionarTodos: false
     };
+    this.selecionarTodos = this.selecionarTodos.bind(this);
+    this.onCheckClicked = this.onCheckClicked.bind(this);
+    this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +57,65 @@ export class StatusSolicitacoes extends Component {
     });
   }
 
+  selecionarTodos(solicitacoes) {
+    const selecionarTodos = !this.state.selecionarTodos;
+    solicitacoes.forEach((_, key) => {
+      this.props.change(`check_${key}`, selecionarTodos);
+    });
+    this.props.change("selecionar_todos", selecionarTodos);
+    this.setState({ selecionarTodos });
+  }
+
+  onCheckClicked(solicitacoes, key) {
+    solicitacoes[key].checked = !solicitacoes[key].checked;
+    this.props.change(`check_${key}`, solicitacoes[key].checked);
+  }
+
+  onPesquisarChanged(event) {
+    let solicitacoesFiltrados = this.state.solicitacoes;
+    solicitacoesFiltrados = this.filtrarNome(solicitacoesFiltrados, event);
+    this.setState({ solicitacoesFiltrados });
+  }
+
+  filtrarNome(listaFiltro, event) {
+    listaFiltro = listaFiltro.filter(function(item) {
+      const wordToFilter = event.target.value.toLowerCase();
+      return item.text.toLowerCase().search(wordToFilter) !== -1;
+    });
+    return listaFiltro;
+  }
+
+  retornaUrlPaginacao = (visao, statusDieta) => {
+    switch (visao) {
+      case ESCOLA:
+        return `${DIETA_ESPECIAL_SOLICITACOES.ESCOLA}/${statusDieta}`;
+      case TERCEIRIZADA:
+        return `${DIETA_ESPECIAL_SOLICITACOES.TERCEIRIZADA}/${statusDieta}`;
+      case CODAE:
+        return `${DIETA_ESPECIAL_SOLICITACOES.CODAE}/${statusDieta}`;
+      case DRE:
+        return `${DIETA_ESPECIAL_SOLICITACOES.DRE}/${statusDieta}`;
+      default:
+        break;
+    }
+  };
+
+  navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
+    const { instituicao, urlPaginacao } = this.state;
+    const offSet = quantidadePorPagina * (multiploQuantidade - 1);
+    getPaginacaoSolicitacoesDietaEspecial(
+      urlPaginacao,
+      instituicao.uuid,
+      offSet
+    ).then(response => {
+      this.setState({
+        solicitacoesFiltrados: ajustarFormatoLog(response.results)
+      });
+    });
+  };
+
   componentDidUpdate() {
+    const visao = this.props.visao;
     const {
       solicitacoesFiltrados,
       tipoSolicitacao,
@@ -60,9 +133,11 @@ export class StatusSolicitacoes extends Component {
                   response.results,
                   this.props.logPara
                 ),
+                count: response.count,
                 tipoCard: CARD_TYPE_ENUM.PENDENTE,
                 icone: ICON_CARD_TYPE_ENUM.PENDENTE,
-                titulo: "Aguardando Autorização"
+                titulo: "Aguardando Autorização",
+                urlPaginacao: this.retornaUrlPaginacao(visao, PENDENTES_DIETA)
               });
             });
           break;
@@ -75,9 +150,11 @@ export class StatusSolicitacoes extends Component {
                   response.results,
                   this.props.logPara
                 ),
+                count: response.count,
                 tipoCard: CARD_TYPE_ENUM.NEGADO,
                 icone: ICON_CARD_TYPE_ENUM.NEGADO,
-                titulo: "Negadas"
+                titulo: "Negadas",
+                urlPaginacao: this.retornaUrlPaginacao(visao, NEGADOS_DIETA)
               });
             });
           break;
@@ -90,9 +167,11 @@ export class StatusSolicitacoes extends Component {
                   response.results,
                   this.props.logPara
                 ),
+                count: response.count,
                 tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
                 icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
-                titulo: "Autorizadas"
+                titulo: "Autorizadas",
+                urlPaginacao: this.retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
               });
             });
           break;
@@ -106,7 +185,13 @@ export class StatusSolicitacoes extends Component {
   }
 
   render() {
-    const { solicitacoesFiltrados, titulo, tipoCard, icone } = this.state;
+    const {
+      solicitacoesFiltrados,
+      titulo,
+      tipoCard,
+      icone,
+      count
+    } = this.state;
     return (
       <form onSubmit={this.props.handleSubmit}>
         <div className="card mt-3">
@@ -126,7 +211,7 @@ export class StatusSolicitacoes extends Component {
               selecionarTodos={this.selecionarTodos}
               onCheckClicked={this.onCheckClicked}
             />
-            <CardLegendas />
+            <Paginacao onChange={this.navegacaoPage} total={count} />
           </div>
         </div>
       </form>
