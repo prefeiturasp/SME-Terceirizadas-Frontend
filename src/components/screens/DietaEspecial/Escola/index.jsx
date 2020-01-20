@@ -1,15 +1,15 @@
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import {
-  minLength,
-  required,
-  length
-} from "../../../../helpers/fieldValidators";
+import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
 import { criaDietaEspecial } from "../../../../services/dietaEspecial";
-import { meusDados } from "../../../../services/perfil.service";
+import {
+  meusDados,
+  obtemDadosAlunoPeloEOL
+} from "../../../../services/perfil.service";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
@@ -30,6 +30,8 @@ const minLength6 = minLength(6);
 class solicitacaoDietaEspecial extends Component {
   constructor(props) {
     super(props);
+    window.changeForm = props.change;
+    window.momentjs = moment;
     this.state = {
       quantidadeAlunos: "...",
       files: null,
@@ -39,6 +41,7 @@ class solicitacaoDietaEspecial extends Component {
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.onEolBlur = this.onEolBlur.bind(this);
   }
 
   componentDidMount() {
@@ -58,6 +61,23 @@ class solicitacaoDietaEspecial extends Component {
   setFiles(files) {
     this.setState({ files });
   }
+
+  onEolBlur = async event => {
+    const { change } = this.props;
+    change("nome_completo_aluno", "");
+    change("data_nascimento_aluno", "");
+    const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
+    if (!resposta) return;
+    if (resposta.status === 400) {
+      toastError("Aluno não encontrado no EOL.");
+    } else {
+      change("nome_completo_aluno", resposta.detail.nm_aluno);
+      change(
+        "data_nascimento_aluno",
+        moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
+      );
+    }
+  };
 
   async onSubmit(payload) {
     payload.anexos = this.state.files;
@@ -104,12 +124,8 @@ class solicitacaoDietaEspecial extends Component {
             <div className="ajuste-fonte">
               <span>* </span>Cód. EOL do Aluno
             </div>
-            <div className="ajuste-fonte">
-              <span>* </span>Nome completo do Aluno
-            </div>
-            <div className="ajuste-fonte">
-              <span>* </span>Data de Nascimento
-            </div>
+            <div className="ajuste-fonte">Nome completo do Aluno</div>
+            <div className="ajuste-fonte">Data de Nascimento</div>
             <Field
               component={InputText}
               name="codigo_eol_aluno"
@@ -117,7 +133,7 @@ class solicitacaoDietaEspecial extends Component {
               className="form-control"
               type="number"
               required
-              validate={[required, length(6)]}
+              onBlur={this.onEolBlur}
             />
             <Field
               component={InputText}
@@ -125,18 +141,19 @@ class solicitacaoDietaEspecial extends Component {
               placeholder="Insira o Nome do Aluno"
               className="form-control"
               required
+              disabled
               validate={[required, minLength6]}
             />
             <Field
               component={InputComData}
               name="data_nascimento_aluno"
-              placeholder="Selecione"
               className="form-control"
               minDate={dateDelta(-360 * 99)}
               maxDate={dateDelta(-1)}
               showMonthDropdown
               showYearDropdown
               required
+              disabled
               validate={required}
             />
           </div>
@@ -158,7 +175,6 @@ class solicitacaoDietaEspecial extends Component {
                 name="registro_funcional_pescritor"
                 placeholder="Insira o Registro Funcional"
                 className="form-control"
-                validate={minLength6}
               />
             </div>
           </section>
@@ -234,7 +250,18 @@ class solicitacaoDietaEspecial extends Component {
 }
 
 const componentNameForm = reduxForm({
-  form: "solicitacaoDietaEspecial"
+  form: "solicitacaoDietaEspecial",
+  validate: ({ nome_completo_aluno, data_nascimento_aluno }) => {
+    const errors = {};
+    if (
+      nome_completo_aluno === undefined &&
+      data_nascimento_aluno === undefined
+    ) {
+      errors.codigo_eol_aluno =
+        "É necessário preencher este campo com um código EOL válido";
+    }
+    return errors;
+  }
 })(solicitacaoDietaEspecial);
 
 const selector = formValueSelector("solicitacaoDietaEspecial");
