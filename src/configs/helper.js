@@ -10,6 +10,9 @@ import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
+import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DietaEspecialPage";
+import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
+
 import { TIPO_PERFIL } from "../constants";
 
 export const painelGestaoAlimentacao = () => {
@@ -50,6 +53,19 @@ export const relatorios = () => {
       return RelatoriosPage.RelatoriosEscola;
     default:
       return RelatoriosPage.RelatoriosEscola;
+  }
+};
+
+export const dashBoardDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return DashBoardDietaEspecial.DietaEspecialDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return DashBoardDietaEspecial.DietaEspecialCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return DashBoardDietaEspecial.DietaEspecialTerceirizada;
+    default:
+      return DashBoardDietaEspecial.DietaEspecialEscola;
   }
 };
 
@@ -113,5 +129,18 @@ export const relatoriosSolicitacaoUnificada = () => {
       return RelatoriosSolicitacaoUnificada.RelatorioTerceirizada;
     default:
       return RelatoriosSolicitacaoUnificada.RelatorioDRE;
+  }
+};
+
+export const StatusSolicitacoesDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialTerceirizada;
+    default:
+      return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialEscola;
   }
 };
