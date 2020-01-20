@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { AUTH_TOKEN } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -138,4 +139,20 @@ export const confirmarEmail = (uuid, confirmationKey) => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const obtemDadosAlunoPeloEOL = async codEOL => {
+  const url = `${API_URL}/dados-alunos-eol/${codEOL}`;
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { detail: json.detail, status };
+  } catch (error) {
+    console.log(error);
+  }
 };
