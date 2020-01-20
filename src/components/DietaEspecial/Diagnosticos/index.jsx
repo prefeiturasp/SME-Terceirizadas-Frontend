@@ -1,7 +1,6 @@
 import "./style.scss";
 
 import React, { Component } from "react";
-import { Field } from "redux-form";
 
 import Select from "../../Shareable/Select";
 import Botao from "../../Shareable/Botao";
@@ -9,10 +8,6 @@ import { BUTTON_STYLE, BUTTON_ICON } from "../../Shareable/Botao/constants";
 
 export default class Diagnosticos extends Component {
   render() {
-    const fieldProps = {
-      component: Select,
-      name: "diagnosticos"
-    };
     const { selecionados, diagnosticos } = this.props;
     return (
       <div>
@@ -26,13 +21,12 @@ export default class Diagnosticos extends Component {
           return (
             <div key={key} className="row" id="diagnosticos">
               <div className="col-8">
-                <Field
-                  naoDesabilitarPrimeiraOpcao={opcao !== ""}
+                <Select
+                  naoDesabilitarPrimeiraOpcao
                   onChange={event =>
                     this.props.onSelect(key, event.target.value)
                   }
                   options={options}
-                  {...fieldProps}
                 />
               </div>
               <div className="col-2">
