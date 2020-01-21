@@ -18,6 +18,7 @@ class DashBoardDietaEspecial extends Component {
       autorizadasListFiltered: null,
       pendentesListFiltered: null,
       negadasListFiltered: null,
+      canceladasListFiltered: null,
       instituicao: null
     };
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -36,6 +37,7 @@ class DashBoardDietaEspecial extends Component {
       autorizadasListFiltered,
       pendentesListFiltered,
       negadasListFiltered,
+      canceladasListFiltered,
       instituicao
     } = this.state;
 
@@ -79,6 +81,18 @@ class DashBoardDietaEspecial extends Component {
         });
       });
     }
+    if (
+      canceladasListFiltered !== prevState.canceladasListFiltered &&
+      !canceladasListFiltered
+    ) {
+      this.props.getDietaEspecialCanceladas(instituicao.uuid).then(response => {
+        this.setState({
+          canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results
+          )
+        });
+      });
+    }
   }
 
   filtrarNome(listaFiltro, event) {
@@ -94,17 +108,20 @@ class DashBoardDietaEspecial extends Component {
     let {
       pendentesListFiltered,
       autorizadasListFiltered,
-      negadasListFiltered
+      negadasListFiltered,
+      canceladasListFiltered
     } = this.state;
 
     pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
     autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
     negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
+    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
 
     this.setState({
       autorizadasListFiltered,
       pendentesListFiltered,
-      negadasListFiltered
+      negadasListFiltered,
+      canceladasListFiltered
     });
   }
 
@@ -113,6 +130,7 @@ class DashBoardDietaEspecial extends Component {
       autorizadasListFiltered,
       pendentesListFiltered,
       negadasListFiltered,
+      canceladasListFiltered,
       instituicao
     } = this.state;
     return (
@@ -157,6 +175,15 @@ class DashBoardDietaEspecial extends Component {
                     solicitations={negadasListFiltered}
                     icon={ICON_CARD_TYPE_ENUM.NEGADO}
                     href={`/solicitacoes-dieta-especial/solicitacoes-negadas`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={canceladasListFiltered}
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
                   />
                 </div>
               </div>

@@ -55,6 +55,22 @@ export const getDietaEspecialNegadasEscola = uuid => {
     });
 };
 
+export const getDietaEspecialCanceladasEscola = uuid => {
+  const url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 // DRE
 export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -90,6 +106,22 @@ export const getDietaEspecialAutorizadasDRE = uuid => {
 
 export const getDietaEspecialNegadasDRE = uuid => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/negados-dieta/${uuid}/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDietaEspecialCanceladasDRE = uuid => {
+  const url = `${API_URL}/diretoria-regional-solicitacoes/cancelados-dieta/${uuid}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -153,6 +185,22 @@ export const getDietaEspecialNegadasCODAE = () => {
     });
 };
 
+export const getDietaEspecialCanceladasCODAE = () => {
+  const url = `${API_URL}/codae-solicitacoes/cancelados-dieta/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
 // TERCEIRIZADA
 export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {
   const url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -188,6 +236,22 @@ export const getDietaEspecialAutorizadasTerceirizada = uuid => {
 
 export const getDietaEspecialNegadasTerceirizada = uuid => {
   const url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDietaEspecialCanceladasTerceirizada = uuid => {
+  const url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
