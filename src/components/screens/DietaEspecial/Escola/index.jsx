@@ -28,6 +28,7 @@ import {
   RELATORIO
 } from "../../../../configs/constants";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
+import { formatarSolicitacoesVigentes } from "./helper";
 
 const minLength6 = minLength(6);
 
@@ -81,8 +82,14 @@ class solicitacaoDietaEspecial extends Component {
         "aluno_json.data_nascimento",
         moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
       );
-      getDietasEspeciaisVigentesDeUmAluno(event.target.value).then(response => {
-        this.setState({ solicitacoesVigentes: response.data.results });
+      getDietasEspeciaisVigentesDeUmAluno(
+        event.target.value.padStart(6, "0")
+      ).then(response => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            response.data.results
+          )
+        });
       });
     }
   };
@@ -178,7 +185,9 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </FormSection>
-          <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
+          {solicitacoesVigentes && (
+            <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
+          )}
           <section className="row">
             <div className="col-7">
               <Field

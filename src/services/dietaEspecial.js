@@ -42,7 +42,7 @@ export const getDietaEspecial = async uuid => {
 };
 
 export const getDietasEspeciaisVigentesDeUmAluno = async codigo_eol_aluno => {
-  const url = `${URL_DIETA_ESPECIAL}/${codigo_eol_aluno}`;
+  const url = `${URL_DIETA_ESPECIAL}/solicitacoes-aluno/${codigo_eol_aluno}`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
