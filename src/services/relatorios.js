@@ -11,7 +11,7 @@ export const getRelatorioAlteracaoCardapio = uuid => {
 };
 
 export const getRelatorioDietaEspecial = uuid => {
-  const url = `${API_URL}/dietas-especiais/${uuid}/relatorio/`;
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/relatorio/`;
   return url;
 };
 
