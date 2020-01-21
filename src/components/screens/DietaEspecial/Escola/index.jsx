@@ -5,7 +5,10 @@ import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
 import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
-import { criaDietaEspecial } from "../../../../services/dietaEspecial";
+import {
+  criaDietaEspecial,
+  getDietasEspeciaisVigentesDeUmAluno
+} from "../../../../services/dietaEspecial";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
@@ -24,6 +27,7 @@ import {
   ESCOLA,
   RELATORIO
 } from "../../../../configs/constants";
+import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
 
 const minLength6 = minLength(6);
 
@@ -36,7 +40,8 @@ class solicitacaoDietaEspecial extends Component {
       quantidadeAlunos: "...",
       files: null,
       submitted: false,
-      resumo: null
+      resumo: null,
+      solicitacoesVigentes: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -76,6 +81,9 @@ class solicitacaoDietaEspecial extends Component {
         "aluno_json.data_nascimento",
         moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
       );
+      getDietasEspeciaisVigentesDeUmAluno(event.target.value).then(response => {
+        this.setState({ solicitacoesVigentes: response.data.results });
+      });
     }
   };
 
@@ -117,7 +125,12 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const { quantidadeAlunos, resumo, submitted } = this.state;
+    const {
+      quantidadeAlunos,
+      resumo,
+      submitted,
+      solicitacoesVigentes
+    } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -165,6 +178,7 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </FormSection>
+          <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
           <section className="row">
             <div className="col-7">
               <Field
