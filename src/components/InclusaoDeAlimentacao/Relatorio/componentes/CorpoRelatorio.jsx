@@ -11,6 +11,7 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 import { formatarDiasMotivos, MOTIVOS } from "./helper";
+import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
@@ -87,13 +88,19 @@ export class CorpoRelatorio extends Component {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right"
-            />
+            <a
+              href={getRelatorioInclusaoAlimentacao(
+                inclusaoDeAlimentacao.uuid,
+                ehInclusaoContinua
+              )}
+            >
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+                className="float-right"
+              />
+            </a>
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">

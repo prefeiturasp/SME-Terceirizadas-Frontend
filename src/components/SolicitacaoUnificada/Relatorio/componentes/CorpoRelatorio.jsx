@@ -8,7 +8,7 @@ import {
 import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
 import { corDaMensagem } from "../../../../helpers/utilities";
-import { getDetalheKitLancheUnificado } from "../../../../services/relatorios";
+import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
@@ -22,7 +22,7 @@ export const CorpoRelatorio = props => {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            <a href={getDetalheKitLancheUnificado(solicitacaoUnificada.uuid)}>
+            <a href={getRelatorioKitLancheUnificado(solicitacaoUnificada.uuid)}>
               <Botao
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.BLUE}
