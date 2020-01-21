@@ -64,16 +64,16 @@ class solicitacaoDietaEspecial extends Component {
 
   onEolBlur = async event => {
     const { change } = this.props;
-    change("aluno.nome", "");
-    change("aluno.data_nascimento", "");
+    change("aluno_json.nome", "");
+    change("aluno_json.data_nascimento", "");
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
     if (!resposta) return;
     if (resposta.status === 400) {
       toastError("Aluno não encontrado no EOL.");
     } else {
-      change("aluno.nome", resposta.detail.nm_aluno);
+      change("aluno_json.nome", resposta.detail.nm_aluno);
       change(
-        "aluno.data_nascimento",
+        "aluno_json.data_nascimento",
         moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
       );
     }
@@ -126,7 +126,7 @@ class solicitacaoDietaEspecial extends Component {
           <span className="card-title font-weight-bold cinza-escuro">
             Descrição da Solicitação
           </span>
-          <FormSection name="aluno">
+          <FormSection name="aluno_json">
             <div className="grid-container">
               <div className="ajuste-fonte">
                 <span>* </span>Cód. EOL do Aluno
