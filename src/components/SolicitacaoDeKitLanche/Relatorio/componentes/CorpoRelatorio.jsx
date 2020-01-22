@@ -8,6 +8,7 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoKitLanche, prazoDoPedidoMensagem } = props;
@@ -20,12 +21,14 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right"
-          />
+          <a href={getDetalheKitLancheAvulso(solicitacaoKitLanche.uuid)}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />
+          </a>
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">

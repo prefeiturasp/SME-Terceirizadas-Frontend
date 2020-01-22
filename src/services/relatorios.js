@@ -22,3 +22,8 @@ export const getRelatorioInclusaoAlimentacao = (uuid, ehInclusaoContinua) => {
   }
   return url;
 };
+
+export const getDetalheKitLancheAvulso = uuid => {
+  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/relatorio/`;
+  return url;
+};
