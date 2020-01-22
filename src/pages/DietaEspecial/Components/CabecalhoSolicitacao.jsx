@@ -4,6 +4,13 @@ import { TIPO_PERFIL } from "../../../constants";
 
 import { FluxoDeStatus } from "../../../components/Shareable/FluxoDeStatus";
 import LinhaSolicitacao from "./LinhaSolicitacao";
+import Botao from "../../../components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../components/Shareable/Botao/constants";
+import { getRelatorioDietaEspecial } from "../../../services/relatorios";
 
 export default class CabecalhoSolicitacao extends Component {
   render() {
@@ -11,9 +18,9 @@ export default class CabecalhoSolicitacao extends Component {
     const { escola } = dietaEspecial;
     return (
       <div>
-        <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
-          dietaEspecial.id_externo
-        }`}</span>
+        <span className="page-title">
+          {`Dieta Especial - Solicitação # ${dietaEspecial.id_externo}`}
+        </span>
         <div className="row">
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
@@ -23,7 +30,7 @@ export default class CabecalhoSolicitacao extends Component {
               <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
             </span>
           </div>
-          <div className="offset-2 col-8">
+          <div className="col-8">
             <div className="beside-text mt-auto">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />
@@ -32,6 +39,17 @@ export default class CabecalhoSolicitacao extends Component {
             <br />
             <span className="dre-name">{escola && escola.nome}</span>
           </div>
+          <a
+            className="col-2"
+            href={getRelatorioDietaEspecial(dietaEspecial.uuid)}
+          >
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />
+          </a>
         </div>
         <div className="row">
           <div className="col-2 report-label-value">
