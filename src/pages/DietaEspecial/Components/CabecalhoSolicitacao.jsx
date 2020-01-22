@@ -78,15 +78,15 @@ export default class CabecalhoSolicitacao extends Component {
         <LinhaSolicitacao titulo="Descrição da Solicitação">
           <div className="col-3 report-label-value">
             <p>Cód. EOL do Aluno</p>
-            <p className="value">{dietaEspecial.codigo_eol_aluno}</p>
+            <p className="value">{dietaEspecial.aluno.codigo_eol}</p>
           </div>
           <div className="col-5 report-label-value">
             <p>Nome Completo do Aluno</p>
-            <p className="value">{dietaEspecial.nome_completo_aluno}</p>
+            <p className="value">{dietaEspecial.aluno.nome}</p>
           </div>
           <div className="col-4 report-label-value">
             <p>Data de Nascimento</p>
-            <p className="value">{dietaEspecial.data_nascimento_aluno}</p>
+            <p className="value">{dietaEspecial.aluno.data_nascimento}</p>
           </div>
         </LinhaSolicitacao>
         <div className="row">
