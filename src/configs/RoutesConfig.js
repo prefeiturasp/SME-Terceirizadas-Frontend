@@ -1,5 +1,5 @@
 import {
-  painelHome,
+  painelGestaoAlimentacao,
   permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
@@ -68,6 +68,7 @@ import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceiri
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 import * as constants from "./constants";
 
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
@@ -80,7 +81,12 @@ import DietaRelatorioRouter from "../pages/DietaEspecial/RelatorioRouter.jsx";
 const routesConfig = [
   {
     path: "/",
-    component: painelHome(),
+    component: PainelInicialPage,
+    exact: true
+  },
+  {
+    path: "/painel-gestao-alimentacao",
+    component: painelGestaoAlimentacao(),
     exact: true
   },
   {

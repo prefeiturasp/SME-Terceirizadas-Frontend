@@ -43,3 +43,29 @@ div.datepicker
   input {
   background-color: #dadada;
 }
+
+div.current-diets {
+  font-size: 14px;
+  .no-diets {
+    color: $red;
+  }
+  p.title {
+    font-style: normal;
+    color: $gray;
+  }
+  div.school-container {
+    hr {
+      margin: 0;
+    }
+    div.title {
+      color: $blackSubtle;
+      font-weight: bold;
+    }
+    div.container {
+      padding-left: 1em;
+      table.table-periods {
+        color: $gray;
+      }
+    }
+  }
+}
