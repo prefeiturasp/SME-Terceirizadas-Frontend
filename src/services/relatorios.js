@@ -27,3 +27,8 @@ export const getDetalheKitLancheAvulso = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/relatorio/`;
   return url;
 };
+
+export const getDetalheInversaoCardapio = uuid => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
+  return url;
+};

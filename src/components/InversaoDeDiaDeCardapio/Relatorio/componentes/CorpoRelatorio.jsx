@@ -8,6 +8,8 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 
+import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
+
 export const CorpoRelatorio = props => {
   const {
     inversaoDiaCardapio,
@@ -23,13 +25,15 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            titulo="imprimir"
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right"
-          />
+          <a href={getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              titulo="imprimir"
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />
+          </a>
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">
