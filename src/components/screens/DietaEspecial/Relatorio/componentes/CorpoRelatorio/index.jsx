@@ -113,15 +113,17 @@ export const CorpoRelatorio = props => {
         </div>{" "}
         <div className="col-4 report-label-value">
           <p>Anexos</p>
-          {dietaEspecial.anexos.map((anexo, key) => {
-            return (
-              <div key={key}>
-                <a href={anexo.arquivo} className="value-important link">
-                  {`Anexo ${key + 1}`}
-                </a>
-              </div>
-            );
-          })}
+          {dietaEspecial.anexos
+            .filter(anexo => anexo.eh_laudo_medico)
+            .map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a href={anexo.arquivo} className="value-important link">
+                    {`Anexo ${key + 1}`}
+                  </a>
+                </div>
+              );
+            })}
         </div>
       </section>
       <div className="report-label-value">
@@ -133,6 +135,48 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
+      {dietaEspecial.alergias_intolerancias && (
+        <div className="report-label-value">
+          <p>Relação por Diagnóstico</p>
+          {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
+            return (
+              <div className="value" key={key}>
+                {alergia.descricao}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {dietaEspecial.anexos.filter(anexo => !anexo.eh_laudo_medico).length >
+        0 && (
+        <div className="pb-3 report-label-value">
+          <p>Protocolo da Dieta Especial</p>
+          {dietaEspecial.anexos
+            .filter(anexo => !anexo.eh_laudo_medico)
+            .map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={anexo.arquivo}
+                    className="link"
+                  >
+                    {anexo.nome}
+                  </a>
+                </div>
+              );
+            })}
+        </div>
+      )}
+      {dietaEspecial.registro_funcional_nutricionista && (
+        <div className="report-label-value">
+          <p>Identificação do Nutricionista</p>
+          <div className="value">
+            {dietaEspecial.registro_funcional_nutricionista}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

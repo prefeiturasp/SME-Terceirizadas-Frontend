@@ -115,6 +115,12 @@ class solicitacaoDietaEspecial extends Component {
             response.data["registro_funcional_pescritor"][0]
           }`
         );
+      } else if (response.data["nome_completo_pescritor"]) {
+        toastError(
+          `Nome do Prescritor da receita: ${
+            response.data["nome_completo_pescritor"][0]
+          }`
+        );
       } else if (response.data["anexos"][0]["nome"][0]) {
         const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
         toastError(erroExtensaoInvalida);

@@ -9,7 +9,8 @@ import {
   relatoriosInversaoDiaCardapio,
   dashBoardDietaEspecial,
   StatusSolicitacoesDietaEspecial,
-  relatoriosDietaEspecial
+  relatoriosDietaEspecial,
+  painelInicial
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -68,7 +69,6 @@ import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceiri
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 import * as constants from "./constants";
 
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
@@ -79,7 +79,7 @@ import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerP
 const routesConfig = [
   {
     path: "/",
-    component: PainelInicialPage,
+    component: painelInicial(),
     exact: true
   },
   {

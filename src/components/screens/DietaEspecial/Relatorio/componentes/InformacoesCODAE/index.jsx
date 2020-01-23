@@ -40,7 +40,6 @@ class InformacoesCODAE extends Component {
     const { diagnosticos, classificacoesDieta } = this.state;
     return (
       <div className="information-codae">
-        <div className="title">Relação por Diagnóstico</div>
         {diagnosticos && (
           <Field
             component={DiagnosticosField}
