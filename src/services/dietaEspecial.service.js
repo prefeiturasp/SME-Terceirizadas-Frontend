@@ -106,22 +106,13 @@ export const CODAEAutorizaDietaEspecial = async ({
     });
 };
 
-export const CODAENegaDietaEspecial = async ({
-  uuid,
-  motivo,
-  justificativa,
-  identificacaoNutricionista
-}) => {
+export const CODAENegaDietaEspecial = async (uuid, payload) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
-    body: JSON.stringify({
-      motivo_negacao: motivo,
-      justificativa_negacao: justificativa,
-      registro_funcional_nutricionista: identificacaoNutricionista
-    }),
+    body: JSON.stringify(payload),
     headers: authToken
   })
     .then(res => {

@@ -5,7 +5,7 @@ import Page from "../../components/Shareable/Page/Page";
 import { ESCOLA, CODAE } from "../../configs/constants";
 import { HOME } from "../Escola/constants";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
-import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import ModalNegarSolicitacao from "../../components/screens/DietaEspecial/Relatorio/componentes/ModalNegaDietaEspecial";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import {
   CODAENegaDietaEspecial,
@@ -50,7 +50,7 @@ export const RelatorioCODAE = () => (
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
-    toastAprovaMensagem={"Dieta Especial autorizada com sucesso!"}
+    toastAprovaMensagem={"Autorização de dieta especial realizada com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao autorizar a Dieta Especial"}
     endpointNaoAprovaSolicitacao={CODAENegaDietaEspecial}
     endpointAprovaSolicitacao={CODAEAutorizaDietaEspecial}
