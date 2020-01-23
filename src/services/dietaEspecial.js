@@ -1,6 +1,8 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
+import getAxios from "./_base";
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
@@ -39,4 +41,22 @@ export const getDietaEspecial = async uuid => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getDietasAtivasInativasPorAluno = async (params = {}) => {
+  let { dre, escola, codeol, nomealuno } = params;
+  if (dre && escola) {
+    throw new Error("Pesquisa permitida apenas por DRE ou Escola, não ambos");
+  }
+  if (codeol && nomealuno) {
+    throw new Error(
+      "Pesquisa permitida apenas por Cód. EOL ou Nome do Aluno, não ambos"
+    );
+  }
+  const axios = getAxios();
+  const response = await axios.get(
+    "solicitacoes-dieta-especial-ativas-inativas/",
+    { params }
+  );
+  return response;
 };

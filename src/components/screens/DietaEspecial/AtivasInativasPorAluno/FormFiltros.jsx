@@ -60,14 +60,14 @@ class Filtros extends Component {
       loading,
       loadingNomeAluno
     } = this.state;
-    const { change, dre } = this.props;
+    const { change, dre, handleSubmit } = this.props;
     const escolasFiltrado = dre
       ? escolas.filter(e => e.uuid === "" || e.diretoria_regional.uuid === dre)
       : escolas;
     return (
       <div className="card mt-3">
         <div className="card-body">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-5">
                 <label htmlFor="dre">Diretoria Regional de Educação</label>
