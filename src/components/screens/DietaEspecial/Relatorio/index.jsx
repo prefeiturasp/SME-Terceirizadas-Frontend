@@ -103,7 +103,10 @@ class Relatorio extends Component {
       ModalNaoAprova,
       endpointNaoAprovaSolicitacao,
       justificativa,
-      motivo
+      motivo,
+      classificacaoDieta,
+      protocolos,
+      diagnosticosSelecionados
     } = this.props;
     const { dietaEspecial, showNaoAprovaModal, uuid } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -155,6 +158,13 @@ class Relatorio extends Component {
                         )}
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
+                        disabled={
+                          usuarioCODAEDietaEspecial()
+                            ? !diagnosticosSelecionados ||
+                              !protocolos ||
+                              !classificacaoDieta
+                            : false
+                        }
                       />
                     )}
                   </div>
@@ -180,7 +190,10 @@ const selector = formValueSelector(formName);
 const mapStateToProps = state => {
   return {
     justificativa: selector(state, "justificativa_negacao"),
-    motivo: selector(state, "motivo_negacao")
+    motivo: selector(state, "motivo_negacao"),
+    diagnosticosSelecionados: selector(state, "diagnosticosSelecionados"),
+    protocolos: selector(state, "protocolos"),
+    classificacaoDieta: selector(state, "classificacaoDieta")
   };
 };
 

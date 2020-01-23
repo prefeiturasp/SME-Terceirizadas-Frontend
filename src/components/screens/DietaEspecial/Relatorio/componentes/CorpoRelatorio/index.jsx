@@ -1,6 +1,13 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../../../Shareable/FluxoDeStatus";
 import { TIPO_FLUXO } from "../../../../../Shareable/FluxoDeStatus/constants";
+import { getRelatorioDietaEspecial } from "../../../../../../services/relatorios";
+import Botao from "../../../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../../../Shareable/Botao/constants";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial } = props;
@@ -16,12 +23,21 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">ID DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="ml-5 col-8">
+        <div className="ml-5 col-7">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
             {dietaEspecial.escola && dietaEspecial.escola.nome}
           </span>
+        </div>
+        <div className="col-2 float-right">
+          <a href={getRelatorioDietaEspecial(dietaEspecial.uuid)}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+            />
+          </a>
         </div>
       </div>
       <div className="row">
@@ -50,6 +66,22 @@ export const CorpoRelatorio = props => {
               dietaEspecial.escola.tipo_gestao.nome}
           </p>
         </div>
+        {dietaEspecial.escola.contato && (
+          <div className="col-2 report-label-value">
+            <p>Telefone</p>
+            <p className="value-important">
+              {dietaEspecial.escola.contato.telefone}
+            </p>
+          </div>
+        )}
+        {dietaEspecial.escola.contato && (
+          <div className="col-4 report-label-value">
+            <p>E-mail</p>
+            <p className="value-important">
+              {dietaEspecial.escola.contato.email}
+            </p>
+          </div>
+        )}
       </div>
       <hr />
       {dietaEspecial.logs && (
