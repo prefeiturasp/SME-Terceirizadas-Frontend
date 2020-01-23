@@ -2,9 +2,12 @@ import "./style.scss";
 
 import React, { Component } from "react";
 
-import Select from "../../Shareable/Select";
-import Botao from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_ICON } from "../../Shareable/Botao/constants";
+import Select from "../../../../../../../Shareable/Select";
+import Botao from "../../../../../../../Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../../../../../Shareable/Botao/constants";
 
 export default class Diagnosticos extends Component {
   render() {

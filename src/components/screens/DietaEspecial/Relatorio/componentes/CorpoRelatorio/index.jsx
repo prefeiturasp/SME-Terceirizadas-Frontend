@@ -1,6 +1,13 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../../../Shareable/FluxoDeStatus";
 import { TIPO_FLUXO } from "../../../../../Shareable/FluxoDeStatus/constants";
+import { getRelatorioDietaEspecial } from "../../../../../../services/relatorios";
+import Botao from "../../../../../Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../../../Shareable/Botao/constants";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial } = props;
@@ -16,12 +23,21 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">ID DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="ml-5 col-8">
+        <div className="ml-5 col-7">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
             {dietaEspecial.escola && dietaEspecial.escola.nome}
           </span>
+        </div>
+        <div className="col-2 float-right">
+          <a href={getRelatorioDietaEspecial(dietaEspecial.uuid)}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+            />
+          </a>
         </div>
       </div>
       <div className="row">
@@ -50,6 +66,22 @@ export const CorpoRelatorio = props => {
               dietaEspecial.escola.tipo_gestao.nome}
           </p>
         </div>
+        {dietaEspecial.escola.contato && (
+          <div className="col-2 report-label-value">
+            <p>Telefone</p>
+            <p className="value-important">
+              {dietaEspecial.escola.contato.telefone}
+            </p>
+          </div>
+        )}
+        {dietaEspecial.escola.contato && (
+          <div className="col-4 report-label-value">
+            <p>E-mail</p>
+            <p className="value-important">
+              {dietaEspecial.escola.contato.email}
+            </p>
+          </div>
+        )}
       </div>
       <hr />
       {dietaEspecial.logs && (
@@ -113,32 +145,70 @@ export const CorpoRelatorio = props => {
         </div>{" "}
         <div className="col-4 report-label-value">
           <p>Anexos</p>
-          {dietaEspecial.anexos.map((anexo, key) => {
+          {dietaEspecial.anexos
+            .filter(anexo => anexo.eh_laudo_medico)
+            .map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a href={anexo.arquivo} className="value-important link">
+                    {`Anexo ${key + 1}`}
+                  </a>
+                </div>
+              );
+            })}
+        </div>
+      </section>
+      <div className="report-label-value">
+        <p>Observações</p>
+        <p
+          className="value"
+          dangerouslySetInnerHTML={{
+            __html: dietaEspecial.observacoes
+          }}
+        />
+      </div>
+      {dietaEspecial.alergias_intolerancias && (
+        <div className="report-label-value">
+          <p>Relação por Diagnóstico</p>
+          {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
             return (
-              <div key={key}>
-                <a href={anexo.arquivo} className="value-important link">
-                  {`Anexo ${key + 1}`}
-                </a>
+              <div className="value" key={key}>
+                {alergia.descricao}
               </div>
             );
           })}
         </div>
-      </section>
-      <table className="table-periods">
-        <tr>
-          <th>Observações</th>
-        </tr>
-        <tr>
-          <td>
-            <p
-              className="value"
-              dangerouslySetInnerHTML={{
-                __html: dietaEspecial.observacoes
-              }}
-            />
-          </td>
-        </tr>
-      </table>
+      )}
+      {dietaEspecial.anexos.filter(anexo => !anexo.eh_laudo_medico).length >
+        0 && (
+        <div className="pb-3 report-label-value">
+          <p>Protocolo da Dieta Especial</p>
+          {dietaEspecial.anexos
+            .filter(anexo => !anexo.eh_laudo_medico)
+            .map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href={anexo.arquivo}
+                    className="link"
+                  >
+                    {anexo.nome}
+                  </a>
+                </div>
+              );
+            })}
+        </div>
+      )}
+      {dietaEspecial.registro_funcional_nutricionista && (
+        <div className="report-label-value">
+          <p>Identificação do Nutricionista</p>
+          <div className="value">
+            {dietaEspecial.registro_funcional_nutricionista}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

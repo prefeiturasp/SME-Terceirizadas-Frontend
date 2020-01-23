@@ -8,7 +8,7 @@ import { dateDelta } from "../../../../helpers/utilities";
 import {
   criaDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno
-} from "../../../../services/dietaEspecial";
+} from "../../../../services/dietaEspecial.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
@@ -115,6 +115,12 @@ class solicitacaoDietaEspecial extends Component {
             response.data["registro_funcional_pescritor"][0]
           }`
         );
+      } else if (response.data["nome_completo_pescritor"]) {
+        toastError(
+          `Nome do Prescritor da receita: ${
+            response.data["nome_completo_pescritor"][0]
+          }`
+        );
       } else if (response.data["anexos"][0]["nome"][0]) {
         const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
         toastError(erroExtensaoInvalida);
@@ -132,12 +138,7 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const {
-      quantidadeAlunos,
-      resumo,
-      submitted,
-      solicitacoesVigentes
-    } = this.state;
+    const { quantidadeAlunos, submitted, solicitacoesVigentes } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -250,11 +251,6 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </section>
-          {resumo && (
-            <a href={resumo}>
-              Clique aqui para visualizar o resumo da solicitação
-            </a>
-          )}
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"
