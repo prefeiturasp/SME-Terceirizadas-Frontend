@@ -16,11 +16,11 @@ import {
 import VisualizarPage from "./Relatorio";
 import EditarPage from "./EditarPage";
 
+import { getSolicitacaoDietaEspecial } from "../../services/painelNutricionista.service";
 import {
-  autorizaSolicitacaoDietaEspecial,
-  getSolicitacaoDietaEspecial,
-  terceirizadaTomarCiencia
-} from "../../services/painelNutricionista.service";
+  terceirizadaTomaCienciaDietaEspecial,
+  CODAEAutorizaDietaEspecial
+} from "../../services/dietaEspecial.service";
 
 const BotaoCiencia = props => (
   <div className="row">
@@ -67,7 +67,7 @@ export default class RelatorioRouter extends Component {
       protocolos
     } = formData;
     let diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
-    const resposta = await autorizaSolicitacaoDietaEspecial({
+    const resposta = await CODAEAutorizaDietaEspecial({
       uuid,
       classificacaoDieta,
       diagnosticosSelecionados: diagnosticos,
@@ -94,7 +94,7 @@ export default class RelatorioRouter extends Component {
     this.setState({
       fetching: true
     });
-    const resposta = await terceirizadaTomarCiencia(uuid);
+    const resposta = await terceirizadaTomaCienciaDietaEspecial(uuid);
     if (resposta.status === 200) {
       toastSuccess(resposta.data.mensagem);
       this.updateDietaEspecial(uuid);

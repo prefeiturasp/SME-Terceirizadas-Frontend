@@ -10,7 +10,8 @@ import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
-import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DietaEspecialPage";
+import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
+import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
 import { TIPO_PERFIL } from "../constants";
@@ -118,6 +119,19 @@ export const relatoriosSolicitacaoKitLanche = () => {
       return RelatoriosSolicitacaoKitLanche.RelatorioTerceirizada;
     default:
       return RelatoriosSolicitacaoKitLanche.RelatorioEscola;
+  }
+};
+
+export const relatoriosDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosDietaEspecial.RelatorioEscola;
+    case TIPO_PERFIL.DIETA_ESPECIAL:
+      return RelatoriosDietaEspecial.RelatorioCODAE;
+    default:
+      return RelatoriosDietaEspecial.RelatorioEscola;
   }
 };
 

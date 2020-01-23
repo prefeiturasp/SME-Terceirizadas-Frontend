@@ -124,21 +124,15 @@ export const CorpoRelatorio = props => {
           })}
         </div>
       </section>
-      <table className="table-periods">
-        <tr>
-          <th>Observações</th>
-        </tr>
-        <tr>
-          <td>
-            <p
-              className="value"
-              dangerouslySetInnerHTML={{
-                __html: dietaEspecial.observacoes
-              }}
-            />
-          </td>
-        </tr>
-      </table>
+      <div className="report-label-value">
+        <p>Observações</p>
+        <p
+          className="value"
+          dangerouslySetInnerHTML={{
+            __html: dietaEspecial.observacoes
+          }}
+        />
+      </div>
     </div>
   );
 };

@@ -9,8 +9,7 @@ import CabecalhoSolicitacao from "./Components/CabecalhoSolicitacao";
 import LinhaSolicitacao from "./Components/LinhaSolicitacao";
 
 import "./style.scss";
-
-import { getClassificacoesDietaEspecial } from "../../services/painelNutricionista.service";
+import { getClassificacoesDietaEspecial } from "../../services/dietaEspecial.service";
 
 const CamposSolicitacaoNegada = ({ dietaEspecial }) => (
   <div>

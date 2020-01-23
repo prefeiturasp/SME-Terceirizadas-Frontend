@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { reduxForm, Field } from "redux-form";
 
-import DiagnosticosField from "../../components/DietaEspecial/Diagnosticos/Field";
-import ProtocolosField from "../../components/DietaEspecial/ProtocolosField";
+import DiagnosticosField from "../../components/screens/DietaEspecial/Relatorio/componentes/InformacoesCODAE/componentes/Diagnosticos/Field";
+import ProtocolosField from "../../components/screens/DietaEspecial/Relatorio/componentes/InformacoesCODAE/componentes/ProtocolosField";
 import { obtemIdentificacaoNutricionista } from "../../helpers/utilities";
 
 import Botao from "../../components/Shareable/Botao";
@@ -25,10 +25,10 @@ import ModalNegaSolicitacao from "./ModalNegaSolicitacao";
 import "./style.scss";
 
 import {
-  autorizaSolicitacaoDietaEspecial,
+  CODAEAutorizaDietaEspecial,
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial
-} from "../../services/painelNutricionista.service";
+} from "../../services/dietaEspecial.service";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -170,7 +170,7 @@ export default class EditarPage extends Component {
       protocolos
     } = formData;
     let diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
-    const resposta = await autorizaSolicitacaoDietaEspecial({
+    const resposta = await CODAEAutorizaDietaEspecial({
       uuid,
       classificacaoDieta,
       diagnosticosSelecionados: diagnosticos,

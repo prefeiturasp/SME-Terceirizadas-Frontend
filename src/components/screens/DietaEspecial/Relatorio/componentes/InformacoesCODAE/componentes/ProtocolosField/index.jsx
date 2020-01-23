@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import { InputErroMensagem } from "../../Shareable/Input/InputErroMensagem";
-import InputText from "../../Shareable/Input/InputText";
-import InputFileManaged from "../../Shareable/Input/InputFile/Managed";
+import { InputErroMensagem } from "../../../../../../../Shareable/Input/InputErroMensagem";
+import InputText from "../../../../../../../Shareable/Input/InputText";
+import InputFileManaged from "../../../../../../../Shareable/Input/InputFile/Managed";
 
 export default class ProtocolosField extends Component {
   constructor(props) {
@@ -46,7 +46,7 @@ export default class ProtocolosField extends Component {
               }
             }}
           />
-          <div className="alert alert-importante" role="alert">
+          <div className="mt-2 card-warning" role="alert">
             <b>IMPORTANTE:</b> Envie um arquivo formato .doc, .docx, .pdf, .png,
             .jpg ou .jpeg, com até 2Mb.
           </div>

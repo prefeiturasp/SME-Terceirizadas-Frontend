@@ -16,8 +16,8 @@ import { TextAreaWYSIWYG } from "../../components/Shareable/TextArea/TextAreaWYS
 
 import {
   getMotivosNegacaoDietaEspecial,
-  negaSolicitacaoDietaEspecial
 } from "../../services/painelNutricionista.service";
+import { CODAENegaDietaEspecial } from "../../services/dietaEspecial.service";
 
 class ModalNegaSolicitacaoForm extends Component {
   constructor(props) {
@@ -135,7 +135,7 @@ export default class ModalNegaSolicitacao extends Component {
   submit = async formData => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const resposta = await negaSolicitacaoDietaEspecial({
+    const resposta = await CODAENegaDietaEspecial({
       uuid,
       identificacaoNutricionista: obtemIdentificacaoNutricionista(),
       ...formData
