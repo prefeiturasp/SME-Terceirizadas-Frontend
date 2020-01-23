@@ -126,10 +126,11 @@ export const relatoriosDietaEspecial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-    case TIPO_PERFIL.TERCEIRIZADA:
       return RelatoriosDietaEspecial.RelatorioEscola;
     case TIPO_PERFIL.DIETA_ESPECIAL:
       return RelatoriosDietaEspecial.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosDietaEspecial.RelatorioTerceirizada;
     default:
       return RelatoriosDietaEspecial.RelatorioEscola;
   }

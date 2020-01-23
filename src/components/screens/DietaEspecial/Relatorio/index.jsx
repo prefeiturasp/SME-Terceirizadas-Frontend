@@ -66,28 +66,33 @@ class Relatorio extends Component {
       identificacaoNutricionista,
       protocolos
     } = values;
-    let diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
-    this.props
-      .endpointAprovaSolicitacao({
+    let diagnosticos = null;
+    let payload = null;
+    if (diagnosticosSelecionados) {
+      diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
+      payload = {
         uuid,
         classificacaoDieta,
         diagnosticosSelecionados: diagnosticos,
         identificacaoNutricionista,
         protocolos
-      })
-      .then(
-        response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess(toastAprovaMensagem);
-            this.loadSolicitacao(uuid);
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(toastAprovaMensagemErro);
-          }
-        },
-        function() {
+      };
+    } else {
+      payload = uuid;
+    }
+    this.props.endpointAprovaSolicitacao(payload).then(
+      response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess(toastAprovaMensagem);
+          this.loadSolicitacao(uuid);
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
-      );
+      },
+      function() {
+        toastError(toastAprovaMensagemErro);
+      }
+    );
   }
 
   render() {

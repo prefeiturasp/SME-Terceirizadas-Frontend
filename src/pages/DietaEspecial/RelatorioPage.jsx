@@ -2,14 +2,15 @@ import React from "react";
 import Relatorio from "../../components/screens/DietaEspecial/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
-import { ESCOLA, CODAE } from "../../configs/constants";
+import { ESCOLA, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import { HOME } from "../Escola/constants";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import ModalNegarSolicitacao from "../../components/screens/DietaEspecial/Relatorio/componentes/ModalNegaDietaEspecial";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import {
   CODAENegaDietaEspecial,
-  CODAEAutorizaDietaEspecial
+  CODAEAutorizaDietaEspecial,
+  terceirizadaTomaCienciaDietaEspecial
 } from "../../services/dietaEspecial.service";
 
 class RelatorioBase extends React.Component {
@@ -56,5 +57,16 @@ export const RelatorioCODAE = () => (
     endpointAprovaSolicitacao={CODAEAutorizaDietaEspecial}
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
+  />
+);
+
+// Terceirizada
+export const RelatorioTerceirizada = () => (
+  <RelatorioBase
+    visao={TERCEIRIZADA}
+    toastAprovaMensagem={"Ciência da Dieta Especial enviado com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao tomar ciência da Dieta Especial"}
+    endpointAprovaSolicitacao={terceirizadaTomaCienciaDietaEspecial}
+    textoBotaoAprova="Ciente"
   />
 );
