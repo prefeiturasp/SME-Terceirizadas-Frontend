@@ -32,3 +32,8 @@ export const getDetalheInversaoCardapio = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
   return url;
 };
+
+export const getDetalheSuspensaoAlimentacao = uuid => {
+  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+  return url;
+};
