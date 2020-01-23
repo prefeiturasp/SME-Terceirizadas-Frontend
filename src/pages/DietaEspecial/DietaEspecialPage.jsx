@@ -4,6 +4,7 @@ import DashBoardDietaEspecial from "../../components/screens/DashBoardDietaEspec
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
+import XXX from "../../components/screens/DietaEspecial/Aluno";
 
 import {
   getDietaEspecialPendenteAutorizacaoEscola,
@@ -75,4 +76,13 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
   />
+);
+
+// Detalhes do aluno
+
+export const DietaEspecialAluno = () => (
+  <Page>
+    <Breadcrumb home={HOME} />
+    <XXX />
+  </Page>
 );

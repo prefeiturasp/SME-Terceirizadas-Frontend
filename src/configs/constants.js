@@ -11,6 +11,7 @@ export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
 export const DRE = "dre";
 export const ESCOLA = "escola";
+export const ALUNO = "aluno";
 
 export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";

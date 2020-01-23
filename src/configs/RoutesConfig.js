@@ -33,6 +33,7 @@ import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCar
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
 
+import { DietaEspecialAluno } from "../pages/DietaEspecial/DietaEspecialPage";
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesAutorizadasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
@@ -79,6 +80,11 @@ import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerP
 import DietaRelatorioRouter from "../pages/DietaEspecial/RelatorioRouter.jsx";
 
 const routesConfig = [
+  {
+    path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
+    component: DietaEspecialAluno,
+    exact: false
+  },
   {
     path: "/",
     component: PainelInicialPage,

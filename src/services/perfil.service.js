@@ -156,3 +156,22 @@ export const obtemDadosAlunoPeloEOL = async codEOL => {
     console.log(error);
   }
 };
+
+export const dadosDoAluno = codigoEol => {
+  const url = `${API_URL}/alunos/${codigoEol}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
