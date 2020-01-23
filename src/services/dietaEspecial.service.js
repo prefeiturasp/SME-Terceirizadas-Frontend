@@ -26,7 +26,6 @@ const retornoBase = async url => {
   }
 };
 
-
 export const criaDietaEspecial = async payload => {
   const url = `${URL_DIETA_ESPECIAL}/`;
   const OBJ_REQUEST = {

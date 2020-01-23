@@ -14,9 +14,7 @@ import {
 } from "../../components/Shareable/Toast/dialogs";
 import { TextAreaWYSIWYG } from "../../components/Shareable/TextArea/TextAreaWYSIWYG";
 
-import {
-  getMotivosNegacaoDietaEspecial,
-} from "../../services/painelNutricionista.service";
+import { getMotivosNegacaoDietaEspecial } from "../../services/painelNutricionista.service";
 import { CODAENegaDietaEspecial } from "../../services/dietaEspecial.service";
 
 class ModalNegaSolicitacaoForm extends Component {
