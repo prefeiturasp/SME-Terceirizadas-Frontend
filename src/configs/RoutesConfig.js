@@ -78,6 +78,7 @@ import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCarda
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
 
 import DietaRelatorioRouter from "../pages/DietaEspecial/RelatorioRouter.jsx";
+import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 
 const routesConfig = [
   {
@@ -394,6 +395,11 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
     component: DietaRelatorioRouter,
+    exact: false
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/ativas-inativas`,
+    component: RelatorioAlunosDietasAtivasInativasPage,
     exact: false
   },
   {
