@@ -142,7 +142,7 @@ export const confirmarEmail = (uuid, confirmationKey) => {
 };
 
 export const obtemDadosAlunoPeloEOL = async codEOL => {
-  const url = `${API_URL}/dados-alunos-eol/${codEOL}`;
+  const url = `${API_URL}/dados-alunos-eol/${codEOL}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

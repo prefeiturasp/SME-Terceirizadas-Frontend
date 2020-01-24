@@ -40,111 +40,12 @@ export const getSolicitacoesNegadasNutricionista = async () => {
   return retornoBase(url);
 };
 
-export const getAlergiasIntolerancias = async () => {
-  const url = `${API_URL}/alergias-intolerancias`;
-  const response = await retornoBase(url);
-  return {
-    status: response.status,
-    results: response.results.map(r => {
-      return {
-        uuid: r.id.toString(),
-        nome: r.descricao
-      };
-    })
-  };
-};
-
 export const getTiposDietaEspecial = async () => {
   const url = `${API_URL}/tipos-dieta-especial`;
-  return retornoBase(url);
-};
-
-export const getClassificacoesDietaEspecial = async () => {
-  const url = `${API_URL}/classificacoes-dieta`;
   return retornoBase(url);
 };
 
 export const getMotivosNegacaoDietaEspecial = async () => {
   const url = `${API_URL}/motivos-negacao`;
   return retornoBase(url);
-};
-
-export const autorizaSolicitacaoDietaEspecial = async ({
-  uuid,
-  classificacaoDieta,
-  diagnosticosSelecionados,
-  identificacaoNutricionista,
-  protocolos
-}) => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/autorizar/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify({
-      classificacao: classificacaoDieta,
-      alergias_intolerancias: diagnosticosSelecionados,
-      registro_funcional_nutricionista: identificacaoNutricionista,
-      protocolos
-    }),
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
-};
-
-export const negaSolicitacaoDietaEspecial = async ({
-  uuid,
-  motivo,
-  justificativa,
-  identificacaoNutricionista
-}) => {
-  // TODO: Incluir identificação do nutricionista na negação da dieta
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify({
-      motivo_negacao: motivo,
-      justificativa_negacao: justificativa,
-      registro_funcional_nutricionista: identificacaoNutricionista
-    }),
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
-};
-
-export const terceirizadaTomarCiencia = async uuid => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
 };

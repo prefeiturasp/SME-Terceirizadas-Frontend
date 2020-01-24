@@ -3,18 +3,20 @@ import fetchMock from "fetch-mock";
 import { SOLICITACOES, SOLICITACOES_DIETA } from "../contants";
 import { API_URL } from "../../constants/config.constants";
 import {
-  autorizaSolicitacaoDietaEspecial,
-  getAlergiasIntolerancias,
-  getClassificacoesDietaEspecial,
   getMotivosNegacaoDietaEspecial,
   getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
   getSolicitacoesNegadasNutricionista,
-  getTiposDietaEspecial,
-  negaSolicitacaoDietaEspecial,
-  terceirizadaTomarCiencia
+  getTiposDietaEspecial
 } from "../painelNutricionista.service";
+import {
+  CODAENegaDietaEspecial,
+  CODAEAutorizaDietaEspecial,
+  terceirizadaTomaCienciaDietaEspecial,
+  getClassificacoesDietaEspecial,
+  getAlergiasIntolerancias
+} from "../dietaEspecial.service";
 
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.PENDENTES}/`, {
   results: ["resultados", "pendentes"]
@@ -112,8 +114,7 @@ describe("test painelNutricionista.service", () => {
     });
   });
   it("negaSolicitacaoDietaEspecial", async () => {
-    const response = await negaSolicitacaoDietaEspecial({
-      uuid: 1234,
+    const response = await CODAENegaDietaEspecial(1234, {
       motivo: 1,
       justificativa: "Justificando porque foi negado",
       identificacaoNutricionista:
@@ -125,7 +126,7 @@ describe("test painelNutricionista.service", () => {
     });
   });
   it("autorizaSolicitacaoDietaEspecial", async () => {
-    const response = await autorizaSolicitacaoDietaEspecial({
+    const response = await CODAEAutorizaDietaEspecial({
       uuid: 1234,
       classificacaoDieta: 1,
       diagnosticosSelecionados: [2, 3, 4],
@@ -139,7 +140,7 @@ describe("test painelNutricionista.service", () => {
     });
   });
   it("terceirizadaTomarCiencia", async () => {
-    const response = await terceirizadaTomarCiencia(1234);
+    const response = await terceirizadaTomaCienciaDietaEspecial(1234);
     expect(response).toEqual({
       data: { mensagem: "Ciente da solicitação de dieta especial" },
       status: 200

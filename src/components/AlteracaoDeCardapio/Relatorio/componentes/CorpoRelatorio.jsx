@@ -1,6 +1,13 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { corDaMensagem } from "../../../../helpers/utilities";
+import Botao from "../../../Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
+import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 
 export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem } = props;
@@ -13,6 +20,14 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
+          <a href={getRelatorioAlteracaoCardapio(alteracaoDeCardapio.uuid)}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+            />
+          </a>
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">

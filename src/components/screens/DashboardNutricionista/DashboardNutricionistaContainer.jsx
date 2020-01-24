@@ -24,7 +24,7 @@ export default class DashboardNutricionistaContainer extends Component {
     return solicitacoes.map(s => {
       const ultimoLog = s.logs[s.logs.length - 1];
       return {
-        text: truncarString(`${s.id_externo} - ${s.nome_completo_aluno}`, 48),
+        text: truncarString(`${s.id_externo} - ${s.aluno.nome}`, 48),
         date: ultimoLog.criado_em.slice(0, ultimoLog.criado_em.length - 3),
         link: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}/?uuid=${
           s.uuid

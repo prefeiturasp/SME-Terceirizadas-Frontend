@@ -3,7 +3,7 @@ import fetchMock from "fetch-mock";
 import { API_URL } from "../../constants/config.constants";
 import { obtemDadosAlunoPeloEOL } from "../perfil.service";
 
-fetchMock.get(`${API_URL}/dados-alunos-eol/123456`, {
+fetchMock.get(`${API_URL}/dados-alunos-eol/123456/`, {
   detail: { detalhes: "do aluno" }
 });
 

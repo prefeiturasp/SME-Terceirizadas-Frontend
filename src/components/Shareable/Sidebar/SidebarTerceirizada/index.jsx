@@ -52,7 +52,11 @@ export class SidebarTerceirizada extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink activeClassName="active" className="collapse-item" to="/">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/painel-gestao-alimentacao"
+            >
               Painel de Solicitações
             </NavLink>
             <NavLink
@@ -121,7 +125,7 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/`}
+              to={`/painel-dieta-especial`}
             >
               Consulta Dieta de Alunos
             </NavLink>
