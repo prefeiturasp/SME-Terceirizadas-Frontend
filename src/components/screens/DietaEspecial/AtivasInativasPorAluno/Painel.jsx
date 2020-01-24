@@ -3,8 +3,6 @@ import React, { Component } from "react";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
 
-import { Paginacao } from "../../../Shareable/Paginacao";
-
 import "./Painel.scss";
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
@@ -27,12 +25,8 @@ const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   </div>
 );
 
-const TabelaDietas = ({ dadosDietaPorAluno }) => {
-  if (
-    dadosDietaPorAluno === undefined ||
-    dadosDietaPorAluno.results === undefined ||
-    dadosDietaPorAluno.results.length === 0
-  ) {
+const TabelaDietas = ({ solicitacoes }) => {
+  if (solicitacoes === undefined || solicitacoes.length === 0) {
     return <div>Carregando...</div>;
   }
   return (
@@ -49,7 +43,7 @@ const TabelaDietas = ({ dadosDietaPorAluno }) => {
             </tr>
           </thead>
           <tbody>
-            {dadosDietaPorAluno.results.map((dados, key) => {
+            {solicitacoes.map((dados, key) => {
               return (
                 <tr key={key}>
                   <td>{dados.codigo_eol}</td>
@@ -66,21 +60,6 @@ const TabelaDietas = ({ dadosDietaPorAluno }) => {
                 </tr>
               );
             })}
-            {/* { dadosDietaPorAluno.map( dados => {
-              <tr>
-                <td>{ dados.codigo_eol }</td>
-                <td>{ dados.nome }</td>
-                <td>{ dados.ativas }</td>
-                <td>{ dados.inativas }</td>
-                <td>
-                  <Botao
-                    texto="Visualizar"
-                    icon={undefined}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                </td>
-              </tr>
-            })} */}
           </tbody>
         </table>
       </div>
@@ -90,18 +69,18 @@ const TabelaDietas = ({ dadosDietaPorAluno }) => {
 
 export default class Painel extends Component {
   render() {
-    const {
-      totalDietasAtivas,
-      totalDietasInativas,
-      dadosDietaPorAluno
-    } = this.props;
+    const { dadosDietaPorAluno } = this.props;
+    const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
+    if (solicitacoes.length === 0) {
+      return <div>Não há dados para os filtros utilizados</div>;
+    }
     return (
       <div className="card mt-3">
         <div className="card-body">
           <form>
             <CabecalhoPainel
-              totalDietasAtivas={totalDietasAtivas}
-              totalDietasInativas={totalDietasInativas}
+              totalDietasAtivas={total_ativas}
+              totalDietasInativas={total_inativas}
             />
             <hr />
             <div className="row">
@@ -110,8 +89,7 @@ export default class Painel extends Component {
                 <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
               </div>
             </div>
-            <TabelaDietas dadosDietaPorAluno={dadosDietaPorAluno} />
-            <Paginacao total={dadosDietaPorAluno.length} />
+            <TabelaDietas solicitacoes={solicitacoes} />
           </form>
         </div>
       </div>

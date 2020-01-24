@@ -59,6 +59,7 @@ class Filtros extends Component {
                   options={diretoriasRegionais}
                   disabled={loading}
                   onChange={() => change("escola", "")}
+                  naoDesabilitarPrimeiraOpcao
                 />
               </div>
               <div className="col-7">

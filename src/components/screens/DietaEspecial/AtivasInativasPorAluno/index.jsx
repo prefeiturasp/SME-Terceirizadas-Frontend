@@ -7,49 +7,81 @@ import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspec
 import { getDiretoriaregionalSimplissima } from "../../../../services/diretoriaRegional.service";
 import { getEscolasSimplissimaComDRE } from "../../../../services/escola.service";
 
+import { Paginacao } from "../../../Shareable/Paginacao";
+
 export default class AtivasInativasContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      totalDietasAtivas: 68,
-      totalDietasInativas: 25,
-      dadosDietaPorAluno: [],
+      dadosDietaPorAluno: undefined,
       diretoriasRegionais: [{ uuid: "", nome: "Carregando..." }],
       escolas: [{ uuid: "", nome: "Carregando..." }],
       loading: true,
       loadingNomeAluno: false
     };
     this.submit = this.submit.bind(this);
+    this.onPaginationChange = this.onPaginationChange.bind(this);
   }
 
   componentDidMount = async () => {
     const resposta = await getDiretoriaregionalSimplissima();
-    const diretoriasRegionais = [{ uuid: "", nome: "Selecione..." }].concat(
+    const diretoriasRegionais = [{ uuid: "", nome: "Todas" }].concat(
       resposta.data.results
     );
     const resposta2 = await getEscolasSimplissimaComDRE();
-    const escolas = [{ uuid: "", nome: "Selecione..." }].concat(
-      resposta2.results
-    );
+    const escolas = [{ uuid: "", nome: "Todas" }].concat(resposta2.results);
     const response3 = await getDietasAtivasInativasPorAluno();
     this.setState({
-      dadosDietaPorAluno: response3.data
+      dadosDietaPorAluno: response3.data,
+      diretoriasRegionais,
+      escolas,
+      loading: false
     });
-    this.setState({ diretoriasRegionais, escolas, loading: false });
+  };
+
+  atualizaDados = async params => {
+    this.setState({
+      loading: true
+    });
+    const response = await getDietasAtivasInativasPorAluno(params);
+    this.setState({
+      dadosDietaPorAluno: response.data,
+      loading: false
+    });
   };
 
   submit = async formValues => {
-    const response = await getDietasAtivasInativasPorAluno(formValues);
     this.setState({
-      dadosDietaPorAluno: response.data
+      formValues
+    });
+    this.atualizaDados(formValues);
+  };
+
+  onPaginationChange = async page => {
+    this.atualizaDados({
+      page,
+      ...this.state.formValues
     });
   };
 
   render() {
+    const { dadosDietaPorAluno, loading } = this.state;
+    const pagTotal = dadosDietaPorAluno ? dadosDietaPorAluno.count : 0;
     return (
       <div>
         <FormFiltros onSubmit={this.submit} {...this.state} />
-        <Painel {...this.state} />
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          <div>
+            <Painel
+              dadosDietaPorAluno={
+                dadosDietaPorAluno ? dadosDietaPorAluno.results : []
+              }
+            />
+            <Paginacao total={pagTotal} onChange={this.onPaginationChange} />
+          </div>
+        )}
       </div>
     );
   }
