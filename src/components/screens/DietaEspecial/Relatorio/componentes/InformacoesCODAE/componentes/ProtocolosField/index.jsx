@@ -48,7 +48,7 @@ export default class ProtocolosField extends Component {
           />
           <div className="mt-2 card-warning" role="alert">
             <b>IMPORTANTE:</b> Envie um arquivo formato .doc, .docx, .pdf, .png,
-            .jpg ou .jpeg, com até 2Mb.
+            .jpg ou .jpeg, com até 10Mb.
           </div>
           <InputErroMensagem meta={meta} />
         </div>

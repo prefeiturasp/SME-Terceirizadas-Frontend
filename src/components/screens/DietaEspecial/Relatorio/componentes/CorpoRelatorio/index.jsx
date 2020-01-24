@@ -179,6 +179,12 @@ export const CorpoRelatorio = props => {
           })}
         </div>
       )}
+      {dietaEspecial.classificacao && (
+        <div className="report-label-value">
+          <p>Classificação da Dieta</p>
+          <div className="value">{dietaEspecial.classificacao.nome}</div>
+        </div>
+      )}
       {dietaEspecial.anexos.filter(anexo => !anexo.eh_laudo_medico).length >
         0 && (
         <div className="pb-3 report-label-value">
