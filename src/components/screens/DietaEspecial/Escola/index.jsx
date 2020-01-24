@@ -198,6 +198,7 @@ class solicitacaoDietaEspecial extends Component {
                 placeholder="Insira o Nome do Prescritor"
                 className="form-control"
                 validate={minLength6}
+                helpText={"Mínimo 6 caracteres"}
               />
             </div>
             <div className="col-5">
@@ -207,6 +208,7 @@ class solicitacaoDietaEspecial extends Component {
                 name="registro_funcional_pescritor"
                 placeholder="Insira o Registro Funcional"
                 className="form-control"
+                helpText={"Mínimo 6 caracteres"}
               />
             </div>
           </section>
@@ -222,7 +224,7 @@ class solicitacaoDietaEspecial extends Component {
               </div>
               <div className="card-warning mt-2">
                 <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
-                .docx, .pdf, .png, .jpg ou .jpeg, com até 2Mb. <br /> O Laudo
+                .docx, .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo
                 deve ter sido emitido há, no máximo, 3 meses. Após a data de
                 aprovação no sistema, o laudo terá validade de 12 meses
               </div>
