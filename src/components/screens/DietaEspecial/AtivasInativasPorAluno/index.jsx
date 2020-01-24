@@ -6,6 +6,7 @@ import Painel from "./Painel";
 import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial";
 import { getDiretoriaregionalSimplissima } from "../../../../services/diretoriaRegional.service";
 import { getEscolasSimplissimaComDRE } from "../../../../services/escola.service";
+import { meusDados } from "../../../../services/perfil.service";
 
 import { Paginacao } from "../../../Shareable/Paginacao";
 
@@ -24,17 +25,38 @@ export default class AtivasInativasContainer extends Component {
   }
 
   componentDidMount = async () => {
-    const resposta = await getDiretoriaregionalSimplissima();
-    const diretoriasRegionais = [{ uuid: "", nome: "Todas" }].concat(
-      resposta.data.results
-    );
-    const resposta2 = await getEscolasSimplissimaComDRE();
-    const escolas = [{ uuid: "", nome: "Todas" }].concat(resposta2.results);
-    const response3 = await getDietasAtivasInativasPorAluno();
+    const dadosUsuario = await meusDados();
+    let diretoriasRegionais, escolas;
+    const formValues = {};
+    if (dadosUsuario.tipo_usuario === "escola") {
+      let { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
+      escolas = [{ uuid, nome }];
+      formValues.escola = uuid;
+      const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
+      diretoriasRegionais = [{ uuid: dre.uuid, nome: dre.nome }];
+      formValues.dre = dre.uuid;
+    } else {
+      const resposta2 = await getEscolasSimplissimaComDRE();
+      escolas = [{ uuid: "", nome: "Todas" }].concat(resposta2.results);
+
+      if (dadosUsuario.tipo_usuario === "diretoriaregional") {
+        const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
+        diretoriasRegionais = [{ uuid, nome }];
+        formValues.dre = uuid;
+      } else {
+        const resposta = await getDiretoriaregionalSimplissima();
+        diretoriasRegionais = [{ uuid: "", nome: "Todas" }].concat(
+          resposta.data.results
+        );
+      }
+    }
+    const response3 = await getDietasAtivasInativasPorAluno(formValues);
+
     this.setState({
       dadosDietaPorAluno: response3.data,
       diretoriasRegionais,
       escolas,
+      formValues,
       loading: false
     });
   };

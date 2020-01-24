@@ -11,6 +11,7 @@ import { toastError } from "../../../Shareable/Toast/dialogs";
 import { obtemDadosAlunoPeloEOL } from "../../../../services/perfil.service";
 
 import "./FormFiltros.scss";
+import { TIPO_PERFIL } from "../../../../constants";
 
 class Filtros extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class Filtros extends Component {
     const escolasFiltrado = dre
       ? escolas.filter(e => e.uuid === "" || e.diretoria_regional.uuid === dre)
       : escolas;
+    const tipoUsuario = localStorage.getItem("tipo_perfil");
     return (
       <div className="card mt-3">
         <div className="card-body">
@@ -57,7 +59,11 @@ class Filtros extends Component {
                   component={Select}
                   name="dre"
                   options={diretoriasRegionais}
-                  disabled={loading}
+                  disabled={
+                    loading ||
+                    tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
+                    tipoUsuario === TIPO_PERFIL.ESCOLA
+                  }
                   onChange={() => change("escola", "")}
                   naoDesabilitarPrimeiraOpcao
                 />
@@ -68,7 +74,7 @@ class Filtros extends Component {
                   component={Select}
                   name="escola"
                   options={escolasFiltrado}
-                  disabled={loading}
+                  disabled={loading || tipoUsuario === TIPO_PERFIL.ESCOLA}
                 />
               </div>
             </div>
