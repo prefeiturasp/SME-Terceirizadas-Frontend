@@ -4,6 +4,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
 
 import "./Painel.scss";
+import { TIPO_PERFIL } from "../../../../constants";
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">
@@ -29,16 +30,27 @@ const TabelaDietas = ({ solicitacoes }) => {
   if (solicitacoes === undefined || solicitacoes.length === 0) {
     return <div>Carregando...</div>;
   }
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
   return (
     <div className="row">
       <div className="col-12">
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Código EOL</th>
+              {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL ? (
+                <th scope="col">DRE</th>
+              ) : (
+                ""
+              )}
+              {tipoPerfil !== TIPO_PERFIL.ESCOLA ? (
+                <th scope="col">Unidade Escolar</th>
+              ) : (
+                ""
+              )}
+              <th scope="col">Cód. EOL</th>
               <th scope="col">Nome do Aluno</th>
-              <th scope="col">Qtde. Ativas</th>
-              <th scope="col">Qtde. Inativas</th>
+              <th scope="col">Qtde Ativas</th>
+              <th scope="col">Qtde Inativas</th>
               <th scope="col" />
             </tr>
           </thead>
@@ -46,6 +58,16 @@ const TabelaDietas = ({ solicitacoes }) => {
             {solicitacoes.map((dados, key) => {
               return (
                 <tr key={key}>
+                  {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL ? (
+                    <td>{dados.dre}</td>
+                  ) : (
+                    ""
+                  )}
+                  {tipoPerfil !== TIPO_PERFIL.ESCOLA ? (
+                    <td>{dados.escola}</td>
+                  ) : (
+                    ""
+                  )}
                   <td>{dados.codigo_eol}</td>
                   <td>{dados.nome}</td>
                   <td>{dados.ativas}</td>
