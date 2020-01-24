@@ -27,68 +27,74 @@ const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   </div>
 );
 
-const TabelaDietas = () => (
-  <div className="row">
-    <div className="col-12">
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Código EOL</th>
-            <th scope="col">Nome do Aluno</th>
-            <th scope="col">Qtde. Ativas</th>
-            <th scope="col">Qtde. Inativas</th>
-            <th scope="col" />
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>094633</td>
-            <td>Ricardo Albuquerque de Oliveira Prado</td>
-            <td>3</td>
-            <td>2</td>
-            <td>
-              <Botao
-                texto="Visualizar"
-                icon={undefined}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>094633</td>
-            <td>Ricardo Albuquerque de Oliveira Prado</td>
-            <td>3</td>
-            <td>2</td>
-            <td>
-              <Botao
-                texto="Visualizar"
-                icon={undefined}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>094633</td>
-            <td>Ricardo Albuquerque de Oliveira Prado</td>
-            <td>3</td>
-            <td>2</td>
-            <td>
-              <Botao
-                texto="Visualizar"
-                icon={undefined}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+const TabelaDietas = ({ dadosDietaPorAluno }) => {
+  if (
+    dadosDietaPorAluno === undefined ||
+    dadosDietaPorAluno.results === undefined ||
+    dadosDietaPorAluno.results.length === 0
+  ) {
+    return <div>Carregando...</div>;
+  }
+  return (
+    <div className="row">
+      <div className="col-12">
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Código EOL</th>
+              <th scope="col">Nome do Aluno</th>
+              <th scope="col">Qtde. Ativas</th>
+              <th scope="col">Qtde. Inativas</th>
+              <th scope="col" />
+            </tr>
+          </thead>
+          <tbody>
+            {dadosDietaPorAluno.results.map((dados, key) => {
+              return (
+                <tr key={key}>
+                  <td>{dados.codigo_eol}</td>
+                  <td>{dados.nome}</td>
+                  <td>{dados.ativas}</td>
+                  <td>{dados.inativas}</td>
+                  <td>
+                    <Botao
+                      texto="Visualizar"
+                      icon={undefined}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+            {/* { dadosDietaPorAluno.map( dados => {
+              <tr>
+                <td>{ dados.codigo_eol }</td>
+                <td>{ dados.nome }</td>
+                <td>{ dados.ativas }</td>
+                <td>{ dados.inativas }</td>
+                <td>
+                  <Botao
+                    texto="Visualizar"
+                    icon={undefined}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                </td>
+              </tr>
+            })} */}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default class Painel extends Component {
   render() {
-    const { totalDietasAtivas, totalDietasInativas, count } = this.props;
+    const {
+      totalDietasAtivas,
+      totalDietasInativas,
+      dadosDietaPorAluno
+    } = this.props;
     return (
       <div className="card mt-3">
         <div className="card-body">
@@ -104,8 +110,8 @@ export default class Painel extends Component {
                 <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
               </div>
             </div>
-            <TabelaDietas />
-            <Paginacao total={count} />
+            <TabelaDietas dadosDietaPorAluno={dadosDietaPorAluno} />
+            <Paginacao total={dadosDietaPorAluno.length} />
           </form>
         </div>
       </div>
