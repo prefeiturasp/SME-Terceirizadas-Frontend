@@ -55,40 +55,48 @@ class solicitacaoDietaEspecial extends Component {
     } = this.state;
     const { handleSubmit } = this.props;
     return (
-      <form className="special-diet-aluno" onSubmit={handleSubmit}>
-        <div className="row">
-          <h4>Detalhe das Dietas Especiais</h4>
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            title={"XXX"}
-            texto={"Voltar"}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-          />
+      <div className="card">
+        <div className="card-body">
+          <form className="special-diet" onSubmit={handleSubmit}>
+            <div className="row p-1">
+              <div className="col-8">
+                <h4>Detalhe das Dietas Especiais</h4>
+              </div>
+              <div className="col-4 text-right">
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto={"Voltar"}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                />
+              </div>
+            </div>
+            <div>
+              <hr />
+              <table className="tabela-informacoes-aluno">
+                <tr>
+                  <th>Diretoria Regional de Educação</th>
+                  <th>Unidade escolar</th>
+                </tr>
+                <tr>
+                  <td>{dreAtual}</td>
+                  <td>{escolaAtual}</td>
+                </tr>
+                <tr>
+                  <th>Código EOL</th>
+                  <th>Nome Completo</th>
+                </tr>
+                <tr>
+                  <td>{eolAluno}</td>
+                  <td>{nomeAluno}</td>
+                </tr>
+              </table>
+            </div>
+            {solicitacoesVigentes && (
+              <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
+            )}
+          </form>
         </div>
-        <div>
-          <table className="table">
-            <tr>
-              <th>Diretoria Regional de Educação</th>
-              <th>Unidade escolar</th>
-            </tr>
-            <tr>
-              <td>{dreAtual}</td>
-              <td>{escolaAtual}</td>
-            </tr>
-            <tr>
-              <th>Código EOL</th>
-              <th>Nome Completo</th>
-            </tr>
-            <tr>
-              <td>{eolAluno}</td>
-              <td>{nomeAluno}</td>
-            </tr>
-          </table>
-        </div>
-        {solicitacoesVigentes && (
-          <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
-        )}
-      </form>
+      </div>
     );
   }
 }

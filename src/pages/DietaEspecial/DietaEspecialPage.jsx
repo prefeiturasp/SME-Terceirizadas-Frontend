@@ -1,24 +1,23 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import DashBoardDietaEspecial from "../../components/screens/DashBoardDietaEspecial";
+import SolicitacaoDietaEspecial from "../../components/screens/DietaEspecial/Aluno";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 import { HOME } from "../../constants/config.constants";
-import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
-import XXX from "../../components/screens/DietaEspecial/Aluno";
-
 import {
-  getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialAutorizadasEscola,
-  getDietaEspecialNegadasEscola,
-  getDietaEspecialPendenteAutorizacaoDRE,
-  getDietaEspecialAutorizadasDRE,
-  getDietaEspecialNegadasDRE,
-  getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialAutorizadasCODAE,
-  getDietaEspecialNegadasCODAE,
-  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialAutorizadasDRE,
+  getDietaEspecialAutorizadasEscola,
   getDietaEspecialAutorizadasTerceirizada,
-  getDietaEspecialNegadasTerceirizada
+  getDietaEspecialNegadasCODAE,
+  getDietaEspecialNegadasDRE,
+  getDietaEspecialNegadasEscola,
+  getDietaEspecialNegadasTerceirizada,
+  getDietaEspecialPendenteAutorizacaoCODAE,
+  getDietaEspecialPendenteAutorizacaoDRE,
+  getDietaEspecialPendenteAutorizacaoEscola,
+  getDietaEspecialPendenteAutorizacaoTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -81,8 +80,8 @@ export const DietaEspecialTerceirizada = () => (
 // Detalhes do aluno
 
 export const DietaEspecialAluno = () => (
-  <Page>
+  <Page titulo="Consulta de Dieta Especial">
     <Breadcrumb home={HOME} />
-    <XXX />
+    <SolicitacaoDietaEspecial />
   </Page>
 );

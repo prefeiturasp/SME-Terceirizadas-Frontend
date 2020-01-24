@@ -1,6 +1,33 @@
 @import "../../../../styles/variables.scss";
 
 form.special-diet {
+  h4 {
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: bold;
+    color: $blue;
+  }
+  hr > {
+    width: 100%;
+    background: #f0f0f0;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+  }
+  .tabela-informacoes-aluno {
+    width: 100%;
+    th {
+      padding: 0.5em;
+      font-size: 14px;
+      line-height: 16px;
+      color: $blackInput;
+    }
+    td {
+      padding: 0.5em;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      color: $blackSubtle;
+    }
+  }
   .cinza-escuro {
     color: $gray;
   }
