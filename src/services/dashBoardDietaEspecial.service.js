@@ -287,3 +287,24 @@ export const getPaginacaoSolicitacoesDietaEspecial = (
       console.log(error);
     });
 };
+
+export const getPaginacaoSolicitacoesDietaEspecialCODAE = (
+  urlPaginacao,
+  offSet
+) => {
+  const url = `${API_URL}/${urlPaginacao}/?limit=100${
+    offSet > 0 ? `&offset=${offSet}` : ""
+  }`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

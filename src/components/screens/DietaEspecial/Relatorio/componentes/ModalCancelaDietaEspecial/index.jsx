@@ -1,3 +1,4 @@
+import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
@@ -15,7 +16,10 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "../../../../../Shareable/Botao/constants";
-import { toastSuccess } from "../../../../../Shareable/Toast/dialogs";
+import {
+  toastSuccess,
+  toastError
+} from "../../../../../Shareable/Toast/dialogs";
 
 export class ModalCancelaDietaEspecial extends Component {
   constructor(props) {
@@ -25,7 +29,12 @@ export class ModalCancelaDietaEspecial extends Component {
 
   cancelaDietaEspecial = (uuid, values) => {
     escolaCancelaSolicitacao(uuid, values).then(response => {
-      toastSuccess(response.status);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Solicitação de Dieta Especial cancelada com sucesso!");
+        this.props.closeModal();
+      } else {
+        toastError("Erro ao cancelar Solicitação de Dieta Especial");
+      }
     });
   };
 

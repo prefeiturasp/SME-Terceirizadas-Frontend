@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
-import { getPaginacaoSolicitacoesDietaEspecial } from "../../../services/dashBoardDietaEspecial.service";
+import {
+  getPaginacaoSolicitacoesDietaEspecial,
+  getPaginacaoSolicitacoesDietaEspecialCODAE
+} from "../../../services/dashBoardDietaEspecial.service";
 import { extrairStatusDaSolicitacaoURL } from "./helpers";
 import {
   CODAE,
@@ -105,15 +108,25 @@ export class StatusSolicitacoes extends Component {
   navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
     const { instituicao, urlPaginacao } = this.state;
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
-    getPaginacaoSolicitacoesDietaEspecial(
-      urlPaginacao,
-      instituicao.uuid,
-      offSet
-    ).then(response => {
-      this.setState({
-        solicitacoesFiltrados: ajustarFormatoLog(response.results)
+    if (this.props.visao === CODAE) {
+      getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
+        response => {
+          this.setState({
+            solicitacoesFiltrados: ajustarFormatoLog(response.results)
+          });
+        }
+      );
+    } else {
+      getPaginacaoSolicitacoesDietaEspecial(
+        urlPaginacao,
+        instituicao.uuid,
+        offSet
+      ).then(response => {
+        this.setState({
+          solicitacoesFiltrados: ajustarFormatoLog(response.results)
+        });
       });
-    });
+    }
   };
 
   componentDidUpdate() {

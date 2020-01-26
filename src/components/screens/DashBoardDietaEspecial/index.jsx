@@ -152,7 +152,9 @@ class DashBoardDietaEspecial extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Aguardando Autorização"}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={pendentesListFiltered}
+                    solicitations={
+                      pendentesListFiltered ? pendentesListFiltered : []
+                    }
                     icon={ICON_CARD_TYPE_ENUM.PENDENTE}
                     href={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}
                   />
@@ -161,7 +163,9 @@ class DashBoardDietaEspecial extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizados"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={autorizadasListFiltered}
+                    solicitations={
+                      autorizadasListFiltered ? autorizadasListFiltered : []
+                    }
                     icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
                     href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas`}
                   />
@@ -172,7 +176,9 @@ class DashBoardDietaEspecial extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Negadas"}
                     cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={negadasListFiltered}
+                    solicitations={
+                      negadasListFiltered ? negadasListFiltered : []
+                    }
                     icon={ICON_CARD_TYPE_ENUM.NEGADO}
                     href={`/solicitacoes-dieta-especial/solicitacoes-negadas`}
                   />
@@ -181,7 +187,9 @@ class DashBoardDietaEspecial extends Component {
                   <CardStatusDeSolicitacao
                     cardTitle={"Canceladas"}
                     cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={canceladasListFiltered}
+                    solicitations={
+                      canceladasListFiltered ? canceladasListFiltered : []
+                    }
                     icon={ICON_CARD_TYPE_ENUM.CANCELADO}
                     href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
                   />

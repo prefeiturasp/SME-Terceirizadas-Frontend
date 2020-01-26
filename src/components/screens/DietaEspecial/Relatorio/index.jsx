@@ -23,11 +23,10 @@ class Relatorio extends Component {
       dietaEspecial: null,
       uuid: null,
       showNaoAprovaModal: false,
-      ShowCancelaModal: true
+      ShowCancelaModal: false
     };
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
-    this.closeCancelaModal = this.closeCancelaModal.bind(this);
   }
 
   componentDidMount() {
@@ -57,10 +56,6 @@ class Relatorio extends Component {
 
   closeNaoAprovaModal() {
     this.setState({ showNaoAprovaModal: false });
-  }
-
-  closeCancelaModal() {
-    this.setState({ ShowCancelaModal: false });
   }
 
   handleSubmit(values) {
@@ -112,15 +107,9 @@ class Relatorio extends Component {
       motivo,
       classificacaoDieta,
       protocolos,
-      diagnosticosSelecionados,
-      ModalCancela
+      diagnosticosSelecionados
     } = this.props;
-    const {
-      dietaEspecial,
-      showNaoAprovaModal,
-      ShowCancelaModal,
-      uuid
-    } = this.state;
+    const { dietaEspecial, showNaoAprovaModal, uuid } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR = tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA;
     return (
@@ -139,14 +128,6 @@ class Relatorio extends Component {
                 justificativa={justificativa}
                 motivo={motivo}
                 uuid={uuid}
-              />
-            )}
-            {ModalCancela && (
-              <ModalCancela
-                showModal={ShowCancelaModal}
-                closeModal={this.closeCancelaModal}
-                uuid={uuid}
-                solicitacao={dietaEspecial}
               />
             )}
             <span className="page-title">{`Dieta Especial - Solicitação # ${
