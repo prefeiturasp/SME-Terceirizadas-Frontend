@@ -1,27 +1,27 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import DashBoardDietaEspecial from "../../components/screens/DashBoardDietaEspecial";
+import SolicitacaoDietaEspecial from "../../components/screens/DietaEspecial/Aluno";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 import { HOME } from "../../constants/config.constants";
-import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
-
 import {
-  getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialAutorizadasEscola,
-  getDietaEspecialNegadasEscola,
-  getDietaEspecialCanceladasEscola,
-  getDietaEspecialPendenteAutorizacaoDRE,
-  getDietaEspecialAutorizadasDRE,
-  getDietaEspecialNegadasDRE,
-  getDietaEspecialCanceladasDRE,
-  getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialAutorizadasCODAE,
-  getDietaEspecialNegadasCODAE,
-  getDietaEspecialCanceladasCODAE,
-  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialAutorizadasDRE,
+  getDietaEspecialAutorizadasEscola,
   getDietaEspecialAutorizadasTerceirizada,
+  getDietaEspecialNegadasCODAE,
+  getDietaEspecialNegadasDRE,
+  getDietaEspecialNegadasEscola,
   getDietaEspecialNegadasTerceirizada,
-  getDietaEspecialCanceladasTerceirizada
+  getDietaEspecialPendenteAutorizacaoCODAE,
+  getDietaEspecialPendenteAutorizacaoDRE,
+  getDietaEspecialPendenteAutorizacaoEscola,
+  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialCanceladasCODAE,
+  getDietaEspecialCanceladasDRE,
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialCanceladasEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -83,4 +83,13 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
   />
+);
+
+// Detalhes do aluno
+
+export const DietaEspecialAluno = () => (
+  <Page titulo="Consulta de Dieta Especial">
+    <Breadcrumb home={HOME} />
+    <SolicitacaoDietaEspecial />
+  </Page>
 );

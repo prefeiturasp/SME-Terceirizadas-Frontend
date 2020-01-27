@@ -1,24 +1,9 @@
-import {
-  painelGestaoAlimentacao,
-  permissoes,
-  relatorios,
-  relatoriosAlteracaoDeCardapio,
-  relatoriosInclusaoDeAlimentacao,
-  relatoriosSolicitacaoUnificada,
-  relatoriosSolicitacaoKitLanche,
-  relatoriosInversaoDiaCardapio,
-  dashBoardDietaEspecial,
-  StatusSolicitacoesDietaEspecial,
-  relatoriosDietaEspecial,
-  painelInicial
-} from "./helper";
 import { Login } from "../components/Login";
-import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
-import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -27,56 +12,69 @@ import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoD
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
-
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
+import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
+import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
+import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
+import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
+import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
-
 import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
 import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesAutorizadasDREPage";
+import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
-import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
-import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
-import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
-import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
-
-import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
-import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
-import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
-import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
-
-import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-
-import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
-
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
-import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
+import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
+import PerfilPage from "../pages/Perfil/PerfilPage";
+import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
-
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
+import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
+import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
+import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
+import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
-
+import {
+  dashBoardDietaEspecial,
+  painelGestaoAlimentacao,
+  painelInicial,
+  permissoes,
+  relatorios,
+  relatoriosAlteracaoDeCardapio,
+  relatoriosDietaEspecial,
+  relatoriosInclusaoDeAlimentacao,
+  relatoriosInversaoDiaCardapio,
+  relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoUnificada,
+  StatusSolicitacoesDietaEspecial
+} from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 
-import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
-import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
-
 const routesConfig = [
+  {
+    path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
+    component: DietaEspecialAluno,
+    exact: false
+  },
   {
     path: "/",
     component: painelInicial(),
@@ -379,6 +377,11 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
     component: relatoriosDietaEspecial(),
+    exact: false
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/ativas-inativas`,
+    component: RelatorioAlunosDietasAtivasInativasPage,
     exact: false
   },
   {

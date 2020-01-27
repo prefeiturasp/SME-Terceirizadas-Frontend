@@ -146,7 +146,7 @@ export class SidebarCODAE extends Component {
               <NavLink
                 activeClassName="active"
                 className="collapse-item"
-                to={`/`}
+                to={`/dieta-especial/ativas-inativas`}
               >
                 Consulta Dieta de Alunos
               </NavLink>
