@@ -16,11 +16,9 @@ export default class Diagnosticos extends Component {
       <div>
         {selecionados.map((opcao, key) => {
           const options =
-            opcao !== ""
-              ? diagnosticos.map(d =>
-                  opcao === d.uuid ? Object.assign({ selected: true }, d) : d
-                )
-              : [{ uuid: "", nome: "Selecione" }].concat(diagnosticos);
+            opcao === ""
+              ? [{ uuid: "", nome: "Selecione" }].concat(diagnosticos)
+              : diagnosticos;
           return (
             <div key={key} className="row" id="diagnosticos">
               <div className="col-8">
@@ -30,6 +28,11 @@ export default class Diagnosticos extends Component {
                     this.props.onSelect(key, event.target.value)
                   }
                   options={options}
+                  input={{
+                    value: opcao,
+                    onChange: event =>
+                      this.props.onSelect(key, event.target.value)
+                  }}
                 />
               </div>
               <div className="col-2">
