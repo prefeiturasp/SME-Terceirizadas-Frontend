@@ -147,7 +147,7 @@ export const terceirizadaTomaCienciaDietaEspecial = async uuid => {
 };
 
 export const getAlergiasIntolerancias = async () => {
-  const url = `${API_URL}/alergias-intolerancias`;
+  const url = `${API_URL}/alergias-intolerancias/`;
   const response = await retornoBase(url);
   return {
     status: response.status,
@@ -161,7 +161,7 @@ export const getAlergiasIntolerancias = async () => {
 };
 
 export const getClassificacoesDietaEspecial = async () => {
-  const url = `${API_URL}/classificacoes-dieta`;
+  const url = `${API_URL}/classificacoes-dieta/`;
   return retornoBase(url);
 };
 

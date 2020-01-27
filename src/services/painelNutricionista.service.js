@@ -41,11 +41,11 @@ export const getSolicitacoesNegadasNutricionista = async () => {
 };
 
 export const getTiposDietaEspecial = async () => {
-  const url = `${API_URL}/tipos-dieta-especial`;
+  const url = `${API_URL}/tipos-dieta-especial/`;
   return retornoBase(url);
 };
 
 export const getMotivosNegacaoDietaEspecial = async () => {
-  const url = `${API_URL}/motivos-negacao`;
+  const url = `${API_URL}/motivos-negacao/`;
   return retornoBase(url);
 };

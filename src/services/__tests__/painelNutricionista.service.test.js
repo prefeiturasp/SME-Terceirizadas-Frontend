@@ -27,19 +27,19 @@ fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.AUTORIZADOS}/`, {
 fetchMock.get(`${SOLICITACOES_DIETA}/${SOLICITACOES.NEGADOS}/`, {
   results: ["resultados", "negados"]
 });
-fetchMock.get(`${API_URL}/alergias-intolerancias`, {
+fetchMock.get(`${API_URL}/alergias-intolerancias/`, {
   results: [
     { descricao: "asdf", id: "1234" },
     { descricao: "qwer", id: "5678" }
   ]
 });
-fetchMock.get(`${API_URL}/tipos-dieta-especial`, {
+fetchMock.get(`${API_URL}/tipos-dieta-especial/`, {
   results: ["tipos", "dieta", "especial"]
 });
-fetchMock.get(`${API_URL}/classificacoes-dieta`, {
+fetchMock.get(`${API_URL}/classificacoes-dieta/`, {
   results: ["classificacoes", "dieta"]
 });
-fetchMock.get(`${API_URL}/motivos-negacao`, {
+fetchMock.get(`${API_URL}/motivos-negacao/`, {
   results: ["motivos", "negacao"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
