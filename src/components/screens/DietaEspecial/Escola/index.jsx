@@ -7,7 +7,7 @@ import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta } from "../../../../helpers/utilities";
 import {
   criaDietaEspecial,
-  getDietasAtivasInativasPorAluno
+  getDietasEspeciaisVigentesDeUmAluno
 } from "../../../../services/dietaEspecial.service";
 import {
   meusDados,
@@ -82,15 +82,15 @@ class solicitacaoDietaEspecial extends Component {
         "aluno_json.data_nascimento",
         moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
       );
-      getDietasAtivasInativasPorAluno(event.target.value.padStart(6, "0")).then(
-        response => {
-          this.setState({
-            solicitacoesVigentes: formatarSolicitacoesVigentes(
-              response.data.results
-            )
-          });
-        }
-      );
+      getDietasEspeciaisVigentesDeUmAluno(
+        event.target.value.padStart(6, "0")
+      ).then(response => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            response.data.results
+          )
+        });
+      });
     }
   };
 

@@ -49,7 +49,7 @@ export class SolicitacaoVigente extends Component {
                     }
                   >
                     <div className="col-md-12 pt-2 pb-2 title">
-                      {`Solicitação XXXX: # ${solicitacaoVigente.id_externo}`}
+                      {`Solicitação # ${solicitacaoVigente.id_externo}`}
                       <ToggleExpandir
                         onClick={() => this.activateSolicitacao(key)}
                         ativo={solicitacaoVigente.active}
