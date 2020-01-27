@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial";
+import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
 import { dadosDoAluno } from "../../../../services/perfil.service";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";

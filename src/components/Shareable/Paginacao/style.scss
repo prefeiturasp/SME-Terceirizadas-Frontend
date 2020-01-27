@@ -1,10 +1,27 @@
+@import "../../../styles/variables.scss";
+
 .footer-pagination-default {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 
   a.ant-pagination-item-link {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 0px !important;
+  }
+
+  ul.ant-pagination {
+    li {
+      padding: 1.5em;
+      border-radius: 0px;
+      border: 0px;
+      width: 5em;
+      height: 5em;
+    }
+    li.ant-pagination-item-active {
+      background-color: $green !important;
+      color: $white;
+    }
   }
 }

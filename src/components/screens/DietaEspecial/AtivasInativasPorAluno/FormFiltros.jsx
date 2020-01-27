@@ -75,6 +75,7 @@ class Filtros extends Component {
                   name="escola"
                   options={escolasFiltrado}
                   disabled={loading || tipoUsuario === TIPO_PERFIL.ESCOLA}
+                  naoDesabilitarPrimeiraOpcao
                 />
               </div>
             </div>
