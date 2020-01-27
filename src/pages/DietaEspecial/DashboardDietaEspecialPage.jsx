@@ -17,7 +17,11 @@ import {
   getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialPendenteAutorizacaoTerceirizada
+  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialCanceladasCODAE,
+  getDietaEspecialCanceladasDRE,
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialCanceladasEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
