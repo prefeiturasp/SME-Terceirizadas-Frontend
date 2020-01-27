@@ -241,11 +241,9 @@ export const visualizaBotoesDoFluxo = solicitacao => {
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioCODAEDietaEspecial();
+      return usuarioEscola() || usuarioCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
-      return usuarioTerceirizada() || usuarioEscola();
-    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
-      return usuarioEscola();
+      return usuarioTerceirizada();
     default:
       return false;
   }

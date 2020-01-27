@@ -22,7 +22,8 @@ class Relatorio extends Component {
     this.state = {
       dietaEspecial: null,
       uuid: null,
-      showNaoAprovaModal: false
+      showNaoAprovaModal: false,
+      ShowCancelaModal: false
     };
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);

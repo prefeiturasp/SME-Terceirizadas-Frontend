@@ -164,3 +164,23 @@ export const getClassificacoesDietaEspecial = async () => {
   const url = `${API_URL}/classificacoes-dieta`;
   return retornoBase(url);
 };
+
+export const escolaCancelaSolicitacao = async (uuid, payload) => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/escola-cancela-dieta-especial/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};

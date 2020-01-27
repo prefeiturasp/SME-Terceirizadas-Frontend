@@ -9,15 +9,19 @@ import {
   getDietaEspecialPendenteAutorizacaoEscola,
   getDietaEspecialAutorizadasEscola,
   getDietaEspecialNegadasEscola,
+  getDietaEspecialCanceladasEscola,
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialAutorizadasDRE,
   getDietaEspecialNegadasDRE,
+  getDietaEspecialCanceladasDRE,
   getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialAutorizadasCODAE,
   getDietaEspecialNegadasCODAE,
+  getDietaEspecialCanceladasCODAE,
   getDietaEspecialPendenteAutorizacaoTerceirizada,
   getDietaEspecialAutorizadasTerceirizada,
-  getDietaEspecialNegadasTerceirizada
+  getDietaEspecialNegadasTerceirizada,
+  getDietaEspecialCanceladasTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -40,6 +44,7 @@ export const DietaEspecialEscola = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
     getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
   />
 );
 
@@ -50,6 +55,7 @@ export const DietaEspecialDRE = () => (
     getDietaEspecialPendenteAutorizacao={getDietaEspecialPendenteAutorizacaoDRE}
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
     getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasDRE}
   />
 );
 
@@ -62,6 +68,7 @@ export const DietaEspecialCODAE = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
     getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasCODAE}
   />
 );
 
@@ -74,5 +81,6 @@ export const DietaEspecialTerceirizada = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
   />
 );

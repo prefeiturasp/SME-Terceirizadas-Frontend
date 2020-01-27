@@ -4,13 +4,14 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import { HOME } from "../Escola/constants";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import ModalCancelaDietaEspecial from "../../components/screens/DietaEspecial/Relatorio/componentes/ModalCancelaDietaEspecial";
 import ModalNegarSolicitacao from "../../components/screens/DietaEspecial/Relatorio/componentes/ModalNegaDietaEspecial";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import {
   CODAENegaDietaEspecial,
   CODAEAutorizaDietaEspecial,
-  terceirizadaTomaCienciaDietaEspecial
+  terceirizadaTomaCienciaDietaEspecial,
+  escolaCancelaSolicitacao
 } from "../../services/dietaEspecial.service";
 
 class RelatorioBase extends React.Component {
@@ -39,7 +40,8 @@ class RelatorioBase extends React.Component {
 export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
-    ModalNaoAprova={ModalCancelarSolicitacao}
+    ModalNaoAprova={ModalCancelaDietaEspecial}
+    endpointNaoAprovaSolicitacao={escolaCancelaSolicitacao}
     toastNaoAprovaMensagem={"Dieta Especial cancelada com sucesso!"}
     textoBotaoNaoAprova="Cancelar"
   />

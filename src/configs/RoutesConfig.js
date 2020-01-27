@@ -438,6 +438,13 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_CANCELADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
   }
 ];
 

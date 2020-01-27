@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
-import { getPaginacaoSolicitacoesDietaEspecial } from "../../../services/dashBoardDietaEspecial.service";
+import {
+  getPaginacaoSolicitacoesDietaEspecial,
+  getPaginacaoSolicitacoesDietaEspecialCODAE
+} from "../../../services/dashBoardDietaEspecial.service";
 import { extrairStatusDaSolicitacaoURL } from "./helpers";
 import {
   CODAE,
@@ -12,7 +15,9 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
   AUTORIZADOS_DIETA,
+  CANCELADOS_DIETA,
   PENDENTES_DIETA,
   NEGADOS_DIETA,
   DIETA_ESPECIAL_SOLICITACOES
@@ -103,15 +108,25 @@ export class StatusSolicitacoes extends Component {
   navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
     const { instituicao, urlPaginacao } = this.state;
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
-    getPaginacaoSolicitacoesDietaEspecial(
-      urlPaginacao,
-      instituicao.uuid,
-      offSet
-    ).then(response => {
-      this.setState({
-        solicitacoesFiltrados: ajustarFormatoLog(response.results)
+    if (this.props.visao === CODAE) {
+      getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
+        response => {
+          this.setState({
+            solicitacoesFiltrados: ajustarFormatoLog(response.results)
+          });
+        }
+      );
+    } else {
+      getPaginacaoSolicitacoesDietaEspecial(
+        urlPaginacao,
+        instituicao.uuid,
+        offSet
+      ).then(response => {
+        this.setState({
+          solicitacoesFiltrados: ajustarFormatoLog(response.results)
+        });
       });
-    });
+    }
   };
 
   componentDidUpdate() {
@@ -172,6 +187,23 @@ export class StatusSolicitacoes extends Component {
                 icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
                 titulo: "Autorizadas",
                 urlPaginacao: this.retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
+              });
+            });
+          break;
+        case SOLICITACOES_CANCELADAS:
+          this.props
+            .getDietaEspecialCanceladas(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.results,
+                  this.props.logPara
+                ),
+                count: response.count,
+                tipoCard: CARD_TYPE_ENUM.CANCELADO,
+                icone: ICON_CARD_TYPE_ENUM.CANCELADO,
+                titulo: "Canceladas",
+                urlPaginacao: this.retornaUrlPaginacao(visao, CANCELADOS_DIETA)
               });
             });
           break;

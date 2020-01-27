@@ -1,7 +1,6 @@
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
-import DashboardNutricionistaPage from "../pages/Nutricionista/DashboardNutricionistaPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
@@ -162,7 +161,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
 export const painelInicial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIETA_ESPECIAL:
-      return DashboardNutricionistaPage;
+      return DashBoardDietaEspecial.DietaEspecialCODAE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return DashboardCODAEPage;
     default:
