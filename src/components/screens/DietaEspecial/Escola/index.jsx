@@ -8,7 +8,7 @@ import { dateDelta } from "../../../../helpers/utilities";
 import {
   criaDietaEspecial,
   getDietasAtivasInativasPorAluno
-} from "../../../../services/dietaEspecial";
+} from "../../../../services/dietaEspecial.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL

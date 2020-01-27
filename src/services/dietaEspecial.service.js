@@ -1,6 +1,8 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
+import getAxios from "./_base";
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
@@ -183,4 +185,13 @@ export const escolaCancelaSolicitacao = async (uuid, payload) => {
     .catch(error => {
       return error;
     });
+};
+
+export const getDietasAtivasInativasPorAluno = async (params = {}) => {
+  const axios = getAxios();
+  const response = await axios.get(
+    "solicitacoes-dieta-especial-ativas-inativas/",
+    { params }
+  );
+  return response;
 };

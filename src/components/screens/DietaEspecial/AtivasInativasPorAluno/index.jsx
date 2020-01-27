@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import FormFiltros from "./FormFiltros";
 import Painel from "./Painel";
 
-import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial";
+import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
 import { getDiretoriaregionalSimplissima } from "../../../../services/diretoriaRegional.service";
 import { getEscolasSimplissimaComDRE } from "../../../../services/escola.service";
 import { meusDados } from "../../../../services/perfil.service";
