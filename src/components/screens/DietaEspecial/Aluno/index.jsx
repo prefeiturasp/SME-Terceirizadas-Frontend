@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { getDietasEspeciaisVigentesDeUmAluno } from "../../../../services/dietaEspecial";
+import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial";
 import { dadosDoAluno } from "../../../../services/perfil.service";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
@@ -19,7 +19,9 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   componentDidMount() {
-    dadosDoAluno("642071").then(dadosAluno => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const codigo_eol = urlParams.get("codigo_eol");
+    dadosDoAluno(codigo_eol).then(dadosAluno => {
       const dados = dadosAluno.data;
       this.setState({
         nomeAluno: dados.nome,
@@ -28,7 +30,7 @@ class solicitacaoDietaEspecial extends Component {
         dreAtual: dados.nome_dre
       });
     });
-    getDietasEspeciaisVigentesDeUmAluno("642071").then(response => {
+    getDietasAtivasInativasPorAluno(codigo_eol).then(response => {
       this.setState({
         solicitacoesVigentes: formatarSolicitacoesVigentes(
           response.data.results
