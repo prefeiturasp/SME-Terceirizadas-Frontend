@@ -40,6 +40,7 @@ export const DietaEspecialEscola = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
     getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
   />
 );
 
@@ -50,6 +51,7 @@ export const DietaEspecialDRE = () => (
     getDietaEspecialPendenteAutorizacao={getDietaEspecialPendenteAutorizacaoDRE}
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
     getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasDRE}
   />
 );
 
@@ -62,6 +64,7 @@ export const DietaEspecialCODAE = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
     getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasCODAE}
   />
 );
 
@@ -74,6 +77,7 @@ export const DietaEspecialTerceirizada = () => (
     }
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
   />
 );
 

@@ -58,7 +58,11 @@ export class SidebarEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink activeClassName="active" className="collapse-item" to="/">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/painel-gestao-alimentacao"
+            >
               Painel de Solicitações
             </NavLink>
             <NavLink
@@ -172,7 +176,11 @@ export class SidebarEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink activeClassName="active" className="collapse-item" to="/">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/painel-dieta-especial"
+            >
               Painel de Solicitações
             </NavLink>
             <NavLink

@@ -8,7 +8,9 @@ import {
   relatoriosSolicitacaoKitLanche,
   relatoriosInversaoDiaCardapio,
   dashBoardDietaEspecial,
-  StatusSolicitacoesDietaEspecial
+  StatusSolicitacoesDietaEspecial,
+  relatoriosDietaEspecial,
+  painelInicial
 } from "./helper";
 import { Login } from "../components/Login";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -55,7 +57,6 @@ import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
-import RelatorioDietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/RelatorioPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -69,7 +70,6 @@ import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceiri
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 import * as constants from "./constants";
 
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
@@ -88,7 +88,7 @@ const routesConfig = [
   },
   {
     path: "/",
-    component: PainelInicialPage,
+    component: painelInicial(),
     exact: true
   },
   {
@@ -111,13 +111,6 @@ const routesConfig = [
     path: "/relatorios",
     component: relatorios(),
     exact: true
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioDietaEspecialEscolaPage,
-    exact: false
   },
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
@@ -394,7 +387,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
-    component: DietaRelatorioRouter,
+    component: relatoriosDietaEspecial(),
     exact: false
   },
   {
@@ -456,6 +449,13 @@ const routesConfig = [
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
       constants.SOLICITACOES_AUTORIZADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_CANCELADAS
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true

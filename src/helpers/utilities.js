@@ -221,6 +221,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
@@ -232,6 +233,17 @@ export const visualizaBotoesDoFluxo = solicitacao => {
       return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
         tipoPerfil
       );
+    default:
+      return false;
+  }
+};
+
+export const vizualizaBotoesDietaEspecial = solicitacao => {
+  switch (solicitacao.status_solicitacao) {
+    case statusEnum.CODAE_A_AUTORIZAR:
+      return usuarioEscola() || usuarioCODAEDietaEspecial();
+    case statusEnum.CODAE_AUTORIZADO:
+      return usuarioTerceirizada();
     default:
       return false;
   }

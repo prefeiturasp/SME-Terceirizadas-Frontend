@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { InputErroMensagem } from "../../Shareable/Input/InputErroMensagem";
+import { InputErroMensagem } from "../../../../../../../Shareable/Input/InputErroMensagem";
 
 import Diagnosticos from "./index";
 

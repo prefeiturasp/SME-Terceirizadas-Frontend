@@ -1,7 +1,6 @@
 import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
-import DashboardNutricionistaPage from "../pages/Nutricionista/DashboardNutricionistaPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
@@ -10,15 +9,15 @@ import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
-import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DietaEspecialPage";
+import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
+import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
 import { TIPO_PERFIL } from "../constants";
+import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIETA_ESPECIAL:
-      return DashboardNutricionistaPage;
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return DashboardDREPage;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
@@ -121,6 +120,20 @@ export const relatoriosSolicitacaoKitLanche = () => {
   }
 };
 
+export const relatoriosDietaEspecial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosDietaEspecial.RelatorioEscola;
+    case TIPO_PERFIL.DIETA_ESPECIAL:
+      return RelatoriosDietaEspecial.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosDietaEspecial.RelatorioTerceirizada;
+    default:
+      return RelatoriosDietaEspecial.RelatorioEscola;
+  }
+};
+
 export const relatoriosSolicitacaoUnificada = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
@@ -136,11 +149,22 @@ export const StatusSolicitacoesDietaEspecial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+    case TIPO_PERFIL.DIETA_ESPECIAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialTerceirizada;
     default:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialEscola;
+  }
+};
+
+export const painelInicial = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIETA_ESPECIAL:
+      return DashBoardDietaEspecial.DietaEspecialCODAE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return DashboardCODAEPage;
+    default:
+      return PainelInicialPage;
   }
 };

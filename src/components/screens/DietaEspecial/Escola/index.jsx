@@ -115,6 +115,12 @@ class solicitacaoDietaEspecial extends Component {
             response.data["registro_funcional_pescritor"][0]
           }`
         );
+      } else if (response.data["nome_completo_pescritor"]) {
+        toastError(
+          `Nome do Prescritor da receita: ${
+            response.data["nome_completo_pescritor"][0]
+          }`
+        );
       } else if (response.data["anexos"][0]["nome"][0]) {
         const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
         toastError(erroExtensaoInvalida);
@@ -132,12 +138,7 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const {
-      quantidadeAlunos,
-      resumo,
-      submitted,
-      solicitacoesVigentes
-    } = this.state;
+    const { quantidadeAlunos, submitted, solicitacoesVigentes } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -197,6 +198,7 @@ class solicitacaoDietaEspecial extends Component {
                 placeholder="Insira o Nome do Prescritor"
                 className="form-control"
                 validate={minLength6}
+                helpText={"Mínimo 6 caracteres"}
               />
             </div>
             <div className="col-5">
@@ -206,6 +208,7 @@ class solicitacaoDietaEspecial extends Component {
                 name="registro_funcional_pescritor"
                 placeholder="Insira o Registro Funcional"
                 className="form-control"
+                helpText={"Mínimo 6 caracteres"}
               />
             </div>
           </section>
@@ -221,7 +224,7 @@ class solicitacaoDietaEspecial extends Component {
               </div>
               <div className="card-warning mt-2">
                 <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
-                .docx, .pdf, .png, .jpg ou .jpeg, com até 2Mb. <br /> O Laudo
+                .docx, .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo
                 deve ter sido emitido há, no máximo, 3 meses. Após a data de
                 aprovação no sistema, o laudo terá validade de 12 meses
               </div>
@@ -250,11 +253,6 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </section>
-          {resumo && (
-            <a href={resumo}>
-              Clique aqui para visualizar o resumo da solicitação
-            </a>
-          )}
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"
