@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
@@ -73,11 +74,17 @@ const TabelaDietas = ({ solicitacoes }) => {
                   <td>{dados.ativas}</td>
                   <td>{dados.inativas}</td>
                   <td>
-                    <Botao
-                      texto="Visualizar"
-                      icon={undefined}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
+                    <Link
+                      to={`/aluno/dieta-especial?codigo_eol=${
+                        dados.codigo_eol
+                      }`}
+                    >
+                      <Botao
+                        texto="Visualizar"
+                        icon={undefined}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    </Link>
                   </td>
                 </tr>
               );
