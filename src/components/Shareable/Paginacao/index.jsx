@@ -4,7 +4,7 @@ import "./style.scss";
 import { Pagination } from "antd";
 
 export const Paginacao = props => {
-  const { total, onChange, className } = props;
+  const { total, onChange, className, ...rest } = props;
   return (
     <section className="pt-3 footer-pagination-default">
       <Pagination
@@ -14,6 +14,7 @@ export const Paginacao = props => {
         onChange={onChange}
         total={total}
         size="medium"
+        {...rest}
       />
     </section>
   );

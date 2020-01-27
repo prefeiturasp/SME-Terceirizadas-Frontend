@@ -18,7 +18,8 @@ export default class AtivasInativasContainer extends Component {
       diretoriasRegionais: [{ uuid: "", nome: "Carregando..." }],
       escolas: [{ uuid: "", nome: "Carregando..." }],
       loading: true,
-      loadingNomeAluno: false
+      loadingNomeAluno: false,
+      page: 1
     };
     this.submit = this.submit.bind(this);
     this.onPaginationChange = this.onPaginationChange.bind(this);
@@ -84,10 +85,13 @@ export default class AtivasInativasContainer extends Component {
       page,
       ...this.state.formValues
     });
+    this.setState({
+      page
+    });
   };
 
   render() {
-    const { dadosDietaPorAluno, loading } = this.state;
+    const { dadosDietaPorAluno, loading, page } = this.state;
     const pagTotal = dadosDietaPorAluno ? dadosDietaPorAluno.count : 0;
     return (
       <div>
@@ -101,7 +105,11 @@ export default class AtivasInativasContainer extends Component {
                 dadosDietaPorAluno ? dadosDietaPorAluno.results : []
               }
             />
-            <Paginacao total={pagTotal} onChange={this.onPaginationChange} />
+            <Paginacao
+              total={pagTotal}
+              onChange={this.onPaginationChange}
+              current={page}
+            />
           </div>
         )}
       </div>
