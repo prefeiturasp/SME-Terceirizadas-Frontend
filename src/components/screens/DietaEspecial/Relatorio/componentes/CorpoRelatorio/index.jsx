@@ -167,18 +167,19 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
-      {dietaEspecial.alergias_intolerancias && (
-        <div className="report-label-value">
-          <p>Relação por Diagnóstico</p>
-          {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
-            return (
-              <div className="value" key={key}>
-                {alergia.descricao}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {dietaEspecial.alergias_intolerancias &&
+        dietaEspecial.alergias_intolerancias.length > 0 && (
+          <div className="report-label-value">
+            <p>Relação por Diagnóstico</p>
+            {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
+              return (
+                <div className="value" key={key}>
+                  {alergia.descricao}
+                </div>
+              );
+            })}
+          </div>
+        )}
       {dietaEspecial.classificacao && (
         <div className="report-label-value">
           <p>Classificação da Dieta</p>
