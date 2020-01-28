@@ -8,6 +8,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
+import { usuarioTerceirizada } from "../../../../../../helpers/utilities";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial } = props;
@@ -135,29 +136,31 @@ export const CorpoRelatorio = props => {
           </div>
         )}
       </div>
-      <section className="row attachments">
-        <div className="report-label-value col-8">
-          <p>Laudo Médico</p>
-          <p>
-            O laudo fornecido pelo médico. Sem ele, a solicitação de Dieta
-            Especial será negada.
-          </p>{" "}
-        </div>{" "}
-        <div className="col-4 report-label-value">
-          <p>Anexos</p>
-          {dietaEspecial.anexos
-            .filter(anexo => anexo.eh_laudo_medico)
-            .map((anexo, key) => {
-              return (
-                <div key={key}>
-                  <a href={anexo.arquivo} className="value-important link">
-                    {`Anexo ${key + 1}`}
-                  </a>
-                </div>
-              );
-            })}
-        </div>
-      </section>
+      {!usuarioTerceirizada() && (
+        <section className="row attachments">
+          <div className="report-label-value col-8">
+            <p>Laudo Médico</p>
+            <p>
+              O laudo fornecido pelo médico. Sem ele, a solicitação de Dieta
+              Especial será negada.
+            </p>{" "}
+          </div>{" "}
+          <div className="col-4 report-label-value">
+            <p>Anexos</p>
+            {dietaEspecial.anexos
+              .filter(anexo => anexo.eh_laudo_medico)
+              .map((anexo, key) => {
+                return (
+                  <div key={key}>
+                    <a href={anexo.arquivo} className="value-important link">
+                      {`Anexo ${key + 1}`}
+                    </a>
+                  </div>
+                );
+              })}
+          </div>
+        </section>
+      )}
       <div className="report-label-value">
         <p>Observações</p>
         <p
