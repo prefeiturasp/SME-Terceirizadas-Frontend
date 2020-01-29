@@ -167,7 +167,6 @@ class solicitacaoDietaEspecial extends Component {
               <Field
                 component={InputText}
                 name="nome"
-                placeholder="Insira o Nome do Aluno"
                 className="form-control"
                 required
                 disabled

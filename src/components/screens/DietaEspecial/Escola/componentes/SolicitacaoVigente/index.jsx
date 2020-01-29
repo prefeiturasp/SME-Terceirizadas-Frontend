@@ -30,9 +30,16 @@ export class SolicitacaoVigente extends Component {
 
   render() {
     const { solicitacoesVigentes } = this.state;
+    const { uuid } = this.props;
     return (
       <div className="current-diets">
-        {solicitacoesVigentes && solicitacoesVigentes.length > 0 && (
+        {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
+          !uuid && (
+            <div className="pt-2 no-diets">
+              Não há solicitações vigentes para este aluno.
+            </div>
+          )
+        ) : (
           <div>
             <p className="pt-3 title">Dietas Ativas/Inativas</p>
             {solicitacoesVigentes.map((solicitacaoVigente, key) => {
