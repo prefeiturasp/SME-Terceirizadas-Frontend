@@ -23,7 +23,7 @@ import {
   getDietaEspecialCanceladasTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
-export const HOME = "/";
+export const HOME = "/painel-dieta-especial";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -40,7 +40,7 @@ class StatusSolicitacoesBase extends React.Component {
     };
     const anteriores = [
       {
-        href: `/`,
+        href: `/painel-dieta-especial`,
         titulo: "Painel Dieta Especial"
       }
     ];
