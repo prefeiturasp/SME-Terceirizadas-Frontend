@@ -103,7 +103,8 @@ class solicitacaoDietaEspecial extends Component {
         submitted: !this.state.submitted,
         resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
           response.data.uuid
-        }`
+        }`,
+        solicitacoesVigentes: null
       });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {

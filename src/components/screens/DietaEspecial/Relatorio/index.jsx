@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
+import {
+  getDietaEspecial,
+  getDietasEspeciaisVigentesDeUmAluno
+} from "../../../../services/dietaEspecial.service";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { TIPO_PERFIL, statusEnum } from "../../../../constants";
@@ -15,12 +18,14 @@ import {
   usuarioCODAEDietaEspecial,
   vizualizaBotoesDietaEspecial
 } from "../../../../helpers/utilities";
+import { formatarSolicitacoesVigentes } from "../Escola/helper";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dietaEspecial: null,
+      solicitacoesVigentes: null,
       uuid: null,
       showNaoAprovaModal: false,
       ShowCancelaModal: false
@@ -33,19 +38,37 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getDietaEspecial(uuid).then(response => {
-        this.setState({
-          dietaEspecial: response.data,
-          uuid
+      getDietaEspecial(uuid).then(responseDietaEspecial => {
+        getDietasEspeciaisVigentesDeUmAluno(
+          responseDietaEspecial.data.aluno.codigo_eol
+        ).then(responseDietasVigentes => {
+          this.setState({
+            solicitacoesVigentes: formatarSolicitacoesVigentes(
+              responseDietasVigentes.data.results.filter(
+                solicitacaoVigente => solicitacaoVigente.uuid !== uuid
+              )
+            ),
+            dietaEspecial: responseDietaEspecial.data,
+            uuid
+          });
         });
       });
     }
   }
 
   loadSolicitacao(uuid) {
-    getDietaEspecial(uuid).then(response => {
-      this.setState({
-        dietaEspecial: response.data
+    getDietaEspecial(uuid).then(responseDietaEspecial => {
+      getDietasEspeciaisVigentesDeUmAluno(
+        responseDietaEspecial.data.aluno.codigo_eol
+      ).then(responseDietasVigentes => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            responseDietasVigentes.data.results.filter(
+              solicitacaoVigente => solicitacaoVigente.uuid !== uuid
+            )
+          ),
+          dietaEspecial: responseDietaEspecial.data
+        });
       });
     });
   }
@@ -109,7 +132,12 @@ class Relatorio extends Component {
       protocolos,
       diagnosticosSelecionados
     } = this.props;
-    const { dietaEspecial, showNaoAprovaModal, uuid } = this.state;
+    const {
+      dietaEspecial,
+      showNaoAprovaModal,
+      uuid,
+      solicitacoesVigentes
+    } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR = tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA;
     return (
@@ -135,7 +163,11 @@ class Relatorio extends Component {
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
-                <CorpoRelatorio dietaEspecial={dietaEspecial} />
+                <CorpoRelatorio
+                  uuid={uuid}
+                  solicitacoesVigentes={solicitacoesVigentes}
+                  dietaEspecial={dietaEspecial}
+                />
                 {usuarioCODAEDietaEspecial() &&
                   dietaEspecial.status_solicitacao ===
                     statusEnum.CODAE_A_AUTORIZAR && <InformacoesCODAE />}

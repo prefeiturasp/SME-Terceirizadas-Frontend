@@ -9,9 +9,10 @@ import {
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
 import { usuarioTerceirizada } from "../../../../../../helpers/utilities";
+import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
 
 export const CorpoRelatorio = props => {
-  const { dietaEspecial } = props;
+  const { dietaEspecial, solicitacoesVigentes, uuid } = props;
   return (
     <div>
       <div className="row">
@@ -115,6 +116,12 @@ export const CorpoRelatorio = props => {
           </p>
         </div>
       </div>
+      {solicitacoesVigentes && (
+        <SolicitacaoVigente
+          uuid={uuid}
+          solicitacoesVigentes={solicitacoesVigentes}
+        />
+      )}
       <div className="row">
         {dietaEspecial.nome_completo_pescritor && (
           <div className="col-8 report-label-value">
