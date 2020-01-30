@@ -42,13 +42,15 @@ import Weekly from "../Shareable/Weekly/Weekly";
 import {
   extrairTiposALimentacao,
   formatarSubmissaoSolicitacaoContinua,
-  formatarSubmissaoSolicitacaoNormal
+  formatarSubmissaoSolicitacaoNormal,
+  construirPeriodosECombos
 } from "./helper";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -253,8 +255,7 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
-    let periodos = this.state.periodos;
-    let validacaoPeriodos = this.state.validacaoPeriodos;
+    let { periodos, validacaoPeriodos } = this.state;
     if (validacaoPeriodos[indice].checado === true) {
       validacaoPeriodos[indice].checado = false;
       periodos[indice].tipos_alimentacao_selecionados = [];
@@ -367,20 +368,14 @@ class InclusaoDeAlimentacao extends Component {
     this.refresh();
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.adicionaIndiceNoValidacaoPeriodos(this.props.periodos);
-      this.setState({
-        periodos: this.props.periodos
-      });
-    }
+  componentDidUpdate() {
     const {
       motivos_simples,
       motivos_continuos,
       meusDados,
       proximos_dois_dias_uteis
     } = this.props;
-    const { loading, periodos } = this.state;
+    let { loading, periodos } = this.state;
     if (
       motivos_simples !== [] &&
       motivos_continuos !== [] &&
@@ -391,6 +386,15 @@ class InclusaoDeAlimentacao extends Component {
     ) {
       this.setState({
         loading: false
+      });
+    }
+    if (this.props.meusDados) {
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao
+        .tipo_unidade_escolar;
+      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.adicionaIndiceNoValidacaoPeriodos(periodos);
+        this.setState({ combosTipoAlimentacao: response.results, periodos });
       });
     }
   }

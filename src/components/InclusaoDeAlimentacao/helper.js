@@ -13,6 +13,27 @@ export const formatarPeriodos = periodos => {
   return periodos;
 };
 
+export const construirPeriodosECombos = periodos => {
+  let periodosCombo = [];
+  periodos.forEach(periodo => {
+    let dicionarioPeriodo = {
+      checked: false,
+      tipos_alimentacao_selecionados: [],
+      numero_alunos: null,
+      nome: periodo.periodo_escolar.nome,
+      uuid: periodo.periodo_escolar.uuid,
+      tipos_alimentacao: periodo.combos.map(combo => {
+        return {
+          nome: combo.label,
+          uuid: combo.uuid
+        };
+      })
+    };
+    periodosCombo.push(dicionarioPeriodo);
+  });
+  return periodosCombo;
+};
+
 export const extrairTiposALimentacao = tiposAlimentacao => {
   let uuidsTiposAlimentacao = [];
   tiposAlimentacao.forEach(tipoAlimentacao => {
