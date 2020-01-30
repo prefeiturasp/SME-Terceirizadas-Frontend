@@ -152,7 +152,12 @@ export const CorpoRelatorio = props => {
               .map((anexo, key) => {
                 return (
                   <div key={key}>
-                    <a href={anexo.arquivo} className="value-important link">
+                    <a
+                      href={anexo.arquivo}
+                      className="value-important link"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       {`Anexo ${key + 1}`}
                     </a>
                   </div>
