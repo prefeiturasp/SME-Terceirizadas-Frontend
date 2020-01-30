@@ -98,6 +98,7 @@ class Relatorio extends Component {
     if (
       solicitacoesVigentes &&
       solicitacoesVigentes.length > 0 &&
+      usuarioCODAEDietaEspecial() &&
       !showAutorizarModal
     ) {
       this.showAutorizarModal();
