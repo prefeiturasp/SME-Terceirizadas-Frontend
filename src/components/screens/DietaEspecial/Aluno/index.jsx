@@ -1,5 +1,6 @@
 import moment from "moment";
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { getDietasEspeciaisVigentesDeUmAluno } from "../../../../services/dietaEspecial.service";
@@ -69,6 +70,9 @@ class solicitacaoDietaEspecial extends Component {
                   type={BUTTON_TYPE.BUTTON}
                   texto={"Voltar"}
                   style={BUTTON_STYLE.BLUE_OUTLINE}
+                  onClick={() =>
+                    this.props.history.push("/dieta-especial/ativas-inativas")
+                  }
                 />
               </div>
             </div>
@@ -122,4 +126,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(componentNameForm);
+export default connect(mapStateToProps)(withRouter(componentNameForm));
