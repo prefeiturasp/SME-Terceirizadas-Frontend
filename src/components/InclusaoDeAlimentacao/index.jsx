@@ -388,13 +388,13 @@ class InclusaoDeAlimentacao extends Component {
         loading: false
       });
     }
-    if (this.props.meusDados) {
+    if (this.props.meusDados && periodos.length === 0 && loading) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao
         .tipo_unidade_escolar;
       getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
         periodos = construirPeriodosECombos(response.results);
         this.adicionaIndiceNoValidacaoPeriodos(periodos);
-        this.setState({ combosTipoAlimentacao: response.results, periodos });
+        this.setState({ periodos });
       });
     }
   }
