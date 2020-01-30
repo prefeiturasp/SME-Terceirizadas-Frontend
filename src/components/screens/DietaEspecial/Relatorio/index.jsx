@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
+import {
+  getDietaEspecial,
+  getDietasEspeciaisVigentesDeUmAluno
+} from "../../../../services/dietaEspecial.service";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { TIPO_PERFIL, statusEnum } from "../../../../constants";
@@ -15,37 +18,60 @@ import {
   usuarioCODAEDietaEspecial,
   vizualizaBotoesDietaEspecial
 } from "../../../../helpers/utilities";
+import { formatarSolicitacoesVigentes } from "../Escola/helper";
+import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 
 class Relatorio extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dietaEspecial: null,
+      solicitacoesVigentes: null,
       uuid: null,
       showNaoAprovaModal: false,
-      ShowCancelaModal: false
+      ShowCancelaModal: false,
+      showAutorizarModal: false
     };
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getDietaEspecial(uuid).then(response => {
-        this.setState({
-          dietaEspecial: response.data,
-          uuid
+      getDietaEspecial(uuid).then(responseDietaEspecial => {
+        getDietasEspeciaisVigentesDeUmAluno(
+          responseDietaEspecial.data.aluno.codigo_eol
+        ).then(responseDietasVigentes => {
+          this.setState({
+            solicitacoesVigentes: formatarSolicitacoesVigentes(
+              responseDietasVigentes.data.results.filter(
+                solicitacaoVigente => solicitacaoVigente.uuid !== uuid
+              )
+            ),
+            dietaEspecial: responseDietaEspecial.data,
+            uuid
+          });
         });
       });
     }
   }
 
   loadSolicitacao(uuid) {
-    getDietaEspecial(uuid).then(response => {
-      this.setState({
-        dietaEspecial: response.data
+    getDietaEspecial(uuid).then(responseDietaEspecial => {
+      getDietasEspeciaisVigentesDeUmAluno(
+        responseDietaEspecial.data.aluno.codigo_eol
+      ).then(responseDietasVigentes => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            responseDietasVigentes.data.results.filter(
+              solicitacaoVigente => solicitacaoVigente.uuid !== uuid
+            )
+          ),
+          dietaEspecial: responseDietaEspecial.data
+        });
       });
     });
   }
@@ -54,46 +80,63 @@ class Relatorio extends Component {
     this.setState({ resposta_sim_nao, showNaoAprovaModal: true });
   }
 
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
   closeNaoAprovaModal() {
     this.setState({ showNaoAprovaModal: false });
   }
 
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
+  }
+
   handleSubmit(values) {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
-    const uuid = this.state.uuid;
-    const {
-      classificacaoDieta,
-      diagnosticosSelecionados,
-      identificacaoNutricionista,
-      protocolos
-    } = values;
-    let diagnosticos = null;
-    let payload = null;
-    if (diagnosticosSelecionados) {
-      diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
-      payload = {
-        uuid,
+    const { uuid, solicitacoesVigentes, showAutorizarModal } = this.state;
+    if (
+      solicitacoesVigentes &&
+      solicitacoesVigentes.length > 0 &&
+      !showAutorizarModal
+    ) {
+      this.showAutorizarModal();
+    } else {
+      const {
         classificacaoDieta,
-        diagnosticosSelecionados: diagnosticos,
+        diagnosticosSelecionados,
         identificacaoNutricionista,
         protocolos
-      };
-    } else {
-      payload = uuid;
-    }
-    this.props.endpointAprovaSolicitacao(payload).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(uuid);
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      } = values;
+      let diagnosticos = null;
+      let payload = null;
+      if (diagnosticosSelecionados) {
+        diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
+        payload = {
+          uuid,
+          classificacaoDieta,
+          diagnosticosSelecionados: diagnosticos,
+          identificacaoNutricionista,
+          protocolos
+        };
+      } else {
+        payload = uuid;
+      }
+      this.closeAutorizarModal();
+      this.props.endpointAprovaSolicitacao(payload).then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(toastAprovaMensagem);
+            this.loadSolicitacao(uuid);
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(toastAprovaMensagemErro);
+          }
+        },
+        function() {
           toastError(toastAprovaMensagemErro);
         }
-      },
-      function() {
-        toastError(toastAprovaMensagemErro);
-      }
-    );
+      );
+    }
   }
 
   render() {
@@ -109,7 +152,13 @@ class Relatorio extends Component {
       protocolos,
       diagnosticosSelecionados
     } = this.props;
-    const { dietaEspecial, showNaoAprovaModal, uuid } = this.state;
+    const {
+      dietaEspecial,
+      showNaoAprovaModal,
+      showAutorizarModal,
+      uuid,
+      solicitacoesVigentes
+    } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR = tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA;
     return (
@@ -130,12 +179,22 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
+            <ModalAutorizaDietaEspecial
+              closeModal={this.closeAutorizarModal}
+              showModal={showAutorizarModal}
+              dietaEspecial={dietaEspecial}
+              handleSubmit={handleSubmit(values => this.handleSubmit(values))}
+            />
             <span className="page-title">{`Dieta Especial - Solicitação # ${
               dietaEspecial.id_externo
             }`}</span>
             <div className="card mt-3">
               <div className="card-body">
-                <CorpoRelatorio dietaEspecial={dietaEspecial} />
+                <CorpoRelatorio
+                  uuid={uuid}
+                  solicitacoesVigentes={solicitacoesVigentes}
+                  dietaEspecial={dietaEspecial}
+                />
                 {usuarioCODAEDietaEspecial() &&
                   dietaEspecial.status_solicitacao ===
                     statusEnum.CODAE_A_AUTORIZAR && <InformacoesCODAE />}

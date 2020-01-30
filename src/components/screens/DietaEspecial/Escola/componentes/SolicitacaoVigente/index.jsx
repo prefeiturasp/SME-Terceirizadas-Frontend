@@ -30,16 +30,31 @@ export class SolicitacaoVigente extends Component {
 
   render() {
     const { solicitacoesVigentes } = this.state;
+    const { uuid } = this.props;
     return (
       <div className="current-diets">
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
-          <div className="pt-2 no-diets">
-            Não há solicitações vigentes para este aluno.
-          </div>
+          !uuid && (
+            <div className="pt-2 no-diets">
+              Não há solicitações vigentes para este aluno.
+            </div>
+          )
         ) : (
           <div>
-            <p className="pt-3 title">Dietas Ativas</p>
+            <p className="pt-3 title">Dietas Ativas/Inativas</p>
             {solicitacoesVigentes.map((solicitacaoVigente, key) => {
+              let texto = "";
+              let iconClassName = "";
+              let corIcone = "";
+              solicitacaoVigente.ativo
+                ? (texto = "Dieta ativa")
+                : (texto = "Dieta inativa");
+              solicitacaoVigente.ativo
+                ? (iconClassName = "fas fa-check-circle")
+                : (iconClassName = "fas fa-ban");
+              solicitacaoVigente.ativo
+                ? (corIcone = "green")
+                : (corIcone = "red");
               return (
                 <div className="pb-2" key={key}>
                   <div
@@ -48,13 +63,22 @@ export class SolicitacaoVigente extends Component {
                       solicitacaoVigente.active ? { background: "#F2FBFE" } : {}
                     }
                   >
-                    <div className="col-md-12 pt-2 pb-2 title">
-                      {`Solicitação # ${solicitacaoVigente.id_externo}`}
-                      <ToggleExpandir
-                        onClick={() => this.activateSolicitacao(key)}
-                        ativo={solicitacaoVigente.active}
-                        className="float-right"
-                      />
+                    <div className="row pt-2 pb-2 title">
+                      <div className="col-4">
+                        {`Solicitação: # ${solicitacaoVigente.id_externo}`}
+                      </div>
+                      <div className="col-8 text-right">
+                        <i
+                          style={{ color: corIcone }}
+                          className={iconClassName}
+                        />
+                        <label className="ml-1 pr-3 ">{texto}</label>
+                        <ToggleExpandir
+                          onClick={() => this.activateSolicitacao(key)}
+                          ativo={solicitacaoVigente.active}
+                          className="float-right"
+                        />
+                      </div>
                     </div>
                     <Collapse isOpened={solicitacaoVigente.active}>
                       <hr />

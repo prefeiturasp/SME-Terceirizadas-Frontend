@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
 import { minLength, required } from "../../../../helpers/fieldValidators";
-import { dateDelta } from "../../../../helpers/utilities";
+import { dateDelta, getError } from "../../../../helpers/utilities";
 import {
   criaDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno
@@ -103,30 +103,12 @@ class solicitacaoDietaEspecial extends Component {
         submitted: !this.state.submitted,
         resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
           response.data.uuid
-        }`
+        }`,
+        solicitacoesVigentes: null
       });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
-        toastError("Por favor anexe o laudo médico");
-      } else if (response.data["registro_funcional_pescritor"]) {
-        toastError(
-          `Registro funcional: ${
-            response.data["registro_funcional_pescritor"][0]
-          }`
-        );
-      } else if (response.data["nome_completo_pescritor"]) {
-        toastError(
-          `Nome do Prescritor da receita: ${
-            response.data["nome_completo_pescritor"][0]
-          }`
-        );
-      } else if (response.data["anexos"][0]["nome"][0]) {
-        const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
-        toastError(erroExtensaoInvalida);
-      } else {
-        toastError("Erro ao solicitar dieta especial");
-      }
+      toastError(getError(response.data));
     } else {
       toastError("Erro ao solicitar dieta especial");
     }
@@ -166,7 +148,6 @@ class solicitacaoDietaEspecial extends Component {
               <Field
                 component={InputText}
                 name="nome"
-                placeholder="Insira o Nome do Aluno"
                 className="form-control"
                 required
                 disabled

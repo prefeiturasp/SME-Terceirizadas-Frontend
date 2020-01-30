@@ -7,9 +7,9 @@ import { getDietasEspeciaisVigentesDeUmAluno } from "../../../../services/dietaE
 import { dadosDoAluno } from "../../../../services/perfil.service";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
-import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
-import { formatarSolicitacoesVigentes } from "./helper";
 import "./style.scss";
+import { formatarSolicitacoesVigentes } from "../Escola/helper";
+import SolicitacaoVigente from "../Escola/componentes/SolicitacaoVigente";
 
 class solicitacaoDietaEspecial extends Component {
   constructor(props) {
