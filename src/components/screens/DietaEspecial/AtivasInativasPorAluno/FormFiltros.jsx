@@ -54,8 +54,8 @@ class Filtros extends Component {
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-5">
-                <label htmlFor="dre">Diretoria Regional de Educação</label>
                 <Field
+                  label="Diretoria Regional de Educação"
                   component={Select}
                   name="dre"
                   options={diretoriasRegionais}
@@ -69,8 +69,8 @@ class Filtros extends Component {
                 />
               </div>
               <div className="col-7">
-                <label htmlFor="escola">Unidade Escolar</label>
                 <Field
+                  label="Unidade Escolar"
                   component={Select}
                   name="escola"
                   options={escolasFiltrado}
@@ -81,8 +81,8 @@ class Filtros extends Component {
             </div>
             <div className="row">
               <div className="col-2">
-                <label htmlFor="codigo_eol">Cód. EOL do Aluno</label>
                 <Field
+                  label="Cód. EOL do Aluno"
                   component={InputText}
                   name="codigo_eol"
                   placeholder="Insira o Código"
@@ -91,11 +91,11 @@ class Filtros extends Component {
                 />
               </div>
               <div className="col-9">
-                <label htmlFor="nome_aluno">Nome Completo do Aluno</label>
                 <Field
+                  label="Nome Completo do Aluno"
                   component={InputText}
                   name="nome_aluno"
-                  placeholder="Indira o Nome do Aluno"
+                  placeholder="Insira o Nome do Aluno"
                   disabled={loading || loadingNomeAluno}
                 />
               </div>

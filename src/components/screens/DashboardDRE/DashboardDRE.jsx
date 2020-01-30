@@ -250,21 +250,6 @@ class DashboardDRE extends Component {
               <TabelaHistoricoLotes lotes={lotesDRE} />
             </Collapse>
           </CardMatriculados>
-          <div className="card card-shortcut-to-form mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold">
-                Faça uma Solicitação Unificada
-              </div>
-              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <Link to="/dre/solicitacao-unificada">
-                <Botao
-                  texto="Solicitação Unificada"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                />
-              </Link>
-            </div>
-          </div>
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
@@ -485,6 +470,21 @@ class DashboardDRE extends Component {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="card card-shortcut-to-form mt-3">
+            <div className="card-body">
+              <div className="card-title font-weight-bold">
+                Faça uma Solicitação Unificada
+              </div>
+              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
+              <Link to="/dre/solicitacao-unificada">
+                <Botao
+                  texto="Solicitação Unificada"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                />
+              </Link>
             </div>
           </div>
         </form>
