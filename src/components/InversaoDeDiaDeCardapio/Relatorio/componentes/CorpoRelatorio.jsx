@@ -9,6 +9,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
+import { Link } from "react-router-dom";
 
 export const CorpoRelatorio = props => {
   const {
@@ -25,7 +26,14 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
-          <a href={getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}>
+          <Link
+            to="route"
+            target="_blank"
+            onClick={event => {
+              event.preventDefault();
+              window.open(getDetalheInversaoCardapio(inversaoDiaCardapio.uuid));
+            }}
+          >
             <Botao
               type={BUTTON_TYPE.BUTTON}
               titulo="imprimir"
@@ -33,7 +41,7 @@ export const CorpoRelatorio = props => {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
             />
-          </a>
+          </Link>
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">
