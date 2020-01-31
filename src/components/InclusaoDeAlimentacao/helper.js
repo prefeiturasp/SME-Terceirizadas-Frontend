@@ -103,3 +103,31 @@ export const formatarSubmissaoSolicitacaoNormal = (values, meusDados) => {
   dataFormatada.descricao = values.descricao;
   return dataFormatada;
 };
+
+const retornaQuantidadeDeAlunosNoPeriodoEscolar = (
+  periodoUuid,
+  periodosQuantidadeAlunos
+) => {
+  let quantidadeAlunos = null;
+  periodosQuantidadeAlunos.forEach(periodo => {
+    if (periodo.periodo_escolar.uuid === periodoUuid) {
+      quantidadeAlunos = periodo.quantidade_alunos;
+    }
+  });
+  return quantidadeAlunos;
+};
+
+export const abstraiPeriodosComAlunosMatriculados = (
+  periodos,
+  periodosQuantidadeAlunos
+) => {
+  periodos.forEach(periodo => {
+    periodo["maximo_alunos"] = retornaQuantidadeDeAlunosNoPeriodoEscolar(
+      periodo.uuid,
+      periodosQuantidadeAlunos
+    );
+    periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["validador"] = [];
+  });
+  return periodos;
+};
