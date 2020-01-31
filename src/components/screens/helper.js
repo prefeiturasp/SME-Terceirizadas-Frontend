@@ -1,9 +1,6 @@
 import {
   ALTERACAO_CARDAPIO,
-  CODAE,
-  DRE,
-  ESCOLA,
-  TERCEIRIZADA,
+  DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   RELATORIO,
@@ -11,8 +8,10 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
 } from "../../configs/constants";
+import { truncarString } from "../../helpers/utilities";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
+const DIETA_ESP = "DIETA_ESPECIAL";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
 const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
@@ -27,29 +26,34 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
-export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
-  let tipoRelatorio = "";
-  switch (visao) {
-    case LOG_PARA.ESCOLA:
-      tipoRelatorio = ESCOLA;
-      break;
-    case LOG_PARA.DRE:
-      tipoRelatorio = DRE;
-      break;
-    case LOG_PARA.CODAE:
-      tipoRelatorio = CODAE;
-      break;
-    case LOG_PARA.TERCEIRIZADA:
-      tipoRelatorio = TERCEIRIZADA;
-      break;
-    default:
-      break;
-  }
+export const ajustaFormatoLogPainelDietaEspecial = logs => {
   return logs.map(log => {
+    let tamanhoString = 48;
+    let descricao = log.descricao;
+    return {
+      text: truncarString(descricao, tamanhoString),
+      date: log.data_log,
+      link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+        log.uuid
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+    };
+  });
+};
+
+export const ajustarFormatoLog = logs => {
+  return logs.map(log => {
+    let tamanhoString = 48;
+    let descricao = log.descricao;
     let solicitacao = "falta-implementar";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
         solicitacao = ALTERACAO_CARDAPIO;
+        break;
+
+      case DIETA_ESP:
+        solicitacao = DIETA_ESPECIAL;
+        descricao = log.descricao_dieta_especial;
+        tamanhoString = 150;
         break;
 
       case KIT_LANCHE_AVULSA:
@@ -78,14 +82,11 @@ export const ajustarFormatoLog = (logs, visao = LOG_PARA.ESCOLA) => {
         break;
     }
     return {
-      text: log.descricao,
+      text: truncarString(descricao, tamanhoString),
       date: log.data_log,
-      link:
-        solicitacao === ALTERACAO_CARDAPIO
-          ? `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}`
-          : `/${tipoRelatorio}/${solicitacao}/${RELATORIO}?uuid=${
-              log.uuid
-            }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      link: `/${solicitacao}/${RELATORIO}?uuid=${
+        log.uuid
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
     };
   });
 };

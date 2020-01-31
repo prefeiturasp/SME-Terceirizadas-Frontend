@@ -1,6 +1,6 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants/statusEnum";
+import { statusEnum } from "../constants";
 import { TIPO_PERFIL } from "../constants";
 
 export const showResults = values =>
@@ -123,11 +123,11 @@ export const getDataObj = data => {
 export const prazoDoPedidoMensagem = prioridade => {
   switch (prioridade) {
     case "REGULAR":
-      return "Pedido no prazo regular";
+      return "Solicitação no prazo regular";
     case "LIMITE":
-      return "Pedido no prazo limite";
+      return "Solicitação no prazo limite";
     case "PRIORITARIO":
-      return "Pedido próximo ao prazo de vencimento";
+      return "Solicitação próxima ao prazo de vencimento";
     default:
       return "";
   }
@@ -221,6 +221,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
@@ -229,7 +230,20 @@ export const visualizaBotoesDoFluxo = solicitacao => {
         tipoPerfil
       );
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
-      return tipoPerfil === TIPO_PERFIL.ESCOLA;
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
+        tipoPerfil
+      );
+    default:
+      return false;
+  }
+};
+
+export const vizualizaBotoesDietaEspecial = solicitacao => {
+  switch (solicitacao.status_solicitacao) {
+    case statusEnum.CODAE_A_AUTORIZAR:
+      return usuarioEscola() || usuarioCODAEDietaEspecial();
+    case statusEnum.CODAE_AUTORIZADO:
+      return usuarioTerceirizada();
     default:
       return false;
   }
@@ -244,4 +258,57 @@ export const formatarCPFouCNPJ = value => {
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
     "$1.$2.$3/$4-$5"
   );
+};
+
+export const usuarioEscola = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
+};
+
+export const usuarioDiretoriaRegional = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
+};
+
+export const usuarioCODAEGestaoAlimentacao = () => {
+  return (
+    localStorage.getItem("tipo_perfil") ===
+    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioCODAEDietaEspecial = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
+};
+
+export const usuarioTerceirizada = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
+};
+
+export const converterDDMMYYYYparaYYYYMMDD = data => {
+  return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
+};
+
+export const obtemIdentificacaoNutricionista = () =>
+  `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
+    "crn_numero"
+  )}`.replace(/[^\w\s-]/g, "");
+
+export const getKey = obj => {
+  return Object.keys(obj)[0];
+};
+
+export const getError = obj => {
+  let result = "Erro";
+  if (!obj[getKey(obj)]) {
+    return "Erro";
+  } else if (
+    (obj[getKey(obj)][0] !== undefined &&
+      typeof obj[getKey(obj)][0] !== "string") ||
+    typeof obj[getKey(obj)] !== "string"
+  ) {
+    result = getError(obj[getKey(obj)]);
+  } else {
+    if (typeof obj[getKey(obj)] === "string") return obj[getKey(obj)];
+    else return obj[getKey(obj)][0];
+  }
+  return result;
 };

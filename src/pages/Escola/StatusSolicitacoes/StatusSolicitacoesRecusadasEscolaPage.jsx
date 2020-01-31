@@ -8,7 +8,7 @@ import { HOME } from "../constants";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_NEGADAS}`,
-  titulo: "Solicitações Recusadas"
+  titulo: "Solicitações Negadas"
 };
 
 export default () => (

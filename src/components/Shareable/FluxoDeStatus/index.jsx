@@ -1,6 +1,7 @@
 import React from "react";
 import {
   existeAlgumStatusFimDeFluxo,
+  fluxoDietaEspecialPartindoEscola,
   fluxoPartindoEscola,
   fluxoPartindoDRE,
   fluxoInformativoPartindoEscola,
@@ -16,12 +17,20 @@ export const FluxoDeStatus = props => {
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
     cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
-  const fluxo =
-    tipoDeFluxo === "informativo"
-      ? fluxoInformativoPartindoEscola
-      : tipoDeFluxo === "partindoDRE"
-      ? fluxoPartindoDRE
-      : fluxoPartindoEscola;
+  let fluxo;
+  switch (tipoDeFluxo) {
+    case "informativo":
+      fluxo = fluxoInformativoPartindoEscola;
+      break;
+    case "partindoDRE":
+      fluxo = fluxoPartindoDRE;
+      break;
+    case "dietaEspecialPartindoEscola":
+      fluxo = fluxoDietaEspecialPartindoEscola;
+      break;
+    default:
+      fluxo = fluxoPartindoEscola;
+  }
   const fluxoUtilizado =
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
   return (

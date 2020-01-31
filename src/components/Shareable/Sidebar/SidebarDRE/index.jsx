@@ -6,7 +6,8 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  RELATORIOS
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -28,269 +29,158 @@ export class SidebarDRE extends Component {
     const { subMenu } = this.state;
     return [
       <li key={0} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapsePainel"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fas fa-sliders-h" />
+        <NavLink className={`nav-link collapsed`} to="/">
+          <i className="fas fa-file-alt" />
           <span>Painel Inicial</span>
         </NavLink>
-        <div
-          id="collapsePainel"
-          className={`collapse`}
-          aria-labelledby="headingPainel"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/`}
-            >
-              Home
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
-            >
-              Autorizadas
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
-            >
-              Aguardando autorização
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
-            >
-              Negadas
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-            >
-              Canceladas
-            </NavLink>
-          </div>
-        </div>
       </li>,
       <li key={1} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapseSolicitacoes"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fas fa-edit" />
-          <span>Novas solicitações</span>
-        </NavLink>
-        <div
-          id="collapseSolicitacoes"
-          className={`collapse`}
-          aria-labelledby="headingPainel"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
-            >
-              Solicitação Unificada
-            </NavLink>
-          </div>
-        </div>
-      </li>,
-      <li key={2} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapseRelatorio"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fas fa-file-alt" />
-          <span>Relatório</span>
-        </NavLink>
-        <div
-          id="collapseRelatorio"
-          className={`collapse`}
-          aria-labelledby="headingSchool"
-          data-parent="#accordionSidebar"
-        >
-          <div className="bg-white collapse-inner rounded">
-            <NavLink
-              onClick={() => this.onSubmenuClick("solicitacoes")}
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
-              Por tipo de Solicitação
-              <i className="fas fa-chevron-down" />
-            </NavLink>
-            {subMenu === "solicitacoes" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inclusão de Alimentação
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Alteração de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Kit Lanche Passeio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Unificada
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inversão de Dia de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Suspensão de Alimentação
-                </NavLink>
-              </div>
-            )}
-            <NavLink
-              onClick={() => this.onSubmenuClick("status")}
-              activeClassName="active"
-              className="collapse-item"
-              to="#"
-            >
-              Por tipo de Status
-              <i className="fas fa-chevron-down" />
-            </NavLink>
-            {subMenu === "status" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inclusão de Alimentação
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Alteração de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação de Kit Lanche Passeio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Solicitação Unificada
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Inversão de Dia de Cardápio
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="#"
-                >
-                  Suspensão de Alimentação
-                </NavLink>
-              </div>
-            )}
-          </div>
-        </div>
-      </li>,
-      <li key={3} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"
           data-toggle="collapse"
-          data-target="#collapseConfig"
+          data-target="#collapseGestaoAlimentacao"
           aria-expanded="false"
-          aria-controls="collapseTwo"
+          aria-controls="collapseOne"
         >
-          <i className="fas fa-cog" />
-          <span>Configurações</span>
+          <i className="fas fa-utensils" />
+          <span>Gestão de Alimentação</span>
         </Link>
         <div
-          id="collapseConfig"
+          id="collapseGestaoAlimentacao"
           className={`collapse`}
           aria-labelledby="headingConfig"
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              onClick={() => this.onSubmenuClick("cadastros")}
+              activeClassName="active"
+              className="collapse-item"
+              to="/painel-gestao-alimentacao"
+            >
+              Painel de Solicitações
+            </NavLink>
+            <NavLink
+              onClick={() => this.onSubmenuClick("novas-solicitacoes")}
               activeClassName="active"
               className="collapse-item"
               to="#"
             >
-              Cadastros
+              Novas Solicitações
               <i className="fas fa-chevron-down" />
             </NavLink>
-            {subMenu === "cadastros" && (
+            {subMenu === "novas-solicitacoes" && (
               <div className="submenu">
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/configuracoes/cadastros"
+                  to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
                 >
-                  Perfil
+                  Solicitação Unificada
+                </NavLink>
+              </div>
+            )}
+            <NavLink
+              onClick={() => this.onSubmenuClick("consulta-solicitacoes")}
+              activeClassName="active"
+              className="collapse-item"
+              to="#"
+            >
+              Consulta de Solicitações
+              <i className="fas fa-chevron-down" />
+            </NavLink>
+            {subMenu === "consulta-solicitacoes" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
+                >
+                  Aguardando autorização
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to="/configuracoes/cadastros"
+                  to={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
                 >
-                  Unidades Escolares
+                  Autorizadas
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+                >
+                  Negadas
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                >
+                  Canceladas
                 </NavLink>
               </div>
             )}
-            {[PERFIL.SUPLENTE, PERFIL.COGESTOR].includes(
-              localStorage.getItem("perfil")
-            ) && (
+          </div>
+        </div>
+      </li>,
+      <li key={2} className="nav-item">
+        <Link
+          className={`nav-link collapsed`}
+          href="#teste"
+          data-toggle="collapse"
+          data-target="#collapseDietaEspecial"
+          aria-expanded="false"
+          aria-controls="collapseTwo"
+        >
+          <i className="fas fa-carrot" />
+          <span>Dieta Especial</span>
+        </Link>
+        <div
+          id="collapseDietaEspecial"
+          className={`collapse`}
+          aria-labelledby="headingConfig"
+          data-parent="#accordionSidebar"
+        >
+          <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/dieta-especial/ativas-inativas`}
+            >
+              Consulta Dieta de Alunos
+            </NavLink>
+          </div>
+        </div>
+      </li>,
+      <li key={3} className="nav-item">
+        <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
+          <i className="fas fa-file-alt" />
+          <span>Relatórios</span>
+        </NavLink>
+      </li>,
+      [PERFIL.SUPLENTE, PERFIL.COGESTOR].includes(
+        localStorage.getItem("perfil")
+      ) && (
+        <li key={4} className="nav-item">
+          <Link
+            className={`nav-link collapsed`}
+            href="#teste"
+            data-toggle="collapse"
+            data-target="#collapseConfig"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <i className="fas fa-cog" />
+            <span>Configurações</span>
+          </Link>
+          <div
+            id="collapseConfig"
+            className={`collapse`}
+            aria-labelledby="headingConfig"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
               <NavLink
                 activeClassName="active"
                 className="collapse-item"
@@ -298,24 +188,10 @@ export class SidebarDRE extends Component {
               >
                 Permissões
               </NavLink>
-            )}
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes"
-            >
-              Disparo de E-mail
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/configuracoes/mensagem"
-            >
-              Configuração de Mensagem
-            </NavLink>
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      )
     ];
   }
 }

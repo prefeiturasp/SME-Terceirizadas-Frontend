@@ -29,7 +29,9 @@ export const InputText = props => {
     <div className={`input ${icone && "icon"}`}>
       {label && [
         required && !esconderAsterisco && (
-          <span className="required-asterisk">*</span>
+          <span key={0} className="required-asterisk">
+            *
+          </span>
         ),
         <label
           key={1}

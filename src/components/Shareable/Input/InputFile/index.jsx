@@ -8,7 +8,7 @@ import { BUTTON_STYLE, BUTTON_ICON, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
 import { toastSuccess, toastError } from "../../Toast/dialogs";
 import { truncarString } from "../../../../helpers/utilities";
-import { DOIS_MB } from "../../../../constants";
+import { DEZ_MB } from "../../../../constants";
 
 export class InputFile extends Component {
   constructor(props) {
@@ -50,11 +50,15 @@ export class InputFile extends Component {
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
     Array.from(event.target.files).forEach(file => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
-      if (!["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(extensao)) {
+      if (
+        !["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(
+          extensao.toLowerCase()
+        )
+      ) {
         toastError(`Extensão do arquivo não suportada: ${extensao}`);
         valido = false;
-      } else if (file.size > DOIS_MB) {
-        toastError(`Tamanho máximo: 2MB`);
+      } else if (file.size > DEZ_MB) {
+        toastError(`Tamanho máximo: 10MB`);
         valido = false;
       }
     });
@@ -65,13 +69,22 @@ export class InputFile extends Component {
         readerFile(file)
           .then(anexo => {
             data.push(anexo);
-            files.push({ nome: file.name, base64: anexo.arquivo });
+            files.push({
+              nome: this.props.nomeNovoArquivo || file.name,
+              base64: anexo.arquivo
+            });
           })
           .then(() => {
             if (files.length === QUANTIDADE_ARQUIVOS) {
               toastSuccess("Laudo(s) incluso(s) com sucesso");
-              this.props.setFiles(data);
-              this.setState({ files });
+              if (this.props.concatenarNovosArquivos) {
+                const allFiles = this.state.files.concat(files);
+                this.props.setFiles(allFiles);
+                this.setState({ files: allFiles });
+              } else {
+                this.props.setFiles(data);
+                this.setState({ files });
+              }
             }
           });
       });
@@ -148,6 +161,7 @@ export class InputFile extends Component {
 
 InputFile.propTypes = {
   className: PropTypes.string,
+  concatenarNovosArquivos: PropTypes.bool,
   disabled: PropTypes.bool,
   esconderAsterisco: PropTypes.bool,
   helpText: PropTypes.string,
@@ -156,6 +170,7 @@ InputFile.propTypes = {
   labelClassName: PropTypes.string,
   meta: PropTypes.object,
   name: PropTypes.string,
+  nomeNovoArquivo: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string
@@ -163,6 +178,7 @@ InputFile.propTypes = {
 
 InputFile.defaultProps = {
   className: "",
+  concatenarNovosArquivos: false,
   disabled: false,
   esconderAsterisco: false,
   helpText: "",

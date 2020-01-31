@@ -83,4 +83,24 @@ button.general-button {
       border: 1px solid $grayDisabled;
     }
   }
+  &.red-button-outline {
+    color: $red;
+    border: 1px solid $red;
+    background-color: transparent;
+    i {
+      color: $red;
+    }
+    &:hover {
+      color: $white;
+      background-color: $red;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
 }

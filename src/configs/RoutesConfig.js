@@ -1,12 +1,6 @@
-import {
-  painelHome,
-  permissoes,
-  relatorios,
-  relatoriosAlteracaoDeCardapio
-} from "./helper";
 import { Login } from "../components/Login";
-import PerfilPage from "../pages/Perfil/PerfilPage";
 import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
@@ -17,69 +11,78 @@ import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
 import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/RelatorioPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
-
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioCODAEPage from "../pages/CODAE/SolicitacaoUnificada/RelatorioPage";
-import SolicitacaoUnificadaRelatorioDREPage from "../pages/DRE/SolicitacaoUnificada/RelatorioPage";
-import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
-import MensagemPage from "../pages/Configuracoes/MensagemPage";
-import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
-import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioDREPage from "../pages/DRE/InclusaoDeAlimentacao/RelatorioPage";
-import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
-
-import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
-import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesAutorizadasDREPage";
-import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
-import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
-import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
 import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
+import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
-
+import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
+import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
+import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
+import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
+import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
+import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
+import SolicitacaoUnificadaPage from "../pages/DRE/SolicitacaoUnificadaPage";
+import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesAutorizadasDREPage";
+import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
+import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
+import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
+import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
+import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
+import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
+import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
+import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
+import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
+import PerfilPage from "../pages/Perfil/PerfilPage";
+import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
+import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
+import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
+import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
+import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
+import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
 import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
 import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
-import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
-
-import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
-import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-
-import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
-
-import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
-import RelatorioDietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/RelatorioPage";
-import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
-import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
-import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
-import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
-import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
-import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
-import InclusaoDeAlimentacaoRelatorioTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/RelatorioPage";
-import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
-
-import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
-import SolicitacaoUnificadaRelatorioTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/RelatorioPage";
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
-
-import * as InclusaoDeAlimentacaoPaginas from "./imports/InclusaoDeAlimentacaoPaginas";
+import {
+  dashBoardDietaEspecial,
+  painelGestaoAlimentacao,
+  painelInicial,
+  permissoes,
+  relatorios,
+  relatoriosAlteracaoDeCardapio,
+  relatoriosDietaEspecial,
+  relatoriosInclusaoDeAlimentacao,
+  relatoriosInversaoDiaCardapio,
+  relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoUnificada,
+  StatusSolicitacoesDietaEspecial
+} from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
-
-import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
-import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
-import * as RelatorioPageKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 
 const routesConfig = [
   {
+    path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
+    component: DietaEspecialAluno,
+    exact: false
+  },
+  {
     path: "/",
-    component: painelHome(),
+    component: painelInicial(),
+    exact: true
+  },
+  {
+    path: "/painel-gestao-alimentacao",
+    component: painelGestaoAlimentacao(),
     exact: true
   },
   {
@@ -97,13 +100,6 @@ const routesConfig = [
     path: "/relatorios",
     component: relatorios(),
     exact: true
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioDietaEspecialEscolaPage,
-    exact: false
   },
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
@@ -137,13 +133,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoPaginas.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
     exact: false
@@ -154,23 +143,9 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioEscola,
-    exact: true
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioEscola,
-    exact: true
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
@@ -208,22 +183,8 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioDREPage,
-    exact: false
-  },
-  {
     path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
-    exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioDRE,
     exact: false
   },
   {
@@ -232,23 +193,9 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioDRE,
-    exact: false
-  },
-  {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosDRE,
     exact: false
-  },
-  {
-    path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
-      constants.RELATORIO
-    }`,
-    component: SolicitacaoUnificadaRelatorioDREPage,
-    exact: true
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
@@ -276,13 +223,6 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioCODAEPage,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
     exact: false
@@ -293,34 +233,13 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioCODAE,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
-      constants.RELATORIO
-    }`,
-    component: SolicitacaoUnificadaRelatorioCODAEPage,
-    exact: false
-  },
-  {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageInversaoDiaCardapio.RelatorioTerceirizada,
     exact: false
   },
   {
@@ -359,22 +278,8 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
-    component: InclusaoDeAlimentacaoRelatorioTerceirizadaPage,
-    exact: false
-  },
-  {
     path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}/${
-      constants.RELATORIO
-    }`,
-    component: RelatorioPageKitLanche.RelatorioTerceirizada,
     exact: false
   },
   {
@@ -385,21 +290,12 @@ const routesConfig = [
   {
     path: `/${constants.TERCEIRIZADA}/${
       constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
-    }/${constants.RELATORIO}`,
-    component: SolicitacaoUnificadaRelatorioTerceirizadaPage,
-    exact: false
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${
-      constants.SOLICITACAO_KIT_LANCHE_UNIFICADA
     }`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}/${
-      constants.RELATORIO
-    }`,
+    path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
     exact: false
   },
@@ -426,6 +322,11 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
+    exact: false
+  },
+  {
+    path: `/configuracoes/cadastros/horario-combos-alimentacao`,
+    component: CadastroHorarioComboAlimentacaoPage,
     exact: false
   },
   {
@@ -469,10 +370,35 @@ const routesConfig = [
     exact: false
   },
   {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}/${
+    path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacao(),
+    exact: false
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
+    component: relatoriosDietaEspecial(),
+    exact: false
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/ativas-inativas`,
+    component: RelatorioAlunosDietasAtivasInativasPage,
+    exact: false
+  },
+  {
+    path: `/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
+    component: relatoriosInversaoDiaCardapio(),
+    exact: false
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLanche(),
+    exact: false
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${
       constants.RELATORIO
     }`,
-    component: RelatorioPageKitLanche.RelatorioCODAE,
+    component: relatoriosSolicitacaoUnificada(),
     exact: false
   },
   {
@@ -489,6 +415,39 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false
+  },
+  {
+    path: `/painel-dieta-especial`,
+    component: dashBoardDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_PENDENTES
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_NEGADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_AUTORIZADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_CANCELADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true
   }
 ];
 

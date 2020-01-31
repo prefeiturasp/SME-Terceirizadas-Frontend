@@ -7,6 +7,7 @@ import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
 import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";
 import IconeTipoAlimentacao from "../../Shareable/Icones/Cadastros/IconeTipoAlimentacao";
+import IconeHorarioCombo from "../../Shareable/Icones/Cadastros/IconeCadastroHorarioComboAlimentacao";
 import "./style.scss";
 
 class Cadastros extends Component {
@@ -16,7 +17,8 @@ class Cadastros extends Component {
       gestaoDeAlimentacao: false,
       hoverLotes: false,
       hoverEmpresas: false,
-      hoverEdital: false
+      hoverEdital: false,
+      hoverHorarios: false
     };
     this.cardEdital = React.createRef();
   }
@@ -27,6 +29,7 @@ class Cadastros extends Component {
       hoverEmpresas,
       hoverTipoAlimentacao,
       hoverLotes,
+      hoverHorarios,
       gestaoDeAlimentacao
     } = this.state;
     return (
@@ -91,6 +94,20 @@ class Cadastros extends Component {
             <Link to="/configuracoes/cadastros/tipos-alimentacao">
               <CardLogo titulo={"Cadastro de Tipos de Alimentações"}>
                 <IconeTipoAlimentacao hover={hoverTipoAlimentacao} />
+              </CardLogo>
+            </Link>
+          </div>
+        </div>
+
+        <div className="row mt-3">
+          <div
+            onMouseEnter={() => this.setState({ hoverHorarios: true })}
+            onMouseLeave={() => this.setState({ hoverHorarios: false })}
+            className="linked-card col-4"
+          >
+            <Link to="/configuracoes/cadastros/horario-combos-alimentacao">
+              <CardLogo titulo={"Horários de alimentações"}>
+                <IconeHorarioCombo hover={hoverHorarios} />
               </CardLogo>
             </Link>
           </div>

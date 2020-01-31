@@ -1,4 +1,5 @@
 import { API_URL } from "../constants/config.constants";
+import { AUTH_TOKEN } from "./contants";
 import authService from "./auth";
 
 const authToken = {
@@ -127,6 +128,41 @@ export const confirmarEmail = (uuid, confirmationKey) => {
   return fetch(url, {
     method: "GET",
     headers: { "Content-Type": "application/json" }
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const obtemDadosAlunoPeloEOL = async codEOL => {
+  const url = `${API_URL}/dados-alunos-eol/${codEOL}/`;
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { detail: json.detail, status };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const dadosDoAluno = codigoEol => {
+  const url = `${API_URL}/alunos/${codigoEol}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
   })
     .then(res => {
       status = res.status;

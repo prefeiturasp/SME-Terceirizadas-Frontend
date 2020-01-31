@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
@@ -12,7 +12,6 @@ import {
   formatarPedidos
 } from "../../../../helpers/painelPedidos";
 import CardHistorico from "../../components/CardHistorico";
-import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -102,7 +101,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>
@@ -114,7 +112,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={`${TERCEIRIZADA}`}
                       />
                     </div>
                   </div>
@@ -127,7 +124,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={`${TERCEIRIZADA}`}
                       />
                     </div>
                   </div>
@@ -141,7 +137,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inclusões de Alimentação Autorizadas"
                         }
-                        parametroURL={`${TERCEIRIZADA}`}
                       />
                     </div>
                   </div>

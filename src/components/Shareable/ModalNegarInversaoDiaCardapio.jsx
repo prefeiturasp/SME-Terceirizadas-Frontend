@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { statusEnum } from "../../constants/statusEnum";
+import { statusEnum } from "../../constants";
 import { required } from "../../helpers/fieldValidators";
 import { mensagemCancelamento } from "../../helpers/utilities";
 import {

@@ -1,3 +1,4 @@
+import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
 export const FLUXO = {
@@ -26,8 +27,11 @@ export const SOLICITACOES = {
   PENDENTES_CIENCIA: "pendentes-ciencia",
   NEGADOS: "negados",
   CANCELADOS: "cancelados",
-  PENDENTES_VALIDACAO_DRE: "pendentes-validacao"
+  PENDENTES_VALIDACAO_DRE: "pendentes-validacao",
+  QUESTIONAMENTOS: "questionamentos"
 };
+
+export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
 
 export const AUTH_TOKEN = {
   Authorization: `JWT ${authService.getToken()}`,

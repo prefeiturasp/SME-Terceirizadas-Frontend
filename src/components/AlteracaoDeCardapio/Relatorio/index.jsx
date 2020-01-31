@@ -5,17 +5,15 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
-import { getDiasUteis } from "../../../services/diasUteis.service";
-import {
-  dataParaUTC,
-  visualizaBotoesDoFluxo
-} from "../../../helpers/utilities";
+import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants/statusEnum";
+import { statusEnum } from "../../../constants";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import { CODAE } from "../../../configs/constants";
+import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -23,6 +21,7 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       showNaoAprovaModal: false,
+      showAutorizarModal: false,
       showModal: false,
       alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
@@ -30,33 +29,22 @@ class Relatorio extends Component {
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getAlteracaoCardapio(uuid).then(response => {
-          this.setState({
-            alteracaoDeCardapio: response,
-            uuid,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              response.data_inicial,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
-            )
-          });
+    if (uuid) {
+      getAlteracaoCardapio(uuid).then(response => {
+        this.setState({
+          alteracaoDeCardapio: response,
+          uuid,
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
-      }
-    });
+      });
+    }
   }
 
   showQuestionamentoModal(resposta_sim_nao) {
@@ -75,6 +63,14 @@ class Relatorio extends Component {
     this.setState({ showNaoAprovaModal: false });
   }
 
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
+  }
+
   loadSolicitacao(uuid) {
     getAlteracaoCardapio(uuid).then(response => {
       this.setState({
@@ -90,6 +86,7 @@ class Relatorio extends Component {
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
+          this.closeAutorizarModal();
           this.loadSolicitacao(uuid);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
@@ -108,16 +105,19 @@ class Relatorio extends Component {
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
-      uuid
+      uuid,
+      showAutorizarModal
     } = this.state;
     const {
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
+      endpointAprovaSolicitacao,
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
-      ModalQuestionamento
+      ModalQuestionamento,
+      visao
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -149,8 +149,14 @@ class Relatorio extends Component {
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         alteracaoDeCardapio.status
       );
+    const EXIBIR_MODAL_AUTORIZACAO =
+      visao === CODAE &&
+      alteracaoDeCardapio &&
+      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      !alteracaoDeCardapio.logs[alteracaoDeCardapio.logs.length - 1]
+        .resposta_sim_nao;
     return (
-      <div>
+      <div className="report">
         {ModalNaoAprova && (
           <ModalNaoAprova
             showModal={showNaoAprovaModal}
@@ -178,7 +184,17 @@ class Relatorio extends Component {
           <div>Carregando...</div>
         ) : (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Alteração de Cardápio - Pedido # ${
+            {endpointAprovaSolicitacao && (
+              <ModalAutorizarAposQuestionamento
+                showModal={showAutorizarModal}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            )}
+            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
             <div className="card mt-3">
@@ -205,7 +221,11 @@ class Relatorio extends Component {
                       <Botao
                         texto={textoBotaoAprova}
                         type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
+                        onClick={() =>
+                          EXIBIR_MODAL_AUTORIZACAO
+                            ? this.showAutorizarModal()
+                            : this.handleSubmit()
+                        }
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />

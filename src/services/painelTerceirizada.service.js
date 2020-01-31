@@ -272,6 +272,7 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
@@ -323,5 +324,12 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.PENDENTES_CIENCIA
   }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
+  return retornoBase(url);
+};
+
+export const getSolicitacoesComQuestionamento = async TerceirizadaUuid => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${
+    SOLICITACOES.QUESTIONAMENTOS
+  }/${TerceirizadaUuid}/`;
   return retornoBase(url);
 };

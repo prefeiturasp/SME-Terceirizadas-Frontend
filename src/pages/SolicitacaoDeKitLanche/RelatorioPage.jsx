@@ -10,14 +10,21 @@ import {
   CODAE,
   TERCEIRIZADA
 } from "../../configs/constants";
-
 import {
-  autorizaDeKitLancheAvulsoCodae,
-  validaDeKitLancheAvulsoDiretoriaRegional,
-  cienciaDeKitLancheAvulsoTerceirizadas,
-  DREnaoValidarKitLancheAvulsoEscola,
-  CODAENegaKitLancheAvulsoEscola
+  cancelaKitLancheAvulsoEscola,
+  DRENaoValidaKitLancheAvulso,
+  DREValidaKitLancheAvulso,
+  CODAENegaKitLancheAvulso,
+  CODAEquestionaKitLancheAvulso,
+  CODAEAutorizaKitLancheAvulso,
+  terceirizadaTomaCienciaKitLancheAvulso,
+  terceirizadaRespondeQuestionamentoKitLancheAvulso
 } from "../../services/solicitacaoDeKitLanche.service";
+import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
+import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
+import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -28,55 +35,76 @@ class RelatorioBase extends React.Component {
     const anteriores = [
       {
         href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-        titulo: "Solicitações de Kit Lanche Passeio"
+        titulo: "Kits Lanche Passeio"
       }
     ];
 
     return (
       <Page>
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
-        <Relatorio
-          VISAO={this.props.VISAO}
-          HandleAprovaPedido={this.props.HandleAprovaPedido}
-          negarEndpoint={this.props.negarEndpoint}
-          toastSucessoMensagem={this.props.toastSucessoMensagem}
-        />
+        <Relatorio {...this.props} />
       </Page>
     );
   }
 }
 
 // Escola
-export const RelatorioEscola = () => <RelatorioBase VISAO={ESCOLA} />;
+export const RelatorioEscola = () => (
+  <RelatorioBase
+    visao={ESCOLA}
+    ModalNaoAprova={ModalCancelarSolicitacao}
+    toastNaoAprovaMensagem={"Kit Lanche Passeio cancelado com sucesso!"}
+    endpointNaoAprovaSolicitacao={cancelaKitLancheAvulsoEscola}
+    textoBotaoNaoAprova="Cancelar"
+  />
+);
+
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
-    HandleAprovaPedido={validaDeKitLancheAvulsoDiretoriaRegional}
-    negarEndpoint={DREnaoValidarKitLancheAvulsoEscola}
-    toastSucessoMensagem={
-      "Solicitação de Kit Lanche Passeio validada com sucesso!"
-    }
+    visao={DRE}
+    ModalNaoAprova={ModalNaoValidarSolicitacao}
+    toastAprovaMensagem={"Kit Lanche Passeio validado com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao validar o Kit Lanche Passeio"}
+    endpointNaoAprovaSolicitacao={DRENaoValidaKitLancheAvulso}
+    endpointAprovaSolicitacao={DREValidaKitLancheAvulso}
+    textoBotaoNaoAprova="Não Validar"
+    textoBotaoAprova="Validar"
   />
 );
+
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
-    HandleAprovaPedido={autorizaDeKitLancheAvulsoCodae}
-    negarEndpoint={CODAENegaKitLancheAvulsoEscola}
-    toastSucessoMensagem={
-      "Solicitação de Kit Lanche Passeio autorizada com sucesso!"
-    }
+    visao={CODAE}
+    ModalNaoAprova={ModalNegarSolicitacao}
+    ModalQuestionamento={ModalCODAEQuestiona}
+    toastAprovaMensagem={"Kit Lanche Passeio autorizado com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao autorizar o Kit Lanche Passeio"}
+    endpointNaoAprovaSolicitacao={CODAENegaKitLancheAvulso}
+    endpointAprovaSolicitacao={CODAEAutorizaKitLancheAvulso}
+    endpointQuestionamento={CODAEquestionaKitLancheAvulso}
+    textoBotaoNaoAprova="Negar"
+    textoBotaoAprova="Autorizar"
   />
 );
-// TERCEIRIZADA
+
+// Terceirizada
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
-    HandleAprovaPedido={cienciaDeKitLancheAvulsoTerceirizadas}
-    toastSucessoMensagem={
-      "Ciência de Solicitação de Kit Lanche Passeio enviada com sucesso!"
+    visao={TERCEIRIZADA}
+    ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
+    ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
+    toastAprovaMensagem={"Ciência de Kit Lanche Passeio enviado com sucesso!"}
+    toastAprovaMensagemErro={
+      "Houve um erro ao tomar ciência do Kit Lanche Passeio"
     }
+    endpointAprovaSolicitacao={terceirizadaTomaCienciaKitLancheAvulso}
+    endpointNaoAprovaSolicitacao={
+      terceirizadaRespondeQuestionamentoKitLancheAvulso
+    }
+    endpointQuestionamento={terceirizadaRespondeQuestionamentoKitLancheAvulso}
+    textoBotaoNaoAprova="Não"
+    textoBotaoAprova="Ciente"
   />
 );

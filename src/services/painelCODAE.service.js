@@ -16,6 +16,8 @@ import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.se
 import { getSuspensaoDeAlimentacaoCODAE } from "./suspensaoDeAlimentacao.service";
 import { SOLICITACOES } from "./contants";
 
+// TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"

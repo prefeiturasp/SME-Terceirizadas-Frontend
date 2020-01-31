@@ -1,12 +1,16 @@
 import React from "react";
 import { TIPO_USUARIO } from "../../../constants";
 import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "./helper";
 
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
+  const EXIBIR_HISTORICO =
+    solicitacao.foi_solicitado_fora_do_prazo &&
+    existeLogDeQuestionamentoDaCODAE(solicitacao.logs);
   return (
     <div>
-      {solicitacao.foi_solicitado_fora_do_prazo && solicitacao.logs.length > 2 && (
+      {EXIBIR_HISTORICO && (
         <div className="question-history">
           <hr />
           <div className="row title">
@@ -59,11 +63,21 @@ export const RelatorioHistoricoQuestionamento = props => {
                   {log.status_evento_explicacao === "CODAE autorizou" && (
                     <div className="is-it-possible">
                       <div className="title">Autorizou</div>
+                      {log.justificativa && (
+                        <div className="obs">
+                          Observação da CODAE: {log.justificativa}
+                        </div>
+                      )}
                     </div>
                   )}
                   {log.status_evento_explicacao === "CODAE negou" && (
                     <div className="is-it-possible">
                       <div className="title">Negou</div>
+                      {log.justificativa && (
+                        <div className="obs">
+                          Observação da CODAE: {log.justificativa}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

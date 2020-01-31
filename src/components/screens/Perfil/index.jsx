@@ -124,10 +124,10 @@ class Perfil extends Component {
                   <div className="row">
                     <div className="col-12">
                       <div className="avatar">
-                        {tipo_perfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
-                          <AvatarCODAE />
-                        )}
+                        {[
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+                          TIPO_PERFIL.DIETA_ESPECIAL
+                        ].includes(tipo_perfil) && <AvatarCODAE />}
                         {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && (
                           <AvatarDRE />
                         )}

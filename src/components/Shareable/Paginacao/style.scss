@@ -1,0 +1,26 @@
+@import "../../../styles/variables.scss";
+
+.footer-pagination-default {
+  display: flex;
+  justify-content: center;
+
+  a.ant-pagination-item-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0px !important;
+  }
+
+  ul.ant-pagination {
+    li {
+      border-radius: 0px;
+      border: 0px;
+      width: 32px;
+      height: 32px;
+    }
+    li.ant-pagination-item-active {
+      background-color: $green !important;
+      color: $white;
+    }
+  }
+}

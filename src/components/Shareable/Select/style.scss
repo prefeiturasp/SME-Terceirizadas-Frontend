@@ -5,6 +5,9 @@ div.select {
     color: $red;
     padding-right: 5px;
   }
+  label {
+    font-size: 14px;
+  }
   select {
     -webkit-appearance: none;
     -moz-appearance: none;

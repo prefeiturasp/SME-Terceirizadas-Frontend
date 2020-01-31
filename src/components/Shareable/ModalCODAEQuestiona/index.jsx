@@ -25,7 +25,7 @@ export class ModalCODAEQuestiona extends Component {
       this.props.loadSolicitacao(this.props.uuid);
       toastSuccess("Questionamento enviado com sucesso!");
     } else {
-      toastError(resp.detail);
+      toastError(resp.data.detail);
     }
   }
 

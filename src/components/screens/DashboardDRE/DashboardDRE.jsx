@@ -250,85 +250,6 @@ class DashboardDRE extends Component {
               <TabelaHistoricoLotes lotes={lotesDRE} />
             </Collapse>
           </CardMatriculados>
-          <div className="card card-shortcut-to-form mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold">
-                Faça uma Solicitação Unificada
-              </div>
-              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <Link to="/dre/solicitacao-unificada">
-                <Botao
-                  texto="Solicitação Unificada"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                />
-              </Link>
-            </div>
-          </div>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                Acompanhamento de solicitações
-                <span className="float-right">
-                  <input
-                    className="input-search"
-                    placeholder="Pesquisar"
-                    onChange={this.filterList}
-                  />
-                  <i className="fas fa-search" />
-                </span>
-              </div>
-              <div>
-                <p className="current-date">
-                  Data: <span>{dataAtual()}</span>
-                </p>
-              </div>
-              <div className="row mb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Autorização"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={pendentesListFiltered}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
-                    loading={loadingPendentes}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={autorizadasListFiltered}
-                    icon={"fa-check"}
-                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
-                    loading={loadingAutorizadas}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={negadasListFiltered}
-                    icon={"fa-ban"}
-                    href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
-                    loading={loadingPendentes}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={canceladasListFiltered}
-                    icon={"fa-times-circle"}
-                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-                    loading={loadingAutorizadas}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
@@ -485,6 +406,85 @@ class DashboardDRE extends Component {
                 </div>
               )}
               {/* /Lotes */}
+            </div>
+          </div>
+          <div className="card mt-3">
+            <div className="card-body">
+              <div className="card-title font-weight-bold dashboard-card-title">
+                Acompanhamento de solicitações
+                <span className="float-right">
+                  <input
+                    className="input-search"
+                    placeholder="Pesquisar"
+                    onChange={this.filterList}
+                  />
+                  <i className="fas fa-search" />
+                </span>
+              </div>
+              <div>
+                <p className="current-date">
+                  Data: <span>{dataAtual()}</span>
+                </p>
+              </div>
+              <div className="row mb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Autorização"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={pendentesListFiltered}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
+                    loading={loadingPendentes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={autorizadasListFiltered}
+                    icon={"fa-check"}
+                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                    loading={loadingAutorizadas}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={negadasListFiltered}
+                    icon={"fa-ban"}
+                    href={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+                    loading={loadingPendentes}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={canceladasListFiltered}
+                    icon={"fa-times-circle"}
+                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                    loading={loadingAutorizadas}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="card card-shortcut-to-form mt-3">
+            <div className="card-body">
+              <div className="card-title font-weight-bold">
+                Faça uma Solicitação Unificada
+              </div>
+              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
+              <Link to="/dre/solicitacao-unificada">
+                <Botao
+                  texto="Solicitação Unificada"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                />
+              </Link>
             </div>
           </div>
         </form>

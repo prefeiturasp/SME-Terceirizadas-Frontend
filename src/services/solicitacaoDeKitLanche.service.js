@@ -328,7 +328,7 @@ export const getDetalheKitLancheAvulsa = uuid => {
     });
 };
 
-export const validaDeKitLancheAvulsoDiretoriaRegional = uuid => {
+export const DREValidaKitLancheAvulso = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -348,10 +348,7 @@ export const validaDeKitLancheAvulsoDiretoriaRegional = uuid => {
     });
 };
 
-export const naoValidaDeKitLancheAvulsoDiretoriaRegional = async (
-  uuid,
-  justificativa
-) => {
+export const DRENaoValidaKitLancheAvulso = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -431,28 +428,7 @@ export const cancelaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const DREnaoValidarKitLancheAvulsoEscola = async (
-  uuid,
-  justificativa
-) => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
-  }
-};
-
-export const CODAENegaKitLancheAvulsoEscola = async (uuid, justificativa) => {
+export const CODAENegaKitLancheAvulso = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -470,10 +446,11 @@ export const CODAENegaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const autorizaDeKitLancheAvulsoCodae = uuid => {
+export const CODAEAutorizaKitLancheAvulso = (uuid, justificativa = {}) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
+    body: JSON.stringify(justificativa),
     method: "PATCH"
   };
   let status = 0;
@@ -490,7 +467,7 @@ export const autorizaDeKitLancheAvulsoCodae = uuid => {
     });
 };
 
-export const cienciaDeKitLancheAvulsoTerceirizadas = uuid => {
+export const terceirizadaTomaCienciaKitLancheAvulso = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
   }/`;

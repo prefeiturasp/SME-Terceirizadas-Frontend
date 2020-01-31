@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import CardHistorico from "../../components/CardHistorico";
@@ -11,10 +11,9 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./../../../../helpers/painelPedidos";
-import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { TIPODECARD } from "../../../../constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -98,7 +97,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -110,7 +108,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -122,7 +119,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -135,7 +131,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Solicitações Unificadas Autorizadas"
                         }
-                        parametroURL={TERCEIRIZADA}
                       />
                     </div>
                   </div>

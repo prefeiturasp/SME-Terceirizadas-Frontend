@@ -663,8 +663,12 @@ table.cadastro-lote {
 .form-section-terceirizada {
   .section-nutri-crn {
     display: grid;
-    grid-template-columns: 62% 36%;
+    grid-template-columns: 60% 38% 2%;
     grid-column-gap: 2%;
+    .trash {
+      cursor: pointer;
+      margin-top: auto;
+    }
   }
   .section-nutri-contato {
     display: grid;
