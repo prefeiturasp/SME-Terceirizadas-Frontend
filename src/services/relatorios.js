@@ -1,4 +1,9 @@
 import { API_URL } from "../constants/config.constants";
+import authService from "./auth";
+const authToken = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
+};
 
 export const getRelatorioKitLancheUnificado = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/relatorio/`;
@@ -36,4 +41,23 @@ export const getDetalheInversaoCardapio = uuid => {
 export const getDetalheSuspensaoAlimentacao = uuid => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
   return url;
+};
+
+export const getRelatorioFiltroPorPeriodo = filtro => {
+  console.log("filtro...", filtro);
+  const url = `${API_URL}/escola-solicitacoes/relatorio-periodo/?tipo_solicitacao=${
+    filtro.tipo_de_solicitacao
+  }&status_solicitacao=${
+    filtro.status_solicitacao
+  }&data_inicial=${"2020-01-31"}&data_final=${"2020-02-03"}`;
+
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      window.open(URL.createObjectURL(data));
+    });
 };

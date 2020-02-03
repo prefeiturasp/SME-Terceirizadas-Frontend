@@ -9,6 +9,7 @@ import { toastError } from "../../../../Shareable/Toast/dialogs";
 import { Paginacao } from "../../../../Shareable/Paginacao";
 import "./style.scss";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../../../helpers/utilities";
+import { getRelatorioFiltroPorPeriodo } from "../../../../../services/relatorios";
 
 class ResultadoFiltro extends Component {
   constructor(props) {
@@ -95,27 +96,27 @@ class ResultadoFiltro extends Component {
   render() {
     const { count } = this.props;
     const { checkTodos, listaSolicitacoes } = this.state;
+    const filtros = this.props.values
     return (
       <section className="card">
         <section className="card-body relatorio-filtro">
           <header>Resultado</header>
           <section className="cabecalho">
-            <div className="cabecalho-esquerdo">Solicitações por status</div>
+            <div className="cabecalho-esquerdo">
+              Solicitações por status
+            </div>
             <div className="cabecalho-direito">
               <section>
                 <Botao
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                  texto={"Exportar Planilha"}
-                  icon={BUTTON_ICON.FILE_PDF}
-                  type={BUTTON_TYPE.BUTTON}
-                />
-                {/*<Botao
                   className="ml-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
+                  onClick={() =>
+                    getRelatorioFiltroPorPeriodo(filtros)
+                  }
                   type={BUTTON_TYPE.BUTTON}
-                />*/}
+                />
                 <Botao
                   className="ml-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
