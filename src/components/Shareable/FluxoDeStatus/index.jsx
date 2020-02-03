@@ -1,10 +1,6 @@
 import React from "react";
 import {
   existeAlgumStatusFimDeFluxo,
-  fluxoDietaEspecialPartindoEscola,
-  fluxoPartindoEscola,
-  fluxoPartindoDRE,
-  fluxoInformativoPartindoEscola,
   tipoDeStatusClasse,
   formatarLogs
 } from "./helper";
@@ -12,25 +8,11 @@ import "./style.scss";
 import { deepCopy } from "../../../helpers/utilities";
 
 export const FluxoDeStatus = props => {
-  const { listaDeStatus, tipoDeFluxo } = props;
+  const { listaDeStatus, fluxo } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
     cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
-  let fluxo;
-  switch (tipoDeFluxo) {
-    case "informativo":
-      fluxo = fluxoInformativoPartindoEscola;
-      break;
-    case "partindoDRE":
-      fluxo = fluxoPartindoDRE;
-      break;
-    case "dietaEspecialPartindoEscola":
-      fluxo = fluxoDietaEspecialPartindoEscola;
-      break;
-    default:
-      fluxo = fluxoPartindoEscola;
-  }
   const fluxoUtilizado =
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
   return (
