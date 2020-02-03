@@ -244,6 +244,7 @@ class InclusaoDeAlimentacao extends Component {
       periodo["checked"] = false;
       periodo["tipos_alimentacao_selecionados"] = [];
       periodo["numero_alunos"] = null;
+      periodo["multiselect"] = "multiselect-wrapper-disabled";
     });
     this.setState({
       status: "SEM STATUS",
