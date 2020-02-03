@@ -96,15 +96,13 @@ class ResultadoFiltro extends Component {
   render() {
     const { count } = this.props;
     const { checkTodos, listaSolicitacoes } = this.state;
-    const filtros = this.props.values
+    const filtros = this.props.values;
     return (
       <section className="card">
         <section className="card-body relatorio-filtro">
           <header>Resultado</header>
           <section className="cabecalho">
-            <div className="cabecalho-esquerdo">
-              Solicitações por status
-            </div>
+            <div className="cabecalho-esquerdo">Solicitações por status</div>
             <div className="cabecalho-direito">
               <section>
                 <Botao
@@ -112,9 +110,7 @@ class ResultadoFiltro extends Component {
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
-                  onClick={() =>
-                    getRelatorioFiltroPorPeriodo(filtros)
-                  }
+                  onClick={() => getRelatorioFiltroPorPeriodo(filtros)}
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao

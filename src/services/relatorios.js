@@ -1,5 +1,7 @@
 import { API_URL } from "../constants/config.constants";
+import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
@@ -49,7 +51,9 @@ export const getRelatorioFiltroPorPeriodo = filtro => {
     filtro.tipo_de_solicitacao
   }&status_solicitacao=${
     filtro.status_solicitacao
-  }&data_inicial=${"2020-01-31"}&data_final=${"2020-02-03"}`;
+  }&data_inicial=${converterDDMMYYYYparaYYYYMMDD(
+    filtro.data_de
+  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}`;
 
   fetch(url, {
     method: "GET",
@@ -58,6 +62,7 @@ export const getRelatorioFiltroPorPeriodo = filtro => {
   })
     .then(response => response.blob())
     .then(data => {
+      console.log(data);
       window.open(URL.createObjectURL(data));
     });
 };
