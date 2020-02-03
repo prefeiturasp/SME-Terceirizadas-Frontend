@@ -74,7 +74,7 @@ export const fluxoDietaEspecialComInativacao = [
     usuario: null
   },
   {
-    titulo: "CODAE autorizou inativação",
+    titulo: "CODAE",
     status: "",
     criado_em: "",
     usuario: null
