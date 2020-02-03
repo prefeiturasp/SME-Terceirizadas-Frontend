@@ -68,7 +68,8 @@ div.datepicker
   div.react-datepicker-wrapper
   .react-datepicker__input-container
   input {
-  background-color: #dadada;
+  // TODO: Marcelo, arrumar o background do input porque esta afetando todos os componentes input
+  // background-color: #dadada;
 }
 
 div.current-diets {

@@ -9,7 +9,8 @@ import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   required,
   naoPodeSerZero,
-  numericInteger
+  numericInteger,
+  maxValue
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
@@ -42,13 +43,17 @@ import Weekly from "../Shareable/Weekly/Weekly";
 import {
   extrairTiposALimentacao,
   formatarSubmissaoSolicitacaoContinua,
-  formatarSubmissaoSolicitacaoNormal
+  formatarSubmissaoSolicitacaoNormal,
+  construirPeriodosECombos,
+  abstraiPeriodosComAlunosMatriculados
 } from "./helper";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -57,6 +62,7 @@ class InclusaoDeAlimentacao extends Component {
     this.state = {
       validacaoPeriodos: [],
       loading: true,
+      loadQuantidadeAlunos: false,
       periodos: [],
       rascunhosInclusaoDeAlimentacao: [],
       status: "SEM STATUS",
@@ -130,18 +136,35 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
-  onCheckChanged(periodo) {
-    const indicePeriodo = this.state.periodos.findIndex(
-      periodoState => periodoState.nome === periodo.nome
-    );
+  onCheckInput = indice => {
     let periodos = this.state.periodos;
-    periodo.checked = !periodo.checked;
-    periodos[indicePeriodo].checked = periodo.checked;
+    if (periodos[indice].checked) {
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.props.change(
+        `quantidades_periodo_${periodos[indice].nome}.numero_alunos`,
+        null
+      );
+    }
+
+    periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].multiselect = periodos[indice].checked
+      ? "multiselect-wrapper-enabled"
+      : "multiselect-wrapper-disabled";
+
+    periodos[indice].validador = periodos[indice].checked
+      ? [
+          naoPodeSerZero,
+          numericInteger,
+          maxValue(periodos[indice].maximo_alunos)
+        ]
+      : [];
+
     this.props.change(
-      `quantidades_periodo_${periodo.nome}.check`,
-      periodo.checked
+      `quantidades_periodo_${periodos[indice].nome}.check`,
+      periodos[indice].checked
     );
-  }
+    this.setState({ periodos });
+  };
 
   onNumeroAlunosChanged(event, periodo) {
     const indicePeriodo = this.state.periodos.findIndex(
@@ -221,6 +244,7 @@ class InclusaoDeAlimentacao extends Component {
       periodo["checked"] = false;
       periodo["tipos_alimentacao_selecionados"] = [];
       periodo["numero_alunos"] = null;
+      periodo["multiselect"] = "multiselect-wrapper-disabled";
     });
     this.setState({
       status: "SEM STATUS",
@@ -253,8 +277,7 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
-    let periodos = this.state.periodos;
-    let validacaoPeriodos = this.state.validacaoPeriodos;
+    let { periodos, validacaoPeriodos } = this.state;
     if (validacaoPeriodos[indice].checado === true) {
       validacaoPeriodos[indice].checado = false;
       periodos[indice].tipos_alimentacao_selecionados = [];
@@ -368,29 +391,52 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.adicionaIndiceNoValidacaoPeriodos(this.props.periodos);
-      this.setState({
-        periodos: this.props.periodos
-      });
-    }
     const {
       motivos_simples,
       motivos_continuos,
       meusDados,
       proximos_dois_dias_uteis
     } = this.props;
-    const { loading, periodos } = this.state;
+    let { loading, periodos, loadQuantidadeAlunos } = this.state;
     if (
       motivos_simples !== [] &&
       motivos_continuos !== [] &&
       periodos !== [] &&
       meusDados !== null &&
       proximos_dois_dias_uteis !== null &&
-      loading
+      loading &&
+      periodos.length > 0 &&
+      loadQuantidadeAlunos
     ) {
       this.setState({
         loading: false
+      });
+    }
+    const escola = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    if (
+      meusDados &&
+      periodos.length === 0 &&
+      loading &&
+      prevProps.meusDados !== meusDados
+    ) {
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao
+        .tipo_unidade_escolar;
+
+      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.adicionaIndiceNoValidacaoPeriodos(periodos);
+        this.setState({ periodos });
+      });
+    }
+    if (periodos.length > 0 && loading && !loadQuantidadeAlunos) {
+      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+        if (periodos !== []) {
+          periodos = abstraiPeriodosComAlunosMatriculados(
+            periodos,
+            response.results
+          );
+        }
+        this.setState({ periodos, loadQuantidadeAlunos: true });
       });
     }
   }
@@ -578,8 +624,7 @@ class InclusaoDeAlimentacao extends Component {
       inclusoes,
       periodos,
       showModal,
-      loading,
-      validacaoPeriodos
+      loading
     } = this.state;
     const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     const dataInicialContinua = inclusoes[0].data_inicial;
@@ -778,11 +823,7 @@ class InclusaoDeAlimentacao extends Component {
                               />
                               <span
                                 onClick={() => {
-                                  this.onCheckChanged(periodo);
-                                  this.atualizaIndiceNoValidacaoPeriodos(
-                                    indice,
-                                    periodo
-                                  );
+                                  this.onCheckInput(indice);
                                 }}
                                 className="checkbox-custom"
                                 data-cy={`checkbox-${periodo.nome}`}
@@ -792,16 +833,10 @@ class InclusaoDeAlimentacao extends Component {
                           </div>
                         </div>
                         <div className="form-group col-md-5 mr-5">
-                          <div
-                            className={
-                              !validacaoPeriodos[indice].checado
-                                ? "multiselect-wrapper-disabled"
-                                : "multiselect-wrapper-enabled"
-                            }
-                          >
+                          <div className={periodo.multiselect}>
                             <Field
                               component={StatefulMultiSelect}
-                              name=".tipos_alimentacao"
+                              name="tipos_alimentacao"
                               selected={periodo.tipos_alimentacao_selecionados}
                               options={formatarParaMultiselect(
                                 periodo.tipos_alimentacao
@@ -825,19 +860,13 @@ class InclusaoDeAlimentacao extends Component {
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
-                            disabled={!validacaoPeriodos[indice].checado}
+                            disabled={!periodo.checked}
                             type="number"
                             name={`numero_alunos`}
                             min="0"
                             className="form-control quantidade-aluno"
-                            required={validacaoPeriodos[indice].checado}
-                            validate={
-                              validacaoPeriodos[indice].checado && [
-                                required,
-                                naoPodeSerZero,
-                                numericInteger
-                              ]
-                            }
+                            required={periodo.checked}
+                            validate={periodo.validador}
                           />
                         </div>
                       </div>
