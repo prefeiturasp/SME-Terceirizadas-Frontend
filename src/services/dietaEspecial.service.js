@@ -79,7 +79,7 @@ export const getDietasEspeciaisVigentesDeUmAluno = async codigo_eol_aluno => {
 };
 
 export const CODAEAutorizaDietaEspecial = async ({ uuid, ...params }) =>
-  await axios.patch(ENDPOINT.AUTORIZAR_DIETA(uuid), params);
+  await axios.patch(`${ENDPOINT.AUTORIZAR_DIETA(uuid)}/`, params);
 
 export const CODAENegaDietaEspecial = async (uuid, payload) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
@@ -228,8 +228,4 @@ export const getDietasAtivasInativasPorAluno = async (params = {}) => {
 
 export const getAlimentos = async () => {
   return await axios.get(`${ENDPOINT.ALIMENTOS}/`);
-};
-
-export const getSubstitutos = async () => {
-  return await axios.get(`${ENDPOINT.SUBSTITUTOS}/`);
 };

@@ -6,8 +6,7 @@ import { ENDPOINT } from "../../constants";
 import {
   CODAEAutorizaDietaEspecial,
   getAlimentos,
-  getDietasAtivasInativasPorAluno,
-  getSubstitutos
+  getDietasAtivasInativasPorAluno
 } from "../dietaEspecial.service";
 
 describe("test getDietasAtivasInativasPorAluno", () => {
@@ -51,19 +50,6 @@ describe("test getAlimentos", () => {
   });
 });
 
-describe("test getSubstitutos", () => {
-  const baseUrl = `${API_URL}/${ENDPOINT.SUBSTITUTOS}/`;
-  test("obtem lista de substitutos", async () => {
-    moxios.stubRequest(baseUrl, {
-      status: 200,
-      response: ["lista", "de", "substitutos"]
-    });
-    const response = await getSubstitutos();
-    expect(response.data).toEqual(["lista", "de", "substitutos"]);
-    expect(response.status).toEqual(200);
-  });
-});
-
 describe("test CODAEAutorizaDietaEspecial", () => {
   const baseUrl = `${API_URL}/${ENDPOINT.AUTORIZAR_DIETA("1234-5678")}/`;
   test("autorização bem sucedida", async () => {
@@ -73,7 +59,9 @@ describe("test CODAEAutorizaDietaEspecial", () => {
         detail: "Autorização de dieta especial realizada com sucesso"
       }
     });
-    const response = await CODAEAutorizaDietaEspecial();
+    const response = await CODAEAutorizaDietaEspecial({
+      uuid: "1234-5678"
+    });
     expect(response.data).toEqual({
       detail: "Autorização de dieta especial realizada com sucesso"
     });

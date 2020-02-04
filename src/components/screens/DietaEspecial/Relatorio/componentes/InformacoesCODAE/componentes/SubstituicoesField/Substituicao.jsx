@@ -34,20 +34,18 @@ const SelectSelecione = props => {
 
 export default class SubstituicoesField extends Component {
   render() {
-    const {
-      alimentos,
-      substitutos,
-      addOption,
-      removeOption,
-      name,
-      meta
-    } = this.props;
+    const { alimentos, addOption, removeOption, name, meta } = this.props;
     return (
       <div className="row">
         <div className="col-3">
           <Field
             component={SelectSelecione}
-            options={alimentos}
+            options={alimentos.map(a => {
+              return {
+                uuid: a.id.toString(),
+                nome: a.nome
+              };
+            })}
             name={`${name}.alimento`}
             required
           />
@@ -67,7 +65,12 @@ export default class SubstituicoesField extends Component {
           <Field
             component={MultiSelect}
             name={`${name}.substitutos`}
-            options={substitutos}
+            options={alimentos.map(a => {
+              return {
+                value: a.id,
+                label: a.nome
+              };
+            })}
             required
           />
         </div>

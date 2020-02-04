@@ -28,7 +28,7 @@ const validaSubstituicoes = substituicoes => {
     if (
       !substituicao.alimento ||
       !substituicao.tipo ||
-      substituicao.substitutos.length === 0
+      (substituicao.substitutos && substituicao.substitutos.length === 0)
     ) {
       return false;
     }
@@ -107,66 +107,42 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  handleSubmit(values) {
+  handleSubmit = async values => {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const {
-      uuid,
-      solicitacoesVigentes,
-      showAutorizarModal,
-      dietaEspecial
-    } = this.state;
-    if (
-      solicitacoesVigentes &&
-      solicitacoesVigentes.length > 0 &&
-      usuarioCODAEDietaEspecial() &&
-      dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR &&
-      !showAutorizarModal
-    ) {
-      this.showAutorizarModal();
+      classificacao,
+      alergias_intolerancias,
+      registro_funcional_nutricionista,
+      nome_protocolo,
+      substituicoes
+    } = values;
+    let alergias = null;
+    let payload = null;
+    if (alergias_intolerancias) {
+      alergias = alergias_intolerancias.filter(d => d !== "");
+      payload = {
+        uuid,
+        classificacao,
+        alergias_intolerancias: alergias,
+        registro_funcional_nutricionista,
+        nome_protocolo,
+        substituicoes: substituicoes.map(s =>
+          Object.assign({}, s, {
+            tipo: s.tipo === "isento" ? "I" : "S"
+          })
+        )
+      };
     } else {
-      const {
-        classificacaoDieta,
-        diagnosticosSelecionados,
-        identificacaoNutricionista,
-        protocolos
-      } = values;
-      let diagnosticos = null;
-      let payload = null;
-      if (diagnosticosSelecionados) {
-        diagnosticos = diagnosticosSelecionados.filter(
-          diagnostico => diagnostico !== ""
-        );
-        payload = {
-          uuid,
-          classificacaoDieta,
-          diagnosticosSelecionados: diagnosticos,
-          identificacaoNutricionista,
-          protocolos
-        };
-      } else {
-        payload = uuid;
-      }
-      this.closeAutorizarModal();
-      const endpoint =
-        dietaEspecial.status_solicitacao ===
-        statusEnum.ESCOLA_SOLICITOU_INATIVACAO
-          ? CODAEAutorizaInativacaoDietaEspecial
-          : this.props.endpointAprovaSolicitacao;
-      endpoint(payload).then(
-        response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess(toastAprovaMensagem);
-            this.loadSolicitacao(uuid);
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(toastAprovaMensagemErro);
-          }
-        },
-        function() {
-          toastError(toastAprovaMensagemErro);
-        }
-      );
+      payload = uuid;
     }
-  }
+    const response = await this.props.endpointAprovaSolicitacao(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(toastAprovaMensagem);
+      this.loadSolicitacao(uuid);
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(toastAprovaMensagemErro);
+    }
+  };
 
   render() {
     const {
@@ -177,10 +153,10 @@ class Relatorio extends Component {
       endpointNaoAprovaSolicitacao,
       justificativa,
       motivo,
-      classificacaoDieta,
+      classificacao,
+      alergias_intolerancias,
       nome_protocolo,
-      substituicoes,
-      diagnosticosSelecionados
+      substituicoes
     } = this.props;
     const {
       dietaEspecial,
@@ -255,8 +231,8 @@ class Relatorio extends Component {
                         className="ml-3"
                         disabled={
                           usuarioCODAEDietaEspecial()
-                            ? !diagnosticosSelecionados ||
-                              !classificacaoDieta ||
+                            ? !alergias_intolerancias ||
+                              !classificacao ||
                               !nome_protocolo ||
                               !validaSubstituicoes(substituicoes)
                             : false
@@ -279,7 +255,7 @@ const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true,
   initialValues: {
-    identificacaoNutricionista: obtemIdentificacaoNutricionista(),
+    registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
     substituicoes: [{}]
   }
 })(Relatorio);
@@ -288,10 +264,10 @@ const mapStateToProps = state => {
   return {
     justificativa: selector(state, "justificativa_negacao"),
     motivo: selector(state, "motivo_negacao"),
-    diagnosticosSelecionados: selector(state, "diagnosticosSelecionados"),
+    alergias_intolerancias: selector(state, "alergias_intolerancias"),
     substituicoes: selector(state, "substituicoes"),
     nome_protocolo: selector(state, "nome_protocolo"),
-    classificacaoDieta: selector(state, "classificacaoDieta")
+    classificacao: selector(state, "classificacao")
   };
 };
 

@@ -7,7 +7,7 @@ import "./style.scss";
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, substitutos } = this.props;
+    const { alimentos } = this.props;
     return (
       <div className="substituicoes-field">
         <div className="row">
@@ -24,7 +24,6 @@ export default class SubstituicoesField extends Component {
                   name={field}
                   key={index}
                   alimentos={alimentos}
-                  substitutos={substitutos}
                   addOption={() => fields.push({})}
                   removeOption={() => {
                     fields.remove(index);
