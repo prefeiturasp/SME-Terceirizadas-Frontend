@@ -13,6 +13,7 @@ import {
 import { formatarDiasMotivos, MOTIVOS } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { Link } from "react-router-dom";
+import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
@@ -163,7 +164,10 @@ export class CorpoRelatorio extends Component {
         <hr />
         {inclusaoDeAlimentacao.logs && (
           <div className="row">
-            <FluxoDeStatus listaDeStatus={inclusaoDeAlimentacao.logs} />
+            <FluxoDeStatus
+              listaDeStatus={inclusaoDeAlimentacao.logs}
+              fluxo={fluxoPartindoEscola}
+            />
           </div>
         )}
         <hr />
