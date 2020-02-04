@@ -6,6 +6,14 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS
 } from "../../../../../configs/constants";
+import { VISAO } from "../../../../../constants";
+import { getRelatorioResumoMesAno } from "../../../../../services/relatorios";
+import Botao from "../../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "../../../../Shareable/Botao/constants";
 import "./style.scss";
 
 export const ICON_CARD_TYPE_ENUM = {
@@ -95,26 +103,23 @@ class CardsComBandeira extends Component {
 
   render() {
     const { totais_tipo_solicitacao } = this.state;
+    const { visao } = this.props;
+    console.log("visaooo", visao);
     return (
       <div className="cards-with-flag">
         <div className="row p-4">
-          {/* <div className="col-12">
-              <p className="float-right">
-                <Botao
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                  texto={"Exportar Planilha"}
-                  icon={BUTTON_ICON.FILE_PDF}
-                  type={BUTTON_TYPE.BUTTON}
-                />
-                <Botao
-                  className="ml-2"
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                  icon={BUTTON_ICON.PRINT}
-                  texto={"Imprimir"}
-                  type={BUTTON_TYPE.BUTTON}
-                />
-              </p>
-            </div> */}
+          <div className="col-12">
+            <p className="float-right">
+              <Botao
+                className="ml-2"
+                style={BUTTON_STYLE.BLUE_OUTLINE}
+                icon={BUTTON_ICON.PRINT}
+                texto={"Imprimir"}
+                onClick={() => getRelatorioResumoMesAno(visao)}
+                type={BUTTON_TYPE.BUTTON}
+              />
+            </p>
+          </div>
           <div className="col-12">
             <p className="fonte-titulo">Solicitações por status</p>
           </div>
