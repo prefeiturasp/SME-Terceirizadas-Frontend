@@ -23,6 +23,19 @@ import {
 import { formatarSolicitacoesVigentes } from "../Escola/helper";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 
+const validaSubstituicoes = substituicoes => {
+  for (let substituicao of substituicoes) {
+    if (
+      !substituicao.alimento ||
+      !substituicao.tipo ||
+      substituicao.substitutos.length === 0
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
 class Relatorio extends Component {
   constructor(props) {
     super(props);
@@ -165,7 +178,8 @@ class Relatorio extends Component {
       justificativa,
       motivo,
       classificacaoDieta,
-      protocolos,
+      nome_protocolo,
+      substituicoes,
       diagnosticosSelecionados
     } = this.props;
     const {
@@ -241,11 +255,10 @@ class Relatorio extends Component {
                         className="ml-3"
                         disabled={
                           usuarioCODAEDietaEspecial()
-                            ? (!diagnosticosSelecionados ||
-                                !protocolos ||
-                                !classificacaoDieta) &&
-                              dietaEspecial.status_solicitacao ===
-                                statusEnum.CODAE_A_AUTORIZAR
+                            ? !diagnosticosSelecionados ||
+                              !classificacaoDieta ||
+                              !nome_protocolo ||
+                              !validaSubstituicoes(substituicoes)
                             : false
                         }
                       />
@@ -266,7 +279,8 @@ const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true,
   initialValues: {
-    identificacaoNutricionista: obtemIdentificacaoNutricionista()
+    identificacaoNutricionista: obtemIdentificacaoNutricionista(),
+    substituicoes: [{}]
   }
 })(Relatorio);
 const selector = formValueSelector(formName);
@@ -275,7 +289,8 @@ const mapStateToProps = state => {
     justificativa: selector(state, "justificativa_negacao"),
     motivo: selector(state, "motivo_negacao"),
     diagnosticosSelecionados: selector(state, "diagnosticosSelecionados"),
-    protocolos: selector(state, "protocolos"),
+    substituicoes: selector(state, "substituicoes"),
+    nome_protocolo: selector(state, "nome_protocolo"),
     classificacaoDieta: selector(state, "classificacaoDieta")
   };
 };

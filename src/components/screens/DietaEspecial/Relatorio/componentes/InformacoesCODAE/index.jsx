@@ -7,8 +7,9 @@ import {
 } from "../../../../../../services/dietaEspecial.service";
 import "./style.scss";
 import { ClassificacaoDaDieta } from "./componentes/ClassificacaoDaDieta";
-import ProtocolosField from "./componentes/ProtocolosField";
+import SubstituicoesField from "./componentes/SubstituicoesField";
 import InputText from "../../../../../Shareable/Input/InputText";
+import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 
 class InformacoesCODAE extends Component {
   constructor(props) {
@@ -16,7 +17,28 @@ class InformacoesCODAE extends Component {
     this.state = {
       classificacaoDieta: "",
       diagnosticos: null,
-      classificacoesDieta: null
+      classificacoesDieta: null,
+      alimentos: [
+        { uuid: "1", nome: "Barra de Cereal" },
+        { uuid: "2", nome: "Peixe" },
+        { uuid: "3", nome: "Bolo de Aniversário" },
+        { uuid: "4", nome: "Bolo Individual" },
+        { uuid: "5", nome: "Granola" },
+        { uuid: "6", nome: "Biscoito Doce" },
+        { uuid: "7", nome: "Salada de Frutas" }
+      ],
+      substitutos: [
+        { value: 1, label: "Banana" },
+        { value: 2, label: "Pêssego" },
+        { value: 3, label: "Damasco" },
+        { value: 4, label: "Mamão Papaia" },
+        { value: 5, label: "Castanha Portuguesa" },
+        { value: 6, label: "Kiwi" },
+        { value: 7, label: "Abacate" },
+        { value: 8, label: "Carne Bovina" },
+        { value: 9, label: "Carne Suína" },
+        { value: 10, label: "Carne Frango" }
+      ]
     };
     this.onClassificacaoChanged = this.onClassificacaoChanged.bind(this);
   }
@@ -37,7 +59,12 @@ class InformacoesCODAE extends Component {
   };
 
   render() {
-    const { diagnosticos, classificacoesDieta } = this.state;
+    const {
+      alimentos,
+      classificacoesDieta,
+      diagnosticos,
+      substitutos
+    } = this.state;
     return (
       <div className="information-codae">
         <div className="pt-2 title">Relação por Diagnóstico</div>
@@ -58,8 +85,31 @@ class InformacoesCODAE extends Component {
             required
           />
         )}
-        <div className="pt-2 title">Protocolo da Dieta Especial</div>
-        <Field component={ProtocolosField} name="protocolos" required />
+        <div className="card mt-3">
+          <div className="card-body">
+            <div className="pt-2 title">
+              Nome do Protocolo de Dieta Especial
+            </div>
+            <Field component={InputText} name="nome_protocolo" required />
+            <div className="pt-2 title">Substituições de Alimentos</div>
+            <Field
+              component={SubstituicoesField}
+              name="substituicoes"
+              required
+              alimentos={alimentos}
+              substitutos={substitutos}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-9">
+            <Field
+              component={TextAreaWYSIWYG}
+              label="Informações Adicionais"
+              name="informacoes_adicionais"
+            />
+          </div>
+        </div>
         <div className="pt-2 title">Identificação do Nutricionista</div>
         <div className="row">
           <div className="col-9">
