@@ -10,8 +10,8 @@ import {
 import { usuarioTerceirizada } from "../../../../../../helpers/utilities";
 import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
 import {
-  fluxoDietaEspecialComInativacao,
-  fluxoDietaEspecialPartindoEscola
+  fluxoDietaEspecialPartindoEscola,
+  formatarFluxoDietaEspecial
 } from "../../../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
@@ -98,7 +98,7 @@ export const CorpoRelatorio = props => {
                 log =>
                   log.status_evento_explicacao === "Escola solicitou inativação"
               ) !== undefined
-                ? fluxoDietaEspecialComInativacao
+                ? formatarFluxoDietaEspecial(dietaEspecial.logs)
                 : fluxoDietaEspecialPartindoEscola
             }
           />

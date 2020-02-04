@@ -161,6 +161,13 @@ export const tipoDeStatusClasse = status => {
     : "pending";
 };
 
+export const formatarFluxoDietaEspecial = logs => {
+  if (!logs[2].status_evento_explicacao.includes("Terceirizada")) {
+    fluxoDietaEspecialComInativacao.splice(2, 1);
+  }
+  return fluxoDietaEspecialComInativacao;
+};
+
 export const existeAlgumStatusFimDeFluxo = logs => {
   return (
     logs.findIndex(

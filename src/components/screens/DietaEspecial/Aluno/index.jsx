@@ -98,7 +98,10 @@ class solicitacaoDietaEspecial extends Component {
               </table>
             </div>
             {solicitacoesVigentes && (
-              <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
+              <SolicitacaoVigente
+                codigoEol={eolAluno}
+                solicitacoesVigentes={solicitacoesVigentes}
+              />
             )}
           </form>
         </div>
