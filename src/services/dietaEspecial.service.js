@@ -1,7 +1,8 @@
 import { API_URL } from "../constants/config.constants";
+import { ENDPOINT } from "../constants";
 import authService from "./auth";
 
-import getAxios from "./_base";
+import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -77,36 +78,8 @@ export const getDietasEspeciaisVigentesDeUmAluno = async codigo_eol_aluno => {
   }
 };
 
-export const CODAEAutorizaDietaEspecial = async ({
-  uuid,
-  classificacaoDieta,
-  diagnosticosSelecionados,
-  identificacaoNutricionista,
-  protocolos
-}) => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/autorizar/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify({
-      classificacao: classificacaoDieta,
-      alergias_intolerancias: diagnosticosSelecionados,
-      registro_funcional_nutricionista: identificacaoNutricionista,
-      protocolos
-    }),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
-};
+export const CODAEAutorizaDietaEspecial = async ({ uuid, ...params }) =>
+  await axios.patch(ENDPOINT.AUTORIZAR_DIETA(uuid), params);
 
 export const CODAENegaDietaEspecial = async (uuid, payload) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
@@ -246,10 +219,17 @@ export const CODAENegaInativacaoDietaEspecial = async uuid => {
 };
 
 export const getDietasAtivasInativasPorAluno = async (params = {}) => {
-  const axios = getAxios();
   const response = await axios.get(
-    "solicitacoes-dieta-especial-ativas-inativas/",
+    `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS}/`,
     { params }
   );
   return response;
+};
+
+export const getAlimentos = async () => {
+  return await axios.get(`${ENDPOINT.ALIMENTOS}/`);
+};
+
+export const getSubstitutos = async () => {
+  return await axios.get(`${ENDPOINT.SUBSTITUTOS}/`);
 };
