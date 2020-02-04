@@ -78,6 +78,12 @@ export const fluxoDietaEspecialComInativacao = [
     status: "",
     criado_em: "",
     usuario: null
+  },
+  {
+    titulo: "Terceirizada",
+    status: "",
+    criado_em: "",
+    usuario: null
   }
 ];
 
