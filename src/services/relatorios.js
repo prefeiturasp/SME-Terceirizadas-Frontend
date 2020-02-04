@@ -1,4 +1,11 @@
 import { API_URL } from "../constants/config.constants";
+import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
+import authService from "./auth";
+
+const authToken = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
+};
 
 export const getRelatorioKitLancheUnificado = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/relatorio/`;
@@ -36,4 +43,26 @@ export const getDetalheInversaoCardapio = uuid => {
 export const getDetalheSuspensaoAlimentacao = uuid => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
   return url;
+};
+
+export const getRelatorioFiltroPorPeriodo = filtro => {
+  console.log("filtro...", filtro);
+  const url = `${API_URL}/escola-solicitacoes/relatorio-periodo/?tipo_solicitacao=${
+    filtro.tipo_de_solicitacao
+  }&status_solicitacao=${
+    filtro.status_solicitacao
+  }&data_inicial=${converterDDMMYYYYparaYYYYMMDD(
+    filtro.data_de
+  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}`;
+
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      console.log(data);
+      window.open(URL.createObjectURL(data));
+    });
 };
