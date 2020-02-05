@@ -9,6 +9,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 import { Link } from "react-router-dom";
+import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem } = props;
@@ -93,7 +94,10 @@ export const CorpoRelatorio = props => {
       <hr />
       {alteracaoDeCardapio.logs && (
         <div className="row">
-          <FluxoDeStatus listaDeStatus={alteracaoDeCardapio.logs} />
+          <FluxoDeStatus
+            listaDeStatus={alteracaoDeCardapio.logs}
+            fluxo={fluxoPartindoEscola}
+          />
         </div>
       )}
       <hr />

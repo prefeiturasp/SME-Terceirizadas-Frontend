@@ -1,6 +1,5 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../../../Shareable/FluxoDeStatus";
-import { TIPO_FLUXO } from "../../../../../Shareable/FluxoDeStatus/constants";
 import { getRelatorioDietaEspecial } from "../../../../../../services/relatorios";
 import Botao from "../../../../../Shareable/Botao";
 import {
@@ -10,6 +9,10 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import { usuarioTerceirizada } from "../../../../../../helpers/utilities";
 import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
+import {
+  fluxoDietaEspecialPartindoEscola,
+  formatarFluxoDietaEspecial
+} from "../../../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial, solicitacoesVigentes, uuid } = props;
@@ -90,7 +93,14 @@ export const CorpoRelatorio = props => {
         <div className="row">
           <FluxoDeStatus
             listaDeStatus={dietaEspecial.logs}
-            tipoDeFluxo={TIPO_FLUXO.PARTINDO_DRE}
+            fluxo={
+              dietaEspecial.logs.find(
+                log =>
+                  log.status_evento_explicacao === "Escola solicitou inativação"
+              ) !== undefined
+                ? formatarFluxoDietaEspecial(dietaEspecial.logs)
+                : fluxoDietaEspecialPartindoEscola
+            }
           />
         </div>
       )}

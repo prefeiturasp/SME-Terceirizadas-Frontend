@@ -1,4 +1,12 @@
+import { VISAO } from "../constants";
 import { API_URL } from "../constants/config.constants";
+import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
+import authService from "./auth";
+
+const authToken = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
+};
 
 export const getRelatorioKitLancheUnificado = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/relatorio/`;
@@ -36,4 +44,84 @@ export const getDetalheInversaoCardapio = uuid => {
 export const getDetalheSuspensaoAlimentacao = uuid => {
   const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
   return url;
+};
+
+export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
+  let endpoint = "";
+  let filtroExtra = "";
+  let escolaUUID = "";
+  let diretoriaRegionalUUID = "";
+  switch (visao) {
+    case VISAO.ESCOLA:
+      endpoint = "escola-solicitacoes";
+      break;
+    case VISAO.DIRETORIA_REGIONAL:
+      endpoint = "diretoria-regional-solicitacoes";
+      escolaUUID = filtro.unidade_escolar;
+      filtroExtra = escolaUUID;
+      break;
+    case VISAO.CODAE:
+      endpoint = "codae-solicitacoes";
+      escolaUUID = filtro.unidade_escolar;
+      diretoriaRegionalUUID = filtro.diretoria_regional;
+      filtroExtra = `${diretoriaRegionalUUID}/${escolaUUID}`;
+      break;
+    default:
+      endpoint = "escola-solicitacoes";
+      break;
+  }
+  const url = `${API_URL}/${endpoint}/relatorio-periodo/${filtroExtra}?tipo_solicitacao=${
+    filtro.tipo_de_solicitacao
+  }&status_solicitacao=${
+    filtro.status_solicitacao
+  }&data_inicial=${converterDDMMYYYYparaYYYYMMDD(
+    filtro.data_de
+  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}`;
+
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `filtro-por-periodo-${visao}.pdf`;
+      a.click();
+    });
+};
+
+export const getRelatorioResumoMesAno = visao => {
+  let endpoint = "";
+  switch (visao) {
+    case VISAO.ESCOLA:
+      endpoint = "escola-solicitacoes";
+      break;
+    case VISAO.DIRETORIA_REGIONAL:
+      endpoint = "diretoria-regional-solicitacoes";
+      break;
+    case VISAO.CODAE:
+      endpoint = "codae-solicitacoes";
+      break;
+    default:
+      endpoint = "escola-solicitacoes";
+      break;
+  }
+  const url = `${API_URL}/${endpoint}/relatorio-resumo-mes-ano/`;
+
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `resumo-mes-ano-${visao}.pdf`;
+      a.click();
+    });
 };

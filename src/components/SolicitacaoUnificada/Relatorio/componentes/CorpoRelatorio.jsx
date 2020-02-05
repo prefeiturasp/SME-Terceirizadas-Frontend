@@ -10,6 +10,7 @@ import { TabelaKits } from "./TabelaKits";
 import { corDaMensagem } from "../../../../helpers/utilities";
 import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
 import { Link } from "react-router-dom";
+import { fluxoPartindoDRE } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
@@ -65,7 +66,7 @@ export const CorpoRelatorio = props => {
 
         <hr />
         <FluxoDeStatus
-          tipoDeFluxo="partindoDRE"
+          tipoDeFluxo={fluxoPartindoDRE}
           listaDeStatus={solicitacaoUnificada.logs}
         />
         <hr />

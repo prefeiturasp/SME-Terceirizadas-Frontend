@@ -11,6 +11,7 @@ export const BUTTON_ICON = {
   PRINT: "fas fa-print",
   CHART_LINE: "fas fa-chart-line",
   FILE_PDF: "far fa-file-pdf",
+  FILE_ALT: "far fa-file-alt",
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
   SAIR: "fas fa-door-open",

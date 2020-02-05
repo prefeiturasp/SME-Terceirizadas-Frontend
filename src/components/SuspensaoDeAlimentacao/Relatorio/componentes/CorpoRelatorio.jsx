@@ -9,6 +9,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { getDetalheSuspensaoAlimentacao } from "../../../../services/relatorios";
 import Botao from "../../../Shareable/Botao";
+import { fluxoInformativoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { suspensaoAlimentacao, dadosEscola } = props;
@@ -78,7 +79,7 @@ export const CorpoRelatorio = props => {
         <div className="row">
           <FluxoDeStatus
             listaDeStatus={suspensaoAlimentacao.logs}
-            tipoDeFluxo={"informativo"}
+            fluxo={fluxoInformativoPartindoEscola}
           />
         </div>
       )}

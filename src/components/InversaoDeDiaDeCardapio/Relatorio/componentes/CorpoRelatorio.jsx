@@ -10,6 +10,7 @@ import {
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
 import { Link } from "react-router-dom";
+import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const {
@@ -95,7 +96,10 @@ export const CorpoRelatorio = props => {
       <hr />
       {inversaoDiaCardapio.logs && (
         <div className="row">
-          <FluxoDeStatus listaDeStatus={inversaoDiaCardapio.logs} />
+          <FluxoDeStatus
+            listaDeStatus={inversaoDiaCardapio.logs}
+            fluxo={fluxoPartindoEscola}
+          />
         </div>
       )}
       <hr />

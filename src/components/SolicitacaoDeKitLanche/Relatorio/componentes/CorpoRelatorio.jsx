@@ -10,6 +10,7 @@ import {
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { Link } from "react-router-dom";
+import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoKitLanche, prazoDoPedidoMensagem } = props;
@@ -91,7 +92,10 @@ export const CorpoRelatorio = props => {
       </div>
       <hr />
       <div className="row">
-        <FluxoDeStatus listaDeStatus={solicitacaoKitLanche.logs} />
+        <FluxoDeStatus
+          listaDeStatus={solicitacaoKitLanche.logs}
+          fluxo={fluxoPartindoEscola}
+        />
       </div>
       <hr />
       <div className="row">

@@ -1,6 +1,7 @@
 import { mount } from "enzyme";
 import React from "react";
 import { FluxoDeStatus } from "../../FluxoDeStatus";
+import { fluxoPartindoEscola } from "../helper";
 
 describe("Teste <FluxoDeStatus>", () => {
   let wrapper;
@@ -22,7 +23,12 @@ describe("Teste <FluxoDeStatus>", () => {
   ];
 
   beforeAll(() => {
-    wrapper = mount(<FluxoDeStatus listaDeStatus={listaDeStatus} />);
+    wrapper = mount(
+      <FluxoDeStatus
+        listaDeStatus={listaDeStatus}
+        fluxo={fluxoPartindoEscola}
+      />
+    );
   });
 
   it("renderiza", () => {
