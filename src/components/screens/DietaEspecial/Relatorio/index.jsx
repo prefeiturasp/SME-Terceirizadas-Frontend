@@ -114,7 +114,8 @@ class Relatorio extends Component {
       alergias_intolerancias,
       registro_funcional_nutricionista,
       nome_protocolo,
-      substituicoes
+      substituicoes,
+      informacoes_adicionais
     } = values;
     let alergias = null;
     let payload = null;
@@ -126,6 +127,7 @@ class Relatorio extends Component {
         alergias_intolerancias: alergias,
         registro_funcional_nutricionista,
         nome_protocolo,
+        informacoes_adicionais,
         substituicoes: substituicoes.map(s =>
           Object.assign({}, s, {
             tipo: s.tipo === "isento" ? "I" : "S"
