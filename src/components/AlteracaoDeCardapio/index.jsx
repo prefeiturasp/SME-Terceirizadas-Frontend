@@ -12,8 +12,9 @@ import { Rascunhos } from "./Rascunhos";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
-import { montaPeriodoDeAlteracao } from "./helper";
+import { construirPeriodosECombos } from "./helper";
 import { agregarDefault } from "../../helpers/utilities";
+import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
@@ -54,28 +55,32 @@ class AlteracaoCardapio extends Component {
     this.resetForm = this.resetForm.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      let periodos = this.state.periodos;
-      let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
-      this.props.periodos.forEach(periodo => {
-        this.montaObjetoDeSubstituicoesEdit(periodo);
-        substituicoesAlimentacao.push({ substituicoes: null });
-        periodos.push(montaPeriodoDeAlteracao(periodo));
-      });
-      this.setState({ periodos });
-    }
-    const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
-    const { loading, periodos } = this.state;
+  componentDidUpdate() {
+    const { meusDados, proximos_dois_dias_uteis } = this.props;
+    let { loading, periodos, substituicoesAlimentacao } = this.state;
+
     if (
-      motivos !== [] &&
-      periodos !== [] &&
-      meusDados !== null &&
-      proximos_dois_dias_uteis !== null &&
-      loading
+      meusDados &&
+      proximos_dois_dias_uteis &&
+      loading &&
+      periodos.length === 0
     ) {
-      this.setState({
-        loading: false
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao
+        .tipo_unidade_escolar;
+
+      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.setState({ periodos, loading: false });
+      });
+      periodos.forEach(periodo => {
+        this.montaObjetoDeSubstituicoesEdit(periodo);
+      });
+    }
+
+    if (substituicoesAlimentacao.length === 0) {
+      periodos.forEach(periodo => {
+        periodo["ck"] = null;
+        substituicoesAlimentacao.push({ substituicoes: [] });
       });
     }
   }
@@ -89,7 +94,7 @@ class AlteracaoCardapio extends Component {
     substituicoesEdit.push({
       turno: periodo.nome,
       substituicoes: [],
-      checado: false
+      checked: false
     });
     this.setState({ substituicoesEdit });
   };
@@ -126,16 +131,38 @@ class AlteracaoCardapio extends Component {
 
   OnEditButtonClicked(param) {
     let dataInicial = this.state.dataInicial;
+    let { substituicoesAlimentacao, periodos } = this.state;
     dataInicial = param["alteracaoDeCardapio"].data_inicial;
     this.props.reset("alteracaoCardapio");
+    param.alteracaoDeCardapio.substituicoes.forEach(substituicao => {
+      substituicao.tipo_alimentacao_de["nome"] =
+        substituicao.tipo_alimentacao_de.label;
+      substituicao.tipo_alimentacao_para["nome"] =
+        substituicao.tipo_alimentacao_para.label;
+      substituicao.tipo_alimentacao_de.substituicoes.forEach(
+        substituicao_sub => {
+          substituicao_sub["nome"] = substituicao_sub.label;
+        }
+      );
+    });
     this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
+    param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
+      substituicoesAlimentacao[index].substituicoes =
+        substituicao.tipo_alimentacao_de.substituicoes;
+    });
+    periodos.forEach(periodo => {
+      periodo.checked =
+        param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
+    });
     this.setState({
       dataInicial,
       status: param.alteracaoDeCardapio.status,
       title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
-      id: param.alteracaoDeCardapio.id_externo
+      id: param.alteracaoDeCardapio.id_externo,
+      substituicoesAlimentacao,
+      periodos
     });
   }
 
@@ -155,27 +182,13 @@ class AlteracaoCardapio extends Component {
   }
 
   resetForm() {
-    let periodos = this.state.periodos;
     this.props.loadAlteracaoCardapio(null);
     this.props.change("alterar_dia", null);
     this.props.change("data_inicial", null);
     this.props.change("data_final", null);
     this.props.change("motivo", null);
     this.props.change("observacao", "<p><p/>\n");
-    periodos.forEach(periodo => {
-      periodo.checado = false;
-      this.props.change(`substituicoes_${periodo.nome}.check`, false);
-      this.props.change(
-        `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
-        null
-      );
-      this.props.change(
-        `substituicoes_${periodo.nome}.tipo_alimentacao_de`,
-        null
-      );
-    });
     this.setState({
-      periodos,
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: null,
@@ -271,29 +284,6 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
-    if (periodo.checado) {
-      this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
-        null
-      );
-      this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-        null
-      );
-    }
-  }
-
-  resetAlteracaoDoPeriodo(uuidInput, periodoNome, indice) {
-    let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
-    if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
-      this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-        null
-      );
-    }
-  }
-
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
       deleteAlteracaoCardapio(uuid).then(
@@ -322,26 +312,38 @@ class AlteracaoCardapio extends Component {
     this.setState({ periodos });
   }
 
+  onKeyPress(event) {
+    if (event.which === ENTER) {
+      event.preventDefault();
+    }
+  }
+
+  obtemDataInicial = value => {
+    let dataInicial = this.state.dataInicial;
+    dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
+    this.setState({ dataInicial });
+  };
+
+  limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
+    if (periodo.checked) {
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+        null
+      );
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        null
+      );
+    }
+  }
+
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
     this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
-    periodos[indice].checado = !periodos[indice].checado;
-    this.props.change(input, periodos[indice].checado);
+    periodos[indice].checked = !periodos[indice].checked;
+    this.props.change(input, periodos[indice].checked);
     this.setState({ periodos });
   }
-
-  handleSelectedChanged = (selectedOptions, periodo) => {
-    let opcoesDe = this.state.opcoesDe;
-    opcoesDe[periodo.nome] = selectedOptions;
-    this.setState({
-      ...this.state,
-      opcoesDe: opcoesDe
-    });
-    this.props.change(
-      `substituicoes_${periodo.nome}.tipo_de_refeicao`,
-      selectedOptions
-    );
-  };
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
     let periodos = this.state.periodos;
@@ -357,26 +359,24 @@ class AlteracaoCardapio extends Component {
     this.setState({ substituicoesAlimentacao });
   };
 
-  onKeyPress(event) {
-    if (event.which === ENTER) {
-      event.preventDefault();
+  resetAlteracaoDoPeriodo(uuidInput, periodoNome, indice) {
+    let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
+    if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        null
+      );
     }
   }
-
-  obtemDataInicial = value => {
-    let dataInicial = this.state.dataInicial;
-    dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
-    this.setState({ dataInicial });
-  };
 
   render() {
     const {
       loading,
       alteracaoCardapioList,
-      periodos,
       showModal,
-      substituicoesEdit,
-      dataInicial
+      dataInicial,
+      periodos,
+      substituicoesAlimentacao
     } = this.state;
     const {
       handleSubmit,
@@ -446,7 +446,7 @@ class AlteracaoCardapio extends Component {
                     component={InputComData}
                     name="data_final"
                     label="Até"
-                    disabled={dataInicial !== null ? false : true}
+                    disabled={dataInicial === null || this.props.alterar_dia}
                     minDate={dataInicial}
                   />
                 </section>
@@ -467,7 +467,6 @@ class AlteracaoCardapio extends Component {
                   <div>Alterar alimentação de:</div>
                   <div>Para alimentação:</div>
                 </header>
-
                 {periodos.map((periodo, indice) => {
                   this.props.change(
                     `substituicoes_${periodo.nome}.periodo`,
@@ -512,7 +511,7 @@ class AlteracaoCardapio extends Component {
                         component={Select}
                         name="tipo_alimentacao_de"
                         options={agregarDefault(periodo.tipos_alimentacao)}
-                        disabled={!periodo.checado}
+                        disabled={!periodo.checked}
                         onChange={event => {
                           this.resetAlteracaoDoPeriodo(
                             event.target.value,
@@ -530,11 +529,11 @@ class AlteracaoCardapio extends Component {
                       <Field
                         component={Select}
                         name="tipo_alimentacao_para"
-                        disabled={!periodo.checado}
+                        disabled={!periodo.checked}
                         options={agregarDefault(
-                          this.retornaOpcoesAlteracao(indice).length === 0
-                            ? substituicoesEdit[indice].substituicoes
-                            : this.retornaOpcoesAlteracao(indice)
+                          substituicoesAlimentacao.length > 0
+                            ? substituicoesAlimentacao[indice].substituicoes
+                            : []
                         )}
                         validate={periodo.checado && required}
                       />
