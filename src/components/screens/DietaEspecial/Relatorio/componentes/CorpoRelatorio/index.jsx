@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { FluxoDeStatus } from "../../../../../Shareable/FluxoDeStatus";
 import { getRelatorioDietaEspecial } from "../../../../../../services/relatorios";
 import Botao from "../../../../../Shareable/Botao";
@@ -106,8 +106,19 @@ export const CorpoRelatorio = props => {
       )}
       <hr />
       <div className="row">
-        <div className="col-12 report-label-value">
+        <div className="col-8 report-label-value">
           <p className="value">Descrição da Dieta Especial</p>
+        </div>
+        <div className="col-4 report-label-value">
+          <p className="value">
+            <i
+              style={{ color: dietaEspecial.ativo ? "green" : "red" }}
+              className={`pr-1 fas fa-${
+                dietaEspecial.ativo ? "check-circle" : "ban"
+              }`}
+            />
+            {`Dieta ${dietaEspecial.ativo ? "ativa" : "inativa"}`}
+          </p>
         </div>
       </div>
       <div className="row">
@@ -194,16 +205,19 @@ export const CorpoRelatorio = props => {
       </div>
       {dietaEspecial.alergias_intolerancias &&
         dietaEspecial.alergias_intolerancias.length > 0 && (
-          <div className="report-label-value">
-            <p>Relação por Diagnóstico</p>
-            {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
-              return (
-                <div className="value" key={key}>
-                  {alergia.descricao}
-                </div>
-              );
-            })}
-          </div>
+          <Fragment>
+            <hr />
+            <div className="report-label-value">
+              <p>Relação por Diagnóstico</p>
+              {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
+                return (
+                  <div className="value" key={key}>
+                    {alergia.descricao}
+                  </div>
+                );
+              })}
+            </div>
+          </Fragment>
         )}
       {dietaEspecial.classificacao && (
         <div className="report-label-value">
@@ -217,6 +231,7 @@ export const CorpoRelatorio = props => {
           <p>Protocolo da Dieta Especial</p>
           {dietaEspecial.anexos
             .filter(anexo => !anexo.eh_laudo_medico)
+            .filter(anexo => !anexo.eh_laudo_alta)
             .map((anexo, key) => {
               return (
                 <div key={key}>
@@ -240,6 +255,43 @@ export const CorpoRelatorio = props => {
             {dietaEspecial.registro_funcional_nutricionista}
           </div>
         </div>
+      )}
+      {dietaEspecial.anexos.filter(anexo => anexo.eh_laudo_alta).length > 0 && (
+        <Fragment>
+          <hr />
+          <div className="report-label-value">
+            <p>Laudo Médico - Inativação da Dieta</p>
+            {dietaEspecial.anexos
+              .filter(anexo => anexo.eh_laudo_alta)
+              .map((anexo, key) => {
+                return (
+                  <div key={key}>
+                    <a
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      href={anexo.arquivo}
+                      className="link"
+                    >
+                      {anexo.nome}
+                    </a>
+                  </div>
+                );
+              })}
+          </div>
+          <div className="pb-3 report-label-value">
+            <p>Justificativa</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: dietaEspecial.logs.find(
+                  log =>
+                    log.status_evento_explicacao ===
+                    "Escola solicitou inativação"
+                ).justificativa
+              }}
+            />
+          </div>
+        </Fragment>
       )}
     </div>
   );

@@ -188,11 +188,30 @@ export const escolaCancelaSolicitacao = async (uuid, payload) => {
 };
 
 export const escolaInativaDietaEspecial = async (uuid, payload) => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/inativar/`;
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/escola-solicita-inativacao/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAEAutorizaInativacaoDietaEspecial = async uuid => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/codae-autoriza-inativacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {

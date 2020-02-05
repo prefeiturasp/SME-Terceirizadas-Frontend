@@ -4,7 +4,8 @@ import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import {
   getDietaEspecial,
-  getDietasEspeciaisVigentesDeUmAluno
+  getDietasEspeciaisVigentesDeUmAluno,
+  CODAEAutorizaInativacaoDietaEspecial
 } from "../../../../services/dietaEspecial.service";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
@@ -94,11 +95,17 @@ class Relatorio extends Component {
 
   handleSubmit(values) {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
-    const { uuid, solicitacoesVigentes, showAutorizarModal } = this.state;
+    const {
+      uuid,
+      solicitacoesVigentes,
+      showAutorizarModal,
+      dietaEspecial
+    } = this.state;
     if (
       solicitacoesVigentes &&
       solicitacoesVigentes.length > 0 &&
       usuarioCODAEDietaEspecial() &&
+      dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR &&
       !showAutorizarModal
     ) {
       this.showAutorizarModal();
@@ -112,7 +119,9 @@ class Relatorio extends Component {
       let diagnosticos = null;
       let payload = null;
       if (diagnosticosSelecionados) {
-        diagnosticos = diagnosticosSelecionados.filter(d => d !== "");
+        diagnosticos = diagnosticosSelecionados.filter(
+          diagnostico => diagnostico !== ""
+        );
         payload = {
           uuid,
           classificacaoDieta,
@@ -124,7 +133,12 @@ class Relatorio extends Component {
         payload = uuid;
       }
       this.closeAutorizarModal();
-      this.props.endpointAprovaSolicitacao(payload).then(
+      const endpoint =
+        dietaEspecial.status_solicitacao ===
+        statusEnum.ESCOLA_SOLICITOU_INATIVACAO
+          ? CODAEAutorizaInativacaoDietaEspecial
+          : this.props.endpointAprovaSolicitacao;
+      endpoint(payload).then(
         response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess(toastAprovaMensagem);
@@ -221,9 +235,11 @@ class Relatorio extends Component {
                         className="ml-3"
                         disabled={
                           usuarioCODAEDietaEspecial()
-                            ? !diagnosticosSelecionados ||
-                              !protocolos ||
-                              !classificacaoDieta
+                            ? (!diagnosticosSelecionados ||
+                                !protocolos ||
+                                !classificacaoDieta) &&
+                              dietaEspecial.status_solicitacao ===
+                                statusEnum.CODAE_A_AUTORIZAR
                             : false
                         }
                       />
