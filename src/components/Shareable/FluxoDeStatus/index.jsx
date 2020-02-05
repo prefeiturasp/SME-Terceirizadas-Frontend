@@ -18,10 +18,7 @@ export const FluxoDeStatus = props => {
   return (
     <div className="w-100">
       <div className="row">
-        <div className="progressbar-main-title col-2 my-auto">
-          Status de Solicitação:
-        </div>
-        <div className="col-10">
+        <div className="col-12">
           <ul className={`progressbar-titles fluxos`}>
             {fluxoUtilizado.map((status, key) => {
               return (
