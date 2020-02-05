@@ -175,22 +175,20 @@ export const CorpoRelatorio = props => {
           </div>{" "}
           <div className="col-4 report-label-value">
             <p>Anexos</p>
-            {dietaEspecial.anexos
-              .filter(anexo => anexo.eh_laudo_medico)
-              .map((anexo, key) => {
-                return (
-                  <div key={key}>
-                    <a
-                      href={anexo.arquivo}
-                      className="value-important link"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {`Anexo ${key + 1}`}
-                    </a>
-                  </div>
-                );
-              })}
+            {dietaEspecial.anexos.map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a
+                    href={anexo.arquivo}
+                    className="value-important link"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {`Anexo ${key + 1}`}
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -225,12 +223,11 @@ export const CorpoRelatorio = props => {
           <div className="value">{dietaEspecial.classificacao.nome}</div>
         </div>
       )}
-      {dietaEspecial.anexos.filter(anexo => !anexo.eh_laudo_medico).length >
+      {dietaEspecial.anexos.length >
         0 && (
         <div className="pb-3 report-label-value">
           <p>Protocolo da Dieta Especial</p>
           {dietaEspecial.anexos
-            .filter(anexo => !anexo.eh_laudo_medico)
             .filter(anexo => !anexo.eh_laudo_alta)
             .map((anexo, key) => {
               return (
