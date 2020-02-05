@@ -28,6 +28,14 @@ export const PERFIL = {
   ADMINISTRADOR_TERCEIRIZADA: `"ADMINISTRADOR_TERCEIRIZADA`
 };
 
+export const VISAO = {
+  ESCOLA: "escola",
+  DIRETORIA_REGIONAL: "dre",
+  CODAE: "codae",
+  TERCEIRIZADA: "terceirizada",
+  ALUNO: "aluno"
+};
+
 export const TIPO_PERFIL = {
   ESCOLA: `"escola"`,
   DIRETORIA_REGIONAL: `"diretoriaregional"`,

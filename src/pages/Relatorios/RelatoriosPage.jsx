@@ -3,7 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorios from "../../components/screens/Relatorios";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import { ESCOLA, DRE } from "../../configs/constants";
+import { ESCOLA, DRE, CODAE } from "../../configs/constants";
 import {
   getEvolucaoSolicitacoesEscola,
   getResumoTotaisPorMesEscola,
@@ -66,7 +66,7 @@ export const RelatoriosDRE = () => (
 // CODAE
 export const RelatoriosCODAE = () => (
   <RelatoriosBase
-    visao={DRE}
+    visao={CODAE}
     getEvolucaoSolicitacoes={getEvolucaoSolicitacoesCODAE}
     getResumoTotaisPorMes={getResumoTotaisPorMesCODAE}
     getPedidosESolicitacoesFiltro={getPedidosESolicitacoesFiltroCODAE}
