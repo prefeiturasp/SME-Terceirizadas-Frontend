@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import {
   getDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
-  CODAEAutorizaInativacaoDietaEspecial
+  CODAEAutorizaInativacaoDietaEspecial,
+  CODAENegaInativacaoDietaEspecial
 } from "../../../../services/dietaEspecial.service";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
@@ -186,7 +187,12 @@ class Relatorio extends Component {
               <ModalNaoAprova
                 showModal={showNaoAprovaModal}
                 closeModal={this.closeNaoAprovaModal}
-                endpoint={endpointNaoAprovaSolicitacao}
+                endpoint={
+                  dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_A_AUTORIZAR
+                    ? endpointNaoAprovaSolicitacao
+                    : CODAENegaInativacaoDietaEspecial
+                }
                 solicitacao={dietaEspecial}
                 loadSolicitacao={this.loadSolicitacao}
                 justificativa={justificativa}
