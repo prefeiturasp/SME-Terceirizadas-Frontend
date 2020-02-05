@@ -182,19 +182,24 @@ class AlteracaoCardapio extends Component {
   }
 
   resetForm() {
+    let { periodos } = this.state;
     this.props.loadAlteracaoCardapio(null);
     this.props.change("alterar_dia", null);
     this.props.change("data_inicial", null);
     this.props.change("data_final", null);
     this.props.change("motivo", null);
     this.props.change("observacao", "<p><p/>\n");
+    periodos.forEach(periodo => {
+      periodo.checked = false;
+    });
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
-      dataInicial: null
+      dataInicial: null,
+      periodos
     });
   }
 
@@ -203,6 +208,8 @@ class AlteracaoCardapio extends Component {
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
+          this.refresh();
+          this.resetForm("alteracaoCardapio");
         } else {
           toastError("Houve um erro ao enviar a Alteração de Cardápio");
         }
@@ -229,6 +236,7 @@ class AlteracaoCardapio extends Component {
               } else {
                 toastSuccess("Alteração de Cardápio salva com sucesso");
                 this.refresh();
+                this.resetForm("alteracaoCardapio");
               }
               this.resetForm();
             }
