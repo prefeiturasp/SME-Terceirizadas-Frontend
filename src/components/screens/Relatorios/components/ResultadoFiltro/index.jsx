@@ -94,7 +94,7 @@ class ResultadoFiltro extends Component {
   };
 
   render() {
-    const { count } = this.props;
+    const { count, visao } = this.props;
     const { checkTodos, listaSolicitacoes } = this.state;
     const filtros = this.props.values;
     return (
@@ -110,7 +110,7 @@ class ResultadoFiltro extends Component {
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
-                  onClick={() => getRelatorioFiltroPorPeriodo(filtros)}
+                  onClick={() => getRelatorioFiltroPorPeriodo(filtros, visao)}
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao

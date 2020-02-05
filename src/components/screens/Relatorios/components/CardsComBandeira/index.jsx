@@ -6,7 +6,6 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS
 } from "../../../../../configs/constants";
-import { VISAO } from "../../../../../constants";
 import { getRelatorioResumoMesAno } from "../../../../../services/relatorios";
 import Botao from "../../../../Shareable/Botao";
 import {
@@ -104,7 +103,6 @@ class CardsComBandeira extends Component {
   render() {
     const { totais_tipo_solicitacao } = this.state;
     const { visao } = this.props;
-    console.log("visaooo", visao);
     return (
       <div className="cards-with-flag">
         <div className="row p-4">
