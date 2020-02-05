@@ -64,6 +64,7 @@ export default class SubstituicoesField extends Component {
         <div className="col-5">
           <Field
             component={MultiSelect}
+            type="select-multi"
             name={`${name}.substitutos`}
             options={alimentos.map(a => {
               return {
