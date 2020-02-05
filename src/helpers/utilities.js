@@ -242,7 +242,10 @@ export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
       return usuarioEscola() || usuarioCODAEDietaEspecial();
+    case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
+      return usuarioCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
+    case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
       return usuarioTerceirizada();
     default:
       return false;

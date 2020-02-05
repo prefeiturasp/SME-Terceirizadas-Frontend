@@ -30,7 +30,7 @@ export const AvatarEscola = () => {
                 className="st1"
                 d="M15.9,64.8v0.5c0,2.9,2,5.2,4.4,5.2h66c2.4,0,4.4-2.3,4.4-5.2v-0.5H15.9z"
               />
-              <g claclassNamess="st2">
+              <g className="st2">
                 <path
                   className="st1"
                   d="M90.6,64.8H15.9v0.5c0,0.6,0.1,1.2,0.3,1.7h74.2c0.2-0.5,0.3-1.1,0.3-1.7V64.8z"
