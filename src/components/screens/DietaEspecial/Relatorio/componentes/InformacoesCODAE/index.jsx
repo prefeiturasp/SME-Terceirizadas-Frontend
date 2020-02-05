@@ -105,6 +105,21 @@ class InformacoesCODAE extends Component {
               component={CKEditorField}
               label="Informações Adicionais"
               name="informacoes_adicionais"
+              config={{
+                removePlugins: ["Heading", "Link", "BlockQuote"],
+                toolbar: [
+                  "bold",
+                  "italic",
+                  "|",
+                  "bulletedList",
+                  "numberedList",
+                  "|",
+                  "insertTable",
+                  "|",
+                  "undo",
+                  "redo"
+                ]
+              }}
             />
           </div>
         </div>
