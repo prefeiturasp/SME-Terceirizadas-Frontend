@@ -6,7 +6,8 @@ import {
   getDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
   CODAEAutorizaInativacaoDietaEspecial,
-  CODAENegaInativacaoDietaEspecial
+  CODAENegaInativacaoDietaEspecial,
+  terceirizadaTomaCienciaInativacaoDietaEspecial
 } from "../../../../services/dietaEspecial.service";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
@@ -138,6 +139,9 @@ class Relatorio extends Component {
         dietaEspecial.status_solicitacao ===
         statusEnum.ESCOLA_SOLICITOU_INATIVACAO
           ? CODAEAutorizaInativacaoDietaEspecial
+          : dietaEspecial.status_solicitacao ===
+            statusEnum.CODAE_AUTORIZOU_INATIVACAO
+          ? terceirizadaTomaCienciaInativacaoDietaEspecial
           : this.props.endpointAprovaSolicitacao;
       endpoint(payload).then(
         response => {

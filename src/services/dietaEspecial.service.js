@@ -245,6 +245,25 @@ export const CODAENegaInativacaoDietaEspecial = async uuid => {
     });
 };
 
+export const terceirizadaTomaCienciaInativacaoDietaEspecial = async uuid => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/terceirizada-toma-ciencia-inativacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const getDietasAtivasInativasPorAluno = async (params = {}) => {
   const axios = getAxios();
   const response = await axios.get(
