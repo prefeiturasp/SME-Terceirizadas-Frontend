@@ -138,8 +138,8 @@ export const CorpoRelatorio = props => {
                   {quantidade_por_periodo.periodo_escolar &&
                     quantidade_por_periodo.periodo_escolar.nome}
                 </td>
-                <td>{quantidade_por_periodo.tipo_alimentacao_de.nome}</td>
-                <td>{quantidade_por_periodo.tipo_alimentacao_para.nome}</td>
+                <td>{quantidade_por_periodo.tipo_alimentacao_de.label}</td>
+                <td>{quantidade_por_periodo.tipo_alimentacao_para.label}</td>
               </tr>
             );
           }
