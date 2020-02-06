@@ -28,7 +28,8 @@ const validaSubstituicoes = substituicoes => {
     if (
       !substituicao.alimento ||
       !substituicao.tipo ||
-      (substituicao.substitutos && substituicao.substitutos.length === 0)
+      !substituicao.substitutos ||
+      substituicao.substitutos.length === 0
     ) {
       return false;
     }
@@ -110,6 +111,22 @@ class Relatorio extends Component {
   handleSubmit = async values => {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const {
+      uuid,
+      solicitacoesVigentes,
+      showAutorizarModal,
+      dietaEspecial
+    } = this.state;
+    if (
+      solicitacoesVigentes &&
+      solicitacoesVigentes.length > 0 &&
+      usuarioCODAEDietaEspecial() &&
+      dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR &&
+      !showAutorizarModal
+    ) {
+      this.showAutorizarModal();
+      return;
+    }
+    const {
       classificacao,
       alergias_intolerancias,
       registro_funcional_nutricionista,
@@ -137,7 +154,13 @@ class Relatorio extends Component {
     } else {
       payload = uuid;
     }
-    const response = await this.props.endpointAprovaSolicitacao(payload);
+    const endpoint =
+      this.state.dietaEspecial.status_solicitacao ===
+      statusEnum.CODAE_A_AUTORIZAR
+        ? this.props.endpointAprovaSolicitacao
+        : CODAEAutorizaInativacaoDietaEspecial;
+    const response = await endpoint(payload);
+    this.closeAutorizarModal();
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess(toastAprovaMensagem);
       this.loadSolicitacao(uuid);
@@ -232,12 +255,15 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                         disabled={
-                          usuarioCODAEDietaEspecial()
-                            ? !alergias_intolerancias ||
-                              !classificacao ||
-                              !nome_protocolo ||
-                              !validaSubstituicoes(substituicoes)
-                            : false
+                          usuarioCODAEDietaEspecial() &&
+                          (!alergias_intolerancias ||
+                            (alergias_intolerancias.length === 1 &&
+                              alergias_intolerancias[0] === "") ||
+                            !classificacao ||
+                            !nome_protocolo ||
+                            !validaSubstituicoes(substituicoes)) &&
+                          dietaEspecial.status_solicitacao ===
+                            statusEnum.CODAE_A_AUTORIZAR
                         }
                       />
                     )}

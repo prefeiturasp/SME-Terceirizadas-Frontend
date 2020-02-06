@@ -223,26 +223,6 @@ export const CorpoRelatorio = props => {
           <div className="value">{dietaEspecial.classificacao.nome}</div>
         </div>
       )}
-      {dietaEspecial.anexos.length >
-        0 && (
-        <div className="pb-3 report-label-value">
-          <p>Protocolo da Dieta Especial</p>
-          {dietaEspecial.anexos
-            .filter(anexo => !anexo.eh_laudo_alta)
-            .map((anexo, key) => {
-              return (
-                <div key={key}>
-                  <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={anexo.arquivo}
-                    className="link"
-                  >
-                    {anexo.nome}
-                  </a>
-                </div>
-              );
-            })}
       {dietaEspecial.motivo_negacao && (
         <div className="report-label-value">
           <p>Motivo da Negação</p>

@@ -43,7 +43,8 @@ export default class MultiSelect extends React.Component {
           overrideStrings={{
             selectSomeItems: "Selecione",
             allItemsAreSelected: "Todos os itens estão selecionados",
-            selectAll: "Todos"
+            selectAll: "Todos",
+            search: "Buscar"
           }}
           {...rest}
         />

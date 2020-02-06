@@ -20,27 +20,6 @@ class InformacoesCODAE extends Component {
       diagnosticos: null,
       classificacoesDieta: null,
       alimentos: []
-      // alimentos: [
-      //   { uuid: "1", nome: "Barra de Cereal" },
-      //   { uuid: "2", nome: "Peixe" },
-      //   { uuid: "3", nome: "Bolo de Aniversário" },
-      //   { uuid: "4", nome: "Bolo Individual" },
-      //   { uuid: "5", nome: "Granola" },
-      //   { uuid: "6", nome: "Biscoito Doce" },
-      //   { uuid: "7", nome: "Salada de Frutas" }
-      // ],
-      // substitutos: [
-      //   { value: 1, label: "Banana" },
-      //   { value: 2, label: "Pêssego" },
-      //   { value: 3, label: "Damasco" },
-      //   { value: 4, label: "Mamão Papaia" },
-      //   { value: 5, label: "Castanha Portuguesa" },
-      //   { value: 6, label: "Kiwi" },
-      //   { value: 7, label: "Abacate" },
-      //   { value: 8, label: "Carne Bovina" },
-      //   { value: 9, label: "Carne Suína" },
-      //   { value: 10, label: "Carne Frango" }
-      // ]
     };
     this.onClassificacaoChanged = this.onClassificacaoChanged.bind(this);
   }
