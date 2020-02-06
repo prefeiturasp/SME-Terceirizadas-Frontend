@@ -190,25 +190,6 @@ export class SolicitacaoVigente extends Component {
                               }
                             )}
                           </div>
-                          <div className="pb-3 report-label-value">
-                            <p>Protocolo da Dieta Especial</p>
-                            {solicitacaoVigente.anexos
-                              .filter(anexo => !anexo.eh_laudo_medico)
-                              .map((anexo, key) => {
-                                return (
-                                  <div key={key}>
-                                    <a
-                                      rel="noopener noreferrer"
-                                      target="_blank"
-                                      href={anexo.arquivo}
-                                      className="link"
-                                    >
-                                      {anexo.nome}
-                                    </a>
-                                  </div>
-                                );
-                              })}
-                          </div>
                           <div className="row pb-3">
                             <div className="col-6">
                               <Botao

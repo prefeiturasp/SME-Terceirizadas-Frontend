@@ -190,3 +190,13 @@ export const TIPOS_SOLICITACAO_LISTA = [
     link: SUSPENSAO_ALIMENTACAO
   }
 ];
+
+const ENDPOINT = {
+  ALIMENTOS: "alimentos",
+  SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
+  SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
+    "solicitacoes-dieta-especial-ativas-inativas"
+};
+ENDPOINT.AUTORIZAR_DIETA = uuid =>
+  `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
+export { ENDPOINT };

@@ -3,12 +3,14 @@ import { Field } from "redux-form";
 import DiagnosticosField from "./componentes/Diagnosticos/Field";
 import {
   getAlergiasIntolerancias,
+  getAlimentos,
   getClassificacoesDietaEspecial
 } from "../../../../../../services/dietaEspecial.service";
 import "./style.scss";
 import { ClassificacaoDaDieta } from "./componentes/ClassificacaoDaDieta";
-import ProtocolosField from "./componentes/ProtocolosField";
+import SubstituicoesField from "./componentes/SubstituicoesField";
 import InputText from "../../../../../Shareable/Input/InputText";
+import CKEditorField from "../../../../../Shareable/CKEditorField";
 
 class InformacoesCODAE extends Component {
   constructor(props) {
@@ -16,7 +18,8 @@ class InformacoesCODAE extends Component {
     this.state = {
       classificacaoDieta: "",
       diagnosticos: null,
-      classificacoesDieta: null
+      classificacoesDieta: null,
+      alimentos: []
     };
     this.onClassificacaoChanged = this.onClassificacaoChanged.bind(this);
   }
@@ -29,22 +32,24 @@ class InformacoesCODAE extends Component {
 
   componentDidMount = async () => {
     const alergiasIntolerancias = await getAlergiasIntolerancias();
+    const alimentos = await getAlimentos();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
     this.setState({
       diagnosticos: alergiasIntolerancias.results,
-      classificacoesDieta: classificacoesDieta.results
+      classificacoesDieta: classificacoesDieta.results,
+      alimentos: alimentos.data
     });
   };
 
   render() {
-    const { diagnosticos, classificacoesDieta } = this.state;
+    const { alimentos, classificacoesDieta, diagnosticos } = this.state;
     return (
       <div className="information-codae">
         <div className="pt-2 title">Relação por Diagnóstico</div>
         {diagnosticos && (
           <Field
             component={DiagnosticosField}
-            name="diagnosticosSelecionados"
+            name="alergias_intolerancias"
             diagnosticos={diagnosticos}
             required
           />
@@ -52,20 +57,42 @@ class InformacoesCODAE extends Component {
         <div className="pt-2 title">Classificação da Dieta</div>
         {classificacoesDieta && (
           <ClassificacaoDaDieta
-            name="classificacaoDieta"
+            name="classificacao"
             onClassificacaoChanged={this.onClassificacaoChanged}
             classificacoes={classificacoesDieta}
             required
           />
         )}
-        <div className="pt-2 title">Protocolo da Dieta Especial</div>
-        <Field component={ProtocolosField} name="protocolos" required />
+        <div className="card mt-3">
+          <div className="card-body">
+            <div className="pt-2 title">
+              Nome do Protocolo de Dieta Especial
+            </div>
+            <Field component={InputText} name="nome_protocolo" required />
+            <div className="pt-2 title">Substituições de Alimentos</div>
+            <Field
+              component={SubstituicoesField}
+              name="substituicoes"
+              required
+              alimentos={alimentos}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-9">
+            <Field
+              component={CKEditorField}
+              label="Informações Adicionais"
+              name="informacoes_adicionais"
+            />
+          </div>
+        </div>
         <div className="pt-2 title">Identificação do Nutricionista</div>
         <div className="row">
           <div className="col-9">
             <Field
               component={InputText}
-              name="identificacaoNutricionista"
+              name="registro_funcional_nutricionista"
               disabled
             />
           </div>

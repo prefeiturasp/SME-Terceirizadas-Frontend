@@ -9,6 +9,32 @@ export const montaPeriodoDeAlteracao = periodo => {
   return periodoAlteracao;
 };
 
+export const construirPeriodosECombos = periodos => {
+  let periodosCombo = [];
+  periodos.forEach(periodo => {
+    let dicionarioPeriodo = {
+      checked: false,
+      nome: periodo.periodo_escolar.nome,
+      uuid: periodo.periodo_escolar.uuid,
+      style: backgroundLabelPeriodo(periodo.periodo_escolar.nome),
+      tipos_alimentacao: periodo.combos.map(combo => {
+        return {
+          nome: combo.label,
+          uuid: combo.uuid,
+          substituicoes: combo.substituicoes.map(substituicao => {
+            return {
+              nome: substituicao.label,
+              uuid: substituicao.uuid
+            };
+          })
+        };
+      })
+    };
+    periodosCombo.push(dicionarioPeriodo);
+  });
+  return periodosCombo;
+};
+
 const backgroundLabelPeriodo = nomePeriodo => {
   switch (nomePeriodo) {
     case "MANHA":
