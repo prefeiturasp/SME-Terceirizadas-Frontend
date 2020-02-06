@@ -3,8 +3,8 @@ import React from "react";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-import { HelpText } from "../../../../../../../Shareable/HelpText";
-import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
+import { HelpText } from "../HelpText";
+import InputErroMensagem from "../Input/InputErroMensagem";
 
 const CKEditorField = props => {
   const {
@@ -40,5 +40,22 @@ const CKEditorField = props => {
       <InputErroMensagem meta={meta} />
     </div>
   );
+};
+CKEditorField.defaultProps = {
+  config: {
+    removePlugins: ["Heading", "Link", "BlockQuote"],
+    toolbar: [
+      "bold",
+      "italic",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "|",
+      "insertTable",
+      "|",
+      "undo",
+      "redo"
+    ]
+  }
 };
 export default CKEditorField;

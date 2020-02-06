@@ -10,7 +10,7 @@ import "./style.scss";
 import { ClassificacaoDaDieta } from "./componentes/ClassificacaoDaDieta";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import InputText from "../../../../../Shareable/Input/InputText";
-import CKEditorField from "./componentes/CKEditorField";
+import CKEditorField from "../../../../../Shareable/CKEditorField";
 
 class InformacoesCODAE extends Component {
   constructor(props) {
@@ -84,21 +84,6 @@ class InformacoesCODAE extends Component {
               component={CKEditorField}
               label="Informações Adicionais"
               name="informacoes_adicionais"
-              config={{
-                removePlugins: ["Heading", "Link", "BlockQuote"],
-                toolbar: [
-                  "bold",
-                  "italic",
-                  "|",
-                  "bulletedList",
-                  "numberedList",
-                  "|",
-                  "insertTable",
-                  "|",
-                  "undo",
-                  "redo"
-                ]
-              }}
             />
           </div>
         </div>
