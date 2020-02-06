@@ -22,6 +22,8 @@
     }
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^16.0.0",
+    "@ckeditor/ckeditor5-react": "^2.1.0",
     "@khanacademy/react-multi-select": "^0.3.2",
     "@sentry/browser": "^5.9.1",
     "antd": "^3.26.4",

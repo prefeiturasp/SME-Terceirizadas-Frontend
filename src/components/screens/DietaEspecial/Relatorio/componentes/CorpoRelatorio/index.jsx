@@ -175,22 +175,20 @@ export const CorpoRelatorio = props => {
           </div>{" "}
           <div className="col-4 report-label-value">
             <p>Anexos</p>
-            {dietaEspecial.anexos
-              .filter(anexo => anexo.eh_laudo_medico)
-              .map((anexo, key) => {
-                return (
-                  <div key={key}>
-                    <a
-                      href={anexo.arquivo}
-                      className="value-important link"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {`Anexo ${key + 1}`}
-                    </a>
-                  </div>
-                );
-              })}
+            {dietaEspecial.anexos.map((anexo, key) => {
+              return (
+                <div key={key}>
+                  <a
+                    href={anexo.arquivo}
+                    className="value-important link"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {`Anexo ${key + 1}`}
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
@@ -225,27 +223,65 @@ export const CorpoRelatorio = props => {
           <div className="value">{dietaEspecial.classificacao.nome}</div>
         </div>
       )}
-      {dietaEspecial.anexos.filter(anexo => !anexo.eh_laudo_medico).length >
-        0 && (
-        <div className="pb-3 report-label-value">
-          <p>Protocolo da Dieta Especial</p>
-          {dietaEspecial.anexos
-            .filter(anexo => !anexo.eh_laudo_medico)
-            .filter(anexo => !anexo.eh_laudo_alta)
-            .map((anexo, key) => {
-              return (
-                <div key={key}>
-                  <a
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href={anexo.arquivo}
-                    className="link"
-                  >
-                    {anexo.nome}
-                  </a>
-                </div>
-              );
-            })}
+      {dietaEspecial.motivo_negacao && (
+        <div className="report-label-value">
+          <p>Motivo da Negação</p>
+          <div className="value">{dietaEspecial.motivo_negacao.descricao}</div>
+        </div>
+      )}
+      {dietaEspecial.justificativa_negacao && (
+        <div className="report-label-value">
+          <p>Justificativa da Negação</p>
+          <div className="value">{dietaEspecial.justificativa_negacao}</div>
+        </div>
+      )}
+      {dietaEspecial.nome_protocolo && (
+        <div className="report-label-value">
+          <p>Nome do Protocolo</p>
+          <div className="value">{dietaEspecial.nome_protocolo}</div>
+        </div>
+      )}
+      {dietaEspecial.substituicoes.length > 0 && (
+        <div className="report-label-value">
+          <p>Substituições</p>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Alimento</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Isenções / Substituições</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dietaEspecial.substituicoes.map((s, key) => (
+                <tr key={key}>
+                  <td className="value">{s.alimento.nome}</td>
+                  <td className="value">
+                    {s.tipo === "I" ? "Isento" : "Substituição"}
+                  </td>
+                  <td className="value">
+                    <ul>
+                      {s.substitutos.map((ss, key2) => (
+                        <li key={key2}>{ss.nome}</li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="value">{dietaEspecial.justificativa_negacao}</div>
+        </div>
+      )}
+      {dietaEspecial.informacoes_adicionais && (
+        <div className="report-label-value">
+          <p>Informações Adicionais</p>
+          <div
+            className="value"
+            dangerouslySetInnerHTML={{
+              __html: dietaEspecial.informacoes_adicionais
+            }}
+          />
         </div>
       )}
       {dietaEspecial.registro_funcional_nutricionista && (

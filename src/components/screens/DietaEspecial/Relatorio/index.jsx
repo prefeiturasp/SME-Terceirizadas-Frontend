@@ -23,6 +23,20 @@ import {
 import { formatarSolicitacoesVigentes } from "../Escola/helper";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 
+const validaSubstituicoes = substituicoes => {
+  for (let substituicao of substituicoes) {
+    if (
+      !substituicao.alimento ||
+      !substituicao.tipo ||
+      !substituicao.substitutos ||
+      substituicao.substitutos.length === 0
+    ) {
+      return false;
+    }
+  }
+  return true;
+};
+
 class Relatorio extends Component {
   constructor(props) {
     super(props);
@@ -94,7 +108,7 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  handleSubmit(values) {
+  handleSubmit = async values => {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const {
       uuid,
@@ -110,50 +124,50 @@ class Relatorio extends Component {
       !showAutorizarModal
     ) {
       this.showAutorizarModal();
-    } else {
-      const {
-        classificacaoDieta,
-        diagnosticosSelecionados,
-        identificacaoNutricionista,
-        protocolos
-      } = values;
-      let diagnosticos = null;
-      let payload = null;
-      if (diagnosticosSelecionados) {
-        diagnosticos = diagnosticosSelecionados.filter(
-          diagnostico => diagnostico !== ""
-        );
-        payload = {
-          uuid,
-          classificacaoDieta,
-          diagnosticosSelecionados: diagnosticos,
-          identificacaoNutricionista,
-          protocolos
-        };
-      } else {
-        payload = uuid;
-      }
-      this.closeAutorizarModal();
-      const endpoint =
-        dietaEspecial.status_solicitacao ===
-        statusEnum.ESCOLA_SOLICITOU_INATIVACAO
-          ? CODAEAutorizaInativacaoDietaEspecial
-          : this.props.endpointAprovaSolicitacao;
-      endpoint(payload).then(
-        response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess(toastAprovaMensagem);
-            this.loadSolicitacao(uuid);
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(toastAprovaMensagemErro);
-          }
-        },
-        function() {
-          toastError(toastAprovaMensagemErro);
-        }
-      );
+      return;
     }
-  }
+    const {
+      classificacao,
+      alergias_intolerancias,
+      registro_funcional_nutricionista,
+      nome_protocolo,
+      substituicoes,
+      informacoes_adicionais
+    } = values;
+    let alergias = null;
+    let payload = null;
+    if (alergias_intolerancias) {
+      alergias = alergias_intolerancias.filter(d => d !== "");
+      payload = {
+        uuid,
+        classificacao,
+        alergias_intolerancias: alergias,
+        registro_funcional_nutricionista,
+        nome_protocolo,
+        informacoes_adicionais,
+        substituicoes: substituicoes.map(s =>
+          Object.assign({}, s, {
+            tipo: s.tipo === "isento" ? "I" : "S"
+          })
+        )
+      };
+    } else {
+      payload = uuid;
+    }
+    const endpoint =
+      this.state.dietaEspecial.status_solicitacao ===
+      statusEnum.CODAE_A_AUTORIZAR
+        ? this.props.endpointAprovaSolicitacao
+        : CODAEAutorizaInativacaoDietaEspecial;
+    const response = await endpoint(payload);
+    this.closeAutorizarModal();
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(toastAprovaMensagem);
+      this.loadSolicitacao(uuid);
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(toastAprovaMensagemErro);
+    }
+  };
 
   render() {
     const {
@@ -164,9 +178,10 @@ class Relatorio extends Component {
       endpointNaoAprovaSolicitacao,
       justificativa,
       motivo,
-      classificacaoDieta,
-      protocolos,
-      diagnosticosSelecionados
+      classificacao,
+      alergias_intolerancias,
+      nome_protocolo,
+      substituicoes
     } = this.props;
     const {
       dietaEspecial,
@@ -240,13 +255,15 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                         disabled={
-                          usuarioCODAEDietaEspecial()
-                            ? (!diagnosticosSelecionados ||
-                                !protocolos ||
-                                !classificacaoDieta) &&
-                              dietaEspecial.status_solicitacao ===
-                                statusEnum.CODAE_A_AUTORIZAR
-                            : false
+                          usuarioCODAEDietaEspecial() &&
+                          (!alergias_intolerancias ||
+                            (alergias_intolerancias.length === 1 &&
+                              alergias_intolerancias[0] === "") ||
+                            !classificacao ||
+                            !nome_protocolo ||
+                            !validaSubstituicoes(substituicoes)) &&
+                          dietaEspecial.status_solicitacao ===
+                            statusEnum.CODAE_A_AUTORIZAR
                         }
                       />
                     )}
@@ -266,7 +283,8 @@ const RelatorioForm = reduxForm({
   form: formName,
   enableReinitialize: true,
   initialValues: {
-    identificacaoNutricionista: obtemIdentificacaoNutricionista()
+    registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
+    substituicoes: [{}]
   }
 })(Relatorio);
 const selector = formValueSelector(formName);
@@ -274,9 +292,10 @@ const mapStateToProps = state => {
   return {
     justificativa: selector(state, "justificativa_negacao"),
     motivo: selector(state, "motivo_negacao"),
-    diagnosticosSelecionados: selector(state, "diagnosticosSelecionados"),
-    protocolos: selector(state, "protocolos"),
-    classificacaoDieta: selector(state, "classificacaoDieta")
+    alergias_intolerancias: selector(state, "alergias_intolerancias"),
+    substituicoes: selector(state, "substituicoes"),
+    nome_protocolo: selector(state, "nome_protocolo"),
+    classificacao: selector(state, "classificacao")
   };
 };
 

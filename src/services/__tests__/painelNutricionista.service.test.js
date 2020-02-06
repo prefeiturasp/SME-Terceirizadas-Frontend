@@ -12,7 +12,6 @@ import {
 } from "../painelNutricionista.service";
 import {
   CODAENegaDietaEspecial,
-  CODAEAutorizaDietaEspecial,
   terceirizadaTomaCienciaDietaEspecial,
   getClassificacoesDietaEspecial,
   getAlergiasIntolerancias
@@ -122,20 +121,6 @@ describe("test painelNutricionista.service", () => {
     });
     expect(response).toEqual({
       data: { mensagem: "Solicitação de Dieta Especial Negada" },
-      status: 200
-    });
-  });
-  it("autorizaSolicitacaoDietaEspecial", async () => {
-    const response = await CODAEAutorizaDietaEspecial({
-      uuid: 1234,
-      classificacaoDieta: 1,
-      diagnosticosSelecionados: [2, 3, 4],
-      identificacaoNutricionista:
-        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN 15615645",
-      protocolos: ["asdf", "qwer"]
-    });
-    expect(response).toEqual({
-      data: { mensagem: "Autorização de dieta especial realizada com sucesso" },
       status: 200
     });
   });
