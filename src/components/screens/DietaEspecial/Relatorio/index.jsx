@@ -176,6 +176,27 @@ class Relatorio extends Component {
     }
   };
 
+  deveDesabilitarBotaoAprova() {
+    const {
+      classificacao,
+      alergias_intolerancias,
+      nome_protocolo,
+      substituicoes
+    } = this.props;
+    const alergias_intolerancias_vazio =
+      alergias_intolerancias.length === 1 && alergias_intolerancias[0] === "";
+    return (
+      usuarioCODAEDietaEspecial() &&
+      (!alergias_intolerancias ||
+        alergias_intolerancias_vazio ||
+        !classificacao ||
+        !nome_protocolo ||
+        !validaSubstituicoes(substituicoes)) &&
+      this.state.dietaEspecial.status_solicitacao ===
+        statusEnum.CODAE_A_AUTORIZAR
+    );
+  }
+
   render() {
     const {
       textoBotaoNaoAprova,
@@ -184,11 +205,7 @@ class Relatorio extends Component {
       ModalNaoAprova,
       endpointNaoAprovaSolicitacao,
       justificativa,
-      motivo,
-      classificacao,
-      alergias_intolerancias,
-      nome_protocolo,
-      substituicoes
+      motivo
     } = this.props;
     const {
       dietaEspecial,
@@ -288,17 +305,7 @@ class Relatorio extends Component {
                           )}
                           style={BUTTON_STYLE.GREEN}
                           className="ml-3"
-                          disabled={
-                            usuarioCODAEDietaEspecial() &&
-                            (!alergias_intolerancias ||
-                              (alergias_intolerancias.length === 1 &&
-                                alergias_intolerancias[0] === "") ||
-                              !classificacao ||
-                              !nome_protocolo ||
-                              !validaSubstituicoes(substituicoes)) &&
-                            dietaEspecial.status_solicitacao ===
-                              statusEnum.CODAE_A_AUTORIZAR
-                          }
+                          disabled={this.deveDesabilitarBotaoAprova}
                         />
                       )}
                   </div>
