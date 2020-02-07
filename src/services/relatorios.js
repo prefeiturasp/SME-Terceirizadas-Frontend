@@ -23,6 +23,11 @@ export const getRelatorioDietaEspecial = uuid => {
   return url;
 };
 
+export const getProtocoloDietaEspecial = uuid => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/protocolo/`;
+  return url;
+};
+
 export const getRelatorioInclusaoAlimentacao = (uuid, ehInclusaoContinua) => {
   let url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/relatorio/`;
   if (ehInclusaoContinua) {
