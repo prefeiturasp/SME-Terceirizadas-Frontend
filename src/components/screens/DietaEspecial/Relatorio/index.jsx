@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { reduxForm, formValueSelector } from "redux-form";
+
 import {
   getDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
@@ -9,12 +11,17 @@ import {
   CODAENegaInativacaoDietaEspecial,
   terceirizadaTomaCienciaInativacaoDietaEspecial
 } from "../../../../services/dietaEspecial.service";
+import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { TIPO_PERFIL, statusEnum } from "../../../../constants";
 import Botao from "../../../Shareable/Botao";
 import InformacoesCODAE from "./componentes/InformacoesCODAE";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import {
   obtemIdentificacaoNutricionista,
@@ -179,6 +186,27 @@ class Relatorio extends Component {
     );
   };
 
+  deveDesabilitarBotaoAprova() {
+    const {
+      classificacao,
+      alergias_intolerancias,
+      nome_protocolo,
+      substituicoes
+    } = this.props;
+    const alergias_intolerancias_vazio =
+      alergias_intolerancias.length === 1 && alergias_intolerancias[0] === "";
+    return (
+      usuarioCODAEDietaEspecial() &&
+      (!alergias_intolerancias ||
+        alergias_intolerancias_vazio ||
+        !classificacao ||
+        !nome_protocolo ||
+        !validaSubstituicoes(substituicoes)) &&
+      this.state.dietaEspecial.status_solicitacao ===
+        statusEnum.CODAE_A_AUTORIZAR
+    );
+  }
+
   render() {
     const {
       textoBotaoNaoAprova,
@@ -187,11 +215,7 @@ class Relatorio extends Component {
       ModalNaoAprova,
       endpointNaoAprovaSolicitacao,
       justificativa,
-      motivo,
-      classificacao,
-      alergias_intolerancias,
-      nome_protocolo,
-      substituicoes
+      motivo
     } = this.props;
     const {
       dietaEspecial,
@@ -244,40 +268,59 @@ class Relatorio extends Component {
                 {usuarioCODAEDietaEspecial() &&
                   dietaEspecial.status_solicitacao ===
                     statusEnum.CODAE_A_AUTORIZAR && <InformacoesCODAE />}
-                {vizualizaBotoesDietaEspecial(dietaEspecial) && (
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_AUTORIZADO ||
+                dietaEspecial.status_solicitacao ===
+                  statusEnum.TERCEIRIZADA_TOMOU_CIENCIA ||
+                vizualizaBotoesDietaEspecial(dietaEspecial) ? (
                   <div className="form-group row float-right mt-4">
-                    {EXIBIR_BOTAO_NAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoNaoAprova}
-                        className="ml-3"
-                        onClick={() => this.showNaoAprovaModal("Não")}
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
+                    {dietaEspecial.status_solicitacao !==
+                      statusEnum.CODAE_A_AUTORIZAR && (
+                      <Link
+                        to="route"
+                        target="_blank"
+                        onClick={event => {
+                          event.preventDefault();
+                          window.open(
+                            getProtocoloDietaEspecial(dietaEspecial.uuid)
+                          );
+                        }}
+                      >
+                        <Botao
+                          texto="Gerar Protocolo"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.BLUE_OUTLINE}
+                          icon={BUTTON_ICON.PRINT}
+                          className="ml-3"
+                        />
+                      </Link>
                     )}
-                    {textoBotaoAprova && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={handleSubmit(values =>
-                          this.handleSubmit(values)
-                        )}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                        disabled={
-                          usuarioCODAEDietaEspecial() &&
-                          (!alergias_intolerancias ||
-                            (alergias_intolerancias.length === 1 &&
-                              alergias_intolerancias[0] === "") ||
-                            !classificacao ||
-                            !nome_protocolo ||
-                            !validaSubstituicoes(substituicoes)) &&
-                          dietaEspecial.status_solicitacao ===
-                            statusEnum.CODAE_A_AUTORIZAR
-                        }
-                      />
-                    )}
+                    {vizualizaBotoesDietaEspecial(dietaEspecial) &&
+                      EXIBIR_BOTAO_NAO_APROVAR && (
+                        <Botao
+                          texto={textoBotaoNaoAprova}
+                          className="ml-3"
+                          onClick={() => this.showNaoAprovaModal("Não")}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      )}
+                    {vizualizaBotoesDietaEspecial(dietaEspecial) &&
+                      textoBotaoAprova && (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={handleSubmit(values =>
+                            this.handleSubmit(values)
+                          )}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                          disabled={this.deveDesabilitarBotaoAprova}
+                        />
+                      )}
                   </div>
+                ) : (
+                  ""
                 )}
               </div>
             </div>
