@@ -1,0 +1,22 @@
+.faixas-etarias {
+  .select-meses {
+    height: 20em !important;
+  }
+  // .select-meses-editando{
+  //   option:not(disabled){
+  //     color: darkgreen;
+  //   }
+  // }
+  .faixa-etaria-item-editando {
+    background-color: lightgreen !important;
+  }
+  .faixa-etaria-item {
+    display: flex;
+    button {
+      margin-left: 1em;
+    }
+    .input {
+      flex-grow: 100;
+    }
+  }
+}

@@ -49,7 +49,7 @@ button.general-button {
   }
   &.green-button {
     background-color: $green;
-    border: none;
+    border: 1.5px solid $green;
     color: $white;
     i {
       color: $white;
@@ -75,6 +75,26 @@ button.general-button {
       background-color: $greenButtonHover;
       i {
         color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+  &.red-button {
+    color: $white;
+    border: 1.5px solid $red;
+    background-color: $red;
+    i {
+      color: $white;
+    }
+    &:hover {
+      color: $red;
+      background-color: $white;
+      i {
+        color: $red;
       }
     }
     &:disabled {
