@@ -4,13 +4,7 @@ import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
 import Container from "../../components/InversaoDeDiaDeCardapio/Container";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  INVERSAO_CARDAPIO,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 
 import {
   CODAEAutorizaPedidoDRE,
@@ -34,16 +28,10 @@ class RelatorioBase extends React.Component {
       href: "#",
       titulo: "Relatório"
     };
-    const anteriores = [
-      {
-        href: `/${this.props.VISAO}/${INVERSAO_CARDAPIO}`,
-        titulo: "Inversões de dia de Cardápio"
-      }
-    ];
 
     return (
       <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <Breadcrumb home={HOME} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
     );

@@ -34,7 +34,8 @@ class Relatorio extends Component {
       showAutorizarModal: false,
       inversaoDiaCardapio: null,
       escolaDaInversao: null,
-      prazoDoPedidoMensagem: null
+      prazoDoPedidoMensagem: null,
+      erro: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
@@ -59,15 +60,25 @@ class Relatorio extends Component {
     const uuid = urlParams.get("uuid");
     if (uuid) {
       getInversaoDeDiaDeCardapio(uuid).then(response => {
-        const inversaoDiaCardapio = response.data;
-        this.setState({
-          inversaoDiaCardapio,
-          uuid,
-          escolaDaInversao: inversaoDiaCardapio.escola,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-            inversaoDiaCardapio.prioridade
-          )
-        });
+        if (response.status === HTTP_STATUS.OK) {
+          const inversaoDiaCardapio = response.data;
+          this.setState({
+            inversaoDiaCardapio,
+            uuid,
+            escolaDaInversao: inversaoDiaCardapio.escola,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+              inversaoDiaCardapio.prioridade
+            )
+          });
+        } else if (response.data.detail) {
+          this.setState({ erro: true });
+          toastError(response.data.detail);
+        } else {
+          this.setState({ erro: true });
+          toastError(
+            "Erro ao carregar relatório de Inversão de dia de Cardápio"
+          );
+        }
       });
     }
   }
@@ -131,7 +142,8 @@ class Relatorio extends Component {
       resposta_sim_nao,
       showNaoAprovaModal,
       showQuestionamentoModal,
-      showAutorizarModal
+      showAutorizarModal,
+      erro
     } = this.state;
     const {
       visao,
@@ -205,9 +217,11 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!inversaoDiaCardapio ? (
-          <div>Carregando...</div>
-        ) : (
+        {erro && (
+          <div>Opss... parece que ocorreu um erro ao carregar a página.</div>
+        )}
+        {!inversaoDiaCardapio && !erro && <div>Carregando...</div>}
+        {inversaoDiaCardapio && (
           <form onSubmit={this.props.handleSubmit}>
             {endpointAprovaSolicitacao && (
               <ModalAutorizarAposQuestionamento

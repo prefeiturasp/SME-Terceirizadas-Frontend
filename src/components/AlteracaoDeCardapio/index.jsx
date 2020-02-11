@@ -23,7 +23,7 @@ import { validateSubmit } from "./validacao";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import {
   createAlteracaoCardapio,
-  getAlteracoesCardapioList,
+  getMeusRascunhosAlteracoesCardapio,
   updateAlteracaoCardapio,
   deleteAlteracaoCardapio,
   enviarAlteracaoCardapio
@@ -168,7 +168,7 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    getAlteracoesCardapioList()
+    getMeusRascunhosAlteracoesCardapio()
       .then(response => {
         alteracaoCardapioList =
           response.results.length > 0 ? response.results : [];

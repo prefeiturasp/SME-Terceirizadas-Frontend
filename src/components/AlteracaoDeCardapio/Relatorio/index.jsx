@@ -25,7 +25,8 @@ class Relatorio extends Component {
       showModal: false,
       alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
-      resposta_sim_nao: null
+      resposta_sim_nao: null,
+      error: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
@@ -38,11 +39,21 @@ class Relatorio extends Component {
     const uuid = urlParams.get("uuid");
     if (uuid) {
       getAlteracaoCardapio(uuid).then(response => {
-        this.setState({
-          alteracaoDeCardapio: response,
-          uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
-        });
+        if (response.status === HTTP_STATUS.OK) {
+          this.setState({
+            alteracaoDeCardapio: response.data,
+            uuid,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+              response.data.prioridade
+            )
+          });
+        } else if (response.data.detail) {
+          this.setState({ erro: true });
+          toastError(response.data.detail);
+        } else {
+          this.setState({ erro: true });
+          toastError("Erro ao carregar relatório de Alteração de Cardápio");
+        }
       });
     }
   }
@@ -74,7 +85,7 @@ class Relatorio extends Component {
   loadSolicitacao(uuid) {
     getAlteracaoCardapio(uuid).then(response => {
       this.setState({
-        alteracaoDeCardapio: response
+        alteracaoDeCardapio: response.data
       });
     });
   }
@@ -106,7 +117,8 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal
+      showAutorizarModal,
+      erro
     } = this.state;
     const {
       justificativa,
@@ -180,9 +192,11 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!alteracaoDeCardapio ? (
-          <div>Carregando...</div>
-        ) : (
+        {erro && (
+          <div>Opss... parece que ocorreu um erro ao carregar a página.</div>
+        )}
+        {!alteracaoDeCardapio && !erro && <div>Carregando...</div>}
+        {alteracaoDeCardapio && (
           <form onSubmit={this.props.handleSubmit}>
             {endpointAprovaSolicitacao && (
               <ModalAutorizarAposQuestionamento

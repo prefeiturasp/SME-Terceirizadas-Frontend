@@ -13,7 +13,8 @@ import {
   CADASTROS,
   LOTE,
   EMPRESA,
-  EDITAIS_CONTRATOS
+  EDITAIS_CONTRATOS,
+  TIPOS_ALIMENTACAO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 import {
@@ -214,7 +215,11 @@ export class SidebarCODAE extends Component {
             >
               Editais e Contratos
             </NavLink>
-            <NavLink activeClassName="active" className="collapse-item" to="#">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}`}
+            >
               Tipos de Alimentações
             </NavLink>
           </div>
