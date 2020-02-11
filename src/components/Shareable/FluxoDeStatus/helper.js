@@ -133,6 +133,7 @@ export const tipoDeStatus = status => {
     case "Terceirizada tomou ciência":
     case "Escola solicitou inativação":
     case "CODAE autorizou inativação":
+    case "Terceirizada tomou ciência da inativação":
       return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":

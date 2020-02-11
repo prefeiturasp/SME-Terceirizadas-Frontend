@@ -8,7 +8,8 @@ import {
   getDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
   CODAEAutorizaInativacaoDietaEspecial,
-  CODAENegaInativacaoDietaEspecial
+  CODAENegaInativacaoDietaEspecial,
+  terceirizadaTomaCienciaInativacaoDietaEspecial
 } from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 import "./style.scss";
@@ -161,19 +162,28 @@ class Relatorio extends Component {
     } else {
       payload = uuid;
     }
-    const endpoint =
-      this.state.dietaEspecial.status_solicitacao ===
-      statusEnum.CODAE_A_AUTORIZAR
-        ? this.props.endpointAprovaSolicitacao
-        : CODAEAutorizaInativacaoDietaEspecial;
-    const response = await endpoint(payload);
     this.closeAutorizarModal();
-    if (response.status === HTTP_STATUS.OK) {
-      toastSuccess(toastAprovaMensagem);
-      this.loadSolicitacao(uuid);
-    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      toastError(toastAprovaMensagemErro);
-    }
+    const endpoint =
+      dietaEspecial.status_solicitacao ===
+      statusEnum.ESCOLA_SOLICITOU_INATIVACAO
+        ? CODAEAutorizaInativacaoDietaEspecial
+        : dietaEspecial.status_solicitacao ===
+          statusEnum.CODAE_AUTORIZOU_INATIVACAO
+        ? terceirizadaTomaCienciaInativacaoDietaEspecial
+        : this.props.endpointAprovaSolicitacao;
+    endpoint(payload).then(
+      response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess(toastAprovaMensagem);
+          this.loadSolicitacao(uuid);
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(toastAprovaMensagemErro);
+        }
+      },
+      function() {
+        toastError(toastAprovaMensagemErro);
+      }
+    );
   };
 
   deveDesabilitarBotaoAprova() {
