@@ -55,6 +55,7 @@ export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
 export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
   "tipo-alimentacao-unidade-escolar";
+export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 

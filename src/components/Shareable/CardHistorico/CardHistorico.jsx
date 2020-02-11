@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Stand } from "react-burgers";
 import "./style.scss";
 import Botao from "../Botao";
 import { BUTTON_TYPE, BUTTON_STYLE, BUTTON_ICON } from "../Botao/constants";
+import { ToggleExpandir } from "../ToggleExpandir";
 
 export class CardHistorico extends Component {
   constructor(props) {
@@ -40,13 +40,9 @@ export class CardHistorico extends Component {
               {titulo}
             </div>
             <div className="pl-5 col-1">
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={30}
-                padding={0}
-                lineSpacing={5}
-                active={!collapsed}
+                ativo={!collapsed}
               />
             </div>
           </div>
