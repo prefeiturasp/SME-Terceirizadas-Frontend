@@ -50,13 +50,21 @@ class RelatorioSuspensaoAlimentacao extends Component {
     const uuid = urlParams.get("uuid");
     if (uuid) {
       getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
-        let suspensaoAlimentacao = response.data;
-        let dadosEscola = suspensaoAlimentacao.escola;
-        this.setState({
-          suspensaoAlimentacao,
-          dadosEscola,
-          uuid
-        });
+        if (response.status === HTTP_STATUS.OK) {
+          let suspensaoAlimentacao = response.data;
+          let dadosEscola = suspensaoAlimentacao.escola;
+          this.setState({
+            suspensaoAlimentacao,
+            dadosEscola,
+            uuid
+          });
+        } else if (response.data.detail) {
+          this.setState({ erro: true });
+          toastError(response.data.detail);
+        } else {
+          this.setState({ erro: true });
+          toastError("Erro ao carregar relatório de Suspensão de Alimentação");
+        }
       });
     }
   }
@@ -81,13 +89,15 @@ class RelatorioSuspensaoAlimentacao extends Component {
   }
 
   render() {
-    const { suspensaoAlimentacao, dadosEscola } = this.state;
+    const { suspensaoAlimentacao, dadosEscola, erro } = this.state;
     return (
       <div className="report">
         {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
-        {!suspensaoAlimentacao ? (
-          <div>Carregando...</div>
-        ) : (
+        {erro && (
+          <div>Opss... parece que ocorreu um erro ao carregar a página.</div>
+        )}
+        {!suspensaoAlimentacao && !erro && <div>Carregando...</div>}
+        {suspensaoAlimentacao && (
           <form onSubmit={this.props.handleSubmit}>
             <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
               suspensaoAlimentacao.id_externo

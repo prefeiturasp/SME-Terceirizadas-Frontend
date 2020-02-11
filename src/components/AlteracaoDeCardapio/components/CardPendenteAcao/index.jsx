@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Stand } from "react-burgers";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../../helpers/utilities";
 import { ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 import "../../../Shareable/style.scss";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -69,15 +69,9 @@ export class CardPendenteAcao extends Component {
           )}
           <div className="col-1">
             {pedidos.length > 0 && (
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={18}
-                padding={0}
-                lineHeight={3}
-                lineSpacing={3}
-                className="float-right"
-                active={!collapsed}
+                ativo={!collapsed}
               />
             )}
           </div>

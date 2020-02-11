@@ -63,8 +63,8 @@ export const deleteAlteracaoCardapio = uuid => {
     });
 };
 
-export const getAlteracoesCardapioList = () => {
-  const url = `${API_URL}/alteracoes-cardapio-rascunho/`;
+export const getMeusRascunhosAlteracoesCardapio = () => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/minhas-solicitacoes/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -244,12 +244,17 @@ export const getAlteracaoCardapio = uuid => {
     headers: authToken,
     method: "GET"
   };
+  let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
-      console.log(error);
+      return error.json();
     });
 };
 

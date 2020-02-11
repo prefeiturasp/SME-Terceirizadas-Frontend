@@ -15,7 +15,19 @@ export const getRelatorioKitLancheUnificado = uuid => {
 
 export const getRelatorioAlteracaoCardapio = uuid => {
   const url = `${API_URL}/alteracoes-cardapio/${uuid}/relatorio/`;
-  return url;
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `alteracao_cardapio.pdf`;
+      a.click();
+    });
 };
 
 export const getRelatorioDietaEspecial = uuid => {
