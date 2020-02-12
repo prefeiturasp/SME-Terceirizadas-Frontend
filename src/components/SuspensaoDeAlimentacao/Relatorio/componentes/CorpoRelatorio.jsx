@@ -123,7 +123,7 @@ export const CorpoRelatorio = props => {
                 <td>
                   {stringSeparadaPorVirgulas(
                     quantidade_por_periodo.tipos_alimentacao,
-                    "nome"
+                    "label"
                   )}
                 </td>
                 <td>{quantidade_por_periodo.numero_alunos}</td>

@@ -25,6 +25,7 @@ import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 
 const ENTER = 13;
 class FoodSuspensionEditor extends Component {
@@ -198,6 +199,21 @@ class FoodSuspensionEditor extends Component {
     this.refresh();
   }
 
+  retornaPeriodosComCombos = (periodosResponse, periodosProps) => {
+    periodosProps.forEach(periodoProps => {
+      periodosResponse.forEach(periodoResp => {
+        if (periodoProps.nome === periodoResp.periodo_escolar.nome) {
+          periodoProps.tipos_alimentacao = periodoResp.combos.map(combo => {
+            return {
+              uuid: combo.uuid,
+              nome: combo.label
+            };
+          });
+        }
+      });
+    });
+  };
+
   componentDidUpdate(prevProps) {
     const fields = [
       "suspensoes_MANHA",
@@ -226,8 +242,10 @@ class FoodSuspensionEditor extends Component {
       }.bind(this)
     );
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.setState({
-        periodos: this.props.periodos
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao
+        .tipo_unidade_escolar;
+      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
+        this.retornaPeriodosComCombos(response.results, this.props.periodos);
       });
     }
     const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
@@ -369,6 +387,7 @@ class FoodSuspensionEditor extends Component {
       NOITE: suspensoes_NOITE && suspensoes_NOITE.check,
       INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check
     };
+
     return (
       <div>
         {loading ? (
