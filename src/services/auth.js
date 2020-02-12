@@ -49,7 +49,7 @@ const login = async (email, password) => {
 
 const logout = () => {
   localStorage.removeItem(TOKEN_ALIAS);
-  window.location.reload();
+  window.location.href = "/login";
 };
 
 const getToken = () => {

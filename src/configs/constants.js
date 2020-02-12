@@ -65,3 +65,5 @@ export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
+
+export const QUALQUER_USUARIO = true;
