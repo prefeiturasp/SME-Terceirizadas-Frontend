@@ -12,7 +12,10 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  CONFIGURACOES,
+  CADASTROS,
+  HORARIO_COMBOS_ALIMENTACAO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -206,8 +209,37 @@ export class SidebarEscola extends Component {
           <span>Relatórios</span>
         </NavLink>
       </li>,
+      <li key={4} className="nav-item">
+        <Link
+          className={`nav-link collapsed`}
+          href="#teste"
+          data-toggle="collapse"
+          data-target="#collapseCadastros"
+          aria-expanded="false"
+          aria-controls="collapseTwo"
+        >
+          <i className="fas fa-user-plus" />
+          <span>Cadastros</span>
+        </Link>
+        <div
+          id="collapseCadastros"
+          className={`collapse`}
+          aria-labelledby="headingConfig"
+          data-parent="#accordionSidebar"
+        >
+          <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`}
+            >
+              Horários de Alimentações
+            </NavLink>
+          </div>
+        </div>
+      </li>,
       localStorage.getItem("perfil") === PERFIL.DIRETOR && (
-        <li key={4} className="nav-item">
+        <li key={5} className="nav-item">
           <Link
             className={`nav-link collapsed`}
             href="#teste"
