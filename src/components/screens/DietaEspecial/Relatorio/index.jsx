@@ -231,7 +231,7 @@ class Relatorio extends Component {
         {!dietaEspecial ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={handleSubmit(this.handleSubmit)}>
             {ModalNaoAprova && (
               <ModalNaoAprova
                 showModal={showNaoAprovaModal}
@@ -310,9 +310,6 @@ class Relatorio extends Component {
                         <Botao
                           texto={textoBotaoAprova}
                           type={BUTTON_TYPE.SUBMIT}
-                          onClick={handleSubmit(values =>
-                            this.handleSubmit(values)
-                          )}
                           style={BUTTON_STYLE.GREEN}
                           className="ml-3"
                           disabled={this.deveDesabilitarBotaoAprova}
