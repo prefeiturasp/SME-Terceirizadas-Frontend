@@ -126,6 +126,15 @@ export default class FaixasEtariasEditar extends Component {
       <div className="card mt-3 faixas-etarias-editar">
         <div className="card-body">
           <div className="row">
+            <p>
+              Selecione um mês para{" "}
+              {this.state.mesEdicaoAtual === undefined
+                ? "começar uma"
+                : "terminar a"}{" "}
+              faixa
+            </p>
+          </div>
+          <div className="row">
             <div className="col-5">
               <select
                 multiple

@@ -37,16 +37,18 @@ export class ModalJustificativa extends Component {
           <Modal.Title>Redefinição de Novas Faixas Etárias</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <TextAreaWYSIWYG
-            label="Justificativa"
-            required
-            validate={required}
-            input={{
-              onChange: valor => this.setState({ justificativa: valor }),
-              value: this.state.justificativa,
-              onBlur: () => {}
-            }}
-          />
+          <div className="modal-justificativa-body">
+            <TextAreaWYSIWYG
+              label="Justificativa"
+              required
+              validate={required}
+              input={{
+                onChange: valor => this.setState({ justificativa: valor }),
+                value: this.state.justificativa,
+                onBlur: () => {}
+              }}
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Botao
