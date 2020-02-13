@@ -216,6 +216,7 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
 
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
+  FAIXAS_ETARIAS: "faixas-etarias",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
     "solicitacoes-dieta-especial-ativas-inativas"

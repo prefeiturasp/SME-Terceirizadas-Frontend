@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { AUTH_TOKEN } from "./contants";
+import { AUTH_TOKEN } from "./constants";
 import { API_URL } from "../constants/config.constants";
 
 const instance = axios.create({
