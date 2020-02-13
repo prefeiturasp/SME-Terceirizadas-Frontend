@@ -194,7 +194,6 @@ class DashboardDRE extends Component {
               <Collapse isOpened={!collapsed}>
                 <TabelaHistoricoLotes
                   lotes={meusDados.vinculo_atual.instituicao.lotes}
-                  tipoPerfil={"Terceirizada"}
                 />
               </Collapse>
             )}
