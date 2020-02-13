@@ -252,36 +252,6 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
-  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesValidacaoDRE(
-    dree_uuid,
-    filtro
-  )).results;
-  const reducer = (resumoPorLote, corrente) => {
-    if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {};
-    }
-    if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
-        corrente.lote
-      ][corrente.prioridade]
-        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
-        : 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
-        "TOTAL"
-      ]
-        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
-        : 1;
-    }
-    return resumoPorLote;
-  };
-
-  let resumoPorLote = solicitacoes.reduce(reducer, {});
-
-  return resumoPorLote;
-};
-
 // TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
