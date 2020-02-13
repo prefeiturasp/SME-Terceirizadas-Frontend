@@ -49,7 +49,7 @@ button.general-button {
   }
   &.green-button {
     background-color: $green;
-    border: none;
+    border: 1.5px solid $green;
     color: $white;
     i {
       color: $white;
@@ -83,16 +83,36 @@ button.general-button {
       border: 1px solid $grayDisabled;
     }
   }
+  &.red-button {
+    color: $white;
+    border: 1.5px solid $redToastError;
+    background-color: $redToastError;
+    i {
+      color: $white;
+    }
+    &:hover {
+      color: $redToastError;
+      background-color: $white;
+      i {
+        color: $redToastError;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
   &.red-button-outline {
-    color: $red;
-    border: 1px solid $red;
+    color: $redToastError;
+    border: 1px solid $redToastError;
     background-color: transparent;
     i {
-      color: $red;
+      color: $redToastError;
     }
     &:hover {
       color: $white;
-      background-color: $red;
+      background-color: $redToastError;
       i {
         color: $white;
       }

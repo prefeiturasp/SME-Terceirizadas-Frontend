@@ -4,6 +4,7 @@ import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHora
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -404,6 +405,12 @@ const routesConfig = [
     component: EditaisContratosPage,
     exact: true,
     tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/configuracoes/cadastros/faixas-etarias`,
+    component: FaixasEtariasPage,
+    exact: true,
+    tipoUsuario: usuarioCODAEGestaoAlimentacao()
   },
   {
     path: `/configuracoes/cadastros`,

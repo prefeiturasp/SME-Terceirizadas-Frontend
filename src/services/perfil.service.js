@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { AUTH_TOKEN } from "./contants";
+import { AUTH_TOKEN } from "./constants";
 import authService from "./auth";
 
 const authToken = {

@@ -4,7 +4,7 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
-import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 import { getTerceirizadaPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";

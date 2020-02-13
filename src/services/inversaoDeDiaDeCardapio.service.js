@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { FLUXO } from "./contants";
+import { FLUXO } from "./constants";
 import authService from "./auth";
 
 const authToken = {

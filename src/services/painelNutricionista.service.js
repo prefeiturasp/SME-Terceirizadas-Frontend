@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { AUTH_TOKEN, SOLICITACOES, SOLICITACOES_DIETA } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES, SOLICITACOES_DIETA } from "./constants";
 
 // TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
