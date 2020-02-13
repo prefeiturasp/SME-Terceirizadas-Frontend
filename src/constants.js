@@ -191,6 +191,29 @@ export const TIPOS_SOLICITACAO_LISTA = [
   }
 ];
 
+export const TIPOS_SOLICITACAO_LISTA_DRE = [
+  {
+    titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO,
+    cor: "rgba(205, 100, 2, 1)",
+    link: INCLUSAO_ALIMENTACAO
+  },
+  {
+    titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DE_CARDAPIO,
+    cor: "rgba(1, 68, 111, 1)",
+    link: ALTERACAO_CARDAPIO
+  },
+  {
+    titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO,
+    cor: "rgba(173, 0, 7, 1)",
+    link: SOLICITACAO_KIT_LANCHE
+  },
+  {
+    titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
+    cor: "rgba(41, 120, 5, 1)",
+    link: INVERSAO_CARDAPIO
+  }
+];
+
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",

@@ -66,7 +66,7 @@ export const CorpoRelatorio = props => {
 
         <hr />
         <FluxoDeStatus
-          tipoDeFluxo={fluxoPartindoDRE}
+          fluxo={fluxoPartindoDRE}
           listaDeStatus={solicitacaoUnificada.logs}
         />
         <hr />

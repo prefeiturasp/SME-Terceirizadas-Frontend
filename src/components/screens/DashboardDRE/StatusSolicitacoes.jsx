@@ -5,7 +5,7 @@ import {
   getSolicitacoesAutorizadasDRE,
   getSolicitacoesCanceladasDRE,
   getSolicitacoesPendentesDRE,
-  getSolicitacoesRecusadasDRE
+  getSolicitacoesNegadasDRE
 } from "../../../services/painelDRE.service";
 import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
@@ -110,7 +110,7 @@ export class StatusSolicitacoes extends Component {
         tipoCard = CARD_TYPE_ENUM.NEGADO;
         icone = ICON_CARD_TYPE_ENUM.NEGADO;
         titulo = "Negadas";
-        solicitacoes = await getSolicitacoesRecusadasDRE(dreUuid);
+        solicitacoes = await getSolicitacoesNegadasDRE(dreUuid);
         break;
       default:
         break;
