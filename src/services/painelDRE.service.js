@@ -298,29 +298,32 @@ const retornoBase = async url => {
   }
 };
 
-export const getSolicitacoesPendentesValidacaoDRE = async (dreUuid, filtro) => {
+export const getSolicitacoesPendentesValidacaoDRE = async (
+  filtroAplicado,
+  tipoVisao
+) => {
   const url = `${SOLICITACOES_DRE}/${
     SOLICITACOES.PENDENTES_VALIDACAO_DRE
-  }/${dreUuid}/${filtro}/`;
+  }/${filtroAplicado}/${tipoVisao}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesPendentesDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/${dreUuid}/`;
+export const getSolicitacoesPendentesDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesAutorizadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
+export const getSolicitacoesAutorizadasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesCanceladasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/${dreUuid}/`;
+export const getSolicitacoesCanceladasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesRecusadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/${dreUuid}/`;
+export const getSolicitacoesNegadasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/`;
   return retornoBase(url);
 };

@@ -315,3 +315,11 @@ export const getError = obj => {
   }
   return result;
 };
+
+export const formatarLotesParaVisao = lotes => {
+  lotes.forEach(lote => {
+    lote["titulo"] = lote["nome"];
+    lote["link"] = lote["uuid"];
+  });
+  return lotes;
+};

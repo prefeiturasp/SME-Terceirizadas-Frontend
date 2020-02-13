@@ -6,7 +6,7 @@ import { InputSearch } from "../../../Shareable/InputSearch";
 import {
   getSolicitacoesPendentesDRE,
   getSolicitacoesAutorizadasDRE,
-  getSolicitacoesRecusadasDRE,
+  getSolicitacoesNegadasDRE,
   getSolicitacoesCanceladasDRE
 } from "../../../../services/painelDRE.service";
 import { meusDados as getMeusDados } from "../../../../services/perfil.service";
@@ -34,7 +34,7 @@ export class StatusSolicitacoesTodos extends Component {
     const dreUUid = meusDados.vinculo_atual.instituicao.uuid;
     const autorizadas = await getSolicitacoesAutorizadasDRE(dreUUid);
     const pendentes = await getSolicitacoesPendentesDRE(dreUUid);
-    const recusadas = await getSolicitacoesRecusadasDRE(dreUUid);
+    const recusadas = await getSolicitacoesNegadasDRE(dreUUid);
     const canceladas = await getSolicitacoesCanceladasDRE(dreUUid);
 
     this.setState({
