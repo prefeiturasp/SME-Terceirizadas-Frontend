@@ -54,11 +54,6 @@ const FaixaEtariaItem = ({
         <Botao
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.BLUE_OUTLINE}
-          icon={BUTTON_ICON.PLUS}
-        />
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
           icon={BUTTON_ICON.TRASH}
           onClick={onApagar}
         />
@@ -81,6 +76,7 @@ export default class FaixasEtariasEditar extends Component {
     this.onFinalizar = this.onFinalizar.bind(this);
   }
   selecionaMes(mes) {
+    if (isNaN(mes)) return;
     if (this.state.mesEdicaoAtual !== undefined) {
       const faixasEtarias = ordenaFaixas(
         this.state.faixasEtarias.concat({
@@ -181,12 +177,21 @@ export default class FaixasEtariasEditar extends Component {
           <div>
             <Botao
               texto="Finalizar"
-              className="float-right"
+              className="float-right botao-finalizar"
               type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
               disabled={this.state.meses.length > 0}
               onClick={this.onFinalizar}
             />
+            {this.props.redefinir && (
+              <Botao
+                texto="Cancelar"
+                className="float-right"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={this.props.onCancelar}
+              />
+            )}
           </div>
         </div>
       </div>

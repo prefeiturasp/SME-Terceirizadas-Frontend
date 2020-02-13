@@ -106,6 +106,7 @@ export default class FaixasEtarias extends Component {
     if (this.state.redefinir) {
       this.setState({ faixasEtarias, mostrarModalJustificativa: true });
     } else {
+      this.setState({ faixasEtarias });
       this.criarFaixasEtarias(faixasEtarias, "Primeiro cadastro");
     }
   }
@@ -120,11 +121,13 @@ export default class FaixasEtarias extends Component {
 
   render() {
     const {
+      carregando,
       editar,
       faixasEtarias,
       mostrarModalAvisoRedefinicao,
       mostrarModalJustificativa
     } = this.state;
+    if (carregando) return "";
     return (
       <div className="card mt-3 faixas-etarias">
         <div className="card-body">
@@ -139,7 +142,11 @@ export default class FaixasEtarias extends Component {
             onCancelar={this.onCancelarRedefinicao}
           />
           {editar ? (
-            <FaixasEtariasEditar onFinalizar={this.onFinalizarEdicao} />
+            <FaixasEtariasEditar
+              onFinalizar={this.onFinalizarEdicao}
+              onCancelar={this.onCancelarRedefinicao}
+              redefinir={this.state.redefinir}
+            />
           ) : (
             <FaixasEtariasExibir
               faixasEtarias={faixasEtarias}

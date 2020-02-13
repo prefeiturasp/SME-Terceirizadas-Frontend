@@ -32,45 +32,37 @@ export class ModalJustificativa extends Component {
   render() {
     const { showModal, closeModal } = this.props;
     return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+      <Modal size="lg" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Redefinição de Novas Faixas Etárias</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="form-row mb-3">
-            <div className="form-group col-12">
-              <TextAreaWYSIWYG
-                label="Justificativa"
-                required
-                validate={required}
-                input={{
-                  onChange: valor => this.setState({ justificativa: valor }),
-                  value: this.state.justificativa,
-                  onBlur: () => {}
-                }}
-              />
-            </div>
-          </div>
+          <TextAreaWYSIWYG
+            label="Justificativa"
+            required
+            validate={required}
+            input={{
+              onChange: valor => this.setState({ justificativa: valor }),
+              value: this.state.justificativa,
+              onBlur: () => {}
+            }}
+          />
         </Modal.Body>
         <Modal.Footer>
-          <div className="row mt-4">
-            <div className="col-12">
-              <Botao
-                texto="Não"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={closeModal}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
-              />
-              <Botao
-                texto="Sim"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={this.onSubmit}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
-              />
-            </div>
-          </div>
+          <Botao
+            texto="Não"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={closeModal}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="ml-3"
+          />
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={this.onSubmit}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="ml-3"
+          />
         </Modal.Footer>
       </Modal>
     );

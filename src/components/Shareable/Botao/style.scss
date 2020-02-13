@@ -85,16 +85,16 @@ button.general-button {
   }
   &.red-button {
     color: $white;
-    border: 1.5px solid $red;
-    background-color: $red;
+    border: 1.5px solid $redToastError;
+    background-color: $redToastError;
     i {
       color: $white;
     }
     &:hover {
-      color: $red;
+      color: $redToastError;
       background-color: $white;
       i {
-        color: $red;
+        color: $redToastError;
       }
     }
     &:disabled {
@@ -104,15 +104,15 @@ button.general-button {
     }
   }
   &.red-button-outline {
-    color: $red;
-    border: 1px solid $red;
+    color: $redToastError;
+    border: 1px solid $redToastError;
     background-color: transparent;
     i {
-      color: $red;
+      color: $redToastError;
     }
     &:hover {
       color: $white;
-      background-color: $red;
+      background-color: $redToastError;
       i {
         color: $white;
       }

@@ -10,7 +10,9 @@ const FaixasEtariasExibir = ({ faixasEtarias, onRedefinir }) => (
     <h5>Resumo do cadastro</h5>
     <table className="table table-bordered">
       <thead className="thead-light">
-        <th scope="col">Tipos de faixas etárias</th>
+        <tr>
+          <th scope="col">Tipos de faixas etárias</th>
+        </tr>
       </thead>
       <tbody>
         {faixasEtarias.map((faixaEtaria, index) => (
