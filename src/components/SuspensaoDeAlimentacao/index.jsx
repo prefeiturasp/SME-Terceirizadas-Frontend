@@ -15,7 +15,11 @@ import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { Select } from "../Shareable/Select";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import {
+  required,
+  naoPodeSerZero,
+  maxValue
+} from "../../helpers/fieldValidators";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
@@ -26,6 +30,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
 class FoodSuspensionEditor extends Component {
@@ -214,6 +219,19 @@ class FoodSuspensionEditor extends Component {
     });
   };
 
+  vinculaQuantidadeAlunosPorPeriodo = (
+    periodosEQuantidadeAlunos,
+    periodoProps
+  ) => {
+    periodoProps.forEach(periodo => {
+      periodosEQuantidadeAlunos.forEach(quantidade => {
+        if (periodo.nome === quantidade.periodo_escolar.nome) {
+          periodo.quantidade_alunos = quantidade.quantidade_alunos;
+        }
+      });
+    });
+  };
+
   componentDidUpdate(prevProps) {
     const fields = [
       "suspensoes_MANHA",
@@ -244,8 +262,15 @@ class FoodSuspensionEditor extends Component {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao
         .tipo_unidade_escolar;
+      const escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
         this.retornaPeriodosComCombos(response.results, this.props.periodos);
+      });
+      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+        this.vinculaQuantidadeAlunosPorPeriodo(
+          response.results,
+          this.props.periodos
+        );
       });
     }
     const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
@@ -387,7 +412,6 @@ class FoodSuspensionEditor extends Component {
       NOITE: suspensoes_NOITE && suspensoes_NOITE.check,
       INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check
     };
-
     return (
       <div>
         {loading ? (
@@ -573,7 +597,8 @@ class FoodSuspensionEditor extends Component {
                             validate={
                               checkMap[period.nome] && [
                                 required,
-                                naoPodeSerZero
+                                naoPodeSerZero,
+                                maxValue(period.quantidade_alunos)
                               ]
                             }
                           />
