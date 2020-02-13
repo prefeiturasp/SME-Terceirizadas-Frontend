@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { FLUXO, PEDIDOS } from "./contants";
+import { FLUXO, PEDIDOS } from "./constants";
 
 export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
 export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa`;

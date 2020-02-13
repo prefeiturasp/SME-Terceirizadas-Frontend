@@ -5,7 +5,7 @@ import {
   filtraRegular
 } from "../helpers/painelPedidos";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
 import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";

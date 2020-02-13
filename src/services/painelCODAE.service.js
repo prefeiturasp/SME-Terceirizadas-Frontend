@@ -14,7 +14,7 @@ import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import { getSuspensaoDeAlimentacaoCODAE } from "./suspensaoDeAlimentacao.service";
-import { SOLICITACOES } from "./contants";
+import { SOLICITACOES } from "./constants";
 
 // TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
 

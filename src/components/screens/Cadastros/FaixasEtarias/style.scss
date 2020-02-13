@@ -1,14 +1,11 @@
+@import "../../../../styles/variables.scss";
+
 .faixas-etarias {
   .select-meses {
     height: 20em !important;
   }
-  // .select-meses-editando{
-  //   option:not(disabled){
-  //     color: darkgreen;
-  //   }
-  // }
   .faixa-etaria-item-editando {
-    background-color: lightgreen !important;
+    background-color: $greenHover !important;
   }
   .faixa-etaria-item {
     display: flex;
@@ -17,6 +14,17 @@
     }
     .input {
       flex-grow: 100;
+    }
+  }
+  .table {
+    .thead-light th {
+      background-color: $grayHeader;
+      border: 1px solid $grayHeader;
+      color: $blackSubtle;
+    }
+    .table-bordered th,
+    .table-bordered td {
+      border: 1px solid $grayHeader;
     }
   }
 }

@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { FLUXO, PEDIDOS } from "./contants";
+import { FLUXO, PEDIDOS } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,

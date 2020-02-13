@@ -91,3 +91,7 @@ export const mesesFinaisValidos = (mesInicial, faixasEtarias, limite = 60) => {
   }
   return mesesValidos;
 };
+
+export const faixaToString = ({ inicio, fim }) =>
+  mesesToMesEAnoString(inicio) +
+  (fim - inicio === 1 ? "" : " - " + mesesToMesEAnoString(fim));

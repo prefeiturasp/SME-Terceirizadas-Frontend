@@ -1,191 +1,151 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 
-import InputText from "../../../Shareable/Input/InputText";
-import Botao from "../../../Shareable/Botao";
-import {
-  BUTTON_TYPE,
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "../../../Shareable/Botao/constants";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 
 import {
-  mesEstaDentroDeAlgumaFaixa,
-  mesesToMesEAnoString,
-  mesesFinaisValidos,
-  mesesForaDasFaixas,
-  ordenaFaixas,
-  range
-} from "./helper";
+  criarFaixasEtarias,
+  getFaixasEtarias
+} from "../../../../services/faixaEtaria.service";
 
-import "./style.scss";
-
-const FaixaEtariaItem = ({
-  inicio,
-  editando,
-  fim,
-  onApagar,
-  onCancelar,
-  onConfirmar
-}) => (
-  <div className="faixa-etaria-item">
-    <InputText
-      className={editando && "faixa-etaria-item-editando"}
-      input={{
-        value:
-          mesesToMesEAnoString(inicio) +
-          (fim - inicio === 1 ? "" : " - " + mesesToMesEAnoString(fim))
-      }}
-      disabled
-    />
-    {editando ? (
-      <Fragment>
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon={BUTTON_ICON.CHECK_CIRCLE}
-          onClick={onConfirmar}
-        />
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.RED}
-          icon={BUTTON_ICON.TIMES_CIRCLE}
-          onClick={onCancelar}
-        />
-      </Fragment>
-    ) : (
-      <Fragment>
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
-          icon={BUTTON_ICON.PLUS}
-        />
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
-          icon={BUTTON_ICON.TRASH}
-          onClick={onApagar}
-        />
-      </Fragment>
-    )}
-  </div>
-);
+import FaixasEtariasEditar from "./Editar";
+import FaixasEtariasExibir from "./Exibir";
+import ModalJustificativa from "./ModalJustificativa";
+import ModalAvisoRedefinicao from "./ModalAvisoRedefinicao";
 
 export default class FaixasEtarias extends Component {
-  SEIS_ANOS = 6 * 12;
-  SEIS_ANOS_MAIS_UM_MES = this.SEIS_ANOS + 1;
   constructor(props) {
     super(props);
     this.state = {
-      meses: range(this.SEIS_ANOS_MAIS_UM_MES),
       faixasEtarias: [],
-      mesEdicaoAtual: undefined
+      carregando: true,
+      editar: false,
+      redefinir: false,
+      justificativa: undefined,
+      mostrarModalJustificativa: false,
+      mostrarModalAvisoRedefinicao: false
     };
-    this.cancelarEdicao = this.cancelarEdicao.bind(this);
+    this.onCancelarRedefinicao = this.onCancelarRedefinicao.bind(this);
+    this.onFecharModalAvisoRedefinicao = this.onFecharModalAvisoRedefinicao.bind(
+      this
+    );
+    this.onFecharModalJustificativa = this.onFecharModalJustificativa.bind(
+      this
+    );
+    this.onFinalizarComJustificativa = this.onFinalizarComJustificativa.bind(
+      this
+    );
+    this.onFinalizarEdicao = this.onFinalizarEdicao.bind(this);
+    this.onRedefinir = this.onRedefinir.bind(this);
   }
-  selecionaMes(mes) {
-    if (this.state.mesEdicaoAtual !== undefined) {
-      const faixasEtarias = ordenaFaixas(
-        this.state.faixasEtarias.concat({
-          inicio: this.state.mesEdicaoAtual,
-          fim: mes === this.state.mesEdicaoAtual ? mes + 1 : mes
-        })
+
+  componentWillMount = async () => {
+    const resposta = await getFaixasEtarias();
+    if (resposta.status !== 200) {
+      toastError(
+        `Não foi possível carregar as faixas etárias: ${resposta.status} - ${
+          resposta.data
+        }`
       );
+    }
+    this.setState({
+      carregando: false,
+      faixasEtarias: resposta.data.results,
+      editar: resposta.data.results.length === 0
+    });
+  };
+
+  criarFaixasEtarias = async (faixasEtarias, justificativa) => {
+    const resposta = await criarFaixasEtarias(faixasEtarias, justificativa);
+    if (resposta.status === 201) {
+      if (this.state.redefinir) {
+        toastSuccess(
+          "Redefinição de Novas Faixas Etárias Efetuado com Sucesso"
+        );
+      } else {
+        toastSuccess("Cadastro de Faixas Etárias Efetuado com Sucesso");
+      }
       this.setState({
-        mesEdicaoAtual: undefined,
-        faixasEtarias,
-        meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES)
+        editar: false,
+        redefinir: false,
+        mostrarModalJustificativa: false
       });
     } else {
-      this.setState({
-        mesEdicaoAtual: mes,
-        meses: mesesFinaisValidos(
-          mes,
-          this.state.faixasEtarias,
-          this.SEIS_ANOS_MAIS_UM_MES
-        )
-      });
+      toastError(
+        `Erro ao enviar os dados para o servidor: ${resposta.status} - ${
+          resposta.data
+        }`
+      );
+    }
+  };
+
+  onCancelarRedefinicao() {
+    this.setState({
+      mostrarModalAvisoRedefinicao: false,
+      editar: false,
+      redefinir: false
+    });
+  }
+
+  onFecharModalAvisoRedefinicao() {
+    this.setState({
+      mostrarModalAvisoRedefinicao: false
+    });
+  }
+
+  onFecharModalJustificativa() {
+    this.setState({
+      mostrarModalJustificativa: false
+    });
+  }
+
+  onFinalizarComJustificativa(justificativa) {
+    this.criarFaixasEtarias(this.state.faixasEtarias, justificativa);
+  }
+
+  onFinalizarEdicao(faixasEtarias) {
+    if (this.state.redefinir) {
+      this.setState({ faixasEtarias, mostrarModalJustificativa: true });
+    } else {
+      this.criarFaixasEtarias(faixasEtarias, "Primeiro cadastro");
     }
   }
-  cancelarEdicao() {
+
+  onRedefinir() {
     this.setState({
-      mesEdicaoAtual: undefined,
-      meses: mesesForaDasFaixas(
-        this.state.faixasEtarias,
-        this.SEIS_ANOS_MAIS_UM_MES
-      )
+      mostrarModalAvisoRedefinicao: true,
+      editar: true,
+      redefinir: true
     });
   }
-  apagarFaixa(indice) {
-    const faixasEtarias = this.state.faixasEtarias.filter(
-      (f, i) => i !== indice
-    );
-    this.setState({
-      faixasEtarias,
-      meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES)
-    });
-  }
+
   render() {
+    const {
+      editar,
+      faixasEtarias,
+      mostrarModalAvisoRedefinicao,
+      mostrarModalJustificativa
+    } = this.state;
     return (
       <div className="card mt-3 faixas-etarias">
         <div className="card-body">
-          <div className="row">
-            <div className="col-5">
-              <select
-                multiple
-                className={
-                  "form-control select-meses" +
-                  (this.state.mesEdicaoAtual ? " select-meses-editando" : "")
-                }
-                onClick={e => this.selecionaMes(parseInt(e.target.value))}
-              >
-                {this.state.meses.map((mes, key) => (
-                  <option
-                    key={key}
-                    value={mes}
-                    disabled={
-                      this.state.mesEdicaoAtual
-                        ? mes < this.state.mesEdicaoAtual ||
-                          mesEstaDentroDeAlgumaFaixa(
-                            mes,
-                            this.state.faixasEtarias
-                          )
-                        : false
-                    }
-                  >
-                    {mesesToMesEAnoString(mes)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-7">
-              {this.state.faixasEtarias.map((f, key) => (
-                <FaixaEtariaItem
-                  key={key}
-                  onApagar={() => this.apagarFaixa(key)}
-                  {...f}
-                />
-              ))}
-              {this.state.mesEdicaoAtual !== undefined && (
-                <FaixaEtariaItem
-                  inicio={this.state.mesEdicaoAtual}
-                  editando={true}
-                  onCancelar={this.cancelarEdicao}
-                  onConfirmar={() =>
-                    this.selecionaMes(this.state.mesEdicaoAtual)
-                  }
-                />
-              )}
-            </div>
-          </div>
-          <div>
-            <Botao
-              texto="Finalizar"
-              className="float-right"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              disabled={this.state.meses.length > 0}
+          <ModalJustificativa
+            showModal={mostrarModalJustificativa}
+            closeModal={this.onFecharModalJustificativa}
+            onSubmit={this.onFinalizarComJustificativa}
+          />
+          <ModalAvisoRedefinicao
+            showModal={mostrarModalAvisoRedefinicao}
+            closeModal={this.onFecharModalAvisoRedefinicao}
+            onCancelar={this.onCancelarRedefinicao}
+          />
+          {editar ? (
+            <FaixasEtariasEditar onFinalizar={this.onFinalizarEdicao} />
+          ) : (
+            <FaixasEtariasExibir
+              faixasEtarias={faixasEtarias}
+              onRedefinir={this.onRedefinir}
             />
-          </div>
+          )}
         </div>
       </div>
     );

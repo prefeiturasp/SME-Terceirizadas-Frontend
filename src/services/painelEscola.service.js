@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 
 const SOLICITACOES_ESCOLA = `${API_URL}/escola-solicitacoes`;
 

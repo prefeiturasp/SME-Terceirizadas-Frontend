@@ -1,7 +1,7 @@
 import moxios from "../_moxios";
 
 import { API_URL } from "../../constants/config.constants";
-import { AUTH_TOKEN } from "../contants";
+import { AUTH_TOKEN } from "../constants";
 import axios from "../_base";
 
 describe("test getAxios", () => {
