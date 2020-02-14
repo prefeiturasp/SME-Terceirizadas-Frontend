@@ -93,7 +93,7 @@ export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
     filtro.status_solicitacao
   }&data_inicial=${converterDDMMYYYYparaYYYYMMDD(
     filtro.data_de
-  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}`;
+  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}/`;
 
   fetch(url, {
     method: "GET",
