@@ -89,11 +89,11 @@ export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
   }
   const url = `${API_URL}/${endpoint}/relatorio-periodo/${filtroExtra}?tipo_solicitacao=${
     filtro.tipo_de_solicitacao
-  }&status_solicitacao=${
-    filtro.status_solicitacao
   }&data_inicial=${converterDDMMYYYYparaYYYYMMDD(
     filtro.data_de
-  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(filtro.data_ate)}/`;
+  )}&data_final=${converterDDMMYYYYparaYYYYMMDD(
+    filtro.data_ate
+  )}&status_solicitacao=${filtro.status_solicitacao}/`;
 
   fetch(url, {
     method: "GET",
