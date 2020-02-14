@@ -81,7 +81,7 @@ export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
       endpoint = "codae-solicitacoes";
       escolaUUID = filtro.unidade_escolar;
       diretoriaRegionalUUID = filtro.diretoria_regional;
-      filtroExtra = `${diretoriaRegionalUUID}/${escolaUUID}`;
+      filtroExtra = `${diretoriaRegionalUUID}/${escolaUUID}/`;
       break;
     default:
       endpoint = "escola-solicitacoes";
