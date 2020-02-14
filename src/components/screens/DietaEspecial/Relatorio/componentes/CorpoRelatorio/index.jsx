@@ -195,7 +195,7 @@ export const CorpoRelatorio = props => {
       <div className="report-label-value">
         <p>Observações</p>
         <p
-          className="value"
+          className="texto-wysiwyg"
           dangerouslySetInnerHTML={{
             __html: dietaEspecial.observacoes
           }}
@@ -232,7 +232,9 @@ export const CorpoRelatorio = props => {
       {dietaEspecial.justificativa_negacao && (
         <div className="report-label-value">
           <p>Justificativa da Negação</p>
-          <div className="value">{dietaEspecial.justificativa_negacao}</div>
+          <div className="texto-wysiwyg">
+            {dietaEspecial.justificativa_negacao}
+          </div>
         </div>
       )}
       {dietaEspecial.nome_protocolo && (
@@ -277,7 +279,7 @@ export const CorpoRelatorio = props => {
         <div className="report-label-value">
           <p>Informações Adicionais</p>
           <div
-            className="value"
+            className="texto-wysiwyg"
             dangerouslySetInnerHTML={{
               __html: dietaEspecial.informacoes_adicionais
             }}
