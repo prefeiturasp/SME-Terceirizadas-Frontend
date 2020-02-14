@@ -17,14 +17,14 @@ export const TabelaHistoricoLotesDREs = props => {
           return (
             <tr key={key}>
               <td>
-                <Link to={`/configuracoes/cadastros/lote?uuid=${lote.id}`}>
-                  {lote.lote}
+                <Link to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}>
+                  {lote.nome}
                 </Link>
               </td>
               <td>
-                <Link to="#">{lote.dre}</Link>
+                <Link to="#">{lote.diretoria_regional.nome}</Link>
               </td>
-              <td className="pl-5">{lote.tipo}</td>
+              <td className="pl-5">{lote.tipo_gestao}</td>
             </tr>
           );
         })}
