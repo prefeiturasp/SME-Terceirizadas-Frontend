@@ -1,4 +1,4 @@
-import moxios from "../_moxios";
+import mock from "../_mock";
 
 import { API_URL } from "../../constants/config.constants";
 import { AUTH_TOKEN } from "../constants";
@@ -15,15 +15,12 @@ describe("test getAxios", () => {
   });
   test("seta corretamente headers e configurações", async () => {
     const baseUrl = `${API_URL}/test/`;
-    moxios.stubRequest(baseUrl, {
-      status: 200,
-      response: ["lista", "de", "substitutos"]
-    });
+    mock.onGet(baseUrl).reply(200, ["lista", "de", "substitutos"]);
     const response = await axios.get(`test/`);
     expect(response.data).toEqual(["lista", "de", "substitutos"]);
     expect(response.status).toEqual(200);
-    expect(response.request.config.baseURL).toEqual(API_URL);
-    expect(response.request.config.headers).toEqual(
+    expect(response.config.baseURL).toEqual(API_URL);
+    expect(response.config.headers).toEqual(
       Object.assign(
         {
           Accept: "application/json, text/plain, */*"
