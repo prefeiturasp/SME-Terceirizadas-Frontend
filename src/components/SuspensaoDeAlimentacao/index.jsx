@@ -208,6 +208,8 @@ class FoodSuspensionEditor extends Component {
     periodosProps.forEach(periodoProps => {
       periodosResponse.forEach(periodoResp => {
         if (periodoProps.nome === periodoResp.periodo_escolar.nome) {
+          periodoProps.validador = [];
+          periodoProps.checked = false;
           periodoProps.tipos_alimentacao = periodoResp.combos.map(combo => {
             return {
               uuid: combo.uuid,
@@ -381,6 +383,18 @@ class FoodSuspensionEditor extends Component {
     }
   }
 
+  onCheckInput = indice => {
+    let periodos = this.props.periodos;
+    periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].validador = periodos[indice].checked
+      ? [naoPodeSerZero, maxValue(periodos[indice].quantidade_alunos), required]
+      : [];
+    this.props.change(
+      `suspensoes_${periodos[indice].nome}.check`,
+      periodos[indice].checked
+    );
+  };
+
   onKeyPress(event) {
     if (event.which === ENTER) {
       event.preventDefault();
@@ -545,12 +559,7 @@ class FoodSuspensionEditor extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() =>
-                                  this.props.change(
-                                    `suspensoes_${period.nome}.check`,
-                                    !checkMap[period.nome]
-                                  )
-                                }
+                                onClick={() => this.onCheckInput(key)}
                                 className="checkbox-custom"
                               />{" "}
                               {period.nome}
@@ -594,13 +603,7 @@ class FoodSuspensionEditor extends Component {
                             min="0"
                             className="form-control"
                             required
-                            validate={
-                              checkMap[period.nome] && [
-                                required,
-                                naoPodeSerZero,
-                                maxValue(period.quantidade_alunos)
-                              ]
-                            }
+                            validate={period.validador}
                           />
                         </div>
                       </div>
