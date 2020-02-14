@@ -14,7 +14,8 @@ import {
   LOTE,
   EMPRESA,
   EDITAIS_CONTRATOS,
-  TIPOS_ALIMENTACAO
+  TIPOS_ALIMENTACAO,
+  FAIXAS_ETARIAS
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 import {
@@ -221,6 +222,13 @@ export class SidebarCODAE extends Component {
               to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}`}
             >
               Tipos de Alimentações
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${FAIXAS_ETARIAS}`}
+            >
+              Faixas Etárias
             </NavLink>
           </div>
         </div>

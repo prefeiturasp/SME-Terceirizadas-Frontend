@@ -25,7 +25,6 @@ class Cadastros extends Component {
       hoverLotes: false,
       hoverEmpresas: false,
       hoverEdital: false,
-      hoverFaixasEtarias: false,
       hoverHorarios: false
     };
     this.cardEdital = React.createRef();
@@ -35,7 +34,6 @@ class Cadastros extends Component {
     const {
       hoverEdital,
       hoverEmpresas,
-      hoverFaixasEtarias,
       hoverTipoAlimentacao,
       hoverLotes,
       hoverHorarios,
@@ -136,18 +134,6 @@ class Cadastros extends Component {
             </div>
           </div>
         )}
-        <div
-          onMouseEnter={() => this.setState({ hoverFaixasEtarias: true })}
-          onMouseLeave={() => this.setState({ hoverFaixasEtarias: false })}
-          className="linked-card col-4"
-        >
-          <Link to="/configuracoes/cadastros/faixas-etarias">
-            <CardLogo titulo={"Faixas Etárias"}>
-              {/* TODO: Escolher um ícone melhor para esse item */}
-              <IconeHorarioCombo hover={hoverFaixasEtarias} />
-            </CardLogo>
-          </Link>
-        </div>
       </div>
     );
   }
