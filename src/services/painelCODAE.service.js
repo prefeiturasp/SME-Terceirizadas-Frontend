@@ -75,6 +75,26 @@ export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
   }
 };
 
+export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
+  filtroAplicado,
+  tipoVisao
+) => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
+    SOLICITACOES.PENDENTES
+  }/${filtroAplicado}/${tipoVisao}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getSolicitacoesNegadasCodae = async () => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.NEGADOS}/`;
 

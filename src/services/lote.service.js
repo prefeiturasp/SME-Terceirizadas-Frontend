@@ -102,3 +102,23 @@ export const getLotes = payload => {
       return error.json();
     });
 };
+
+export const getLotesSimples = payload => {
+  const url = `${API_URL}/lotes-simples/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    body: payload,
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { ...data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};

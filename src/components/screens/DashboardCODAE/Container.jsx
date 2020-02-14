@@ -1,101 +1,18 @@
 import React, { Component } from "react";
-import DashboardCODAE from ".";
-import { getTotalAlunos } from "../../../services/codae.service";
+import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
-import { getLotes } from "../../../services/lote.service";
-import {
-  getSolicitacoesAutorizadasCodae,
-  getSolicitacoesCanceladasCodae,
-  getSolicitacoesNegadasCodae,
-  getSolicitacoesPendentesAutorizacaoCodae
-} from "../../../services/painelCODAE.service";
-import { getSuspensoesDeAlimentacaoInformadas } from "../../../services/suspensaoDeAlimentacao.service";
-import { FILTRO, VENCIMENTO } from "../const";
-import { ajustarFormaLotes, ajustarFormatoLog, LOG_PARA } from "../helper";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants";
+import { formatarLotesParaVisao } from "../../../helpers/utilities";
+import DashboardCODAE from ".";
+import { getLotesSimples } from "../../../services/lote.service";
 
-class DashboardCODAEContainer extends Component {
-  async componentDidMount() {
-    const totalAlunos = await getTotalAlunos();
-    let solicitacoesAutorizadas = await getSolicitacoesAutorizadasCodae();
-    let solicitacoesPendentes = await getSolicitacoesPendentesAutorizacaoCodae(
-      FILTRO.SEM_FILTRO
-    );
-    let solicitacoesCanceladas = await getSolicitacoesCanceladasCodae();
-    let solicitacoesNegadas = await getSolicitacoesNegadasCodae();
-
-    let diretoriasRegionais = await getDiretoriaregionalSimplissima();
-
-    if (solicitacoesAutorizadas.length)
-      solicitacoesAutorizadas = ajustarFormatoLog(
-        solicitacoesAutorizadas,
-        LOG_PARA.CODAE
-      );
-    if (solicitacoesPendentes)
-      solicitacoesPendentes = ajustarFormatoLog(
-        solicitacoesPendentes,
-        LOG_PARA.CODAE
-      );
-
-    if (solicitacoesCanceladas.length)
-      solicitacoesCanceladas = ajustarFormatoLog(
-        solicitacoesCanceladas,
-        LOG_PARA.CODAE
-      );
-
-    if (solicitacoesNegadas.length)
-      solicitacoesNegadas = ajustarFormatoLog(
-        solicitacoesNegadas,
-        LOG_PARA.CODAE
-      );
-
-    let lotes = await getLotes();
-    lotes = ajustarFormaLotes(lotes.results);
-
-    getSuspensoesDeAlimentacaoInformadas().then(response => {
-      let quantidade_suspensoes = response.length;
-      this.setState({ quantidade_suspensoes });
-    });
-
-    this.setState({
-      totalAlunos,
-      solicitacoesAutorizadas,
-      solicitacoesPendentes,
-      solicitacoesCanceladas,
-      solicitacoesNegadas,
-      lotes,
-      diretoriasRegionais: diretoriasRegionais.data.results
-    });
-  }
-
+class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      solicitacoesAutorizadas: [],
-      solicitacoesPendentes: [],
-      solicitacoesCanceladas: [],
-      solicitacoesNegadas: [],
-      totalAlunos: 0,
-      quantidade_suspensoes: null,
-      lotes: [],
-      loadingPainelSolicitacoes: true,
-      diretoriasRegionais: [],
-      vencimentoPara: [
+      vision_by: [
         {
-          nome: VENCIMENTO.SEM_FILTRO,
-          uuid: FILTRO.SEM_FILTRO
-        },
-        {
-          nome: VENCIMENTO.SEMANA,
-          uuid: FILTRO.DAQUI_A_7_DIAS
-        },
-        {
-          nome: VENCIMENTO.MES,
-          uuid: FILTRO.DAQUI_A_30_DIAS
-        }
-      ],
-      visaoPor: [
-        {
-          nome: "Tipo de solicitação",
+          nome: "Tipo de Solicitação",
           uuid: "tipo_solicitacao"
         },
         {
@@ -106,13 +23,49 @@ class DashboardCODAEContainer extends Component {
           nome: "Lote",
           uuid: "lote"
         }
-      ]
+      ],
+      filtro_por: [
+        {
+          nome: "Sem filtro",
+          uuid: "sem_filtro"
+        },
+        {
+          nome: "Semana",
+          uuid: "daqui_a_7_dias"
+        },
+        {
+          nome: "Mês",
+          uuid: "daqui_a_30_dias"
+        }
+      ],
+      meusDados: null,
+      cards: TIPOS_SOLICITACAO_LISTA,
+      tiposSolicitacao: TIPOS_SOLICITACAO_LISTA,
+      diretoriasRegionais: null,
+      lotes: null
     };
   }
 
+  componentDidMount() {
+    getMeusDados().then(response => {
+      getLotesSimples().then(responseLotes => {
+        getDiretoriaregionalSimplissima().then(responseDREs => {
+          this.setState({
+            meusDados: response,
+            lotes: formatarLotesParaVisao(responseLotes.results),
+            lotesRaw: responseLotes.results,
+            diretoriasRegionais: formatarLotesParaVisao(
+              responseDREs.data.results
+            )
+          });
+        });
+      });
+    });
+  }
+
   render() {
-    return <DashboardCODAE {...this.state} />;
+    return <DashboardCODAE {...this.state} {...this.props} />;
   }
 }
 
-export default DashboardCODAEContainer;
+export default Container;
