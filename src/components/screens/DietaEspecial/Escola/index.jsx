@@ -197,10 +197,10 @@ class solicitacaoDietaEspecial extends Component {
           <section className="row attachments">
             <div className="col-9">
               <div className="card-title font-weight-bold cinza-escuro mt-4">
-                Laudo Médico
+                Laudo
               </div>
               <div className="text">
-                Anexe o laudo fornecido pelo médico acima. Sem ele, a
+                Anexe o laudo fornecido pelo profissional acima. Sem ele, a
                 solicitação de Dieta Especial será negada.
               </div>
               <div className="card-warning mt-2">

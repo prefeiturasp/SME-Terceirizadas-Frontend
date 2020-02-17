@@ -13,7 +13,7 @@ export default props => (
     </Modal.Header>
     <Modal.Body>
       O aluno {props.dietaEspecial.aluno.nome} já possui uma dieta especial
-      ativa. Ao prosseguir com a autorização, esta será inativada. Deseja
+      ativa. Ao prosseguir com a autorização, a anterior será inativada. Deseja
       continuar?
     </Modal.Body>
     <Modal.Footer>

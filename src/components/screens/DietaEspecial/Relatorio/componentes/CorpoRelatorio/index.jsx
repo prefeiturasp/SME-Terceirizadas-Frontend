@@ -167,10 +167,10 @@ export const CorpoRelatorio = props => {
       {!usuarioTerceirizada() && (
         <section className="row attachments">
           <div className="report-label-value col-8">
-            <p>Laudo Médico</p>
+            <p>Laudo</p>
             <p>
-              O laudo fornecido pelo médico. Sem ele, a solicitação de Dieta
-              Especial será negada.
+              O laudo fornecido pelo profissional. Sem ele, a solicitação de
+              Dieta Especial será negada.
             </p>{" "}
           </div>{" "}
           <div className="col-4 report-label-value">
@@ -298,7 +298,7 @@ export const CorpoRelatorio = props => {
         <Fragment>
           <hr />
           <div className="report-label-value">
-            <p>Laudo Médico - Inativação da Dieta</p>
+            <p>Laudo de Alta - Inativação da Dieta</p>
             {dietaEspecial.anexos
               .filter(anexo => anexo.eh_laudo_alta)
               .map((anexo, key) => {

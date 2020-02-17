@@ -203,52 +203,6 @@ class DashboardCODAE extends Component {
               </Collapse>
             )}
           </CardMatriculados>
-          <CardBody
-            titulo={"Acompanhamento solicitações"}
-            dataAtual={dataAtual()}
-            onChange={this.onPesquisaChanged}
-          >
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Pendentes Autorização"}
-                  cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={questionamentosListFiltered}
-                  icon={"fa-exclamation-triangle"}
-                  href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
-                />
-              </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Autorizadas"}
-                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                  solicitations={autorizadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                  href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Negadas"}
-                  cardType={CARD_TYPE_ENUM.NEGADO}
-                  solicitations={negadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                  href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
-                />
-              </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Canceladas"}
-                  cardType={CARD_TYPE_ENUM.CANCELADO}
-                  solicitations={canceladasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                  href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
-                />
-              </div>
-            </div>
-          </CardBody>
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
@@ -323,6 +277,52 @@ class DashboardCODAE extends Component {
               </div>
             </div>
           </div>
+          <CardBody
+            titulo={"Acompanhamento solicitações"}
+            dataAtual={dataAtual()}
+            onChange={this.onPesquisaChanged}
+          >
+            <div className="row pb-3">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Pendentes Autorização"}
+                  cardType={CARD_TYPE_ENUM.PENDENTE}
+                  solicitations={questionamentosListFiltered}
+                  icon={"fa-exclamation-triangle"}
+                  href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
+                />
+              </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Autorizadas"}
+                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                  solicitations={autorizadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                  href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Negadas"}
+                  cardType={CARD_TYPE_ENUM.NEGADO}
+                  solicitations={negadasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                  href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
+                />
+              </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Canceladas"}
+                  cardType={CARD_TYPE_ENUM.CANCELADO}
+                  solicitations={canceladasListFiltered}
+                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                  href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
+                />
+              </div>
+            </div>
+          </CardBody>
         </form>
       </div>
     );

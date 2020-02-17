@@ -69,7 +69,7 @@ export class SolicitacaoVigente extends Component {
 
   onSubmit(values) {
     this.setState({ submitted: true });
-    values.anexos = this.state.files;
+    values.anexos = this.state.files || [];
     escolaInativaDietaEspecial(values.uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Inativação de solicitação realizada com sucesso.");
@@ -79,8 +79,10 @@ export class SolicitacaoVigente extends Component {
         });
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(getError(response.data));
+        this.setState({ submitted: false });
       } else {
         toastError("Erro ao solicitar dieta especial");
+        this.setState({ submitted: false });
       }
     });
   }
@@ -143,7 +145,7 @@ export class SolicitacaoVigente extends Component {
                         <div className="container">
                           <section className="row attachments">
                             <div className="report-label-value col-8">
-                              <p>Laudo Médico</p>
+                              <p>Laudo</p>
                               <p>
                                 Para visualizar o(s) laudo(s) fornecido(s) pelo
                                 prescritor, clique nos anexo(s)
@@ -231,12 +233,12 @@ export class SolicitacaoVigente extends Component {
                                 <section className="row attachments">
                                   <div className="col-9">
                                     <div className="card-title font-weight-bold cinza-escuro mt-4">
-                                      Laudo Médico
+                                      Laudo
                                     </div>
                                     <div className="text">
-                                      Anexe o laudo fornecido pelo médico acima.
-                                      Sem ele, a solicitação de Dieta Especial
-                                      será negada.
+                                      Anexe o laudo fornecido pelo profissional
+                                      acima. Sem ele, a solicitação de Dieta
+                                      Especial será negada.
                                     </div>
                                     <div className="card-warning mt-2">
                                       <strong>IMPORTANTE:</strong> Envie um
