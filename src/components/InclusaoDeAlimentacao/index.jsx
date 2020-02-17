@@ -51,7 +51,6 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import "./style.scss";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
@@ -874,13 +873,7 @@ class InclusaoDeAlimentacao extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group pb-5">
-                  <Field
-                    component={TextAreaWYSIWYG}
-                    label="Observações"
-                    name="descricao"
-                  />
-                </div>
+
                 <div className="form-group row float-right mt-4">
                   <div className="col-12">
                     <Botao
