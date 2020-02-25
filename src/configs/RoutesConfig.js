@@ -33,6 +33,7 @@ import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/Status
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -155,6 +156,12 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: InclusaoDeAlimentacaoPage,
+    exact: false,
+    tipoUsuario: usuarioEscola()
+  },
+  {
+    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO_CEI}`,
+    component: InclusaoDeAlimentacaoCEIPage,
     exact: false,
     tipoUsuario: usuarioEscola()
   },
