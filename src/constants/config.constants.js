@@ -9,7 +9,7 @@ let API_MOCK = process.env.REACT_APP_API_MOCK;
 // https://getblimp.github.io/django-rest-framework-jwt/#refresh-token
 const REFRESH_TOKEN_TIMEOUT = process.env.REACT_APP_REFRESH_TOKEN_TIMEOUT;
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.IS_DOCKER_ENVIRONMENT === true) {
   // This way we can pass params to static files. see Dockerfile.
   // when build default env is production
   API_URL = "API_URL_REPLACE_ME";
