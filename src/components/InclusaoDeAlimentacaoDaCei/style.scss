@@ -1,0 +1,192 @@
+.rascunhos-inclusao {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 1em;
+}
+
+.titulo-solicitacao {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+
+  color: #42474a;
+}
+
+.formulario-inclusao-alimentacao-cei {
+  .motivo-data {
+    display: grid;
+    grid-template-columns: 68% 20%;
+    column-gap: 2%;
+
+    .input-data {
+      width: 100%;
+    }
+  }
+
+  .periodo-e-tipo-de-alimentacoes {
+    display: grid;
+    grid-template-columns: 60% 39%;
+    column-gap: 1%;
+
+    .periodos-da-cei {
+      display: flex;
+      width: 100%;
+
+      .input-radio-periodo {
+        margin-right: 5px;
+        background-color: #ebedff;
+        border: 1px solid #b2baff;
+        box-sizing: border-box;
+        border-radius: 4px;
+        height: 36px;
+        flex-grow: 1;
+
+        .container-radio-input {
+          display: block;
+          position: relative;
+          padding-left: 25px;
+          margin-bottom: 12px;
+          cursor: pointer;
+          font-size: 14px;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+
+          nav {
+            margin: 0.5em;
+            color: #42474a;
+            font-weight: 500;
+            font-size: 14px;
+          }
+        }
+
+        .container-radio-input input {
+          position: absolute;
+          opacity: 0;
+          cursor: pointer;
+        }
+
+        .checkmark {
+          margin: 0.2em 0 0 0.7em;
+
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 15px;
+          width: 15px;
+          background-color: #eee;
+          border-radius: 50%;
+        }
+
+        .container-radio-input:hover input ~ .checkmark {
+          background-color: #ccc;
+        }
+
+        .container-radio-input input:checked ~ .checkmark {
+          background-color: #0c6b45;
+        }
+
+        .checkmark:after {
+          content: "";
+          position: absolute;
+          display: none;
+        }
+
+        .container-radio-input input:checked ~ .checkmark:after {
+          display: block;
+        }
+
+        .container-radio-input .checkmark:after {
+          top: 5px;
+          left: 5px;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: white;
+        }
+      }
+    }
+  }
+
+  .tabela-faixa-etaria-qtd-alunos {
+    border-radius: 4px;
+    border: 1px solid #e9eaea;
+    margin: 2em 0 2em 0;
+
+    article {
+      display: grid;
+      grid-template-columns: 7fr 2fr 2fr;
+      border-bottom: 1px solid #e9eaea;
+      min-height: 48px;
+      height: auto;
+      font-weight: 500;
+      line-height: 18px;
+      color: #686868;
+
+      div {
+        font-style: normal;
+
+        font-size: 14px;
+
+        /* identical to box height */
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      div:first-child {
+        justify-content: flex-start;
+        margin-left: 15px;
+      }
+
+      div:last-child {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 1em 0 0.5em 0;
+
+        .error-or-warning-message {
+          margin: 0;
+          .error-message {
+            margin: 0;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .faixa-etaria {
+        border-right: 0.5px solid #e9eaea;
+      }
+      .alunos-matriculados {
+        border-left: 0.5px solid #e9eaea;
+        border-right: 0.5px solid #e9eaea;
+      }
+      .quantidade {
+        display: flex;
+        border-left: 0.5px solid #e9eaea;
+      }
+
+      .input-qtd-alunos {
+        margin: 0 1em;
+      }
+    }
+
+    article:first-child {
+      background-color: #f5f6f8;
+      font-weight: bold;
+      line-height: 16px;
+      color: #42474a;
+    }
+
+    article:last-child {
+      background-color: #f5f6f8;
+      font-weight: bold;
+      line-height: 16px;
+      color: #42474a;
+      border-bottom: 0px;
+    }
+  }
+}
