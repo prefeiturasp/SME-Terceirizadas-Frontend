@@ -9,6 +9,7 @@ import {
 import "./style.scss";
 import { ClassificacaoDaDieta } from "./componentes/ClassificacaoDaDieta";
 import SubstituicoesField from "./componentes/SubstituicoesField";
+import { InputComData } from "../../../../../Shareable/DatePicker";
 import InputText from "../../../../../Shareable/Input/InputText";
 import CKEditorField from "../../../../../Shareable/CKEditorField";
 
@@ -75,6 +76,16 @@ class InformacoesCODAE extends Component {
               name="substituicoes"
               required
               alimentos={alimentos}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-9">
+            <Field
+              component={InputComData}
+              name="data_termino"
+              minDate={new Date()}
+              label="Data término"
             />
           </div>
         </div>
