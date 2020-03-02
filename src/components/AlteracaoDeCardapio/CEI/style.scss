@@ -1,0 +1,16 @@
+.header-alteracao-cei {
+  display: flex;
+  section {
+    display: block;
+  }
+  .section-form-motivo {
+    flex-grow: 100;
+  }
+  .section-form-datas {
+    flex-grow: 2;
+    margin-left: 1em;
+    label.col-form-label {
+      font-size: 14px;
+    }
+  }
+}
