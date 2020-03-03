@@ -275,6 +275,12 @@ export const CorpoRelatorio = props => {
           <div className="value">{dietaEspecial.justificativa_negacao}</div>
         </div>
       )}
+      <div className="report-label-value">
+        <p>Data de término</p>
+        <div className="value">
+          {dietaEspecial.data_termino || "Sem data de término"}
+        </div>
+      </div>
       {dietaEspecial.informacoes_adicionais && (
         <div className="report-label-value">
           <p>Informações Adicionais</p>

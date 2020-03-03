@@ -137,6 +137,7 @@ export const tipoDeStatus = status => {
       return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":
+    case "Terminada por atingir data de término":
       return "cancelado";
     case "DRE não validou":
     case "CODAE negou":
@@ -175,7 +176,8 @@ export const existeAlgumStatusFimDeFluxo = logs => {
       log =>
         log.status_evento_explicacao.includes("neg") ||
         log.status_evento_explicacao.includes("não") ||
-        log.status_evento_explicacao.includes("cancel")
+        log.status_evento_explicacao.includes("cancel") ||
+        log.status_evento_explicacao.includes("Terminada")
     ) === -1
   );
 };

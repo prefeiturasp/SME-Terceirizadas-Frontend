@@ -24,6 +24,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import {
+  converterDDMMYYYYparaYYYYMMDD,
   obtemIdentificacaoNutricionista,
   usuarioCODAEDietaEspecial,
   vizualizaBotoesDietaEspecial
@@ -135,12 +136,13 @@ class Relatorio extends Component {
       return;
     }
     const {
-      classificacao,
       alergias_intolerancias,
-      registro_funcional_nutricionista,
+      classificacao,
+      data_termino,
+      informacoes_adicionais,
       nome_protocolo,
-      substituicoes,
-      informacoes_adicionais
+      registro_funcional_nutricionista,
+      substituicoes
     } = values;
     let alergias = null;
     let payload = null;
@@ -159,6 +161,9 @@ class Relatorio extends Component {
           })
         )
       };
+      if (data_termino) {
+        payload.data_termino = converterDDMMYYYYparaYYYYMMDD(data_termino);
+      }
     } else {
       payload = uuid;
     }

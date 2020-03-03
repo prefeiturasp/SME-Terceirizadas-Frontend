@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
+import moment from "moment";
 import DiagnosticosField from "./componentes/Diagnosticos/Field";
 import {
   getAlergiasIntolerancias,
@@ -8,6 +9,7 @@ import {
 } from "../../../../../../services/dietaEspecial.service";
 import "./style.scss";
 import { ClassificacaoDaDieta } from "./componentes/ClassificacaoDaDieta";
+import DataOpcional from "./componentes/DataOpcional";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import InputText from "../../../../../Shareable/Input/InputText";
 import CKEditorField from "../../../../../Shareable/CKEditorField";
@@ -75,6 +77,18 @@ class InformacoesCODAE extends Component {
               name="substituicoes"
               required
               alimentos={alimentos}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12">
+            <Field
+              component={DataOpcional}
+              label="Data de Término"
+              labelLigado="Com data de término"
+              labelDesligado="Sem data de término"
+              minDate={moment().add(1, "day")["_d"]}
+              name="data_termino"
             />
           </div>
         </div>
