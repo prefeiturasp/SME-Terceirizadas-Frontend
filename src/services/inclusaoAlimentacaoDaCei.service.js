@@ -36,3 +36,16 @@ export const excluirInclusoesDaCei = async uuid => {
     `/${ENDPOINT.INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`
   );
 };
+
+export const atualizarInclusoesDaCEI = async (payload, uuid) => {
+  return await axios.put(
+    `/${ENDPOINT.INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`,
+    payload
+  );
+};
+
+export const iniciarInclusoesDaCEI = async uuid => {
+  return await axios.patch(
+    `/${ENDPOINT.INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/inicio-pedido/`
+  );
+};

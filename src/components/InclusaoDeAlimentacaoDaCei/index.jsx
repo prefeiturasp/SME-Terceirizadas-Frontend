@@ -6,7 +6,9 @@ import {
   minhasFaixasEtarias,
   getQuantidadeAlunosFaixaEtaria,
   getQuantidadeAlunosPeriodoEscolar,
-  criarInclusoesDaCEI
+  criarInclusoesDaCEI,
+  atualizarInclusoesDaCEI,
+  iniciarInclusoesDaCEI
 } from "../../services/inclusaoAlimentacaoDaCei.service";
 import Rascunho from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
@@ -50,7 +52,8 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       periodoEscolarDaEscola: null,
       periodoSelecionado: null,
-      tiposAlimentacaoSelecionados: []
+      tiposAlimentacaoSelecionados: [],
+      uuidRascunho: null
     };
     this.removerRascunho = this.removerRascunho.bind(this);
     this.carregarRascunho = this.carregarRascunho.bind(this);
@@ -86,7 +89,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       });
     });
     diaInclusao = inclusaoDeAlimentacao.data;
-    this.setState({ faixasEtarias, tiposAlimentacaoSelecionados, diaInclusao });
+    this.setState({ faixasEtarias, diaInclusao });
     this.props.change("motivo", inclusaoDeAlimentacao.motivo.uuid);
     this.props.change("data", inclusaoDeAlimentacao.data);
     this.props.change(
@@ -95,11 +98,17 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     );
     this.buscarFaixasEtariasEQuantidadesNoPeriodo(periodoEscolarDaEscola);
     this.loadTiposAlimentacao(inclusaoDeAlimentacao.periodo_escolar.uuid);
+    this.props.change(`tipos_alimentacao`, tiposAlimentacaoSelecionados);
+    this.setState({
+      salvarAtualizarLbl: "Atualizar",
+      tiposAlimentacaoSelecionados,
+      uuidRascunho: inclusaoDeAlimentacao.uuid
+    });
   }
 
   onSubmit = async values => {
     const { meusDados } = this.props;
-    const { faixasEtarias } = this.state;
+    const { faixasEtarias, salvarAtualizarLbl, uuidRascunho } = this.state;
 
     const escolaUuid = meusDados && meusDados.vinculo_atual.instituicao.uuid;
     let listaFaixas = [];
@@ -118,11 +127,70 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tipos_alimentacao: values.tipos_alimentacao,
       motivo: values.motivo,
       quantidade_alunos_por_faixas_etarias: listaFaixas,
-      descricao: "xxx",
+      descricao: values.descricao === undefined ? "" : values.descricao,
       data: values.data,
       status: values.status
     };
-    await criarInclusoesDaCEI(payload);
+    let resposta = null;
+    if (payload.periodo_escolar === undefined) {
+      toastError("Selecione o periodo escolar");
+    } else if (
+      payload.tipos_alimentacao === null ||
+      payload.tipos_alimentacao.length === 0
+    ) {
+      toastError("Selecione ao menos um tipo de alimentação");
+    } else {
+      if (
+        salvarAtualizarLbl === "Salvar Rascunho" &&
+        values.status === STATUS_RASCUNHO
+      ) {
+        resposta = await criarInclusoesDaCEI(payload);
+        if (resposta.status === HTTP_STATUS.CREATED) {
+          toastSuccess("Rascunho Salvo com Sucesso!");
+          this.refresh();
+          this.resetForm();
+        } else {
+          toastError("Erro ao Salvar Rascunho");
+        }
+      } else if (
+        salvarAtualizarLbl === "Atualizar" &&
+        values.status === STATUS_RASCUNHO
+      ) {
+        resposta = await atualizarInclusoesDaCEI(payload, uuidRascunho);
+        if (resposta.status === HTTP_STATUS.OK) {
+          toastSuccess("Rascunho Salvo com Sucesso!");
+          this.refresh();
+          this.resetForm();
+        } else {
+          toastError("Erro ao Salvar Rascunho");
+        }
+      } else {
+        if (uuidRascunho === null) {
+          payload.status = "RASCUNHO";
+          resposta = await criarInclusoesDaCEI(payload);
+          const respInicio = await iniciarInclusoesDaCEI(resposta.data.uuid);
+          if (
+            resposta.status === HTTP_STATUS.CREATED &&
+            respInicio.status === HTTP_STATUS.OK
+          ) {
+            toastSuccess("Solicitação enviada com sucesso!");
+            this.refresh();
+            this.resetForm();
+          } else {
+            toastError("Erro ao enviar solicitação");
+          }
+        } else {
+          const respInicio = await iniciarInclusoesDaCEI(uuidRascunho);
+          if (respInicio.status === HTTP_STATUS.OK) {
+            toastSuccess("Solicitação enviada com sucesso!");
+            this.refresh();
+            this.resetForm();
+          } else {
+            toastError("Erro ao enviar solicitação");
+          }
+        }
+      }
+    }
   };
 
   removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
@@ -144,10 +212,30 @@ class InclusaoDeAlimentacaoDaCei extends Component {
   }
 
   resetForm() {
+    let { faixasEtarias } = this.state;
+    faixasEtarias.forEach(faixa => {
+      faixa.total_matriculados = 0;
+    });
     this.props.reset("inclusaoAlimentacaoDaCei");
+    this.setState({
+      salvarAtualizarLbl: "Salvar Rascunho",
+      tiposAlimentacaoSelecionados: [],
+      diaInclusao: null,
+      tiposAlimentacao: [],
+      faixasEtarias,
+      totalFaixasEtarias: 0,
+      totalQuantidade: 0
+    });
   }
 
-  refresh() {}
+  refresh = async () => {
+    let { meusRascunhos } = this.state;
+    const response = await meusRascunhosDeInclusaoDeAlimentacao();
+    meusRascunhos = response.data.results;
+    this.setState({
+      meusRascunhos
+    });
+  };
 
   onKeyPress(event) {
     if (event.which === ENTER) {

@@ -40,7 +40,7 @@
         border: 1px solid #b2baff;
         box-sizing: border-box;
         border-radius: 4px;
-        height: 36px;
+        height: 39px;
         flex-grow: 1;
 
         .container-radio-input {
@@ -71,18 +71,19 @@
 
         .checkmark {
           margin: 0.2em 0 0 0.7em;
-
           position: absolute;
           top: 0;
           left: 0;
           height: 15px;
           width: 15px;
-          background-color: #eee;
+          background-color: #ffffff;
           border-radius: 50%;
+          visibility: visible;
+          border: 1px solid #b2baff;
         }
 
         .container-radio-input:hover input ~ .checkmark {
-          background-color: #ccc;
+          background-color: #ffffff;
         }
 
         .container-radio-input input:checked ~ .checkmark {
@@ -100,8 +101,8 @@
         }
 
         .container-radio-input .checkmark:after {
-          top: 5px;
-          left: 5px;
+          top: 4px;
+          left: 4px;
           width: 5px;
           height: 5px;
           border-radius: 50%;
