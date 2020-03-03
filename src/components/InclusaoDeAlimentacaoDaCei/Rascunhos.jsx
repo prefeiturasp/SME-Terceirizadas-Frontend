@@ -1,17 +1,18 @@
 import React, { Component } from "react";
+import { excluirInclusoesDaCei } from "../../services/inclusaoAlimentacaoDaCei.service";
 import "./style.scss";
 
 export default class Rascunhos extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  removerRascunho(id, uuid) {
+    this.props.removerRascunho(id, uuid, excluirInclusoesDaCei);
+    this.props.resetForm();
   }
 
   render() {
-    const { meusRascunhos } = this.props;
+    const { meusRascunhos, carregarRascunho } = this.props;
     const cardsInclusoesCei = meusRascunhos.map(
       (inclusaoAlimentacaoCei, indice) => {
-        const { id_externo } = inclusaoAlimentacaoCei;
+        const { id_externo, uuid } = inclusaoAlimentacaoCei;
         let backgroundColor = "#DADADA";
         return (
           <div
@@ -31,7 +32,16 @@ export default class Rascunhos extends Component {
             </div>
             <div className="icon-draft-card">
               Criado em: {inclusaoAlimentacaoCei.criado_em}
-              <span>
+              <span onClick={() => this.removerRascunho(id_externo, uuid)}>
+                <i className="fas fa-trash" />
+              </span>
+              <span
+                onClick={() =>
+                  carregarRascunho({
+                    inclusaoAlimentacaoCei
+                  })
+                }
+              >
                 <i className="fas fa-edit" />
               </span>
             </div>

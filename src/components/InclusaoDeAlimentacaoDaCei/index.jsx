@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Field, reduxForm } from "redux-form";
 import {
   meusRascunhosDeInclusaoDeAlimentacao,
   minhasFaixasEtarias,
   getQuantidadeAlunosFaixaEtaria,
-  getQuantidadeAlunosPeriodoEscolar
+  getQuantidadeAlunosPeriodoEscolar,
+  criarInclusoesDaCEI
 } from "../../services/inclusaoAlimentacaoDaCei.service";
 import Rascunho from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
@@ -12,15 +14,24 @@ import { Select } from "../Shareable/Select";
 import { faixaToString } from "../../helpers/faixasEtarias";
 import { required, maxValue } from "../../helpers/fieldValidators";
 import "./style.scss";
-import { agregarDefault } from "../../helpers/utilities";
+import {
+  agregarDefault,
+  formatarParaMultiselect
+} from "../../helpers/utilities";
 import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import {
   montatiposAlimentacaoPorPeriodo,
   montaNomeCombosAlimentacao,
-  retornaUuidEscolaPeriodoEscolar
+  retornaUuidEscolaPeriodoEscolar,
+  renderizarLabelTipoAlimentacao
 } from "./helper";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import InputText from "../Shareable/Input/InputText";
 import moment from "moment";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import Botao from "../Shareable/Botao";
+import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 
 const ENTER = 13;
 
@@ -36,9 +47,107 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       faixasEtarias: null,
       totalFaixasEtarias: 0,
       totalQuantidade: 0,
-      periodoEscolarDaEscola: null
+      salvarAtualizarLbl: "Salvar Rascunho",
+      periodoEscolarDaEscola: null,
+      periodoSelecionado: null,
+      tiposAlimentacaoSelecionados: []
     };
+    this.removerRascunho = this.removerRascunho.bind(this);
+    this.carregarRascunho = this.carregarRascunho.bind(this);
   }
+
+  carregarRascunho(param) {
+    let { faixasEtarias, periodoEscolarDaEscola, diaInclusao } = this.state;
+    const periodosEscolares = this.props.meusDados.vinculo_atual.instituicao
+      .periodos_escolares;
+    const inclusaoDeAlimentacao = param.inclusaoAlimentacaoCei;
+    periodosEscolares.forEach(periodo => {
+      if (
+        periodoEscolarDaEscola === null &&
+        periodo.uuid === inclusaoDeAlimentacao.periodo_escolar.uuid
+      ) {
+        periodoEscolarDaEscola = periodo.escola_periodo;
+      }
+    });
+    const tiposAlimentacaoSelecionados = inclusaoDeAlimentacao.tipos_alimentacao.map(
+      tipo => {
+        return tipo.uuid;
+      }
+    );
+    const qtdFaixaEtaria =
+      inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias;
+    this.props.reset("inclusaoAlimentacaoDaCei");
+    qtdFaixaEtaria.forEach(qtdFaixa => {
+      this.props.change(qtdFaixa.faixa_etaria.uuid, qtdFaixa.quantidade_alunos);
+      faixasEtarias.forEach(faixa => {
+        if (qtdFaixa.faixa_etaria.uuid === faixa.uuid) {
+          faixa.quantidade = qtdFaixa.quantidade_alunos;
+        }
+      });
+    });
+    diaInclusao = inclusaoDeAlimentacao.data;
+    this.setState({ faixasEtarias, tiposAlimentacaoSelecionados, diaInclusao });
+    this.props.change("motivo", inclusaoDeAlimentacao.motivo.uuid);
+    this.props.change("data", inclusaoDeAlimentacao.data);
+    this.props.change(
+      "periodo_escolar",
+      inclusaoDeAlimentacao.periodo_escolar.uuid
+    );
+    this.buscarFaixasEtariasEQuantidadesNoPeriodo(periodoEscolarDaEscola);
+    this.loadTiposAlimentacao(inclusaoDeAlimentacao.periodo_escolar.uuid);
+  }
+
+  onSubmit = async values => {
+    const { meusDados } = this.props;
+    const { faixasEtarias } = this.state;
+
+    const escolaUuid = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    let listaFaixas = [];
+
+    faixasEtarias.forEach(faixa => {
+      if (faixa.quantidade > 0) {
+        listaFaixas.push({
+          faixa_etaria: faixa.uuid,
+          quantidade_alunos: faixa.quantidade
+        });
+      }
+    });
+    const payload = {
+      escola: escolaUuid,
+      periodo_escolar: values.periodo_escolar,
+      tipos_alimentacao: values.tipos_alimentacao,
+      motivo: values.motivo,
+      quantidade_alunos_por_faixas_etarias: listaFaixas,
+      descricao: "xxx",
+      data: values.data,
+      status: values.status
+    };
+    await criarInclusoesDaCEI(payload);
+  };
+
+  removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerInclusaoDeAlimentacao(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.refresh();
+          } else {
+            toastError("Houve um erro ao excluir o rascunho");
+          }
+        },
+        function() {
+          toastError("Houve um erro ao excluir o rascunho");
+        }
+      );
+    }
+  }
+
+  resetForm() {
+    this.props.reset("inclusaoAlimentacaoDaCei");
+  }
+
+  refresh() {}
 
   onKeyPress(event) {
     if (event.which === ENTER) {
@@ -60,18 +169,21 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     );
     const results = qtdAlunosFaixa.data.results;
 
-    results.forEach(faixa => {
-      totalFaixasEtarias += parseInt(faixa.count);
-    });
-
-    faixasEtarias.forEach(faixa => {
-      results.forEach(result => {
-        if (faixa.uuid === result.faixa_etaria.uuid) {
-          faixa.total_matriculados = result.count;
-        }
+    if (results) {
+      results.forEach(faixa => {
+        totalFaixasEtarias += parseInt(faixa.count);
       });
-    });
-    this.setState({ faixasEtarias, totalFaixasEtarias });
+
+      faixasEtarias.forEach(faixa => {
+        results.forEach(result => {
+          if (faixa.uuid === result.faixa_etaria.uuid) {
+            faixa.total_matriculados = result.count;
+            faixa.validade = maxValue(result.count);
+          }
+        });
+      });
+      this.setState({ faixasEtarias, totalFaixasEtarias });
+    }
   };
 
   componentDidUpdate = async (prevProps, prevState) => {
@@ -114,7 +226,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       resp.data.results.forEach(faixa => {
         faixa["total_matriculados"] = 0;
         faixa["quantidade"] = null;
-
+        faixa["validade"] = maxValue(0);
         faixasEtarias.push(faixa);
       });
       this.setState({
@@ -165,6 +277,13 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     });
   };
 
+  onSelectedChanged = opcoesSelecionadas => {
+    this.setState({
+      tiposAlimentacaoSelecionados: opcoesSelecionadas
+    });
+    this.props.change(`tipos_alimentacao`, opcoesSelecionadas);
+  };
+
   totalQuantidadeInput = (valor, indice) => {
     let { totalQuantidade, faixasEtarias } = this.state;
     totalQuantidade = 0;
@@ -186,19 +305,25 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       diaInclusao,
       faixasEtarias,
       totalFaixasEtarias,
-      totalQuantidade
+      totalQuantidade,
+      tiposAlimentacaoSelecionados
     } = this.state;
-    const { periodos, motivos } = this.props;
+    const { periodos, motivos, handleSubmit } = this.props;
     return (
       <div>
         {loading ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit} onKeyPress={this.onKeyPress}>
+          <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
             {meusRascunhos && meusRascunhos.length > 0 && (
               <div className="mt-3">
                 <span>Rascunhos</span>
-                <Rascunho meusRascunhos={meusRascunhos} />
+                <Rascunho
+                  meusRascunhos={meusRascunhos}
+                  removerRascunho={this.removerRascunho}
+                  resetForm={() => this.resetForm()}
+                  carregarRascunho={params => this.carregarRascunho(params)}
+                />
               </div>
             )}
             <div className="card mt-2">
@@ -239,7 +364,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                             <Field
                               component={"input"}
                               type="radio"
-                              name="check"
+                              name="periodo_escolar"
                               value={periodo.uuid}
                               onChange={() => {
                                 this.loadTiposAlimentacao(periodo.uuid);
@@ -260,9 +385,23 @@ class InclusaoDeAlimentacaoDaCei extends Component {
 
                   <div>
                     <Field
-                      component={Select}
+                      component={StatefulMultiSelect}
                       name="tipos_alimentacao"
-                      options={agregarDefault(tiposAlimentacao)}
+                      selected={tiposAlimentacaoSelecionados}
+                      options={formatarParaMultiselect(tiposAlimentacao)}
+                      disableSearch={true}
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected:
+                          "Todos os itens estão selecionados",
+                        selectAll: "Todos"
+                      }}
+                      valueRenderer={(selected, options) =>
+                        renderizarLabelTipoAlimentacao(selected, options)
+                      }
+                      onSelectedChanged={values =>
+                        this.onSelectedChanged(values)
+                      }
                     />
                   </div>
                 </div>
@@ -290,7 +429,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                           type="number"
                           name={faixa.uuid}
                           min="0"
-                          validate={[maxValue(faixa.total_matriculados)]}
+                          validate={faixa.validade}
                           className="quantidade input-qtd-alunos"
                           onChange={value => {
                             this.totalQuantidadeInput(
@@ -311,6 +450,39 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     <div className="quantidade">{totalQuantidade}</div>
                   </article>
                 </section>
+                <div className="mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={() => this.resetForm()}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto={this.state.salvarAtualizarLbl}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values,
+                          status: STATUS_RASCUNHO
+                        })
+                      )}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={handleSubmit(values =>
+                        this.onSubmit({
+                          ...values,
+                          status: STATUS_DRE_A_VALIDAR
+                        })
+                      )}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </form>

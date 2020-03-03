@@ -69,3 +69,16 @@ export const retornaUuidEscolaPeriodoEscolar = (periodo, periodosEscolares) => {
   });
   return uuidPeriodo;
 };
+
+export const renderizarLabelTipoAlimentacao = (selected, options) => {
+  if (selected.length === 0) {
+    return "Selecione";
+  }
+  if (selected.length === options.length) {
+    return "Todos os itens estão selecionados";
+  }
+  if (selected.length === 1) {
+    return `${selected.length} tipo de alimentação selecionado`;
+  }
+  return `${selected.length} tipos de alimentações selecionados`;
+};
