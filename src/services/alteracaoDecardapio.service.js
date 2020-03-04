@@ -258,21 +258,6 @@ export const getAlteracaoCardapio = uuid => {
     });
 };
 
-export const getCodaePedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getCodaePedidosReprovados = () => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-codae/`;
   const OBJ_REQUEST = {
@@ -349,21 +334,6 @@ export const CODAEquestionaAlteracaoCardapio = async (
   } catch (error) {
     return error.json();
   }
-};
-
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const getTerceirizadaPedidosReprovados = () => {

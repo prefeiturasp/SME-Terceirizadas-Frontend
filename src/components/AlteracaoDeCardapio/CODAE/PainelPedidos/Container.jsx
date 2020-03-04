@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants";
-import {
-  getCodaePedidosAutorizados as pedidosAutorizadosNormais,
-  getCodaePedidosReprovados as pedidosReprovadosNormais
-} from "../../../../services/alteracaoDecardapio.service";
 import PainelPedidos from ".";
 
 class Container extends Component {
@@ -14,21 +10,6 @@ class Container extends Component {
       pedidosAutorizados: [],
       pedidosReprovados: []
     };
-  }
-
-  componentDidMount() {
-    let pedidosAutorizados = [];
-    let pedidosReprovados = [];
-
-    pedidosAutorizadosNormais().then(response => {
-      pedidosAutorizados = response.results;
-      this.setState({ pedidosAutorizados });
-    });
-
-    pedidosReprovadosNormais().then(response => {
-      pedidosReprovados = response.results;
-      this.setState({ pedidosReprovados });
-    });
   }
 
   render() {

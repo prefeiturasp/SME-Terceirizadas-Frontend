@@ -248,54 +248,6 @@ export const getCodaePedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getCodaePedidosDeKitLancheAutorizados = () => {
-  //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosDeKitLancheReprovados = () => {
-  //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getPedidosDeKitLancheAutorizadosTerceirizada = () => {
-  //TODO tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-terceirizadas/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${
     PEDIDOS.TERCEIRIZADA
