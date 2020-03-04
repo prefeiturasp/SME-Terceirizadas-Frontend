@@ -1,20 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { TIPODECARD } from "../../../../constants";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosAutorizados } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
 import CardHistorico from "../../components/CardHistorico";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
-import {
-  filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
-} from "./../../../../helpers/painelPedidos";
+import { formatarPedidos } from "./../../../../helpers/painelPedidos";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -28,29 +20,8 @@ class PainelPedidos extends Component {
     };
   }
 
-  filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
+  filtrar() {
     this.setState({ pedidosCarregados: 0 });
-    getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
-      pedidosPrioritarios = filtraPrioritarios(response.results);
-      pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      pedidosNoPrazoRegular = filtraRegular(response.results);
-      this.setState({
-        pedidosPrioritarios,
-        pedidosNoPrazoLimite,
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
-      });
-    });
-  }
-
-  componentDidMount() {
-    this.filtrar(FiltroEnum.SEM_FILTRO);
-    getDiretoriaRegionalPedidosAutorizados().then(response => {
-      this.setState({ pedidosAutorizados: response.results });
-    });
   }
 
   onFiltroSelected(value) {

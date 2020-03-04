@@ -114,36 +114,6 @@ export const enviarAlteracaoCardapio = (uuid, payload) => {
     });
 };
 
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosReprovados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
 export const getDiretoriaRegionalPedidosDeAlteracaoCardapio = filtroAplicado => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${

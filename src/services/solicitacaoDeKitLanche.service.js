@@ -201,22 +201,6 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosDeKitLancheAutorizados = () => {
-  //TODO TIRAR
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
   //TODO: TIRAR
   const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-diretoria-regional/`;
