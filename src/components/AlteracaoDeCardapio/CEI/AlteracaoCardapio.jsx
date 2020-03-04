@@ -16,27 +16,26 @@ import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
 import { faixaToString } from "../../../helpers/faixasEtarias";
 import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
-import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import "../style.scss";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
-import { validateSubmit } from "../validacao";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import InputText from "../../Shareable/Input/InputText";
 import {
-  createAlteracaoCardapio,
   getMeusRascunhosAlteracoesCardapio,
-  updateAlteracaoCardapio,
   deleteAlteracaoCardapio,
   enviarAlteracaoCardapio
 } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  getEscolaPeriodoEscolares
+  getEscolaPeriodoEscolares,
+  criaAlteracaoCardapioCei,
+  iniciaFluxoAlteracaoCardapioCei
 } from "../../../services/alteracaoDeCardapioCEI.service";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import moment from "moment";
+import { parseFormValues } from "./helper";
 
 const ENTER = 13;
 
@@ -55,7 +54,8 @@ class AlteracaoCardapio extends Component {
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
       dataInicial: null,
-      ultimaDataAlteracao: undefined
+      ultimaDataAlteracao: undefined,
+      submitting: false
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -215,10 +215,8 @@ class AlteracaoCardapio extends Component {
   resetForm() {
     let { periodos } = this.state;
     this.props.loadAlteracaoCardapio(null);
-    this.props.change("alterar_dia", null);
-    this.props.change("data_inicial", null);
-    this.props.change("data_final", null);
-    this.props.change("motivo", null);
+    this.props.change("data_alteracao", "");
+    this.props.change("motivo", "");
     this.props.change("observacao", "<p><p/>\n");
     periodos.forEach(periodo => {
       periodo.checked = false;
@@ -251,57 +249,32 @@ class AlteracaoCardapio extends Component {
     );
   }
 
-  onSubmit(values) {
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    const status = values.status;
-    delete values.status;
-    const erros = validateSubmit(values, this.props.meusDados);
-    if (!erros) {
-      this.resetaTodoPeriodoCheck();
-      if (!values.uuid) {
-        createAlteracaoCardapio(values)
-          .then(async response => {
-            if (response.status === HTTP_STATUS.CREATED) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(response.data.uuid);
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-                this.resetForm("alteracaoCardapio");
-              }
-              this.resetForm();
-            }
-          })
-          .catch(error => {
-            toastError(error);
-            this.resetForm("alteracaoCardapio");
-            this.refresh();
-          });
-      } else {
-        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-                this.resetForm("alteracaoCardapio");
-              }
-            } else {
-              toastError(res.error);
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
+  onSubmit = async (values, rascunho = false) => {
+    this.setState({ submitting: true });
+    const parsedValues = parseFormValues(values);
+    parsedValues.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+
+    const response = await criaAlteracaoCardapioCei(parsedValues);
+    if (response.status === HTTP_STATUS.CREATED) {
+      if (!rascunho) {
+        const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
+          response.data.uuid
         );
+        if (responseInicia.status === HTTP_STATUS.OK) {
+          toastSuccess("Alteração de Cardápio salva com sucesso");
+          this.refresh();
+          this.resetForm("alteracaoCardapio");
+        } else {
+          toastError(responseInicia.error);
+        }
+      } else {
+        toastSuccess("Alteração de Cardápio salva com sucesso");
+        this.refresh();
+        this.resetForm("alteracaoCardapio");
       }
-    } else {
-      toastError(erros);
     }
-  }
+    this.setState({ submitting: false });
+  };
 
   showModal() {
     this.setState({ ...this.state, showModal: true });
@@ -414,7 +387,8 @@ class AlteracaoCardapio extends Component {
       alteracaoCardapioList,
       showModal,
       periodos,
-      substituicoesAlimentacao
+      substituicoesAlimentacao,
+      submitting
     } = this.state;
     const {
       data_alteracao,
@@ -423,8 +397,7 @@ class AlteracaoCardapio extends Component {
       meusDados,
       proximos_dois_dias_uteis,
       motivos,
-      pristine,
-      submitting
+      pristine
     } = this.props;
     return (
       <Fragment>
@@ -639,7 +612,7 @@ class AlteracaoCardapio extends Component {
                 <Botao
                   disabled={pristine || submitting}
                   texto={this.state.salvarAtualizarLbl}
-                  onClick={handleSubmit(values => this.onSubmit(values))}
+                  onClick={handleSubmit(values => this.onSubmit(values, true))}
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.OutlinePrimary}
                 />
@@ -647,12 +620,7 @@ class AlteracaoCardapio extends Component {
                   texto="Enviar"
                   disabled={pristine || submitting}
                   type={BUTTON_TYPE.SUBMIT}
-                  onClick={handleSubmit(values =>
-                    this.onSubmit({
-                      ...values,
-                      status: STATUS_DRE_A_VALIDAR
-                    })
-                  )}
+                  onClick={handleSubmit(values => this.onSubmit(values))}
                   style={BUTTON_STYLE.Primary}
                 />
               </article>

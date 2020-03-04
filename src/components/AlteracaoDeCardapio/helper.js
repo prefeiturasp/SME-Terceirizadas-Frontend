@@ -15,7 +15,7 @@ export const construirPeriodosECombos = periodos => {
     let dicionarioPeriodo = {
       checked: false,
       nome: periodo.periodo_escolar.nome,
-      uuid: periodo.uuid,
+      uuid: periodo.periodo_escolar.uuid,
       style: backgroundLabelPeriodo(periodo.periodo_escolar.nome),
       tipos_alimentacao: periodo.combos.map(combo => {
         return {
