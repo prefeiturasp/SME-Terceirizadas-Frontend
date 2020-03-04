@@ -53,14 +53,21 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       periodoEscolarDaEscola: null,
       periodoSelecionado: null,
       tiposAlimentacaoSelecionados: [],
-      uuidRascunho: null
+      uuidRascunho: null,
+      ehOutroMotivo: false
     };
     this.removerRascunho = this.removerRascunho.bind(this);
     this.carregarRascunho = this.carregarRascunho.bind(this);
   }
 
   carregarRascunho(param) {
-    let { faixasEtarias, periodoEscolarDaEscola, diaInclusao } = this.state;
+    let {
+      faixasEtarias,
+      periodoEscolarDaEscola,
+      diaInclusao,
+      ehOutroMotivo,
+      totalQuantidade
+    } = this.state;
     const periodosEscolares = this.props.meusDados.vinculo_atual.instituicao
       .periodos_escolares;
     const inclusaoDeAlimentacao = param.inclusaoAlimentacaoCei;
@@ -85,19 +92,30 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       faixasEtarias.forEach(faixa => {
         if (qtdFaixa.faixa_etaria.uuid === faixa.uuid) {
           faixa.quantidade = qtdFaixa.quantidade_alunos;
+          totalQuantidade += qtdFaixa.quantidade_alunos;
         }
       });
     });
+    if (inclusaoDeAlimentacao.motivo.nome === "Outro") {
+      ehOutroMotivo = true;
+      this.props.change("outro_motivo", inclusaoDeAlimentacao.descricao);
+    }
     diaInclusao = inclusaoDeAlimentacao.data;
-    this.setState({ faixasEtarias, diaInclusao });
+    this.setState({
+      faixasEtarias,
+      diaInclusao,
+      ehOutroMotivo,
+      totalQuantidade
+    });
     this.props.change("motivo", inclusaoDeAlimentacao.motivo.uuid);
     this.props.change("data", inclusaoDeAlimentacao.data);
     this.props.change(
       "periodo_escolar",
       inclusaoDeAlimentacao.periodo_escolar.uuid
     );
+
     this.buscarFaixasEtariasEQuantidadesNoPeriodo(periodoEscolarDaEscola);
-    this.loadTiposAlimentacao(inclusaoDeAlimentacao.periodo_escolar.uuid);
+    this.loadTiposAlimentacao(inclusaoDeAlimentacao.periodo_escolar);
     this.props.change(`tipos_alimentacao`, tiposAlimentacaoSelecionados);
     this.setState({
       salvarAtualizarLbl: "Atualizar",
@@ -108,7 +126,13 @@ class InclusaoDeAlimentacaoDaCei extends Component {
 
   onSubmit = async values => {
     const { meusDados } = this.props;
-    const { faixasEtarias, salvarAtualizarLbl, uuidRascunho } = this.state;
+    const {
+      faixasEtarias,
+      salvarAtualizarLbl,
+      uuidRascunho,
+      tiposAlimentacaoSelecionados,
+      periodoSelecionado
+    } = this.state;
 
     const escolaUuid = meusDados && meusDados.vinculo_atual.instituicao.uuid;
     let listaFaixas = [];
@@ -127,22 +151,39 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tipos_alimentacao: values.tipos_alimentacao,
       motivo: values.motivo,
       quantidade_alunos_por_faixas_etarias: listaFaixas,
-      descricao: values.descricao === undefined ? "" : values.descricao,
+      descricao: values.outro_motivo === undefined ? "" : values.outro_motivo,
       data: values.data,
       status: values.status
     };
+    let errors = false;
+    if (
+      periodoSelecionado === "PARCIAL" &&
+      tiposAlimentacaoSelecionados.length < 3
+    ) {
+      errors = true;
+      toastError(
+        "Necessário selecionar 3 tipos de alimentações no período parcial"
+      );
+    }
     let resposta = null;
+    if (payload.quantidade_alunos_por_faixas_etarias.length === 0) {
+      toastError("Selecione ao menos uma faixa etaria");
+      errors = true;
+    }
     if (payload.periodo_escolar === undefined) {
       toastError("Selecione o periodo escolar");
+      errors = true;
     } else if (
       payload.tipos_alimentacao === null ||
       payload.tipos_alimentacao.length === 0
     ) {
       toastError("Selecione ao menos um tipo de alimentação");
+      errors = true;
     } else {
       if (
         salvarAtualizarLbl === "Salvar Rascunho" &&
-        values.status === STATUS_RASCUNHO
+        values.status === STATUS_RASCUNHO &&
+        !errors
       ) {
         resposta = await criarInclusoesDaCEI(payload);
         if (resposta.status === HTTP_STATUS.CREATED) {
@@ -154,7 +195,8 @@ class InclusaoDeAlimentacaoDaCei extends Component {
         }
       } else if (
         salvarAtualizarLbl === "Atualizar" &&
-        values.status === STATUS_RASCUNHO
+        values.status === STATUS_RASCUNHO &&
+        !errors
       ) {
         resposta = await atualizarInclusoesDaCEI(payload, uuidRascunho);
         if (resposta.status === HTTP_STATUS.OK) {
@@ -165,7 +207,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
           toastError("Erro ao Salvar Rascunho");
         }
       } else {
-        if (uuidRascunho === null) {
+        if (uuidRascunho === null && !errors) {
           payload.status = "RASCUNHO";
           resposta = await criarInclusoesDaCEI(payload);
           const respInicio = await iniciarInclusoesDaCEI(resposta.data.uuid);
@@ -180,13 +222,15 @@ class InclusaoDeAlimentacaoDaCei extends Component {
             toastError("Erro ao enviar solicitação");
           }
         } else {
-          const respInicio = await iniciarInclusoesDaCEI(uuidRascunho);
-          if (respInicio.status === HTTP_STATUS.OK) {
-            toastSuccess("Solicitação enviada com sucesso!");
-            this.refresh();
-            this.resetForm();
-          } else {
-            toastError("Erro ao enviar solicitação");
+          if (!errors) {
+            const respInicio = await iniciarInclusoesDaCEI(uuidRascunho);
+            if (respInicio.status === HTTP_STATUS.OK) {
+              toastSuccess("Solicitação enviada com sucesso!");
+              this.refresh();
+              this.resetForm();
+            } else {
+              toastError("Erro ao enviar solicitação");
+            }
           }
         }
       }
@@ -224,7 +268,10 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tiposAlimentacao: [],
       faixasEtarias,
       totalFaixasEtarias: 0,
-      totalQuantidade: 0
+      totalQuantidade: 0,
+      periodoSelecionado: null,
+      uuidRascunho: null,
+      ehOutroMotivo: false
     });
   }
 
@@ -355,21 +402,41 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     }
   };
 
-  loadTiposAlimentacao = periodoUuid => {
+  loadTiposAlimentacao = ({ uuid, nome }) => {
+    this.setState({
+      periodoSelecionado: nome,
+      tiposAlimentacaoSelecionados: []
+    });
     this.props.change("tipos_alimentacao", null);
     const { periodos } = this.props;
     periodos.forEach(periodo => {
-      if (periodo.uuid === periodoUuid) {
+      if (periodo.uuid === uuid) {
         this.setState({ tiposAlimentacao: periodo.tipos_alimentacao });
       }
     });
   };
 
+  addQuantidadeTiposAlimentacao = (opcoesSelecionadas, quantidade) => {
+    if (opcoesSelecionadas.length <= quantidade) {
+      this.setState({
+        tiposAlimentacaoSelecionados: opcoesSelecionadas
+      });
+      this.props.change(`tipos_alimentacao`, opcoesSelecionadas);
+    }
+  };
+
   onSelectedChanged = opcoesSelecionadas => {
-    this.setState({
-      tiposAlimentacaoSelecionados: opcoesSelecionadas
-    });
-    this.props.change(`tipos_alimentacao`, opcoesSelecionadas);
+    const { periodoSelecionado } = this.state;
+    if (periodoSelecionado === "PARCIAL") {
+      this.addQuantidadeTiposAlimentacao(opcoesSelecionadas, 3);
+    } else if (periodoSelecionado === "INTEGRAL") {
+      this.addQuantidadeTiposAlimentacao(opcoesSelecionadas, 5);
+    } else {
+      this.setState({
+        tiposAlimentacaoSelecionados: opcoesSelecionadas
+      });
+      this.props.change(`tipos_alimentacao`, opcoesSelecionadas);
+    }
   };
 
   totalQuantidadeInput = (valor, indice) => {
@@ -385,6 +452,19 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     });
   };
 
+  verificaSeEhOutroMotivo = motivoUuid => {
+    const { motivos } = this.props;
+    motivos.forEach(motivo => {
+      if (motivo.uuid === motivoUuid) {
+        if (motivo.nome !== "Outro") {
+          this.setState({ ehOutroMotivo: false });
+        } else {
+          this.setState({ ehOutroMotivo: true });
+        }
+      }
+    });
+  };
+
   render() {
     const {
       loading,
@@ -394,7 +474,8 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       faixasEtarias,
       totalFaixasEtarias,
       totalQuantidade,
-      tiposAlimentacaoSelecionados
+      tiposAlimentacaoSelecionados,
+      ehOutroMotivo
     } = this.state;
     const { periodos, motivos, handleSubmit } = this.props;
     return (
@@ -427,6 +508,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     required
                     validate={required}
                     options={agregarDefault(motivos)}
+                    onChange={event => {
+                      this.verificaSeEhOutroMotivo(event.target.value);
+                    }}
                   />
                   <Field
                     className="input-data"
@@ -440,6 +524,17 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     }}
                   />
                 </div>
+                {ehOutroMotivo && (
+                  <div className="grid-outro-motivo pb-2">
+                    <Field
+                      component={InputText}
+                      label="Qual o motivo?"
+                      name="outro_motivo"
+                      required
+                      validate={required}
+                    />
+                  </div>
+                )}
                 <div className="periodo-e-tipo-de-alimentacoes mt-3">
                   <div>Periodos</div>
                   <div>Tipos de Alimentação</div>
@@ -455,7 +550,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                               name="periodo_escolar"
                               value={periodo.uuid}
                               onChange={() => {
-                                this.loadTiposAlimentacao(periodo.uuid);
+                                this.loadTiposAlimentacao(periodo);
                                 this.buscarFaixasEtariasEQuantidadesNoPeriodo(
                                   periodo.escola_periodo,
                                   diaInclusao
@@ -539,7 +634,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                   </article>
                 </section>
                 <div className="mt-4">
-                  <div className="col-12">
+                  <div className="botoes-submit-inclusoes-cei">
                     <Botao
                       texto="Cancelar"
                       onClick={() => this.resetForm()}

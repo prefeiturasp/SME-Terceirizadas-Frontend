@@ -25,6 +25,11 @@
     }
   }
 
+  .botoes-submit-inclusoes-cei {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .periodo-e-tipo-de-alimentacoes {
     display: grid;
     grid-template-columns: 60% 39%;
