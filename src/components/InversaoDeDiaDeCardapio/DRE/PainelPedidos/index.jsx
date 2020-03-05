@@ -4,24 +4,41 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum, TIPODECARD } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
-import CardHistorico from "../../components/CardHistorico";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
-import { formatarPedidos } from "./../../../../helpers/painelPedidos";
+import {
+  filtraPrioritarios,
+  filtraNoLimite,
+  filtraRegular
+} from "./../../../../helpers/painelPedidos";
+import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
+      pedidosCarregados: false,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: [],
-      pedidosAutorizados: []
+      pedidosNoPrazoRegular: []
     };
   }
 
-  filtrar() {
-    this.setState({ pedidosCarregados: 0 });
+  filtrar(filtro) {
+    getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
+      let pedidosPrioritarios = filtraPrioritarios(response.results);
+      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      let pedidosNoPrazoRegular = filtraRegular(response.results);
+      this.setState({
+        pedidosCarregados: true,
+        pedidosPrioritarios,
+        pedidosNoPrazoLimite,
+        pedidosNoPrazoRegular
+      });
+    });
+  }
+
+  componentDidMount() {
+    this.filtrar(FiltroEnum.SEM_FILTRO);
   }
 
   onFiltroSelected(value) {
@@ -40,12 +57,11 @@ class PainelPedidos extends Component {
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular,
-      pedidosAutorizados
+      pedidosNoPrazoRegular
     } = this.state;
-    const { visaoPorCombo, valorDoFiltro, pedidosReprovados } = this.props;
+    const { visaoPorCombo, valorDoFiltro } = this.props;
 
-    const todosOsPedidosForamCarregados = pedidosCarregados;
+    const todosOsPedidosForamCarregados = pedidosCarregados === true;
     return (
       <div>
         {!todosOsPedidosForamCarregados ? (
@@ -103,30 +119,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data"}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inversões de cardápio Autorizadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={"Histórico de Inversões de cardápio reprovadas"}
                       />
                     </div>
                   </div>

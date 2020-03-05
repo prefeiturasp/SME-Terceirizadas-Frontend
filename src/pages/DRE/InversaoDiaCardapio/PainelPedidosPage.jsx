@@ -7,7 +7,7 @@ import { INVERSAO_CARDAPIO, DRE } from "../../../configs/constants";
 
 const atual = {
   href: `/${DRE}/${INVERSAO_CARDAPIO}`,
-  titulo: "Inversão de dia de Cardápio - Pendente Validação"
+  titulo: "Inversão de dia de Cardápio"
 };
 
 export default () => (
