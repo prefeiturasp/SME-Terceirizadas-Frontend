@@ -108,7 +108,9 @@ class AlteracaoCardapio extends Component {
           periodo.escolaPeriodoEscolar.uuid,
           converterDDMMYYYYparaYYYYMMDD(data_alteracao)
         );
-        periodo.alunosPorFaixaEtaria = response.data.results;
+        periodo.alunosPorFaixaEtaria = response.data.results.sort(
+          (a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio
+        );
       }
       this.setState({ ultimaDataAlteracao: data_alteracao, periodos });
     }
