@@ -5,8 +5,10 @@ import { ENDPOINT } from "../../constants";
 
 import {
   criaAlteracaoCardapioCei,
+  deleteAlteracaoCardapioCei,
   getAlunosPorFaixaEtariaNumaData,
   getEscolaPeriodoEscolares,
+  getMeusRascunhosAlteracoesCardapioCei,
   iniciaFluxoAlteracaoCardapioCei
 } from "../alteracaoDeCardapioCEI.service";
 
@@ -60,5 +62,28 @@ describe("test getEscolaPeriodoEscolares", () => {
       escolaPeriodoEscolares: "lista de resultados"
     });
     expect(response.status).toEqual(200);
+  });
+});
+
+describe("test getMeusRascunhosAlteracoesCardapioCei", () => {
+  const baseUrl = `${API_URL}/${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${
+    ENDPOINT.MINHAS_SOLICITACOES
+  }/`;
+  const responseData = { count: 3, results: ["lista", "de", "resultados"] };
+  mock.onGet(baseUrl).reply(200, responseData);
+  test("obtem os dados corretamente", async () => {
+    const response = await getMeusRascunhosAlteracoesCardapioCei();
+    expect(response.data).toEqual(responseData);
+    expect(response.status).toEqual(200);
+  });
+});
+
+describe("test deleteAlteracaoCardapioCei", () => {
+  const uuid = "asdf-1234-qwer";
+  const baseUrl = `${API_URL}/${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`;
+  mock.onDelete(baseUrl).reply(204);
+  test("deleta corretamente", async () => {
+    const response = await deleteAlteracaoCardapioCei(uuid);
+    expect(response.status).toEqual(204);
   });
 });

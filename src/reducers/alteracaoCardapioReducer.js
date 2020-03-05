@@ -1,4 +1,5 @@
 const LOAD_ALTERACAO_CARDAPIO = "LOAD_ALTERACAO_CARDAPIO";
+const LOAD_ALTERACAO_CARDAPIO_CEI = "LOAD_ALTERACAO_CARDAPIO_CEI";
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
@@ -24,6 +25,44 @@ export default function reducer(state = {}, action) {
           ...action.data
         }
       };
+    case LOAD_ALTERACAO_CARDAPIO_CEI:
+      if (action.data !== null) {
+        const { observacao, motivo, data, substituicoes } = action.data;
+        const dadosRetornados = {
+          motivo: motivo.uuid,
+          observacao,
+          data_alteracao: data
+        };
+        substituicoes.forEach(function(substituicao) {
+          const {
+            periodo_escolar,
+            tipo_alimentacao_de,
+            tipo_alimentacao_para,
+            faixas_etarias
+          } = substituicao;
+          const dadosSubstituicao = {
+            periodo: periodo_escolar.uuid,
+            check: true,
+            tipo_alimentacao_para: tipo_alimentacao_para.uuid,
+            tipo_alimentacao_de: tipo_alimentacao_de.uuid
+          };
+          faixas_etarias.forEach(faixaEtaria => {
+            dadosSubstituicao[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`] =
+              faixaEtaria.quantidade;
+          });
+          dadosRetornados[
+            `substituicoes_${substituicao.periodo_escolar.nome}`
+          ] = dadosSubstituicao;
+        });
+        return {
+          data: dadosRetornados
+        };
+      }
+      return {
+        data: {
+          ...action.data
+        }
+      };
     default:
       return state;
   }
@@ -31,3 +70,6 @@ export default function reducer(state = {}, action) {
 
 export const loadAlteracaoCardapio = data => dispatch =>
   dispatch({ type: LOAD_ALTERACAO_CARDAPIO, data });
+
+export const loadAlteracaoCardapioCei = data => dispatch =>
+  dispatch({ type: LOAD_ALTERACAO_CARDAPIO_CEI, data });

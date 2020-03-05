@@ -6,7 +6,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { bindActionCreators } from "redux";
-import { loadAlteracaoCardapio } from "../../../reducers/alteracaoCardapioReducer";
+import { loadAlteracaoCardapioCei } from "../../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "../Rascunhos";
 import { required, textAreaRequired } from "../../../helpers/fieldValidators";
@@ -22,16 +22,14 @@ import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import InputText from "../../Shareable/Input/InputText";
-import {
-  getMeusRascunhosAlteracoesCardapio,
-  deleteAlteracaoCardapio,
-  enviarAlteracaoCardapio
-} from "../../../services/alteracaoDecardapio.service";
+import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
   getEscolaPeriodoEscolares,
+  getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
-  iniciaFluxoAlteracaoCardapioCei
+  iniciaFluxoAlteracaoCardapioCei,
+  deleteAlteracaoCardapioCei
 } from "../../../services/alteracaoDeCardapioCEI.service";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import moment from "moment";
@@ -137,7 +135,10 @@ class AlteracaoCardapio extends Component {
       if (item.turno === substituicao.periodo_escolar.nome) {
         item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes;
       }
-      if (periodos[indice].nome === substituicao.periodo_escolar.nome) {
+      if (
+        periodos[indice] &&
+        periodos[indice].nome === substituicao.periodo_escolar.nome
+      ) {
         periodos[indice].checado = true;
       }
     });
@@ -161,60 +162,37 @@ class AlteracaoCardapio extends Component {
   };
 
   OnEditButtonClicked(param) {
-    let dataInicial = this.state.dataInicial;
-    let { substituicoesAlimentacao, periodos } = this.state;
-    dataInicial = param["alteracaoDeCardapio"].data_inicial;
-    this.props.reset("alteracaoCardapio");
-    param.alteracaoDeCardapio.substituicoes.forEach(substituicao => {
-      substituicao.tipo_alimentacao_de["nome"] =
-        substituicao.tipo_alimentacao_de.label;
-      substituicao.tipo_alimentacao_para["nome"] =
-        substituicao.tipo_alimentacao_para.label;
-      substituicao.tipo_alimentacao_de.substituicoes.forEach(
-        substituicao_sub => {
-          substituicao_sub["nome"] = substituicao_sub.label;
-        }
+    const alteracaoDeCardapio = param.alteracaoDeCardapio;
+    this.props.loadAlteracaoCardapioCei(alteracaoDeCardapio);
+    const periodos = this.state.periodos.map(periodo => {
+      const index = alteracaoDeCardapio.substituicoes.findIndex(
+        substituicao => substituicao.periodo_escolar.nome === periodo.nome
       );
+      periodo.checked = index > -1;
+      return periodo;
     });
-    this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
-    this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
-    param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
-      substituicoesAlimentacao[index].substituicoes =
-        substituicao.tipo_alimentacao_de.substituicoes;
-    });
-    periodos.forEach(periodo => {
-      periodo.checked =
-        param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
-    });
-    this.setState({
-      dataInicial,
-      status: param.alteracaoDeCardapio.status,
-      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
-      salvarAtualizarLbl: "Atualizar",
-      id: param.alteracaoDeCardapio.id_externo,
-      substituicoesAlimentacao,
-      periodos
-    });
+    this.setState({ periodos });
   }
 
-  refresh() {
+  refresh = async () => {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    getMeusRascunhosAlteracoesCardapio()
-      .then(response => {
+    try {
+      const response = await getMeusRascunhosAlteracoesCardapioCei();
+      if (response.status === HTTP_STATUS.OK) {
         alteracaoCardapioList =
-          response.results.length > 0 ? response.results : [];
+          response.data.results.length > 0 ? response.data.results : [];
         this.setState({
           alteracaoCardapioList
         });
-      })
-      .catch(error => {
-        toastError("Houve um erro ao carregar Rascunhos Salvos", error);
-      });
-  }
+      }
+    } catch (error) {
+      toastError("Houve um erro ao carregar Rascunhos Salvos", error);
+    }
+  };
 
   resetForm() {
     let { periodos } = this.state;
-    this.props.loadAlteracaoCardapio(null);
+    this.props.loadAlteracaoCardapioCei(null);
     this.props.change("data_alteracao", "");
     this.props.change("motivo", "");
     this.props.change("observacao", "<p><p/>\n");
@@ -296,23 +274,21 @@ class AlteracaoCardapio extends Component {
     }
   }
 
-  OnDeleteButtonClicked(id_externo, uuid) {
+  OnDeleteButtonClicked = async (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
-      deleteAlteracaoCardapio(uuid).then(
-        statusCode => {
-          if (statusCode === HTTP_STATUS.NO_CONTENT) {
-            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-            this.refresh();
-          } else {
-            toastError("Houve um erro ao excluir o rascunho");
-          }
-        },
-        function() {
+      try {
+        const response = await deleteAlteracaoCardapioCei(uuid);
+        if (response.status === HTTP_STATUS.NO_CONTENT) {
+          toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+          this.refresh();
+        } else {
           toastError("Houve um erro ao excluir o rascunho");
         }
-      );
+      } catch (error) {
+        toastError("Houve um erro ao excluir o rascunho");
+      }
     }
-  }
+  };
 
   resetaTodoPeriodoCheck() {
     let periodos = this.state.periodos;
@@ -657,7 +633,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      loadAlteracaoCardapio
+      loadAlteracaoCardapioCei
     },
     dispatch
   );
