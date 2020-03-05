@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
 import { visaoPorComboSomenteDatas } from "../../../../constants";
-import {
-  getDiretoriaRegionalPedidosDeKitLancheAutorizados,
-  getDiretoriaRegionalPedidosDeKitLancheReprovados
-} from "../../../../services/solicitacaoDeKitLanche.service";
 
 class Container extends Component {
   constructor(props) {
@@ -14,21 +10,6 @@ class Container extends Component {
       pedidosAutorizados: [],
       pedidosReprovados: []
     };
-  }
-
-  componentDidMount() {
-    let pedidosAutorizados = [];
-    let pedidosReprovados = [];
-
-    getDiretoriaRegionalPedidosDeKitLancheAutorizados().then(response => {
-      pedidosAutorizados = response.results;
-      this.setState({ pedidosAutorizados });
-    });
-
-    getDiretoriaRegionalPedidosDeKitLancheReprovados().then(response => {
-      pedidosReprovados = response.results;
-      this.setState({ pedidosReprovados });
-    });
   }
 
   render() {

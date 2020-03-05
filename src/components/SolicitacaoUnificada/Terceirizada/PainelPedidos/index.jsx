@@ -1,19 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
+import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraRegular
 } from "./../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import Select from "../../../Shareable/Select";
-import { TIPODECARD } from "../../../../constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -62,7 +59,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    const { visaoPorCombo, pedidosAutorizados, pedidosReprovados } = this.props;
+    const { visaoPorCombo } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -122,32 +119,6 @@ class PainelPedidos extends Component {
                     />
                   </div>
                 </div>
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações Unificadas Autorizadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações Unificadas Reprovadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </form>

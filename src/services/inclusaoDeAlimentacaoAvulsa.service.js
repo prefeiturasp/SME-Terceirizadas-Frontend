@@ -149,21 +149,6 @@ export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa = async filt
   }
 };
 
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getDiretoriaRegionalPedidosReprovados = () => {
   const url = `${URL_INCLUSAO_AVULSA}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
@@ -195,36 +180,6 @@ export const getCODAEPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado =
   }
 };
 
-export const getCodaePedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosReprovados = () => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa = async filtroAplicado => {
   const url = `${URL_INCLUSAO_AVULSA}/${
     PEDIDOS.TERCEIRIZADA
@@ -241,21 +196,6 @@ export const getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa = async filtroApl
   } catch (error) {
     console.log(error);
   }
-};
-
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_AVULSA}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const getTerceirizadaPedidosReprovados = () => {

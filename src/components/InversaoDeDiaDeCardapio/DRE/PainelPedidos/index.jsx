@@ -1,56 +1,44 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { TIPODECARD } from "../../../../constants";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosAutorizados } from "../../../../services/inversaoDeDiaDeCardapio.service";
-import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
-import CardHistorico from "../../components/CardHistorico";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
 import {
-  filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraNoLimite,
+  filtraRegular
 } from "./../../../../helpers/painelPedidos";
+import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pedidosCarregados: 0,
+      pedidosCarregados: false,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: [],
-      pedidosAutorizados: []
+      pedidosNoPrazoRegular: []
     };
   }
 
   filtrar(filtro) {
-    let pedidosPrioritarios = [];
-    let pedidosNoPrazoLimite = [];
-    let pedidosNoPrazoRegular = [];
-    this.setState({ pedidosCarregados: 0 });
     getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
-      pedidosPrioritarios = filtraPrioritarios(response.results);
-      pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      pedidosNoPrazoRegular = filtraRegular(response.results);
+      let pedidosPrioritarios = filtraPrioritarios(response.results);
+      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
+      let pedidosNoPrazoRegular = filtraRegular(response.results);
       this.setState({
+        pedidosCarregados: true,
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
-        pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
+        pedidosNoPrazoRegular
       });
     });
   }
 
   componentDidMount() {
     this.filtrar(FiltroEnum.SEM_FILTRO);
-    getDiretoriaRegionalPedidosAutorizados().then(response => {
-      this.setState({ pedidosAutorizados: response.results });
-    });
   }
 
   onFiltroSelected(value) {
@@ -69,12 +57,11 @@ class PainelPedidos extends Component {
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular,
-      pedidosAutorizados
+      pedidosNoPrazoRegular
     } = this.state;
-    const { visaoPorCombo, valorDoFiltro, pedidosReprovados } = this.props;
+    const { visaoPorCombo, valorDoFiltro } = this.props;
 
-    const todosOsPedidosForamCarregados = pedidosCarregados;
+    const todosOsPedidosForamCarregados = pedidosCarregados === true;
     return (
       <div>
         {!todosOsPedidosForamCarregados ? (
@@ -132,30 +119,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data"}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inversões de cardápio Autorizadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={"Histórico de Inversões de cardápio reprovadas"}
                       />
                     </div>
                   </div>
