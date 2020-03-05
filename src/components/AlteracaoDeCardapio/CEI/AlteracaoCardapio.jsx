@@ -9,7 +9,13 @@ import { bindActionCreators } from "redux";
 import { loadAlteracaoCardapioCei } from "../../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "../Rascunhos";
-import { required, textAreaRequired } from "../../../helpers/fieldValidators";
+import {
+  required,
+  textAreaRequired,
+  numericInteger,
+  minValue,
+  maxValue
+} from "../../../helpers/fieldValidators";
 import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
 import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
@@ -111,6 +117,13 @@ class AlteracaoCardapio extends Component {
         periodo.alunosPorFaixaEtaria = response.data.results.sort(
           (a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio
         );
+        periodo.alunosPorFaixaEtaria.forEach(faixa => {
+          faixa.validators = [
+            numericInteger,
+            minValue(0),
+            maxValue(faixa.count)
+          ];
+        });
       }
       this.setState({ ultimaDataAlteracao: data_alteracao, periodos });
     }
@@ -549,8 +562,7 @@ class AlteracaoCardapio extends Component {
                                         name={`qtde-faixa-${
                                           faixa.faixa_etaria.uuid
                                         }`}
-                                        min={0}
-                                        max={faixa.count}
+                                        validate={faixa.validators}
                                         type="number"
                                       />
                                     </td>
