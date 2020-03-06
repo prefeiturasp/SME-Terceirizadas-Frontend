@@ -51,7 +51,7 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
 import "./style.scss";
-import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
@@ -421,11 +421,13 @@ class InclusaoDeAlimentacao extends Component {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao
         .tipo_unidade_escolar;
 
-      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
-        periodos = construirPeriodosECombos(response.results);
-        this.adicionaIndiceNoValidacaoPeriodos(periodos);
-        this.setState({ periodos });
-      });
+      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(vinculo).then(
+        response => {
+          periodos = construirPeriodosECombos(response.results);
+          this.adicionaIndiceNoValidacaoPeriodos(periodos);
+          this.setState({ periodos });
+        }
+      );
     }
     if (periodos.length > 0 && loading && !loadQuantidadeAlunos) {
       getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
