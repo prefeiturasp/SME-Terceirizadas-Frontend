@@ -13,14 +13,14 @@ import {
 } from "../alteracaoDeCardapioCEI.service";
 
 test("getAlunosPorFaixaEtariaNumaData", async () => {
-  const escolaPeriodoUUID = "asdf-qwer-1234";
+  const periodoUUID = "asdf-qwer-1234";
   const dataReferencia = "2020-04-01";
   const baseUrl = `${API_URL}/${
-    ENDPOINT.QUANTIDADE_ALUNOS_POR_PERIODO
-  }/${escolaPeriodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`;
+    ENDPOINT.PERIODOS_ESCOLARES
+  }/${periodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`;
   mock.onGet(baseUrl).reply(200, ["faixas", "etarias"]);
   const response = await getAlunosPorFaixaEtariaNumaData(
-    escolaPeriodoUUID,
+    periodoUUID,
     dataReferencia
   );
   expect(response.data).toEqual(["faixas", "etarias"]);

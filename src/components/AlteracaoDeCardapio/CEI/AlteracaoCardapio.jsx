@@ -31,7 +31,6 @@ import InputText from "../../Shareable/Input/InputText";
 import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  getEscolaPeriodoEscolares,
   getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
   iniciaFluxoAlteracaoCardapioCei,
@@ -90,14 +89,7 @@ class AlteracaoCardapio extends Component {
         vinculo
       );
       periodos = construirPeriodosECombos(response.results);
-      const responsePeriodos = await getEscolaPeriodoEscolares();
-      periodos.forEach(periodo => {
-        const escolaPeriodoEscolar = responsePeriodos.data.results.find(
-          r => r.periodo_escolar.nome === periodo.nome
-        );
-        periodo.escolaPeriodoEscolar = escolaPeriodoEscolar;
-        this.montaObjetoDeSubstituicoesEdit(periodo);
-      });
+      periodos.forEach(periodo => this.montaObjetoDeSubstituicoesEdit(periodo));
       this.setState({ periodos, loading: false });
     }
 
@@ -107,11 +99,10 @@ class AlteracaoCardapio extends Component {
         substituicoesAlimentacao.push({ substituicoes: [] });
       });
     }
-
     if (data_alteracao && ultimaDataAlteracao !== data_alteracao) {
       for (let periodo of periodos) {
         const response = await getAlunosPorFaixaEtariaNumaData(
-          periodo.escolaPeriodoEscolar.uuid,
+          periodo.uuid,
           converterDDMMYYYYparaYYYYMMDD(data_alteracao)
         );
         periodo.alunosPorFaixaEtaria = response.data.results.sort(

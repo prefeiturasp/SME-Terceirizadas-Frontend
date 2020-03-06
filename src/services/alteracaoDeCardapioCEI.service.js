@@ -2,13 +2,13 @@ import axios from "./_base";
 import { ENDPOINT } from "../constants";
 
 export const getAlunosPorFaixaEtariaNumaData = async (
-  escolaPeriodoUUID,
+  periodoUUID,
   dataReferencia
 ) => {
   return await axios.get(
     `/${
-      ENDPOINT.QUANTIDADE_ALUNOS_POR_PERIODO
-    }/${escolaPeriodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`
+      ENDPOINT.PERIODOS_ESCOLARES
+    }/${periodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`
   );
 };
 

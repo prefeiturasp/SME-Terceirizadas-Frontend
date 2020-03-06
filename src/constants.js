@@ -221,6 +221,7 @@ const ENDPOINT = {
   FAIXAS_ETARIAS: "faixas-etarias",
   INICIO_PEDIDO: "inicio-pedido",
   MINHAS_SOLICITACOES: "minhas-solicitacoes",
+  PERIODOS_ESCOLARES: "periodos-escolares",
   QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
