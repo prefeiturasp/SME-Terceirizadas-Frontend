@@ -42,8 +42,10 @@ export class Rascunhos extends Component {
             </div>
             <div className="ml-3">
               <p>
-                {alteracaoDeCardapio.data_inicial ===
-                alteracaoDeCardapio.data_final
+                {alteracaoDeCardapio.data
+                  ? `Dia: ${alteracaoDeCardapio.data}`
+                  : alteracaoDeCardapio.data_inicial ===
+                    alteracaoDeCardapio.data_final
                   ? `Dia: ${alteracaoDeCardapio.data_inicial ||
                       alteracaoDeCardapio.alterar_dia}`
                   : `De ${alteracaoDeCardapio.data_inicial} a ${

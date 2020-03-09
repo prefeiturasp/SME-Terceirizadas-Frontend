@@ -16,6 +16,7 @@ export const TODOS = "TODOS";
 
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,
+  DIRETOR_CEI: `"DIRETOR CEI"`,
   ADMINISTRADOR_ESCOLA: `"ADMINISTRADOR_ESCOLA"`,
   SUPLENTE: `"SUPLENTE"`,
   COGESTOR: `"COGESTOR"`,
@@ -216,10 +217,16 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
 
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
+  ALTERACOES_CARDAPIO_CEI: "alteracoes-cardapio-cei",
   FAIXAS_ETARIAS: "faixas-etarias",
+  INICIO_PEDIDO: "inicio-pedido",
+  MINHAS_SOLICITACOES: "minhas-solicitacoes",
+  PERIODOS_ESCOLARES: "periodos-escolares",
+  QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
-    "solicitacoes-dieta-especial-ativas-inativas"
+    "solicitacoes-dieta-especial-ativas-inativas",
+  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;

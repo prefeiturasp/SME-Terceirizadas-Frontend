@@ -30,9 +30,9 @@ import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/Stat
 import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
-import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -55,6 +55,7 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import * as constants from "./constants";
 import {
+  alteracaoCardapio,
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
@@ -159,8 +160,14 @@ const routesConfig = [
     tipoUsuario: usuarioEscola()
   },
   {
+    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO_CEI}`,
+    component: InclusaoDeAlimentacaoCEIPage,
+    exact: false,
+    tipoUsuario: usuarioEscola()
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
-    component: AlteracaoDeCardapioPage,
+    component: alteracaoCardapio(),
     exact: false,
     tipoUsuario: usuarioEscola()
   },
