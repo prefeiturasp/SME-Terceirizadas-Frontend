@@ -81,7 +81,9 @@ export class SolicitacaoVigente extends Component {
         toastError(getError(response.data));
         this.setState({ submitted: false });
       } else {
-        toastError(`Erro ao solicitar dieta especial: ${getError(response.data)}`);
+        toastError(
+          `Erro ao solicitar dieta especial: ${getError(response.data)}`
+        );
         this.setState({ submitted: false });
       }
     });

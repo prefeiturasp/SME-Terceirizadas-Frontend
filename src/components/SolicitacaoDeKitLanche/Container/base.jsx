@@ -10,7 +10,10 @@ import {
   required
 } from "../../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
-import { checaSeDataEstaEntre2e5DiasUteis, getError } from "../../../helpers/utilities";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
+} from "../../../helpers/utilities";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,

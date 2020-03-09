@@ -76,7 +76,11 @@ class Relatorio extends Component {
           toastError(getError(response.data));
         } else {
           this.setState({ erro: true });
-          toastError(`Erro ao carregar relatório de Inversão de dia de Cardápio ${getError(response.data)}`);
+          toastError(
+            `Erro ao carregar relatório de Inversão de dia de Cardápio ${getError(
+              response.data
+            )}`
+          );
         }
       });
     }

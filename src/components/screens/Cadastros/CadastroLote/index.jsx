@@ -253,7 +253,9 @@ class CadastroLote extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError(`Houve um erro ao atualizar o lote ${getError(res.data)}`);
+            toastError(
+              `Houve um erro ao atualizar o lote ${getError(res.data)}`
+            );
           }
         },
         function() {

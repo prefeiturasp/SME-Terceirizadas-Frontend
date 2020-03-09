@@ -148,7 +148,9 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError(`Houve um erro ao excluir o edital ${getError(res.data)}`);
+            toastError(
+              `Houve um erro ao excluir o edital ${getError(res.data)}`
+            );
           }
         },
         function() {
@@ -226,7 +228,9 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError(`Houve um erro ao salvar o edital ${getError(response.data)}`);
+            toastError(
+              `Houve um erro ao salvar o edital ${getError(response.data)}`
+            );
           }
         },
         function() {
@@ -241,7 +245,9 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError(`Houve um erro ao atualizar o edita ${getError(res.data)}`);
+            toastError(
+              `Houve um erro ao atualizar o edita ${getError(res.data)}`
+            );
           }
         },
         function() {

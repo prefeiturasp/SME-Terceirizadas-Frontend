@@ -93,7 +93,7 @@ class Permissoes extends Component {
             toastError(getError(response.data));
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.setState({ perfisEOL: null, bloquearBotao: false });
           toastError(`Erro ao permitir usuário ${getError(error.data)}`);
         });

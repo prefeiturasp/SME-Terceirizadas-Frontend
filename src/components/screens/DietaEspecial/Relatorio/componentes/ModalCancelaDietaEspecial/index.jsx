@@ -35,7 +35,11 @@ export class ModalCancelaDietaEspecial extends Component {
         this.props.loadSolicitacao(uuid);
         this.props.closeModal();
       } else {
-        toastError(`Erro ao cancelar Solicitação de Dieta Especial: ${getError(response.data)}`);
+        toastError(
+          `Erro ao cancelar Solicitação de Dieta Especial: ${getError(
+            response.data
+          )}`
+        );
       }
     });
   };

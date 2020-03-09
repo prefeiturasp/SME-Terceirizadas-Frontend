@@ -60,7 +60,7 @@ class EmailConfiguration extends Component {
           "Salvo com sucesso! Por favor, teste para ver se deu tudo certo."
         );
       })
-      .catch((error) => {
+      .catch(error => {
         toastError(getError(error));
       });
   }

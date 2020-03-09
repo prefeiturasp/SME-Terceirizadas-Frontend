@@ -110,7 +110,9 @@ class solicitacaoDietaEspecial extends Component {
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       toastError(getError(response.data));
     } else {
-      toastError(`Erro ao solicitar dieta especial: ${getError(response.data)}`);
+      toastError(
+        `Erro ao solicitar dieta especial: ${getError(response.data)}`
+      );
     }
   }
 
