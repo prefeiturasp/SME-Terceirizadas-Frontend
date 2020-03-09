@@ -341,10 +341,6 @@ const RelatorioForm = reduxForm({
     registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
     substituicoes: [{}]
   }
-  // validate: (values) => {
-  //   console.log('validate', values);
-  //   return {};
-  // }
 })(Relatorio);
 const selector = formValueSelector(formName);
 const mapStateToProps = state => {

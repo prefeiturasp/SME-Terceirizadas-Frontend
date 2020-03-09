@@ -128,21 +128,6 @@ export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua = filtroAp
     });
 };
 
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getDiretoriaRegionalPedidosReprovados = () => {
   const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
@@ -174,36 +159,6 @@ export const getCODAEPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado
   }
 };
 
-export const getCodaePedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosReprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/${
     PEDIDOS.TERCEIRIZADA
@@ -220,35 +175,6 @@ export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroA
   } catch (error) {
     console.log(error);
   }
-};
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosReprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const inicioPedidoContinua = uuid => {

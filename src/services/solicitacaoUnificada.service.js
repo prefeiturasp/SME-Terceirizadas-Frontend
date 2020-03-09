@@ -281,38 +281,6 @@ export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
   }
 };
 
-export const getTerceirizadaPedidosAutorizadosKitLancheUnificado = () => {
-  //todo RETIRAR
-  const url = `${URL_SOLICITACAO_UNIFICADA}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCODAEPedidosAutorizadosKitLancheUnificado = () => {
-  //TODO RETIRAR
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const cancelaKitLancheUnificadoDre = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.DRE_CANCELA}/`;
   const OBJ_REQUEST = {

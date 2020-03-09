@@ -14,7 +14,7 @@ import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { construirPeriodosECombos } from "./helper";
 import { agregarDefault } from "../../helpers/utilities";
-import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
@@ -68,10 +68,12 @@ class AlteracaoCardapio extends Component {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao
         .tipo_unidade_escolar;
 
-      getVinculosTipoAlimentacaoPorUnidadeEscolar(vinculo).then(response => {
-        periodos = construirPeriodosECombos(response.results);
-        this.setState({ periodos, loading: false });
-      });
+      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(vinculo).then(
+        response => {
+          periodos = construirPeriodosECombos(response.results);
+          this.setState({ periodos, loading: false });
+        }
+      );
       periodos.forEach(periodo => {
         this.montaObjetoDeSubstituicoesEdit(periodo);
       });

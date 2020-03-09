@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { visaoPorComboSomenteDatas } from "../../../../constants";
-import { getTerceirizadaPedidosAutorizados } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import PainelPedidos from "../PainelPedidos";
 
 class Container extends Component {
@@ -11,12 +10,6 @@ class Container extends Component {
       pedidosAutorizados: [],
       pedidosReprovados: []
     };
-  }
-
-  componentDidMount() {
-    getTerceirizadaPedidosAutorizados().then(response => {
-      this.setState({ pedidosAutorizados: response.results });
-    });
   }
 
   render() {

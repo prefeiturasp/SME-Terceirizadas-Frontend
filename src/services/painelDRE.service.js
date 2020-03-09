@@ -8,7 +8,6 @@ import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecar
 import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
@@ -137,9 +136,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
-  filtro = "sem_filtro"
-) => {
+export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async () => {
   let resposta = {
     total: 0,
     prioritario: 0,
@@ -150,14 +147,6 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
   let pedidosPrioritarios = [];
   let pedidosLimite = [];
   let pedidosRegular = [];
-
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
-
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
 
   resposta.limite = pedidosLimite.length;
   resposta.prioritario = pedidosPrioritarios.length;

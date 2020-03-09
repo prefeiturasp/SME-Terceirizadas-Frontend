@@ -225,7 +225,8 @@ const ENDPOINT = {
   QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
-    "solicitacoes-dieta-especial-ativas-inativas"
+    "solicitacoes-dieta-especial-ativas-inativas",
+  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
