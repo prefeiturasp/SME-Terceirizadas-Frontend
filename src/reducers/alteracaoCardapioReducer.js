@@ -27,8 +27,9 @@ export default function reducer(state = {}, action) {
       };
     case LOAD_ALTERACAO_CARDAPIO_CEI:
       if (action.data !== null) {
-        const { observacao, motivo, data, substituicoes } = action.data;
+        const { uuid, observacao, motivo, data, substituicoes } = action.data;
         const dadosRetornados = {
+          uuid,
           motivo: motivo.uuid,
           observacao,
           data_alteracao: data

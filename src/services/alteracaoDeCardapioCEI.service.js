@@ -34,6 +34,10 @@ export const iniciaFluxoAlteracaoCardapioCei = async uuid => {
   );
 };
 
+export const atualizaAlteracaoCardapioCei = async data => {
+  return axios.patch(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${data.uuid}/`, data);
+};
+
 export const deleteAlteracaoCardapioCei = async uuid => {
   return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`);
 };

@@ -11,11 +11,14 @@ export const parseFormValues = ({
   for (let dadosSubstituicao of Object.values(dadosSubstituicoes)) {
     const {
       periodo,
+      check,
       tipo_alimentacao_de,
       tipo_alimentacao_para,
       ...dadosFaixasEtarias
     } = dadosSubstituicao;
-    delete dadosFaixasEtarias.check;
+    if (!check) {
+      continue;
+    }
     let faixas_etarias = [];
     for (let [chave, qtde] of Object.entries(dadosFaixasEtarias)) {
       const faixa_etaria = chave.slice(11);

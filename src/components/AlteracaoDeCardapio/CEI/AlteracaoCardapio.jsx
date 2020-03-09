@@ -34,6 +34,7 @@ import {
   getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
   iniciaFluxoAlteracaoCardapioCei,
+  atualizaAlteracaoCardapioCei,
   deleteAlteracaoCardapioCei
 } from "../../../services/alteracaoDeCardapioCEI.service";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
@@ -199,9 +200,7 @@ class AlteracaoCardapio extends Component {
   resetForm() {
     let { periodos } = this.state;
     this.props.loadAlteracaoCardapioCei(null);
-    this.props.change("data_alteracao", "");
-    this.props.change("motivo", "");
-    this.props.change("observacao", "<p><p/>\n");
+    this.props.reset();
     periodos.forEach(periodo => {
       periodo.checked = false;
     });
@@ -238,25 +237,33 @@ class AlteracaoCardapio extends Component {
     const parsedValues = parseFormValues(values);
     parsedValues.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
 
-    const response = await criaAlteracaoCardapioCei(parsedValues);
-    if (response.status === HTTP_STATUS.CREATED) {
-      if (!rascunho) {
-        const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
-          response.data.uuid
-        );
-        if (responseInicia.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio salva com sucesso");
-          this.refresh();
-          this.resetForm("alteracaoCardapio");
-        } else {
-          toastError(responseInicia.error);
-        }
-      } else {
+    let response;
+    let statusOk;
+
+    if (values.uuid) {
+      parsedValues.uuid = values.uuid;
+      response = await atualizaAlteracaoCardapioCei(parsedValues);
+      statusOk = HTTP_STATUS.OK;
+    } else {
+      response = await criaAlteracaoCardapioCei(parsedValues);
+      statusOk = HTTP_STATUS.CREATED;
+    }
+
+    if (response.status === statusOk && !rascunho) {
+      const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
+        response.data.uuid
+      );
+      if (responseInicia.status === HTTP_STATUS.OK) {
         toastSuccess("Alteração de Cardápio salva com sucesso");
         this.refresh();
         this.resetForm("alteracaoCardapio");
+      } else {
+        toastError(responseInicia.error);
       }
+    } else {
+      toastError(response.error);
     }
+
     this.setState({ submitting: false });
   };
 
