@@ -663,11 +663,14 @@ const AlteracaoCardapioForm = reduxForm({
           totais[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`];
         if (totalFaixaEtaria && totalFaixaEtaria > faixaEtaria.count) {
           for (let periodo of Object.keys(periodos)) {
-            errors[periodo] = {
+            const erroCampo = {
               [`qtde-faixa-${
                 faixaEtaria.faixa_etaria.uuid
               }`]: "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
             };
+            errors[periodo] = errors[periodo]
+              ? Object.assign({}, errors[periodo], erroCampo)
+              : erroCampo;
           }
         }
       });
