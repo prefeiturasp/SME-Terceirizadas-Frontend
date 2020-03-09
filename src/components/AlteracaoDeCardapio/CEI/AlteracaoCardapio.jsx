@@ -116,6 +116,10 @@ class AlteracaoCardapio extends Component {
             maxValue(faixa.count)
           ];
         });
+        this.props.change(
+          `substituicoes_${periodo.nome}.alunosPorFaixaEtaria`,
+          periodo.alunosPorFaixaEtaria
+        );
       }
       this.setState({ ultimaDataAlteracao: data_alteracao, periodos });
     }
@@ -626,13 +630,55 @@ class AlteracaoCardapio extends Component {
 
 const AlteracaoCardapioForm = reduxForm({
   form: "alteracaoCardapio",
-  enableReinitialize: true
+  enableReinitialize: true,
+  validate: (values, props) => {
+    // TODO: Mover para helper, criar teste e ver se dá pra simplificar
+    if (!props.formValues || !props.formValues.data_alteracao) {
+      return {};
+    }
+    const periodos = Object.assign({}, values);
+    delete periodos.observacao;
+    delete periodos.data_alteracao;
+    delete periodos.motivo;
+    const totais = {};
+    let alunosPorFaixaEtaria;
+    for (let dadosPeriodo of Object.values(periodos)) {
+      for (let [chave, valor] of Object.entries(dadosPeriodo)) {
+        if (chave.startsWith("qtde-faixa")) {
+          totais[chave] = totais[chave]
+            ? totais[chave] + parseInt(valor)
+            : parseInt(valor);
+        } else if (chave === "alunosPorFaixaEtaria") {
+          alunosPorFaixaEtaria = valor;
+        }
+      }
+    }
+
+    const errors = {};
+    if (alunosPorFaixaEtaria) {
+      alunosPorFaixaEtaria.forEach(faixaEtaria => {
+        const totalFaixaEtaria =
+          totais[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`];
+        if (totalFaixaEtaria && totalFaixaEtaria > faixaEtaria.count) {
+          for (let periodo of Object.keys(periodos)) {
+            errors[periodo] = {
+              [`qtde-faixa-${
+                faixaEtaria.faixa_etaria.uuid
+              }`]: "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
+            };
+          }
+        }
+      });
+    }
+    return errors;
+  }
 })(AlteracaoCardapio);
 
 const selector = formValueSelector("alteracaoCardapio");
 
 const mapStateToProps = state => {
   return {
+    alunosPorFaixaEtaria: state.alunosPorFaixaEtaria,
     initialValues: state.alteracaoCardapio.data,
     formValues:
       state.form.alteracaoCardapio && state.form.alteracaoCardapio.values,
