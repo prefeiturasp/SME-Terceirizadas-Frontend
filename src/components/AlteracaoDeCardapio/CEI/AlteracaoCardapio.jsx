@@ -544,7 +544,7 @@ class AlteracaoCardapio extends Component {
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
                         <div>
-                          <table className="table">
+                          <table className="table tabela-substituicao">
                             <thead className="thead-light">
                               <tr>
                                 <th>Faixa Etária</th>
