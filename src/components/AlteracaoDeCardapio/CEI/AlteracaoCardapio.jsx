@@ -106,9 +106,9 @@ class AlteracaoCardapio extends Component {
           periodo.uuid,
           converterDDMMYYYYparaYYYYMMDD(data_alteracao)
         );
-        periodo.alunosPorFaixaEtaria = response.data.results.sort(
-          (a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio
-        );
+        periodo.alunosPorFaixaEtaria = response.data.results
+          .filter(info => info.faixa_etaria.inicio >= 12)
+          .sort((a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio);
         periodo.alunosPorFaixaEtaria.forEach(faixa => {
           faixa.validators = [
             numericInteger,
@@ -331,13 +331,10 @@ class AlteracaoCardapio extends Component {
 
   limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
     if (periodo.checked) {
-      this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
-        null
-      );
+      this.props.change(`substituicoes_${periodoNome}.tipo_alimentacao_de`, "");
       this.props.change(
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-        null
+        ""
       );
     }
   }
@@ -527,7 +524,8 @@ class AlteracaoCardapio extends Component {
                               indice
                             );
                           }}
-                          validate={periodo.checado && required}
+                          validate={periodo.checked ? [required] : []}
+                          required={periodo.checked}
                         />
 
                         <Field
@@ -539,7 +537,8 @@ class AlteracaoCardapio extends Component {
                               ? substituicoesAlimentacao[indice].substituicoes
                               : []
                           )}
-                          validate={periodo.checado && required}
+                          validate={periodo.checked ? [required] : []}
+                          required={periodo.checked}
                         />
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
@@ -633,8 +632,9 @@ const AlteracaoCardapioForm = reduxForm({
   enableReinitialize: true,
   validate: (values, props) => {
     // TODO: Mover para helper, criar teste e ver se dá pra simplificar
+    const errors = {};
     if (!props.formValues || !props.formValues.data_alteracao) {
-      return {};
+      return errors;
     }
     const periodos = Object.assign({}, values);
     delete periodos.observacao;
@@ -654,7 +654,6 @@ const AlteracaoCardapioForm = reduxForm({
       }
     }
 
-    const errors = {};
     if (alunosPorFaixaEtaria) {
       alunosPorFaixaEtaria.forEach(faixaEtaria => {
         const totalFaixaEtaria =
