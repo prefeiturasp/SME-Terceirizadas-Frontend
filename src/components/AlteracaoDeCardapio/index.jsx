@@ -10,7 +10,7 @@ import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import { checaSeDataEstaEntre2e5DiasUteis, getError } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
 import { construirPeriodosECombos } from "./helper";
 import { agregarDefault } from "../../helpers/utilities";
@@ -213,7 +213,7 @@ class AlteracaoCardapio extends Component {
           this.refresh();
           this.resetForm("alteracaoCardapio");
         } else {
-          toastError("Houve um erro ao enviar a Alteração de Cardápio");
+          toastError(`Houve um erro ao enviar a Alteração de Cardápio ${getError(res.data)}`);
         }
       },
       function() {
@@ -244,7 +244,7 @@ class AlteracaoCardapio extends Component {
             }
           })
           .catch(error => {
-            toastError(error);
+            toastError(getError(error.data));
             this.resetForm("alteracaoCardapio");
             this.refresh();
           });
@@ -261,7 +261,7 @@ class AlteracaoCardapio extends Component {
                 this.resetForm("alteracaoCardapio");
               }
             } else {
-              toastError(res.error);
+              toastError(getError(res.data));
             }
           },
           function() {

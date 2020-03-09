@@ -35,6 +35,7 @@ import {
   CONFIGURACOES,
   EDITAIS_CADASTRADOS
 } from "../../../../configs/constants";
+import { getError } from "../../../../helpers/utilities";
 
 const ENTER = 13;
 class EditaisContratos extends Component {
@@ -147,7 +148,7 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError("Houve um erro ao excluir o edital");
+            toastError(`Houve um erro ao excluir o edital ${getError(res.data)}`);
           }
         },
         function() {
@@ -225,7 +226,7 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError("Houve um erro ao salvar o edital");
+            toastError(`Houve um erro ao salvar o edital ${getError(response.data)}`);
           }
         },
         function() {
@@ -240,7 +241,7 @@ class EditaisContratos extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError("Houve um erro ao atualizar o edital");
+            toastError(`Houve um erro ao atualizar o edita ${getError(res.data)}`);
           }
         },
         function() {

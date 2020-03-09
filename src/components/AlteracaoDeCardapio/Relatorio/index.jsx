@@ -5,7 +5,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
+import { visualizaBotoesDoFluxo, getError } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
@@ -49,7 +49,7 @@ class Relatorio extends Component {
           });
         } else if (response.data.detail) {
           this.setState({ erro: true });
-          toastError(response.data.detail);
+          toastError(getError(response.data));
         } else {
           this.setState({ erro: true });
           toastError("Erro ao carregar relatório de Alteração de Cardápio");

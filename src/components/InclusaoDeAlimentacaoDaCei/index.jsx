@@ -18,7 +18,8 @@ import { required, maxValue } from "../../helpers/fieldValidators";
 import "./style.scss";
 import {
   agregarDefault,
-  formatarParaMultiselect
+  formatarParaMultiselect,
+  getError
 } from "../../helpers/utilities";
 import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import {
@@ -191,7 +192,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
           this.refresh();
           this.resetForm();
         } else {
-          toastError("Erro ao Salvar Rascunho");
+          toastError(`Erro ao Salvar Rascunho ${getError(resposta.data)}`);
         }
       } else if (
         salvarAtualizarLbl === "Atualizar" &&
@@ -204,7 +205,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
           this.refresh();
           this.resetForm();
         } else {
-          toastError("Erro ao Salvar Rascunho");
+          toastError(`${resposta.data.detail}`);
         }
       } else {
         if (uuidRascunho === null && !errors) {
@@ -219,7 +220,11 @@ class InclusaoDeAlimentacaoDaCei extends Component {
             this.refresh();
             this.resetForm();
           } else {
-            toastError("Erro ao enviar solicitação");
+            toastError(
+              `Erro ao enviar solicitação ${toastError(
+                getError(resposta.data)
+              )}`
+            );
           }
         } else {
           if (!errors) {
@@ -229,7 +234,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
               this.refresh();
               this.resetForm();
             } else {
-              toastError("Erro ao enviar solicitação");
+              toastError(getError(respInicio.data));
             }
           }
         }
@@ -245,7 +250,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(getError(res.data));
           }
         },
         function() {

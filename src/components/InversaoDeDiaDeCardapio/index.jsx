@@ -10,7 +10,8 @@ import {
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
-  dateDelta
+  dateDelta,
+  getError
 } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
 import {
@@ -57,7 +58,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(getError(res.data));
           }
         },
         function() {
@@ -142,7 +143,11 @@ export class InversaoDeDiaDeCardapio extends Component {
           toastSuccess("Inversão de dia de Cardápio enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inversão de dia de Cardápio");
+          toastError(
+            `Houve um erro ao enviar a Inversão de dia de Cardápio: ${getError(
+              res.data
+            )}`
+          );
         }
       },
       function() {

@@ -10,7 +10,7 @@ import {
   required
 } from "../../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
+import { checaSeDataEstaEntre2e5DiasUteis, getError } from "../../../helpers/utilities";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,
@@ -68,7 +68,7 @@ export class SolicitacaoDeKitLanche extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(getError(res.data));
           }
         },
         function() {
