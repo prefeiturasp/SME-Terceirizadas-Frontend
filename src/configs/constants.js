@@ -1,5 +1,6 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
+export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
@@ -63,6 +64,7 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
+export const STATUS_RASCUNHO = "RASCUNHO";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
