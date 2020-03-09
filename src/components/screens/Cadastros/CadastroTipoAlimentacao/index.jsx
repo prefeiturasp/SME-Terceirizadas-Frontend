@@ -220,10 +220,10 @@ class CadastroTipoAlimentacao extends Component {
       if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(response.data.tipos_alimentacao[0]);
       } else {
-        vinculosTiposAlimentacao[periodoEscolar].combos.forEach(combo => {
-          combo.substituicoes.forEach(substituicao => {
-            substituicao.combo = response.data.uuid;
-          });
+        vinculosTiposAlimentacao[periodoEscolar].combos[
+          indice
+        ].substituicoes.forEach(substituicao => {
+          substituicao.combo = response.data.uuid;
         });
         this.setState({
           vinculoCombo: response.data.uuid,
