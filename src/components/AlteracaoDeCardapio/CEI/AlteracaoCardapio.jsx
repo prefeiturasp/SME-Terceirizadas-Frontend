@@ -21,7 +21,7 @@ import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
 import { faixaToString } from "../../../helpers/faixasEtarias";
-import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
+import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
 import "../style.scss";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
@@ -86,7 +86,7 @@ class AlteracaoCardapio extends Component {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao
         .tipo_unidade_escolar;
 
-      const response = await getVinculosTipoAlimentacaoPorUnidadeEscolar(
+      const response = await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
         vinculo
       );
       periodos = construirPeriodosECombos(response.results);
@@ -264,10 +264,13 @@ class AlteracaoCardapio extends Component {
       } else {
         toastError(responseInicia.error);
       }
+    } else if (response.status === statusOk) {
+      toastSuccess("Rascunho salvo com sucesso");
+      this.refresh();
+      this.resetForm("alteracaoCardapio");
     } else {
       toastError(response.error);
     }
-
     this.setState({ submitting: false });
   };
 

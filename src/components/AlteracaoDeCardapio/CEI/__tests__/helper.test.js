@@ -8,7 +8,8 @@ test("test parseFormValues", () => {
       tipo_alimentacao_de: "5f55272c-663a-4c93-8fba-f8d0d01e6bf1",
       tipo_alimentacao_para: "11a2766f-4b3f-46ed-a49a-111a923d6131",
       "qtde-faixa-e37d05fa-b4a1-4a5c-a3f6-acc527bc3b45": "23",
-      "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34"
+      "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34",
+      alunosPorFaixaEtaria: []
     },
     substituicoes_PARCIAL: {
       periodo: "74a49ddf-b2f5-494a-b130-73d266d28dec",
@@ -16,7 +17,8 @@ test("test parseFormValues", () => {
       tipo_alimentacao_de: "5f55272c-663a-4c93-8fba-f8d0d01e6bf1",
       tipo_alimentacao_para: "11a2766f-4b3f-46ed-a49a-111a923d6131",
       "qtde-faixa-e37d05fa-b4a1-4a5c-a3f6-acc527bc3b45": "23",
-      "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34"
+      "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34",
+      alunosPorFaixaEtaria: []
     },
     observacao: "<p>Que dia feio...</p>↵",
     motivo: "509cb115-bcc1-46ad-aee2-5b84c0b3c302",

@@ -16,6 +16,7 @@ export const parseFormValues = ({
       tipo_alimentacao_para,
       ...dadosFaixasEtarias
     } = dadosSubstituicao;
+    delete dadosFaixasEtarias.alunosPorFaixaEtaria;
     if (!check) {
       continue;
     }
