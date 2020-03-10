@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import { ENDPOINT } from "../constants";
+import { SOLICITACOES_DIETA } from "./constants";
 import authService from "./auth";
 
 import axios from "./_base";
@@ -84,41 +85,12 @@ export const CODAEAutorizaDietaEspecial = async ({ uuid, ...params }) =>
 export const CODAENegaDietaEspecial = async (uuid, payload) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+  return axios.post(url, payload);
 };
 
 export const terceirizadaTomaCienciaDietaEspecial = async uuid => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+  const url = `/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
+  return axios.post(url);
 };
 
 export const getAlergiasIntolerancias = async () => {
@@ -247,4 +219,9 @@ export const getDietasAtivasInativasPorAluno = async (params = {}) => {
 
 export const getAlimentos = async () => {
   return await axios.get(`${ENDPOINT.ALIMENTOS}/`);
+};
+
+export const getSolicitacaoDietaEspecial = async uuid => {
+  const url = `${SOLICITACOES_DIETA}/${uuid}/`;
+  return axios.get(url);
 };

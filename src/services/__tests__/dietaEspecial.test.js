@@ -2,11 +2,15 @@ import mock from "../_mock";
 
 import { API_URL } from "../../constants/config.constants";
 import { ENDPOINT } from "../../constants";
+import { SOLICITACOES_DIETA } from "../constants";
 
 import {
   CODAEAutorizaDietaEspecial,
+  CODAENegaDietaEspecial,
   getAlimentos,
-  getDietasAtivasInativasPorAluno
+  getDietasAtivasInativasPorAluno,
+  getSolicitacaoDietaEspecial,
+  terceirizadaTomaCienciaDietaEspecial
 } from "../dietaEspecial.service";
 
 describe("test getDietasAtivasInativasPorAluno", () => {
@@ -48,6 +52,47 @@ describe("test CODAEAutorizaDietaEspecial", () => {
     });
     expect(response.data).toEqual({
       detail: "Autorização de dieta especial realizada com sucesso"
+    });
+    expect(response.status).toEqual(200);
+  });
+});
+
+describe("test getSolicitacaoDietaEspecial", () => {
+  const uuid = "asdf-1234-qwer";
+  const baseUrl = `${API_URL}/${SOLICITACOES_DIETA}/${uuid}/`;
+  mock.onGet(baseUrl).reply(200, { resultado: "dieta-especial" });
+  test("obtém dados corretamente", async () => {
+    const response = await getSolicitacaoDietaEspecial(uuid);
+    expect(response.data).toEqual({ resultado: "dieta-especial" });
+    expect(response.status).toEqual(200);
+  });
+});
+
+describe("test terceirizadaTomaCienciaDietaEspecial", () => {
+  const uuid = "asdf-1234-qwer";
+  const baseUrl = `${API_URL}/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
+  mock
+    .onPost(baseUrl)
+    .reply(200, { mensagem: "Ciente da solicitação de dieta especial" });
+  test("obtém dados corretamente", async () => {
+    const response = await terceirizadaTomaCienciaDietaEspecial(uuid);
+    expect(response.data).toEqual({
+      mensagem: "Ciente da solicitação de dieta especial"
+    });
+    expect(response.status).toEqual(200);
+  });
+});
+
+describe("test CODAENegaDietaEspecial", () => {
+  const uuid = "asdf-1234-qwer";
+  const baseUrl = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
+  mock
+    .onPost(baseUrl)
+    .reply(200, { mensagem: "Solicitação de Dieta Especial Negada" });
+  test("obtém dados corretamente", async () => {
+    const response = await CODAENegaDietaEspecial(uuid);
+    expect(response.data).toEqual({
+      mensagem: "Solicitação de Dieta Especial Negada"
     });
     expect(response.status).toEqual(200);
   });

@@ -4,15 +4,12 @@ import { SOLICITACOES, SOLICITACOES_DIETA } from "../constants";
 import { API_URL } from "../../constants/config.constants";
 import {
   getMotivosNegacaoDietaEspecial,
-  getSolicitacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,
   getSolicitacoesAutorizadasNutricionista,
   getSolicitacoesNegadasNutricionista,
   getTiposDietaEspecial
 } from "../painelNutricionista.service";
 import {
-  CODAENegaDietaEspecial,
-  terceirizadaTomaCienciaDietaEspecial,
   getClassificacoesDietaEspecial,
   getAlergiasIntolerancias
 } from "../dietaEspecial.service";
@@ -42,18 +39,6 @@ fetchMock.get(`${API_URL}/motivos-negacao/`, {
   results: ["motivos", "negacao"]
 });
 fetchMock.get(`begin:${SOLICITACOES_DIETA}/`, { resultado: "dieta-especial" });
-fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/negar/`, {
-  mensagem: "Solicitação de Dieta Especial Negada"
-});
-fetchMock.post(`begin:${API_URL}/solicitacoes-dieta-especial/1234/autorizar/`, {
-  mensagem: "Autorização de dieta especial realizada com sucesso"
-});
-fetchMock.post(
-  `begin:${API_URL}/solicitacoes-dieta-especial/1234/tomar_ciencia/`,
-  {
-    mensagem: "Ciente da solicitação de dieta especial"
-  }
-);
 
 describe("test painelNutricionista.service", () => {
   it("getSolicitacoesPendentesNutricionista", async () => {
@@ -74,13 +59,6 @@ describe("test painelNutricionista.service", () => {
     const response = await getSolicitacoesNegadasNutricionista();
     expect(response).toEqual({
       results: ["resultados", "negados"],
-      status: 200
-    });
-  });
-  it("getSolicitacaoDietaEspecial", async () => {
-    const response = await getSolicitacaoDietaEspecial();
-    expect(response).toEqual({
-      results: { resultado: "dieta-especial" },
       status: 200
     });
   });
@@ -109,25 +87,6 @@ describe("test painelNutricionista.service", () => {
     const response = await getMotivosNegacaoDietaEspecial();
     expect(response).toEqual({
       results: ["motivos", "negacao"],
-      status: 200
-    });
-  });
-  it("negaSolicitacaoDietaEspecial", async () => {
-    const response = await CODAENegaDietaEspecial(1234, {
-      motivo: 1,
-      justificativa: "Justificando porque foi negado",
-      identificacaoNutricionista:
-        "ELABORADO por USUARIO NUTRICIONISTA CODAE - CRN 15615645"
-    });
-    expect(response).toEqual({
-      data: { mensagem: "Solicitação de Dieta Especial Negada" },
-      status: 200
-    });
-  });
-  it("terceirizadaTomarCiencia", async () => {
-    const response = await terceirizadaTomaCienciaDietaEspecial(1234);
-    expect(response).toEqual({
-      data: { mensagem: "Ciente da solicitação de dieta especial" },
       status: 200
     });
   });

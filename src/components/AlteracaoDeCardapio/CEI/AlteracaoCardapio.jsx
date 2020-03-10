@@ -658,7 +658,7 @@ const AlteracaoCardapioForm = reduxForm({
     if (!aoMenosUmPeriodoSelecionado) {
       for (let periodo of Object.keys(periodos)) {
         const erroCampo = {
-          ["check"]: "É necessário selecionar pelo menos um período"
+          check: "É necessário selecionar pelo menos um período"
         };
         errors[periodo] = errors[periodo]
           ? Object.assign({}, errors[periodo], erroCampo)
