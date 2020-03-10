@@ -9,7 +9,6 @@ import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
 import { corDaMensagem } from "../../../../helpers/utilities";
 import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
-import { Link } from "react-router-dom";
 import { fluxoPartindoDRE } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
@@ -24,23 +23,15 @@ export const CorpoRelatorio = props => {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            <Link
-              to="route"
-              target="_blank"
-              onClick={event => {
-                event.preventDefault();
-                window.open(
-                  getRelatorioKitLancheUnificado(solicitacaoUnificada.uuid)
-                );
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+              onClick={() => {
+                getRelatorioKitLancheUnificado(solicitacaoUnificada.uuid);
               }}
-            >
-              <Botao
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.PRINT}
-                className="float-right"
-              />
-            </Link>
+            />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">

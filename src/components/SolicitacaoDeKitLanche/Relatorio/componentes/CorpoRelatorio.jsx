@@ -9,7 +9,6 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
-import { Link } from "react-router-dom";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
@@ -23,21 +22,15 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
-          <Link
-            to="route"
-            target="_blank"
-            onClick={event => {
-              event.preventDefault();
-              window.open(getDetalheKitLancheAvulso(solicitacaoKitLanche.uuid));
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            className="float-right"
+            onClick={() => {
+              getDetalheKitLancheAvulso(solicitacaoKitLanche.uuid);
             }}
-          >
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right"
-            />
-          </Link>
+          />
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">
