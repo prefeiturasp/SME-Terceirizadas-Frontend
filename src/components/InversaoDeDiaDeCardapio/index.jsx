@@ -58,7 +58,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError(getError(res.data));
+            toastError(`Erro ao remover rascunho: ${getError(res.data)}`);
           }
         },
         function() {
@@ -169,8 +169,12 @@ export class InversaoDeDiaDeCardapio extends Component {
           }
         } else {
           let keys = Object.keys(response.data);
-          keys.forEach(function(key) {
-            toastError(response.data[key][0]);
+          keys.forEach(function() {
+            toastError(
+              `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                response.data
+              )}`
+            );
           });
         }
       });
@@ -185,8 +189,12 @@ export class InversaoDeDiaDeCardapio extends Component {
           }
         } else {
           let keys = Object.keys(response.data);
-          keys.forEach(function(key) {
-            toastError(response.data[key][0]);
+          keys.forEach(function() {
+            toastError(
+              `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                response.data
+              )}`
+            );
           });
         }
       });
