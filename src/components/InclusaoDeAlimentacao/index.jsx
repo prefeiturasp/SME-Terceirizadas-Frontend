@@ -1,16 +1,15 @@
-import React, { Component } from "react";
-import HTTP_STATUS from "http-status-codes";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { InputText } from "../Shareable/Input/InputText";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
-  required,
+  maxValue,
   naoPodeSerZero,
   numericInteger,
-  maxValue
+  required
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
@@ -19,9 +18,9 @@ import {
   geradorUUID,
   getDataObj
 } from "../../helpers/utilities";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { Select } from "../Shareable/Select";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
+import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 import {
   atualizarInclusaoDeAlimentacaoNormal,
   criarInclusaoDeAlimentacaoNormal,
@@ -37,22 +36,22 @@ import {
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { InputComData } from "../Shareable/DatePicker";
+import { InputText } from "../Shareable/Input/InputText";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { Select } from "../Shareable/Select";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import Weekly from "../Shareable/Weekly/Weekly";
 import {
+  abstraiPeriodosComAlunosMatriculados,
+  construirPeriodosECombos,
   extrairTiposALimentacao,
   formatarSubmissaoSolicitacaoContinua,
-  formatarSubmissaoSolicitacaoNormal,
-  construirPeriodosECombos,
-  abstraiPeriodosComAlunosMatriculados
+  formatarSubmissaoSolicitacaoNormal
 } from "./helper";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
-import "./style.scss";
-import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
-import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -418,16 +417,12 @@ class InclusaoDeAlimentacao extends Component {
       loading &&
       prevProps.meusDados !== meusDados
     ) {
-      const vinculo = this.props.meusDados.vinculo_atual.instituicao
-        .tipo_unidade_escolar;
-
-      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(vinculo).then(
-        response => {
-          periodos = construirPeriodosECombos(response.results);
-          this.adicionaIndiceNoValidacaoPeriodos(periodos);
-          this.setState({ periodos });
-        }
-      );
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.adicionaIndiceNoValidacaoPeriodos(periodos);
+        this.setState({ periodos });
+      });
     }
     if (periodos.length > 0 && loading && !loadQuantidadeAlunos) {
       getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
