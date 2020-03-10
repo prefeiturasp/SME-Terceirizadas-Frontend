@@ -13,9 +13,15 @@ import {
   fluxoDietaEspecialPartindoEscola,
   formatarFluxoDietaEspecial
 } from "../../../../../Shareable/FluxoDeStatus/helper";
+import { statusEnum } from "../../../../../../constants";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial, solicitacoesVigentes, uuid } = props;
+  const statusDietaAutorizada = [
+    statusEnum.CODAE_AUTORIZADO,
+    statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
+    statusEnum.ESCOLA_SOLICITOU_INATIVACAO
+  ];
   return (
     <div>
       <div className="row">
@@ -275,12 +281,15 @@ export const CorpoRelatorio = props => {
           <div className="value">{dietaEspecial.justificativa_negacao}</div>
         </div>
       )}
-      <div className="report-label-value">
-        <p>Data de término</p>
-        <div className="value">
-          {dietaEspecial.data_termino || "Sem data de término"}
+      {statusDietaAutorizada.includes(dietaEspecial.status_solicitacao) && (
+        <div className="report-label-value">
+          <p>Data de término</p>
+          <div className="value">
+            {dietaEspecial.data_termino || "Sem data de término"}
+          </div>
         </div>
-      </div>
+      )}
+
       {dietaEspecial.informacoes_adicionais && (
         <div className="report-label-value">
           <p>Informações Adicionais</p>
