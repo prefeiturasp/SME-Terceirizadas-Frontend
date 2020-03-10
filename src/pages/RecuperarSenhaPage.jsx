@@ -16,6 +16,7 @@ import {
 import { required } from "../helpers/fieldValidators";
 import { atualizarSenha } from "../services/perfil.service";
 import "./style.scss";
+import { getError } from "../helpers/utilities";
 
 class RecuperarSenhaPage extends Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class RecuperarSenhaPage extends Component {
         }, 1000);
       } else {
         this.setState({ mensagem: response.data.detail });
-        toastError(`Erro ${response.data.detail}`);
+        toastError(`Erro: ${getError(response.data)}`);
       }
     });
   }

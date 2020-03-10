@@ -7,7 +7,7 @@ import {
   TERCEIRIZADA
 } from "../../../configs/constants";
 import { statusEnum } from "../../../constants";
-import { usuarioTerceirizada } from "../../../helpers/utilities";
+import { usuarioTerceirizada, getError } from "../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -60,7 +60,11 @@ class RelatorioSuspensaoAlimentacao extends Component {
           });
         } else if (response.data.detail) {
           this.setState({ erro: true });
-          toastError(response.data.detail);
+          toastError(
+            `Erro ao carregar relatório de Suspensão de Alimentação ${getError(
+              response.data
+            )}`
+          );
         } else {
           this.setState({ erro: true });
           toastError("Erro ao carregar relatório de Suspensão de Alimentação");
@@ -79,7 +83,11 @@ class RelatorioSuspensaoAlimentacao extends Component {
           );
           this.setRedirect();
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Erro ao tomar ciência de suspensão de alimentação");
+          toastError(
+            `Erro ao tomar ciência de suspensão de alimentação ${getError(
+              response.data
+            )}`
+          );
         }
       },
       function() {

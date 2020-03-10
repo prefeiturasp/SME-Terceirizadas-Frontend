@@ -186,7 +186,11 @@ export class SolicitacaoDeKitLanche extends Component {
           );
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(`${res.data.detail}`);
+          toastError(
+            `Houve um erro ao enviar a Solicitação de Kit Lanche Passeio: ${getError(
+              res.data.detail
+            )}`
+          );
         }
       },
       function() {
@@ -228,7 +232,9 @@ export class SolicitacaoDeKitLanche extends Component {
         } else if (resp.data.tipo_error) {
           this.validaTipoMensagemError(resp.data);
         } else {
-          toastError(`${resp.data}`);
+          toastError(
+            `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
+          );
         }
       });
     } else {

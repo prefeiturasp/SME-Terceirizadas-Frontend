@@ -16,7 +16,10 @@ import {
   minValue,
   maxValue
 } from "../../../helpers/fieldValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
+} from "../../../helpers/utilities";
 import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
@@ -228,7 +231,11 @@ class AlteracaoCardapio extends Component {
           this.refresh();
           this.resetForm("alteracaoCardapio");
         } else {
-          toastError("Houve um erro ao enviar a Alteração de Cardápio");
+          toastError(
+            `Houve um erro ao enviar a Alteração de Cardápio ${getError(
+              res.data
+            )}`
+          );
         }
       },
       function() {
