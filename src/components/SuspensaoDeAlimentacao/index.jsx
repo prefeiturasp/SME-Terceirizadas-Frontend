@@ -10,7 +10,11 @@ import {
   updateSuspensaoDeAlimentacao,
   enviarSuspensaoDeAlimentacao
 } from "../../services/suspensaoDeAlimentacao.service";
-import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
+import {
+  geradorUUID,
+  formatarParaMultiselect,
+  getError
+} from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
@@ -308,13 +312,15 @@ class FoodSuspensionEditor extends Component {
       res => {
         if (res.status === HTTP_STATUS.OK) {
           this.refresh();
-          toastSuccess("Suspensão de Alimentação enviada com sucesso");
+          toastSuccess("Suspensão de alimentação enviada com sucesso");
         } else {
-          toastError(res.error);
+          toastError(
+            `Erro ao enviar suspensão de alimentação: ${getError(res.data)}`
+          );
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Suspensão de Alimentação");
+        toastError("Houve um erro ao enviar a suspensão de alimentação");
       }
     );
   }
@@ -350,11 +356,13 @@ class FoodSuspensionEditor extends Component {
                 toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
-              toastError(res.error);
+              toastError(
+                `Erro ao enviar suspensão de alimentação: ${getError(res.data)}`
+              );
             }
           },
           function() {
-            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
+            toastError("Houve um erro ao salvar a suspensão de alimentação");
           }
         );
       } else {
@@ -366,14 +374,18 @@ class FoodSuspensionEditor extends Component {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
               } else {
-                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
+                toastSuccess("Suspensão de alimentação atualizada com sucesso");
               }
             } else {
-              toastError(res.error);
+              toastError(
+                `Erro ao atualizar a suspensão de alimentação: ${getError(
+                  res.data
+                )}`
+              );
             }
           },
           function() {
-            toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
+            toastError("Houve um erro ao atualizar a suspensão de alimentação");
           }
         );
       }
