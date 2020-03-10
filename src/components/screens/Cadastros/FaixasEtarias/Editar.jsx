@@ -16,7 +16,7 @@ import {
   mesesForaDasFaixas,
   ordenaFaixas,
   range
-} from "./helper";
+} from "../../../../helpers/faixasEtarias";
 
 import "./style.scss";
 

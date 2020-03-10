@@ -12,7 +12,6 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { formatarDiasMotivos, MOTIVOS } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
-import { Link } from "react-router-dom";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export class CorpoRelatorio extends Component {
@@ -90,26 +89,18 @@ export class CorpoRelatorio extends Component {
             )}`}
           >
             {prazoDoPedidoMensagem}
-            <Link
-              to="route"
-              target="_blank"
-              onClick={event => {
-                event.preventDefault();
-                window.open(
-                  getRelatorioInclusaoAlimentacao(
-                    inclusaoDeAlimentacao.uuid,
-                    ehInclusaoContinua
-                  )
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right"
+              onClick={() => {
+                getRelatorioInclusaoAlimentacao(
+                  inclusaoDeAlimentacao.uuid,
+                  ehInclusaoContinua
                 );
               }}
-            >
-              <Botao
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.PRINT}
-                className="float-right"
-              />
-            </Link>
+            />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">

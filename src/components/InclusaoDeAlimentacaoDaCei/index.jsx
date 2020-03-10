@@ -21,7 +21,7 @@ import {
   formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
-import { getVinculosTipoAlimentacaoPorUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
 import {
   montatiposAlimentacaoPorPeriodo,
   montaNomeCombosAlimentacao,
@@ -372,7 +372,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       this.setState({
         faixasEtarias
       });
-      getVinculosTipoAlimentacaoPorUnidadeEscolar(tpUnidadeEscolar).then(
+      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(tpUnidadeEscolar).then(
         response => {
           let tiposAlimentacao = montatiposAlimentacaoPorPeriodo(
             response.results,

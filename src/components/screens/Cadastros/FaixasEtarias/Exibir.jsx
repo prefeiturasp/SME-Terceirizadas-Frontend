@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 
-import { faixaToString } from "./helper";
+import { faixaToString } from "../../../../helpers/faixasEtarias";
 
 const FaixasEtariasExibir = ({ faixasEtarias, onRedefinir }) => (
   <Fragment>

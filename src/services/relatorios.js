@@ -10,7 +10,19 @@ const authToken = {
 
 export const getRelatorioKitLancheUnificado = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/relatorio/`;
-  return url;
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `solicitacao_unificada.pdf`;
+      a.click();
+    });
 };
 
 export const getRelatorioAlteracaoCardapio = uuid => {
@@ -45,12 +57,36 @@ export const getRelatorioInclusaoAlimentacao = (uuid, ehInclusaoContinua) => {
   if (ehInclusaoContinua) {
     url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/relatorio/`;
   }
-  return url;
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `inclusao_alimentacao.pdf`;
+      a.click();
+    });
 };
 
 export const getDetalheKitLancheAvulso = uuid => {
   const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/relatorio/`;
-  return url;
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `solicitacao_kit_lanche.pdf`;
+      a.click();
+    });
 };
 
 export const getDetalheInversaoCardapio = uuid => {

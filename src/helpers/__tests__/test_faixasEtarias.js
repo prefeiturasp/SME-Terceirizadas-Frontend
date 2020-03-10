@@ -5,7 +5,7 @@ import {
   mesesForaDasFaixas,
   mesesToMesEAnoString,
   range
-} from "../helper";
+} from "../faixasEtarias";
 
 test("test mesesToMesEAnoString", () => {
   expect(mesesToMesEAnoString(0)).toEqual("0 meses");
