@@ -40,6 +40,7 @@ import {
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import moment from "moment";
 import { parseFormValues } from "./helper";
+import CheckboxPeriodo from "./CheckboxPeriodo";
 
 const ENTER = 13;
 
@@ -447,6 +448,7 @@ class AlteracaoCardapio extends Component {
                       name="data_alteracao"
                       minDate={proximos_dois_dias_uteis}
                       label="Alterar dia"
+                      required
                     />
                   </section>
                 </div>
@@ -485,32 +487,22 @@ class AlteracaoCardapio extends Component {
                   return (
                     <FormSection name={formSectionName} key={indice}>
                       <div className="item-periodo-alimentacao">
-                        <label
-                          htmlFor="check"
-                          className="checkbox-label"
+                        <Field
+                          component={CheckboxPeriodo}
+                          name="check"
+                          onChange={() =>
+                            this.atualizaPeriodoCheck(
+                              `substituicoes_${periodo.nome}.check`,
+                              indice,
+                              periodo.nome
+                            )
+                          }
                           style={{
                             background: periodo.style.background,
                             border: `1px solid ${periodo.style.borderColor}`
                           }}
-                        >
-                          <Field
-                            component={"input"}
-                            type="checkbox"
-                            name="check"
-                          />
-                          <span
-                            onClick={() =>
-                              this.atualizaPeriodoCheck(
-                                `substituicoes_${periodo.nome}.check`,
-                                indice,
-                                periodo.nome
-                              )
-                            }
-                            className="checkbox-custom"
-                            data-cy={`checkbox-${periodo.nome}`}
-                          />
-                          <div className=""> {periodo.nome}</div>
-                        </label>
+                          nomePeriodo={periodo.nome}
+                        />
                         <Field
                           component={Select}
                           name="tipo_alimentacao_de"
@@ -635,9 +627,12 @@ const AlteracaoCardapioForm = reduxForm({
   enableReinitialize: true,
   validate: (values, props) => {
     // TODO: Mover para helper, criar teste e ver se dá pra simplificar
+    if (!props.formValues) {
+      return {};
+    }
     const errors = {};
-    if (!props.formValues || !props.formValues.data_alteracao) {
-      return errors;
+    if (!props.formValues.data_alteracao) {
+      errors.data_alteracao = "É necessária uma data de alteração de cardápio";
     }
     const periodos = Object.assign({}, values);
     delete periodos.observacao;
@@ -645,15 +640,29 @@ const AlteracaoCardapioForm = reduxForm({
     delete periodos.motivo;
     const totais = {};
     let alunosPorFaixaEtaria;
+    let aoMenosUmPeriodoSelecionado = false;
     for (let dadosPeriodo of Object.values(periodos)) {
       for (let [chave, valor] of Object.entries(dadosPeriodo)) {
-        if (chave.startsWith("qtde-faixa")) {
+        if (chave === "check") {
+          aoMenosUmPeriodoSelecionado = true;
+        } else if (chave.startsWith("qtde-faixa")) {
           totais[chave] = totais[chave]
             ? totais[chave] + parseInt(valor)
             : parseInt(valor);
         } else if (chave === "alunosPorFaixaEtaria") {
           alunosPorFaixaEtaria = valor;
         }
+      }
+    }
+
+    if (!aoMenosUmPeriodoSelecionado) {
+      for (let periodo of Object.keys(periodos)) {
+        const erroCampo = {
+          ["check"]: "É necessário selecionar pelo menos um período"
+        };
+        errors[periodo] = errors[periodo]
+          ? Object.assign({}, errors[periodo], erroCampo)
+          : erroCampo;
       }
     }
 
