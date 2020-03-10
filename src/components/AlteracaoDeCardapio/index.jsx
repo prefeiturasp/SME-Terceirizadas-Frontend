@@ -8,7 +8,8 @@ import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { required, textAreaRequired } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
-  checaSeDataEstaEntre2e5DiasUteis
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
@@ -22,23 +23,14 @@ import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipo
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
-import { bindActionCreators } from "redux";
-import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
-import { connect } from "react-redux";
 import { Rascunhos } from "./Rascunhos";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../helpers/utilities";
+
 import { InputComData } from "../Shareable/DatePicker";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
-import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 
@@ -222,7 +214,7 @@ class AlteracaoCardapio extends Component {
           this.resetForm("alteracaoCardapio");
         } else {
           toastError(
-            `Houve um erro ao enviar a Alteração de Cardápio ${getError(
+            `Houve um erro ao enviar a Alteração de Cardápio: ${getError(
               res.data
             )}`
           );
@@ -273,7 +265,11 @@ class AlteracaoCardapio extends Component {
                 this.resetForm("alteracaoCardapio");
               }
             } else {
-              toastError(getError(res.data));
+              toastError(
+                `Houve um erro ao enviar ao salvar alteração de cardápio: ${getError(
+                  res.data
+                )}`
+              );
             }
           },
           function() {

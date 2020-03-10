@@ -104,7 +104,7 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação de Kit Lanche Passeio/Passeio # ${
+      title: `Solicitação de Kit Lanche Passeio #${
         solicitacaoKitLanche.id_externo
       }`,
       salvarAtualizarLbl: "Atualizar",
@@ -246,7 +246,9 @@ export class SolicitacaoDeKitLanche extends Component {
           } else if (resp.data.tipo_error) {
             this.validaTipoMensagemError(resp.data);
           } else {
-            toastError("erro ao atualizar a solicitação");
+            toastError(
+              `Erro ao atualizar a solicitação: ${getError(resp.data)}`
+            );
           }
         })
         .catch(() => {
