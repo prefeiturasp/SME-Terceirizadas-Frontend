@@ -1,34 +1,36 @@
-import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Select } from "../Shareable/Select";
+import moment from "moment";
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { required, textAreaRequired } from "../../helpers/fieldValidators";
+import {
+  agregarDefault,
+  checaSeDataEstaEntre2e5DiasUteis
+} from "../../helpers/utilities";
+import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
+import {
+  createAlteracaoCardapio,
+  deleteAlteracaoCardapio,
+  enviarAlteracaoCardapio,
+  getMeusRascunhosAlteracoesCardapio,
+  updateAlteracaoCardapio
+} from "../../services/alteracaoDecardapio.service";
+import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
-import { bindActionCreators } from "redux";
-import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
-import { connect } from "react-redux";
-import { Rascunhos } from "./Rascunhos";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
 import { InputComData } from "../Shareable/DatePicker";
-import { construirPeriodosECombos } from "./helper";
-import { agregarDefault } from "../../helpers/utilities";
-import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
-import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import "./style.scss";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { Select } from "../Shareable/Select";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import { construirPeriodosECombos } from "./helper";
+import { Rascunhos } from "./Rascunhos";
+import "./style.scss";
 import { validateSubmit } from "./validacao";
-import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import {
-  createAlteracaoCardapio,
-  getMeusRascunhosAlteracoesCardapio,
-  updateAlteracaoCardapio,
-  deleteAlteracaoCardapio,
-  enviarAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
-import moment from "moment";
 
 const ENTER = 13;
 
@@ -65,15 +67,11 @@ class AlteracaoCardapio extends Component {
       loading &&
       periodos.length === 0
     ) {
-      const vinculo = this.props.meusDados.vinculo_atual.instituicao
-        .tipo_unidade_escolar;
-
-      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(vinculo).then(
-        response => {
-          periodos = construirPeriodosECombos(response.results);
-          this.setState({ periodos, loading: false });
-        }
-      );
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.setState({ periodos, loading: false });
+      });
       periodos.forEach(periodo => {
         this.montaObjetoDeSubstituicoesEdit(periodo);
       });

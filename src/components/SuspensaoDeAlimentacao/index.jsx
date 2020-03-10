@@ -29,7 +29,7 @@ import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
+import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
@@ -262,14 +262,11 @@ class FoodSuspensionEditor extends Component {
       }.bind(this)
     );
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      const vinculo = this.props.meusDados.vinculo_atual.instituicao
-        .tipo_unidade_escolar;
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       const escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(vinculo).then(
-        response => {
-          this.retornaPeriodosComCombos(response.results, this.props.periodos);
-        }
-      );
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        this.retornaPeriodosComCombos(response.results, this.props.periodos);
+      });
       getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
         this.vinculaQuantidadeAlunosPorPeriodo(
           response.results,
