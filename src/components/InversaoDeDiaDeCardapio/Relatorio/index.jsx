@@ -8,7 +8,8 @@ import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import {
   visualizaBotoesDoFluxo,
-  prazoDoPedidoMensagem
+  prazoDoPedidoMensagem,
+  getError
 } from "../../../helpers/utilities";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
@@ -72,11 +73,13 @@ class Relatorio extends Component {
           });
         } else if (response.data.detail) {
           this.setState({ erro: true });
-          toastError(response.data.detail);
+          toastError(getError(response.data));
         } else {
           this.setState({ erro: true });
           toastError(
-            "Erro ao carregar relatório de Inversão de dia de Cardápio"
+            `Erro ao carregar relatório de Inversão de dia de Cardápio ${getError(
+              response.data
+            )}`
           );
         }
       });

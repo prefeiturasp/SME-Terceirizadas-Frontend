@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { formatarCPFouCNPJ } from "../../../helpers/utilities";
+import { formatarCPFouCNPJ, getError } from "../../../helpers/utilities";
 import { meusDados } from "../../../services/perfil.service";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
@@ -68,7 +68,7 @@ class PermissoesTerceirizadas extends Component {
             });
             this.setEquipeAdministradora();
           } else {
-            toastError(response.data.detail);
+            toastError(getError(response.data));
           }
         });
     }

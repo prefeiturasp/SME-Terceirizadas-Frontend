@@ -16,7 +16,8 @@ import {
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect,
   geradorUUID,
-  getDataObj
+  getDataObj,
+  getError
 } from "../../helpers/utilities";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -521,7 +522,11 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao atualizar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+                res.data
+              )}`
+            );
           }
         },
         function() {
@@ -572,7 +577,11 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao atualizar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+                res.data
+              )}`
+            );
           }
         },
         function() {

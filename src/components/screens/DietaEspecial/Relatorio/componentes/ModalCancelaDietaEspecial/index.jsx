@@ -20,6 +20,7 @@ import {
   toastSuccess,
   toastError
 } from "../../../../../Shareable/Toast/dialogs";
+import { getError } from "../../../../../../helpers/utilities";
 
 export class ModalCancelaDietaEspecial extends Component {
   constructor(props) {
@@ -34,7 +35,11 @@ export class ModalCancelaDietaEspecial extends Component {
         this.props.loadSolicitacao(uuid);
         this.props.closeModal();
       } else {
-        toastError("Erro ao cancelar Solicitação de Dieta Especial");
+        toastError(
+          `Erro ao cancelar Solicitação de Dieta Especial: ${getError(
+            response.data
+          )}`
+        );
       }
     });
   };

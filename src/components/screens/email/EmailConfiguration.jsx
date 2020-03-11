@@ -15,6 +15,7 @@ import { InputText } from "../../Shareable/Input/InputText";
 import { Select } from "../../Shareable/Select";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
+import { getError } from "../../../helpers/utilities";
 
 class EmailConfiguration extends Component {
   constructor(props) {
@@ -59,8 +60,8 @@ class EmailConfiguration extends Component {
           "Salvo com sucesso! Por favor, teste para ver se deu tudo certo."
         );
       })
-      .catch(() => {
-        toastError("Ops! Algo deu errado...");
+      .catch(error => {
+        toastError(getError(error));
       });
   }
 

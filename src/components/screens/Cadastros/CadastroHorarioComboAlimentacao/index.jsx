@@ -18,6 +18,7 @@ import {
   putHorariosCombosPorEscola
 } from "../../../../services/cadastroTipoAlimentacao.service";
 import ModalAlterarQuantidadeAlunos from "./components/ModalAlterarQuantidadeAlunos";
+import { getError } from "../../../../helpers/utilities";
 
 class CadastroHorarioComboAlimentacao extends Component {
   constructor(props) {
@@ -149,7 +150,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             periodoEscolar: periodoEscolar + 1
           });
         } else {
-          toastError("Erro ao salvar combo");
+          toastError(`Erro ao salvar combo ${getError(response.data)}`);
         }
       });
     } else {
@@ -161,7 +162,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             periodoEscolar: periodoEscolar + 1
           });
         } else {
-          toastError("Erro ao alterar combo");
+          toastError(`Erro ao alterar combo ${getError(response.data)}`);
         }
       });
     }
@@ -194,7 +195,7 @@ class CadastroHorarioComboAlimentacao extends Component {
           });
           toastSuccess("Cadastrado efetuado com sucesso");
         } else {
-          toastError("Erro ao salvar combo");
+          toastError(`Erro ao alterar combo ${getError(response.data)}`);
         }
       });
     } else {
@@ -208,7 +209,7 @@ class CadastroHorarioComboAlimentacao extends Component {
           });
           toastSuccess("Cadastrado efetuado com sucesso");
         } else {
-          toastError("Erro ao alterar combo");
+          toastError(`Erro ao alterar combo ${getError(response.data)}`);
         }
       });
     }
@@ -238,7 +239,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             comboAlimentacaoAtual: comboAlimentacaoAtual + 1
           });
         } else {
-          toastError("Erro ao salvar combo");
+          toastError(`Erro ao alterar combo ${getError(response.data)}`);
         }
       });
     } else {
@@ -249,7 +250,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             comboAlimentacaoAtual: comboAlimentacaoAtual + 1
           });
         } else {
-          toastError("Erro ao alterar combo");
+          toastError(`Erro ao alterar combo ${getError(response.data)}`);
         }
       });
     }

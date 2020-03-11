@@ -10,7 +10,10 @@ import {
   required
 } from "../../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../../helpers/utilities";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
+} from "../../../helpers/utilities";
 import {
   getSolicitacoesKitLancheApi,
   inicioPedido,
@@ -68,7 +71,7 @@ export class SolicitacaoDeKitLanche extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(getError(res.data));
           }
         },
         function() {
@@ -101,7 +104,7 @@ export class SolicitacaoDeKitLanche extends Component {
     );
     this.setState({
       status: solicitacaoKitLanche.status,
-      title: `Solicitação de Kit Lanche Passeio/Passeio # ${
+      title: `Solicitação de Kit Lanche Passeio #${
         solicitacaoKitLanche.id_externo
       }`,
       salvarAtualizarLbl: "Atualizar",
@@ -183,7 +186,11 @@ export class SolicitacaoDeKitLanche extends Component {
           );
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(`${res.data.detail}`);
+          toastError(
+            `Houve um erro ao enviar a Solicitação de Kit Lanche Passeio: ${getError(
+              res.data.detail
+            )}`
+          );
         }
       },
       function() {
@@ -225,7 +232,9 @@ export class SolicitacaoDeKitLanche extends Component {
         } else if (resp.data.tipo_error) {
           this.validaTipoMensagemError(resp.data);
         } else {
-          toastError(`${resp.data}`);
+          toastError(
+            `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
+          );
         }
       });
     } else {
@@ -243,7 +252,9 @@ export class SolicitacaoDeKitLanche extends Component {
           } else if (resp.data.tipo_error) {
             this.validaTipoMensagemError(resp.data);
           } else {
-            toastError("erro ao atualizar a solicitação");
+            toastError(
+              `Erro ao atualizar a solicitação: ${getError(resp.data)}`
+            );
           }
         })
         .catch(() => {

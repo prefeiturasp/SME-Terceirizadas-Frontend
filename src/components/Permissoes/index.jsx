@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { CODAE } from "../../configs/constants";
 import { TAMANHO_RF } from "../../constants";
-import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
+import { stringSeparadaPorVirgulas, getError } from "../../helpers/utilities";
 import { meusDados } from "../../services/perfil.service";
 import { getDadosUsuarioEOL } from "../../services/permissoes.service";
 import { Botao } from "../Shareable/Botao";
@@ -84,18 +84,18 @@ class Permissoes extends Component {
             this.setState({ perfisEOL: null, bloquearBotao: false });
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             this.setState({ perfisEOL: null, bloquearBotao: false });
-            toastError(response.data.detail);
+            toastError(getError(response.data));
           } else if (response.status === HTTP_STATUS.FORBIDDEN) {
             this.setState({ perfisEOL: null, bloquearBotao: false });
             toastError("Você não tem permissão para essa ação");
           } else {
             this.setState({ perfisEOL: null, bloquearBotao: false });
-            toastError("Erro ao permitir usuário");
+            toastError(getError(response.data));
           }
         })
-        .catch(() => {
+        .catch(error => {
           this.setState({ perfisEOL: null, bloquearBotao: false });
-          toastError("Erro ao permitir usuário");
+          toastError(`Erro ao permitir usuário ${getError(error.data)}`);
         });
     } else {
       toastError(
