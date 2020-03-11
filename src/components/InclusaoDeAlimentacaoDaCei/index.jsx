@@ -310,6 +310,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     const results = qtdAlunosFaixa.data.results;
 
     if (results) {
+      totalFaixasEtarias = 0;
       results.forEach(faixa => {
         totalFaixasEtarias += parseInt(faixa.count);
       });
