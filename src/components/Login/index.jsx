@@ -504,7 +504,7 @@ export class Login extends Component {
             </div>
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
-              <img src="/assets/image/logo-sme.svg" alt="" />
+              <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />
             </div>
           </div>
         </div>
