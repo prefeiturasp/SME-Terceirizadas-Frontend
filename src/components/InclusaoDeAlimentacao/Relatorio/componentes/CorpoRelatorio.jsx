@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
@@ -10,38 +10,41 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
-import { formatarDiasMotivos, MOTIVOS } from "./helper";
+import { formataMotivosDias } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
     const { inclusaoDeAlimentacao } = this.props;
-    const diasMotivosFormatados = formatarDiasMotivos(
+    const diasMotivosFormatados = formataMotivosDias(
       inclusaoDeAlimentacao.inclusoes
     );
     return (
       <table className="table-reasons">
-        {MOTIVOS.map(motivo => {
-          return (
-            diasMotivosFormatados[motivo].length > 0 && [
-              <tr className="row" key={0}>
-                <th className="col-2">Motivo</th>
-                <th className="col-10">Dia(s) de inclusão</th>
-              </tr>,
-              <tr className="row" key={1}>
-                <td className="col-2">{motivo}</td>
-                {diasMotivosFormatados[motivo].map((dia, key) => {
-                  return (
-                    <td key={key} className="col-2">
-                      {dia}
-                    </td>
-                  );
-                })}
-              </tr>
-            ]
-          );
-        })}
+        <tbody>
+          {Object.entries(diasMotivosFormatados).map((dadosMotivo, key) => {
+            const [motivo, datas] = dadosMotivo;
+            return (
+              <Fragment key={key}>
+                <tr className="row">
+                  <th className="col-2">Motivo</th>
+                  <th className="col-10">Dia(s) de inclusão</th>
+                </tr>
+                <tr className="row">
+                  <td className="col-2">{motivo}</td>
+                  {datas.map((dia, key) => {
+                    return (
+                      <td key={key} className="col-2">
+                        {dia}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </Fragment>
+            );
+          })}
+        </tbody>
       </table>
     );
   }
@@ -166,30 +169,32 @@ export class CorpoRelatorio extends Component {
           ? this.renderParteContinua()
           : this.renderParteAvulsa()}
         <table className="table-report mt-3">
-          <tr>
-            <th>Período</th>
-            <th>Tipos de Alimentação</th>
-            <th>Nº de Alunos</th>
-          </tr>
-          {inclusaoDeAlimentacao.quantidades_periodo.map(
-            (quantidade_por_periodo, key) => {
-              return (
-                <tr key={key}>
-                  <td>
-                    {quantidade_por_periodo.periodo_escolar &&
-                      quantidade_por_periodo.periodo_escolar.nome}
-                  </td>
-                  <td>
-                    {stringSeparadaPorVirgulas(
-                      quantidade_por_periodo.tipos_alimentacao,
-                      "label"
-                    )}
-                  </td>
-                  <td>{quantidade_por_periodo.numero_alunos}</td>
-                </tr>
-              );
-            }
-          )}
+          <tbody>
+            <tr>
+              <th>Período</th>
+              <th>Tipos de Alimentação</th>
+              <th>Nº de Alunos</th>
+            </tr>
+            {inclusaoDeAlimentacao.quantidades_periodo.map(
+              (quantidade_por_periodo, key) => {
+                return (
+                  <tr key={key}>
+                    <td>
+                      {quantidade_por_periodo.periodo_escolar &&
+                        quantidade_por_periodo.periodo_escolar.nome}
+                    </td>
+                    <td>
+                      {stringSeparadaPorVirgulas(
+                        quantidade_por_periodo.tipos_alimentacao,
+                        "label"
+                      )}
+                    </td>
+                    <td>{quantidade_por_periodo.numero_alunos}</td>
+                  </tr>
+                );
+              }
+            )}
+          </tbody>
         </table>
         <div className="row">
           <div className="col-12 report-label-value">
