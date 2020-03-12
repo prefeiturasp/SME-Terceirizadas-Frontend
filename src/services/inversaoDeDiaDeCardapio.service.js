@@ -315,14 +315,15 @@ export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
     });
 };
 
-export const escolaCancelaInversaoDiaCardapio = uuid => {
+export const escolaCancelaInversaoDiaCardapio = (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.ESCOLA_CANCELA
   }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ justificativa: payload })
   })
     .then(res => {
       status = res.status;

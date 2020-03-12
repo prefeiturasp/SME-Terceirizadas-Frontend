@@ -220,6 +220,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.CODAE_A_AUTORIZAR:
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
