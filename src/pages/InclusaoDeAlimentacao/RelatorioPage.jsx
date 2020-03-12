@@ -3,13 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  INCLUSAO_ALIMENTACAO,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -54,16 +48,10 @@ class RelatorioBase extends Component {
       href: "#",
       titulo: "Relatório"
     };
-    const anteriores = [
-      {
-        href: `/${this.props.VISAO}/${INCLUSAO_ALIMENTACAO}`,
-        titulo: "Inclusões de Alimentação"
-      }
-    ];
 
     return (
       <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <Breadcrumb home={HOME} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
     );
