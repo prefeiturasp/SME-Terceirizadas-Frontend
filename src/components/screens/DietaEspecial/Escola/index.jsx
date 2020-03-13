@@ -1,8 +1,13 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
-import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import {
+  DIETA_ESPECIAL,
+  ESCOLA,
+  RELATORIO
+} from "../../../../configs/constants";
 import { minLength, required } from "../../../../helpers/fieldValidators";
 import { dateDelta, getError } from "../../../../helpers/utilities";
 import {
@@ -17,20 +22,16 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
 import { InputComData } from "../../../Shareable/DatePicker";
-import InputText from "../../../Shareable/Input/InputText";
 import InputFile from "../../../Shareable/Input/InputFile";
+import InputText from "../../../Shareable/Input/InputText";
 import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import "./style.scss";
-import {
-  DIETA_ESPECIAL,
-  ESCOLA,
-  RELATORIO
-} from "../../../../configs/constants";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
 import { formatarSolicitacoesVigentes } from "./helper";
+import "./style.scss";
 
 const minLength6 = minLength(6);
+const minLength7 = minLength(7);
 
 class solicitacaoDietaEspecial extends Component {
   constructor(props) {
@@ -72,6 +73,8 @@ class solicitacaoDietaEspecial extends Component {
     const { change } = this.props;
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
+    if (event.target.value.length !== 7) return;
+
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
     if (!resposta) return;
     if (resposta.status === 400) {
@@ -145,6 +148,7 @@ class solicitacaoDietaEspecial extends Component {
                 className="form-control"
                 type="number"
                 required
+                validate={[required, minLength7]}
                 onBlur={this.onEolBlur}
               />
               <Field
