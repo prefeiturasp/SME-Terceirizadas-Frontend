@@ -61,11 +61,11 @@ export class TempoPasseio extends Component {
                   os 3 modelos estabelecidos contratualmente;
                 </label>
                 <label>
-                  <b>De 5 a 7 horas:</b> 2 kits lanche/alunos: Escolher 2 kits
+                  <b>De 5 a 7 horas:</b> 2 kit lanche/alunos: Escolher 2 kits
                   distintos entre os 3 modelos estabelecidos contratualmente;
                 </label>
                 <label>
-                  <b>8 horas ou mais:</b> 3 kits lanche/aluno: Será autorizado o
+                  <b>8 horas ou mais:</b> 3 kit lanche/aluno: Será autorizado o
                   fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
                 </label>
               </div>

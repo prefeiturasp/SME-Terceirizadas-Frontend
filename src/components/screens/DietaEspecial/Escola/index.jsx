@@ -8,7 +8,11 @@ import {
   ESCOLA,
   RELATORIO
 } from "../../../../configs/constants";
-import { minLength,length, required } from "../../../../helpers/fieldValidators";
+import {
+  minLength,
+  length,
+  required
+} from "../../../../helpers/fieldValidators";
 import { dateDelta, getError } from "../../../../helpers/utilities";
 import {
   criaDietaEspecial,
@@ -31,7 +35,7 @@ import { formatarSolicitacoesVigentes } from "./helper";
 import "./style.scss";
 
 const minLength6 = minLength(6);
-const length7 = length(7)
+const length7 = length(7);
 
 class solicitacaoDietaEspecial extends Component {
   constructor(props) {
