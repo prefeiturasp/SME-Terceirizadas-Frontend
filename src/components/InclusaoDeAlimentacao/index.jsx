@@ -240,11 +240,14 @@ class InclusaoDeAlimentacao extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            // ARRUMAR O TOAST PARA MOSTRAR A MENSAGEM DE ERRO DO BACKEND SOBRE DATA NO FERIADO
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao excluir o rascunho");
+        error => {
+          toastError(`Houve um erro ao excluir o rascunho: ${getError(error)}`);
         }
       );
     }
@@ -469,13 +472,15 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function() {
-            toastError("Erro ao carregar as inclusões salvas");
+          error => {
+            toastError(
+              `Erro ao carregar as inclusões salvas: ${getError(error)}`
+            );
           }
         );
       },
-      function() {
-        toastError("Erro ao carregar as inclusões salvas");
+      error => {
+        toastError(`Erro ao carregar as inclusões salvas: ${getError(error)}`);
       }
     );
   }
@@ -487,11 +492,19 @@ class InclusaoDeAlimentacao extends Component {
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+          toastError(
+            `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+              res.data
+            )}`
+          );
         }
       },
-      function() {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+      error => {
+        toastError(
+          `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+            error
+          )}`
+        );
       }
     );
   }
@@ -513,11 +526,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -544,8 +559,12 @@ class InclusaoDeAlimentacao extends Component {
             );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -568,11 +587,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -599,8 +620,12 @@ class InclusaoDeAlimentacao extends Component {
             );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -620,7 +645,7 @@ class InclusaoDeAlimentacao extends Component {
       }
       this.closeModal();
     } else {
-      toastError(error);
+      toastError(getError(error));
     }
   }
 
