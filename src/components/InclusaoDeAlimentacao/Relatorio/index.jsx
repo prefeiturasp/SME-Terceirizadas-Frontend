@@ -12,6 +12,7 @@ import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { getInclusaoDeAlimentacaoContinua } from "../../../services/inclusaoDeAlimentacaoContinua.service";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
@@ -215,6 +216,9 @@ class Relatorio extends Component {
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   ehInclusaoContinua={ehInclusaoContinua}
+                />
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={inclusaoDeAlimentacao}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inclusaoDeAlimentacao}

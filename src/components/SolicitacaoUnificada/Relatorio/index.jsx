@@ -12,6 +12,7 @@ import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "../../../constants";
 import { statusEnum } from "../../../constants";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
@@ -201,6 +202,9 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   solicitacaoUnificada={solicitacaoUnificada}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                />
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={solicitacaoUnificada}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={solicitacaoUnificada}

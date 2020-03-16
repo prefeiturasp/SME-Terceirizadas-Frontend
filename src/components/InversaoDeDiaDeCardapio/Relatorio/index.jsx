@@ -20,6 +20,7 @@ import {
 } from "../../Shareable/Botao/constants";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 
@@ -255,6 +256,9 @@ class Relatorio extends Component {
                   inversaoDiaCardapio={inversaoDiaCardapio}
                   escolaDaInversao={escolaDaInversao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                />
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={inversaoDiaCardapio}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inversaoDiaCardapio}

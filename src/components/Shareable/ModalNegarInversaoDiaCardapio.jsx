@@ -60,6 +60,7 @@ export class ModalNegarInversaoDiaCardapio extends Component {
       inversaoDeDiaDeCardapio.status === statusEnum.DRE_A_VALIDAR
     )
       negarValidar = "não validar";
+
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
