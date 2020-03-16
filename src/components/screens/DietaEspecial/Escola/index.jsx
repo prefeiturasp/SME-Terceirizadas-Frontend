@@ -9,6 +9,7 @@ import {
   RELATORIO
 } from "../../../../configs/constants";
 import {
+  length,
   minLength,
   required,
   maxLength,
