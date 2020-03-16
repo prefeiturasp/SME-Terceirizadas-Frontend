@@ -164,20 +164,22 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
-    values.kit_lanche = this.state.kitsChecked;
-    values.quantidade_alunos = parseInt(values.quantidade_alunos);
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
-    if (values.confirmar) {
-      solicitacao_kit_lanche.confirmar = values.confirmar;
-    }
-    try {
-      validateTourRequestForm(values);
-      this.salvarOuEnviar(solicitacao_kit_lanche, values);
-      this.handleConfirmation();
-    } catch (SubmissionError) {
-      toastError(SubmissionError.errors.kit_lanche);
-    }
+    return new Promise(() => {
+      values.kit_lanche = this.state.kitsChecked;
+      values.quantidade_alunos = parseInt(values.quantidade_alunos);
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      let solicitacao_kit_lanche = montaObjetoRequisicao(values);
+      if (values.confirmar) {
+        solicitacao_kit_lanche.confirmar = values.confirmar;
+      }
+      try {
+        validateTourRequestForm(values);
+        this.salvarOuEnviar(solicitacao_kit_lanche, values);
+        this.handleConfirmation();
+      } catch (SubmissionError) {
+        toastError(SubmissionError.errors.kit_lanche);
+      }
+    });
   }
 
   iniciarPedido(uuid) {

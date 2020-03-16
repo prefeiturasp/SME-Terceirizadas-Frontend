@@ -41,28 +41,32 @@ class EmailConfiguration extends Component {
   }
 
   onSubmit(values) {
-    switch (values.security) {
-      case SECURITY_OPTIONS.TLS:
-        values.use_tls = true;
-        values.use_ssl = false;
-        break;
-      case SECURITY_OPTIONS.SSL:
-        values.use_tls = false;
-        values.use_ssl = true;
-        break;
-      default:
-        break;
-    }
-    const resp = setEmailConfiguration(values);
-    resp
-      .then(() => {
-        toastSuccess(
-          "Salvo com sucesso! Por favor, teste para ver se deu tudo certo."
-        );
-      })
-      .catch(error => {
-        toastError(getError(error));
-      });
+    return new Promise(resolve => {
+      switch (values.security) {
+        case SECURITY_OPTIONS.TLS:
+          values.use_tls = true;
+          values.use_ssl = false;
+          break;
+        case SECURITY_OPTIONS.SSL:
+          values.use_tls = false;
+          values.use_ssl = true;
+          break;
+        default:
+          break;
+      }
+      const resp = setEmailConfiguration(values);
+      resp
+        .then(() => {
+          toastSuccess(
+            "Salvo com sucesso! Por favor, teste para ver se deu tudo certo."
+          );
+          resolve();
+        })
+        .catch(error => {
+          toastError(getError(error));
+          resolve();
+        });
+    });
   }
 
   onTestConfiguration(toEmail) {

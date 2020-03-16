@@ -107,26 +107,28 @@ class solicitacaoDietaEspecial extends Component {
     }
   };
 
-  async onSubmit(payload) {
-    payload.anexos = this.state.files;
-    const response = await criaDietaEspecial(payload);
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Solicitação realizada com sucesso.");
-      this.setState({
-        submitted: !this.state.submitted,
-        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
-          response.data.uuid
-        }`,
-        solicitacoesVigentes: null
-      });
-      this.resetForm();
-    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      toastError(getError(response.data));
-    } else {
-      toastError(
-        `Erro ao solicitar dieta especial: ${getError(response.data)}`
-      );
-    }
+  onSubmit(payload) {
+    return new Promise(async () => {
+      payload.anexos = this.state.files;
+      const response = await criaDietaEspecial(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Solicitação realizada com sucesso.");
+        this.setState({
+          submitted: !this.state.submitted,
+          resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+            response.data.uuid
+          }`,
+          solicitacoesVigentes: null
+        });
+        this.resetForm();
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(getError(response.data));
+      } else {
+        toastError(
+          `Erro ao solicitar dieta especial: ${getError(response.data)}`
+        );
+      }
+    });
   }
 
   resetForm() {
