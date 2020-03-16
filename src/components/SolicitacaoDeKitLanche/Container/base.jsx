@@ -7,7 +7,8 @@ import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,
   naoPodeSerZero,
-  required
+  required,
+  maxLength
 } from "../../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
 import {
@@ -61,6 +62,8 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setInitialValues = this.setInitialValues.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
     this.updateKitsChecked = this.updateKitsChecked.bind(this);
+
+    this.validatorsLocalPasseio = [required, maxLength(160)];
   }
 
   OnDeleteButtonClicked(id_externo, uuid) {
@@ -346,7 +349,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     label="Local do passeio"
                     name="local"
                     required
-                    validate={[required]}
+                    validate={this.validatorsLocalPasseio}
                   />
                 </div>
               </div>
