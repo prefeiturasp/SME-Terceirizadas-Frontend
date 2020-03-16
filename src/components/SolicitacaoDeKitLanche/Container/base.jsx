@@ -151,6 +151,10 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.reset();
+  }
+
   validaDiasUteis = event => {
     if (
       checaSeDataEstaEntre2e5DiasUteis(

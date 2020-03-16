@@ -3,13 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/SolicitacaoDeKitLanche/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  SOLICITACAO_KIT_LANCHE,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
   cancelaKitLancheAvulsoEscola,
   DRENaoValidaKitLancheAvulso,
