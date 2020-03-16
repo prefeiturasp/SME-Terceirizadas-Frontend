@@ -32,16 +32,10 @@ class RelatorioBase extends React.Component {
       href: "#",
       titulo: "Relatório"
     };
-    const anteriores = [
-      {
-        href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-        titulo: "Kits Lanche Passeio"
-      }
-    ];
 
     return (
       <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <Breadcrumb home={HOME} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
     );
