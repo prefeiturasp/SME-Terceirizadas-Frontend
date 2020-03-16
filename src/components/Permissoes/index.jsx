@@ -50,8 +50,8 @@ class Permissoes extends Component {
   filterList(registroFuncional) {
     if (registroFuncional.length === TAMANHO_RF) {
       getDadosUsuarioEOL(registroFuncional).then(response => {
-        if (response.data.length > 0) {
-          this.setState({ registroFuncional, perfisEOL: response.data });
+        if (response.data.detail.length > 0) {
+          this.setState({ registroFuncional, perfisEOL: response.data.detail });
         } else {
           toastError(`${response.data.detail}`);
         }

@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { length, required } from "../../helpers/fieldValidators";
+import {
+  length,
+  required,
+  semCaracteresEspeciais
+} from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import { recuperaSenha, setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
@@ -213,12 +217,12 @@ export class Login extends Component {
                   <div ref={this.emailInput} className="col-6">
                     <Field
                       component={InputText}
-                      placeholder={"seu.nome"}
+                      placeholder={"Início do seu E-mail SME"}
                       label="E-mail"
                       name="email"
                       required
                       type="text"
-                      validate={[required]}
+                      validate={[required, semCaracteresEspeciais]}
                     />
                   </div>
                   <div className="input-group-append col-6">
