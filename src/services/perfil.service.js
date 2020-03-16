@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
-import { AUTH_TOKEN } from "./constants";
 import authService from "./auth";
+import { AUTH_TOKEN } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -11,7 +11,16 @@ export const setUsuario = payload => {
   const url = `${API_URL}/cadastro/`;
   let status = 0;
   let values = { ...payload };
-  // values["email"] = values["email"] + "@sme.prefeitura.sp.gov.br";
+  //TODO: ajeitar esse values email
+  // eslint-disable-next-line
+  if (values["tipo_email"] && values["tipo_email"] == 0) {
+    values["email"] = values["email"] + "@sme.prefeitura.sp.gov.br";
+  }
+  // eslint-disable-next-line
+  if (values["tipo_email"] && values["tipo_email"] == 1) {
+    values["email"] = values["email"] + "@prefeitura.sp.gov.br";
+  }
+
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(values),
