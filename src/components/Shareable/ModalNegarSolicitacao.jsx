@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
-import { required } from "../../helpers/fieldValidators";
+import { peloMenosUmCaractere, required } from "../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "./TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess, toastWarn } from "./Toast/dialogs";
 import Botao from "./Botao";
@@ -54,7 +54,7 @@ export class ModalNegarSolicitacao extends Component {
                 label="Justificativa"
                 name="justificativa"
                 required
-                validate={required}
+                validate={[peloMenosUmCaractere, required]}
               />
             </div>
           </div>

@@ -4,9 +4,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
 import {
+  deveSerNoAnoCorrente,
   required,
-  textAreaRequired,
-  deveSerNoAnoCorrente
+  peloMenosUmCaractere,
+  textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -278,7 +279,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       label="Motivo"
                       name="motivo"
                       required
-                      validate={[textAreaRequired]}
+                      validate={[textAreaRequired, peloMenosUmCaractere]}
                     />
                   </div>
                 </div>

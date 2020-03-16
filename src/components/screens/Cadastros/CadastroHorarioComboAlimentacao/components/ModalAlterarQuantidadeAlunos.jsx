@@ -11,6 +11,7 @@ import { Field } from "redux-form";
 import {
   required,
   numericInteger,
+  peloMenosUmCaractere,
   textAreaRequired
 } from "../../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../../Shareable/TextArea/TextAreaWYSIWYG";
@@ -85,7 +86,7 @@ class ModalAlterarQuantidadeAlunos extends Component {
                 label="Justificativa"
                 className="form-control"
                 name="observacao"
-                validate={[required, textAreaRequired]}
+                validate={[required, textAreaRequired, peloMenosUmCaractere]}
               />
             </section>
           </main>

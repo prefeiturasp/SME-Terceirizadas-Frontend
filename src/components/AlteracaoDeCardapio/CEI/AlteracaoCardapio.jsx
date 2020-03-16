@@ -14,7 +14,8 @@ import {
   textAreaRequired,
   numericInteger,
   minValue,
-  maxValue
+  maxValue,
+  peloMenosUmCaractere
 } from "../../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -592,7 +593,7 @@ class AlteracaoCardapio extends Component {
                   label="Observações"
                   name="observacao"
                   required
-                  validate={textAreaRequired}
+                  validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
               </article>
               <article className="card-body footer-button">

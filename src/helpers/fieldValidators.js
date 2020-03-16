@@ -1,4 +1,5 @@
 import moment from "moment";
+import strip_tags from "locutus/php/strings/strip_tags";
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
@@ -15,6 +16,12 @@ export const diasAntecedencia = value => {
 // XXX: Workaround for labelAndTextArea component
 export const textAreaRequired = value => {
   return value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+};
+
+export const peloMenosUmCaractere = value => {
+  return /[a-zA-Z0-9]/i.test(strip_tags(value))
+    ? undefined
+    : "Pelo menos um caractere deve ser digitado";
 };
 
 export const requiredCheck = value =>

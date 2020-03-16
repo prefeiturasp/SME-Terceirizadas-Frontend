@@ -5,7 +5,11 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
+import {
+  peloMenosUmCaractere,
+  required,
+  textAreaRequired
+} from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -566,7 +570,7 @@ class AlteracaoCardapio extends Component {
                   label="Observações"
                   name="observacao"
                   required
-                  validate={textAreaRequired}
+                  validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
               </article>
               <article className="card-body footer-button">
