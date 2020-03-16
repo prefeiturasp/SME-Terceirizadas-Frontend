@@ -9,9 +9,11 @@ import {
   RELATORIO
 } from "../../../../configs/constants";
 import {
-  minLength,
   length,
-  required
+  minLength,
+  required,
+  maxLength,
+  numericInteger
 } from "../../../../helpers/fieldValidators";
 import { dateDelta, getError } from "../../../../helpers/utilities";
 import {
@@ -53,6 +55,11 @@ class solicitacaoDietaEspecial extends Component {
     this.removeFile = this.removeFile.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.onEolBlur = this.onEolBlur.bind(this);
+    this.registroFuncionalValidators = [
+      numericInteger,
+      maxLength(6),
+      minLength(4)
+    ];
   }
 
   componentDidMount() {
@@ -101,26 +108,28 @@ class solicitacaoDietaEspecial extends Component {
     }
   };
 
-  async onSubmit(payload) {
-    payload.anexos = this.state.files;
-    const response = await criaDietaEspecial(payload);
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Solicitação realizada com sucesso.");
-      this.setState({
-        submitted: !this.state.submitted,
-        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
-          response.data.uuid
-        }`,
-        solicitacoesVigentes: null
-      });
-      this.resetForm();
-    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      toastError(getError(response.data));
-    } else {
-      toastError(
-        `Erro ao solicitar dieta especial: ${getError(response.data)}`
-      );
-    }
+  onSubmit(payload) {
+    return new Promise(async () => {
+      payload.anexos = this.state.files;
+      const response = await criaDietaEspecial(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Solicitação realizada com sucesso.");
+        this.setState({
+          submitted: !this.state.submitted,
+          resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+            response.data.uuid
+          }`,
+          solicitacoesVigentes: null
+        });
+        this.resetForm();
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(getError(response.data));
+      } else {
+        toastError(
+          `Erro ao solicitar dieta especial: ${getError(response.data)}`
+        );
+      }
+    });
   }
 
   resetForm() {
@@ -195,11 +204,11 @@ class solicitacaoDietaEspecial extends Component {
             <div className="col-5">
               <Field
                 component={InputText}
-                label="Registro funcional (CRM/CRN/CRFa)"
+                label="CRM/CRN/CRFa"
                 name="registro_funcional_pescritor"
-                placeholder="Insira o Registro Funcional"
                 className="form-control"
-                helpText={"Mínimo 6 caracteres"}
+                helpText={"Tamanho: 4 a 6 caracteres"}
+                validate={this.registroFuncionalValidators}
               />
             </div>
           </section>

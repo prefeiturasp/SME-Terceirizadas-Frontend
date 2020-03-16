@@ -35,7 +35,11 @@ import {
   inicioPedidoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { Botao } from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
@@ -85,6 +89,7 @@ class InclusaoDeAlimentacao extends Component {
     this.carregarRascunho = this.carregarRascunho.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
     this.adicionarDia = this.adicionarDia.bind(this);
+    this.removerDia = this.removerDia.bind(this);
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -198,6 +203,16 @@ class InclusaoDeAlimentacao extends Component {
     });
   }
 
+  removerDia(indiceAExcluir) {
+    if (window.confirm("Deseja remover este dia?")) {
+      this.setState({
+        inclusoes: this.state.inclusoes.filter(
+          (_, indice) => indice !== indiceAExcluir
+        )
+      });
+    }
+  }
+
   showModal() {
     this.setState({ ...this.state, showModal: true });
   }
@@ -225,11 +240,14 @@ class InclusaoDeAlimentacao extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            // ARRUMAR O TOAST PARA MOSTRAR A MENSAGEM DE ERRO DO BACKEND SOBRE DATA NO FERIADO
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao excluir o rascunho");
+        error => {
+          toastError(`Houve um erro ao excluir o rascunho: ${getError(error)}`);
         }
       );
     }
@@ -454,13 +472,15 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function() {
-            toastError("Erro ao carregar as inclusões salvas");
+          error => {
+            toastError(
+              `Erro ao carregar as inclusões salvas: ${getError(error)}`
+            );
           }
         );
       },
-      function() {
-        toastError("Erro ao carregar as inclusões salvas");
+      error => {
+        toastError(`Erro ao carregar as inclusões salvas: ${getError(error)}`);
       }
     );
   }
@@ -472,11 +492,19 @@ class InclusaoDeAlimentacao extends Component {
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+          toastError(
+            `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+              res.data
+            )}`
+          );
         }
       },
-      function() {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+      error => {
+        toastError(
+          `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+            error
+          )}`
+        );
       }
     );
   }
@@ -498,11 +526,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -529,8 +559,12 @@ class InclusaoDeAlimentacao extends Component {
             );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -553,11 +587,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -584,8 +620,12 @@ class InclusaoDeAlimentacao extends Component {
             );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -605,7 +645,7 @@ class InclusaoDeAlimentacao extends Component {
       }
       this.closeModal();
     } else {
-      toastError(error);
+      toastError(getError(error));
     }
   }
 
@@ -631,7 +671,8 @@ class InclusaoDeAlimentacao extends Component {
       showModal,
       loading
     } = this.state;
-    const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
+    const primeiroEhMotivoContinuo =
+      inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     const dataInicialContinua = inclusoes[0].data_inicial;
     return (
       <div>
@@ -669,6 +710,8 @@ class InclusaoDeAlimentacao extends Component {
                   Descrição da Inclusão
                 </div>
                 {inclusoes.map((diaMotivo, indice) => {
+                  const ehMotivoContinuo =
+                    diaMotivo.motivo && diaMotivo.motivoContinuo;
                   return (
                     <FormSection
                       key={indice}
@@ -790,11 +833,21 @@ class InclusaoDeAlimentacao extends Component {
                             </div>
                           </div>
                         )}
+                        {indice > 0 && (
+                          <Botao
+                            texto="Remover dia"
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() => this.removerDia(indice)}
+                            style={BUTTON_STYLE.BLUE_OUTLINE}
+                            icon={BUTTON_ICON.TRASH}
+                            className="botao-remover-dia"
+                          />
+                        )}
                       </section>
                     </FormSection>
                   );
                 })}
-                {!ehMotivoContinuo && (
+                {!primeiroEhMotivoContinuo && (
                   <Botao
                     className="col-sm-3"
                     texto="Adicionar dia"
@@ -871,7 +924,7 @@ class InclusaoDeAlimentacao extends Component {
                             min="0"
                             className="form-control quantidade-aluno"
                             required={periodo.checked}
-                            validate={periodo.validador}
+                            validate={periodo.checked && periodo.validador}
                           />
                         </div>
                       </div>

@@ -240,7 +240,7 @@ class Relatorio extends Component {
             <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
               inversaoDiaCardapio.id_externo
             }`}</span>
-            <Link to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`}>
+            <Link to={`/`}>
               <Botao
                 texto="voltar"
                 titulo="voltar"

@@ -14,7 +14,8 @@ import {
   textAreaRequired,
   numericInteger,
   minValue,
-  maxValue
+  maxValue,
+  peloMenosUmCaractere
 } from "../../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -62,8 +63,7 @@ class AlteracaoCardapio extends Component {
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
       dataInicial: null,
-      ultimaDataAlteracao: undefined,
-      submitting: false
+      ultimaDataAlteracao: undefined
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -245,41 +245,41 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit = async (values, rascunho = false) => {
-    this.setState({ submitting: true });
-    const parsedValues = parseFormValues(values);
-    parsedValues.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+    return new Promise(async () => {
+      const parsedValues = parseFormValues(values);
+      parsedValues.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
 
-    let response;
-    let statusOk;
+      let response;
+      let statusOk;
 
-    if (values.uuid) {
-      parsedValues.uuid = values.uuid;
-      response = await atualizaAlteracaoCardapioCei(parsedValues);
-      statusOk = HTTP_STATUS.OK;
-    } else {
-      response = await criaAlteracaoCardapioCei(parsedValues);
-      statusOk = HTTP_STATUS.CREATED;
-    }
+      if (values.uuid) {
+        parsedValues.uuid = values.uuid;
+        response = await atualizaAlteracaoCardapioCei(parsedValues);
+        statusOk = HTTP_STATUS.OK;
+      } else {
+        response = await criaAlteracaoCardapioCei(parsedValues);
+        statusOk = HTTP_STATUS.CREATED;
+      }
 
-    if (response.status === statusOk && !rascunho) {
-      const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
-        response.data.uuid
-      );
-      if (responseInicia.status === HTTP_STATUS.OK) {
-        toastSuccess("Alteração de Cardápio salva com sucesso");
+      if (response.status === statusOk && !rascunho) {
+        const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
+          response.data.uuid
+        );
+        if (responseInicia.status === HTTP_STATUS.OK) {
+          toastSuccess("Alteração de Cardápio salva com sucesso");
+          this.refresh();
+          this.resetForm("alteracaoCardapio");
+        } else {
+          toastError(responseInicia.error);
+        }
+      } else if (response.status === statusOk) {
+        toastSuccess("Rascunho salvo com sucesso");
         this.refresh();
         this.resetForm("alteracaoCardapio");
       } else {
-        toastError(responseInicia.error);
+        toastError(response.error);
       }
-    } else if (response.status === statusOk) {
-      toastSuccess("Rascunho salvo com sucesso");
-      this.refresh();
-      this.resetForm("alteracaoCardapio");
-    } else {
-      toastError(response.error);
-    }
-    this.setState({ submitting: false });
+    });
   };
 
   showModal() {
@@ -388,8 +388,7 @@ class AlteracaoCardapio extends Component {
       alteracaoCardapioList,
       showModal,
       periodos,
-      substituicoesAlimentacao,
-      submitting
+      substituicoesAlimentacao
     } = this.state;
     const {
       data_alteracao,
@@ -398,7 +397,8 @@ class AlteracaoCardapio extends Component {
       meusDados,
       proximos_dois_dias_uteis,
       motivos,
-      pristine
+      pristine,
+      submitting
     } = this.props;
     return (
       <Fragment>
@@ -592,7 +592,7 @@ class AlteracaoCardapio extends Component {
                   label="Observações"
                   name="observacao"
                   required
-                  validate={textAreaRequired}
+                  validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
               </article>
               <article className="card-body footer-button">

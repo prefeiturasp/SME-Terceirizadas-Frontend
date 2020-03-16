@@ -4,9 +4,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
 import {
+  deveSerNoAnoCorrente,
   required,
-  textAreaRequired,
-  deveSerNoAnoCorrente
+  peloMenosUmCaractere,
+  textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -157,48 +158,52 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    if (!values.uuid) {
-      criarInversaoDeDiaDeCardapio(values).then(response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          if (values.status === STATUS_DRE_A_VALIDAR) {
-            this.iniciarPedido(response.data.uuid);
+    return new Promise(() => {
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      if (!values.uuid) {
+        criarInversaoDeDiaDeCardapio(values).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
+              this.iniciarPedido(response.data.uuid);
+            } else {
+              toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
+              this.resetForm();
+            }
           } else {
-            toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-            this.resetForm();
+            let keys = Object.keys(response.data);
+            keys.forEach(function() {
+              toastError(
+                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                  response.data
+                )}`
+              );
+            });
           }
-        } else {
-          let keys = Object.keys(response.data);
-          keys.forEach(function() {
-            toastError(
-              `Erro ao enviar Inversão de dia de Cardápio: ${getError(
-                response.data
-              )}`
-            );
-          });
-        }
-      });
-    } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          if (values.status === STATUS_DRE_A_VALIDAR) {
-            this.iniciarPedido(response.data.uuid);
+        });
+      } else {
+        atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
+              this.iniciarPedido(response.data.uuid);
+            } else {
+              toastSuccess(
+                "Inversão de dia de Cardápio atualizado com sucesso!"
+              );
+              this.resetForm();
+            }
           } else {
-            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
-            this.resetForm();
+            let keys = Object.keys(response.data);
+            keys.forEach(function() {
+              toastError(
+                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                  response.data
+                )}`
+              );
+            });
           }
-        } else {
-          let keys = Object.keys(response.data);
-          keys.forEach(function() {
-            toastError(
-              `Erro ao enviar Inversão de dia de Cardápio: ${getError(
-                response.data
-              )}`
-            );
-          });
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   render() {
@@ -278,7 +283,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       label="Motivo"
                       name="motivo"
                       required
-                      validate={[textAreaRequired]}
+                      validate={[textAreaRequired, peloMenosUmCaractere]}
                     />
                   </div>
                 </div>

@@ -22,6 +22,7 @@ import { TextAreaWYSIWYG } from "../../../../Shareable/TextArea/TextAreaWYSIWYG"
 import { MENSAGEM_VAZIA } from "../../../../Shareable/TextArea/constants";
 import {
   required,
+  peloMenosUmCaractere,
   textAreaRequired
 } from "../../../../../helpers/fieldValidators";
 
@@ -175,7 +176,7 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
                 label="Justificativa"
                 name="justificativa"
                 required
-                validate={[required, textAreaRequired]}
+                validate={[required, textAreaRequired, peloMenosUmCaractere]}
               />
             </div>
           </div>

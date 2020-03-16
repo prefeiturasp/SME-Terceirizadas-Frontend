@@ -3,13 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/SolicitacaoDeKitLanche/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  SOLICITACAO_KIT_LANCHE,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
   cancelaKitLancheAvulsoEscola,
   DRENaoValidaKitLancheAvulso,
@@ -32,16 +26,10 @@ class RelatorioBase extends React.Component {
       href: "#",
       titulo: "Relatório"
     };
-    const anteriores = [
-      {
-        href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-        titulo: "Kits Lanche Passeio"
-      }
-    ];
 
     return (
       <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <Breadcrumb home={HOME} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
     );

@@ -5,6 +5,7 @@ import { Field } from "redux-form";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import {
+  peloMenosUmCaractere,
   required,
   textAreaRequired
 } from "../../../../../../helpers/fieldValidators";
@@ -58,7 +59,7 @@ export class ModalCancelaDietaEspecial extends Component {
               label="Justificativa"
               name="justificativa"
               required
-              validate={[required, textAreaRequired]}
+              validate={[required, textAreaRequired, peloMenosUmCaractere]}
             />
           </Modal.Body>
           <Modal.Footer>

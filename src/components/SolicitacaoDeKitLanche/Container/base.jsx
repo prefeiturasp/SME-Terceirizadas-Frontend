@@ -7,7 +7,8 @@ import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,
   naoPodeSerZero,
-  required
+  required,
+  maxLength
 } from "../../../helpers/fieldValidators";
 import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
 import {
@@ -61,6 +62,8 @@ export class SolicitacaoDeKitLanche extends Component {
     this.setInitialValues = this.setInitialValues.bind(this);
     this.handleConfirmation = this.handleConfirmation.bind(this);
     this.updateKitsChecked = this.updateKitsChecked.bind(this);
+
+    this.validatorsLocalPasseio = [required, maxLength(160)];
   }
 
   OnDeleteButtonClicked(id_externo, uuid) {
@@ -148,6 +151,10 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.reset();
+  }
+
   validaDiasUteis = event => {
     if (
       checaSeDataEstaEntre2e5DiasUteis(
@@ -161,20 +168,22 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
-    values.kit_lanche = this.state.kitsChecked;
-    values.quantidade_alunos = parseInt(values.quantidade_alunos);
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
-    if (values.confirmar) {
-      solicitacao_kit_lanche.confirmar = values.confirmar;
-    }
-    try {
-      validateTourRequestForm(values);
-      this.salvarOuEnviar(solicitacao_kit_lanche, values);
-      this.handleConfirmation();
-    } catch (SubmissionError) {
-      toastError(SubmissionError.errors.kit_lanche);
-    }
+    return new Promise(() => {
+      values.kit_lanche = this.state.kitsChecked;
+      values.quantidade_alunos = parseInt(values.quantidade_alunos);
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      let solicitacao_kit_lanche = montaObjetoRequisicao(values);
+      if (values.confirmar) {
+        solicitacao_kit_lanche.confirmar = values.confirmar;
+      }
+      try {
+        validateTourRequestForm(values);
+        this.salvarOuEnviar(solicitacao_kit_lanche, values);
+        this.handleConfirmation();
+      } catch (SubmissionError) {
+        toastError(SubmissionError.errors.kit_lanche);
+      }
+    });
   }
 
   iniciarPedido(uuid) {
@@ -346,7 +355,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     label="Local do passeio"
                     name="local"
                     required
-                    validate={[required]}
+                    validate={this.validatorsLocalPasseio}
                   />
                 </div>
               </div>

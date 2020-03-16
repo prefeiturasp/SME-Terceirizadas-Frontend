@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
-import { required } from "../../../../helpers/fieldValidators";
+import {
+  peloMenosUmCaractere,
+  required
+} from "../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastWarn } from "../../../Shareable/Toast/dialogs";
 import Botao from "../../../Shareable/Botao";
@@ -41,7 +44,7 @@ export class ModalJustificativa extends Component {
             <TextAreaWYSIWYG
               label="Justificativa"
               required
-              validate={required}
+              validate={[required, peloMenosUmCaractere]}
               input={{
                 onChange: valor => this.setState({ justificativa: valor }),
                 value: this.state.justificativa,

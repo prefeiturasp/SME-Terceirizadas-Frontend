@@ -5,7 +5,11 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
-import { required, textAreaRequired } from "../../helpers/fieldValidators";
+import {
+  peloMenosUmCaractere,
+  required,
+  textAreaRequired
+} from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -227,59 +231,61 @@ class AlteracaoCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    const status = values.status;
-    delete values.status;
-    const erros = validateSubmit(values, this.props.meusDados);
-    if (!erros) {
-      this.resetaTodoPeriodoCheck();
-      if (!values.uuid) {
-        createAlteracaoCardapio(values)
-          .then(async response => {
-            if (response.status === HTTP_STATUS.CREATED) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(response.data.uuid);
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-                this.resetForm("alteracaoCardapio");
+    return new Promise(() => {
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      const status = values.status;
+      delete values.status;
+      const erros = validateSubmit(values, this.props.meusDados);
+      if (!erros) {
+        this.resetaTodoPeriodoCheck();
+        if (!values.uuid) {
+          createAlteracaoCardapio(values)
+            .then(async response => {
+              if (response.status === HTTP_STATUS.CREATED) {
+                if (status === STATUS_DRE_A_VALIDAR) {
+                  await this.enviaAlteracaoCardapio(response.data.uuid);
+                } else {
+                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  this.refresh();
+                  this.resetForm("alteracaoCardapio");
+                }
+                this.resetForm();
               }
-              this.resetForm();
+            })
+            .catch(error => {
+              toastError(getError(error.data));
+              this.resetForm("alteracaoCardapio");
+              this.refresh();
+            });
+        } else {
+          updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+            async res => {
+              if (res.status === HTTP_STATUS.OK) {
+                if (status === STATUS_DRE_A_VALIDAR) {
+                  await this.enviaAlteracaoCardapio(res.data.uuid);
+                  this.refresh();
+                } else {
+                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  this.refresh();
+                  this.resetForm("alteracaoCardapio");
+                }
+              } else {
+                toastError(
+                  `Houve um erro ao enviar ao salvar alteração de cardápio: ${getError(
+                    res.data
+                  )}`
+                );
+              }
+            },
+            function() {
+              toastError("Houve um erro ao salvar a Alteração de Cardápio");
             }
-          })
-          .catch(error => {
-            toastError(getError(error.data));
-            this.resetForm("alteracaoCardapio");
-            this.refresh();
-          });
+          );
+        }
       } else {
-        updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
-          async res => {
-            if (res.status === HTTP_STATUS.OK) {
-              if (status === STATUS_DRE_A_VALIDAR) {
-                await this.enviaAlteracaoCardapio(res.data.uuid);
-                this.refresh();
-              } else {
-                toastSuccess("Alteração de Cardápio salva com sucesso");
-                this.refresh();
-                this.resetForm("alteracaoCardapio");
-              }
-            } else {
-              toastError(
-                `Houve um erro ao enviar ao salvar alteração de cardápio: ${getError(
-                  res.data
-                )}`
-              );
-            }
-          },
-          function() {
-            toastError("Houve um erro ao salvar a Alteração de Cardápio");
-          }
-        );
+        toastError(erros);
       }
-    } else {
-      toastError(erros);
-    }
+    });
   }
 
   showModal() {
@@ -323,8 +329,8 @@ class AlteracaoCardapio extends Component {
   resetaTodoPeriodoCheck() {
     let periodos = this.state.periodos;
     periodos.forEach(periodo => {
-      if (periodo.checado) {
-        periodo.checado = false;
+      if (periodo.checked) {
+        periodo.checked = false;
       }
     });
     this.setState({ periodos });
@@ -475,6 +481,7 @@ class AlteracaoCardapio extends Component {
                     label="Motivo"
                     options={motivos}
                     validate={required}
+                    required
                   />
                 </section>
               </article>
@@ -541,7 +548,8 @@ class AlteracaoCardapio extends Component {
                             indice
                           );
                         }}
-                        validate={periodo.checado && required}
+                        validate={periodo.checked && required}
+                        required={periodo.checked}
                       />
 
                       <Field
@@ -553,7 +561,8 @@ class AlteracaoCardapio extends Component {
                             ? substituicoesAlimentacao[indice].substituicoes
                             : []
                         )}
-                        validate={periodo.checado && required}
+                        validate={periodo.checked && required}
+                        required={periodo.checked}
                       />
                     </FormSection>
                   );
@@ -566,7 +575,7 @@ class AlteracaoCardapio extends Component {
                   label="Observações"
                   name="observacao"
                   required
-                  validate={textAreaRequired}
+                  validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
               </article>
               <article className="card-body footer-button">
