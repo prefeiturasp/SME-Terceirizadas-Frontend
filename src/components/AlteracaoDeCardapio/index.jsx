@@ -327,8 +327,8 @@ class AlteracaoCardapio extends Component {
   resetaTodoPeriodoCheck() {
     let periodos = this.state.periodos;
     periodos.forEach(periodo => {
-      if (periodo.checado) {
-        periodo.checado = false;
+      if (periodo.checked) {
+        periodo.checked = false;
       }
     });
     this.setState({ periodos });
@@ -479,6 +479,7 @@ class AlteracaoCardapio extends Component {
                     label="Motivo"
                     options={motivos}
                     validate={required}
+                    required
                   />
                 </section>
               </article>
@@ -545,7 +546,8 @@ class AlteracaoCardapio extends Component {
                             indice
                           );
                         }}
-                        validate={periodo.checado && required}
+                        validate={periodo.checked && required}
+                        required={periodo.checked}
                       />
 
                       <Field
@@ -557,7 +559,8 @@ class AlteracaoCardapio extends Component {
                             ? substituicoesAlimentacao[indice].substituicoes
                             : []
                         )}
-                        validate={periodo.checado && required}
+                        validate={periodo.checked && required}
+                        required={periodo.checked}
                       />
                     </FormSection>
                   );
