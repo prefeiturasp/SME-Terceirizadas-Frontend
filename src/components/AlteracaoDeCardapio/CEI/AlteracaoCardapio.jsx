@@ -545,11 +545,19 @@ class AlteracaoCardapio extends Component {
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
                         <div>
-                          <table className="table tabela-substituicao">
+                          <table
+                            className={`table tabela-substituicao ${
+                              periodo.nome === "PARCIAL"
+                                ? "tabela-substituicao-parcial"
+                                : ""
+                            }`}
+                          >
                             <thead className="thead-light">
                               <tr>
                                 <th>Faixa Etária</th>
-                                <th>Alunos Matriculados</th>
+                                {periodo.nome !== "PARCIAL" && (
+                                  <th>Alunos Matriculados</th>
+                                )}
                                 <th>Quantidade</th>
                               </tr>
                             </thead>
@@ -558,7 +566,9 @@ class AlteracaoCardapio extends Component {
                                 (faixa, key) => (
                                   <tr key={key}>
                                     <td>{faixaToString(faixa.faixa_etaria)}</td>
-                                    <td>{faixa.count}</td>
+                                    {periodo.nome !== "PARCIAL" && (
+                                      <td>{faixa.count}</td>
+                                    )}
                                     <td>
                                       <Field
                                         component={InputText}
@@ -574,7 +584,9 @@ class AlteracaoCardapio extends Component {
                               )}
                               <tr>
                                 <th>Total{" >>"}</th>
-                                <th>{totalAlunos}</th>
+                                {periodo.nome !== "PARCIAL" && (
+                                  <td>{totalAlunos}</td>
+                                )}
                                 <th>{totalSelecionados}</th>
                               </tr>
                             </tbody>
