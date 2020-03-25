@@ -31,8 +31,6 @@ import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/Statu
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -67,7 +65,8 @@ import {
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
-  StatusSolicitacoesDietaEspecial
+  StatusSolicitacoesDietaEspecial,
+  inclusaoCardapio
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
@@ -155,13 +154,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
-    component: InclusaoDeAlimentacaoPage,
-    exact: false,
-    tipoUsuario: usuarioEscola()
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO_CEI}`,
-    component: InclusaoDeAlimentacaoCEIPage,
+    component: inclusaoCardapio(),
     exact: false,
     tipoUsuario: usuarioEscola()
   },

@@ -2,6 +2,8 @@ import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
@@ -168,6 +170,15 @@ export const painelInicial = () => {
       return DashboardCODAEPage;
     default:
       return PainelInicialPage;
+  }
+};
+
+export const inclusaoCardapio = () => {
+  switch (localStorage.getItem("perfil")) {
+    case PERFIL.DIRETOR_CEI:
+      return InclusaoDeAlimentacaoCEIPage;
+    default:
+      return InclusaoDeAlimentacaoPage;
   }
 };
 
