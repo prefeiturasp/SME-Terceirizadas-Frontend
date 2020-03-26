@@ -453,6 +453,9 @@ class AlteracaoCardapio extends Component {
                       onBlur={event => this.onAlterarDiaChanged(event)}
                       name="data_alteracao"
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
                       label="Alterar dia"
                       required
                     />
