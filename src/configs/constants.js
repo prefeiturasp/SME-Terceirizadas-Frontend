@@ -66,6 +66,8 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
 export const STATUS_RASCUNHO = "RASCUNHO";
 
+export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
+
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
 

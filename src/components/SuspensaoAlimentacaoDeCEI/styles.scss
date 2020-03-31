@@ -1,0 +1,125 @@
+.section-main-form {
+  .section-motivo-data {
+    display: grid;
+    grid-template-columns: 72% 20%;
+    column-gap: 2%;
+
+    .div-descricao-label {
+      span {
+        color: #a50e05;
+      }
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      color: #686868;
+      margin: 0 0 8px 0;
+    }
+  }
+
+  .section-botoes-bottom {
+    margin: 150px 0 0 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .section-descricao-periodo {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #686868;
+    margin: 30px 0 5px 0;
+  }
+
+  .form-check-periodos {
+    display: grid;
+    grid-template-columns: 49.5% 49.5%;
+    column-gap: 1%;
+
+    .container {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      height: 35px;
+    }
+
+    .check-INTEGRAL {
+      background: #ebedff;
+      border: 1px solid #b2baff;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .check-PARCIAL {
+      background: #fff7cb;
+      border: 1px solid #ffd79b;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 15px;
+      width: 15px;
+      background-color: #eee;
+      margin: 8px 0 0 8px;
+    }
+
+    .container input ~ .check-false {
+      border: 1px solid #828688;
+      background-color: #ffffff;
+    }
+
+    .container input ~ .check-true {
+      background-color: #0c6b45;
+    }
+
+    .container input:checked ~ .checkmark {
+      background-color: #0c6b45;
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    .container input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .container .checkmark:after {
+      left: 5px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  }
+}

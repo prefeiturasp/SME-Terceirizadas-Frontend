@@ -6,6 +6,8 @@ import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage
 import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
@@ -188,5 +190,14 @@ export const alteracaoCardapio = () => {
       return AlteracaoDeCardapioCEIPage;
     default:
       return AlteracaoDeCardapioPage;
+  }
+};
+
+export const suspensaoAlimentacao = () => {
+  switch (localStorage.getItem("perfil")) {
+    case PERFIL.DIRETOR_CEI:
+      return SuspensaoDeAlimentacaoDeCEI;
+    default:
+      return SuspensaoDeAlimentacaoPage;
   }
 };

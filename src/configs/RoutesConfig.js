@@ -36,7 +36,7 @@ import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolici
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
@@ -51,9 +51,11 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+
 import * as constants from "./constants";
 import {
   alteracaoCardapio,
+  suspensaoAlimentacao,
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
@@ -178,7 +180,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
-    component: SuspensaoDeAlimentacaoPage,
+    component: suspensaoAlimentacao(),
     exact: false,
     tipoUsuario: usuarioEscola()
   },
