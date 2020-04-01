@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Select } from "../../Shareable/Select";
 import { Botao } from "../../Shareable/Botao";
+import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
@@ -491,6 +492,7 @@ class AlteracaoCardapio extends Component {
                       }
                     }
                   }
+                  console.log('periodo', periodo)
                   return (
                     <FormSection name={formSectionName} key={indice}>
                       <div className="item-periodo-alimentacao">
@@ -543,44 +545,14 @@ class AlteracaoCardapio extends Component {
                           required={periodo.checked}
                         />
                       </div>
-                      {periodo.checked && periodo.alunosPorFaixaEtaria && (
-                        <div>
-                          <table className="table tabela-substituicao">
-                            <thead className="thead-light">
-                              <tr>
-                                <th>Faixa Etária</th>
-                                <th>Alunos Matriculados</th>
-                                <th>Quantidade</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {periodo.alunosPorFaixaEtaria.map(
-                                (faixa, key) => (
-                                  <tr key={key}>
-                                    <td>{faixaToString(faixa.faixa_etaria)}</td>
-                                    <td>{faixa.count}</td>
-                                    <td>
-                                      <Field
-                                        component={InputText}
-                                        name={`qtde-faixa-${
-                                          faixa.faixa_etaria.uuid
-                                        }`}
-                                        validate={faixa.validators}
-                                        type="number"
-                                      />
-                                    </td>
-                                  </tr>
-                                )
-                              )}
-                              <tr>
-                                <th>Total{" >>"}</th>
-                                <th>{totalAlunos}</th>
-                                <th>{totalSelecionados}</th>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
+                      {periodo.checked && periodo.alunosPorFaixaEtaria &&
+                        <TabelaQuantidadePorFaixaEtaria
+                          alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
+                          escondeTotalAlunos={periodo.nome === "PARCIAL"}
+                          totalAlunos={totalAlunos}
+                          totalSelecionados={totalSelecionados}
+                        />
+                      }
                     </FormSection>
                   );
                 })}

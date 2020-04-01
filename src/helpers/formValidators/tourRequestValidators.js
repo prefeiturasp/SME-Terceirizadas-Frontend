@@ -36,5 +36,19 @@ export const validateTourRequestForm = values => {
     default:
       break;
   }
+  if (values.qtdePorFaixa === undefined) {
+    throw new SubmissionError({
+      kit_lanche: "A quantidade de alunos participantes de ser maior que zero",
+      _error: "Submission failed!"
+    });
+  }
+  let totalAlunosSelecionados = 0;
+  Object.values(values.qtdePorFaixa).forEach(v => totalAlunosSelecionados += parseInt(v))
+  if (totalAlunosSelecionados < 1) {
+    throw new SubmissionError({
+      kit_lanche: "A quantidade de alunos participantes de ser maior que zero",
+      _error: "Submission failed!"
+    });
+  }
   // window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
 };

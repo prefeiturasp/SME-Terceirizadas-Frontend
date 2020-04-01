@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import "./style.scss";
 import InputErroMensagem from "../../Input/InputErroMensagem";
+import { PERFIL, TIPO_PERFIL } from "../../../../constants";
 
 export class TempoPasseio extends Component {
   render() {
@@ -11,6 +12,7 @@ export class TempoPasseio extends Component {
       onTempoPasseioChanged,
       meta
     } = this.props;
+    const ehCei = localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI;
     return (
       <div className="tour-time">
         <p className="label">Tempo previsto do passeio</p>
@@ -39,7 +41,7 @@ export class TempoPasseio extends Component {
             />
             <span className="checkmark" />
           </label>
-          <label className="container-radio">
+          {!ehCei && <label className="container-radio">
             8 horas ou mais (3 kits)
             <Field
               component={"input"}
@@ -50,7 +52,7 @@ export class TempoPasseio extends Component {
               name={nameTempoPasseio}
             />
             <span className="checkmark" />
-          </label>
+          </label>}
         </div>
         {mostrarExplicacao && (
           <div className="row">
@@ -64,10 +66,10 @@ export class TempoPasseio extends Component {
                   <b>De 5 a 7 horas:</b> 2 kit lanche/alunos: Escolher 2 kits
                   distintos entre os 3 modelos estabelecidos contratualmente;
                 </label>
-                <label>
+                {!ehCei && <label>
                   <b>8 horas ou mais:</b> 3 kit lanche/aluno: Será autorizado o
                   fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
-                </label>
+                </label>}
               </div>
             </div>
           </div>

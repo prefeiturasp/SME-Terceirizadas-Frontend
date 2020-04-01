@@ -166,6 +166,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
+    //AQUI POW
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
     tipoUsuario: usuarioEscola()
