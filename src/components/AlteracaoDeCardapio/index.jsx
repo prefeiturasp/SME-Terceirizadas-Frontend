@@ -38,6 +38,7 @@ import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
+import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
 
 const ENTER = 13;
 
@@ -52,15 +53,19 @@ class AlteracaoCardapio extends Component {
       title: "Nova Alteração de Cardápio",
       id: null,
       showModal: false,
+      showModalConfirm: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
       dataInicial: null,
       periodosQuePossuemLancheNaAlteracao: null,
+      ehAlteracaoComLancheRepetida: false,
       verificado: false
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.showModalConfirm = this.showModalConfirm.bind(this);
+    this.closeModalConfirm = this.closeModalConfirm.bind(this);
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.resetForm = this.resetForm.bind(this);
@@ -371,6 +376,14 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
+  showModalConfirm() {
+    this.setState({ ...this.state, showModalConfirm: true });
+  }
+
+  closeModalConfirm() {
+    this.setState({ ...this.state, showModalConfirm: false });
+  }
+
   onAlterarDiaChanged(event) {
     if (
       checaSeDataEstaEntre2e5DiasUteis(
@@ -473,6 +486,7 @@ class AlteracaoCardapio extends Component {
       loading,
       alteracaoCardapioList,
       showModal,
+      showModalConfirm,
       dataInicial,
       periodos,
       substituicoesAlimentacao
@@ -691,6 +705,10 @@ class AlteracaoCardapio extends Component {
             <ModalDataPrioritaria
               showModal={showModal}
               closeModal={this.closeModal}
+            />
+            <ModalConfirmaAlteracao
+              showModal={showModalConfirm}
+              closeModal={this.closeModalConfirm}
             />
           </form>
         )}
