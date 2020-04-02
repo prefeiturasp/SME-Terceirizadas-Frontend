@@ -396,3 +396,18 @@ export const getTerceirizadaPedidosDeAlteracaoCardapio = filtroAplicado => {
       console.log(error);
     });
 };
+
+export const getAlteracoesComLancheDoMesCorrente = escola_uuid => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/com-lanche-do-mes-corrente/${escola_uuid}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};

@@ -21,7 +21,8 @@ import {
   deleteAlteracaoCardapio,
   enviarAlteracaoCardapio,
   getMeusRascunhosAlteracoesCardapio,
-  updateAlteracaoCardapio
+  updateAlteracaoCardapio,
+  getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDecardapio.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { Botao } from "../Shareable/Botao";
@@ -54,7 +55,9 @@ class AlteracaoCardapio extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       substituicoesAlimentacao: [],
       substituicoesEdit: [],
-      dataInicial: null
+      dataInicial: null,
+      periodosQuePossuemLancheNaAlteracao: null,
+      verificado: false
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -65,17 +68,24 @@ class AlteracaoCardapio extends Component {
 
   componentDidUpdate() {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
-    let { loading, periodos, substituicoesAlimentacao } = this.state;
-
+    let {
+      loading,
+      periodos,
+      substituicoesAlimentacao,
+      periodosQuePossuemLancheNaAlteracao,
+      verificado
+    } = this.state;
     if (
       meusDados &&
       proximos_dois_dias_uteis &&
       loading &&
+      !periodosQuePossuemLancheNaAlteracao &&
       periodos.length === 0
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
         periodos = construirPeriodosECombos(response.results);
+        this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
         this.setState({ periodos, loading: false });
       });
       periodos.forEach(periodo => {
@@ -89,7 +99,72 @@ class AlteracaoCardapio extends Component {
         substituicoesAlimentacao.push({ substituicoes: [] });
       });
     }
+    if (
+      !loading &&
+      !verificado &&
+      periodosQuePossuemLancheNaAlteracao !== null
+    ) {
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      getAlteracoesComLancheDoMesCorrente(vinculo).then(response => {
+        const alteracoes = response.results;
+        alteracoes.forEach(alteracao => {
+          alteracao.substituicoes.forEach(substituicao => {
+            if (substituicao.tipo_alimentacao_para.label.includes("lanche")) {
+              periodosQuePossuemLancheNaAlteracao[
+                `${substituicao.periodo_escolar.nome}`
+              ].status = true;
+            }
+          });
+        });
+        this.setState({
+          verificado: true,
+          periodosQuePossuemLancheNaAlteracao
+        });
+      });
+    }
   }
+
+  buscaPeriodosParaVerificarSePossuiAlteracoesComLanche = periodos => {
+    const periodosComFlags = {
+      temRestricao: false
+    };
+    periodos.forEach(periodo => {
+      periodosComFlags[`${periodo.nome}`] = {
+        status: false,
+        temNaSolicitacao: false
+      };
+    });
+    const periodosQuePossuemLancheNaAlteracao = periodosComFlags;
+    this.setState({ periodosQuePossuemLancheNaAlteracao });
+  };
+
+  verificaSeEhLancheNoTipoDeAlimentacao = (
+    uuidTPAlimentacao,
+    substituicoes,
+    nomePeriodo
+  ) => {
+    let { periodosQuePossuemLancheNaAlteracao } = this.state;
+    substituicoes.forEach(substituicao => {
+      if (substituicao.uuid === uuidTPAlimentacao) {
+        if (substituicao.nome.includes("lanche")) {
+          periodosQuePossuemLancheNaAlteracao[
+            `${nomePeriodo}`
+          ].temNaSolicitacao = true;
+          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+            periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+          }
+        } else {
+          periodosQuePossuemLancheNaAlteracao[
+            `${nomePeriodo}`
+          ].temNaSolicitacao = false;
+          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+            periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+          }
+        }
+      }
+    });
+    this.setState({ periodosQuePossuemLancheNaAlteracao });
+  };
 
   componentDidMount() {
     this.refresh();
@@ -561,6 +636,13 @@ class AlteracaoCardapio extends Component {
                             ? substituicoesAlimentacao[indice].substituicoes
                             : []
                         )}
+                        onChange={event => {
+                          this.verificaSeEhLancheNoTipoDeAlimentacao(
+                            event.target.value,
+                            substituicoesAlimentacao[indice].substituicoes,
+                            periodo.nome
+                          );
+                        }}
                         validate={periodo.checked && required}
                         required={periodo.checked}
                       />
