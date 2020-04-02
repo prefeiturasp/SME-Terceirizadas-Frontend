@@ -19,7 +19,7 @@ import {
 } from "../../../helpers/utilities";
 import {
   getSolicitacoesKitLancheApi,
-  getSolicitacoesKitLancheCeiApi,
+  getSolicitacoesKitLancheCeiRascunho,
   inicioPedido,
   inicioPedidoCei,
   registroAtualizaKitLanche,
@@ -374,7 +374,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   refresh() {
     if (this.state.ehCei) {
-      getSolicitacoesKitLancheCeiApi().then(resp => {
+      getSolicitacoesKitLancheCeiRascunho().then(resp => {
         this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
       });
     } else {

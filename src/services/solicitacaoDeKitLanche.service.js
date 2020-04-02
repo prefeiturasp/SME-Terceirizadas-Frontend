@@ -431,8 +431,8 @@ export const solicitarKitLancheCei = values => {
   return axios.post(url, values);
 };
 
-export const getSolicitacoesKitLancheCeiApi = () => {
-  const url = `solicitacoes-kit-lanche-cei-avulsa/`;
+export const getSolicitacoesKitLancheCeiRascunho = () => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/minhas-solicitacoes/`;
   return axios.get(url);
 };
 
