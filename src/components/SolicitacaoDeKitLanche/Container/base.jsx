@@ -634,7 +634,7 @@ SolicitacaoDeKitLanche = reduxForm({
     if (
       values.evento_data &&
       (previousValues.evento_data === undefined ||
-        previousValues.evento_data !== previousValues.evento_data)
+        previousValues.evento_data !== values.evento_data)
     ) {
       const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
         p => p.nome === "INTEGRAL"
