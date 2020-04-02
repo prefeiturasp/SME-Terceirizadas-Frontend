@@ -15,6 +15,7 @@ import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHist
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -27,12 +28,15 @@ class Relatorio extends Component {
       alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
-      error: false
+      error: false,
+      showModalConfirm: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModalConfirm = this.closeModalConfirm.bind(this);
   }
 
   componentDidMount() {
@@ -91,6 +95,14 @@ class Relatorio extends Component {
     });
   }
 
+  showModalConfirm() {
+    this.setState({ showModalConfirm: true });
+  }
+
+  closeModalConfirm() {
+    this.setState({ showModalConfirm: false });
+  }
+
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
@@ -119,7 +131,8 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
-      erro
+      erro,
+      showModalConfirm
     } = this.state;
     const {
       justificativa,
@@ -235,19 +248,42 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() =>
-                          EXIBIR_MODAL_AUTORIZACAO
-                            ? this.showAutorizarModal()
-                            : this.handleSubmit()
-                        }
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova === "Validar" ? (
+                        alteracaoDeCardapio.eh_alteracao_com_lanche_repetida ? (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() => this.showModalConfirm()}
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />
+                        ) : (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() =>
+                              EXIBIR_MODAL_AUTORIZACAO
+                                ? this.showAutorizarModal()
+                                : this.handleSubmit()
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />
+                        )
+                      ) : (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
@@ -266,6 +302,11 @@ class Relatorio extends Component {
                 )}
               </div>
             </div>
+            <ModalConfirmaAlteracaoDuplicada
+              showModal={showModalConfirm}
+              closeModal={this.closeModalConfirm}
+              handleSubmit={this.handleSubmit}
+            />
           </form>
         )}
       </div>
