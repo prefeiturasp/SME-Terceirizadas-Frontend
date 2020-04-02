@@ -25,14 +25,12 @@ import {
 import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
-import { faixaToString } from "../../../helpers/faixasEtarias";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
 import "../style.scss";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import InputText from "../../Shareable/Input/InputText";
 import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
@@ -492,7 +490,6 @@ class AlteracaoCardapio extends Component {
                       }
                     }
                   }
-                  console.log('periodo', periodo)
                   return (
                     <FormSection name={formSectionName} key={indice}>
                       <div className="item-periodo-alimentacao">
@@ -545,14 +542,14 @@ class AlteracaoCardapio extends Component {
                           required={periodo.checked}
                         />
                       </div>
-                      {periodo.checked && periodo.alunosPorFaixaEtaria &&
+                      {periodo.checked && periodo.alunosPorFaixaEtaria && (
                         <TabelaQuantidadePorFaixaEtaria
                           alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
                           escondeTotalAlunos={periodo.nome === "PARCIAL"}
                           totalAlunos={totalAlunos}
                           totalSelecionados={totalSelecionados}
                         />
-                      }
+                      )}
                     </FormSection>
                   );
                 })}

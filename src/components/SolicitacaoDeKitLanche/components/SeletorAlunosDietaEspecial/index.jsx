@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Field, reduxForm, formValueSelector } from "redux-form";
+import { Field } from "redux-form";
 import { Collapse } from "react-collapse";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -29,18 +28,13 @@ export default class SeletorAlunosDietaEspecial extends Component {
   }
   render() {
     const { alunosComDietaEspecial } = this.props;
-    console.log('alunosComDietaEspecial', alunosComDietaEspecial)
     const { collapsed } = this.state;
     return (
       <div className="card card-history mt-3 seletor-alunos-dieta-especial">
         <div className="card-header">
           <div className="row">
-            <div className="col-2">
-              {"Código EOL"}
-            </div>
-            <div className="col-8">
-              {"Nome do Aluno"}
-            </div>
+            <div className="col-2">{"Código EOL"}</div>
+            <div className="col-8">{"Nome do Aluno"}</div>
             <div className="pl-5 col-1">
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
@@ -54,14 +48,15 @@ export default class SeletorAlunosDietaEspecial extends Component {
             <tbody>
               {alunosComDietaEspecial &&
                 alunosComDietaEspecial.map((aluno, key) => {
-                  console.log('aluno', aluno)
                   return (
                     <tr key={key}>
                       <td>
                         <Field
                           component={CheckboxField}
                           type="checkbox"
-                          name={`alunosComDieta.${aluno.codigo_eol}`}
+                          name={`alunos_com_dieta_especial_participantes.${
+                            aluno.codigo_eol
+                          }`}
                         />
                       </td>
                       <td>{aluno.codigo_eol}</td>

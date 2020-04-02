@@ -19,14 +19,16 @@ import {
 } from "../../../helpers/utilities";
 import {
   getSolicitacoesKitLancheApi,
+  getSolicitacoesKitLancheCeiApi,
   inicioPedido,
+  inicioPedidoCei,
   registroAtualizaKitLanche,
+  registroAtualizaKitLancheCei,
   removeKitLanche,
-  solicitarKitLanche
+  solicitarKitLanche,
+  solicitarKitLancheCei
 } from "../../../services/solicitacaoDeKitLanche.service";
-import {
-  getAlunosPorFaixaEtariaNumaData,
-} from "../../../services/alteracaoDeCardapioCEI.service";
+import { getAlunosPorFaixaEtariaNumaData } from "../../../services/alteracaoDeCardapioCEI.service";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
@@ -117,6 +119,24 @@ export class SolicitacaoDeKitLanche extends Component {
       "tempo_passeio",
       solicitacaoKitLanche.solicitacao_kit_lanche.tempo_passeio.toString()
     );
+    if (this.state.ehCei) {
+      solicitacaoKitLanche.faixas_etarias.forEach(faixa =>
+        this.props.change(
+          `faixas_etarias.${faixa.faixa_etaria.uuid}`,
+          faixa.quantidade
+        )
+      );
+      // TODO: caso tenha alunos no rascunho, expandir o seletor
+      //       tem que passar state.collapsed do componente SeletorAlunosDietaEspecial pra prop
+      //       e guardar no state desse componente
+      solicitacaoKitLanche.alunos_com_dieta_especial_participantes.forEach(
+        aluno =>
+          this.props.change(
+            `alunos_com_dieta_especial_participantes.${aluno.codigo_eol}`,
+            true
+          )
+      );
+    }
     this.setState({
       status: solicitacaoKitLanche.status,
       title: `Solicitação de Kit Lanche Passeio #${
@@ -168,13 +188,15 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   componentWillMount = async () => {
-    const resposta = await getDietasAtivasInativasPorAluno()
+    const resposta = await getDietasAtivasInativasPorAluno();
     if (resposta.status === 200) {
       this.setState({
-        alunosComDietaEspecial: resposta.data.results.solicitacoes.filter(s => s.ativas > 0)
-      })
+        alunosComDietaEspecial: resposta.data.results.solicitacoes.filter(
+          s => s.ativas > 0
+        )
+      });
     }
-  }
+  };
 
   validaDiasUteis = event => {
     if (
@@ -200,15 +222,14 @@ export class SolicitacaoDeKitLanche extends Component {
     }
     try {
       validateTourRequestForm(values);
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         if (this.state.ehCei) {
           this.salvarOuEnviarCei(solicitacao_kit_lanche, values);
-        }
-        else {
+        } else {
           this.salvarOuEnviar(solicitacao_kit_lanche, values);
         }
         this.handleConfirmation();
-        resolve()
+        resolve();
       });
     } catch (SubmissionError) {
       toastError(SubmissionError.errors.kit_lanche);
@@ -216,7 +237,8 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   iniciarPedido(uuid) {
-    inicioPedido(uuid).then(
+    const endpoint = this.state.ehCei ? inicioPedidoCei : inicioPedido;
+    endpoint(uuid).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess(
@@ -305,10 +327,8 @@ export class SolicitacaoDeKitLanche extends Component {
     if (values.status) {
       solicitacao_kit_lanche.status = values.status;
     }
-    console.log('salvarOuEnviarCei', {solicitacao_kit_lanche, values})
-    return;
     if (!values.uuid) {
-      solicitarKitLanche(solicitacao_kit_lanche).then(resp => {
+      solicitarKitLancheCei(solicitacao_kit_lanche).then(resp => {
         if (resp.status === HTTP_STATUS.CREATED) {
           if (values.status === STATUS_DRE_A_VALIDAR) {
             this.iniciarPedido(resp.data.uuid);
@@ -327,7 +347,7 @@ export class SolicitacaoDeKitLanche extends Component {
         }
       });
     } else {
-      registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid)
+      registroAtualizaKitLancheCei(solicitacao_kit_lanche, values.uuid)
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -353,9 +373,15 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   refresh() {
-    getSolicitacoesKitLancheApi().then(resp => {
-      this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
-    });
+    if (this.state.ehCei) {
+      getSolicitacoesKitLancheCeiApi().then(resp => {
+        this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
+      });
+    } else {
+      getSolicitacoesKitLancheApi().then(resp => {
+        this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
+      });
+    }
   }
 
   closeModal() {
@@ -381,8 +407,10 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   getNumeroTotalDeKits() {
-    const qtdeAlunos = this.state.ehCei ? this.props.totalAlunosSelecionadosCei || 0 : (this.props.quantidade_alunos && parseInt(this.props.quantidade_alunos));
-    return qtdeAlunos * this.state.kitsChecked.length
+    const qtdeAlunos = this.state.ehCei
+      ? this.props.totalAlunosSelecionadosCei || 0
+      : this.props.quantidade_alunos && parseInt(this.props.quantidade_alunos);
+    return qtdeAlunos * this.state.kitsChecked.length;
   }
 
   render() {
@@ -413,7 +441,9 @@ export class SolicitacaoDeKitLanche extends Component {
         ) : (
           <form onKeyPress={this.onKeyPress} className="solicitacao-kit-lanche">
             <Field component={"input"} type="hidden" name="uuid" />
-            {!ehCei && <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />}
+            {!ehCei && (
+              <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />
+            )}
             <Rascunhos
               rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
               OnDeleteButtonClicked={(id_externo, uuid) =>
@@ -426,7 +456,13 @@ export class SolicitacaoDeKitLanche extends Component {
             <br />
             {!ehCei && <h3 className="page-title">{this.state.title}</h3>}
             <div className="card mt-3 p-4">
-              {ehCei && <div className="form-group row"><p className="dre-name">Descrição da Solicitação Kit Lanche</p></div>}
+              {ehCei && (
+                <div className="form-group row">
+                  <p className="dre-name">
+                    Descrição da Solicitação Kit Lanche
+                  </p>
+                </div>
+              )}
               <div className="form-group row">
                 <div className="col-3">
                   <Field
@@ -449,22 +485,24 @@ export class SolicitacaoDeKitLanche extends Component {
                   />
                 </div>
               </div>
-              {!ehCei && <div className="form-group row">
-                <div className="col-3">
-                  <Field
-                    component={InputText}
-                    name="quantidade_alunos"
-                    type="number"
-                    label="Número de alunos"
-                    required
-                    validate={[
-                      required,
-                      maxValue(meusDados.quantidade_alunos),
-                      naoPodeSerZero
-                    ]}
-                  />
+              {!ehCei && (
+                <div className="form-group row">
+                  <div className="col-3">
+                    <Field
+                      component={InputText}
+                      name="quantidade_alunos"
+                      type="number"
+                      label="Número de alunos"
+                      required
+                      validate={[
+                        required,
+                        maxValue(meusDados.quantidade_alunos),
+                        naoPodeSerZero
+                      ]}
+                    />
+                  </div>
                 </div>
-              </div>}
+              )}
               <PedidoKitLanche
                 nameTempoPasseio="tempo_passeio"
                 nomeKitsLanche="kit_lanche"
@@ -473,11 +511,12 @@ export class SolicitacaoDeKitLanche extends Component {
                 mostrarExplicacao
                 validate={required}
               />
-              {ehCei && alunosPorFaixaEtaria &&
-              <TabelaQuantidadePorFaixaEtaria
-                alunosPorFaixaEtaria={alunosPorFaixaEtaria}
-                totalSelecionados={totalAlunosSelecionadosCei}
-              />}
+              {ehCei && alunosPorFaixaEtaria && (
+                <TabelaQuantidadePorFaixaEtaria
+                  alunosPorFaixaEtaria={alunosPorFaixaEtaria}
+                  totalSelecionados={totalAlunosSelecionadosCei}
+                />
+              )}
               <div className="kits-total form-group row mt-2 pt-3">
                 <div className="col-12">
                   <label>{"Número total de kits:"}</label>
@@ -486,12 +525,18 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              {ehCei &&
+              {ehCei && (
                 <Fragment>
-                  <div className="form-group row sub-title"><p className="dre-name">Selecionar alunos com dieta especial</p></div>
-                  <SeletorAlunosDietaEspecial alunosComDietaEspecial={alunosComDietaEspecial}/>
+                  <div className="form-group row sub-title">
+                    <p className="dre-name">
+                      Selecionar alunos com dieta especial
+                    </p>
+                  </div>
+                  <SeletorAlunosDietaEspecial
+                    alunosComDietaEspecial={alunosComDietaEspecial}
+                  />
                 </Fragment>
-              }
+              )}
               <div className="form-group">
                 <Field
                   component={TextAreaWYSIWYG}
@@ -586,44 +631,36 @@ SolicitacaoDeKitLanche = reduxForm({
   form: "tourRequest",
   destroyOnUnmount: false,
   onChange: async (values, dispatch, props, previousValues) => {
-    console.log('onChange', {values, dispatch, props, previousValues});
-    if (values.evento_data && (previousValues.evento_data === undefined || previousValues.evento_data !== previousValues.evento_data)){
-      const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(p => p.nome === "INTEGRAL")
+    if (
+      values.evento_data &&
+      (previousValues.evento_data === undefined ||
+        previousValues.evento_data !== previousValues.evento_data)
+    ) {
+      const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
+        p => p.nome === "INTEGRAL"
+      );
       const response = await getAlunosPorFaixaEtariaNumaData(
         periodo.uuid,
         converterDDMMYYYYparaYYYYMMDD(values.evento_data)
       );
       if (response.status === 200 && response.data.count > 0) {
-        dispatch({ type: 'LOAD_ALUNOS_POR_FAIXA_ETARIA', data: response.data.results })
+        dispatch({
+          type: "LOAD_ALUNOS_POR_FAIXA_ETARIA",
+          data: response.data.results
+        });
       }
     }
-    if (values.qtdePorFaixa && !isEqual(values.qtdePorFaixa, previousValues.qtdePorFaixa)) {
+    if (
+      values.faixas_etarias &&
+      !isEqual(values.faixas_etarias, previousValues.faixas_etarias)
+    ) {
       let totalAlunos = 0;
-      Object.values(values.qtdePorFaixa).forEach(v => totalAlunos += parseInt(v))
-      dispatch({ type: 'SET_TOTAL_ALUNOS_SELECIONADOS', data: totalAlunos })
+      Object.values(values.faixas_etarias).forEach(
+        v => (totalAlunos += parseInt(v))
+      );
+      dispatch({ type: "SET_TOTAL_ALUNOS_SELECIONADOS", data: totalAlunos });
     }
-  },
-  // validate: (values, props) => {
-  //   console.log('validate', {values, props})
-  //   const errors = {};
-  //   if (values.qtdePorFaixa) {
-  //     if (props.totalAlunosSelecionadosCei === undefined || props.totalAlunosSelecionadosCei === 0) {
-  //       errors.qtdePorFaixa =
-  //     }
-  //   }
-  //   else {
-  //     errors.qtdePorFaixa =
-  //   }
-  //   // if (values.tempo_passeio) {
-  //   //   const quantidadeKitsNecessarios = parseInt(values.tempo_passeio) + 1
-
-  //   // }
-  //   // else {
-  //   //   errors.tempo_passeio = "Ao menos um tempo de passeio deve ser selecionado";
-  //   // }
-  //   console.log('validate.errors', errors);
-  //   return errors;
-  // }
+  }
 })(SolicitacaoDeKitLanche);
 
 const selector = formValueSelector("tourRequest");

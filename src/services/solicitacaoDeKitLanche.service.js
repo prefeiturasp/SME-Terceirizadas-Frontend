@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
+import axios from "./_base";
 import { FLUXO, PEDIDOS } from "./constants";
 
 export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
@@ -423,4 +424,26 @@ export const terceirizadaTomaCienciaKitLancheAvulso = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const solicitarKitLancheCei = values => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/`;
+  return axios.post(url, values);
+};
+
+export const getSolicitacoesKitLancheCeiApi = () => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/`;
+  return axios.get(url);
+};
+
+export const registroAtualizaKitLancheCei = (payload, uuid) => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/${uuid}/`;
+  return axios.patch(url, payload);
+};
+
+export const inicioPedidoCei = uuid => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/${uuid}/${
+    FLUXO.INICIO_PEDIDO
+  }/`;
+  return axios.patch(url);
 };

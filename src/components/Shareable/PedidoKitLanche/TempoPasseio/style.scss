@@ -60,8 +60,6 @@ div.tour-time {
     border: 1px solid $grayPlaceholder;
     border-radius: 50%;
     &:after {
-      content: "";
-      position: absolute;
       display: none;
       top: 5px;
       left: 5px;

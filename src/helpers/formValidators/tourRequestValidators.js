@@ -36,14 +36,16 @@ export const validateTourRequestForm = values => {
     default:
       break;
   }
-  if (values.qtdePorFaixa === undefined) {
+  if (values.faixas_etarias === undefined) {
     throw new SubmissionError({
       kit_lanche: "A quantidade de alunos participantes de ser maior que zero",
       _error: "Submission failed!"
     });
   }
   let totalAlunosSelecionados = 0;
-  Object.values(values.qtdePorFaixa).forEach(v => totalAlunosSelecionados += parseInt(v))
+  Object.values(values.faixas_etarias).forEach(
+    v => (totalAlunosSelecionados += parseInt(v))
+  );
   if (totalAlunosSelecionados < 1) {
     throw new SubmissionError({
       kit_lanche: "A quantidade de alunos participantes de ser maior que zero",
