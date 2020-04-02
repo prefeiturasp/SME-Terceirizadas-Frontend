@@ -17,7 +17,10 @@ export default props => (
       <Botao
         texto="SIM"
         type={BUTTON_TYPE.BUTTON}
-        onClick={props.closeModal}
+        onClick={() => {
+          props.onSubmit(props.values);
+          props.closeModal();
+        }}
         style={BUTTON_STYLE.BLUE}
         className="ml-3"
       />

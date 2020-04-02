@@ -60,7 +60,8 @@ class AlteracaoCardapio extends Component {
       dataInicial: null,
       periodosQuePossuemLancheNaAlteracao: null,
       ehAlteracaoComLancheRepetida: false,
-      verificado: false
+      verificado: false,
+      values: null
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -69,6 +70,7 @@ class AlteracaoCardapio extends Component {
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidUpdate() {
@@ -110,26 +112,32 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao !== null
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      getAlteracoesComLancheDoMesCorrente(vinculo).then(response => {
-        const alteracoes = response.results;
-        alteracoes.forEach(alteracao => {
-          alteracao.substituicoes.forEach(substituicao => {
-            if (substituicao.tipo_alimentacao_para.label.includes("lanche")) {
-              periodosQuePossuemLancheNaAlteracao[
-                `${substituicao.periodo_escolar.nome}`
-              ].status = true;
-            }
-          });
-        });
-        this.setState({
-          verificado: true,
-          periodosQuePossuemLancheNaAlteracao
-        });
-      });
+      this.atualizaAlteracoesComLancheMesCorrente(vinculo);
     }
   }
 
+  atualizaAlteracoesComLancheMesCorrente = vinculo => {
+    let { periodosQuePossuemLancheNaAlteracao } = this.state;
+    getAlteracoesComLancheDoMesCorrente(vinculo).then(response => {
+      const alteracoes = response.results;
+      alteracoes.forEach(alteracao => {
+        alteracao.substituicoes.forEach(substituicao => {
+          if (substituicao.tipo_alimentacao_para.label.includes("lanche")) {
+            periodosQuePossuemLancheNaAlteracao[
+              `${substituicao.periodo_escolar.nome}`
+            ].status = true;
+          }
+        });
+      });
+      this.setState({
+        verificado: true,
+        periodosQuePossuemLancheNaAlteracao
+      });
+    });
+  };
+
   buscaPeriodosParaVerificarSePossuiAlteracoesComLanche = periodos => {
+    let periodosQuePossuemLancheNaAlteracao = null;
     const periodosComFlags = {
       temRestricao: false
     };
@@ -139,7 +147,7 @@ class AlteracaoCardapio extends Component {
         temNaSolicitacao: false
       };
     });
-    const periodosQuePossuemLancheNaAlteracao = periodosComFlags;
+    periodosQuePossuemLancheNaAlteracao = periodosComFlags;
     this.setState({ periodosQuePossuemLancheNaAlteracao });
   };
 
@@ -215,9 +223,48 @@ class AlteracaoCardapio extends Component {
     }
   };
 
+  atualizaEverificaSeEhAlteracaoRepetida = substituicoes => {
+    let { periodosQuePossuemLancheNaAlteracao } = this.state;
+    substituicoes.forEach(substituicao => {
+      substituicao.tipo_alimentacao_de.substituicoes.forEach(
+        tipo_alimentacao_sub => {
+          if (
+            substituicao.tipo_alimentacao_para.uuid ===
+            tipo_alimentacao_sub.uuid
+          ) {
+            if (tipo_alimentacao_sub.label.includes("lanche")) {
+              periodosQuePossuemLancheNaAlteracao[
+                `${substituicao.periodo_escolar.nome}`
+              ].temNaSolicitacao = true;
+              if (
+                periodosQuePossuemLancheNaAlteracao[
+                  `${substituicao.periodo_escolar.nome}`
+                ].temNaSolicitacao &&
+                periodosQuePossuemLancheNaAlteracao[
+                  `${substituicao.periodo_escolar.nome}`
+                ].status
+              ) {
+                periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+              } else {
+                periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+              }
+            }
+          }
+        }
+      );
+    });
+    this.setState({ periodosQuePossuemLancheNaAlteracao });
+  };
+
   OnEditButtonClicked(param) {
     let dataInicial = this.state.dataInicial;
-    let { substituicoesAlimentacao, periodos } = this.state;
+    let {
+      substituicoesAlimentacao,
+      periodos,
+      ehAlteracaoComLancheRepetida
+    } = this.state;
+    ehAlteracaoComLancheRepetida =
+      param["alteracaoDeCardapio"].eh_alteracao_com_lanche_repetida;
     dataInicial = param["alteracaoDeCardapio"].data_inicial;
     this.props.reset("alteracaoCardapio");
     param.alteracaoDeCardapio.substituicoes.forEach(substituicao => {
@@ -237,6 +284,9 @@ class AlteracaoCardapio extends Component {
       substituicoesAlimentacao[index].substituicoes =
         substituicao.tipo_alimentacao_de.substituicoes;
     });
+    this.atualizaEverificaSeEhAlteracaoRepetida(
+      param.alteracaoDeCardapio.substituicoes
+    );
     periodos.forEach(periodo => {
       periodo.checked =
         param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
@@ -248,7 +298,8 @@ class AlteracaoCardapio extends Component {
       salvarAtualizarLbl: "Atualizar",
       id: param.alteracaoDeCardapio.id_externo,
       substituicoesAlimentacao,
-      periodos
+      periodos,
+      ehAlteracaoComLancheRepetida
     });
   }
 
@@ -269,6 +320,7 @@ class AlteracaoCardapio extends Component {
 
   resetForm() {
     let { periodos } = this.state;
+
     this.props.loadAlteracaoCardapio(null);
     this.props.change("alterar_dia", null);
     this.props.change("data_inicial", null);
@@ -287,6 +339,9 @@ class AlteracaoCardapio extends Component {
       dataInicial: null,
       periodos
     });
+    this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
+    const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+    this.atualizaAlteracoesComLancheMesCorrente(vinculo);
   }
 
   enviaAlteracaoCardapio(uuid) {
@@ -376,8 +431,8 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
-  showModalConfirm() {
-    this.setState({ ...this.state, showModalConfirm: true });
+  showModalConfirm(values) {
+    this.setState({ ...this.state, values, showModalConfirm: true });
   }
 
   closeModalConfirm() {
@@ -481,6 +536,32 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  exibeModalConfirmacao = values => {
+    const {
+      periodosQuePossuemLancheNaAlteracao,
+      ehAlteracaoComLancheRepetida
+    } = this.state;
+    if (
+      periodosQuePossuemLancheNaAlteracao.temRestricao &&
+      ehAlteracaoComLancheRepetida
+    ) {
+      values["eh_alteracao_com_lanche_repetida"] = true;
+      return this.showModalConfirm(values);
+    }
+    if (!ehAlteracaoComLancheRepetida) {
+      if (periodosQuePossuemLancheNaAlteracao.temRestricao) {
+        values["eh_alteracao_com_lanche_repetida"] = true;
+        return this.showModalConfirm(values);
+      } else {
+        values["eh_alteracao_com_lanche_repetida"] = false;
+        this.onSubmit(values);
+      }
+    } else {
+      values["eh_alteracao_com_lanche_repetida"] = false;
+      this.onSubmit(values);
+    }
+  };
+
   render() {
     const {
       loading,
@@ -489,7 +570,8 @@ class AlteracaoCardapio extends Component {
       showModalConfirm,
       dataInicial,
       periodos,
-      substituicoesAlimentacao
+      substituicoesAlimentacao,
+      values
     } = this.state;
     const {
       handleSubmit,
@@ -684,7 +766,9 @@ class AlteracaoCardapio extends Component {
                 <Botao
                   disabled={pristine || submitting}
                   texto={this.state.salvarAtualizarLbl}
-                  onClick={handleSubmit(values => this.onSubmit(values))}
+                  onClick={handleSubmit(values =>
+                    this.exibeModalConfirmacao(values)
+                  )}
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.OutlinePrimary}
                 />
@@ -693,7 +777,7 @@ class AlteracaoCardapio extends Component {
                   disabled={pristine || submitting}
                   type={BUTTON_TYPE.SUBMIT}
                   onClick={handleSubmit(values =>
-                    this.onSubmit({
+                    this.exibeModalConfirmacao({
                       ...values,
                       status: STATUS_DRE_A_VALIDAR
                     })
@@ -709,6 +793,8 @@ class AlteracaoCardapio extends Component {
             <ModalConfirmaAlteracao
               showModal={showModalConfirm}
               closeModal={this.closeModalConfirm}
+              values={values}
+              onSubmit={this.onSubmit}
             />
           </form>
         )}
