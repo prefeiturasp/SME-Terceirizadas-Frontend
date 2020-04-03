@@ -1,9 +1,11 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
+
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   maxValue,
@@ -753,6 +755,9 @@ class InclusaoDeAlimentacao extends Component {
                                 this.onDataChanged(event.target.value)
                               }
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                               label="Dia"
                               required
                               validate={required}
@@ -796,6 +801,9 @@ class InclusaoDeAlimentacao extends Component {
                               required
                               validate={required}
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                             />
                             <div>
                               <Field
@@ -808,6 +816,9 @@ class InclusaoDeAlimentacao extends Component {
                                   )
                                 }
                                 minDate={getDataObj(dataInicialContinua)}
+                                maxDate={moment()
+                                  .endOf("year")
+                                  .toDate()}
                                 disabled={!dataInicialContinua}
                                 name="data_final"
                                 label="Até"

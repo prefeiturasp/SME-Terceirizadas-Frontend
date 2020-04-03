@@ -1,8 +1,10 @@
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
+
 import { PERFIL } from "../../../constants";
 import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
@@ -471,6 +473,9 @@ export class SolicitacaoDeKitLanche extends Component {
                     name="evento_data"
                     onBlur={event => this.validaDiasUteis(event)}
                     minDate={proximos_dois_dias_uteis}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                     required
                     validate={required}
                   />

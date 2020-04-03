@@ -1,8 +1,10 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
 import {
   createSuspensaoDeAlimentacao,
   deleteSuspensaoDeAlimentacao,
@@ -487,6 +489,9 @@ class FoodSuspensionEditor extends Component {
                             component={InputComData}
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
+                            maxDate={moment()
+                              .endOf("year")
+                              .toDate()}
                             onChange={value =>
                               this.handleField(`data${key}`, value, key)
                             }
