@@ -226,8 +226,13 @@ const ENDPOINT = {
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
     "solicitacoes-dieta-especial-ativas-inativas",
-  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei"
+  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
+  SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
+
+ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
+  `${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/informa-suspensao/`;
+
 export { ENDPOINT };

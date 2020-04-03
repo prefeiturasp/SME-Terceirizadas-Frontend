@@ -31,14 +31,12 @@ import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/Statu
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
 import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
-import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
@@ -53,9 +51,11 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+
 import * as constants from "./constants";
 import {
   alteracaoCardapio,
+  suspensaoAlimentacao,
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
@@ -67,7 +67,8 @@ import {
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
-  StatusSolicitacoesDietaEspecial
+  StatusSolicitacoesDietaEspecial,
+  inclusaoCardapio
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
@@ -155,13 +156,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
-    component: InclusaoDeAlimentacaoPage,
-    exact: false,
-    tipoUsuario: usuarioEscola()
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO_CEI}`,
-    component: InclusaoDeAlimentacaoCEIPage,
+    component: inclusaoCardapio(),
     exact: false,
     tipoUsuario: usuarioEscola()
   },
@@ -173,6 +168,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
+    //AQUI POW
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
     tipoUsuario: usuarioEscola()
@@ -185,7 +181,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
-    component: SuspensaoDeAlimentacaoPage,
+    component: suspensaoAlimentacao(),
     exact: false,
     tipoUsuario: usuarioEscola()
   },

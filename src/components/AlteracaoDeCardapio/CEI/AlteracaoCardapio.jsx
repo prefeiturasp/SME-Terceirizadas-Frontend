@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Select } from "../../Shareable/Select";
 import { Botao } from "../../Shareable/Botao";
+import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
@@ -24,14 +25,12 @@ import {
 import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
-import { faixaToString } from "../../../helpers/faixasEtarias";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
 import "../style.scss";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import InputText from "../../Shareable/Input/InputText";
 import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
@@ -544,54 +543,12 @@ class AlteracaoCardapio extends Component {
                         />
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
-                        <div>
-                          <table
-                            className={`table tabela-substituicao ${
-                              periodo.nome === "PARCIAL"
-                                ? "tabela-substituicao-parcial"
-                                : ""
-                            }`}
-                          >
-                            <thead className="thead-light">
-                              <tr>
-                                <th>Faixa Etária</th>
-                                {periodo.nome !== "PARCIAL" && (
-                                  <th>Alunos Matriculados</th>
-                                )}
-                                <th>Quantidade</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {periodo.alunosPorFaixaEtaria.map(
-                                (faixa, key) => (
-                                  <tr key={key}>
-                                    <td>{faixaToString(faixa.faixa_etaria)}</td>
-                                    {periodo.nome !== "PARCIAL" && (
-                                      <td>{faixa.count}</td>
-                                    )}
-                                    <td>
-                                      <Field
-                                        component={InputText}
-                                        name={`qtde-faixa-${
-                                          faixa.faixa_etaria.uuid
-                                        }`}
-                                        validate={faixa.validators}
-                                        type="number"
-                                      />
-                                    </td>
-                                  </tr>
-                                )
-                              )}
-                              <tr>
-                                <th>Total{" >>"}</th>
-                                {periodo.nome !== "PARCIAL" && (
-                                  <td>{totalAlunos}</td>
-                                )}
-                                <th>{totalSelecionados}</th>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <TabelaQuantidadePorFaixaEtaria
+                          alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
+                          escondeTotalAlunos={periodo.nome === "PARCIAL"}
+                          totalAlunos={totalAlunos}
+                          totalSelecionados={totalSelecionados}
+                        />
                       )}
                     </FormSection>
                   );
