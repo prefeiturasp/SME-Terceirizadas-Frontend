@@ -21,6 +21,7 @@ export default class DataTermino extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.onComDataTerminoSelected = this.onComDataTerminoSelected.bind(this);
     this.onSemDataTerminoSelected = this.onSemDataTerminoSelected.bind(this);
+    this.openDatepicker = this.openDatepicker.bind(this);
   }
   handleChange(data) {
     this.props.input.onChange(data);
@@ -31,6 +32,10 @@ export default class DataTermino extends Component {
   onSemDataTerminoSelected() {
     this.props.input.onChange("");
     this.setState({ comData: false });
+  }
+  openDatepicker() {
+    this._calendar.setOpen(true);
+    this._calendar.setFocus();
   }
   dataSelecionada(data) {
     if (data.length !== 0) {
@@ -99,6 +104,7 @@ export default class DataTermino extends Component {
             name={name}
             disabled={!comData}
             dateFormat="dd/MM/yyyy"
+            strictParsing
           />
           {hasIcon && (
             <i onClick={this.openDatepicker} className="fas fa-calendar-alt" />
