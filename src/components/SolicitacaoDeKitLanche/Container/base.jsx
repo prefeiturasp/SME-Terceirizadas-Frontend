@@ -11,7 +11,10 @@ import {
   required,
   maxLength
 } from "../../../helpers/fieldValidators";
-import { validateTourRequestForm } from "../../../helpers/formValidators/tourRequestValidators";
+import {
+  validateFormKitLanchePasseio,
+  validateFormKitLanchePasseioCei
+} from "./validators";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -212,7 +215,8 @@ export class SolicitacaoDeKitLanche extends Component {
 
   onSubmit(values) {
     values.kit_lanche = this.state.kitsChecked;
-    if (!this.state.ehCei) {
+    const { ehCei } = this.state;
+    if (!ehCei) {
       values.quantidade_alunos = parseInt(values.quantidade_alunos);
     }
     values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
@@ -221,9 +225,12 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitacao_kit_lanche.confirmar = values.confirmar;
     }
     try {
-      validateTourRequestForm(values);
+      validateFormKitLanchePasseio(values);
+      if (ehCei) {
+        validateFormKitLanchePasseioCei(values);
+      }
       return new Promise(resolve => {
-        if (this.state.ehCei) {
+        if (ehCei) {
           this.salvarOuEnviarCei(solicitacao_kit_lanche, values);
         } else {
           this.salvarOuEnviar(solicitacao_kit_lanche, values);
@@ -628,10 +635,11 @@ export class SolicitacaoDeKitLanche extends Component {
 }
 
 SolicitacaoDeKitLanche = reduxForm({
-  form: "tourRequest",
+  form: "formKitLanche",
   destroyOnUnmount: false,
   onChange: async (values, dispatch, props, previousValues) => {
     if (
+      localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI &&
       values.evento_data &&
       (previousValues.evento_data === undefined ||
         previousValues.evento_data !== values.evento_data)
@@ -663,7 +671,7 @@ SolicitacaoDeKitLanche = reduxForm({
   }
 })(SolicitacaoDeKitLanche);
 
-const selector = formValueSelector("tourRequest");
+const selector = formValueSelector("formKitLanche");
 const mapStateToProps = state => {
   return {
     tempo_passeio: selector(state, "tempo_passeio"),

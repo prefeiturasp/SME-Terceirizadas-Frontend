@@ -1,4 +1,5 @@
 const montaObjetoFaixasEtarias = faixas_etarias => {
+  if (faixas_etarias === undefined) return [];
   const lista = [];
   Object.entries(faixas_etarias).forEach(dadosFaixa => {
     const [faixa_etaria, quantidade] = dadosFaixa;

@@ -376,7 +376,7 @@ class AlteracaoCardapio extends Component {
     if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
       this.props.change(
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-        null
+        ""
       );
     }
   }
