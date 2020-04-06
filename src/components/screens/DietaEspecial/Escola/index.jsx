@@ -28,7 +28,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
 import { InputComData } from "../../../Shareable/DatePicker";
-import InputFile from "../../../Shareable/Input/InputFile";
+import ManagedInputFileField from "../../../Shareable/Input/InputFile/ManagedField";
 import InputText from "../../../Shareable/Input/InputText";
 import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
@@ -109,8 +109,13 @@ class solicitacaoDietaEspecial extends Component {
   };
 
   onSubmit(payload) {
-    return new Promise(async () => {
-      payload.anexos = this.state.files;
+    payload.anexos = payload.anexos.map(anexo => {
+      return {
+        nome: anexo.nome,
+        arquivo: anexo.base64
+      };
+    });
+    return new Promise(async (resolve, reject) => {
       const response = await criaDietaEspecial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Solicitação realizada com sucesso.");
@@ -122,23 +127,25 @@ class solicitacaoDietaEspecial extends Component {
           solicitacoesVigentes: null
         });
         this.resetForm();
+        resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(getError(response.data));
+        reject();
       } else {
         toastError(
           `Erro ao solicitar dieta especial: ${getError(response.data)}`
         );
+        reject();
       }
     });
   }
 
   resetForm() {
     this.props.reset("solicitacaoDietaEspecial");
-    this.setState({ files: [] });
   }
 
   render() {
-    const { quantidadeAlunos, submitted, solicitacoesVigentes } = this.state;
+    const { quantidadeAlunos, solicitacoesVigentes } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -231,15 +238,12 @@ class solicitacaoDietaEspecial extends Component {
             </div>
             <div className="col-3 btn">
               <Field
-                component={InputFile}
+                component={ManagedInputFileField}
                 className="inputfile"
                 texto="Anexar"
-                name="files"
+                name="anexos"
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                setFiles={this.setFiles}
-                removeFile={this.removeFile}
-                submitted={submitted}
-                multiple
+                validate={[required]}
               />
             </div>
           </section>
