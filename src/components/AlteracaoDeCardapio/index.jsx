@@ -625,6 +625,9 @@ class AlteracaoCardapio extends Component {
                     onBlur={event => this.onAlterarDiaChanged(event)}
                     name="alterar_dia"
                     minDate={proximos_dois_dias_uteis}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
                   />
@@ -634,6 +637,9 @@ class AlteracaoCardapio extends Component {
                     name="data_inicial"
                     label="De"
                     minDate={proximos_dois_dias_uteis}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                     disabled={this.props.alterar_dia}
                     onChange={value => this.obtemDataInicial(value)}
                   />
@@ -643,6 +649,9 @@ class AlteracaoCardapio extends Component {
                     label="Até"
                     disabled={dataInicial === null || this.props.alterar_dia}
                     minDate={dataInicial}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                   />
                 </section>
                 <section className="section-form-motivo mt-3">
