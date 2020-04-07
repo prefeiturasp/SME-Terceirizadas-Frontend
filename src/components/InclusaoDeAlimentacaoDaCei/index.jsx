@@ -525,6 +525,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     name="data"
                     required
                     validate={required}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                     onChange={value => {
                       this.setadiaInclusao(value);
                     }}
