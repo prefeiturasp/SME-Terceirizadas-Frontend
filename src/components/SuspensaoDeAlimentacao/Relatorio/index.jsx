@@ -6,8 +6,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA
 } from "../../../configs/constants";
-import { statusEnum } from "../../../constants";
-import { usuarioTerceirizada, getError } from "../../../helpers/utilities";
+import { getError } from "../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -126,18 +125,6 @@ class RelatorioSuspensaoAlimentacao extends Component {
                   suspensaoAlimentacao={suspensaoAlimentacao}
                   dadosEscola={dadosEscola}
                 />
-                {suspensaoAlimentacao.status === statusEnum.INFORMADO &&
-                  usuarioTerceirizada() && (
-                    <div className="form-group row float-right mt-4">
-                      <Botao
-                        texto="Ciente"
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    </div>
-                  )}
               </div>
             </div>
           </form>
