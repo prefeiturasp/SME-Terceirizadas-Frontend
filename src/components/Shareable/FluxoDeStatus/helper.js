@@ -18,12 +18,6 @@ export const fluxoPartindoEscola = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
@@ -36,12 +30,6 @@ export const fluxoDietaEspecialPartindoEscola = [
   },
   {
     titulo: "CODAE",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -78,12 +66,6 @@ export const fluxoDietaEspecialComInativacao = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
@@ -99,24 +81,12 @@ export const fluxoPartindoDRE = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
 export const fluxoInformativoPartindoEscola = [
   {
     titulo: "Solicitação Realizada",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null

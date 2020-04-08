@@ -249,15 +249,29 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova === "Validar" ? (
-                        alteracaoDeCardapio.eh_alteracao_com_lanche_repetida ? (
-                          <Botao
-                            texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.SUBMIT}
-                            onClick={() => this.showModalConfirm()}
-                            style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
-                          />
+                      (textoBotaoAprova !== "Ciente" &&
+                        (textoBotaoAprova === "Validar" ? (
+                          alteracaoDeCardapio.eh_alteracao_com_lanche_repetida ? (
+                            <Botao
+                              texto={textoBotaoAprova}
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.showModalConfirm()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          ) : (
+                            <Botao
+                              texto={textoBotaoAprova}
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() =>
+                                EXIBIR_MODAL_AUTORIZACAO
+                                  ? this.showAutorizarModal()
+                                  : this.handleSubmit()
+                              }
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          )
                         ) : (
                           <Botao
                             texto={textoBotaoAprova}
@@ -270,20 +284,7 @@ class Relatorio extends Component {
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
                           />
-                        )
-                      ) : (
-                        <Botao
-                          texto={textoBotaoAprova}
-                          type={BUTTON_TYPE.SUBMIT}
-                          onClick={() =>
-                            EXIBIR_MODAL_AUTORIZACAO
-                              ? this.showAutorizarModal()
-                              : this.handleSubmit()
-                          }
-                          style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
-                        />
-                      ))}
+                        )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
