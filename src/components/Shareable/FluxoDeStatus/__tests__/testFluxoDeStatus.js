@@ -36,7 +36,7 @@ describe("Teste <FluxoDeStatus>", () => {
   });
 
   it("renderiza a quantidade de titulos passados", () => {
-    expect(wrapper.find(".progressbar-titles").find("li")).toHaveLength(4);
+    expect(wrapper.find(".progressbar-titles").find("li")).toHaveLength(3);
   });
 
   it("renderiza o primeiro titulo corretamente", () => {
@@ -76,6 +76,6 @@ describe("Teste <FluxoDeStatus>", () => {
         .find("li")
         .at(2)
         .props().style
-    ).toHaveProperty("width", "25%");
+    ).toHaveProperty("width", "33.333333333333336%");
   });
 });
