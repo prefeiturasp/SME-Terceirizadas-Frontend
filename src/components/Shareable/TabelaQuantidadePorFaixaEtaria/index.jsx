@@ -21,7 +21,11 @@ export default class TabelaQuantidadePorFaixaEtaria extends Component {
     Object.values(alunosPorFaixaEtaria).forEach(v => (totalAlunos += v.count));
     return (
       <div>
-        <table className="table tabela-substituicao">
+        <table
+          className={`table tabela-substituicao ${
+            escondeTotalAlunos ? "tabela-substituicao-parcial" : ""
+          }`}
+        >
           <thead className="thead-light">
             <tr>
               <th>Faixa Etária</th>
