@@ -169,6 +169,7 @@ export class SolicitacaoDeKitLanche extends Component {
       type: "LOAD_ALUNOS_POR_FAIXA_ETARIA",
       data: undefined
     });
+    this.props.dispatch({ type: "SET_TOTAL_ALUNOS_SELECIONADOS", data: 0 });
     this.refresh();
   }
 
