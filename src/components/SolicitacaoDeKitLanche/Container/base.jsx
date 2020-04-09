@@ -165,6 +165,10 @@ export class SolicitacaoDeKitLanche extends Component {
       initialValues: true,
       kitsChecked: []
     });
+    this.props.dispatch({
+      type: "LOAD_ALUNOS_POR_FAIXA_ETARIA",
+      data: undefined
+    });
     this.refresh();
   }
 
@@ -189,6 +193,7 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   componentWillUnmount() {
+    this.resetForm();
     this.props.reset();
   }
 
@@ -660,6 +665,8 @@ SolicitacaoDeKitLanche = reduxForm({
         dispatch({
           type: "LOAD_ALUNOS_POR_FAIXA_ETARIA",
           data: response.data.results
+            .filter(info => info.faixa_etaria.inicio >= 12)
+            .sort((a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio)
         });
       }
     }
