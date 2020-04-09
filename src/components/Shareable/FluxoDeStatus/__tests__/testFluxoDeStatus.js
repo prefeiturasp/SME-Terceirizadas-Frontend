@@ -1,6 +1,7 @@
 import { mount } from "enzyme";
 import React from "react";
 import { FluxoDeStatus } from "../../FluxoDeStatus";
+import { fluxoPartindoEscola } from "../helper";
 
 describe("Teste <FluxoDeStatus>", () => {
   let wrapper;
@@ -22,7 +23,12 @@ describe("Teste <FluxoDeStatus>", () => {
   ];
 
   beforeAll(() => {
-    wrapper = mount(<FluxoDeStatus listaDeStatus={listaDeStatus} />);
+    wrapper = mount(
+      <FluxoDeStatus
+        listaDeStatus={listaDeStatus}
+        fluxo={fluxoPartindoEscola}
+      />
+    );
   });
 
   it("renderiza", () => {
@@ -30,7 +36,7 @@ describe("Teste <FluxoDeStatus>", () => {
   });
 
   it("renderiza a quantidade de titulos passados", () => {
-    expect(wrapper.find(".progressbar-titles").find("li")).toHaveLength(4);
+    expect(wrapper.find(".progressbar-titles").find("li")).toHaveLength(3);
   });
 
   it("renderiza o primeiro titulo corretamente", () => {
@@ -70,6 +76,6 @@ describe("Teste <FluxoDeStatus>", () => {
         .find("li")
         .at(2)
         .props().style
-    ).toHaveProperty("width", "25%");
+    ).toHaveProperty("width", "33.333333333333336%");
   });
 });

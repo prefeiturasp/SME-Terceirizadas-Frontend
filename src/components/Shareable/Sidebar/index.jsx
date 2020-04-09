@@ -9,7 +9,13 @@ import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
-import { TIPO_PERFIL } from "../../../constants";
+import {
+  usuarioCODAEGestaoAlimentacao,
+  usuarioCODAEDietaEspecial,
+  usuarioDiretoriaRegional,
+  usuarioEscola,
+  usuarioTerceirizada
+} from "../../../helpers/utilities";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -20,7 +26,6 @@ export class Sidebar extends Component {
   }
 
   render() {
-    const tipo_perfil = localStorage.getItem("tipo_perfil");
     const {
       nome,
       toggle,
@@ -52,14 +57,11 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
-                <AvatarCODAE />
-              )}
-              {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <AvatarDRE />}
-              {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
-              {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
-                <AvatarTerceirizada />
-              )}
+              {(usuarioCODAEDietaEspecial() ||
+                usuarioCODAEGestaoAlimentacao()) && <AvatarCODAE />}
+              {usuarioDiretoriaRegional() && <AvatarDRE />}
+              {usuarioEscola() && <AvatarEscola />}
+              {usuarioTerceirizada() && <AvatarTerceirizada />}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
@@ -79,23 +81,22 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          <div className="sidebar-wrapper">
-            <div className="text-center mx-auto justify-content-center p-2">
-              <span className="text-bold text-white small">
-                RF: {registro_funcional} <br />
-                {nome_instituicao}
-              </span>
+          {!toggled && (
+            <div className="sidebar-wrapper">
+              <div className="text-center mx-auto justify-content-center p-2">
+                <span className="text-bold text-white small">
+                  RF: {registro_funcional} <br />
+                  {nome_instituicao}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div className="sidebar-wrapper div-submenu">
-            {tipo_perfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA && (
-              <SidebarCODAE />
-            )}
-            {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && <SidebarDRE />}
-            {tipo_perfil === TIPO_PERFIL.ESCOLA && <SidebarEscola />}
-            {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
-              <SidebarTerceirizada />
-            )}
+            {(usuarioCODAEDietaEspecial() ||
+              usuarioCODAEGestaoAlimentacao()) && <SidebarCODAE />}
+            {usuarioDiretoriaRegional() && <SidebarDRE />}
+            {usuarioEscola() && <SidebarEscola />}
+            {usuarioTerceirizada() && <SidebarTerceirizada />}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">

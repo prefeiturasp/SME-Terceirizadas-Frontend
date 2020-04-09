@@ -54,7 +54,7 @@ export default class StatusSolicitacoesTerceirizada extends Component {
             icone={"fa-exclamation-triangle"}
           />
           <CardStatusDeSolicitacaoLargo
-            titulo={"Recusadas"}
+            titulo={"Negadas"}
             solicitacoes={solicitacoes}
             tipo={"card-denied"}
             icone={"fa-check"}

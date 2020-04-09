@@ -17,6 +17,16 @@ body {
   height: 100%;
 }
 
+.sidebar {
+  &:not(.toggled) {
+    .sidebar-wrapper {
+      &.div-submenu {
+        overflow-x: auto;
+      }
+    }
+  }
+}
+
 .sidebar-dark {
   ::-webkit-scrollbar {
     width: 8px;
@@ -41,7 +51,6 @@ body {
   }
   .sidebar-wrapper {
     &.div-submenu {
-      overflow-x: auto;
       height: max-content;
     }
     .nav-item {
@@ -52,7 +61,7 @@ body {
         padding-bottom: 0 !important;
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
-        width: 14rem;
+        width: 15rem;
         .submenu {
           .collapse-item {
             padding-left: 2rem;
@@ -163,11 +172,6 @@ body {
       }
       i {
         padding-right: 13.4px;
-      }
-      &:hover,
-      &:not(.collapsed) {
-        //height: 35px;
-        padding-top: 0.4rem;
       }
     }
   }

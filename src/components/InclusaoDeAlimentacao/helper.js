@@ -13,6 +13,27 @@ export const formatarPeriodos = periodos => {
   return periodos;
 };
 
+export const construirPeriodosECombos = periodos => {
+  let periodosCombo = [];
+  periodos.forEach(periodo => {
+    let dicionarioPeriodo = {
+      checked: false,
+      tipos_alimentacao_selecionados: [],
+      numero_alunos: null,
+      nome: periodo.periodo_escolar.nome,
+      uuid: periodo.periodo_escolar.uuid,
+      tipos_alimentacao: periodo.combos.map(combo => {
+        return {
+          nome: combo.label,
+          uuid: combo.uuid
+        };
+      })
+    };
+    periodosCombo.push(dicionarioPeriodo);
+  });
+  return periodosCombo;
+};
+
 export const extrairTiposALimentacao = tiposAlimentacao => {
   let uuidsTiposAlimentacao = [];
   tiposAlimentacao.forEach(tipoAlimentacao => {
@@ -81,4 +102,32 @@ export const formatarSubmissaoSolicitacaoNormal = (values, meusDados) => {
   dataFormatada.quantidades_periodo = quantidades_periodo;
   dataFormatada.descricao = values.descricao;
   return dataFormatada;
+};
+
+const retornaQuantidadeDeAlunosNoPeriodoEscolar = (
+  periodoUuid,
+  periodosQuantidadeAlunos
+) => {
+  let quantidadeAlunos = null;
+  periodosQuantidadeAlunos.forEach(periodo => {
+    if (periodo.periodo_escolar.uuid === periodoUuid) {
+      quantidadeAlunos = periodo.quantidade_alunos;
+    }
+  });
+  return quantidadeAlunos;
+};
+
+export const abstraiPeriodosComAlunosMatriculados = (
+  periodos,
+  periodosQuantidadeAlunos
+) => {
+  periodos.forEach(periodo => {
+    periodo["maximo_alunos"] = retornaQuantidadeDeAlunosNoPeriodoEscolar(
+      periodo.uuid,
+      periodosQuantidadeAlunos
+    );
+    periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["validador"] = [];
+  });
+  return periodos;
 };

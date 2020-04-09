@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getTerceirizadaPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
+import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraRegular
 } from "./../../../../helpers/painelPedidos";
-import { TERCEIRIZADA } from "../../../../configs/constants";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import Select from "../../../Shareable/Select";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -63,7 +59,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    const { visaoPorCombo, pedidosAutorizados, pedidosReprovados } = this.props;
+    const { visaoPorCombo } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -98,7 +94,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -110,7 +105,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -122,37 +116,9 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações Unificadas Autorizadas"
-                        }
-                        parametroURL={TERCEIRIZADA}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações Unificadas Reprovadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </form>

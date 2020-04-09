@@ -1,17 +1,16 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { INVERSAO_CARDAPIO } from "../../../configs/constants";
+import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants/statusEnum";
+import { statusEnum } from "../../../constants";
 import {
-  dataParaUTC,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
+  prazoDoPedidoMensagem,
+  getError
 } from "../../../helpers/utilities";
-import { getDiasUteis } from "../../../services/diasUteis.service";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
 import {
@@ -19,10 +18,11 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "../../Shareable/Botao/constants";
-import { FluxoDeStatus } from "../../Shareable/FluxoDeStatus";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
-import { corDaMensagem, prazoDoPedidoMensagem } from "./helper";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
+import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
+import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import CorpoRelatorio from "./componentes/CorpoRelatorio";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -33,12 +33,15 @@ class Relatorio extends Component {
       redirect: false,
       showNaoAprovaModal: false,
       showModal: false,
-      InversaoCardapio: null,
+      showAutorizarModal: false,
+      inversaoDiaCardapio: null,
       escolaDaInversao: null,
-      prazoDoPedidoMensagem: null
+      prazoDoPedidoMensagem: null,
+      erro: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
@@ -57,34 +60,31 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
-      );
-      if (uuid) {
-        getInversaoDeDiaDeCardapio(uuid).then(response => {
-          const InversaoCardapio = response.data;
-          const dataMaisProxima = moment(
-            InversaoCardapio.data_de,
-            "DD/MM/YYYY"
-          );
-
+    if (uuid) {
+      getInversaoDeDiaDeCardapio(uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          const inversaoDiaCardapio = response.data;
           this.setState({
-            InversaoCardapio,
+            inversaoDiaCardapio,
             uuid,
-            escolaDaInversao: InversaoCardapio.escola,
+            escolaDaInversao: inversaoDiaCardapio.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
-              dataMaisProxima,
-              proximos_dois_dias_uteis,
-              proximos_cinco_dias_uteis
+              inversaoDiaCardapio.prioridade
             )
           });
-        });
-      }
-    });
+        } else if (response.data.detail) {
+          this.setState({ erro: true });
+          toastError(getError(response.data));
+        } else {
+          this.setState({ erro: true });
+          toastError(
+            `Erro ao carregar relatório de Inversão de dia de Cardápio ${getError(
+              response.data
+            )}`
+          );
+        }
+      });
+    }
   }
 
   showQuestionamentoModal(resposta_sim_nao) {
@@ -103,10 +103,18 @@ class Relatorio extends Component {
     this.setState({ showNaoAprovaModal: false });
   }
 
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
+  }
+
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
-        InversaoCardapio: response.data
+        inversaoDiaCardapio: response.data
       });
     });
   }
@@ -131,18 +139,22 @@ class Relatorio extends Component {
 
   render() {
     const {
-      InversaoCardapio,
+      inversaoDiaCardapio,
       prazoDoPedidoMensagem,
       escolaDaInversao,
       uuid,
       resposta_sim_nao,
       showNaoAprovaModal,
-      showQuestionamentoModal
+      showQuestionamentoModal,
+      showAutorizarModal,
+      erro
     } = this.state;
     const {
+      visao,
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
+      endpointAprovaSolicitacao,
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
@@ -151,9 +163,9 @@ class Relatorio extends Component {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
-      (InversaoCardapio &&
-        InversaoCardapio.foi_solicitado_fora_do_prazo &&
-        InversaoCardapio.status === statusEnum.CODAE_QUESTIONADO &&
+      (inversaoDiaCardapio &&
+        inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+        inversaoDiaCardapio.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
       (![
@@ -161,23 +173,29 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
-      (InversaoCardapio &&
-        (!InversaoCardapio.foi_solicitado_fora_do_prazo ||
+      (inversaoDiaCardapio &&
+        (!inversaoDiaCardapio.foi_solicitado_fora_do_prazo ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
-          ].includes(InversaoCardapio.status)) &&
+          ].includes(inversaoDiaCardapio.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
-      InversaoCardapio &&
-      InversaoCardapio.foi_solicitado_fora_do_prazo &&
+      inversaoDiaCardapio &&
+      inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
-        InversaoCardapio.status
+        inversaoDiaCardapio.status
       );
+    const EXIBIR_MODAL_AUTORIZACAO =
+      visao === CODAE &&
+      inversaoDiaCardapio &&
+      inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+      !inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
+        .resposta_sim_nao;
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -185,7 +203,7 @@ class Relatorio extends Component {
             showModal={showNaoAprovaModal}
             closeModal={this.closeNaoAprovaModal}
             endpoint={endpointNaoAprovaSolicitacao}
-            solicitacao={InversaoCardapio}
+            solicitacao={inversaoDiaCardapio}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
@@ -203,14 +221,26 @@ class Relatorio extends Component {
             endpoint={endpointQuestionamento}
           />
         )}
-        {!InversaoCardapio ? (
-          <div>Carregando...</div>
-        ) : (
+        {erro && (
+          <div>Opss... parece que ocorreu um erro ao carregar a página.</div>
+        )}
+        {!inversaoDiaCardapio && !erro && <div>Carregando...</div>}
+        {inversaoDiaCardapio && (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Inversão de dia de cardápio - Pedido # ${
-              InversaoCardapio.id_externo
+            {endpointAprovaSolicitacao && (
+              <ModalAutorizarAposQuestionamento
+                showModal={showAutorizarModal}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            )}
+            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
+              inversaoDiaCardapio.id_externo
             }`}</span>
-            <Link to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`}>
+            <Link to={`/`}>
               <Botao
                 texto="voltar"
                 titulo="voltar"
@@ -222,120 +252,18 @@ class Relatorio extends Component {
             </Link>
             <div className="card mt-3">
               <div className="card-body">
-                <div className="row">
-                  <p
-                    className={`col-12 title-message ${corDaMensagem(
-                      prazoDoPedidoMensagem
-                    )}`}
-                  >
-                    {prazoDoPedidoMensagem}
-                    <Botao
-                      type={BUTTON_TYPE.BUTTON}
-                      titulo="imprimir"
-                      style={BUTTON_STYLE.BLUE}
-                      icon={BUTTON_ICON.PRINT}
-                      className="float-right"
-                    />
-                  </p>
-                  <div className="col-2">
-                    <span className="badge-sme badge-secondary-sme">
-                      <span className="id-of-solicitation-dre">
-                        # {InversaoCardapio.id_externo}
-                      </span>
-                      <br />{" "}
-                      <span className="number-of-order-label">
-                        ID DO PEDIDO
-                      </span>
-                    </span>
-                  </div>
-                  <div className="report-div-beside-order my-auto col-8">
-                    <span className="requester">Escola Solicitante</span>
-                    <br />
-                    <span className="dre-name">
-                      {InversaoCardapio.escola && InversaoCardapio.escola.nome}
-                    </span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-2 report-label-value">
-                    <p>DRE</p>
-                    <p className="value-important">
-                      {InversaoCardapio.escola &&
-                        InversaoCardapio.escola.diretoria_regional &&
-                        InversaoCardapio.escola.diretoria_regional.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Lote</p>
-                    <p className="value-important">
-                      {escolaDaInversao.lote && escolaDaInversao.lote.nome}
-                    </p>
-                  </div>
-                  <div className="col-2 report-label-value">
-                    <p>Tipo de Gestão</p>
-                    <p className="value-important">
-                      {escolaDaInversao &&
-                        escolaDaInversao.tipo_gestao &&
-                        escolaDaInversao.tipo_gestao.nome}
-                    </p>
-                  </div>
-                </div>
-                <hr />
-                {InversaoCardapio.logs && (
-                  <div className="row">
-                    <FluxoDeStatus listaDeStatus={InversaoCardapio.logs} />
-                  </div>
-                )}
-                <hr />
-                <div className="row">
-                  <div className="report-students-div col-3">
-                    <span>Nº de alunos matriculados total</span>
-                    <span>{escolaDaInversao.quantidade_alunos}</span>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p className="value">
-                      Descrição da inversão de dias de cardápio
-                    </p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-3 report-label-value">
-                    <p>De:</p>
-                    <p className="value">{InversaoCardapio.data_de}</p>
-                  </div>
-                  <div className="col-3 report-label-value">
-                    <p>Para:</p>
-                    <p className="value">{InversaoCardapio.data_para}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Motivo</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.motivo
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 report-label-value">
-                    <p>Observações</p>
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: InversaoCardapio.observacao
-                      }}
-                    />
-                  </div>
-                </div>
-                <RelatorioHistoricoQuestionamento
-                  solicitacao={InversaoCardapio}
+                <CorpoRelatorio
+                  inversaoDiaCardapio={inversaoDiaCardapio}
+                  escolaDaInversao={escolaDaInversao}
+                  prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                 />
-                {visualizaBotoesDoFluxo(InversaoCardapio) && (
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={inversaoDiaCardapio}
+                />
+                <RelatorioHistoricoQuestionamento
+                  solicitacao={inversaoDiaCardapio}
+                />
+                {visualizaBotoesDoFluxo(inversaoDiaCardapio) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
@@ -346,15 +274,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.handleSubmit()}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" && (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={

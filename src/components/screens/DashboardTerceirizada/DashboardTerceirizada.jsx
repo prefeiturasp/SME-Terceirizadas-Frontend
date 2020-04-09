@@ -1,35 +1,31 @@
 import React, { Component } from "react";
 import { Collapse } from "react-collapse";
-import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import {
   TERCEIRIZADA,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_PENDENTES,
+  SOLICITACOES_COM_QUESTIONAMENTO,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/filtroVisao";
+import { FILTRO_VISAO } from "../../../constants";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,
+  getSolicitacoesComQuestionamento,
   getSolicitacoesNegadasTerceirizada,
-  getSolicitacoesPendentesTerceirizada,
   getSolicitacoesAutorizadasTerceirizada,
   getSolicitacoesPendenteCienciaTerceirizada
 } from "../../../services/painelTerceirizada.service";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
-import Select from "../../Shareable/Select";
-import { MenuIcones } from "./components/MenuIcones";
 import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
 import { FILTRO } from "../const";
 
@@ -39,7 +35,7 @@ class DashboardTerceirizada extends Component {
     this.state = {
       secao: null,
       cards: this.props.cards,
-      pendentesListFiltered: [],
+      questionamentosListFiltered: [],
       canceladasListFiltered: [],
       negadasListFiltered: [],
       autorizadasListFiltered: [],
@@ -48,7 +44,7 @@ class DashboardTerceirizada extends Component {
       resumo: [],
 
       collapsed: true,
-      pendentesListSolicitacao: [],
+      questionamentosListSolicitacao: [],
       canceladasListSolicitacao: [],
       loadingPainelSolicitacoes: true,
 
@@ -80,7 +76,7 @@ class DashboardTerceirizada extends Component {
 
   setfiltroPorVencimento(filtroPorVencimento) {
     this.setState({ filtroPorVencimento }, () => {
-      this.carregaResumosPendencias();
+      this.carregaResumosQuestionamentos();
     });
   }
 
@@ -93,12 +89,12 @@ class DashboardTerceirizada extends Component {
           visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
       },
       () => {
-        this.carregaResumosPendencias();
+        this.carregaResumosQuestionamentos();
       }
     );
   }
 
-  async carregaResumosPendencias() {
+  async carregaResumosQuestionamentos() {
     const { minhaTerceirizada, visao, filtroPorVencimento } = this.state;
     this.setState({ loadingPainelSolicitacoes: true });
     const resumo = await getSolicitacoesPendenteCienciaTerceirizada(
@@ -127,16 +123,16 @@ class DashboardTerceirizada extends Component {
       minhaTerceirizada = response.vinculo_atual.instituicao.uuid;
       this.setState({ minhaTerceirizada });
 
-      this.carregaResumosPendencias();
+      this.carregaResumosQuestionamentos();
 
-      getSolicitacoesPendentesTerceirizada(minhaTerceirizada).then(request => {
-        let pendentesListSolicitacao = ajustarFormatoLog(
+      getSolicitacoesComQuestionamento(minhaTerceirizada).then(request => {
+        let questionamentosListSolicitacao = ajustarFormatoLog(
           request.results,
           LOG_PARA.TERCEIRIZADA
         );
         this.setState({
-          pendentesListSolicitacao,
-          pendentesListFiltered: pendentesListSolicitacao
+          questionamentosListSolicitacao,
+          questionamentosListFiltered: questionamentosListSolicitacao
         });
       });
 
@@ -180,14 +176,17 @@ class DashboardTerceirizada extends Component {
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
     const {
-      pendentesListSolicitacao,
+      questionamentosListSolicitacao,
       canceladasListSolicitacao,
       autorizadasListSolicitacao,
       negadasListSolicitacao
     } = this.state;
 
     this.setState({
-      pendentesListFiltered: this.filtrarNome(pendentesListSolicitacao, event),
+      questionamentosListFiltered: this.filtrarNome(
+        questionamentosListSolicitacao,
+        event
+      ),
       autorizadasListFiltered: this.filtrarNome(
         autorizadasListSolicitacao,
         event
@@ -198,19 +197,14 @@ class DashboardTerceirizada extends Component {
   }
 
   render() {
-    const { handleSubmit, vision_by, filtro_por, meusDados } = this.props;
+    const { handleSubmit, meusDados } = this.props;
 
     const {
-      cards,
       collapsed,
-      secao,
-      visao,
-      pendentesListFiltered,
+      questionamentosListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
-      autorizadasListFiltered,
-      resumo,
-      loadingPainelSolicitacoes
+      autorizadasListFiltered
     } = this.state;
 
     return (
@@ -243,11 +237,11 @@ class DashboardTerceirizada extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Autorização"}
+                  cardTitle={"Questionamentos da CODAE"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={pendentesListFiltered}
+                  solicitations={questionamentosListFiltered}
                   icon={"fa-exclamation-triangle"}
-                  href={`/${TERCEIRIZADA}/${SOLICITACOES_PENDENTES}`}
+                  href={`/${TERCEIRIZADA}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
                 />
               </div>
               <div className="col-6">
@@ -281,84 +275,6 @@ class DashboardTerceirizada extends Component {
               </div>
             </div>
           </CardBody>
-          <div className="card mt-3" />
-          {!secao && <MenuIcones renderSecao={this.renderSecao} />}
-          {secao === MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO && (
-            <div className="card mt-3">
-              <div className="card-body">
-                <div className="card-title font-weight-bold dashboard-card-title">
-                  <div className="row">
-                    <div className="col-3 mt-3 color-black">Pendências</div>
-                    <div className="offset-3 col-3 text-right my-auto">
-                      <Select
-                        naoDesabilitarPrimeiraOpcao
-                        onChange={event =>
-                          this.setfiltroPorVencimento(event.target.value)
-                        }
-                        placeholder={"Filtro por"}
-                        options={filtro_por}
-                      />
-                    </div>
-                    <div className="col-3 text-right my-auto">
-                      <Select
-                        naoDesabilitarPrimeiraOpcao
-                        disabled={resumo.length === 0}
-                        onChange={event => this.setVisao(event.target.value)}
-                        placeholder={"Visão por"}
-                        options={vision_by}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="pt-3" />
-                <div className="row pt-3">
-                  {cards.map((card, key) => {
-                    return resumo[card.titulo] ? (
-                      <div key={key} className="col-6 pb-3">
-                        <Link
-                          to={
-                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
-                              ? `/${TERCEIRIZADA}/${card.link}`
-                              : "/"
-                          }
-                        >
-                          <CardPendencia
-                            cardTitle={card.titulo}
-                            totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
-                            priorityOrders={
-                              resumo[card.titulo]["PRIORITARIO"] || 0
-                            }
-                            onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
-                            regularOrders={resumo[card.titulo]["REGULAR"] || 0}
-                            loading={loadingPainelSolicitacoes}
-                          />
-                        </Link>
-                      </div>
-                    ) : (
-                      <div key={key} className="col-6 pb-3">
-                        <Link
-                          to={
-                            visao === FILTRO_VISAO.TIPO_SOLICITACAO
-                              ? `/${TERCEIRIZADA}/${card.link}`
-                              : "/"
-                          }
-                        >
-                          <CardPendencia
-                            cardTitle={card.titulo}
-                            totalOfOrders={0}
-                            priorityOrders={0}
-                            onLimitOrders={0}
-                            regularOrders={0}
-                            loading={loadingPainelSolicitacoes}
-                          />
-                        </Link>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
         </form>
       </div>
     );

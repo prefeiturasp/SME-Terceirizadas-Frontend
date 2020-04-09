@@ -1,0 +1,41 @@
+@import "../../../../styles/variables.scss";
+
+.modal-redefinicao .modal-dialog.modal-lg {
+  width: 30em;
+}
+
+.modal-justificativa-body {
+  margin-bottom: 0.5em;
+}
+
+.faixas-etarias {
+  .select-meses {
+    height: 20em !important;
+  }
+  .faixa-etaria-item-editando {
+    background-color: $greenBackgroundToastSuccess !important;
+  }
+  .faixa-etaria-item {
+    display: flex;
+    button {
+      margin-left: 1em;
+    }
+    .input {
+      flex-grow: 100;
+    }
+  }
+  .botao-finalizar {
+    margin-left: 1em;
+  }
+  .table {
+    .thead-light th {
+      background-color: $grayBackground;
+      border: 1px solid $grayInputBackground;
+      color: $blackInput;
+    }
+    .table-bordered th,
+    .table-bordered td {
+      border: 1px solid $grayInputBackground;
+    }
+  }
+}

@@ -1,0 +1,100 @@
+@import "../../../../styles/variables.scss";
+
+form.special-diet {
+  h4 {
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: bold;
+    color: $blue;
+  }
+  hr > {
+    width: 100%;
+    background: #f0f0f0;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+  }
+  .tabela-informacoes-aluno {
+    width: 100%;
+    th {
+      padding: 0.5em;
+      font-size: 14px;
+      line-height: 16px;
+      color: $blackInput;
+    }
+    td {
+      padding: 0.5em;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      color: $blackSubtle;
+    }
+  }
+  .cinza-escuro {
+    color: $gray;
+  }
+  .grid-container {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 20% 50% 30%;
+    column-gap: 2%;
+    row-gap: 0.5em;
+  }
+  .ajuste-fonte {
+    font-size: 14px;
+    font-weight: 500;
+    color: #686868;
+    span {
+      color: $red;
+    }
+  }
+  .attachments {
+    .text {
+      font-size: 14px;
+      color: #686868;
+    }
+    .card-warning {
+      border: 1px solid $red;
+      color: $red;
+      font-size: 10px;
+      padding: 10px;
+    }
+    .btn {
+      display: flex;
+      margin-top: 2em;
+      justify-content: flex-end;
+    }
+  }
+}
+div.datepicker
+  div.react-datepicker-wrapper
+  .react-datepicker__input-container
+  input {
+  // TODO: Marcelo, arrumar o background do input porque esta afetando todos os componentes input
+  // background-color: #dadada;
+}
+
+div.current-diets {
+  font-size: 14px;
+  .no-diets {
+    color: $red;
+  }
+
+  p.title {
+    font-style: normal;
+    color: $gray;
+  }
+  div.school-container {
+    hr {
+      margin: 0;
+    }
+    div.title {
+      color: $blackSubtle;
+      font-weight: bold;
+    }
+    div.container {
+      padding-left: 1em;
+      table.table-periods {
+        color: $gray;
+      }
+    }
+  }
+}

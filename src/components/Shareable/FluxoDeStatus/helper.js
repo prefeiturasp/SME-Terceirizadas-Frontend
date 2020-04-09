@@ -18,9 +18,51 @@ export const fluxoPartindoEscola = [
     status: "",
     criado_em: "",
     usuario: null
+  }
+];
+
+export const fluxoDietaEspecialPartindoEscola = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE",
+    status: "",
+    criado_em: "",
+    usuario: null
+  }
+];
+
+export const fluxoDietaEspecialComInativacao = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE",
+    status: "",
+    criado_em: "",
+    usuario: null
   },
   {
     titulo: "Terceirizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "Escola solicitou inativação",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE",
     status: "",
     criado_em: "",
     usuario: null
@@ -39,24 +81,12 @@ export const fluxoPartindoDRE = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
 export const fluxoInformativoPartindoEscola = [
   {
     titulo: "Solicitação Realizada",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -71,12 +101,17 @@ export const tipoDeStatus = status => {
     case "DRE revisou":
     case "CODAE autorizou":
     case "Terceirizada tomou ciência":
+    case "Escola solicitou inativação":
+    case "CODAE autorizou inativação":
+    case "Terceirizada tomou ciência da inativação":
       return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":
+    case "Terminada por atingir data de término":
       return "cancelado";
     case "DRE não validou":
     case "CODAE negou":
+    case "CODAE negou inativação":
     case "Terceirizada recusou":
       return "reprovado";
     case "Questionamento pela CODAE":
@@ -98,13 +133,21 @@ export const tipoDeStatusClasse = status => {
     : "pending";
 };
 
+export const formatarFluxoDietaEspecial = logs => {
+  if (!logs[2].status_evento_explicacao.includes("Terceirizada")) {
+    fluxoDietaEspecialComInativacao.splice(2, 1);
+  }
+  return fluxoDietaEspecialComInativacao;
+};
+
 export const existeAlgumStatusFimDeFluxo = logs => {
   return (
     logs.findIndex(
       log =>
         log.status_evento_explicacao.includes("neg") ||
         log.status_evento_explicacao.includes("não") ||
-        log.status_evento_explicacao.includes("cancel")
+        log.status_evento_explicacao.includes("cancel") ||
+        log.status_evento_explicacao.includes("Terminada")
     ) === -1
   );
 };

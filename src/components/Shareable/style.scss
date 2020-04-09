@@ -50,6 +50,12 @@ textarea {
   }
 }
 
+.modal-content {
+  .modal-body {
+    font-size: 14px;
+  }
+}
+
 .checkbox-label {
   color: $gray;
   font-size: 14px;
@@ -479,6 +485,7 @@ div.caption-choices {
     padding: 10px 0;
   }
   tr {
+    padding-left: 0.1em;
     th:nth-child(1),
     td:nth-child(1),
     th:nth-child(2),
@@ -516,5 +523,52 @@ div.caption-choices {
     color: #2881bb;
     font-size: 20px;
     position: relative;
+  }
+}
+
+table.table-report {
+  width: 100%;
+  font-size: 14px;
+  tr {
+    border-bottom: 1px solid $blackSubtle;
+    &:first-child {
+      color: white;
+      background-color: $blackSubtle;
+    }
+    &:last-child {
+      border-bottom: 2px solid $blackSubtle;
+    }
+    th,
+    td {
+      padding: 15px 30px;
+    }
+    td {
+      color: $blackInput;
+    }
+  }
+}
+
+table.table-reasons {
+  width: 100%;
+  tr {
+    padding: 5px 0;
+    color: $gray;
+    font-size: 14px;
+    &:nth-child(even):not(:last-child) {
+      border-bottom: 1px solid #c0c0c0;
+    }
+    th {
+      font-weight: normal;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+    td {
+      font-weight: bold;
+      color: $blackInput;
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
   }
 }

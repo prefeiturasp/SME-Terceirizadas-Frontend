@@ -3,13 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config.constants";
-import {
-  ALTERACAO_CARDAPIO,
-  ESCOLA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
   escolaCancelaAlteracaoCardapio,
   DRENaoValidaAlteracaoCardapio,
@@ -32,16 +26,10 @@ class RelatorioBase extends React.Component {
       href: "#",
       titulo: "Relatório"
     };
-    const anteriores = [
-      {
-        href: `/${this.props.VISAO}/${ALTERACAO_CARDAPIO}`,
-        titulo: "Alterações de Cardápio"
-      }
-    ];
 
     return (
       <Page>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+        <Breadcrumb home={HOME} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
     );
@@ -51,7 +39,7 @@ class RelatorioBase extends React.Component {
 // Escola
 export const RelatorioEscola = () => (
   <RelatorioBase
-    VISAO={ESCOLA}
+    visao={ESCOLA}
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Alteração de Cardápio cancelada com sucesso!"}
     endpointNaoAprovaSolicitacao={escolaCancelaAlteracaoCardapio}
@@ -62,7 +50,7 @@ export const RelatorioEscola = () => (
 // DRE
 export const RelatorioDRE = () => (
   <RelatorioBase
-    VISAO={DRE}
+    visao={DRE}
     ModalNaoAprova={ModalNaoValidarSolicitacao}
     toastAprovaMensagem={"Alteração de Cardápio validada com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao validar a Alteração de Cardápio"}
@@ -76,7 +64,7 @@ export const RelatorioDRE = () => (
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
-    VISAO={CODAE}
+    visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
     toastAprovaMensagem={"Alteração de Cardápio autorizada com sucesso!"}
@@ -94,7 +82,7 @@ export const RelatorioCODAE = () => (
 // Terceirizada
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
-    VISAO={TERCEIRIZADA}
+    visao={TERCEIRIZADA}
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     toastAprovaMensagem={

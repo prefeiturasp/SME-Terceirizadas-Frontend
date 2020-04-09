@@ -12,7 +12,10 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  CONFIGURACOES,
+  CADASTROS,
+  HORARIO_COMBOS_ALIMENTACAO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants";
 
@@ -33,121 +36,169 @@ export class SidebarEscola extends Component {
   render() {
     const { subMenu } = this.state;
     return [
-      <li key={1} className="nav-item">
-        <NavLink
-          className={`nav-link collapsed`}
-          data-toggle="collapse"
-          data-target="#collapsePainel"
-          aria-expanded="true"
-          aria-controls="collapseTwo"
-        >
-          <i className="fas fa-sliders-h" />
+      <li key={0} className="nav-item">
+        <NavLink className={`nav-link collapsed`} to="/">
+          <i className="fas fa-file-alt" />
           <span>Painel Inicial</span>
         </NavLink>
+      </li>,
+      <li key={1} className="nav-item">
+        <Link
+          className={`nav-link collapsed`}
+          href="#teste"
+          data-toggle="collapse"
+          data-target="#collapseGestaoAlimentacao"
+          aria-expanded="false"
+          aria-controls="collapseOne"
+        >
+          <i className="fas fa-utensils" />
+          <span>Gestão de Alimentação</span>
+        </Link>
         <div
-          id="collapsePainel"
+          id="collapseGestaoAlimentacao"
           className={`collapse`}
-          aria-labelledby="headingPainel"
+          aria-labelledby="headingConfig"
           data-parent="#accordionSidebar"
         >
-          <div className="bg-white collapse-inner rounded">
+          <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/`}
+              to="/painel-gestao-alimentacao"
             >
-              Home
+              Painel de Solicitações
             </NavLink>
             <NavLink
+              onClick={() => this.onSubmenuClick("novas-solicitacoes")}
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
+              to="#"
             >
-              Aguardando autorização
+              Novas Solicitações
+              <i className="fas fa-chevron-down" />
             </NavLink>
+            {subMenu === "novas-solicitacoes" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
+                >
+                  Inclusão de Alimentação
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}
+                >
+                  Alteração de Cardápio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
+                >
+                  Kit Lanche Passeio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}
+                >
+                  Inversão de Dia de Cardápio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
+                >
+                  Suspensão de Alimentação
+                </NavLink>
+              </div>
+            )}
             <NavLink
+              onClick={() => this.onSubmenuClick("consulta-solicitacoes")}
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
+              to="#"
             >
-              Autorizadas
+              Consulta de Solicitações
+              <i className="fas fa-chevron-down" />
             </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
-            >
-              Negadas
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
-            >
-              Canceladas
-            </NavLink>
+            {subMenu === "consulta-solicitacoes" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
+                >
+                  Aguardando autorização
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
+                >
+                  Autorizadas
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
+                >
+                  Negadas
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
+                >
+                  Canceladas
+                </NavLink>
+              </div>
+            )}
           </div>
         </div>
       </li>,
       <li key={2} className="nav-item">
-        <NavLink
+        <Link
           className={`nav-link collapsed`}
+          href="#teste"
           data-toggle="collapse"
-          data-target="#collapseSolicitacoes"
-          aria-expanded="true"
+          data-target="#collapseDietaEspecial"
+          aria-expanded="false"
           aria-controls="collapseTwo"
         >
-          <i className="fas fa-edit" />
-          <span>Novas solicitações</span>
-        </NavLink>
+          <i className="fas fa-carrot" />
+          <span>Dieta Especial</span>
+        </Link>
         <div
-          id="collapseSolicitacoes"
+          id="collapseDietaEspecial"
           className={`collapse`}
-          aria-labelledby="headingPainel"
+          aria-labelledby="headingConfig"
           data-parent="#accordionSidebar"
         >
-          <div className="bg-white collapse-inner rounded">
+          <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
+              to="/painel-dieta-especial"
             >
-              Inclusão de Alimentação
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}
-            >
-              Alteração de Cardápio
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
-            >
-              Kit Lanche Passeio
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}
-            >
-              Inversão de Dia de Cardápio
-            </NavLink>
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
-            >
-              Suspensão de Alimentação
+              Painel de Solicitações
             </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
               to={`/${ESCOLA}/${DIETA_ESPECIAL}`}
             >
-              Dieta especial
+              Nova Solicitação
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/dieta-especial/ativas-inativas`}
+            >
+              Consulta Dieta de Alunos
             </NavLink>
           </div>
         </div>
@@ -163,48 +214,50 @@ export class SidebarEscola extends Component {
           className={`nav-link collapsed`}
           href="#teste"
           data-toggle="collapse"
-          data-target="#collapseConfig"
+          data-target="#collapseCadastros"
           aria-expanded="false"
           aria-controls="collapseTwo"
         >
-          <i className="fas fa-cog" />
-          <span>Configurações</span>
+          <i className="fas fa-user-plus" />
+          <span>Cadastros</span>
         </Link>
         <div
-          id="collapseConfig"
+          id="collapseCadastros"
           className={`collapse`}
           aria-labelledby="headingConfig"
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              onClick={() => this.onSubmenuClick("cadastros")}
               activeClassName="active"
               className="collapse-item"
-              to="#"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`}
             >
-              Cadastros
-              <i className="fas fa-chevron-down" />
+              Horários de Alimentações
             </NavLink>
-            {subMenu === "cadastros" && (
-              <div className="submenu">
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros"
-                >
-                  Perfil
-                </NavLink>
-                <NavLink
-                  activeClassName="active"
-                  className="collapse-item"
-                  to="/configuracoes/cadastros"
-                >
-                  Unidades Escolares
-                </NavLink>
-              </div>
-            )}
-            {localStorage.getItem("perfil") === PERFIL.DIRETOR && (
+          </div>
+        </div>
+      </li>,
+      localStorage.getItem("perfil") === PERFIL.DIRETOR && (
+        <li key={5} className="nav-item">
+          <Link
+            className={`nav-link collapsed`}
+            href="#teste"
+            data-toggle="collapse"
+            data-target="#collapseConfig"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <i className="fas fa-cog" />
+            <span>Configurações</span>
+          </Link>
+          <div
+            id="collapseConfig"
+            className={`collapse`}
+            aria-labelledby="headingConfig"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
               <NavLink
                 activeClassName="active"
                 className="collapse-item"
@@ -212,10 +265,10 @@ export class SidebarEscola extends Component {
               >
                 Permissões
               </NavLink>
-            )}
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      )
     ];
   }
 }

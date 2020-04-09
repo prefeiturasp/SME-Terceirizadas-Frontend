@@ -1,20 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { getCODAEPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
-import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
-import CardHistorico from "../../components/CardHistorico";
-import {
-  filtraNoLimite,
-  filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
-} from "./helper";
-import { CODAE } from "../../../../configs/constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getCODAEPedidosSolicitacoesUnificadas } from "../../../../services/solicitacaoUnificada.service";
 import Select from "../../../Shareable/Select";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+import { filtraNoLimite, filtraPrioritarios, filtraRegular } from "./helper";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -63,7 +55,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       pedidosCarregados
     } = this.state;
-    const { visaoPorCombo, pedidosAutorizados, pedidosReprovados } = this.props;
+    const { visaoPorCombo } = this.props;
     return (
       <div>
         {!pedidosCarregados ? (
@@ -98,7 +90,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -110,7 +101,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.NO_LIMITE}
                       pedidos={pedidosNoPrazoLimite}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -122,37 +112,9 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.REGULAR}
                       pedidos={pedidosNoPrazoRegular}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Autorizadas"
-                        }
-                        parametroURL={CODAE}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Reprovadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </form>

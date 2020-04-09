@@ -17,9 +17,10 @@ import {
   stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
-import { escolaPodeCancelar } from "../../../../constants/statusEnum";
+import { escolaPodeCancelar } from "../../../../constants";
 import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -248,6 +249,7 @@ class Relatorio extends Component {
                     <div className="row">
                       <FluxoDeStatus
                         listaDeStatus={inclusaoDeAlimentacao.logs}
+                        fluxo={fluxoPartindoEscola}
                       />
                     </div>
                   )}

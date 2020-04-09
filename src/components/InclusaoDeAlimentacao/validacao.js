@@ -46,7 +46,7 @@ export const validarSubmissao = (values, meusDados) => {
     }
   }
 
-  if (!aoMenosUmPeriodo) return "Necessário ao selecionar ao menos um período";
+  if (!aoMenosUmPeriodo) return "Necessário selecionar ao menos um período";
 
   if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
     return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";

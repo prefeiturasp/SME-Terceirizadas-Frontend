@@ -1,26 +1,29 @@
-import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
+import React, { Component } from "react";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
-import { InputText } from "../Shareable/Input/InputText";
+
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
-  required,
+  maxValue,
   naoPodeSerZero,
-  numericInteger
+  numericInteger,
+  required
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect,
   geradorUUID,
-  getDataObj
+  getDataObj,
+  getError
 } from "../../helpers/utilities";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { Select } from "../Shareable/Select";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
+import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 import {
   atualizarInclusaoDeAlimentacaoNormal,
   criarInclusaoDeAlimentacaoNormal,
@@ -34,12 +37,21 @@ import {
   inicioPedidoContinua
 } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { Botao } from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { InputComData } from "../Shareable/DatePicker";
+import { InputText } from "../Shareable/Input/InputText";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { Select } from "../Shareable/Select";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import Weekly from "../Shareable/Weekly/Weekly";
 import {
+  abstraiPeriodosComAlunosMatriculados,
+  construirPeriodosECombos,
   extrairTiposALimentacao,
   formatarSubmissaoSolicitacaoContinua,
   formatarSubmissaoSolicitacaoNormal
@@ -47,8 +59,6 @@ import {
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
-import "./style.scss";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -57,6 +67,7 @@ class InclusaoDeAlimentacao extends Component {
     this.state = {
       validacaoPeriodos: [],
       loading: true,
+      loadQuantidadeAlunos: false,
       periodos: [],
       rascunhosInclusaoDeAlimentacao: [],
       status: "SEM STATUS",
@@ -80,6 +91,7 @@ class InclusaoDeAlimentacao extends Component {
     this.carregarRascunho = this.carregarRascunho.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
     this.adicionarDia = this.adicionarDia.bind(this);
+    this.removerDia = this.removerDia.bind(this);
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -130,18 +142,35 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
-  onCheckChanged(periodo) {
-    const indicePeriodo = this.state.periodos.findIndex(
-      periodoState => periodoState.nome === periodo.nome
-    );
+  onCheckInput = indice => {
     let periodos = this.state.periodos;
-    periodo.checked = !periodo.checked;
-    periodos[indicePeriodo].checked = periodo.checked;
+    if (periodos[indice].checked) {
+      periodos[indice].tipos_alimentacao_selecionados = [];
+      this.props.change(
+        `quantidades_periodo_${periodos[indice].nome}.numero_alunos`,
+        null
+      );
+    }
+
+    periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].multiselect = periodos[indice].checked
+      ? "multiselect-wrapper-enabled"
+      : "multiselect-wrapper-disabled";
+
+    periodos[indice].validador = periodos[indice].checked
+      ? [
+          naoPodeSerZero,
+          numericInteger,
+          maxValue(periodos[indice].maximo_alunos)
+        ]
+      : [];
+
     this.props.change(
-      `quantidades_periodo_${periodo.nome}.check`,
-      periodo.checked
+      `quantidades_periodo_${periodos[indice].nome}.check`,
+      periodos[indice].checked
     );
-  }
+    this.setState({ periodos });
+  };
 
   onNumeroAlunosChanged(event, periodo) {
     const indicePeriodo = this.state.periodos.findIndex(
@@ -176,6 +205,16 @@ class InclusaoDeAlimentacao extends Component {
     });
   }
 
+  removerDia(indiceAExcluir) {
+    if (window.confirm("Deseja remover este dia?")) {
+      this.setState({
+        inclusoes: this.state.inclusoes.filter(
+          (_, indice) => indice !== indiceAExcluir
+        )
+      });
+    }
+  }
+
   showModal() {
     this.setState({ ...this.state, showModal: true });
   }
@@ -203,11 +242,14 @@ class InclusaoDeAlimentacao extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            // ARRUMAR O TOAST PARA MOSTRAR A MENSAGEM DE ERRO DO BACKEND SOBRE DATA NO FERIADO
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao excluir o rascunho");
+        error => {
+          toastError(`Houve um erro ao excluir o rascunho: ${getError(error)}`);
         }
       );
     }
@@ -221,6 +263,7 @@ class InclusaoDeAlimentacao extends Component {
       periodo["checked"] = false;
       periodo["tipos_alimentacao_selecionados"] = [];
       periodo["numero_alunos"] = null;
+      periodo["multiselect"] = "multiselect-wrapper-disabled";
     });
     this.setState({
       status: "SEM STATUS",
@@ -253,8 +296,7 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   bloqueiaCamposQuantidadeAlunosReset(indice, periodo) {
-    let periodos = this.state.periodos;
-    let validacaoPeriodos = this.state.validacaoPeriodos;
+    let { periodos, validacaoPeriodos } = this.state;
     if (validacaoPeriodos[indice].checado === true) {
       validacaoPeriodos[indice].checado = false;
       periodos[indice].tipos_alimentacao_selecionados = [];
@@ -368,29 +410,50 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.adicionaIndiceNoValidacaoPeriodos(this.props.periodos);
-      this.setState({
-        periodos: this.props.periodos
-      });
-    }
     const {
       motivos_simples,
       motivos_continuos,
       meusDados,
       proximos_dois_dias_uteis
     } = this.props;
-    const { loading, periodos } = this.state;
+    let { loading, periodos, loadQuantidadeAlunos } = this.state;
     if (
       motivos_simples !== [] &&
       motivos_continuos !== [] &&
       periodos !== [] &&
       meusDados !== null &&
       proximos_dois_dias_uteis !== null &&
-      loading
+      loading &&
+      periodos.length > 0 &&
+      loadQuantidadeAlunos
     ) {
       this.setState({
         loading: false
+      });
+    }
+    const escola = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    if (
+      meusDados &&
+      periodos.length === 0 &&
+      loading &&
+      prevProps.meusDados !== meusDados
+    ) {
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        periodos = construirPeriodosECombos(response.results);
+        this.adicionaIndiceNoValidacaoPeriodos(periodos);
+        this.setState({ periodos });
+      });
+    }
+    if (periodos.length > 0 && loading && !loadQuantidadeAlunos) {
+      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+        if (periodos !== []) {
+          periodos = abstraiPeriodosComAlunosMatriculados(
+            periodos,
+            response.results
+          );
+        }
+        this.setState({ periodos, loadQuantidadeAlunos: true });
       });
     }
   }
@@ -411,13 +474,15 @@ class InclusaoDeAlimentacao extends Component {
               rascunhosInclusaoDeAlimentacao
             });
           },
-          function() {
-            toastError("Erro ao carregar as inclusões salvas");
+          error => {
+            toastError(
+              `Erro ao carregar as inclusões salvas: ${getError(error)}`
+            );
           }
         );
       },
-      function() {
-        toastError("Erro ao carregar as inclusões salvas");
+      error => {
+        toastError(`Erro ao carregar as inclusões salvas: ${getError(error)}`);
       }
     );
   }
@@ -429,11 +494,19 @@ class InclusaoDeAlimentacao extends Component {
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+          toastError(
+            `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+              res.data
+            )}`
+          );
         }
       },
-      function() {
-        toastError("Houve um erro ao enviar a Inclusão de Alimentação");
+      error => {
+        toastError(
+          `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+            error
+          )}`
+        );
       }
     );
   }
@@ -455,11 +528,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -479,11 +554,19 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao atualizar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+                res.data
+              )}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -506,11 +589,13 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao salvar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao salvar o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao salvar a inclusão de alimentação");
+        error => {
+          toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
       );
     } else {
@@ -530,11 +615,19 @@ class InclusaoDeAlimentacao extends Component {
             }
             this.refresh();
           } else {
-            toastError("Houve um erro ao atualizar a inclusão de alimentação");
+            toastError(
+              `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+                res.data
+              )}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao atualizar a inclusão de alimentação");
+        error => {
+          toastError(
+            `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+              error
+            )}`
+          );
         }
       );
     }
@@ -554,7 +647,7 @@ class InclusaoDeAlimentacao extends Component {
       }
       this.closeModal();
     } else {
-      toastError(error);
+      toastError(getError(error));
     }
   }
 
@@ -578,10 +671,10 @@ class InclusaoDeAlimentacao extends Component {
       inclusoes,
       periodos,
       showModal,
-      loading,
-      validacaoPeriodos
+      loading
     } = this.state;
-    const ehMotivoContinuo = inclusoes[0].motivo && inclusoes[0].motivoContinuo;
+    const primeiroEhMotivoContinuo =
+      inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     const dataInicialContinua = inclusoes[0].data_inicial;
     return (
       <div>
@@ -619,6 +712,8 @@ class InclusaoDeAlimentacao extends Component {
                   Descrição da Inclusão
                 </div>
                 {inclusoes.map((diaMotivo, indice) => {
+                  const ehMotivoContinuo =
+                    diaMotivo.motivo && diaMotivo.motivoContinuo;
                   return (
                     <FormSection
                       key={indice}
@@ -660,6 +755,9 @@ class InclusaoDeAlimentacao extends Component {
                                 this.onDataChanged(event.target.value)
                               }
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                               label="Dia"
                               required
                               validate={required}
@@ -703,6 +801,9 @@ class InclusaoDeAlimentacao extends Component {
                               required
                               validate={required}
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                             />
                             <div>
                               <Field
@@ -715,6 +816,9 @@ class InclusaoDeAlimentacao extends Component {
                                   )
                                 }
                                 minDate={getDataObj(dataInicialContinua)}
+                                maxDate={moment()
+                                  .endOf("year")
+                                  .toDate()}
                                 disabled={!dataInicialContinua}
                                 name="data_final"
                                 label="Até"
@@ -740,11 +844,21 @@ class InclusaoDeAlimentacao extends Component {
                             </div>
                           </div>
                         )}
+                        {indice > 0 && (
+                          <Botao
+                            texto="Remover dia"
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() => this.removerDia(indice)}
+                            style={BUTTON_STYLE.BLUE_OUTLINE}
+                            icon={BUTTON_ICON.TRASH}
+                            className="botao-remover-dia"
+                          />
+                        )}
                       </section>
                     </FormSection>
                   );
                 })}
-                {!ehMotivoContinuo && (
+                {!primeiroEhMotivoContinuo && (
                   <Botao
                     className="col-sm-3"
                     texto="Adicionar dia"
@@ -778,11 +892,7 @@ class InclusaoDeAlimentacao extends Component {
                               />
                               <span
                                 onClick={() => {
-                                  this.onCheckChanged(periodo);
-                                  this.atualizaIndiceNoValidacaoPeriodos(
-                                    indice,
-                                    periodo
-                                  );
+                                  this.onCheckInput(indice);
                                 }}
                                 className="checkbox-custom"
                                 data-cy={`checkbox-${periodo.nome}`}
@@ -792,16 +902,10 @@ class InclusaoDeAlimentacao extends Component {
                           </div>
                         </div>
                         <div className="form-group col-md-5 mr-5">
-                          <div
-                            className={
-                              !validacaoPeriodos[indice].checado
-                                ? "multiselect-wrapper-disabled"
-                                : "multiselect-wrapper-enabled"
-                            }
-                          >
+                          <div className={periodo.multiselect}>
                             <Field
                               component={StatefulMultiSelect}
-                              name=".tipos_alimentacao"
+                              name="tipos_alimentacao"
                               selected={periodo.tipos_alimentacao_selecionados}
                               options={formatarParaMultiselect(
                                 periodo.tipos_alimentacao
@@ -825,19 +929,13 @@ class InclusaoDeAlimentacao extends Component {
                             onChange={event =>
                               this.onNumeroAlunosChanged(event, periodo)
                             }
-                            disabled={!validacaoPeriodos[indice].checado}
+                            disabled={!periodo.checked}
                             type="number"
                             name={`numero_alunos`}
                             min="0"
                             className="form-control quantidade-aluno"
-                            required={validacaoPeriodos[indice].checado}
-                            validate={
-                              validacaoPeriodos[indice].checado && [
-                                required,
-                                naoPodeSerZero,
-                                numericInteger
-                              ]
-                            }
+                            required={periodo.checked}
+                            validate={periodo.checked && periodo.validador}
                           />
                         </div>
                       </div>
@@ -845,13 +943,7 @@ class InclusaoDeAlimentacao extends Component {
                   );
                 })}
                 <hr className="w-100" />
-                <div className="form-group pb-5">
-                  <Field
-                    component={TextAreaWYSIWYG}
-                    label="Observações"
-                    name="descricao"
-                  />
-                </div>
+
                 <div className="form-group row float-right mt-4">
                   <div className="col-12">
                     <Botao

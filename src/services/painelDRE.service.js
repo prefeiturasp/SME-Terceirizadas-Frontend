@@ -5,10 +5,9 @@ import {
   filtraRegular
 } from "../helpers/painelPedidos";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDiretoriaRegionalPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
@@ -137,9 +136,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
-  filtro = "sem_filtro"
-) => {
+export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async () => {
   let resposta = {
     total: 0,
     prioritario: 0,
@@ -150,14 +147,6 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async (
   let pedidosPrioritarios = [];
   let pedidosLimite = [];
   let pedidosRegular = [];
-
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInversoes(filtro);
-
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
 
   resposta.limite = pedidosLimite.length;
   resposta.prioritario = pedidosPrioritarios.length;
@@ -252,36 +241,7 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREPorLote = async (dree_uuid, filtro) => {
-  // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
-  const solicitacoes = (await getSolicitacoesPendentesValidacaoDRE(
-    dree_uuid,
-    filtro
-  )).results;
-  const reducer = (resumoPorLote, corrente) => {
-    if (!resumoPorLote[corrente.lote]) {
-      resumoPorLote[corrente.lote] = {};
-    }
-    if (corrente.prioridade !== "VENCIDO") {
-      resumoPorLote[corrente.lote][corrente.prioridade] = resumoPorLote[
-        corrente.lote
-      ][corrente.prioridade]
-        ? (resumoPorLote[corrente.lote][corrente.prioridade] += 1)
-        : 1;
-      resumoPorLote[corrente.lote]["TOTAL"] = resumoPorLote[corrente.lote][
-        "TOTAL"
-      ]
-        ? (resumoPorLote[corrente.lote]["TOTAL"] += 1)
-        : 1;
-    }
-    return resumoPorLote;
-  };
-
-  let resumoPorLote = solicitacoes.reduce(reducer, {});
-
-  return resumoPorLote;
-};
-
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
@@ -297,29 +257,32 @@ const retornoBase = async url => {
   }
 };
 
-export const getSolicitacoesPendentesValidacaoDRE = async (dreUuid, filtro) => {
+export const getSolicitacoesPendentesValidacaoDRE = async (
+  filtroAplicado,
+  tipoVisao
+) => {
   const url = `${SOLICITACOES_DRE}/${
     SOLICITACOES.PENDENTES_VALIDACAO_DRE
-  }/${dreUuid}/${filtro}/`;
+  }/${filtroAplicado}/${tipoVisao}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesPendentesDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/${dreUuid}/`;
+export const getSolicitacoesPendentesDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesAutorizadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/${dreUuid}/`;
+export const getSolicitacoesAutorizadasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesCanceladasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/${dreUuid}/`;
+export const getSolicitacoesCanceladasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
   return retornoBase(url);
 };
 
-export const getSolicitacoesRecusadasDRE = async dreUuid => {
-  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/${dreUuid}/`;
+export const getSolicitacoesNegadasDRE = async () => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/`;
   return retornoBase(url);
 };

@@ -1,20 +1,17 @@
 import React, { Component } from "react";
-import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { FiltroEnum } from "../../../../constants";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraRegular
 } from "../../../../helpers/painelPedidos";
-import CardHistorico from "../../components/CardHistorico";
-import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import Select from "../../../Shareable/Select";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -64,12 +61,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
     } = this.state;
-    const {
-      visaoPorCombo,
-      valorDoFiltro,
-      pedidosAutorizados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, valorDoFiltro } = this.props;
     return (
       <div>
         {loading ? (
@@ -102,7 +94,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={`${TERCEIRIZADA}`}
                     />
                   </div>
                 </div>
@@ -114,7 +105,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={`${TERCEIRIZADA}`}
                       />
                     </div>
                   </div>
@@ -127,34 +117,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={`${TERCEIRIZADA}`}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Autorizadas"
-                        }
-                        parametroURL={`${TERCEIRIZADA}`}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Reprovadas"
-                        }
                       />
                     </div>
                   </div>

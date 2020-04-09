@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { PEDIDOS, FLUXO } from "./contants";
+import { PEDIDOS, FLUXO } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -128,21 +128,6 @@ export const getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua = filtroAp
     });
 };
 
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getDiretoriaRegionalPedidosReprovados = () => {
   const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
@@ -174,36 +159,6 @@ export const getCODAEPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado
   }
 };
 
-export const getCodaePedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosReprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroAplicado => {
   const url = `${URL_INCLUSAO_CONTINUA}/${
     PEDIDOS.TERCEIRIZADA
@@ -220,35 +175,6 @@ export const getTerceirizadaPedidosDeInclusaoAlimentacaoContinua = async filtroA
   } catch (error) {
     console.log(error);
   }
-};
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosReprovados = () => {
-  const url = `${URL_INCLUSAO_CONTINUA}/pedidos-reprovados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const inicioPedidoContinua = uuid => {
@@ -270,7 +196,7 @@ export const inicioPedidoContinua = uuid => {
     });
 };
 
-export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
+export const DREValidaInclusaoDeAlimentacaoContinua = uuid => {
   const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
@@ -289,11 +215,38 @@ export const DREConfirmaInclusaoDeAlimentacaoContinua = uuid => {
     });
 };
 
-export const CODAEConfirmaInclusaoDeAlimentacaoContinua = uuid => {
-  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/codae-autoriza-pedido/`;
+export const DRENaoValidaInclusaoDeAlimentacaoContinua = (
+  uuid,
+  justificativa
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAEAutorizaInclusaoDeAlimentacaoContinua = (
+  uuid,
+  justificativa = {}
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
@@ -306,6 +259,47 @@ export const CODAEConfirmaInclusaoDeAlimentacaoContinua = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const CODAENegaInclusaoDeAlimentacaoContinua = (uuid, justificativa) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAEQuestionaInclusaoDeAlimentacaoContinua = async (
+  uuid,
+  observacao_questionamento_codae
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ observacao_questionamento_codae })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const escolaCancelaInclusaoDeAlimentacaoContinua = async (
@@ -346,6 +340,29 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua = async (
+  uuid,
+  payload
+) => {
+  const url = `${URL_INCLUSAO_CONTINUA}/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const getCODAEPedidosInclusaoContinuosPendentes = filtroAplicado => {

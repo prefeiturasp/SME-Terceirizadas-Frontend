@@ -17,7 +17,7 @@ import {
   excluirLote
 } from "../../../../services/lote.service";
 import { renderizarLabelEscola, renderizarLabelSubprefeitura } from "./helper";
-import { extrairUUIDs } from "../../../../helpers/utilities";
+import { extrairUUIDs, getError } from "../../../../helpers/utilities";
 import { required } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import Botao from "../../../Shareable/Botao";
@@ -159,7 +159,7 @@ class CadastroLote extends Component {
           } else if (res.status === HTTP_STATUS.UNAUTHORIZED) {
             toastError(res.data.detail);
           } else {
-            toastError("Houve um erro ao excluir o lote");
+            toastError(`Houve um erro ao excluir o lote: ${res.data}`);
           }
         },
         function() {
@@ -237,7 +237,7 @@ class CadastroLote extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError("Houve um erro ao salvar o lote");
+            toastError(`Houve um erro ao salvar o lote: ${getError(res.data)}`);
           }
         },
         function() {
@@ -253,7 +253,9 @@ class CadastroLote extends Component {
             this.setRedirect();
             this.resetForm();
           } else {
-            toastError("Houve um erro ao atualizar o lote");
+            toastError(
+              `Houve um erro ao atualizar o lote ${getError(res.data)}`
+            );
           }
         },
         function() {

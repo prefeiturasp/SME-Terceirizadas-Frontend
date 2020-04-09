@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
-import { visaoPorComboSomenteDatas } from "../../../../constants/painelPedidos.constants";
-import { getCODAEPedidosAutorizadosKitLancheUnificado } from "../../../../services/solicitacaoUnificada.service";
+import { visaoPorComboSomenteDatas } from "../../../../constants";
 
 class Container extends Component {
   constructor(props) {
@@ -11,12 +10,6 @@ class Container extends Component {
       pedidosAutorizados: [],
       pedidosReprovados: []
     };
-  }
-
-  componentDidMount() {
-    getCODAEPedidosAutorizadosKitLancheUnificado().then(response => {
-      this.setState({ pedidosAutorizados: response.results });
-    });
   }
 
   render() {

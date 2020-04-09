@@ -22,7 +22,11 @@ export const Select = props => {
   return (
     <div className="select">
       {label && [
-        required && <span className="required-asterisk">*</span>,
+        required && (
+          <span key={0} className="required-asterisk">
+            *
+          </span>
+        ),
         <label key={1} htmlFor={name} className="col-form-label">
           {label}
         </label>
@@ -45,7 +49,6 @@ export const Select = props => {
             <option
               key={key}
               value={e.uuid}
-              selected={key === 0}
               disabled={
                 e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
               }

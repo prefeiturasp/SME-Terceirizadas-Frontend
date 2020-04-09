@@ -1,8 +1,10 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
 import {
   createSuspensaoDeAlimentacao,
   deleteSuspensaoDeAlimentacao,
@@ -10,12 +12,20 @@ import {
   updateSuspensaoDeAlimentacao,
   enviarSuspensaoDeAlimentacao
 } from "../../services/suspensaoDeAlimentacao.service";
-import { geradorUUID, formatarParaMultiselect } from "../../helpers/utilities";
+import {
+  geradorUUID,
+  formatarParaMultiselect,
+  getError
+} from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
 import { InputText } from "../Shareable/Input/InputText";
 import { Select } from "../Shareable/Select";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
+import {
+  required,
+  naoPodeSerZero,
+  maxValue
+} from "../../helpers/fieldValidators";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
@@ -25,6 +35,8 @@ import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 
 const ENTER = 13;
 class FoodSuspensionEditor extends Component {
@@ -198,6 +210,36 @@ class FoodSuspensionEditor extends Component {
     this.refresh();
   }
 
+  retornaPeriodosComCombos = (periodosResponse, periodosProps) => {
+    periodosProps.forEach(periodoProps => {
+      periodosResponse.forEach(periodoResp => {
+        if (periodoProps.nome === periodoResp.periodo_escolar.nome) {
+          periodoProps.validador = [];
+          periodoProps.checked = false;
+          periodoProps.tipos_alimentacao = periodoResp.combos.map(combo => {
+            return {
+              uuid: combo.uuid,
+              nome: combo.label
+            };
+          });
+        }
+      });
+    });
+  };
+
+  vinculaQuantidadeAlunosPorPeriodo = (
+    periodosEQuantidadeAlunos,
+    periodoProps
+  ) => {
+    periodoProps.forEach(periodo => {
+      periodosEQuantidadeAlunos.forEach(quantidade => {
+        if (periodo.nome === quantidade.periodo_escolar.nome) {
+          periodo.quantidade_alunos = quantidade.quantidade_alunos;
+        }
+      });
+    });
+  };
+
   componentDidUpdate(prevProps) {
     const fields = [
       "suspensoes_MANHA",
@@ -226,8 +268,16 @@ class FoodSuspensionEditor extends Component {
       }.bind(this)
     );
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
-      this.setState({
-        periodos: this.props.periodos
+      const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      const escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        this.retornaPeriodosComCombos(response.results, this.props.periodos);
+      });
+      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+        this.vinculaQuantidadeAlunosPorPeriodo(
+          response.results,
+          this.props.periodos
+        );
       });
     }
     const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
@@ -264,13 +314,15 @@ class FoodSuspensionEditor extends Component {
       res => {
         if (res.status === HTTP_STATUS.OK) {
           this.refresh();
-          toastSuccess("Suspensão de Alimentação enviada com sucesso");
+          toastSuccess("Suspensão de alimentação enviada com sucesso");
         } else {
-          toastError(res.error);
+          toastError(
+            `Erro ao enviar suspensão de alimentação: ${getError(res.data)}`
+          );
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Suspensão de Alimentação");
+        toastError("Houve um erro ao enviar a suspensão de alimentação");
       }
     );
   }
@@ -306,11 +358,13 @@ class FoodSuspensionEditor extends Component {
                 toastSuccess("Suspensão de Alimentação salva com sucesso");
               }
             } else {
-              toastError(res.error);
+              toastError(
+                `Erro ao enviar suspensão de alimentação: ${getError(res.data)}`
+              );
             }
           },
           function() {
-            toastError("Houve um erro ao salvar a Suspensão de Alimentação");
+            toastError("Houve um erro ao salvar a suspensão de alimentação");
           }
         );
       } else {
@@ -322,14 +376,18 @@ class FoodSuspensionEditor extends Component {
                 await this.enviaSuspensaoDeAlimentacao(res.data.uuid);
                 this.refresh();
               } else {
-                toastSuccess("Suspensão de Alimentação atualizada com sucesso");
+                toastSuccess("Suspensão de alimentação atualizada com sucesso");
               }
             } else {
-              toastError(res.error);
+              toastError(
+                `Erro ao atualizar a suspensão de alimentação: ${getError(
+                  res.data
+                )}`
+              );
             }
           },
           function() {
-            toastError("Houve um erro ao atualizar a Suspensão de Alimentação");
+            toastError("Houve um erro ao atualizar a suspensão de alimentação");
           }
         );
       }
@@ -337,6 +395,18 @@ class FoodSuspensionEditor extends Component {
       toastError(error);
     }
   }
+
+  onCheckInput = indice => {
+    let periodos = this.props.periodos;
+    periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].validador = periodos[indice].checked
+      ? [naoPodeSerZero, maxValue(periodos[indice].quantidade_alunos), required]
+      : [];
+    this.props.change(
+      `suspensoes_${periodos[indice].nome}.check`,
+      periodos[indice].checked
+    );
+  };
 
   onKeyPress(event) {
     if (event.which === ENTER) {
@@ -419,6 +489,9 @@ class FoodSuspensionEditor extends Component {
                             component={InputComData}
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
+                            maxDate={moment()
+                              .endOf("year")
+                              .toDate()}
                             onChange={value =>
                               this.handleField(`data${key}`, value, key)
                             }
@@ -502,12 +575,7 @@ class FoodSuspensionEditor extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() =>
-                                  this.props.change(
-                                    `suspensoes_${period.nome}.check`,
-                                    !checkMap[period.nome]
-                                  )
-                                }
+                                onClick={() => this.onCheckInput(key)}
                                 className="checkbox-custom"
                               />{" "}
                               {period.nome}
@@ -551,12 +619,7 @@ class FoodSuspensionEditor extends Component {
                             min="0"
                             className="form-control"
                             required
-                            validate={
-                              checkMap[period.nome] && [
-                                required,
-                                naoPodeSerZero
-                              ]
-                            }
+                            validate={period.validador}
                           />
                         </div>
                       </div>

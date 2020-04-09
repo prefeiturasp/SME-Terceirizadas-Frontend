@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { FLUXO, PEDIDOS } from "./contants";
+import { FLUXO, PEDIDOS } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -172,11 +172,15 @@ export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
     });
 };
 
-export const CODAEAutorizaPedidoKitLancheUnificado = uuid => {
+export const CODAEAutorizaPedidoKitLancheUnificado = (
+  uuid,
+  justificativa = {}
+) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
@@ -212,6 +216,27 @@ export const CODAENegaKitLancheUnificadoEscola = async (
   }
 };
 
+export const CODAEquestionaSolicitacaoUnificada = async (
+  uuid,
+  observacao_questionamento_codae
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ observacao_questionamento_codae })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
 export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
@@ -233,36 +258,27 @@ export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
     });
 };
 
-export const getTerceirizadaPedidosAutorizadosKitLancheUnificado = () => {
-  //todo RETIRAR
-  const url = `${URL_SOLICITACAO_UNIFICADA}/pedidos-autorizados-terceirizada/`;
+export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
+  uuid,
+  payload
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
+    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+  }/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "PATCH",
+    body: JSON.stringify(payload)
   };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCODAEPedidosAutorizadosKitLancheUnificado = () => {
-  //TODO RETIRAR
-  const url = `${API_URL}/solicitacoes-kit-lanche-unificada/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
 };
 
 export const cancelaKitLancheUnificadoDre = async (uuid, justificativa) => {

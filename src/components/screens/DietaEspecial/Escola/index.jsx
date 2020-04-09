@@ -1,44 +1,65 @@
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
-import { Field, formValueSelector, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import {
-  minLength,
-  required,
-  length
-} from "../../../../helpers/fieldValidators";
-import { dateDelta } from "../../../../helpers/utilities";
-import { criaDietaEspecial } from "../../../../services/dietaEspecial";
-import { meusDados } from "../../../../services/perfil.service";
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
-import CardMatriculados from "../../../Shareable/CardMatriculados";
-import { InputComData } from "../../../Shareable/DatePicker";
-import InputText from "../../../Shareable/Input/InputText";
-import InputFile from "../../../Shareable/Input/InputFile";
-import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import "./style.scss";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
   DIETA_ESPECIAL,
   ESCOLA,
   RELATORIO
 } from "../../../../configs/constants";
+import {
+  length,
+  minLength,
+  required,
+  maxLength,
+  numericInteger
+} from "../../../../helpers/fieldValidators";
+import { dateDelta, getError } from "../../../../helpers/utilities";
+import {
+  criaDietaEspecial,
+  getDietasEspeciaisVigentesDeUmAluno
+} from "../../../../services/dietaEspecial.service";
+import {
+  meusDados,
+  obtemDadosAlunoPeloEOL
+} from "../../../../services/perfil.service";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
+import CardMatriculados from "../../../Shareable/CardMatriculados";
+import { InputComData } from "../../../Shareable/DatePicker";
+import ManagedInputFileField from "../../../Shareable/Input/InputFile/ManagedField";
+import InputText from "../../../Shareable/Input/InputText";
+import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
+import { formatarSolicitacoesVigentes } from "./helper";
+import "./style.scss";
 
 const minLength6 = minLength(6);
+const length7 = length(7);
 
 class solicitacaoDietaEspecial extends Component {
   constructor(props) {
     super(props);
+    window.changeForm = props.change;
+    window.momentjs = moment;
     this.state = {
       quantidadeAlunos: "...",
       files: null,
       submitted: false,
-      resumo: null
+      resumo: null,
+      solicitacoesVigentes: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.onEolBlur = this.onEolBlur.bind(this);
+    this.registroFuncionalValidators = [
+      numericInteger,
+      maxLength(6),
+      minLength(4)
+    ];
   }
 
   componentDidMount() {
@@ -59,39 +80,72 @@ class solicitacaoDietaEspecial extends Component {
     this.setState({ files });
   }
 
-  async onSubmit(payload) {
-    payload.anexos = this.state.files;
-    const response = await criaDietaEspecial(payload);
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Solicitação realizada com sucesso.");
-      this.setState({
-        submitted: !this.state.submitted,
-        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
-          response.data.uuid
-        }`
-      });
-      this.resetForm();
-    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      if (response.data["anexos"] && !response.data["anexos"][0]["nome"]) {
-        toastError("Por favor anexe o laudo médico");
-      } else if (response.data["anexos"][0]["nome"][0]) {
-        const erroExtensaoInvalida = response.data["anexos"][0]["nome"][0];
-        toastError(erroExtensaoInvalida);
-      } else {
-        toastError("Erro ao solicitar dieta especial");
-      }
+  onEolBlur = async event => {
+    const { change } = this.props;
+    change("aluno_json.nome", "");
+    change("aluno_json.data_nascimento", "");
+    if (event.target.value.length !== 7) return;
+
+    const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
+    if (!resposta) return;
+    if (resposta.status === 400) {
+      toastError("Aluno não encontrado no EOL.");
     } else {
-      toastError("Erro ao solicitar dieta especial");
+      change("aluno_json.nome", resposta.detail.nm_aluno);
+      change(
+        "aluno_json.data_nascimento",
+        moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
+      );
+      getDietasEspeciaisVigentesDeUmAluno(
+        event.target.value.padStart(6, "0")
+      ).then(response => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            response.data.results
+          )
+        });
+      });
     }
+  };
+
+  onSubmit(payload) {
+    payload.anexos = payload.anexos.map(anexo => {
+      return {
+        nome: anexo.nome,
+        arquivo: anexo.base64
+      };
+    });
+    return new Promise(async (resolve, reject) => {
+      const response = await criaDietaEspecial(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Solicitação realizada com sucesso.");
+        this.setState({
+          submitted: !this.state.submitted,
+          resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+            response.data.uuid
+          }`,
+          solicitacoesVigentes: null
+        });
+        this.resetForm();
+        resolve();
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(getError(response.data));
+        reject();
+      } else {
+        toastError(
+          `Erro ao solicitar dieta especial: ${getError(response.data)}`
+        );
+        reject();
+      }
+    });
   }
 
   resetForm() {
     this.props.reset("solicitacaoDietaEspecial");
-    this.setState({ files: [] });
   }
 
   render() {
-    const { quantidadeAlunos, resumo, submitted } = this.state;
+    const { quantidadeAlunos, solicitacoesVigentes } = this.state;
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -100,46 +154,48 @@ class solicitacaoDietaEspecial extends Component {
           <span className="card-title font-weight-bold cinza-escuro">
             Descrição da Solicitação
           </span>
-          <div className="grid-container">
-            <div className="ajuste-fonte">
-              <span>* </span>Cód. EOL do Aluno
+          <FormSection name="aluno_json">
+            <div className="grid-container">
+              <div className="ajuste-fonte">
+                <span>* </span>Cód. EOL do Aluno
+              </div>
+              <div className="ajuste-fonte">Nome completo do Aluno</div>
+              <div className="ajuste-fonte">Data de Nascimento</div>
+              <Field
+                component={InputText}
+                name="codigo_eol"
+                placeholder="Insira o Código"
+                className="form-control"
+                type="number"
+                required
+                validate={[required, length7]}
+                onBlur={this.onEolBlur}
+              />
+              <Field
+                component={InputText}
+                name="nome"
+                className="form-control"
+                required
+                disabled
+                validate={[required, minLength6]}
+              />
+              <Field
+                component={InputComData}
+                name="data_nascimento"
+                className="form-control"
+                minDate={dateDelta(-360 * 99)}
+                maxDate={dateDelta(-1)}
+                showMonthDropdown
+                showYearDropdown
+                required
+                disabled
+                validate={required}
+              />
             </div>
-            <div className="ajuste-fonte">
-              <span>* </span>Nome completo do Aluno
-            </div>
-            <div className="ajuste-fonte">
-              <span>* </span>Data de Nascimento
-            </div>
-            <Field
-              component={InputText}
-              name="codigo_eol_aluno"
-              placeholder="Insira o Código"
-              className="form-control"
-              type="number"
-              required
-              validate={[required, length(6)]}
-            />
-            <Field
-              component={InputText}
-              name="nome_completo_aluno"
-              placeholder="Insira o Nome do Aluno"
-              className="form-control"
-              required
-              validate={[required, minLength6]}
-            />
-            <Field
-              component={InputComData}
-              name="data_nascimento_aluno"
-              placeholder="Selecione"
-              className="form-control"
-              minDate={dateDelta(-360 * 99)}
-              maxDate={dateDelta(-1)}
-              showMonthDropdown
-              showYearDropdown
-              required
-              validate={required}
-            />
-          </div>
+          </FormSection>
+          {solicitacoesVigentes && (
+            <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
+          )}
           <section className="row">
             <div className="col-7">
               <Field
@@ -149,16 +205,17 @@ class solicitacaoDietaEspecial extends Component {
                 placeholder="Insira o Nome do Prescritor"
                 className="form-control"
                 validate={minLength6}
+                helpText={"Mínimo 6 caracteres"}
               />
             </div>
             <div className="col-5">
               <Field
                 component={InputText}
-                label="Registro funcional (CRM/CRN/CRFa)"
+                label="CRM/CRN/CRFa"
                 name="registro_funcional_pescritor"
-                placeholder="Insira o Registro Funcional"
                 className="form-control"
-                validate={minLength6}
+                helpText={"Tamanho: 4 a 6 caracteres"}
+                validate={this.registroFuncionalValidators}
               />
             </div>
           </section>
@@ -166,30 +223,27 @@ class solicitacaoDietaEspecial extends Component {
           <section className="row attachments">
             <div className="col-9">
               <div className="card-title font-weight-bold cinza-escuro mt-4">
-                Laudo Médico
+                Laudo
               </div>
               <div className="text">
-                Anexe o laudo fornecido pelo médico acima. Sem ele, a
+                Anexe o laudo fornecido pelo profissional acima. Sem ele, a
                 solicitação de Dieta Especial será negada.
               </div>
               <div className="card-warning mt-2">
                 <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
-                .docx, .pdf, .png, .jpg ou .jpeg, com até 2Mb. <br /> O Laudo
+                .docx, .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo
                 deve ter sido emitido há, no máximo, 3 meses. Após a data de
                 aprovação no sistema, o laudo terá validade de 12 meses
               </div>
             </div>
             <div className="col-3 btn">
               <Field
-                component={InputFile}
+                component={ManagedInputFileField}
                 className="inputfile"
                 texto="Anexar"
-                name="files"
+                name="anexos"
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                setFiles={this.setFiles}
-                removeFile={this.removeFile}
-                submitted={submitted}
-                multiple
+                validate={[required]}
               />
             </div>
           </section>
@@ -203,11 +257,6 @@ class solicitacaoDietaEspecial extends Component {
               />
             </div>
           </section>
-          {resumo && (
-            <a href={resumo}>
-              Clique aqui para visualizar o resumo da solicitação
-            </a>
-          )}
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"
@@ -234,7 +283,15 @@ class solicitacaoDietaEspecial extends Component {
 }
 
 const componentNameForm = reduxForm({
-  form: "solicitacaoDietaEspecial"
+  form: "solicitacaoDietaEspecial",
+  validate: ({ nome, data_nascimento }) => {
+    const errors = {};
+    if (nome === undefined && data_nascimento === undefined) {
+      errors.codigo_eol =
+        "É necessário preencher este campo com um código EOL válido";
+    }
+    return errors;
+  }
 })(solicitacaoDietaEspecial);
 
 const selector = formValueSelector("solicitacaoDietaEspecial");

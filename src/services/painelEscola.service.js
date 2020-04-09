@@ -1,8 +1,9 @@
 import { API_URL } from "../constants/config.constants";
-import { AUTH_TOKEN, SOLICITACOES } from "./contants";
+import { AUTH_TOKEN, SOLICITACOES } from "./constants";
 
 const SOLICITACOES_ESCOLA = `${API_URL}/escola-solicitacoes`;
 
+// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

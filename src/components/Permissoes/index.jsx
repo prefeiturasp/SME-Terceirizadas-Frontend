@@ -2,8 +2,8 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { CODAE } from "../../configs/constants";
-import { TAMANHO_RF } from "../../constants/fields.constants";
-import { stringSeparadaPorVirgulas } from "../../helpers/utilities";
+import { TAMANHO_RF } from "../../constants";
+import { stringSeparadaPorVirgulas, getError } from "../../helpers/utilities";
 import { meusDados } from "../../services/perfil.service";
 import { getDadosUsuarioEOL } from "../../services/permissoes.service";
 import { Botao } from "../Shareable/Botao";
@@ -50,8 +50,8 @@ class Permissoes extends Component {
   filterList(registroFuncional) {
     if (registroFuncional.length === TAMANHO_RF) {
       getDadosUsuarioEOL(registroFuncional).then(response => {
-        if (response.data.length > 0) {
-          this.setState({ registroFuncional, perfisEOL: response.data });
+        if (response.data.detail.length > 0) {
+          this.setState({ registroFuncional, perfisEOL: response.data.detail });
         } else {
           toastError(`${response.data.detail}`);
         }
@@ -84,18 +84,18 @@ class Permissoes extends Component {
             this.setState({ perfisEOL: null, bloquearBotao: false });
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             this.setState({ perfisEOL: null, bloquearBotao: false });
-            toastError(response.data.detail);
+            toastError(getError(response.data));
           } else if (response.status === HTTP_STATUS.FORBIDDEN) {
             this.setState({ perfisEOL: null, bloquearBotao: false });
             toastError("Você não tem permissão para essa ação");
           } else {
             this.setState({ perfisEOL: null, bloquearBotao: false });
-            toastError("Erro ao permitir usuário");
+            toastError(getError(response.data));
           }
         })
-        .catch(() => {
+        .catch(error => {
           this.setState({ perfisEOL: null, bloquearBotao: false });
-          toastError("Erro ao permitir usuário");
+          toastError(`Erro ao permitir usuário ${getError(error.data)}`);
         });
     } else {
       toastError(

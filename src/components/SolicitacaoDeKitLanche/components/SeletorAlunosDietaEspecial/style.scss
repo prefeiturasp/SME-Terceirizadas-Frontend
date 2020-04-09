@@ -1,0 +1,16 @@
+.seletor-alunos-dieta-especial {
+  .card-header {
+    color: #353535;
+    .col-2 {
+      margin-left: 33px;
+    }
+  }
+  tr {
+    td:nth-child(1) {
+      width: 20px;
+    }
+    td:nth-child(2) {
+      width: 16.4%;
+    }
+  }
+}

@@ -16,6 +16,7 @@ export const InputText = props => {
     labelClassName,
     meta,
     min,
+    max,
     name,
     placeholder,
     required,
@@ -29,7 +30,9 @@ export const InputText = props => {
     <div className={`input ${icone && "icon"}`}>
       {label && [
         required && !esconderAsterisco && (
-          <span className="required-asterisk">*</span>
+          <span key={0} className="required-asterisk">
+            *
+          </span>
         ),
         <label
           key={1}
@@ -47,6 +50,7 @@ export const InputText = props => {
           "invalid-field"}`}
         disabled={disabled}
         min={min}
+        max={max}
         name={name}
         data-cy={input.name}
         placeholder={placeholder}

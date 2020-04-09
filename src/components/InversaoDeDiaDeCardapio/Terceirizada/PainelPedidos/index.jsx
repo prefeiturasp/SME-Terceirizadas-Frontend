@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
+import { FiltroEnum } from "../../../../constants";
 import { getTerceirizadaPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
+import { TIPODECARD } from "../../../../constants";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
@@ -12,7 +12,6 @@ import {
   filtraRegular,
   formatarPedidos
 } from "./helper";
-import { TERCEIRIZADA } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 
@@ -109,7 +108,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data"}
-                      parametroURL={TERCEIRIZADA}
                     />
                   </div>
                 </div>
@@ -121,7 +119,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={TERCEIRIZADA}
                       />
                     </div>
                   </div>
@@ -134,7 +131,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data"}
-                        parametroURL={TERCEIRIZADA}
                       />
                     </div>
                   </div>
@@ -148,7 +144,6 @@ class PainelPedidos extends Component {
                         titulo={
                           "Histórico de Inversões de cardápio Autorizadas"
                         }
-                        parametroURL={TERCEIRIZADA}
                       />
                     </div>
                   </div>

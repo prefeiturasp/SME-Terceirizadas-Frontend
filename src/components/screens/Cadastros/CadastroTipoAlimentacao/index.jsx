@@ -7,7 +7,7 @@ import { loadTipoAlimentacao } from "../../../../reducers/tipoAlimentacaoReducer
 import { Select } from "../../../Shareable/Select";
 import Wizard from "../../../Shareable/Wizard";
 import {
-  getVinculosTipoAlimentacaoPorUnidadeEscolar,
+  getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
   getTiposDeAlimentacao,
   createVinculoTipoAlimentacaoPeriodoEscolar,
   createVinculoSubstituicaoPeriodoEscolar,
@@ -85,7 +85,7 @@ class CadastroTipoAlimentacao extends Component {
       uuidUnidadeEscolar !== prevState.uuidUnidadeEscolar &&
       vinculosTiposAlimentacao === prevState.vinculosTiposAlimentacao
     ) {
-      getVinculosTipoAlimentacaoPorUnidadeEscolar(uuidUnidadeEscolar).then(
+      getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(uuidUnidadeEscolar).then(
         response => {
           if (response.results.length === 0) {
             this.setState({ uuidUnidadeEscolar: null });
@@ -220,10 +220,10 @@ class CadastroTipoAlimentacao extends Component {
       if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(response.data.tipos_alimentacao[0]);
       } else {
-        vinculosTiposAlimentacao[periodoEscolar].combos.forEach(combo => {
-          combo.substituicoes.forEach(substituicao => {
-            substituicao.combo = response.data.uuid;
-          });
+        vinculosTiposAlimentacao[periodoEscolar].combos[
+          indice
+        ].substituicoes.forEach(substituicao => {
+          substituicao.combo = response.data.uuid;
         });
         this.setState({
           vinculoCombo: response.data.uuid,

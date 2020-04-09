@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { FLUXO } from "./contants";
+import { FLUXO } from "./constants";
 import authService from "./auth";
 
 const authToken = {
@@ -162,11 +162,14 @@ export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
     });
 };
 
-export const CODAEAutorizaPedidoDRE = uuid => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/codae-autoriza-pedido/`;
+export const CODAEAutorizaPedidoDRE = (uuid, justificativa = {}) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
+    FLUXO.CODAE_AUTORIZA
+  }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
@@ -312,89 +315,15 @@ export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosReprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCODAEPedidosAutorizados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCODAEPedidosReprovados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${API_URL}/inversoes-dia-cardapio/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const cancelaInversaoDiaCardapioEscola = uuid => {
+export const escolaCancelaInversaoDiaCardapio = (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.ESCOLA_CANCELA
   }/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ justificativa: payload })
   })
     .then(res => {
       status = res.status;

@@ -1,6 +1,7 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
-import { FLUXO, PEDIDOS } from "./contants";
+import axios from "./_base";
+import { FLUXO, PEDIDOS } from "./constants";
 
 export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
 export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa`;
@@ -201,22 +202,6 @@ export const getDiretoriaRegionalPedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getDiretoriaRegionalPedidosDeKitLancheAutorizados = () => {
-  //TODO TIRAR
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
 export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
   //TODO: TIRAR
   const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-diretoria-regional/`;
@@ -235,54 +220,6 @@ export const getDiretoriaRegionalPedidosDeKitLancheReprovados = () => {
 
 export const getCodaePedidosDeKitLanche = filtroAplicado => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosDeKitLancheAutorizados = () => {
-  //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosDeKitLancheReprovados = () => {
-  //TODO: tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-reprovados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getPedidosDeKitLancheAutorizadosTerceirizada = () => {
-  //TODO tirar
-  const url = `${URL_SOLICITACOES_AVULSAS}/pedidos-autorizados-terceirizadas/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -328,7 +265,7 @@ export const getDetalheKitLancheAvulsa = uuid => {
     });
 };
 
-export const validaDeKitLancheAvulsoDiretoriaRegional = uuid => {
+export const DREValidaKitLancheAvulso = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -348,10 +285,7 @@ export const validaDeKitLancheAvulsoDiretoriaRegional = uuid => {
     });
 };
 
-export const naoValidaDeKitLancheAvulsoDiretoriaRegional = async (
-  uuid,
-  justificativa
-) => {
+export const DRENaoValidaKitLancheAvulso = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -431,28 +365,7 @@ export const cancelaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const DREnaoValidarKitLancheAvulsoEscola = async (
-  uuid,
-  justificativa
-) => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
-  }
-};
-
-export const CODAENegaKitLancheAvulsoEscola = async (uuid, justificativa) => {
+export const CODAENegaKitLancheAvulso = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
@@ -470,10 +383,11 @@ export const CODAENegaKitLancheAvulsoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const autorizaDeKitLancheAvulsoCodae = uuid => {
+export const CODAEAutorizaKitLancheAvulso = (uuid, justificativa = {}) => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
+    body: JSON.stringify(justificativa),
     method: "PATCH"
   };
   let status = 0;
@@ -490,7 +404,7 @@ export const autorizaDeKitLancheAvulsoCodae = uuid => {
     });
 };
 
-export const cienciaDeKitLancheAvulsoTerceirizadas = uuid => {
+export const terceirizadaTomaCienciaKitLancheAvulso = uuid => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${
     FLUXO.TERCEIRIZADA_TOMA_CIENCIA
   }/`;
@@ -510,4 +424,26 @@ export const cienciaDeKitLancheAvulsoTerceirizadas = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const solicitarKitLancheCei = values => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/`;
+  return axios.post(url, values);
+};
+
+export const getSolicitacoesKitLancheCeiRascunho = () => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/minhas-solicitacoes/`;
+  return axios.get(url);
+};
+
+export const registroAtualizaKitLancheCei = (payload, uuid) => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/${uuid}/`;
+  return axios.patch(url, payload);
+};
+
+export const inicioPedidoCei = uuid => {
+  const url = `solicitacoes-kit-lanche-cei-avulsa/${uuid}/${
+    FLUXO.INICIO_PEDIDO
+  }/`;
+  return axios.patch(url);
 };

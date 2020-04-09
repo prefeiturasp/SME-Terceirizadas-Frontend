@@ -18,7 +18,7 @@ import "./styles/sb-admin-2.css";
 import * as Sentry from "@sentry/browser";
 
 /* eslint-disable-next-line */
-if (process.env.NODE_ENV === "production") {
+if (process.env.IS_DOCKER_ENVIRONMENT === true) {
   // This way we can pass params to static files. see Dockerfile.
   // when build default env is production
   const SENTRY_URL = "SENTRY_URL_REPLACE_ME";

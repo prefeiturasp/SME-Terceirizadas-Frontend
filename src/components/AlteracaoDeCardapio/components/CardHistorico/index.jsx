@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Stand } from "react-burgers";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Redirect } from "react-router-dom";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
@@ -74,13 +74,9 @@ export class CardHistorico extends Component {
               {titulo}
             </div>
             <div className="pl-5 col-1">
-              <Stand
+              <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
-                color={"#C8C8C8"}
-                width={30}
-                padding={0}
-                lineSpacing={5}
-                active={!collapsed}
+                ativo={!collapsed}
               />
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { FLUXO, PEDIDOS } from "./contants";
+import { FLUXO, PEDIDOS } from "./constants";
 import authService from "./auth";
 
 const authToken = {
@@ -63,8 +63,8 @@ export const deleteAlteracaoCardapio = uuid => {
     });
 };
 
-export const getAlteracoesCardapioList = () => {
-  const url = `${API_URL}/alteracoes-cardapio-rascunho/`;
+export const getMeusRascunhosAlteracoesCardapio = () => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/minhas-solicitacoes/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -111,36 +111,6 @@ export const enviarAlteracaoCardapio = (uuid, payload) => {
     })
     .catch(error => {
       return error.json();
-    });
-};
-
-export const getDiretoriaRegionalPedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDiretoriaRegionalPedidosReprovados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-reprovados-diretoria-regional/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
     });
 };
 
@@ -244,27 +214,17 @@ export const getAlteracaoCardapio = uuid => {
     headers: authToken,
     method: "GET"
   };
+  let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
     })
     .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-codae/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
+      return error.json();
     });
 };
 
@@ -283,11 +243,12 @@ export const getCodaePedidosReprovados = () => {
     });
 };
 
-export const CODAEAutorizaAlteracaoDeCardapio = uuid => {
+export const CODAEAutorizaAlteracaoDeCardapio = (uuid, justificativa = {}) => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
+    body: JSON.stringify(justificativa),
     headers: authToken
   })
     .then(res => {
@@ -343,21 +304,6 @@ export const CODAEquestionaAlteracaoCardapio = async (
   } catch (error) {
     return error.json();
   }
-};
-
-export const getTerceirizadaPedidosAutorizados = () => {
-  const url = `${API_URL_ALTERACOES_CARDAPIO}/pedidos-autorizados-terceirizada/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const getTerceirizadaPedidosReprovados = () => {
@@ -438,6 +384,21 @@ export const getTerceirizadaPedidosDeAlteracaoCardapio = filtroAplicado => {
   const url = `${API_URL_ALTERACOES_CARDAPIO}/${
     PEDIDOS.TERCEIRIZADA
   }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getAlteracoesComLancheDoMesCorrente = escola_uuid => {
+  const url = `${API_URL_ALTERACOES_CARDAPIO}/com-lanche-do-mes-corrente/${escola_uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

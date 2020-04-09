@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { cancelaInversaoDiaCardapioEscola } from "../../services/inversaoDeDiaDeCardapio.service";
 import { toastError, toastSuccess } from "./Toast/dialogs";
-import { statusEnum } from "../../constants/statusEnum";
+import { statusEnum } from "../../constants";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import { TextArea } from "./TextArea/TextArea";

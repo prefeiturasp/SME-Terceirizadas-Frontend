@@ -1,19 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { DRE } from "../../../../configs/constants";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { FiltroEnum } from "../../../../constants";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraRegular
 } from "../../../../helpers/painelPedidos";
+import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { Select } from "../../../Shareable/Select";
-import CardHistorico from "../../components/CardHistorico";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
 class PainelPedidos extends Component {
@@ -64,12 +61,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
     } = this.state;
-    const {
-      visaoPorCombo,
-      valorDoFiltro,
-      pedidosAutorizados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, valorDoFiltro } = this.props;
     return (
       <div>
         {loading ? (
@@ -102,7 +94,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Inclusão"}
-                      parametroURL={DRE}
                     />
                   </div>
                 </div>
@@ -114,7 +105,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
                       />
                     </div>
                   </div>
@@ -127,34 +117,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Inclusão"}
-                        parametroURL={DRE}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        parametroURL={DRE}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Autorizadas"
-                        }
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Inclusões de Alimentação Reprovadas"
-                        }
                       />
                     </div>
                   </div>

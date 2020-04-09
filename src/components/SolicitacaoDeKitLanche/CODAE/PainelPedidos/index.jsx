@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/filtroEnum";
-import { getCodaePedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
-import { TIPODECARD } from "../../../../constants/cardsPrazo.constants";
-import { CardPendenteAcao } from "../../components/CardPendenteAcao";
-import CardHistorico from "../../components/CardHistorico";
+import { FiltroEnum, TIPODECARD } from "../../../../constants";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular,
-  formatarPedidos
+  filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { CODAE } from "../../../../configs/constants";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { getCodaePedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
 import Select from "../../../Shareable/Select";
+import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -67,12 +63,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular
     } = this.state;
-    const {
-      visaoPorCombo,
-      valorDoFiltro,
-      pedidosAutorizados,
-      pedidosReprovados
-    } = this.props;
+    const { visaoPorCombo, valorDoFiltro } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
     return (
       <div>
@@ -108,7 +99,6 @@ class PainelPedidos extends Component {
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
                       ultimaColunaLabel={"Data da Solicitação"}
-                      parametroURL={CODAE}
                     />
                   </div>
                 </div>
@@ -120,7 +110,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
                         ultimaColunaLabel={"Data da Solicitação"}
-                        parametroURL={CODAE}
                       />
                     </div>
                   </div>
@@ -133,34 +122,6 @@ class PainelPedidos extends Component {
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
                         ultimaColunaLabel={"Data da Solicitação"}
-                        parametroURL={CODAE}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosAutorizados && pedidosAutorizados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosAutorizados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações de Kit Lanche Passeio Autorizadas"
-                        }
-                        parametroURL={CODAE}
-                      />
-                    </div>
-                  </div>
-                )}
-                {pedidosReprovados && pedidosReprovados.length > 0 && (
-                  <div className="row pt-3">
-                    <div className="col-12">
-                      <CardHistorico
-                        pedidos={formatarPedidos(pedidosReprovados)}
-                        ultimaColunaLabel={"Data(s)"}
-                        titulo={
-                          "Histórico de Solicitações de Kit Lanche Passeio reprovadas"
-                        }
                       />
                     </div>
                   </div>

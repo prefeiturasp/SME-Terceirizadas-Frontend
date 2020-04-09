@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
-import { length, required } from "../../helpers/fieldValidators";
+import {
+  length,
+  required,
+  semCaracteresEspeciais
+} from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import { recuperaSenha, setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
@@ -207,33 +211,18 @@ export class Login extends Component {
         </div>
         <div className="form">
           <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
-            {tab === TABS.TERCEIRIZADAS && (
-              <div className="row">
-                <div className="col-12">
-                  <Field
-                    component={InputText}
-                    label="Nome Completo"
-                    name="nome"
-                    placeholder={"Nome Completo"}
-                    required
-                    type="text"
-                    validate={required}
-                  />
-                </div>
-              </div>
-            )}
             {tab === TABS.ESCOLA_DRE_CODAE && (
               <div className="row">
                 <div className="input-group email-sme">
                   <div ref={this.emailInput} className="col-6">
                     <Field
                       component={InputText}
-                      placeholder={"seu.nome"}
+                      placeholder={"Início do seu E-mail SME"}
                       label="E-mail"
                       name="email"
                       required
                       type="text"
-                      validate={[required]}
+                      validate={[required, semCaracteresEspeciais]}
                     />
                   </div>
                   <div className="input-group-append col-6">
@@ -519,7 +508,7 @@ export class Login extends Component {
             </div>
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
-              <img src="/assets/image/logo-sme.svg" alt="" />
+              <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />
             </div>
           </div>
         </div>

@@ -24,7 +24,10 @@ import {
   removerSolicitacaoUnificada
 } from "../../services/solicitacaoUnificada.service";
 import { Rascunhos } from "./Rascunhos";
-import { checaSeDataEstaEntre2e5DiasUteis } from "../../helpers/utilities";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
+} from "../../helpers/utilities";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
 import { validateSubmit } from "./validacao";
@@ -142,11 +145,15 @@ class SolicitacaoUnificada extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.resetForm();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
           }
         },
-        function() {
-          toastError("Houve um erro ao excluir o rascunho");
+        function(error) {
+          toastError(
+            `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
+          );
         }
       );
     }
@@ -369,8 +376,10 @@ class SolicitacaoUnificada extends Component {
           unifiedSolicitationList: res.results
         });
       },
-      function() {
-        toastError("Erro ao carregar as inclusões salvas");
+      function(error) {
+        toastError(
+          `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
+        );
       }
     );
   }
@@ -382,7 +391,11 @@ class SolicitacaoUnificada extends Component {
           toastSuccess("Solicitação Unificada enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a solicitação unificada");
+          toastError(
+            `Houve um erro ao salvar a solicitação unificada: ${getError(
+              res.data
+            )}`
+          );
         }
       },
       function() {
@@ -411,7 +424,11 @@ class SolicitacaoUnificada extends Component {
                 this.resetForm();
               }
             } else {
-              toastError("Houve um erro ao salvar a solicitação unificada");
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
             }
           },
           function() {
@@ -432,7 +449,11 @@ class SolicitacaoUnificada extends Component {
                 this.resetForm();
               }
             } else {
-              toastError("Houve um erro ao salvar a solicitação unificada");
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
             }
           },
           function() {

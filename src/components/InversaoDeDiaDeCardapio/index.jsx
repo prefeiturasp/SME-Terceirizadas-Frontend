@@ -4,13 +4,15 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
 import {
+  deveSerNoAnoCorrente,
   required,
-  textAreaRequired,
-  deveSerNoAnoCorrente
+  peloMenosUmCaractere,
+  textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
-  dateDelta
+  dateDelta,
+  getError
 } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
 import {
@@ -57,7 +59,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
-            toastError("Houve um erro ao excluir o rascunho");
+            toastError(`Erro ao remover rascunho: ${getError(res.data)}`);
           }
         },
         function() {
@@ -142,7 +144,11 @@ export class InversaoDeDiaDeCardapio extends Component {
           toastSuccess("Inversão de dia de Cardápio enviada com sucesso!");
           this.resetForm();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError("Houve um erro ao enviar a Inversão de dia de Cardápio");
+          toastError(
+            `Houve um erro ao enviar a Inversão de dia de Cardápio: ${getError(
+              res.data
+            )}`
+          );
         }
       },
       function() {
@@ -152,40 +158,52 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   onSubmit(values) {
-    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    if (!values.uuid) {
-      criarInversaoDeDiaDeCardapio(values).then(response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          if (values.status === STATUS_DRE_A_VALIDAR) {
-            this.iniciarPedido(response.data.uuid);
+    return new Promise(() => {
+      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      if (!values.uuid) {
+        criarInversaoDeDiaDeCardapio(values).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
+              this.iniciarPedido(response.data.uuid);
+            } else {
+              toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
+              this.resetForm();
+            }
           } else {
-            toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-            this.resetForm();
+            let keys = Object.keys(response.data);
+            keys.forEach(function() {
+              toastError(
+                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                  response.data
+                )}`
+              );
+            });
           }
-        } else {
-          let keys = Object.keys(response.data);
-          keys.forEach(function(key) {
-            toastError(response.data[key][0]);
-          });
-        }
-      });
-    } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          if (values.status === STATUS_DRE_A_VALIDAR) {
-            this.iniciarPedido(response.data.uuid);
+        });
+      } else {
+        atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
+              this.iniciarPedido(response.data.uuid);
+            } else {
+              toastSuccess(
+                "Inversão de dia de Cardápio atualizado com sucesso!"
+              );
+              this.resetForm();
+            }
           } else {
-            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
-            this.resetForm();
+            let keys = Object.keys(response.data);
+            keys.forEach(function() {
+              toastError(
+                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                  response.data
+                )}`
+              );
+            });
           }
-        } else {
-          let keys = Object.keys(response.data);
-          keys.forEach(function(key) {
-            toastError(response.data[key][0]);
-          });
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   render() {
@@ -265,7 +283,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       label="Motivo"
                       name="motivo"
                       required
-                      validate={[textAreaRequired]}
+                      validate={[textAreaRequired, peloMenosUmCaractere]}
                     />
                   </div>
                 </div>

@@ -14,7 +14,9 @@ import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 import { getSuspensaoDeAlimentacaoCODAE } from "./suspensaoDeAlimentacao.service";
-import { SOLICITACOES } from "./contants";
+import { SOLICITACOES } from "./constants";
+
+// TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -60,6 +62,26 @@ export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
     SOLICITACOES.PENDENTES
   }/${filtro}/`;
 
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
+  filtroAplicado,
+  tipoVisao
+) => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
+    SOLICITACOES.PENDENTES
+  }/${filtroAplicado}/${tipoVisao}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

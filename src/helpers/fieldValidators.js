@@ -1,10 +1,11 @@
 import moment from "moment";
+import strip_tags from "locutus/php/strings/strip_tags";
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
 export const deveSerNoAnoCorrente = value => {
-  const dataSelecionada = moment(value, "DD/MM/YYYY").years();
-  const dataAtual = moment().years();
+  const dataSelecionada = moment(value, "DD/MM/YYYY").year();
+  const dataAtual = moment().year();
   return dataSelecionada === dataAtual ? undefined : "Deve ser no mesmo ano";
 };
 
@@ -15,6 +16,12 @@ export const diasAntecedencia = value => {
 // XXX: Workaround for labelAndTextArea component
 export const textAreaRequired = value => {
   return value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+};
+
+export const peloMenosUmCaractere = value => {
+  return /[a-zA-Z0-9]/i.test(strip_tags(value))
+    ? undefined
+    : "Pelo menos um caractere deve ser digitado";
 };
 
 export const requiredCheck = value =>
@@ -79,3 +86,8 @@ export const phoneNumber = value =>
 
 export const tamanhoCnpj = value =>
   value.length < 14 ? "CNPJ Inválido" : undefined;
+
+export const semCaracteresEspeciais = value =>
+  value && !/^[\w&.-]+$/i.test(value)
+    ? `Não permite caracteres especiais`
+    : undefined;
