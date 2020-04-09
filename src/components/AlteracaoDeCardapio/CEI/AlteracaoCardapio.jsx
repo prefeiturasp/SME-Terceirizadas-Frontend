@@ -624,10 +624,12 @@ const AlteracaoCardapioForm = reduxForm({
       for (let [chave, valor] of Object.entries(dadosPeriodo)) {
         if (chave === "check") {
           aoMenosUmPeriodoSelecionado = true;
-        } else if (chave.startsWith("qtde-faixa")) {
-          totais[chave] = totais[chave]
-            ? totais[chave] + parseInt(valor)
-            : parseInt(valor);
+        } else if (chave.startsWith("faixas_etarias")) {
+          for (let [uuid, total] of Object.entries(valor)) {
+            totais[uuid] = totais[uuid]
+              ? totais[uuid] + parseInt(total)
+              : parseInt(total);
+          }
         } else if (chave === "alunosPorFaixaEtaria") {
           alunosPorFaixaEtaria = valor;
         }
@@ -647,22 +649,27 @@ const AlteracaoCardapioForm = reduxForm({
 
     if (alunosPorFaixaEtaria) {
       alunosPorFaixaEtaria.forEach(faixaEtaria => {
-        const totalFaixaEtaria =
-          totais[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`];
+        const totalFaixaEtaria = totais[faixaEtaria.faixa_etaria.uuid];
         if (totalFaixaEtaria && totalFaixaEtaria > faixaEtaria.count) {
           for (let periodo of Object.keys(periodos)) {
             const erroCampo = {
-              [`qtde-faixa-${
-                faixaEtaria.faixa_etaria.uuid
-              }`]: "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
+              [faixaEtaria.faixa_etaria.uuid]:
+                "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
             };
             errors[periodo] = errors[periodo]
-              ? Object.assign({}, errors[periodo], erroCampo)
-              : erroCampo;
+              ? {
+                  faixas_etarias: Object.assign(
+                    {},
+                    errors[periodo].faixas_etarias,
+                    erroCampo
+                  )
+                }
+              : { faixas_etarias: erroCampo };
           }
         }
       });
     }
+
     return errors;
   }
 })(AlteracaoCardapio);
