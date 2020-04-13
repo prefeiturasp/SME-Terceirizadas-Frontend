@@ -69,6 +69,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       ehOutroMotivo,
       totalQuantidade
     } = this.state;
+    totalQuantidade = 0;
     const periodosEscolares = this.props.meusDados.vinculo_atual.instituicao
       .periodos_escolares;
     const inclusaoDeAlimentacao = param.inclusaoAlimentacaoCei;
