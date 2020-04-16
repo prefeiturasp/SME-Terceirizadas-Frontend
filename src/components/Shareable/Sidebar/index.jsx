@@ -100,14 +100,11 @@ export class Sidebar extends Component {
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
-              {/*<img
+              <img
                 src="/assets/image/logo-sme-branco.svg"
                 className="rounded"
                 alt="SME Educação"
-              />*/}
-              <p>
-                SME-SP-SGA - Distribuído sob <br />a Licença AGPL V3
-              </p>
+              />
             </div>
           )}
         </ul>
