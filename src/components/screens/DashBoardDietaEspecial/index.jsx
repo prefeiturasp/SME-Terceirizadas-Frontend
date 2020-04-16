@@ -200,7 +200,7 @@ class DashBoardDietaEspecial extends Component {
               </div>
             </CardBody>
           )}
-                  <div className="row row-shortcuts">
+        <div className="row row-shortcuts">
           <div className="col-3">
             <CardAtalho
               titulo={"Inclusão de Dieta Especial"}
@@ -210,7 +210,6 @@ class DashBoardDietaEspecial extends Component {
               href={"/escola/dieta-especial"}
             />
           </div>
-          
         </div>
       </div>
     );
