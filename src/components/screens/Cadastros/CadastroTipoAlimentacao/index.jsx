@@ -694,6 +694,7 @@ class CadastroTipoAlimentacao extends Component {
                         <Wizard
                           arrayOfObjects={vinculosTiposAlimentacao}
                           currentStep={periodoEscolar}
+                          outerParam={"periodo_escolar"}
                           nameItem="nome"
                         />
                         {exibeFormularioInicial ? (

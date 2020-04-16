@@ -78,6 +78,7 @@ import {
   usuarioTerceirizada,
   usuarioCODAEDietaEspecial
 } from "../helpers/utilities";
+import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 
 const routesConfig = [
   {
@@ -538,6 +539,12 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
+    component: CadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
   }
 ];
 
