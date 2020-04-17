@@ -3,11 +3,12 @@ import { Field } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
+import "./style.scss";
 
 class Step1 extends Component {
   render() {
     return (
-      <div>
+      <div className="cadastro-produto-step1">
         <div className="card-title">Identificação do Produto</div>
         <div className="link-with-student">
           <div className="label">
@@ -46,7 +47,7 @@ class Step1 extends Component {
             <Field
               component={InputText}
               label="Nome do protocolo de Dieta Especial"
-              name="nome"
+              name="nome_protocolo"
               type="text"
               placeholder="Digite o nome do protocolo"
               required
@@ -147,9 +148,13 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-        <div className="card-warning mt-2">
-          <strong>IMPORTANTE:</strong> Relacioná-los conforme dispõe a RDC nº 26
-          de 02/07/15
+        <div className="row">
+          <div className="col-5">
+            <div className="card-warning mt-3">
+              <strong>IMPORTANTE:</strong> Relacioná-los conforme dispõe a RDC
+              nº 26 de 02/07/15
+            </div>
+          </div>
         </div>
       </div>
     );
