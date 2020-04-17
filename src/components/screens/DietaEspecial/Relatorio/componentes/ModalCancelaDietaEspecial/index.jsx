@@ -33,8 +33,7 @@ export class ModalCancelaDietaEspecial extends Component {
     escolaCancelaSolicitacao(uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Solicitação de Dieta Especial cancelada com sucesso!");
-        this.props.loadSolicitacao(uuid);
-        this.props.closeModal();
+        this.props.onCancelar();
       } else {
         toastError(
           `Erro ao cancelar Solicitação de Dieta Especial: ${getError(

@@ -35,7 +35,7 @@ export default class DiagnosticosField extends Component {
       input: { value, onChange }
     } = this.props;
     const diagnosticosSelecionados =
-      value.length === 1 ? [""] : value.filter((v, i) => i !== index);
+      value.length === 1 ? "" : value.filter((v, i) => i !== index);
     onChange(diagnosticosSelecionados);
   }
   render() {

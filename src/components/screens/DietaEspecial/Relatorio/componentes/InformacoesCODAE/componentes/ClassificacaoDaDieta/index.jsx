@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Field } from "redux-form";
+import { Field } from "react-final-form";
 import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
+import { required } from "../../../../../../../../helpers/fieldValidators"
 
-export class ClassificacaoDaDieta extends Component {
+export default class ClassificacaoDaDieta extends Component {
   render() {
-    const { classificacoes, name, onClassificacaoChanged, meta } = this.props;
+    const { classificacoes, meta } = this.props;
     return (
       <div className="tour-time">
         <div className="d-inline-flex">
@@ -13,11 +14,10 @@ export class ClassificacaoDaDieta extends Component {
               <label key={index} className="container-radio">
                 {classificacao.nome}
                 <Field
-                  component={"input"}
-                  onChange={onClassificacaoChanged}
+                  name="classificacao"
+                  component="input"
                   type="radio"
                   value={classificacao.id.toString()}
-                  name={name}
                 />
                 <span className="checkmark" />
               </label>
