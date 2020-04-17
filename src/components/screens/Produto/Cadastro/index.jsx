@@ -4,6 +4,7 @@ import Wizard from "../../../Shareable/Wizard";
 import Step1 from "./Step1";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import Step2 from "./Step2";
 
 class cadastroProduto extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class cadastroProduto extends Component {
               nameItem="nome"
             />
             {currentStep === 0 && <Step1 />}
+            {currentStep === 1 && <Step2 />}
             <div className="row">
               <div className="col-12 text-right pt-3">
                 <Botao

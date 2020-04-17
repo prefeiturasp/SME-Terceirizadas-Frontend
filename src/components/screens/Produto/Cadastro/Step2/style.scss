@@ -1,0 +1,10 @@
+@import "../../../../../styles/variables.scss";
+
+div.cadastro-produto-step2 {
+  .card-title {
+    padding-top: 1.5em;
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+  }
+}
