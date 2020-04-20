@@ -1,0 +1,43 @@
+@import "../../../../../styles/variables.scss";
+
+div.cadastro-produto-step2 {
+  .card-title {
+    padding-top: 1.5em;
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+  }
+  .school-container {
+    font-size: 14px;
+    .title {
+      color: $blackInput;
+      font-weight: bold;
+    }
+    table.table-informacoes-nutricionais {
+      width: 100%;
+      thead {
+        font-weight: bold;
+        th {
+          padding-top: 1em;
+          padding-bottom: 1em;
+          border-top: 1px solid #e9eaea;
+          border-bottom: 1px solid #a7a7a7;
+          background-color: #f5f6f8;
+        }
+      }
+      tbody {
+        tr {
+          padding-top: 0.3em;
+          padding-bottom: 0.3em;
+          border-bottom: 1px solid #a7a7a7;
+          color: $blackInput;
+        }
+      }
+    }
+  }
+  .card-warning {
+    border-radius: 4px;
+    border-color: $grayPlaceholder;
+    color: $grayPlaceholder;
+  }
+}

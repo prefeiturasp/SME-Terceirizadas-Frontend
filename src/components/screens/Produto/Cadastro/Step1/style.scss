@@ -1,0 +1,34 @@
+@import "../../../../../styles/variables.scss";
+
+div.cadastro-produto-step1 {
+  .card-title {
+    padding-top: 1.5em;
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+  }
+  .link-with-student {
+    .container-radio {
+      input {
+        &:checked ~ .checkmark {
+          background-color: $green;
+        }
+      }
+    }
+    div.label {
+      span.required-asterisk {
+        color: $red;
+        padding-right: 5px;
+      }
+      color: $gray;
+      padding-top: 0.5em;
+      padding-bottom: 1em;
+    }
+    label.container-radio {
+      color: $blackInput;
+    }
+  }
+  .card-warning {
+    border-radius: 4px;
+  }
+}
