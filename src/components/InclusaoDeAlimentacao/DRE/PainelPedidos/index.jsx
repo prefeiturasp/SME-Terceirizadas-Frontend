@@ -9,6 +9,7 @@ import {
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getDREPedidosDeInclusaoAlimentacaoDaCei } from "../../../../services/inclusaoAlimentacaoDaCei.service";
 import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
@@ -33,6 +34,7 @@ class PainelPedidos extends Component {
     this.atualizarDadosDasInclusoes(filtro);
   }
 
+  //FIXME: Nao trata errors, nao faz requisicoes em paralelo
   async atualizarDadosDasInclusoes(filtro) {
     const inclusoesAvulsas = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
       filtro
@@ -40,9 +42,14 @@ class PainelPedidos extends Component {
     const inclusoesContinuas = await getDREPedidosInclusaoContinuosPendentes(
       filtro
     );
-    const inclusoesMescladas = inclusoesAvulsas.results.concat(
-      inclusoesContinuas.results
+    const inclusoesCei = await getDREPedidosDeInclusaoAlimentacaoDaCei(
+      filtro
     );
+    const inclusoesMescladas = [
+      ...inclusoesAvulsas.results,
+      ...inclusoesContinuas.results,
+      ...inclusoesCei.results,
+    ]
     const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
     const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);

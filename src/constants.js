@@ -233,21 +233,6 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
     cor: "rgba(41, 120, 5, 1)",
     link: INVERSAO_CARDAPIO
   },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO_CEI,
-    cor: "rgba(41, 120, 5, 1)",
-    link: INCLUSAO_ALIMENTACAO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DE_CARDAPIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
-  }
 ];
 
 const ENDPOINT = {

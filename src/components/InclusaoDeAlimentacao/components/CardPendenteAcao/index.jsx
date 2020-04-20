@@ -99,13 +99,14 @@ export class CardPendenteAcao extends Component {
                 {pedidosFiltrados.map((pedido, key) => {
                   const dataMaisProxima =
                     pedido.inclusoes && pedido.inclusoes[0].data;
+                    const isCei = !!pedido.isCei
+                    const isContinua = !!pedido.data_inicial
                   return (
                     <Link
                       key={key}
                       to={`/${INCLUSAO_ALIMENTACAO}/relatorio?uuid=${
                         pedido.uuid
-                      }&ehInclusaoContinua=${pedido.data_inicial !==
-                        undefined}`}
+                      }&ehInclusaoContinua=${isContinua}&escolaTipoCei=${isCei}`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

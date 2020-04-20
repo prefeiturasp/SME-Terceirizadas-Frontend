@@ -7,7 +7,7 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
 } from "../../../configs/constants";
 import { FILTRO_VISAO } from "../../../constants";
 import { dataAtual } from "../../../helpers/utilities";
@@ -21,6 +21,7 @@ import CardStatusDeSolicitacao, {
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog } from "../helper";
 import Select from "../../Shareable/Select";
+import { toastError } from "../../Shareable/Toast/dialogs";
 import { FILTRO } from "../const";
 import {
   getSolicitacoesPendentesValidacaoDRE,
@@ -90,6 +91,23 @@ class DashboardDRE extends Component {
     );
   }
 
+  consolidaResultados = results => {
+    try{
+      if(results["Inclusão de Alimentacao de Cei"]) {
+        results["Inclusão de Alimentação"].TOTAL += results["Inclusão de Alimentacao de Cei"].TOTAL
+      }
+      if(results["Kit Lanche Passeio de Cei"]) {
+        results["Kit Lanche Passeio"].TOTAL += results["Kit Lanche Passeio de Cei"].TOTAL
+      }
+      if(results["Inclusão de Alimentacao de Cei"]) {
+        results[""].TOTAL += results["Inclusão de Alimentacao de Cei"].TOTAL
+      }
+    }catch(error){
+      toastError("Houve um erro ao carregar Rascunhos Salvos");
+    }
+    return results
+  }
+
   async carregaResumoPendencias() {
     const { visao, filtroPorVencimento } = this.state;
     this.setState({ loadingPainelSolicitacoes: true });
@@ -98,7 +116,7 @@ class DashboardDRE extends Component {
       visao
     );
     this.setState({
-      resumo: resumo.results,
+      resumo: this.consolidaResultados(resumo.results),
       loadingPainelSolicitacoes: false
     });
   }
