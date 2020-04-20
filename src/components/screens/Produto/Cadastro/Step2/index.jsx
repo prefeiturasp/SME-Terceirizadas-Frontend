@@ -129,6 +129,16 @@ class Step2 extends Component {
               </div>
             );
           })}
+        <div className="row">
+          <div className="col-10">
+            <div className="card-warning mt-3 mb-3">
+              % Valores Diários com base em uma dieta de 2.000 Kcal ou 8.400 KJ.
+              <br />
+              Seus valores diários podem ser maiores ou menores dependendo de
+              suas necessidades energéticas. (**) VD não estabelecidos
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
