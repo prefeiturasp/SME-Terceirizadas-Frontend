@@ -6,6 +6,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import { getInformacoesNutricionais } from "../../../../services/produto.service";
 
 class cadastroProduto extends Component {
   constructor(props) {
@@ -28,12 +29,23 @@ class cadastroProduto extends Component {
             nome: "Informação do Produto"
           }
         }
-      ]
+      ],
+      informacoesAgrupadas: null
     };
   }
 
+  getInformacoesAgrupadas = () => {
+    getInformacoesNutricionais().then(response => {
+      this.setState({ informacoesAgrupadas: response.data.results });
+    });
+  };
+
+  componentDidMount() {
+    this.getInformacoesAgrupadas();
+  }
+
   render() {
-    const { wizardSteps, currentStep } = this.state;
+    const { wizardSteps, currentStep, informacoesAgrupadas } = this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="card">
@@ -46,7 +58,9 @@ class cadastroProduto extends Component {
               nameItem="nome"
             />
             {currentStep === 0 && <Step1 />}
-            {currentStep === 1 && <Step2 />}
+            {currentStep === 1 && (
+              <Step2 informacoesAgrupadas={informacoesAgrupadas} />
+            )}
             {currentStep === 2 && <Step3 />}
             <div className="row">
               <div className="col-12 text-right pt-3">
