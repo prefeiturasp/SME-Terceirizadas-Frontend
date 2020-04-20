@@ -5,6 +5,7 @@ import Step1 from "./Step1";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import Step2 from "./Step2";
+import Step3 from "./Step3";
 
 class cadastroProduto extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class cadastroProduto extends Component {
             />
             {currentStep === 0 && <Step1 />}
             {currentStep === 1 && <Step2 />}
+            {currentStep === 2 && <Step3 />}
             <div className="row">
               <div className="col-12 text-right pt-3">
                 <Botao
@@ -65,14 +67,23 @@ class cadastroProduto extends Component {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled
                 />
-                <Botao
-                  texto={"Próximo"}
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  onClick={() =>
-                    this.setState({ currentStep: currentStep + 1 })
-                  }
-                />
+                {currentStep !== 2 && (
+                  <Botao
+                    texto={"Próximo"}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() =>
+                      this.setState({ currentStep: currentStep + 1 })
+                    }
+                  />
+                )}
+                {currentStep === 2 && (
+                  <Botao
+                    texto={"Enviar"}
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                  />
+                )}
               </div>
             </div>
           </form>
