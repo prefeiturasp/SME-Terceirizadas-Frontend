@@ -25,8 +25,6 @@ import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial"
 import "./style.scss";
 
 const BotaoGerarRelatorio = ({uuid}) => {
-  console.log(uuid)
-  console.log('getProtocoloDietaEspecial(uuid)', getProtocoloDietaEspecial(uuid))
   return (
     <div className="form-group row float-right mt-4">
       <Link
@@ -98,7 +96,6 @@ export default class Relatorio extends Component {
     if (!dietaEspecial) {
       return <div>Carregando...</div>
     }
-    console.log('dietaEspecial', dietaEspecial)
     return (
       <>
         <span className="page-title">{`Dieta Especial - Solicitação # ${

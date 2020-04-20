@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
+import arrayMutators from "final-form-arrays"
 
 import {
   getAlergiasIntolerancias,
@@ -55,6 +56,7 @@ export default class FormAutorizaDietaEspecial extends Component {
     return(
       <div>
         <Form
+          mutators={{...arrayMutators}}
           onSubmit={(values) => setTimeout(() => console.log('onSubmit.values', values), 2000)}
           initialValues={{
             registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
@@ -89,23 +91,8 @@ export default class FormAutorizaDietaEspecial extends Component {
                   </div>
                   <Field component={InputText} name="nome_protocolo" validate={required} />
                   <div className="pt-2 title">Substituições de Alimentos</div>
-                  <Field
-                    component={SubstituicoesField}
-                    name="substituicoes"
+                  <SubstituicoesField
                     alimentos={alimentos}
-                    validate={value => {
-                      if (value.length === 1){
-                        if (Object.keys(value[0]).length === 0){
-                          console.log('retorna certo porra')
-                          return "Campo obrigatório"
-                        }
-                        // if (Object.keys(value[0]).length < 3){
-                        //   console.log('retorna certo porra')
-                        //   return "Substituição com dados faltantes"
-                        // }
-                      }
-
-                    }}
                   />
                   <div className="row">
                     <div className="col-12">
@@ -147,12 +134,6 @@ export default class FormAutorizaDietaEspecial extends Component {
                   className="ml-3"
                   disabled={submitting}
                 />
-                <pre>
-                  Values:<br/>
-                  {JSON.stringify(values, undefined, 2)}<br/>
-                  Errors:<br/>
-                  {JSON.stringify(errors, undefined, 2)}
-                </pre>
               </div>
             </form>
           )}

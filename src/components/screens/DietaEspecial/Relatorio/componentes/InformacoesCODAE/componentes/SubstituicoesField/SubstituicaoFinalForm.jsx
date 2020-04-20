@@ -34,8 +34,7 @@ const SelectSelecione = props => {
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, addOption, removeOption, input: {name}, meta } = this.props;
-    console.log('SubstituicoesField.name', name)
+    const { alimentos, addOption, removeOption, input: {name}, meta, deveHabilitarApagar } = this.props;
     return (
       <div className="row">
         <div className="col-3">
@@ -81,7 +80,7 @@ export default class SubstituicoesField extends Component {
           />
           <Botao
             icon={BUTTON_ICON.TRASH}
-            onClick={removeOption}
+            onClick={() => deveHabilitarApagar && removeOption()}
             style={BUTTON_STYLE.BLUE_OUTLINE}
           />
         </div>
