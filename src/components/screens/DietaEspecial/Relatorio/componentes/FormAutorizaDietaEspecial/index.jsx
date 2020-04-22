@@ -1,14 +1,18 @@
+import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from 'react'
 import { Form, Field } from 'react-final-form'
 import arrayMutators from "final-form-arrays"
 
 import {
+  CODAEAutorizaDietaEspecial,
   getAlergiasIntolerancias,
   getAlimentos,
-  getClassificacoesDietaEspecial
+  getClassificacoesDietaEspecial,
+  getDietasEspeciaisVigentesDeUmAluno
 } from "../../../../../../services/dietaEspecial.service";
 
+import { statusEnum } from "../../../../../../constants"
 import { required } from "../../../../../../helpers/fieldValidators"
 import {
   converterDDMMYYYYparaYYYYMMDD,
@@ -24,13 +28,19 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
+import CKEditorField from "../../../../../Shareable/CKEditorField";
+import { toastSuccess, toastError } from "../../../../../Shareable/Toast/dialogs";
+
+import { formatarSolicitacoesVigentes } from "../../../Escola/helper";
 
 import DiagnosticosField from "../InformacoesCODAE/componentes/Diagnosticos/Field";
 import ClassificacaoDaDieta from "../InformacoesCODAE/componentes/ClassificacaoDaDieta";
 import SubstituicoesField from "../InformacoesCODAE/componentes/SubstituicoesField";
 import DataOpcional from "../InformacoesCODAE/componentes/DataOpcional";
+import ModalAutorizaDietaEspecial from "../ModalAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
-import CKEditorField from "../../../../../Shareable/CKEditorField";
+import { formSubscriptionItems } from "final-form";
+
 
 export default class FormAutorizaDietaEspecial extends Component {
   constructor(props) {
@@ -45,16 +55,26 @@ export default class FormAutorizaDietaEspecial extends Component {
     this.showAutorizarModal = this.showAutorizarModal.bind(this)
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this)
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this)
+    this.onAutorizar = this.onAutorizar.bind(this)
   }
 
   componentDidMount = async () => {
+    const { aluno, uuid } = this.props.dietaEspecial;
     const alergiasIntolerancias = await getAlergiasIntolerancias();
     const alimentos = await getAlimentos();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
+    const solicitacoesVigentes = await getDietasEspeciaisVigentesDeUmAluno(
+      aluno.codigo_eol
+    )
     this.setState({
       diagnosticos: alergiasIntolerancias.results,
       classificacoesDieta: classificacoesDieta.results,
-      alimentos: alimentos.data
+      alimentos: alimentos.data,
+      solicitacoesVigentes: formatarSolicitacoesVigentes(
+        solicitacoesVigentes.data.results.filter(
+          solicitacaoVigente => solicitacaoVigente.uuid !== uuid
+        )
+      )
     });
   };
 
@@ -74,19 +94,68 @@ export default class FormAutorizaDietaEspecial extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  onAutorizar(values) {
+    const {
+      solicitacoesVigentes,
+      showAutorizarModal,
+    } = this.state;
+    if (
+      solicitacoesVigentes &&
+      solicitacoesVigentes.length > 0 &&
+      !showAutorizarModal
+    ) {
+      this.showAutorizarModal();
+      return;
+    }
+    if (showAutorizarModal) {
+      this.closeAutorizarModal();
+    }
+    const {
+      dietaEspecial
+    } = this.props;
+    return new Promise((resolve, reject) => {
+      const payload = Object.assign({}, values)
+      if (payload.data_termino){
+        payload.data_termino = converterDDMMYYYYparaYYYYMMDD(payload.data_termino)
+      }
+      payload.substituicoes = payload.substituicoes.map(s =>
+        Object.assign({}, s, {
+          tipo: s.tipo === "isento" ? "I" : "S"
+        })
+      )
+      CODAEAutorizaDietaEspecial(dietaEspecial.uuid, payload).then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Autorização de dieta especial realizada com sucesso!");
+            this.props.onAutorizar();
+            resolve()
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError("Houve um erro ao autorizar a Dieta Especial");
+            resolve(response.data)
+          }
+        },
+        function() {
+          toastError("Houve um erro ao autorizar a Dieta Especial");
+          reject()
+        }
+      );
+    })
+  }
+
   render(){
-    const { diagnosticos, classificacoesDieta, alimentos, showNaoAprovaModal } = this.state;
+    const { diagnosticos, classificacoesDieta, alimentos, showNaoAprovaModal, showAutorizarModal } = this.state;
     const { dietaEspecial } = this.props;
     return(
       <div>
         <Form
           mutators={{...arrayMutators}}
-          onSubmit={(values) => setTimeout(() => console.log('onSubmit.values', values), 2000)}
+          onSubmit={this.onAutorizar}
           initialValues={{
             registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
             substituicoes: [{}]
           }}
-          render={({ handleSubmit, errors, submitting, values }) => (
+          keepDirtyOnReinitialize={true}
+          render={({ form, handleSubmit, errors, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <div className="information-codae">
                 <div className="pt-2 title">Relação por Diagnóstico</div>
@@ -167,6 +236,18 @@ export default class FormAutorizaDietaEspecial extends Component {
                   disabled={submitting}
                 />
               </div>
+              <ModalAutorizaDietaEspecial
+                closeModal={this.closeAutorizarModal}
+                showModal={showAutorizarModal}
+                dietaEspecial={dietaEspecial}
+                handleSubmit={form.submit}
+              />
+              <pre>
+                Values:<br/>
+                {JSON.stringify(values, undefined, 2)}
+                Errors:<br/>
+                {JSON.stringify(errors, undefined, 2)}
+              </pre>
             </form>
           )}
         />

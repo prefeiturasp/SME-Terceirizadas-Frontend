@@ -70,18 +70,8 @@ export default class Relatorio extends Component {
 
   loadSolicitacao(uuid) {
     getDietaEspecial(uuid).then(responseDietaEspecial => {
-      getDietasEspeciaisVigentesDeUmAluno(
-        responseDietaEspecial.data.aluno.codigo_eol
-      ).then(responseDietasVigentes => {
-        this.setState({
-          solicitacoesVigentes: formatarSolicitacoesVigentes(
-            responseDietasVigentes.data.results.filter(
-              solicitacaoVigente => solicitacaoVigente.uuid !== uuid
-            )
-          ),
-          dietaEspecial: responseDietaEspecial.data,
-          uuid
-        });
+      this.setState({
+        dietaEspecial: responseDietaEspecial.data,
       });
     });
   }
@@ -89,7 +79,6 @@ export default class Relatorio extends Component {
   render() {
     const {
       dietaEspecial,
-      uuid,
       solicitacoesVigentes,
     } = this.state;
     const { visao } = this.props;
@@ -104,16 +93,17 @@ export default class Relatorio extends Component {
         <div className="card mt-3">
           <div className="card-body">
             <CorpoRelatorio
-              uuid={uuid}
+              uuid={dietaEspecial.uuid}
               solicitacoesVigentes={solicitacoesVigentes}
               dietaEspecial={dietaEspecial}
             />
             {dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR && visao === ESCOLA &&
               <EscolaCancelaDietaEspecial
                 uuid={dietaEspecial.uuid}
-                onCancelar={() => this.loadSolicitacao(uuid)}
+                onCancelar={() => this.loadSolicitacao(dietaEspecial.uuid)}
               />}
-            {dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE && <FormAutorizaDietaEspecial dietaEspecial={dietaEspecial}/>}
+            {dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE &&
+              <FormAutorizaDietaEspecial dietaEspecial={dietaEspecial} onAutorizar={() => this.loadSolicitacao(dietaEspecial.uuid)}/>}
             {dietaEspecial.status_solicitacao ===
               statusEnum.CODAE_AUTORIZADO && <BotaoGerarRelatorio uuid={dietaEspecial.uuid}/>}
           </div>
