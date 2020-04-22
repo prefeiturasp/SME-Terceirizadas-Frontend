@@ -102,3 +102,14 @@ export const ajustarFormaLotes = lotes => {
     };
   });
 };
+
+export const sumObjectsByKey = (...objs) => {
+  return objs.reduce((a, b) => {
+    for (let k in b) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (b.hasOwnProperty(k))
+        a[k] = (a[k] || 0) + b[k];
+    }
+    return a;
+  }, {});
+}

@@ -15,7 +15,7 @@ import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { faixaToString } from "../../../../helpers/faixasEtarias";
 
-const TabelaFaixaEtaria = (faixas = []) => {
+const TabelaFaixaEtaria = ({faixas = []}) => {
   return (
     <section className="tabela-faixa-etaria-qtd-alunos">
     <article>
@@ -33,7 +33,7 @@ const TabelaFaixaEtaria = (faixas = []) => {
             {faixaToString(item.faixa_etaria)}
           </div>
           <div className="alunos-matriculados">
-            {item.quantidade_alunos}
+              {"N/A"}
           </div>
           <div>{item.quantidade_alunos}</div>
         </article>
@@ -42,7 +42,7 @@ const TabelaFaixaEtaria = (faixas = []) => {
     <article>
       <div className="faixa-etaria">Total {">>"} </div>
       <div className="alunos-matriculados">
-        {2}
+        {"N/A"}
       </div>
       <div className="quantidade">{1}</div>
     </article>
@@ -51,11 +51,7 @@ const TabelaFaixaEtaria = (faixas = []) => {
 }
 
 export class CorpoRelatorio extends Component {
-  renderParteAvulsa() {
-    const { inclusaoDeAlimentacao : {
-      inclusoes,
-
-    } } = this.props;
+  renderParteAvulsa(inclusoes) {
     const diasMotivosFormatados = formataMotivosDias(
       inclusoes
     );
@@ -133,7 +129,11 @@ export class CorpoRelatorio extends Component {
         logs,
         quantidades_periodo,
         descricao,
-        quantidade_alunos_por_faixas_etaria
+        quantidade_alunos_por_faixas_etarias,
+        inclusoes,
+        data,
+        motivo,
+        outro_motivo,
       }
     } = this.props;
     return (
@@ -220,36 +220,46 @@ export class CorpoRelatorio extends Component {
         <hr />
         {ehInclusaoContinua
           ? this.renderParteContinua()
-          : this.renderParteAvulsa()}
-        <table className="table-report mt-3">
-          <tbody>
-            <tr>
-              <th>Período</th>
-              <th>Tipos de Alimentação</th>
-              <th>Nº de Alunos</th>
-            </tr>
-            {quantidades_periodo.map(
-              (quantidade_por_periodo, key) => {
-                return (
-                  <tr key={key}>
-                    <td>
-                      {quantidade_por_periodo.periodo_escolar &&
-                        quantidade_por_periodo.periodo_escolar.nome}
-                    </td>
-                    <td>
-                      {stringSeparadaPorVirgulas(
-                        quantidade_por_periodo.tipos_alimentacao,
-                        "label"
-                      )}
-                    </td>
-                    <td>{quantidade_por_periodo.numero_alunos}</td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
-            { ehEscolaTipoCei && <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etaria} /> }
+          : this.renderParteAvulsa( inclusoes || [{ 
+            data,
+            motivo,
+            outro_motivo,
+           }] )}
+        
+          {!ehEscolaTipoCei && (
+                <table className="table-report mt-3">
+                  <tbody>
+                    <tr>
+                      <th>Período</th>
+                      <th>Tipos de Alimentação</th>
+                      <th>Nº de Alunos</th>
+                    </tr>
+                    {
+                      quantidades_periodo.map(
+                        (quantidade_por_periodo, key) => {
+                          return (
+                            <tr key={key}>
+                              <td>
+                                {quantidade_por_periodo.periodo_escolar &&
+                                  quantidade_por_periodo.periodo_escolar.nome}
+                              </td>
+                              <td>
+                                {stringSeparadaPorVirgulas(
+                                  quantidade_por_periodo.tipos_alimentacao,
+                                  "label"
+                                )}
+                              </td>
+                              <td>{quantidade_por_periodo.numero_alunos}</td>
+                            </tr>
+                          );
+                        }
+                      )
+                    }
+                  </tbody>
+                </table>
+              )
+            }
+            { ehEscolaTipoCei && <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} /> }
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Observações</p>
