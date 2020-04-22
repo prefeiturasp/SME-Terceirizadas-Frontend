@@ -29,6 +29,7 @@ import DiagnosticosField from "../InformacoesCODAE/componentes/Diagnosticos/Fiel
 import ClassificacaoDaDieta from "../InformacoesCODAE/componentes/ClassificacaoDaDieta";
 import SubstituicoesField from "../InformacoesCODAE/componentes/SubstituicoesField";
 import DataOpcional from "../InformacoesCODAE/componentes/DataOpcional";
+import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
 import CKEditorField from "../../../../../Shareable/CKEditorField";
 
 export default class FormAutorizaDietaEspecial extends Component {
@@ -40,7 +41,12 @@ export default class FormAutorizaDietaEspecial extends Component {
       classificacoesDieta: null,
       alimentos: []
     };
+    this.showNaoAprovaModal = this.showNaoAprovaModal.bind(this)
+    this.showAutorizarModal = this.showAutorizarModal.bind(this)
+    this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this)
+    this.closeAutorizarModal = this.closeAutorizarModal.bind(this)
   }
+
   componentDidMount = async () => {
     const alergiasIntolerancias = await getAlergiasIntolerancias();
     const alimentos = await getAlimentos();
@@ -51,8 +57,26 @@ export default class FormAutorizaDietaEspecial extends Component {
       alimentos: alimentos.data
     });
   };
+
+  showNaoAprovaModal() {
+    this.setState({ showNaoAprovaModal: true });
+  }
+
+  showAutorizarModal() {
+    this.setState({ showAutorizarModal: true });
+  }
+
+  closeNaoAprovaModal() {
+    this.setState({ showNaoAprovaModal: false });
+  }
+
+  closeAutorizarModal() {
+    this.setState({ showAutorizarModal: false });
+  }
+
   render(){
-    const { diagnosticos, classificacoesDieta, alimentos } = this.state;
+    const { diagnosticos, classificacoesDieta, alimentos, showNaoAprovaModal } = this.state;
+    const { dietaEspecial } = this.props;
     return(
       <div>
         <Form
@@ -128,6 +152,14 @@ export default class FormAutorizaDietaEspecial extends Component {
                 </div>
               </div>
                 <Botao
+                  texto="Negar"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => this.showNaoAprovaModal("Não")}
+                  className="ml-3"
+                  disabled={submitting}
+                />
+                <Botao
                   texto="Autorizar"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
@@ -137,6 +169,12 @@ export default class FormAutorizaDietaEspecial extends Component {
               </div>
             </form>
           )}
+        />
+        <ModalNegaDietaEspecial
+          showModal={showNaoAprovaModal}
+          closeModal={this.closeNaoAprovaModal}
+          onNaoAprova={this.loadSolicitacao}
+          uuid={dietaEspecial.uuid}
         />
       </div>
     )

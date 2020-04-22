@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
-import { Field } from "redux-form";
+import { Field, Form } from "react-final-form";
 import {
   peloMenosUmCaractere,
   required
@@ -9,45 +9,41 @@ import {
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastError,
-  toastSuccess,
-  toastWarn
+  toastSuccess
 } from "../../../../../Shareable/Toast/dialogs";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "../../../../../Shareable/Botao/constants";
-import { MENSAGEM_VAZIA } from "../../../../../Shareable/TextArea/constants";
 import Select from "../../../../../Shareable/Select";
 import { agregarDefault } from "../../../../../../helpers/utilities";
 import { getMotivosNegacaoDietaEspecial } from "../../../../../../services/painelNutricionista.service";
 import { formataMotivos } from "./helper";
 
+import {
+  CODAENegaDietaEspecial,
+} from "../../../../../../services/dietaEspecial.service";
+
 export class ModalNegarSolicitacao extends Component {
   constructor(props) {
     super(props);
     this.state = { justificativa: "" };
+    this.onSubmit = this.onSubmit.bind(this)
   }
 
-  async negarSolicitacaoEscolaOuDre(uuid) {
-    const { justificativa, motivo } = this.props;
-    if (justificativa === MENSAGEM_VAZIA) {
-      toastWarn("Justificativa é obrigatória.");
-    } else {
-      const payload = {
-        motivo_negacao: motivo,
-        justificativa_negacao: justificativa
-      };
-      const resp = await this.props.endpoint(uuid, payload);
-      if (resp.status === HTTP_STATUS.OK) {
-        this.props.closeModal();
-        toastSuccess("Solicitação negada com sucesso!");
-        if (this.props.loadSolicitacao) {
-          this.props.loadSolicitacao(this.props.uuid);
-        }
-      } else {
-        toastError(resp.data.detail);
+  async onSubmit(values) {
+    console.log('ModalNegarSolicitacao.values', values)
+    const { uuid } = this.props;
+    const resp = await CODAENegaDietaEspecial(uuid, values);
+    if (resp.status === HTTP_STATUS.OK) {
+      this.props.closeModal();
+      toastSuccess("Solicitação negada com sucesso!");
+      if (this.props.loadSolicitacao) {
+        this.props.loadSolicitacao(this.props.uuid);
       }
+    } else {
+      toastError(resp.data.detail);
     }
   }
 
@@ -66,58 +62,68 @@ export class ModalNegarSolicitacao extends Component {
 
   render() {
     const { motivosNegacao } = this.state;
-    const { showModal, closeModal, uuid } = this.props;
+    const { showModal, closeModal } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="row">
-            <div className="col-12">
-              <Field
-                component={Select}
-                label="Motivo"
-                name="motivo_negacao"
-                options={motivosNegacao}
-                required
-              />
-            </div>
-          </div>
-          <div className="form-row mb-3">
-            <div className="form-group col-12">
-              <Field
-                component={TextAreaWYSIWYG}
-                label="Justificativa"
-                name="justificativa_negacao"
-                required
-                validate={[peloMenosUmCaractere, required]}
-              />
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="row mt-4">
-            <div className="col-12">
-              <Botao
-                texto="Não"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={closeModal}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                className="ml-3"
-              />
-              <Botao
-                texto="Sim"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => {
-                  this.negarSolicitacaoEscolaOuDre(uuid);
-                }}
-                style={BUTTON_STYLE.BLUE}
-                className="ml-3"
-              />
-            </div>
-          </div>
-        </Modal.Footer>
+        <Form
+          onSubmit={this.onSubmit}
+          render={({ handleSubmit, submitting }) =>
+            <form onSubmit={handleSubmit}>
+              <Modal.Body>
+                <div className="row">
+                  <div className="col-12">
+                    <Field
+                      component={Select}
+                      label="Motivo"
+                      name="motivo_negacao"
+                      options={motivosNegacao}
+                      validate={required}
+                    />
+                  </div>
+                </div>
+                <div className="form-row mb-3">
+                  <div className="form-group col-12">
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Justificativa"
+                      name="justificativa_negacao"
+                      required
+                      validate={value => {
+                        for (let validator of [peloMenosUmCaractere, required]){
+                          const erro = validator(value);
+                          if (erro) return erro;
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="row mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Não"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={closeModal}
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      className="ml-3"
+                    />
+                    <Botao
+                      texto="Sim"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.BLUE}
+                      className="ml-3"
+                      disabled={submitting}
+                    />
+                  </div>
+                </div>
+              </Modal.Footer>
+            </form>
+          }
+        />
       </Modal>
     );
   }

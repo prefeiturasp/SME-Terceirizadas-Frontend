@@ -113,7 +113,7 @@ export default class Relatorio extends Component {
                 uuid={dietaEspecial.uuid}
                 onCancelar={() => this.loadSolicitacao(uuid)}
               />}
-            {dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE && <FormAutorizaDietaEspecial/>}
+            {dietaEspecial.status_solicitacao === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE && <FormAutorizaDietaEspecial dietaEspecial={dietaEspecial}/>}
             {dietaEspecial.status_solicitacao ===
               statusEnum.CODAE_AUTORIZADO && <BotaoGerarRelatorio uuid={dietaEspecial.uuid}/>}
           </div>
