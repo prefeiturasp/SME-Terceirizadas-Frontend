@@ -79,6 +79,7 @@ import {
   usuarioCODAEDietaEspecial
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
+import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 
 const routesConfig = [
   {
@@ -545,6 +546,14 @@ const routesConfig = [
     component: CadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.HOMOLOGACAO_PRODUTO
+    }`,
+    component: HomologacaoProdutoPage,
+    exact: true,
+    tipoUsuario: true
   }
 ];
 

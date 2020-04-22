@@ -1,0 +1,58 @@
+@import "../../../../styles/variables.scss";
+
+form.homologacao-produto {
+  font-size: 14px;
+  div.title {
+    color: $blackInput;
+    font-weight: bold;
+  }
+  table.table-informacoes-nutricionais {
+    width: 100%;
+    thead {
+      font-weight: bold;
+      th {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        border-top: 1px solid #e9eaea;
+        border-bottom: 1px solid #a7a7a7;
+        background-color: #f5f6f8;
+      }
+    }
+    tbody {
+      tr {
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #a7a7a7;
+        color: $blackInput;
+      }
+    }
+  }
+  .link-with-student {
+    .container-radio {
+      input {
+        &:checked ~ .checkmark {
+          background-color: $green;
+        }
+      }
+    }
+    div.label {
+      span.required-asterisk {
+        color: $red;
+        padding-right: 5px;
+      }
+      color: $gray;
+      padding-top: 0.5em;
+      padding-bottom: 1em;
+    }
+    label.container-radio {
+      color: $blackInput;
+    }
+  }
+  .card-warning {
+    border-radius: 4px;
+    &.gray {
+      border-color: $grayPlaceholder;
+      color: $grayPlaceholder;
+    }
+  }
+}
