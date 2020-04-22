@@ -16,6 +16,8 @@ import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHist
 import { getInclusaoDeAlimentacaoContinua } from "../../../services/inclusaoDeAlimentacaoContinua.service";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import { getInclusaoDeAlimentacaoDaCei } from "../../../services/inclusaoAlimentacaoDaCei.service";
+
 
 class Relatorio extends Component {
   constructor(props) {
@@ -39,17 +41,23 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    const getInclusaoDeAlimentacao =
-      ehInclusaoContinua === "true"
-        ? getInclusaoDeAlimentacaoContinua
-        : getInclusaoDeAlimentacaoAvulsa;
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua")  === "true";
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei")  === "true";
+    let service;
+    if(ehEscolaTipoCei) {
+      service = getInclusaoDeAlimentacaoDaCei
+    }else if(ehInclusaoContinua){
+      service = getInclusaoDeAlimentacaoContinua
+    }else{
+      service = getInclusaoDeAlimentacaoAvulsa;
+    }
     if (uuid) {
-      getInclusaoDeAlimentacao(uuid).then(response => {
+      service(uuid).then(response => {
         this.setState({
           inclusaoDeAlimentacao: response,
           uuid,
-          ehInclusaoContinua: ehInclusaoContinua === "true",
+          ehInclusaoContinua: ehInclusaoContinua,
+          ehEscolaTipoCei: ehEscolaTipoCei,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -119,7 +127,8 @@ class Relatorio extends Component {
       ehInclusaoContinua,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal
+      showAutorizarModal,
+      ehEscolaTipoCei,
     } = this.state;
     const {
       endpointAprovaSolicitacao,
@@ -216,6 +225,7 @@ class Relatorio extends Component {
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   ehInclusaoContinua={ehInclusaoContinua}
+                  ehEscolaTipoCei={ehEscolaTipoCei}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={inclusaoDeAlimentacao}

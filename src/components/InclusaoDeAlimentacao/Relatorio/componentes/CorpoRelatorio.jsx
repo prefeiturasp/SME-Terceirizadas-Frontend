@@ -13,12 +13,51 @@ import {
 import { formataMotivosDias } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import { faixaToString } from "../../../../helpers/faixasEtarias";
+
+const TabelaFaixaEtaria = (faixas = []) => {
+  return (
+    <section className="tabela-faixa-etaria-qtd-alunos">
+    <article>
+      <div className="faixa-etaria">Faixa Etária</div>
+      <div className="alunos-matriculados">
+        Alunos Matriculados
+      </div>
+      <div className="quantidade">Quantidade</div>
+    </article>
+
+    {faixas.map((item, indice) => {
+      return (
+        <article key={indice}>
+          <div className="faixa-etaria">
+            {faixaToString(item.faixa_etaria)}
+          </div>
+          <div className="alunos-matriculados">
+            {item.quantidade_alunos}
+          </div>
+          <div>{item.quantidade_alunos}</div>
+        </article>
+      );
+    })}
+    <article>
+      <div className="faixa-etaria">Total {">>"} </div>
+      <div className="alunos-matriculados">
+        {2}
+      </div>
+      <div className="quantidade">{1}</div>
+    </article>
+  </section>
+  )
+}
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa() {
-    const { inclusaoDeAlimentacao } = this.props;
+    const { inclusaoDeAlimentacao : {
+      inclusoes,
+
+    } } = this.props;
     const diasMotivosFormatados = formataMotivosDias(
-      inclusaoDeAlimentacao.inclusoes
+      inclusoes
     );
     return (
       <table className="table-reasons">
@@ -50,26 +89,31 @@ export class CorpoRelatorio extends Component {
   }
 
   renderParteContinua() {
-    const { inclusaoDeAlimentacao } = this.props;
+    const { inclusaoDeAlimentacao : {
+      data_final,
+      data_inicial,
+      motivo,
+      dias_semana_explicacao
+    } } = this.props;
     return (
       <div>
         <div className="row">
           <div className="col-4 report-label-value">
             <p>Período</p>
             <p className="value">
-              {`${inclusaoDeAlimentacao.data_inicial} - ${
-                inclusaoDeAlimentacao.data_final
+              {`${data_inicial} - ${
+                data_final
               }`}
             </p>
           </div>
           <div className="col-4 report-label-value">
             <p>Motivo</p>
-            <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+            <p className="value">{motivo.nome}</p>
           </div>
           <div className="col-4 report-label-value">
             <p>Dias da Semana</p>
             <p className="value">
-              {inclusaoDeAlimentacao.dias_semana_explicacao}
+              {dias_semana_explicacao}
             </p>
           </div>
         </div>
@@ -80,8 +124,17 @@ export class CorpoRelatorio extends Component {
   render() {
     const {
       ehInclusaoContinua,
-      inclusaoDeAlimentacao,
-      prazoDoPedidoMensagem
+      prazoDoPedidoMensagem,
+      ehEscolaTipoCei,
+      inclusaoDeAlimentacao : {
+        uuid,
+        id_externo,
+        escola,
+        logs,
+        quantidades_periodo,
+        descricao,
+        quantidade_alunos_por_faixas_etaria
+      }
     } = this.props;
     return (
       <div>
@@ -99,7 +152,7 @@ export class CorpoRelatorio extends Component {
               className="float-right"
               onClick={() => {
                 getRelatorioInclusaoAlimentacao(
-                  inclusaoDeAlimentacao.uuid,
+                  uuid,
                   ehInclusaoContinua
                 );
               }}
@@ -108,7 +161,7 @@ export class CorpoRelatorio extends Component {
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
               <span className="id-of-solicitation-dre">
-                # {inclusaoDeAlimentacao.id_externo}
+                # {id_externo}
               </span>
               <br />{" "}
               <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
@@ -118,16 +171,16 @@ export class CorpoRelatorio extends Component {
             <span className="requester">Escola Solicitante</span>
             <br />
             <span className="dre-name">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.nome}
+              {escola &&
+                escola.nome}
             </span>
           </div>
           <div className="my-auto col-4">
             <span className="requester">Código EOL</span>
             <br />
             <span className="dre-name">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.codigo_eol}
+              {escola &&
+                escola.codigo_eol}
             </span>
           </div>
         </div>
@@ -135,31 +188,31 @@ export class CorpoRelatorio extends Component {
           <div className="col-2 report-label-value">
             <p>DRE</p>
             <p className="value-important">
-              {inclusaoDeAlimentacao.escola.diretoria_regional.nome}
+              {escola.diretoria_regional.nome}
             </p>
           </div>
           <div className="col-2 report-label-value">
             <p>Lote</p>
             <p className="value-important">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.lote &&
-                inclusaoDeAlimentacao.escola.lote.nome}
+              {escola &&
+                escola.lote &&
+                escola.lote.nome}
             </p>
           </div>
           <div className="col-2 report-label-value">
             <p>Tipo de Gestão</p>
             <p className="value-important">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.tipo_gestao &&
-                inclusaoDeAlimentacao.escola.tipo_gestao.nome}
+              {escola &&
+                escola.tipo_gestao &&
+                escola.tipo_gestao.nome}
             </p>
           </div>
         </div>
         <hr />
-        {inclusaoDeAlimentacao.logs && (
+        {logs && (
           <div className="row">
             <FluxoDeStatus
-              listaDeStatus={inclusaoDeAlimentacao.logs}
+              listaDeStatus={logs}
               fluxo={fluxoPartindoEscola}
             />
           </div>
@@ -175,7 +228,7 @@ export class CorpoRelatorio extends Component {
               <th>Tipos de Alimentação</th>
               <th>Nº de Alunos</th>
             </tr>
-            {inclusaoDeAlimentacao.quantidades_periodo.map(
+            {quantidades_periodo.map(
               (quantidade_por_periodo, key) => {
                 return (
                   <tr key={key}>
@@ -196,13 +249,14 @@ export class CorpoRelatorio extends Component {
             )}
           </tbody>
         </table>
+            { ehEscolaTipoCei && <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etaria} /> }
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Observações</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: inclusaoDeAlimentacao.descricao
+                __html: descricao
               }}
             />
           </div>
