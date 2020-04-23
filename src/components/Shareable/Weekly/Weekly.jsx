@@ -28,6 +28,10 @@ export default class Weekly extends Component {
       : this.state.clicked;
     const week = [
       {
+        label: "D",
+        value: "6"
+      },
+      {
         label: "S",
         value: "0"
       },
@@ -50,10 +54,6 @@ export default class Weekly extends Component {
       {
         label: "S",
         value: "5"
-      },
-      {
-        label: "D",
-        value: "6"
       }
     ];
     return (
