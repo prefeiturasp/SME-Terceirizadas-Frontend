@@ -7,6 +7,7 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import { getInformacoesNutricionais } from "../../../../services/produto.service";
+import BuscaProduto from "./BuscaProduto";
 
 class cadastroProduto extends Component {
   constructor(props) {
@@ -30,8 +31,10 @@ class cadastroProduto extends Component {
           }
         }
       ],
-      informacoesAgrupadas: null
+      informacoesAgrupadas: null,
+      renderBuscaProduto: true
     };
+    this.exibeFormularioInicial = this.exibeFormularioInicial.bind(this);
   }
 
   getInformacoesAgrupadas = () => {
@@ -44,63 +47,78 @@ class cadastroProduto extends Component {
     this.getInformacoesAgrupadas();
   }
 
+  exibeFormularioInicial = () => {
+    this.setState({ renderBuscaProduto: false });
+  };
+
   render() {
-    const { wizardSteps, currentStep, informacoesAgrupadas } = this.state;
+    const {
+      wizardSteps,
+      currentStep,
+      informacoesAgrupadas,
+      renderBuscaProduto
+    } = this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="card">
         <div className="card-body">
-          <form className="special-diet" onSubmit={handleSubmit}>
-            <Wizard
-              arrayOfObjects={wizardSteps}
-              currentStep={currentStep}
-              outerParam="step"
-              nameItem="nome"
+          {renderBuscaProduto ? (
+            <BuscaProduto
+              exibeFormularioInicial={this.exibeFormularioInicial}
             />
-            {currentStep === 0 && <Step1 />}
-            {currentStep === 1 && (
-              <Step2 informacoesAgrupadas={informacoesAgrupadas} />
-            )}
-            {currentStep === 2 && <Step3 />}
-            <div className="row">
-              <div className="col-12 text-right pt-3">
-                <Botao
-                  texto={"Anterior"}
-                  className="mr-3"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled={currentStep === 0}
-                  onClick={() =>
-                    this.setState({ currentStep: currentStep - 1 })
-                  }
-                />
-                <Botao
-                  texto={"Salvar Rascunho"}
-                  className="mr-3"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled
-                />
-                {currentStep !== 2 && (
+          ) : (
+            <form className="special-diet" onSubmit={handleSubmit}>
+              <Wizard
+                arrayOfObjects={wizardSteps}
+                currentStep={currentStep}
+                outerParam="step"
+                nameItem="nome"
+              />
+              {currentStep === 0 && <Step1 />}
+              {currentStep === 1 && (
+                <Step2 informacoesAgrupadas={informacoesAgrupadas} />
+              )}
+              {currentStep === 2 && <Step3 />}
+              <div className="row">
+                <div className="col-12 text-right pt-3">
                   <Botao
-                    texto={"Próximo"}
+                    texto={"Anterior"}
+                    className="mr-3"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
+                    disabled={currentStep === 0}
                     onClick={() =>
-                      this.setState({ currentStep: currentStep + 1 })
+                      this.setState({ currentStep: currentStep - 1 })
                     }
                   />
-                )}
-                {currentStep === 2 && (
                   <Botao
-                    texto={"Enviar"}
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
+                    texto={"Salvar Rascunho"}
+                    className="mr-3"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    disabled
                   />
-                )}
+                  {currentStep !== 2 && (
+                    <Botao
+                      texto={"Próximo"}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() =>
+                        this.setState({ currentStep: currentStep + 1 })
+                      }
+                    />
+                  )}
+                  {currentStep === 2 && (
+                    <Botao
+                      texto={"Enviar"}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          )}
         </div>
       </div>
     );

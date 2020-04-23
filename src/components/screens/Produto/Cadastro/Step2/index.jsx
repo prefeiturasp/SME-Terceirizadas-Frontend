@@ -99,7 +99,6 @@ class Step2 extends Component {
                                         name="porcao"
                                         type="text"
                                         required
-                                        validate={required}
                                       />
                                     </div>
                                   </div>
@@ -112,7 +111,6 @@ class Step2 extends Component {
                                         name="porcao"
                                         type="text"
                                         required
-                                        validate={required}
                                       />
                                     </div>
                                     <div className="col-2">%</div>
