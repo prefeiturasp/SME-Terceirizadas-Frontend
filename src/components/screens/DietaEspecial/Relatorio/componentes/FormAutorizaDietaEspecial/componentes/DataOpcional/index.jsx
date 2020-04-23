@@ -60,7 +60,6 @@ export default class DataTermino extends Component {
       ...datePickerProps
     } = this.props;
     const { comData } = this.state;
-    console.log('DataTermino.props.input.value', input.value)
     return (
       <div className="data-opcional">
         {label && [

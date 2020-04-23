@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "react-final-form";
 import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
-import { required } from "../../../../../../../../helpers/fieldValidators"
 
 export default class ClassificacaoDaDieta extends Component {
   render() {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "react-final-form";
-import { FieldArray } from "react-final-form-arrays"
+import { FieldArray } from "react-final-form-arrays";
 
 import Substituicao from "./SubstituicaoFinalForm";
 
@@ -18,18 +18,23 @@ export default class SubstituicoesField extends Component {
           <div className="col-5">Substitutos</div>
         </div>
         <FieldArray name="substituicoes">
-          {({ fields }) => fields.map((name, index) =>
-            <Field
-              component={Substituicao}
-              name={name}
-              key={index}
-              alimentos={alimentos}
-              addOption={() => fields.push({})}
-              removeOption={() => {fields.swap(index, fields.length - 1);fields.pop()}}
-              validate={validateSubstituicao}
-              deveHabilitarApagar={fields.length > 1}
-            />
-          )}
+          {({ fields }) =>
+            fields.map((name, index) => (
+              <Field
+                component={Substituicao}
+                name={name}
+                key={index}
+                alimentos={alimentos}
+                addOption={() => fields.push({})}
+                removeOption={() => {
+                  fields.swap(index, fields.length - 1);
+                  fields.pop();
+                }}
+                validate={validateSubstituicao}
+                deveHabilitarApagar={fields.length > 1}
+              />
+            ))
+          }
         </FieldArray>
       </div>
     );

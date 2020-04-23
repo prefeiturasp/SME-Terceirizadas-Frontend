@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE,
+  BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 import ModalCancelaDietaEspecial from "./ModalCancelaDietaEspecial";
 
@@ -11,7 +11,7 @@ export default class EscolaCancelaDietaEspecial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false,
+      showModal: false
     };
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
@@ -25,17 +25,17 @@ export default class EscolaCancelaDietaEspecial extends Component {
     this.setState({ showModal: false });
   }
 
-  render(){
+  render() {
     const { showModal } = this.state;
     const { onCancelar } = this.props;
-    return(
+    return (
       <>
         <ModalCancelaDietaEspecial
           showModal={showModal}
           closeModal={this.closeModal}
           onCancelar={() => {
             this.closeModal();
-            onCancelar()
+            onCancelar();
           }}
           {...this.props}
         />
@@ -47,6 +47,6 @@ export default class EscolaCancelaDietaEspecial extends Component {
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />
       </>
-    )
+    );
   }
 }

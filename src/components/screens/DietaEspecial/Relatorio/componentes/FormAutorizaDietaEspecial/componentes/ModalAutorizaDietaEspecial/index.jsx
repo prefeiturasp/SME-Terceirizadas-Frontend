@@ -1,10 +1,10 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import Botao from "../../../../../Shareable/Botao";
+import Botao from "../../../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
-} from "../../../../../Shareable/Botao/constants";
+} from "../../../../../../../Shareable/Botao/constants";
 
 export default props => (
   <Modal show={props.showModal} onHide={props.closeModal}>

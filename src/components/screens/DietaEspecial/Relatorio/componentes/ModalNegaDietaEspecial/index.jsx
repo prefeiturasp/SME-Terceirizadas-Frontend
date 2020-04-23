@@ -21,19 +21,16 @@ import { agregarDefault } from "../../../../../../helpers/utilities";
 import { getMotivosNegacaoDietaEspecial } from "../../../../../../services/painelNutricionista.service";
 import { formataMotivos } from "./helper";
 
-import {
-  CODAENegaDietaEspecial,
-} from "../../../../../../services/dietaEspecial.service";
+import { CODAENegaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 
 export class ModalNegarSolicitacao extends Component {
   constructor(props) {
     super(props);
     this.state = { justificativa: "" };
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   async onSubmit(values) {
-    console.log('ModalNegarSolicitacao.values', values)
     const { uuid } = this.props;
     const resp = await CODAENegaDietaEspecial(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
@@ -70,7 +67,7 @@ export class ModalNegarSolicitacao extends Component {
         </Modal.Header>
         <Form
           onSubmit={this.onSubmit}
-          render={({ handleSubmit, submitting }) =>
+          render={({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
                 <div className="row">
@@ -92,7 +89,10 @@ export class ModalNegarSolicitacao extends Component {
                       name="justificativa_negacao"
                       required
                       validate={value => {
-                        for (let validator of [peloMenosUmCaractere, required]){
+                        for (let validator of [
+                          peloMenosUmCaractere,
+                          required
+                        ]) {
                           const erro = validator(value);
                           if (erro) return erro;
                         }
@@ -122,7 +122,7 @@ export class ModalNegarSolicitacao extends Component {
                 </div>
               </Modal.Footer>
             </form>
-          }
+          )}
         />
       </Modal>
     );

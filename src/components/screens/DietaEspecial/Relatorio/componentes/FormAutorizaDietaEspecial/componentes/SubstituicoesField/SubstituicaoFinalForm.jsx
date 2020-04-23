@@ -34,7 +34,14 @@ const SelectSelecione = props => {
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, addOption, removeOption, input: {name}, meta, deveHabilitarApagar } = this.props;
+    const {
+      alimentos,
+      addOption,
+      removeOption,
+      input: { name },
+      meta,
+      deveHabilitarApagar
+    } = this.props;
     return (
       <div className="row">
         <div className="col-3">

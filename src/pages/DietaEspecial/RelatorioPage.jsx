@@ -1,5 +1,5 @@
 import React from "react";
-import Relatorio from "../../components/screens/DietaEspecial/Relatorio/index2";
+import Relatorio from "../../components/screens/DietaEspecial/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "../../configs/constants";

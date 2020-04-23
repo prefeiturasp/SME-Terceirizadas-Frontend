@@ -17,7 +17,6 @@ import { statusEnum } from "../../../../../../constants";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial, solicitacoesVigentes, uuid } = props;
-  console.log('CorpoRelatorio.dietaEspecial', dietaEspecial)
   const statusDietaAutorizada = [
     statusEnum.CODAE_AUTORIZADO,
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
@@ -208,9 +207,8 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
-      {
-        dietaEspecial.status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR && <>
-
+      {dietaEspecial.status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR && (
+        <>
           {dietaEspecial.alergias_intolerancias &&
             dietaEspecial.alergias_intolerancias.length > 0 && (
               <Fragment>
@@ -236,7 +234,9 @@ export const CorpoRelatorio = props => {
           {dietaEspecial.motivo_negacao && (
             <div className="report-label-value">
               <p>Motivo da Negação</p>
-              <div className="value">{dietaEspecial.motivo_negacao.descricao}</div>
+              <div className="value">
+                {dietaEspecial.motivo_negacao.descricao}
+              </div>
             </div>
           )}
           {dietaEspecial.justificativa_negacao && (
@@ -314,7 +314,7 @@ export const CorpoRelatorio = props => {
             </div>
           )}
         </>
-      }
+      )}
       {dietaEspecial.anexos.filter(anexo => anexo.eh_laudo_alta).length > 0 && (
         <Fragment>
           <hr />
