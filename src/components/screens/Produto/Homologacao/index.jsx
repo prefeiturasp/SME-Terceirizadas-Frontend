@@ -1,28 +1,40 @@
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import HTTP_STATUS from "http-status-codes";
+import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
-import { getProduto } from "../../../../services/produto.service";
+import {
+  getHomologacaoProduto,
+  CODAEHomologaProduto,
+  CODAENaoHomologaProduto,
+  CODAEPedeAnaliseSensorialProduto
+} from "../../../../services/produto.service";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
+import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 
 class HomologacaoProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      produto: null
+      produto: null,
+      uuid: null
     };
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    getProduto(uuid).then(response => {
+    getHomologacaoProduto(uuid).then(response => {
       this.setState({
-        produto: response.data,
-        informacoesNutricionais: formataInformacoesNutricionais(response.data)
+        produto: response.data.produto,
+        informacoesNutricionais: formataInformacoesNutricionais(
+          response.data.produto
+        ),
+        uuid
       });
     });
   }
@@ -33,16 +45,51 @@ class HomologacaoProduto extends Component {
     this.forceUpdate();
   }
 
+  naoHomologar = () => {
+    const { uuid } = this.state;
+    CODAENaoHomologaProduto(uuid).then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Solicitação de não homologado enviada com sucesso");
+      } else {
+        toastError("Erro ao não homologar solicitação");
+      }
+    });
+  };
+
+  onSubmit = values => {
+    const { uuid } = this.state;
+    if (values.necessita_analise_sensorial === "1") {
+      CODAEPedeAnaliseSensorialProduto(uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação de homologado enviada com sucesso");
+        } else {
+          toastError("Erro ao pedir análise sensorial solicitação");
+        }
+      });
+    } else {
+      CODAEHomologaProduto(uuid).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação de homologado enviada com sucesso");
+        } else {
+          toastError("Erro ao homologar solicitação");
+        }
+      });
+    }
+  };
+
   render() {
     const { produto, informacoesNutricionais } = this.state;
-    const { handleSubmit } = this.props;
+    const { necessita_analise_sensorial, handleSubmit } = this.props;
     return (
       <div className="card">
         <div className="card-body">
           {!produto ? (
             <div>Carregando...</div>
           ) : (
-            <form className="homologacao-produto" onSubmit={handleSubmit}>
+            <form
+              className="homologacao-produto"
+              onSubmit={handleSubmit(this.onSubmit)}
+            >
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
@@ -288,7 +335,7 @@ class HomologacaoProduto extends Component {
                         component={"input"}
                         type="radio"
                         value="1"
-                        name="analise_sensorial"
+                        name="necessita_analise_sensorial"
                       />
                       <span className="checkmark" />
                     </label>
@@ -299,8 +346,8 @@ class HomologacaoProduto extends Component {
                       <Field
                         component={"input"}
                         type="radio"
-                        value="2"
-                        name="analise_sensorial"
+                        value="0"
+                        name="necessita_analise_sensorial"
                       />
                       <span className="checkmark" />
                     </label>
@@ -310,21 +357,40 @@ class HomologacaoProduto extends Component {
               <div className="row">
                 <div className="col-12 text-right pt-3">
                   <Botao
-                    texto={"Salvar Rascunho"}
+                    texto={"Análise"}
+                    className="mr-3"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    disabled={
+                      !necessita_analise_sensorial ||
+                      necessita_analise_sensorial === "0"
+                    }
+                  />
+                  <Botao
+                    texto={"Corrigir"}
                     className="mr-3"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled
                   />
                   <Botao
-                    texto={"Próximo"}
+                    texto={"Não homologar"}
+                    className="mr-3"
+                    onClick={() => this.naoHomologar()}
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
+                    disabled={
+                      !necessita_analise_sensorial ||
+                      necessita_analise_sensorial === "1"
+                    }
                   />
                   <Botao
-                    texto={"Enviar"}
+                    texto={"Homologar"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
+                    disabled={
+                      !necessita_analise_sensorial ||
+                      necessita_analise_sensorial === "1"
+                    }
                   />
                 </div>
               </div>
@@ -339,5 +405,11 @@ class HomologacaoProduto extends Component {
 const componentNameForm = reduxForm({
   form: "HomologacaoProduto"
 })(HomologacaoProduto);
+const selector = formValueSelector("HomologacaoProduto");
+const mapStateToProps = state => {
+  return {
+    necessita_analise_sensorial: selector(state, "necessita_analise_sensorial")
+  };
+};
 
-export default componentNameForm;
+export default connect(mapStateToProps)(componentNameForm);

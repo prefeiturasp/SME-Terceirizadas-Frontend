@@ -20,7 +20,8 @@ import {
 import { PERFIL } from "../../../../constants";
 import {
   usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial
+  usuarioCODAEDietaEspecial,
+  usuarioCODAEGestaoProduto
 } from "../../../../helpers/utilities";
 
 export class SidebarCODAE extends Component {
@@ -156,13 +157,44 @@ export class SidebarCODAE extends Component {
           </div>
         </li>
       ),
-      <li key={3} className="nav-item">
+      usuarioCODAEGestaoProduto() && (
+        <li key={3} className="nav-item">
+          <Link
+            className={`nav-link collapsed`}
+            href="#teste"
+            data-toggle="collapse"
+            data-target="#collapsePD"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            <i className="fas fa-atom" />
+            <span>{"P&D"}</span>
+          </Link>
+          <div
+            id="collapsePD"
+            className={`collapse`}
+            aria-labelledby="headingConfig"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
+              <NavLink
+                activeClassName="active"
+                className="collapse-item"
+                to={`/pesquisa-desenvolvimento/homologacao-produto`}
+              >
+                Homologação de Produto
+              </NavLink>
+            </div>
+          </div>
+        </li>
+      ),
+      <li key={4} className="nav-item">
         <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
           <i className="fas fa-file-alt" />
           <span>Relatórios</span>
         </NavLink>
       </li>,
-      <li key={4} className="nav-item">
+      <li key={5} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"
@@ -233,7 +265,7 @@ export class SidebarCODAE extends Component {
           </div>
         </div>
       </li>,
-      <li key={5} className="nav-item">
+      <li key={6} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

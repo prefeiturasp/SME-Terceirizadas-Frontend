@@ -283,6 +283,18 @@ export const usuarioCODAEDietaEspecial = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
+export const usuarioCODAEGestaoProduto = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
+};
+
+export const algumaCODAE = () => {
+  return (
+    usuarioCODAEGestaoAlimentacao() ||
+    usuarioCODAEDietaEspecial() ||
+    usuarioCODAEGestaoProduto()
+  );
+};
+
 export const usuarioTerceirizada = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
 };
