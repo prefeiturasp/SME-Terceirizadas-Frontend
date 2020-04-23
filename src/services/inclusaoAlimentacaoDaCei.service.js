@@ -1,55 +1,28 @@
 import axios from "./_base";
-import authService from "./auth";
 import { ENDPOINT } from "../constants";
 import { PEDIDOS } from "./constants";
-import { API_URL } from "../constants/config.constants";
-
-
-const URL_INCLUSAO_ALIMENTACAO_CEI = `${API_URL}/inclusoes-alimentacao-da-cei`;
 
 const {
     QUANTIDADE_ALUNOS_POR_PERIODO,
     INCLUSOES_ALIMENTACAO_DA_CEI,
 } = ENDPOINT
 
-const authToken = {
-  Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
-};
 
-export const getInclusaoDeAlimentacaoDaCei = uuid => {
-  const url = `${URL_INCLUSAO_ALIMENTACAO_CEI}/${uuid}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+export const getInclusaoDeAlimentacaoDaCei = async uuid => {
+    const response = await axios.get(`${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
+    return response.data
 };
 
 export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
-  const url = `${URL_INCLUSAO_ALIMENTACAO_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results.map(el=>({
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
+  const response = await axios.get(url); 
+  const results = response.data.results
+  return {
+    results: results.map(el=>({
       ...el,
       isCei: true,
     })) ,
-       status };
-  } catch (error) {
-    console.log(error); //FIXME: show error ui
-  }
+    status: response.status };
 };
 
 export const meusRascunhosDeInclusaoDeAlimentacao = async () => {
