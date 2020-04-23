@@ -16,6 +16,9 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { faixaToString } from "../../../../helpers/faixasEtarias";
 
 const TabelaFaixaEtaria = ({faixas = []}) => {
+
+  const total = faixas.reduce(function (acc, v) { return acc + v.quantidade_alunos; }, 0)
+
   return (
     <section className="tabela-faixa-etaria-qtd-alunos">
     <article>
@@ -44,7 +47,7 @@ const TabelaFaixaEtaria = ({faixas = []}) => {
       <div className="alunos-matriculados">
         {"N/A"}
       </div>
-      <div className="quantidade">{1}</div>
+      <div className="quantidade">{ total }</div>
     </article>
   </section>
   )
