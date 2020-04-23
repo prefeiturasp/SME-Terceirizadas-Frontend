@@ -30,7 +30,7 @@ export default class DataTermino extends Component {
     this.setState({ comData: true });
   }
   onSemDataTerminoSelected() {
-    this.props.input.onChange("");
+    this.props.input.onChange(undefined);
     this.setState({ comData: false });
   }
   openDatepicker() {
@@ -60,6 +60,7 @@ export default class DataTermino extends Component {
       ...datePickerProps
     } = this.props;
     const { comData } = this.state;
+    console.log('DataTermino.props.input.value', input.value)
     return (
       <div className="data-opcional">
         {label && [
@@ -94,7 +95,7 @@ export default class DataTermino extends Component {
           <DatePicker
             {...datePickerProps}
             isClearable={true}
-            selected={this.dataSelecionada(input.value)}
+            selected={input.value}
             className={`form-control ${className} ${meta.touched &&
               meta.error &&
               "invalid-field"}`}

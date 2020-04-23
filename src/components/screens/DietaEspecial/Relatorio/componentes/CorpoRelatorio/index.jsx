@@ -17,6 +17,7 @@ import { statusEnum } from "../../../../../../constants";
 
 export const CorpoRelatorio = props => {
   const { dietaEspecial, solicitacoesVigentes, uuid } = props;
+  console.log('CorpoRelatorio.dietaEspecial', dietaEspecial)
   const statusDietaAutorizada = [
     statusEnum.CODAE_AUTORIZADO,
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
@@ -207,108 +208,113 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
-      {dietaEspecial.alergias_intolerancias &&
-        dietaEspecial.alergias_intolerancias.length > 0 && (
-          <Fragment>
-            <hr />
-            <div className="report-label-value">
-              <p>Relação por Diagnóstico</p>
-              {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
-                return (
-                  <div className="value" key={key}>
-                    {alergia.descricao}
-                  </div>
-                );
-              })}
-            </div>
-          </Fragment>
-        )}
-      {dietaEspecial.classificacao && (
-        <div className="report-label-value">
-          <p>Classificação da Dieta</p>
-          <div className="value">{dietaEspecial.classificacao.nome}</div>
-        </div>
-      )}
-      {dietaEspecial.motivo_negacao && (
-        <div className="report-label-value">
-          <p>Motivo da Negação</p>
-          <div className="value">{dietaEspecial.motivo_negacao.descricao}</div>
-        </div>
-      )}
-      {dietaEspecial.justificativa_negacao && (
-        <div className="report-label-value">
-          <p>Justificativa da Negação</p>
-          <div className="texto-wysiwyg">
-            {dietaEspecial.justificativa_negacao}
-          </div>
-        </div>
-      )}
-      {dietaEspecial.nome_protocolo && (
-        <div className="report-label-value">
-          <p>Nome do Protocolo</p>
-          <div className="value">{dietaEspecial.nome_protocolo}</div>
-        </div>
-      )}
-      {dietaEspecial.substituicoes.length > 0 && (
-        <div className="report-label-value">
-          <p>Substituições</p>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">Alimento</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Isenções / Substituições</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dietaEspecial.substituicoes.map((s, key) => (
-                <tr key={key}>
-                  <td className="value">{s.alimento.nome}</td>
-                  <td className="value">
-                    {s.tipo === "I" ? "Isento" : "Substituição"}
-                  </td>
-                  <td className="value">
-                    <ul>
-                      {s.substitutos.map((ss, key2) => (
-                        <li key={key2}>{ss.nome}</li>
-                      ))}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="value">{dietaEspecial.justificativa_negacao}</div>
-        </div>
-      )}
-      {statusDietaAutorizada.includes(dietaEspecial.status_solicitacao) && (
-        <div className="report-label-value">
-          <p>Data de término</p>
-          <div className="value">
-            {dietaEspecial.data_termino || "Sem data de término"}
-          </div>
-        </div>
-      )}
+      {
+        dietaEspecial.status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR && <>
 
-      {dietaEspecial.informacoes_adicionais && (
-        <div className="report-label-value">
-          <p>Informações Adicionais</p>
-          <div
-            className="texto-wysiwyg"
-            dangerouslySetInnerHTML={{
-              __html: dietaEspecial.informacoes_adicionais
-            }}
-          />
-        </div>
-      )}
-      {dietaEspecial.registro_funcional_nutricionista && (
-        <div className="report-label-value">
-          <p>Identificação do Nutricionista</p>
-          <div className="value">
-            {dietaEspecial.registro_funcional_nutricionista}
-          </div>
-        </div>
-      )}
+          {dietaEspecial.alergias_intolerancias &&
+            dietaEspecial.alergias_intolerancias.length > 0 && (
+              <Fragment>
+                <hr />
+                <div className="report-label-value">
+                  <p>Relação por Diagnóstico</p>
+                  {dietaEspecial.alergias_intolerancias.map((alergia, key) => {
+                    return (
+                      <div className="value" key={key}>
+                        {alergia.descricao}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Fragment>
+            )}
+          {dietaEspecial.classificacao && (
+            <div className="report-label-value">
+              <p>Classificação da Dieta</p>
+              <div className="value">{dietaEspecial.classificacao.nome}</div>
+            </div>
+          )}
+          {dietaEspecial.motivo_negacao && (
+            <div className="report-label-value">
+              <p>Motivo da Negação</p>
+              <div className="value">{dietaEspecial.motivo_negacao.descricao}</div>
+            </div>
+          )}
+          {dietaEspecial.justificativa_negacao && (
+            <div className="report-label-value">
+              <p>Justificativa da Negação</p>
+              <div className="texto-wysiwyg">
+                {dietaEspecial.justificativa_negacao}
+              </div>
+            </div>
+          )}
+          {dietaEspecial.nome_protocolo && (
+            <div className="report-label-value">
+              <p>Nome do Protocolo</p>
+              <div className="value">{dietaEspecial.nome_protocolo}</div>
+            </div>
+          )}
+          {dietaEspecial.substituicoes.length > 0 && (
+            <div className="report-label-value">
+              <p>Substituições</p>
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Alimento</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Isenções / Substituições</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dietaEspecial.substituicoes.map((s, key) => (
+                    <tr key={key}>
+                      <td className="value">{s.alimento.nome}</td>
+                      <td className="value">
+                        {s.tipo === "I" ? "Isento" : "Substituição"}
+                      </td>
+                      <td className="value">
+                        <ul>
+                          {s.substitutos.map((ss, key2) => (
+                            <li key={key2}>{ss.nome}</li>
+                          ))}
+                        </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="value">{dietaEspecial.justificativa_negacao}</div>
+            </div>
+          )}
+          {statusDietaAutorizada.includes(dietaEspecial.status_solicitacao) && (
+            <div className="report-label-value">
+              <p>Data de término</p>
+              <div className="value">
+                {dietaEspecial.data_termino || "Sem data de término"}
+              </div>
+            </div>
+          )}
+
+          {dietaEspecial.informacoes_adicionais && (
+            <div className="report-label-value">
+              <p>Informações Adicionais</p>
+              <div
+                className="texto-wysiwyg"
+                dangerouslySetInnerHTML={{
+                  __html: dietaEspecial.informacoes_adicionais
+                }}
+              />
+            </div>
+          )}
+          {dietaEspecial.registro_funcional_nutricionista && (
+            <div className="report-label-value">
+              <p>Identificação do Nutricionista</p>
+              <div className="value">
+                {dietaEspecial.registro_funcional_nutricionista}
+              </div>
+            </div>
+          )}
+        </>
+      }
       {dietaEspecial.anexos.filter(anexo => anexo.eh_laudo_alta).length > 0 && (
         <Fragment>
           <hr />

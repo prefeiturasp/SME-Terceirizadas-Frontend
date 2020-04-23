@@ -53,8 +53,8 @@ export default class SubstituicoesField extends Component {
           <Field
             component={SelectSelecione}
             options={[
-              { uuid: "isento", nome: "Isento" },
-              { uuid: "substituir", nome: "Substituir" }
+              { uuid: "I", nome: "Isento" },
+              { uuid: "S", nome: "Substituir" }
             ]}
             name={`${name}.tipo`}
           />
