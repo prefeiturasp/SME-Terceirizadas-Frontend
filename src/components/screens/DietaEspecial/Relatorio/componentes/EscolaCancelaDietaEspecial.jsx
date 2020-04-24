@@ -13,17 +13,15 @@ export default class EscolaCancelaDietaEspecial extends Component {
     this.state = {
       showModal: false
     };
-    this.closeModal = this.closeModal.bind(this);
-    this.openModal = this.openModal.bind(this);
   }
 
-  openModal() {
+  onOpenModal = () => {
     this.setState({ showModal: true });
-  }
+  };
 
-  closeModal() {
+  onCloseModal = () => {
     this.setState({ showModal: false });
-  }
+  };
 
   render() {
     const { showModal } = this.state;
@@ -32,9 +30,9 @@ export default class EscolaCancelaDietaEspecial extends Component {
       <>
         <ModalCancelaDietaEspecial
           showModal={showModal}
-          closeModal={this.closeModal}
+          onCloseModal={this.onCloseModal}
           onCancelar={() => {
-            this.closeModal();
+            this.onCloseModal();
             onCancelar();
           }}
           {...this.props}
@@ -42,7 +40,7 @@ export default class EscolaCancelaDietaEspecial extends Component {
         <Botao
           texto="Cancelar"
           className="ml-3"
-          onClick={this.openModal}
+          onClick={this.onOpenModal}
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />

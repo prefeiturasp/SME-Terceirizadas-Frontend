@@ -45,12 +45,6 @@ export default class FormAutorizaDietaEspecial extends Component {
       classificacoesDieta: null,
       alimentos: []
     };
-    this.showNaoAprovaModal = this.showNaoAprovaModal.bind(this);
-    this.showAutorizarModal = this.showAutorizarModal.bind(this);
-    this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
-    this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
-    this.salvaRascunho = this.salvaRascunho.bind(this);
-    this.onAutorizar = this.onAutorizar.bind(this);
   }
 
   componentDidMount = async () => {
@@ -73,21 +67,21 @@ export default class FormAutorizaDietaEspecial extends Component {
     });
   };
 
-  showNaoAprovaModal() {
+  showNaoAprovaModal = () => {
     this.setState({ showNaoAprovaModal: true });
-  }
+  };
 
-  showAutorizarModal() {
+  showAutorizarModal = () => {
     this.setState({ showAutorizarModal: true });
-  }
+  };
 
-  closeNaoAprovaModal() {
+  closeNaoAprovaModal = () => {
     this.setState({ showNaoAprovaModal: false });
-  }
+  };
 
-  closeAutorizarModal() {
+  closeAutorizarModal = () => {
     this.setState({ showAutorizarModal: false });
-  }
+  };
 
   getInitialValues() {
     const {
@@ -121,7 +115,7 @@ export default class FormAutorizaDietaEspecial extends Component {
     };
   }
 
-  salvaRascunho(values) {
+  salvaRascunho = values => {
     const {
       alergias_intolerancias,
       classificacao,
@@ -155,9 +149,9 @@ export default class FormAutorizaDietaEspecial extends Component {
         }
       );
     });
-  }
+  };
 
-  onAutorizar(values) {
+  onAutorizar = values => {
     const { solicitacoesVigentes, showAutorizarModal } = this.state;
     if (
       solicitacoesVigentes &&
@@ -191,7 +185,7 @@ export default class FormAutorizaDietaEspecial extends Component {
         }
       );
     });
-  }
+  };
 
   render() {
     const {

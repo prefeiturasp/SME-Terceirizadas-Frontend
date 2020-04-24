@@ -23,14 +23,13 @@ import { formataMotivos } from "./helper";
 
 import { CODAENegaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 
-export class ModalNegarSolicitacao extends Component {
+export default class ModalNegarSolicitacao extends Component {
   constructor(props) {
     super(props);
-    this.state = { justificativa: "" };
-    this.onSubmit = this.onSubmit.bind(this);
+    this.state = { motivosNegacao: [] };
   }
 
-  async onSubmit(values) {
+  onSubmit = async values => {
     const { uuid } = this.props;
     const resp = await CODAENegaDietaEspecial(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
@@ -42,7 +41,7 @@ export class ModalNegarSolicitacao extends Component {
     } else {
       toastError(resp.data.detail);
     }
-  }
+  };
 
   componentDidMount = async () => {
     const motivosNegacao = await getMotivosNegacaoDietaEspecial();
@@ -50,12 +49,6 @@ export class ModalNegarSolicitacao extends Component {
       motivosNegacao: agregarDefault(formataMotivos(motivosNegacao.results))
     });
   };
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.justificativa !== this.props.justificativa) {
-      this.setState({ justificativa: this.props.justificativa });
-    }
-  }
 
   render() {
     const { motivosNegacao } = this.state;
@@ -128,5 +121,3 @@ export class ModalNegarSolicitacao extends Component {
     );
   }
 }
-
-export default ModalNegarSolicitacao;

@@ -24,11 +24,6 @@ import {
 import { getError } from "../../../../../../helpers/utilities";
 
 export class ModalCancelaDietaEspecial extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { justificativa: null };
-  }
-
   cancelaDietaEspecial = (uuid, values) => {
     escolaCancelaSolicitacao(uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
@@ -45,9 +40,9 @@ export class ModalCancelaDietaEspecial extends Component {
   };
 
   render() {
-    const { showModal, closeModal, uuid, handleSubmit } = this.props;
+    const { showModal, onCloseModal, uuid, handleSubmit } = this.props;
     return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+      <Modal dialogClassName="modal-90w" show={showModal} onHide={onCloseModal}>
         <form onSubmit={this.props.handleSubmit}>
           <Modal.Header closeButton>
             <Modal.Title>Deseja cancelar a solicitação?</Modal.Title>
@@ -67,7 +62,7 @@ export class ModalCancelaDietaEspecial extends Component {
                 <Botao
                   texto="Não"
                   type={BUTTON_TYPE.BUTTON}
-                  onClick={closeModal}
+                  onClick={onCloseModal}
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   className="ml-3"
                 />

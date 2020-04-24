@@ -50,7 +50,6 @@ export default class Relatorio extends Component {
       solicitacoesVigentes: null,
       uuid: null
     };
-    this.loadSolicitacao = this.loadSolicitacao.bind(this);
   }
 
   componentDidMount() {
@@ -61,13 +60,13 @@ export default class Relatorio extends Component {
     }
   }
 
-  loadSolicitacao(uuid) {
+  loadSolicitacao = uuid => {
     getDietaEspecial(uuid).then(responseDietaEspecial => {
       this.setState({
         dietaEspecial: responseDietaEspecial.data
       });
     });
-  }
+  };
 
   render() {
     const { dietaEspecial, solicitacoesVigentes } = this.state;
