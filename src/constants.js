@@ -257,16 +257,18 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
   ALTERACOES_CARDAPIO_CEI: "alteracoes-cardapio-cei",
+  CATEGORIA_PERGUNTAS_FREQUENTES: "categorias-pergunta-frequente",
   FAIXAS_ETARIAS: "faixas-etarias",
+  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
+  SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei",
   INICIO_PEDIDO: "inicio-pedido",
   MINHAS_SOLICITACOES: "minhas-solicitacoes",
+  PERGUNTAS_FREQUENTES: "perguntas-frequentes",
   PERIODOS_ESCOLARES: "periodos-escolares",
   QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
-    "solicitacoes-dieta-especial-ativas-inativas",
-  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
-  SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei"
+    "solicitacoes-dieta-especial-ativas-inativas"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;

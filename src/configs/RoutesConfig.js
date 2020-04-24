@@ -51,6 +51,7 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+import FaqPage from "../pages/Faq/FaqPage";
 
 import * as constants from "./constants";
 import {
@@ -561,11 +562,14 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario:
-      usuarioEscola() ||
-      usuarioDiretoriaRegional() ||
-      usuarioCODAEDietaEspecial() ||
-      usuarioTerceirizada()
+    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/ajuda`,
+    component: FaqPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
