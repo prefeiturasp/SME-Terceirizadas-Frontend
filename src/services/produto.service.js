@@ -140,3 +140,22 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
       return error.json();
     });
 };
+
+export const getHomologacoesCODAE = () => {
+  const url = `${API_URL}/homologacoes-produtos/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};

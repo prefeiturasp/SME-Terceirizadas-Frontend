@@ -20,8 +20,7 @@ import {
 import { PERFIL } from "../../../../constants";
 import {
   usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial,
-  usuarioCODAEGestaoProduto
+  usuarioCODAEDietaEspecial
 } from "../../../../helpers/utilities";
 
 export class SidebarCODAE extends Component {
@@ -152,37 +151,6 @@ export class SidebarCODAE extends Component {
                 to={`/dieta-especial/ativas-inativas`}
               >
                 Consulta Dieta de Alunos
-              </NavLink>
-            </div>
-          </div>
-        </li>
-      ),
-      usuarioCODAEGestaoProduto() && (
-        <li key={3} className="nav-item">
-          <Link
-            className={`nav-link collapsed`}
-            href="#teste"
-            data-toggle="collapse"
-            data-target="#collapsePD"
-            aria-expanded="false"
-            aria-controls="collapseTwo"
-          >
-            <i className="fas fa-atom" />
-            <span>{"P&D"}</span>
-          </Link>
-          <div
-            id="collapsePD"
-            className={`collapse`}
-            aria-labelledby="headingConfig"
-            data-parent="#accordionSidebar"
-          >
-            <div className="bg-white py-2 collapse-inner rounded">
-              <NavLink
-                activeClassName="active"
-                className="collapse-item"
-                to={`/pesquisa-desenvolvimento/homologacao-produto`}
-              >
-                Homologação de Produto
               </NavLink>
             </div>
           </div>

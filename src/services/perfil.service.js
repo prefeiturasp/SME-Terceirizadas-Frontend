@@ -87,7 +87,7 @@ export const meusDados = () => {
       return result.json();
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
