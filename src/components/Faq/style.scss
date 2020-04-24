@@ -5,6 +5,12 @@
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
 
+  .toggle-expand {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
   .title {
     color: $blueButtonFont;
     font-size: 16px;

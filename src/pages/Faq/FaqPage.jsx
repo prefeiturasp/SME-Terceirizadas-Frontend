@@ -95,7 +95,7 @@ const FaqPage = () => {
           </div>
         )}
 
-        {filteredCategories.length && (
+        {!!filteredCategories.length && (
           <Tabs tabs={categories.map(el => el.nome)}>
             {({ activeIndex }) => (
               <TabContent

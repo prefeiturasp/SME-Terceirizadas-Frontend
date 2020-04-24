@@ -11,7 +11,7 @@ const Card = ({ question, answer }) => {
       <div className="container">
         <div className="row">
           <div className="col title">{question}</div>
-          <div className="pr-2 col-auto">
+          <div className="pr-2 toggle-expand">
             <ToggleExpandir
               onClick={() => setCollapsed(!collapsed)}
               ativo={!collapsed}
@@ -20,7 +20,7 @@ const Card = ({ question, answer }) => {
         </div>
 
         <Collapse isOpened={!collapsed}>
-          <div className="card-body p-2">{answer}</div>
+          <div className="card-body p-0 pt-3 pb-1">{answer}</div>
         </Collapse>
       </div>
     </div>
