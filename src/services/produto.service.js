@@ -49,3 +49,23 @@ export const getProdutosPorMarca = async nomeMarca => {
 export const getProdutosPorFabricante = async nomeFabricante => {
   return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
 };
+
+export const getProtocolosDietaEspecial = async () => {
+  return await axios.get(`/protocolo-dieta-especial/`);
+};
+
+export const getMarcasProdutos = async () => {
+  return await axios.get(`/marcas/`);
+};
+
+export const getFabricantesProdutos = async () => {
+  return await axios.get(`/fabricantes/`);
+};
+
+export const criarMarcaProduto = async data => {
+  return await axios.post(`/marcas/`, data);
+};
+
+export const criarFabricanteProduto = async data => {
+  return await axios.post(`/fabricantes/`, data);
+};
