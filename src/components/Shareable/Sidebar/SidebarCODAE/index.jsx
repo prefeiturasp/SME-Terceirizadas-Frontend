@@ -156,13 +156,13 @@ export class SidebarCODAE extends Component {
           </div>
         </li>
       ),
-      <li key={3} className="nav-item">
+      <li key={4} className="nav-item">
         <NavLink className={`nav-link collapsed`} to={`/${RELATORIOS}/`}>
           <i className="fas fa-file-alt" />
           <span>Relatórios</span>
         </NavLink>
       </li>,
-      <li key={4} className="nav-item">
+      <li key={5} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"
@@ -233,7 +233,7 @@ export class SidebarCODAE extends Component {
           </div>
         </div>
       </li>,
-      <li key={5} className="nav-item">
+      <li key={6} className="nav-item">
         <Link
           className={`nav-link collapsed`}
           href="#teste"

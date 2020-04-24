@@ -51,12 +51,6 @@ form.special-diet {
       font-size: 14px;
       color: #686868;
     }
-    .card-warning {
-      border: 1px solid $red;
-      color: $red;
-      font-size: 10px;
-      padding: 10px;
-    }
     .btn {
       display: flex;
       margin-top: 2em;
@@ -64,6 +58,14 @@ form.special-diet {
     }
   }
 }
+
+.card-warning {
+  border: 1px solid $red;
+  color: $red;
+  font-size: 10px;
+  padding: 10px;
+}
+
 div.datepicker
   div.react-datepicker-wrapper
   .react-datepicker__input-container

@@ -14,7 +14,8 @@ import {
   usuarioCODAEDietaEspecial,
   usuarioDiretoriaRegional,
   usuarioEscola,
-  usuarioTerceirizada
+  usuarioTerceirizada,
+  usuarioCODAEGestaoProduto
 } from "../../../helpers/utilities";
 
 export class Sidebar extends Component {
@@ -58,7 +59,8 @@ export class Sidebar extends Component {
           >
             <div className="sidebar-brand-icon mb-3">
               {(usuarioCODAEDietaEspecial() ||
-                usuarioCODAEGestaoAlimentacao()) && <AvatarCODAE />}
+                usuarioCODAEGestaoAlimentacao() ||
+                usuarioCODAEGestaoProduto()) && <AvatarCODAE />}
               {usuarioDiretoriaRegional() && <AvatarDRE />}
               {usuarioEscola() && <AvatarEscola />}
               {usuarioTerceirizada() && <AvatarTerceirizada />}
@@ -93,7 +95,8 @@ export class Sidebar extends Component {
           )}
           <div className="sidebar-wrapper div-submenu">
             {(usuarioCODAEDietaEspecial() ||
-              usuarioCODAEGestaoAlimentacao()) && <SidebarCODAE />}
+              usuarioCODAEGestaoAlimentacao() ||
+              usuarioCODAEGestaoProduto()) && <SidebarCODAE />}
             {usuarioDiretoriaRegional() && <SidebarDRE />}
             {usuarioEscola() && <SidebarEscola />}
             {usuarioTerceirizada() && <SidebarTerceirizada />}

@@ -1,0 +1,25 @@
+@import "../../../../../styles/variables.scss";
+
+div.cadastro-produto-step3 {
+  .card-title {
+    padding-top: 1.5em;
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+  }
+  textarea::placeholder {
+    text-align: left;
+  }
+  div.produto {
+    font-size: 14px;
+    label {
+      color: $blackInput;
+      span {
+        color: $red;
+      }
+    }
+    div.explicacao {
+      color: $gray;
+    }
+  }
+}
