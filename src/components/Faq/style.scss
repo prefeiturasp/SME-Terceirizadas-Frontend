@@ -1,29 +1,27 @@
 @import "./../../styles/variables.scss";
 
 .faq-card {
+  margin-bottom: 1rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
 
-    margin-bottom: 1rem;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
+  .title {
+    color: $blueButtonFont;
+    font-size: 16px;
+    line-height: 19px;
+  }
 
-    .title {
-        color: $blueButtonFont;
-        font-size: 16px;
-        line-height: 19px;
-    }
-
-    .card-body {
-        color: $blackInput;
-        font-size: 14px;
-        line-height: 16px;      
-    }
+  .card-body {
+    color: $blackInput;
+    font-size: 14px;
+    line-height: 16px;
+  }
 }
 
 .faq-row {
-    border: 1px solid red;
+  border: 1px solid red;
 }
 
 .fa-col {
-    border: 1px solid blue;
+  border: 1px solid blue;
 }
-

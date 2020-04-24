@@ -8,8 +8,7 @@ const BotaoVoltar = ({ location, to }) => {
   return (
     <Link
       to={{
-        pathname:
-          location && location.state ? location.state.prevPath : to,
+        pathname: location && location.state ? location.state.prevPath : to,
         state: { botaoVoltar: true }
       }}
     >

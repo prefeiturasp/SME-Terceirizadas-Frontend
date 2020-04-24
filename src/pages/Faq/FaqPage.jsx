@@ -15,7 +15,8 @@ const TabContent = ({ items, setPattern }) => {
         ))
       ) : (
         <div className="no-search-results">
-          {`Nenhum resultado da busca nessa categoria.  `}<span onClick={() => setPattern('')}>Limpar busca</span>
+          {`Nenhum resultado da busca nessa categoria.  `}
+          <span onClick={() => setPattern("")}>Limpar busca</span>
         </div>
       )}
     </div>
@@ -82,7 +83,9 @@ const FaqPage = () => {
 
         {true && (
           <div className="row justify-content-center no-search-results mb-4">
-            <span onClick={() => setPattern('')}>{ pattern.length ? 'Limpar busca' : ''}</span>
+            <span onClick={() => setPattern("")}>
+              {pattern.length ? "Limpar busca" : ""}
+            </span>
           </div>
         )}
 
@@ -95,7 +98,10 @@ const FaqPage = () => {
         {filteredCategories.length && (
           <Tabs tabs={categories.map(el => el.nome)}>
             {({ activeIndex }) => (
-              <TabContent items={filteredCategories[activeIndex].perguntas} setPattern={setPattern} />
+              <TabContent
+                items={filteredCategories[activeIndex].perguntas}
+                setPattern={setPattern}
+              />
             )}
           </Tabs>
         )}

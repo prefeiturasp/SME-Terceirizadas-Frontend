@@ -5,7 +5,7 @@ import "./style.scss";
 const Tab = ({ index, activeIndex, setActiveIndex, title }) => {
   const active = index === activeIndex;
   return (
-    <div    
+    <div
       onClick={() => setActiveIndex(index)}
       className={`tab col ${active ? "active" : "inactive"}`}
     >

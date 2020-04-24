@@ -64,7 +64,9 @@ export default class Page extends Component {
             {children.length ? children[0] : children}
             <h1 className="page-title">
               {titulo}
-              {botaoVoltar && <BotaoVoltar location={this.props.location} to={voltarPara} />}
+              {botaoVoltar && (
+                <BotaoVoltar location={this.props.location} to={voltarPara} />
+              )}
             </h1>
             {children.map((child, key) => {
               return <div key={key}>{key > 0 && child}</div>;
