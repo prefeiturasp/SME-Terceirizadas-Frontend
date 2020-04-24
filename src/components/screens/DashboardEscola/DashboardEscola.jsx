@@ -15,7 +15,7 @@ import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import CardAtalho from "./CardAtalho";
+import CardAtalho from "../../Shareable/CardAtalho";
 import "./style.scss";
 
 export class DashboardEscola extends Component {

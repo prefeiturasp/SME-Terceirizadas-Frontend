@@ -76,9 +76,12 @@ import {
   usuarioDiretoriaRegional,
   usuarioCODAEGestaoAlimentacao,
   usuarioTerceirizada,
-  usuarioCODAEDietaEspecial
+  usuarioCODAEDietaEspecial,
+  usuarioCODAEGestaoProduto,
+  algumaCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
+import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 
 const routesConfig = [
   {
@@ -97,7 +100,11 @@ const routesConfig = [
     path: "/painel-gestao-alimentacao",
     component: painelGestaoAlimentacao(),
     exact: true,
-    tipoUsuario: !usuarioCODAEDietaEspecial()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEGestaoAlimentacao() ||
+      usuarioTerceirizada()
   },
   {
     path: "/login",
@@ -372,7 +379,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/editais-cadastrados`,
     component: EditaisCadastradosPage,
     exact: true,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/cadastros/lote`,
@@ -384,7 +391,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
     exact: false,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
@@ -396,19 +403,19 @@ const routesConfig = [
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
     component: EditaisContratosPage,
     exact: true,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/cadastros/faixas-etarias`,
@@ -426,7 +433,7 @@ const routesConfig = [
     path: `/configuracoes/mensagem`,
     component: MensagemPage,
     exact: false,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/configuracoes/permissoes`,
@@ -438,7 +445,7 @@ const routesConfig = [
     path: `/configuracoes`,
     component: ConfigEmailPage,
     exact: false,
-    tipoUsuario: usuarioCODAEDietaEspecial() || usuarioCODAEGestaoAlimentacao()
+    tipoUsuario: algumaCODAE()
   },
   {
     path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
@@ -506,7 +513,11 @@ const routesConfig = [
     path: `/painel-dieta-especial`,
     component: dashBoardDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEDietaEspecial() ||
+      usuarioTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -514,7 +525,11 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEDietaEspecial() ||
+      usuarioTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -522,7 +537,11 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEDietaEspecial() ||
+      usuarioTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -530,7 +549,11 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEDietaEspecial() ||
+      usuarioTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -538,13 +561,25 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEscola() ||
+      usuarioDiretoriaRegional() ||
+      usuarioCODAEDietaEspecial() ||
+      usuarioTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
     component: CadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.HOMOLOGACAO_PRODUTO
+    }`,
+    component: HomologacaoProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioCODAEGestaoProduto()
   }
 ];
 
