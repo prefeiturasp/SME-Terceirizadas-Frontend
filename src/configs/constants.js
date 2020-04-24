@@ -47,7 +47,9 @@ export const CONFIGURACOES = "configuracoes";
 export const MENSAGEM = "mensagem";
 export const PERMISSOES = "permissoes";
 export const PERFIL = "perfil";
-
+export const PESQUISA_DESENVOLVIMENTO = "pesquisa-desenvolvimento";
+export const PRODUTO = "produto";
+export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";

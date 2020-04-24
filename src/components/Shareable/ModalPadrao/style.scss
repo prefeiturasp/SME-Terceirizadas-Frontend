@@ -1,0 +1,11 @@
+@import "../../../styles/variables.scss";
+
+.modal-question {
+  p.title {
+    font-size: 14px;
+    color: $blackSubtle;
+  }
+  textarea::placeholder {
+    text-align: left;
+  }
+}
