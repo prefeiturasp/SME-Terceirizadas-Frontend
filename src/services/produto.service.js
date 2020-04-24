@@ -101,12 +101,33 @@ export const CODAEPedeAnaliseSensorialProduto = uuid => {
     });
 };
 
-export const CODAENaoHomologaProduto = uuid => {
+export const CODAENaoHomologaProduto = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-nao-homologa/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const CODAEPedeCorrecao = (uuid, justificativa) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-questiona-pedido/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;

@@ -8,22 +8,32 @@ import {
   getHomologacaoProduto,
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
-  CODAEPedeAnaliseSensorialProduto
+  CODAEPedeAnaliseSensorialProduto,
+  CODAEPedeCorrecao
 } from "../../../../services/produto.service";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
+import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 
 class HomologacaoProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
       produto: null,
-      uuid: null
+      uuid: null,
+      showModal: false,
+      modalIndeferir: true,
+      status: null
     };
+    this.closeModal = this.closeModal.bind(this);
   }
+
+  closeModal = () => {
+    this.setState({ showModal: false });
+  };
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,10 +44,25 @@ class HomologacaoProduto extends Component {
         informacoesNutricionais: formataInformacoesNutricionais(
           response.data.produto
         ),
+        status: response.data.status,
+        terceirizada: response.data.rastro_terceirizada,
         uuid
       });
     });
   }
+
+  loadHomologacao = () => {
+    const { uuid } = this.state;
+    getHomologacaoProduto(uuid).then(response => {
+      this.setState({
+        produto: response.data.produto,
+        informacoesNutricionais: formataInformacoesNutricionais(
+          response.data.produto
+        ),
+        status: response.data.status
+      });
+    });
+  };
 
   activateInformacao(key) {
     let informacoesNutricionais = this.state.informacoesNutricionais;
@@ -45,41 +70,44 @@ class HomologacaoProduto extends Component {
     this.forceUpdate();
   }
 
-  naoHomologar = () => {
-    const { uuid } = this.state;
-    CODAENaoHomologaProduto(uuid).then(response => {
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de não homologado enviada com sucesso");
-      } else {
-        toastError("Erro ao não homologar solicitação");
-      }
-    });
-  };
-
   onSubmit = values => {
     const { uuid } = this.state;
     if (values.necessita_analise_sensorial === "1") {
       CODAEPedeAnaliseSensorialProduto(uuid).then(response => {
         if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de homologado enviada com sucesso");
+          toastSuccess("Solicitação de análise sensorial enviada com sucesso");
+          this.loadHomologacao(uuid);
         } else {
-          toastError("Erro ao pedir análise sensorial solicitação");
+          toastError(response.data.detail);
         }
       });
     } else {
       CODAEHomologaProduto(uuid).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação de homologado enviada com sucesso");
+          this.loadHomologacao(uuid);
         } else {
-          toastError("Erro ao homologar solicitação");
+          toastError(response.data.detail);
         }
       });
     }
   };
 
   render() {
-    const { produto, informacoesNutricionais } = this.state;
-    const { necessita_analise_sensorial, handleSubmit } = this.props;
+    const {
+      produto,
+      informacoesNutricionais,
+      uuid,
+      showModal,
+      modalIndeferir,
+      status,
+      terceirizada
+    } = this.state;
+    const {
+      necessita_analise_sensorial,
+      handleSubmit,
+      justificativa
+    } = this.props;
     return (
       <div className="card">
         <div className="card-body">
@@ -90,25 +118,41 @@ class HomologacaoProduto extends Component {
               className="homologacao-produto"
               onSubmit={handleSubmit(this.onSubmit)}
             >
+              <ModalPadrao
+                showModal={showModal}
+                closeModal={this.closeModal}
+                toastSuccessMessage={
+                  modalIndeferir
+                    ? "Solicitação de não homologado enviada com sucesso"
+                    : "Solicitação de correção enviada com sucesso"
+                }
+                modalTitle={
+                  modalIndeferir
+                    ? "Deseja não homologar (indeferir) este produto?"
+                    : "Deseja solicitar correção do cadastro do produto?"
+                }
+                endpoint={
+                  modalIndeferir ? CODAENaoHomologaProduto : CODAEPedeCorrecao
+                }
+                uuid={uuid}
+                loadSolicitacao={this.loadHomologacao}
+                justificativa={justificativa}
+              />
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
               <div className="row">
                 <div className="col-4 report-label-value">
                   <p>Empresa solicitante (Terceirizada)</p>
-                  <p className="value">{produto.terceirizada.nome_fantasia}</p>
+                  <p className="value">{terceirizada.nome_fantasia}</p>
                 </div>
                 <div className="col-4 report-label-value">
                   <p>Telefone</p>
-                  <p className="value">
-                    {produto.terceirizada.contatos[0].telefone}
-                  </p>
+                  <p className="value">{terceirizada.contatos[0].telefone}</p>
                 </div>
                 <div className="col-4 report-label-value">
                   <p>E-mail</p>
-                  <p className="value">
-                    {produto.terceirizada.contatos[0].email}
-                  </p>
+                  <p className="value">{terceirizada.contatos[0].email}</p>
                 </div>
               </div>
               <hr />
@@ -322,78 +366,90 @@ class HomologacaoProduto extends Component {
                   })}
                 </div>
               </section>
-              <div className="link-with-student pt-4">
-                <div className="label">
-                  <span className="required-asterisk">*</span>Precisa solicitar
-                  análise sensorial?
+              {status === "CODAE_PENDENTE_HOMOLOGACAO" && (
+                <div className="link-with-student pt-4">
+                  <div className="label">
+                    <span className="required-asterisk">*</span>Precisa
+                    solicitar análise sensorial?
+                  </div>
+                  <div className="row">
+                    <div className="col-3">
+                      <label className="container-radio">
+                        Sim
+                        <Field
+                          component={"input"}
+                          type="radio"
+                          value="1"
+                          name="necessita_analise_sensorial"
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                    <div className="col-3">
+                      <label className="container-radio">
+                        Não
+                        <Field
+                          component={"input"}
+                          type="radio"
+                          value="0"
+                          name="necessita_analise_sensorial"
+                        />
+                        <span className="checkmark" />
+                      </label>
+                    </div>
+                  </div>
                 </div>
+              )}
+              {status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                 <div className="row">
-                  <div className="col-3">
-                    <label className="container-radio">
-                      Sim
-                      <Field
-                        component={"input"}
-                        type="radio"
-                        value="1"
-                        name="necessita_analise_sensorial"
-                      />
-                      <span className="checkmark" />
-                    </label>
-                  </div>
-                  <div className="col-3">
-                    <label className="container-radio">
-                      Não
-                      <Field
-                        component={"input"}
-                        type="radio"
-                        value="0"
-                        name="necessita_analise_sensorial"
-                      />
-                      <span className="checkmark" />
-                    </label>
+                  <div className="col-12 text-right pt-3">
+                    <Botao
+                      texto={"Análise"}
+                      className="mr-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      disabled={
+                        !necessita_analise_sensorial ||
+                        necessita_analise_sensorial === "0"
+                      }
+                    />
+                    <Botao
+                      texto={"Corrigir"}
+                      className="mr-3"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() =>
+                        this.setState({
+                          modalIndeferir: false,
+                          showModal: true
+                        })
+                      }
+                    />
+                    <Botao
+                      texto={"Não homologar"}
+                      className="mr-3"
+                      onClick={() =>
+                        this.setState({ modalIndeferir: true, showModal: true })
+                      }
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      disabled={
+                        !necessita_analise_sensorial ||
+                        necessita_analise_sensorial === "1"
+                      }
+                    />
+                    <Botao
+                      texto={"Homologar"}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      disabled={
+                        !necessita_analise_sensorial ||
+                        necessita_analise_sensorial === "1"
+                      }
+                    />
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12 text-right pt-3">
-                  <Botao
-                    texto={"Análise"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    disabled={
-                      !necessita_analise_sensorial ||
-                      necessita_analise_sensorial === "0"
-                    }
-                  />
-                  <Botao
-                    texto={"Corrigir"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  <Botao
-                    texto={"Não homologar"}
-                    className="mr-3"
-                    onClick={() => this.naoHomologar()}
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled={
-                      !necessita_analise_sensorial ||
-                      necessita_analise_sensorial === "1"
-                    }
-                  />
-                  <Botao
-                    texto={"Homologar"}
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    disabled={
-                      !necessita_analise_sensorial ||
-                      necessita_analise_sensorial === "1"
-                    }
-                  />
-                </div>
-              </div>
+              )}
             </form>
           )}
         </div>
@@ -408,7 +464,8 @@ const componentNameForm = reduxForm({
 const selector = formValueSelector("HomologacaoProduto");
 const mapStateToProps = state => {
   return {
-    necessita_analise_sensorial: selector(state, "necessita_analise_sensorial")
+    necessita_analise_sensorial: selector(state, "necessita_analise_sensorial"),
+    justificativa: selector(state, "justificativa")
   };
 };
 
