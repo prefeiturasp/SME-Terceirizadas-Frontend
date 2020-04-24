@@ -136,7 +136,7 @@ export default class FormAutorizaDietaEspecial extends Component {
         response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Rascunho salvo com sucesso!");
-            this.props.onAutorizar();
+            this.props.onAutorizarOuNegar();
             resolve();
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError("Houve um erro ao salvar o rascunho");
@@ -172,7 +172,7 @@ export default class FormAutorizaDietaEspecial extends Component {
             toastSuccess(
               "Autorização de dieta especial realizada com sucesso!"
             );
-            this.props.onAutorizar();
+            this.props.onAutorizarOuNegar();
             resolve();
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError("Houve um erro ao autorizar a Dieta Especial");
@@ -274,29 +274,31 @@ export default class FormAutorizaDietaEspecial extends Component {
                     </div>
                   </div>
                 </div>
-                <Botao
-                  texto="Salvar Rascunho"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.BLUE}
-                  onClick={() => this.salvaRascunho(values)}
-                  className="ml-3"
-                  disabled={pristine || submitting}
-                />
-                <Botao
-                  texto="Negar"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  onClick={() => this.showNaoAprovaModal("Não")}
-                  className="ml-3"
-                  disabled={submitting}
-                />
-                <Botao
-                  texto="Autorizar"
-                  type={BUTTON_TYPE.SUBMIT}
-                  style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
-                  disabled={submitting}
-                />
+                <div className="form-group row float-right mt-4">
+                  <Botao
+                    texto="Salvar Rascunho"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.BLUE}
+                    onClick={() => this.salvaRascunho(values)}
+                    className="ml-3"
+                    disabled={pristine || submitting}
+                  />
+                  <Botao
+                    texto="Negar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => this.showNaoAprovaModal("Não")}
+                    className="ml-3"
+                    disabled={submitting}
+                  />
+                  <Botao
+                    texto="Autorizar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
+                    disabled={submitting}
+                  />
+                </div>
               </div>
               <ModalAutorizaDietaEspecial
                 closeModal={this.closeAutorizarModal}
@@ -310,7 +312,7 @@ export default class FormAutorizaDietaEspecial extends Component {
         <ModalNegaDietaEspecial
           showModal={showNaoAprovaModal}
           closeModal={this.closeNaoAprovaModal}
-          onNaoAprova={this.loadSolicitacao}
+          onNegar={this.props.onAutorizarOuNegar}
           uuid={dietaEspecial.uuid}
         />
       </div>

@@ -37,13 +37,15 @@ export default class EscolaCancelaDietaEspecial extends Component {
           }}
           {...this.props}
         />
-        <Botao
-          texto="Cancelar"
-          className="ml-3"
-          onClick={this.onOpenModal}
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-        />
+        <div className="form-group row float-right mt-4">
+          <Botao
+            texto="Cancelar"
+            className="ml-3"
+            onClick={this.onOpenModal}
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+          />
+        </div>
       </>
     );
   }

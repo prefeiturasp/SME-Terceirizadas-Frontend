@@ -99,7 +99,9 @@ export default class Relatorio extends Component {
               visao === CODAE && (
                 <FormAutorizaDietaEspecial
                   dietaEspecial={dietaEspecial}
-                  onAutorizar={() => this.loadSolicitacao(dietaEspecial.uuid)}
+                  onAutorizarOuNegar={() =>
+                    this.loadSolicitacao(dietaEspecial.uuid)
+                  }
                 />
               )}
             {dietaEspecial.status_solicitacao ===

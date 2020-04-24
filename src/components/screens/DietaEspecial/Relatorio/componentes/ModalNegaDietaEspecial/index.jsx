@@ -35,8 +35,8 @@ export default class ModalNegarSolicitacao extends Component {
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação negada com sucesso!");
-      if (this.props.loadSolicitacao) {
-        this.props.loadSolicitacao(this.props.uuid);
+      if (this.props.onNegar) {
+        this.props.onNegar();
       }
     } else {
       toastError(resp.data.detail);
