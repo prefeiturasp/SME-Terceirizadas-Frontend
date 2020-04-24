@@ -51,7 +51,7 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import Faq from "../components/screens/Faq";
+import FaqPage from "../pages/Faq/FaqPage";
 
 import * as constants from "./constants";
 import {
@@ -541,8 +541,8 @@ const routesConfig = [
     tipoUsuario: !usuarioCODAEGestaoAlimentacao()
   },
   {
-    path: `/faq`,
-    component: Faq,
+    path: `/ajuda`,
+    component: FaqPage,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
   }

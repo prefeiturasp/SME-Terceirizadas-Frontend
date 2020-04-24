@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Botao } from "../Botao";
-import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../Botao/constants";
 import { Header } from "../Header";
-import { Link } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
+import BotaoVoltar from "./BotaoVoltar";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import "./style.scss";
 
@@ -66,26 +64,7 @@ export default class Page extends Component {
             {children.length ? children[0] : children}
             <h1 className="page-title">
               {titulo}
-              {botaoVoltar && (
-                <Link
-                  to={{
-                    pathname:
-                      this.props.location && this.props.location.state
-                        ? this.props.location.state.prevPath
-                        : voltarPara,
-                    state: { botaoVoltar: true }
-                  }}
-                >
-                  <Botao
-                    texto="voltar"
-                    titulo="voltar"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.BLUE}
-                    icon={BUTTON_ICON.ARROW_LEFT}
-                    className="float-right"
-                  />
-                </Link>
-              )}
+              {botaoVoltar && <BotaoVoltar location={this.props.location} to={voltarPara} />}
             </h1>
             {children.map((child, key) => {
               return <div key={key}>{key > 0 && child}</div>;
