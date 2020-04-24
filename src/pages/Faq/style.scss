@@ -3,6 +3,7 @@
 .faq-screen {
   margin-top: 5rem;
   .no-search-results {
+    min-height: 25px;
     span {
       cursor: pointer;
       text-decoration: underline;

@@ -6,7 +6,7 @@ import { Card } from "../../components/Faq";
 import { getFaq } from "../../services/faq.service";
 import "./style.scss";
 
-const TabContent = ({ items, setPattern }) => {
+const TabContent = ({ items }) => {
   return (
     <div className="tab-content">
       {items.length ? (
@@ -14,10 +14,7 @@ const TabContent = ({ items, setPattern }) => {
           <Card key={index} question={item.pergunta} answer={item.resposta} />
         ))
       ) : (
-        <div className="no-search-results">
-          {`Nenhum resultado da busca nessa categoria.  `}
-          <span onClick={() => setPattern("")}>Limpar busca</span>
-        </div>
+        <div className="no-search-results">Nenhum resultado da busca nessa categoria.</div>
       )}
     </div>
   );
@@ -80,14 +77,11 @@ const FaqPage = () => {
             <i className="fas fa-search fa-lg" />
           </div>
         </div>
-
-        {true && (
-          <div className="row justify-content-center no-search-results mb-4">
-            <span onClick={() => setPattern("")}>
-              {pattern.length ? "Limpar busca" : ""}
-            </span>
-          </div>
-        )}
+        <div className="row justify-content-center no-search-results mb-4">
+          <span onClick={() => setPattern("")}>
+            {pattern.length ? "Limpar busca" : ""}
+          </span>
+        </div>
 
         {loading && (
           <div className="row justify-content-center">
@@ -100,7 +94,6 @@ const FaqPage = () => {
             {({ activeIndex }) => (
               <TabContent
                 items={filteredCategories[activeIndex].perguntas}
-                setPattern={setPattern}
               />
             )}
           </Tabs>
