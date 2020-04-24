@@ -569,7 +569,6 @@ const routesConfig = [
     component: FaqPage,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
-
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,

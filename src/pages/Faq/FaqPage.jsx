@@ -14,7 +14,9 @@ const TabContent = ({ items }) => {
           <Card key={index} question={item.pergunta} answer={item.resposta} />
         ))
       ) : (
-        <div className="no-search-results">Nenhum resultado da busca nessa categoria.</div>
+        <div className="no-search-results">
+          Nenhum resultado da busca nessa categoria.
+        </div>
       )}
     </div>
   );
@@ -92,9 +94,7 @@ const FaqPage = () => {
         {!!filteredCategories.length && (
           <Tabs tabs={categories.map(el => el.nome)}>
             {({ activeIndex }) => (
-              <TabContent
-                items={filteredCategories[activeIndex].perguntas}
-              />
+              <TabContent items={filteredCategories[activeIndex].perguntas} />
             )}
           </Tabs>
         )}
