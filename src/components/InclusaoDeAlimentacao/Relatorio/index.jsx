@@ -18,7 +18,6 @@ import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import { getInclusaoDeAlimentacaoDaCei } from "../../../services/inclusaoAlimentacaoDaCei.service";
 
-
 class Relatorio extends Component {
   constructor(props) {
     super(props);
@@ -41,14 +40,14 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua")  === "true";
-    const ehEscolaTipoCei = urlParams.get("escolaTipoCei")  === "true";
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
     let service;
-    if(ehEscolaTipoCei) {
-      service = getInclusaoDeAlimentacaoDaCei
-    }else if(ehInclusaoContinua){
-      service = getInclusaoDeAlimentacaoContinua
-    }else{
+    if (ehEscolaTipoCei) {
+      service = getInclusaoDeAlimentacaoDaCei;
+    } else if (ehInclusaoContinua) {
+      service = getInclusaoDeAlimentacaoContinua;
+    } else {
       service = getInclusaoDeAlimentacaoAvulsa;
     }
     if (uuid) {
@@ -128,7 +127,7 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
-      ehEscolaTipoCei,
+      ehEscolaTipoCei
     } = this.state;
     const {
       endpointAprovaSolicitacao,

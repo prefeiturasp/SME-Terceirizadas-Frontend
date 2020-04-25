@@ -97,9 +97,11 @@ export class CardPendenteAcao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
-                  const dataMaisProxima = pedido.inclusoes ? pedido.inclusoes[0].data : pedido.data
-                    const isCei = !!pedido.isCei
-                    const isContinua = !!pedido.data_inicial
+                  const dataMaisProxima = pedido.inclusoes
+                    ? pedido.inclusoes[0].data
+                    : pedido.data;
+                  const isCei = !!pedido.isCei;
+                  const isContinua = !!pedido.data_inicial;
                   return (
                     <Link
                       key={key}

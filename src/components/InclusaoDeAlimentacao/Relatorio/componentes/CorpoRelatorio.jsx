@@ -15,49 +15,42 @@ import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { faixaToString } from "../../../../helpers/faixasEtarias";
 
-const TabelaFaixaEtaria = ({faixas = []}) => {
-
-  const total = faixas.reduce(function (acc, v) { return acc + v.quantidade_alunos; }, 0)
+const TabelaFaixaEtaria = ({ faixas = [] }) => {
+  const total = faixas.reduce(function(acc, v) {
+    return acc + v.quantidade_alunos;
+  }, 0);
 
   return (
     <section className="tabela-faixa-etaria-qtd-alunos">
-    <article>
-      <div className="faixa-etaria">Faixa Etária</div>
-      <div className="alunos-matriculados">
-        Alunos Matriculados
-      </div>
-      <div className="quantidade">Quantidade</div>
-    </article>
+      <article>
+        <div className="faixa-etaria">Faixa Etária</div>
+        <div className="alunos-matriculados">Alunos Matriculados</div>
+        <div className="quantidade">Quantidade</div>
+      </article>
 
-    {faixas.map((item, indice) => {
-      return (
-        <article key={indice}>
-          <div className="faixa-etaria">
-            {faixaToString(item.faixa_etaria)}
-          </div>
-          <div className="alunos-matriculados">
-              {"N/A"}
-          </div>
-          <div>{item.quantidade_alunos}</div>
-        </article>
-      );
-    })}
-    <article>
-      <div className="faixa-etaria">Total {">>"} </div>
-      <div className="alunos-matriculados">
-        {"N/A"}
-      </div>
-      <div className="quantidade">{ total }</div>
-    </article>
-  </section>
-  )
-}
+      {faixas.map((item, indice) => {
+        return (
+          <article key={indice}>
+            <div className="faixa-etaria">
+              {faixaToString(item.faixa_etaria)}
+            </div>
+            <div className="alunos-matriculados">{"N/A"}</div>
+            <div>{item.quantidade_alunos}</div>
+          </article>
+        );
+      })}
+      <article>
+        <div className="faixa-etaria">Total {">>"} </div>
+        <div className="alunos-matriculados">{"N/A"}</div>
+        <div className="quantidade">{total}</div>
+      </article>
+    </section>
+  );
+};
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
-    const diasMotivosFormatados = formataMotivosDias(
-      inclusoes
-    );
+    const diasMotivosFormatados = formataMotivosDias(inclusoes);
     return (
       <table className="table-reasons">
         <tbody>
@@ -88,22 +81,20 @@ export class CorpoRelatorio extends Component {
   }
 
   renderParteContinua() {
-    const { inclusaoDeAlimentacao : {
-      data_final,
-      data_inicial,
-      motivo,
-      dias_semana_explicacao
-    } } = this.props;
+    const {
+      inclusaoDeAlimentacao: {
+        data_final,
+        data_inicial,
+        motivo,
+        dias_semana_explicacao
+      }
+    } = this.props;
     return (
       <div>
         <div className="row">
           <div className="col-4 report-label-value">
             <p>Período</p>
-            <p className="value">
-              {`${data_inicial} - ${
-                data_final
-              }`}
-            </p>
+            <p className="value">{`${data_inicial} - ${data_final}`}</p>
           </div>
           <div className="col-4 report-label-value">
             <p>Motivo</p>
@@ -111,9 +102,7 @@ export class CorpoRelatorio extends Component {
           </div>
           <div className="col-4 report-label-value">
             <p>Dias da Semana</p>
-            <p className="value">
-              {dias_semana_explicacao}
-            </p>
+            <p className="value">{dias_semana_explicacao}</p>
           </div>
         </div>
       </div>
@@ -125,7 +114,7 @@ export class CorpoRelatorio extends Component {
       ehInclusaoContinua,
       prazoDoPedidoMensagem,
       ehEscolaTipoCei,
-      inclusaoDeAlimentacao : {
+      inclusaoDeAlimentacao: {
         uuid,
         id_externo,
         escola,
@@ -136,7 +125,7 @@ export class CorpoRelatorio extends Component {
         inclusoes,
         data,
         motivo,
-        outro_motivo,
+        outro_motivo
       }
     } = this.props;
     return (
@@ -154,18 +143,13 @@ export class CorpoRelatorio extends Component {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
               onClick={() => {
-                getRelatorioInclusaoAlimentacao(
-                  uuid,
-                  ehInclusaoContinua
-                );
+                getRelatorioInclusaoAlimentacao(uuid, ehInclusaoContinua);
               }}
             />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
-              <span className="id-of-solicitation-dre">
-                # {id_externo}
-              </span>
+              <span className="id-of-solicitation-dre"># {id_externo}</span>
               <br />{" "}
               <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
             </span>
@@ -173,96 +157,82 @@ export class CorpoRelatorio extends Component {
           <div className="pl-2 my-auto offset-1 col-5">
             <span className="requester">Escola Solicitante</span>
             <br />
-            <span className="dre-name">
-              {escola &&
-                escola.nome}
-            </span>
+            <span className="dre-name">{escola && escola.nome}</span>
           </div>
           <div className="my-auto col-4">
             <span className="requester">Código EOL</span>
             <br />
-            <span className="dre-name">
-              {escola &&
-                escola.codigo_eol}
-            </span>
+            <span className="dre-name">{escola && escola.codigo_eol}</span>
           </div>
         </div>
         <div className="row">
           <div className="col-2 report-label-value">
             <p>DRE</p>
-            <p className="value-important">
-              {escola.diretoria_regional.nome}
-            </p>
+            <p className="value-important">{escola.diretoria_regional.nome}</p>
           </div>
           <div className="col-2 report-label-value">
             <p>Lote</p>
             <p className="value-important">
-              {escola &&
-                escola.lote &&
-                escola.lote.nome}
+              {escola && escola.lote && escola.lote.nome}
             </p>
           </div>
           <div className="col-2 report-label-value">
             <p>Tipo de Gestão</p>
             <p className="value-important">
-              {escola &&
-                escola.tipo_gestao &&
-                escola.tipo_gestao.nome}
+              {escola && escola.tipo_gestao && escola.tipo_gestao.nome}
             </p>
           </div>
         </div>
         <hr />
         {logs && (
           <div className="row">
-            <FluxoDeStatus
-              listaDeStatus={logs}
-              fluxo={fluxoPartindoEscola}
-            />
+            <FluxoDeStatus listaDeStatus={logs} fluxo={fluxoPartindoEscola} />
           </div>
         )}
         <hr />
         {ehInclusaoContinua
           ? this.renderParteContinua()
-          : this.renderParteAvulsa( inclusoes || [{ 
-            data,
-            motivo,
-            outro_motivo,
-           }] )}
-        
-          {!ehEscolaTipoCei && (
-                <table className="table-report mt-3">
-                  <tbody>
-                    <tr>
-                      <th>Período</th>
-                      <th>Tipos de Alimentação</th>
-                      <th>Nº de Alunos</th>
-                    </tr>
-                    {
-                      quantidades_periodo.map(
-                        (quantidade_por_periodo, key) => {
-                          return (
-                            <tr key={key}>
-                              <td>
-                                {quantidade_por_periodo.periodo_escolar &&
-                                  quantidade_por_periodo.periodo_escolar.nome}
-                              </td>
-                              <td>
-                                {stringSeparadaPorVirgulas(
-                                  quantidade_por_periodo.tipos_alimentacao,
-                                  "label"
-                                )}
-                              </td>
-                              <td>{quantidade_por_periodo.numero_alunos}</td>
-                            </tr>
-                          );
-                        }
-                      )
-                    }
-                  </tbody>
-                </table>
-              )
-            }
-            { ehEscolaTipoCei && <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} /> }
+          : this.renderParteAvulsa(
+              inclusoes || [
+                {
+                  data,
+                  motivo,
+                  outro_motivo
+                }
+              ]
+            )}
+
+        {!ehEscolaTipoCei && (
+          <table className="table-report mt-3">
+            <tbody>
+              <tr>
+                <th>Período</th>
+                <th>Tipos de Alimentação</th>
+                <th>Nº de Alunos</th>
+              </tr>
+              {quantidades_periodo.map((quantidade_por_periodo, key) => {
+                return (
+                  <tr key={key}>
+                    <td>
+                      {quantidade_por_periodo.periodo_escolar &&
+                        quantidade_por_periodo.periodo_escolar.nome}
+                    </td>
+                    <td>
+                      {stringSeparadaPorVirgulas(
+                        quantidade_por_periodo.tipos_alimentacao,
+                        "label"
+                      )}
+                    </td>
+                    <td>{quantidade_por_periodo.numero_alunos}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+        {ehEscolaTipoCei && (
+          <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
+        )}
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Observações</p>

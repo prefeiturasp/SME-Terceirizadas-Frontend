@@ -7,7 +7,7 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
 import { FILTRO_VISAO } from "../../../constants";
 import { dataAtual } from "../../../helpers/utilities";
@@ -92,32 +92,30 @@ class DashboardDRE extends Component {
   }
 
   consolidaResultados = results => {
-
-    try{
-      if(results["Inclusão de Alimentacao de Cei"]) {
+    try {
+      if (results["Inclusão de Alimentacao de Cei"]) {
         results["Inclusão de Alimentação"] = sumObjectsByKey(
           results["Inclusão de Alimentação"],
           results["Inclusão de Alimentacao de Cei"]
-        ) 
-        
+        );
       }
-      if(results["Kit Lanche Passeio de Cei"]) {
+      if (results["Kit Lanche Passeio de Cei"]) {
         results["Kit Lanche Passeio"] = sumObjectsByKey(
-          results["Kit Lanche Passeio"] ,
+          results["Kit Lanche Passeio"],
           results["Kit Lanche Passeio de Cei"]
-        )
+        );
       }
-      if(results["Alteracao de Alimentacao de Cei"]) {
+      if (results["Alteracao de Alimentacao de Cei"]) {
         results["Alteração de Alimentacao"] = sumObjectsByKey(
           results["Alteração de Alimentacao"],
           results["Alteração de Alimentacao de Cei"]
-        )
+        );
       }
-    }catch(error){
+    } catch (error) {
       toastError("Houve um erro ao carregar Rascunhos Salvos");
     }
-    return results
-  }
+    return results;
+  };
 
   async carregaResumoPendencias() {
     const { visao, filtroPorVencimento } = this.state;

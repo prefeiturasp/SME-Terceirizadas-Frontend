@@ -42,14 +42,12 @@ class PainelPedidos extends Component {
     const inclusoesContinuas = await getDREPedidosInclusaoContinuosPendentes(
       filtro
     );
-    const inclusoesCei = await getDREPedidosDeInclusaoAlimentacaoDaCei(
-      filtro
-    );
+    const inclusoesCei = await getDREPedidosDeInclusaoAlimentacaoDaCei(filtro);
     const inclusoesMescladas = [
       ...inclusoesAvulsas.results,
       ...inclusoesContinuas.results,
-      ...inclusoesCei.results,
-    ]
+      ...inclusoesCei.results
+    ];
     const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
     const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);

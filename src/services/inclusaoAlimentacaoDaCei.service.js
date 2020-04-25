@@ -3,30 +3,34 @@ import { ENDPOINT } from "../constants";
 import { PEDIDOS } from "./constants";
 
 const {
-    QUANTIDADE_ALUNOS_POR_PERIODO,
-    INCLUSOES_ALIMENTACAO_DA_CEI,
-} = ENDPOINT
-
+  QUANTIDADE_ALUNOS_POR_PERIODO,
+  INCLUSOES_ALIMENTACAO_DA_CEI
+} = ENDPOINT;
 
 export const getInclusaoDeAlimentacaoDaCei = async uuid => {
-    const response = await axios.get(`${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
-    return response.data
+  const response = await axios.get(`${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
+  return response.data;
 };
 
 export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
-  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const response = await axios.get(url); 
-  const results = response.data.results
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${
+    PEDIDOS.DRE
+  }/${filtroAplicado}/`;
+  const response = await axios.get(url);
+  const results = response.data.results;
   return {
-    results: results.map(el=>({
+    results: results.map(el => ({
       ...el,
-      isCei: true,
-    })) ,
-    status: response.status };
+      isCei: true
+    })),
+    status: response.status
+  };
 };
 
 export const meusRascunhosDeInclusaoDeAlimentacao = async () => {
-  return await axios.get(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/minhas-solicitacoes/`);
+  return await axios.get(
+    `/${INCLUSOES_ALIMENTACAO_DA_CEI}/minhas-solicitacoes/`
+  );
 };
 
 export const minhasFaixasEtarias = async () => {
@@ -49,23 +53,15 @@ export const getQuantidadeAlunosPeriodoEscolar = async uuidEscola => {
 };
 
 export const criarInclusoesDaCEI = async payload => {
-  return await axios.post(
-    `/${INCLUSOES_ALIMENTACAO_DA_CEI}/`,
-    payload
-  );
+  return await axios.post(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/`, payload);
 };
 
 export const excluirInclusoesDaCei = async uuid => {
-  return await axios.delete(
-    `/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`
-  );
+  return await axios.delete(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
 };
 
 export const atualizarInclusoesDaCEI = async (payload, uuid) => {
-  return await axios.put(
-    `/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`,
-    payload
-  );
+  return await axios.put(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`, payload);
 };
 
 export const iniciarInclusoesDaCEI = async uuid => {

@@ -232,7 +232,7 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
     titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
     cor: "rgba(41, 120, 5, 1)",
     link: INVERSAO_CARDAPIO
-  },
+  }
 ];
 
 const ENDPOINT = {
