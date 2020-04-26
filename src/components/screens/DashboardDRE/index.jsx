@@ -19,9 +19,10 @@ import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { ajustarFormatoLog, sumObjectsByKey } from "../helper";
+import { ajustarFormatoLog } from "../helper";
 import Select from "../../Shareable/Select";
 import { toastError } from "../../Shareable/Toast/dialogs";
+import corrigeResumo from "../../../helpers/corrige-dados-do-dashboard";
 import { FILTRO } from "../const";
 import {
   getSolicitacoesPendentesValidacaoDRE,
@@ -91,32 +92,6 @@ class DashboardDRE extends Component {
     );
   }
 
-  consolidaResultados = results => {
-    try {
-      if (results["Inclusão de Alimentacao de Cei"]) {
-        results["Inclusão de Alimentação"] = sumObjectsByKey(
-          results["Inclusão de Alimentação"],
-          results["Inclusão de Alimentacao de Cei"]
-        );
-      }
-      if (results["Kit Lanche Passeio de Cei"]) {
-        results["Kit Lanche Passeio"] = sumObjectsByKey(
-          results["Kit Lanche Passeio"],
-          results["Kit Lanche Passeio de Cei"]
-        );
-      }
-      if (results["Alteracao de Alimentacao de Cei"]) {
-        results["Alteração de Alimentacao"] = sumObjectsByKey(
-          results["Alteração de Alimentacao"],
-          results["Alteração de Alimentacao de Cei"]
-        );
-      }
-    } catch (error) {
-      toastError("Houve um erro ao carregar Rascunhos Salvos");
-    }
-    return results;
-  };
-
   async carregaResumoPendencias() {
     const { visao, filtroPorVencimento } = this.state;
     this.setState({ loadingPainelSolicitacoes: true });
@@ -124,8 +99,10 @@ class DashboardDRE extends Component {
       filtroPorVencimento,
       visao
     );
+    const correcaoOk = corrigeResumo(resumo.results);
+    if(!correcaoOk) toastError("Erro na inclusão de dados da CEI");
     this.setState({
-      resumo: this.consolidaResultados(resumo.results),
+      resumo: resumo.results,
       loadingPainelSolicitacoes: false
     });
   }
