@@ -4,9 +4,12 @@
   margin-top: 5rem;
   .no-search-results {
     min-height: 25px;
+    font-size: 14px;
+    font-style: italic;
     span {
       cursor: pointer;
       text-decoration: underline;
+      font-style: normal;
     }
   }
 
@@ -17,6 +20,7 @@
   .page-title-container {
     display: flex;
     justify-content: center;
+    pointer-events: none;
     position: absolute;
     top: 0;
     left: 0;

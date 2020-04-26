@@ -14,9 +14,7 @@ const TabContent = ({ items }) => {
           <Card key={index} question={item.pergunta} answer={item.resposta} />
         ))
       ) : (
-        <div className="no-search-results">
-          Nenhum resultado da busca nessa categoria.
-        </div>
+        <div className="no-search-results" />
       )}
     </div>
   );
@@ -52,7 +50,7 @@ const FaqPage = () => {
       return {
         nome: category.name,
         perguntas: category.perguntas.filter(item =>
-          item.pergunta.includes(pattern)
+          item.pergunta.toLowerCase().includes(pattern.toLowerCase())
         )
       };
     });
@@ -60,7 +58,7 @@ const FaqPage = () => {
   }, [pattern]);
 
   return (
-    <PageNoSidebar titulo={"Ajuda"} botaoVoltar voltarPara={"/"}>
+    <PageNoSidebar titulo={"Ajuda"} botaoVoltar>
       <div className="container faq-screen mt-4">
         <div className="page-title-container">
           <div className="page-title">
@@ -92,7 +90,13 @@ const FaqPage = () => {
         )}
 
         {!!filteredCategories.length && (
-          <Tabs tabs={categories.map(el => el.nome)}>
+          <Tabs
+            tabs={categories.map((el, index) => {
+              return pattern.length
+                ? `${el.nome} (${filteredCategories[index].perguntas.length})`
+                : el.nome;
+            })}
+          >
             {({ activeIndex }) => (
               <TabContent items={filteredCategories[activeIndex].perguntas} />
             )}

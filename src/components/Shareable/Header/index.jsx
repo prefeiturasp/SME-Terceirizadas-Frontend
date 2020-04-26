@@ -30,7 +30,15 @@ export class Header extends Component {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ml-auto">
                 <li className="nav-item">
-                  <Link to={"/ajuda"} className="nav-link">
+                  <Link
+                    to={{
+                      pathname: `/ajuda`,
+                      state: {
+                        prevPath: window.location.pathname
+                      }
+                    }}
+                    className="nav-link"
+                  >
                     <img src="/assets/image/ajuda.svg" alt="Ícone de ajuda" />
                   </Link>
                   <p className="title">Ajuda</p>
