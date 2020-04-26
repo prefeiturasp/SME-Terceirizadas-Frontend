@@ -13,40 +13,7 @@ import {
 import { formataMotivosDias } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
-import { faixaToString } from "../../../../helpers/faixasEtarias";
-
-const TabelaFaixaEtaria = ({ faixas = [] }) => {
-  const total = faixas.reduce(function(acc, v) {
-    return acc + v.quantidade_alunos;
-  }, 0);
-
-  return (
-    <section className="tabela-faixa-etaria-qtd-alunos">
-      <article>
-        <div className="faixa-etaria">Faixa Etária</div>
-        <div className="alunos-matriculados">Alunos Matriculados</div>
-        <div className="quantidade">Quantidade</div>
-      </article>
-
-      {faixas.map((item, indice) => {
-        return (
-          <article key={indice}>
-            <div className="faixa-etaria">
-              {faixaToString(item.faixa_etaria)}
-            </div>
-            <div className="alunos-matriculados">{"N/A"}</div>
-            <div>{item.quantidade_alunos}</div>
-          </article>
-        );
-      })}
-      <article>
-        <div className="faixa-etaria">Total {">>"} </div>
-        <div className="alunos-matriculados">{"N/A"}</div>
-        <div className="quantidade">{total}</div>
-      </article>
-    </section>
-  );
-};
+import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
