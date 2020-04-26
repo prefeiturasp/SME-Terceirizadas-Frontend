@@ -53,7 +53,7 @@ export const RelatorioCODAE = () => (
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
-    toastAprovaMensagem={"Autorização de dieta especial realizada com sucesso!"}
+    toastAprovaMensagem={"Autorização de Dieta Especial realizada com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao autorizar a Dieta Especial"}
     endpointNaoAprovaSolicitacao={CODAENegaDietaEspecial}
     endpointAprovaSolicitacao={CODAEAutorizaDietaEspecial}

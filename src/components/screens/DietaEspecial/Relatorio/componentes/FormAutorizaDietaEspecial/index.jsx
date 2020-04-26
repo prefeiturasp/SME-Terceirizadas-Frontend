@@ -82,7 +82,21 @@ export default class FormAutorizaDietaEspecial extends Component {
   closeAutorizarModal = () => {
     this.setState({ showAutorizarModal: false });
   };
-
+  getInitialValuesSubstituicoes(substituicoes) {
+    return substituicoes && substituicoes.length > 0
+      ? substituicoes.map(substituicao => {
+          return {
+            alimento: substituicao.alimento
+              ? substituicao.alimento.id
+              : undefined,
+            tipo: substituicao.tipo === "" ? undefined : substituicao.tipo,
+            substitutos: substituicao.substitutos
+              ? substituicao.substitutos.map(substituto => substituto.id)
+              : undefined
+          };
+        })
+      : [{}];
+  }
   getInitialValues() {
     const {
       alergias_intolerancias,
@@ -101,16 +115,7 @@ export default class FormAutorizaDietaEspecial extends Component {
       data_termino: data_termino || undefined,
       informacoes_adicionais: informacoes_adicionais || undefined,
       nome_protocolo: nome_protocolo || undefined,
-      substituicoes:
-        substituicoes && substituicoes.length > 0
-          ? substituicoes.map(s => {
-              return {
-                alimento: s.alimento ? s.alimento.id : undefined,
-                tipo: s.tipo === "" ? undefined : s.tipo,
-                substitutos: s.substitutos
-              };
-            })
-          : [{}],
+      substituicoes: this.getInitialValuesSubstituicoes(substituicoes),
       registro_funcional_nutricionista: obtemIdentificacaoNutricionista()
     };
   }
@@ -170,7 +175,7 @@ export default class FormAutorizaDietaEspecial extends Component {
         response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess(
-              "Autorização de dieta especial realizada com sucesso!"
+              "Autorização de Dieta Especial realizada com sucesso!"
             );
             this.props.onAutorizarOuNegar();
             resolve();

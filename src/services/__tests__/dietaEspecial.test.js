@@ -45,12 +45,12 @@ describe("test CODAEAutorizaDietaEspecial", () => {
   const uuid = "1234-5678";
   const baseUrl = `${API_URL}/${ENDPOINT.AUTORIZAR_DIETA(uuid)}/`;
   mock.onPatch(baseUrl).reply(200, {
-    detail: "Autorização de dieta especial realizada com sucesso"
+    detail: "Autorização de Dieta Especial realizada com sucesso"
   });
   test("autorização bem sucedida", async () => {
     const response = await CODAEAutorizaDietaEspecial(uuid, {});
     expect(response.data).toEqual({
-      detail: "Autorização de dieta especial realizada com sucesso"
+      detail: "Autorização de Dieta Especial realizada com sucesso"
     });
     expect(response.status).toEqual(200);
   });
