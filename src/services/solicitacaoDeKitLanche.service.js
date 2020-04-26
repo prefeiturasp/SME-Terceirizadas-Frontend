@@ -5,6 +5,7 @@ import { FLUXO, PEDIDOS } from "./constants";
 
 export const URL_SOLICITAR = `${API_URL}/kit-lanches`;
 export const URL_SOLICITACOES_AVULSAS = `${API_URL}/solicitacoes-kit-lanche-avulsa`;
+export const URL_SOLICITACOES_AVULSAS_CEI = `${API_URL}/solicitacoes-kit-lanche-cei-avulsa`;
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -174,6 +175,21 @@ export const getKitLanches = async () => {
 
 export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
   const url = `${URL_SOLICITACOES_AVULSAS}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getDREPedidosDeKitLancheCei = filtroAplicado => {
+  const url = `${URL_SOLICITACOES_AVULSAS_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

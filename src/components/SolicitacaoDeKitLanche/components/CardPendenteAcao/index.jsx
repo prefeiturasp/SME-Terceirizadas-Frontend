@@ -104,12 +104,13 @@ export class CardPendenteAcao extends Component {
               <tbody>
                 {pedidosFiltrados.length > 0 &&
                   pedidosFiltrados.map((pedido, key) => {
+                    const isCei = !!pedido.isCei;
                     return (
                       <Link
                         key={key}
                         to={`/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${
                           pedido.uuid
-                        }`}
+                        }&escolaTipoCei=${isCei}`}
                       >
                         <tr>
                           <td>{pedido.id_externo}</td>

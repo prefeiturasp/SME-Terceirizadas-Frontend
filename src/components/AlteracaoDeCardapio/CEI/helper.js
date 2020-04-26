@@ -21,13 +21,12 @@ export const parseFormValues = ({
       continue;
     }
     let faixas_etarias = [];
-    for (let [chave, qtde] of Object.entries(dadosFaixasEtarias)) {
-      const faixa_etaria = chave.slice(11);
+    Object.entries(dadosFaixasEtarias.faixas_etarias).forEach(([k, v]) => {
       faixas_etarias.push({
-        faixa_etaria,
-        quantidade: parseInt(qtde)
+        faixa_etaria: k,
+        quantidade: parseInt(v)
       });
-    }
+    });
     substituicoes.push({
       periodo_escolar: periodo,
       tipo_alimentacao_de,
