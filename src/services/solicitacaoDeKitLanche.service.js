@@ -189,7 +189,9 @@ export const getCODAEPedidosKitLanchePendentes = filtroAplicado => {
 };
 
 export const getDREPedidosDeKitLancheCei = filtroAplicado => {
-  const url = `${URL_SOLICITACOES_AVULSAS_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACOES_AVULSAS_CEI}/${
+    PEDIDOS.DRE
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"

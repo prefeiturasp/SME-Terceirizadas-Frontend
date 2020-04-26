@@ -100,7 +100,7 @@ class DashboardDRE extends Component {
       visao
     );
     const correcaoOk = corrigeResumo(resumo.results);
-    if(!correcaoOk) toastError("Erro na inclusão de dados da CEI");
+    if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
     this.setState({
       resumo: resumo.results,
       loadingPainelSolicitacoes: false
