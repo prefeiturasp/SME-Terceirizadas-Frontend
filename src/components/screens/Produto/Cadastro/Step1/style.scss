@@ -32,3 +32,26 @@ div.cadastro-produto-step1 {
     border-radius: 4px;
   }
 }
+
+.label-formulario-produto {
+  display: flex;
+  color: #686868;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  padding-bottom: 10px;
+  nav {
+    color: #a50e05;
+    padding-right: 5px;
+  }
+}
+
+.adicionar-marca-fornecedor {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  .botao-adicionar-marca-fabricante {
+    height: 32px;
+  }
+}

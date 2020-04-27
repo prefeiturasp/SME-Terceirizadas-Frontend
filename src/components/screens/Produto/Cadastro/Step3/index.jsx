@@ -9,21 +9,7 @@ import InputFile from "../../../../Shareable/Input/InputFile";
 class Step3 extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      files: null
-    };
-    this.removeFile = this.removeFile.bind(this);
-    this.setFiles = this.setFiles.bind(this);
-  }
-
-  removeFile(index) {
-    let files = this.state.files;
-    files.splice(index, 1);
-    this.setState({ files });
-  }
-
-  setFiles(files) {
-    this.setState({ files });
+    this.state = {};
   }
 
   render() {
@@ -121,8 +107,8 @@ class Step3 extends Component {
               texto="Anexar"
               name="files"
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-              setFiles={this.setFiles}
-              removeFile={this.removeFile}
+              setFiles={this.props.setFiles}
+              removeFile={this.props.removeFile}
               multiple
             />
           </div>
