@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
 import { SidebarCODAE } from "./SidebarCODAE";
 import { SidebarDRE } from "./SidebarDRE";
@@ -17,16 +18,24 @@ import {
   usuarioTerceirizada,
   usuarioCODAEGestaoProduto
 } from "../../../helpers/utilities";
+import { getAPIVersion } from "../../../services/api.service";
 
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggled: false
+      toggled: false,
+      API_VERSION: null
     };
   }
 
+  async componentDidMount() {
+    const response = await getAPIVersion();
+    this.setState({ API_VERSION: response.API_Version });
+  }
+
   render() {
+    const { API_VERSION } = this.state;
     const {
       nome,
       toggle,
@@ -100,6 +109,13 @@ export class Sidebar extends Component {
             {usuarioDiretoriaRegional() && <SidebarDRE />}
             {usuarioEscola() && <SidebarEscola />}
             {usuarioTerceirizada() && <SidebarTerceirizada />}
+          </div>
+          <div className="sidebar-wrapper">
+            <div className="text-center mx-auto justify-content-center p-2">
+              <span className="text-bold text-white small">
+                {version} (API: {API_VERSION})
+              </span>
+            </div>
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
