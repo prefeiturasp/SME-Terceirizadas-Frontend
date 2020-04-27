@@ -41,13 +41,15 @@ class Relatorio extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getAlteracaoCardapio(uuid).then(response => {
+      getAlteracaoCardapio(uuid, ehEscolaTipoCei).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             alteracaoDeCardapio: response.data,
             uuid,
+            ehEscolaTipoCei,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               response.data.prioridade
             )
@@ -87,8 +89,8 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid) {
-    getAlteracaoCardapio(uuid).then(response => {
+  loadSolicitacao(uuid, isCei) {
+    getAlteracaoCardapio(uuid, isCei).then(response => {
       this.setState({
         alteracaoDeCardapio: response.data
       });
@@ -106,12 +108,13 @@ class Relatorio extends Component {
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
+    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
+    this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.closeAutorizarModal();
-          this.loadSolicitacao(uuid);
+          this.loadSolicitacao(uuid, this.state.ehEscolaTipoCei);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }

@@ -22,10 +22,10 @@ export default results => {
         results["Kit Lanche Passeio de Cei"]
       );
     }
-    if (results["Alteracao de Alimentacao de Cei"]) {
-      results["Alteração de Alimentacao"] = sumObjectsByKey(
-        results["Alteração de Alimentacao"],
-        results["Alteração de Alimentacao de Cei"]
+    if (results["Alteração de Cardápio de Cei"]) {
+      results["Alteração de Cardápio"] = sumObjectsByKey(
+        results["Alteração de Cardápio"],
+        results["Alteração de Cardápio de Cei"]
       );
     }
   } catch (error) {

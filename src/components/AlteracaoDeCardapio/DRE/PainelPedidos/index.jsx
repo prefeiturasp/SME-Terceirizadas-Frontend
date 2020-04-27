@@ -28,10 +28,11 @@ class PainelPedidos extends Component {
     Promise.all([
       getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro),
       getDREPedidosAlteracaoCardapioCei(filtro)
-    ]).then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
+    ]).then(([response, ceiResponse]) => {
+      const results = response.results.concat(ceiResponse.results);
+      let pedidosPrioritarios = filtraPrioritarios(results);
+      let pedidosNoPrazoLimite = filtraNoLimite(results);
+      let pedidosNoPrazoRegular = filtraRegular(results);
       this.setState({
         pedidosCarregados: true,
         pedidosPrioritarios,

@@ -10,6 +10,7 @@ import {
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getCODAEPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getCODAEPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { getCODAEPedidosDeInclusaoAlimentacaoDaCei } from "../../../../services/inclusaoAlimentacaoDaCei.service";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 

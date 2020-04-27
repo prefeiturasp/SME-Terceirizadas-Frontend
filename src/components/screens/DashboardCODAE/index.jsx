@@ -30,6 +30,8 @@ import {
   getSolicitacoesAutorizadasCodae,
   getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias
 } from "../../../services/painelCODAE.service";
+import { toastError } from "../../Shareable/Toast/dialogs";
+import corrigeResumo from "../../../helpers/corrige-dados-do-dashboard";
 
 class DashboardCODAE extends Component {
   constructor(props) {
@@ -99,6 +101,8 @@ class DashboardCODAE extends Component {
       filtroPorVencimento,
       visao
     );
+    const correcaoOk = corrigeResumo(resumo);
+    if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
     this.setState({
       resumo,
       loadingPainelSolicitacoes: false

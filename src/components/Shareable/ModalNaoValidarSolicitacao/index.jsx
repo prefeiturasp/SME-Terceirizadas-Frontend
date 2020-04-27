@@ -91,7 +91,7 @@ export class ModalNaoValidarSolicitacao extends Component {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              this.naoValidarSolicitacao(uuid);
+              this.naoValidarSolicitacao(uuid, this.props.ehEscolaTipoCei);
             }}
             style={BUTTON_STYLE.BLUE}
             className="ml-3"

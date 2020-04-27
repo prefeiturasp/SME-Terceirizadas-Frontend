@@ -4,7 +4,10 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import {
+  getDetalheKitLancheAvulsa,
+  getDetalheKitLancheAvulsaCei
+} from "../../../services/solicitacaoDeKitLanche.service";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -37,11 +40,14 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
+
     if (uuid) {
-      getDetalheKitLancheAvulsa(uuid).then(response => {
+      getDetalheKitLancheAvulsa(uuid, ehEscolaTipoCei).then(response => {
         this.setState({
           solicitacaoKitLanche: response,
           uuid,
+          ehEscolaTipoCei,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -83,7 +89,8 @@ class Relatorio extends Component {
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
+    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
+    this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
@@ -167,6 +174,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {ModalQuestionamento && (

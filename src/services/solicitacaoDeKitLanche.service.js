@@ -197,6 +197,30 @@ export const getDREPedidosDeKitLancheCei = filtroAplicado => {
     method: "GET"
   };
   return fetch(url, OBJ_REQUEST)
+    .then(async result => {
+      const data = await result.json();
+      return {
+        results: data.results.map(el => ({
+          ...el,
+          isCei: true
+        })),
+        status: data.status
+      };
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getCodaePedidosDeKitLancheCei = filtroAplicado => {
+  const url = `${URL_SOLICITACOES_AVULSAS_CEI}/${
+    PEDIDOS.CODAE
+  }/${filtroAplicado}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
     .then(result => {
       return result.json();
     })
@@ -268,8 +292,9 @@ export const getTerceirizadasPedidosDeKitLanche = filtroAplicado => {
     });
 };
 
-export const getDetalheKitLancheAvulsa = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/`;
+export const getDetalheKitLancheAvulsa = (uuid, isCei) => {
+  const path = isCei ? URL_SOLICITACOES_AVULSAS_CEI : URL_SOLICITACOES_AVULSAS;
+  const url = `${path}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -283,8 +308,9 @@ export const getDetalheKitLancheAvulsa = uuid => {
     });
 };
 
-export const DREValidaKitLancheAvulso = uuid => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_VALIDA}/`;
+export const DREValidaKitLancheAvulso = (uuid, isCei) => {
+  const path = isCei ? URL_SOLICITACOES_AVULSAS_CEI : URL_SOLICITACOES_AVULSAS;
+  const url = `${path}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH"
@@ -303,8 +329,13 @@ export const DREValidaKitLancheAvulso = uuid => {
     });
 };
 
-export const DRENaoValidaKitLancheAvulso = async (uuid, justificativa) => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+export const DRENaoValidaKitLancheAvulso = async (
+  uuid,
+  justificativa,
+  isCei
+) => {
+  const path = isCei ? URL_SOLICITACOES_AVULSAS_CEI : URL_SOLICITACOES_AVULSAS;
+  const url = `${path}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
@@ -323,9 +354,11 @@ export const DRENaoValidaKitLancheAvulso = async (uuid, justificativa) => {
 
 export const CODAEquestionaKitLancheAvulso = async (
   uuid,
-  observacao_questionamento_codae
+  observacao_questionamento_codae,
+  isCei
 ) => {
-  const url = `${URL_SOLICITACOES_AVULSAS}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const path = isCei ? URL_SOLICITACOES_AVULSAS_CEI : URL_SOLICITACOES_AVULSAS;
+  const url = `${path}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",

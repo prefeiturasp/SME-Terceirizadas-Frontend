@@ -27,6 +27,21 @@ export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
   };
 };
 
+export const getCODAEPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${
+    PEDIDOS.CODAE
+  }/${filtroAplicado}/`;
+  const response = await axios.get(url);
+  const results = response.data.results;
+  return {
+    results: results.map(el => ({
+      ...el,
+      isCei: true
+    })),
+    status: response.status
+  };
+};
+
 export const DREValidaInclusaoDeAlimentacaoCei = async uuid => {
   const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const response = await axios.patch(url);
