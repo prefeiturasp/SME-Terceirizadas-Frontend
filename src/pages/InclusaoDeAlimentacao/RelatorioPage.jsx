@@ -30,6 +30,11 @@ import {
   TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 
+import {
+  DREValidaInclusaoDeAlimentacaoCei,
+  DRENaoValidaInclusaoDeAlimentacaoCei,
+} from "../../services/inclusaoAlimentacaoDaCei.service";
+
 class RelatorioBase extends Component {
   constructor(props) {
     super(props);
@@ -40,8 +45,10 @@ class RelatorioBase extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
+    this.setState({ 
+      ehInclusaoContinua,
+    });
   }
   render() {
     const atual = {
@@ -68,8 +75,10 @@ export class RelatorioEscola extends Component {
   }
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
+    this.setState({ 
+      ehInclusaoContinua,
+    });
   }
 
   render() {
@@ -101,11 +110,19 @@ export class RelatorioDRE extends Component {
   }
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
+    this.setState({ 
+      ehInclusaoContinua,
+      ehEscolaTipoCei
+    });
   }
 
   render() {
+
+    
+
+
     return (
       <RelatorioBase
         visao={DRE}
@@ -114,16 +131,18 @@ export class RelatorioDRE extends Component {
         toastAprovaMensagemErro={
           "Houve um erro ao validar a Inclusão de Alimentação"
         }
-        endpointAprovaSolicitacao={
-          this.state.ehInclusaoContinua
+        endpointAprovaSolicitacao={(() => {
+          if(this.state.ehEscolaTipoCei) return DREValidaInclusaoDeAlimentacaoCei;
+          return this.state.ehInclusaoContinua
             ? DREValidaInclusaoDeAlimentacaoContinua
             : DREValidaInclusaoDeAlimentacaoAvulsa
-        }
-        endpointNaoAprovaSolicitacao={
-          this.state.ehInclusaoContinua
+        })()}
+        endpointNaoAprovaSolicitacao={ (() => {
+          if(this.state.ehEscolaTipoCei) return DRENaoValidaInclusaoDeAlimentacaoCei;
+          return this.state.ehInclusaoContinua
             ? DRENaoValidaInclusaoDeAlimentacaoContinua
             : DRENaoValidaInclusaoDeAlimentacaoAvulsa
-        }
+        })()}
         textoBotaoNaoAprova="Não Validar"
         textoBotaoAprova="Validar"
       />

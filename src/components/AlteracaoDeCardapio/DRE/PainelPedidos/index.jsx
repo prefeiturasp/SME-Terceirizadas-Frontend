@@ -9,6 +9,7 @@ import {
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
+import { getDREPedidosAlteracaoCardapioCei }  from "../../../../services/alteracaoDeCardapioCEI.service";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
@@ -24,7 +25,11 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro).then(response => {
+    Promise.all([
+      getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro),
+      getDREPedidosAlteracaoCardapioCei(filtro)
+    ])
+    .then(response => {
       let pedidosPrioritarios = filtraPrioritarios(response.results);
       let pedidosNoPrazoLimite = filtraNoLimite(response.results);
       let pedidosNoPrazoRegular = filtraRegular(response.results);

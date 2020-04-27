@@ -1,6 +1,6 @@
 import axios from "./_base";
 import { ENDPOINT } from "../constants";
-import { PEDIDOS } from "./constants";
+import { PEDIDOS, FLUXO } from "./constants";
 
 const {
   QUANTIDADE_ALUNOS_POR_PERIODO,
@@ -25,6 +25,24 @@ export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
     })),
     status: response.status
   };
+};
+
+export const DREValidaInclusaoDeAlimentacaoCei = async (uuid) => {
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/${FLUXO.DRE_VALIDA}/`;
+  const response = await axios.patch(url);
+  return {
+      data: response.data,
+      status: response.data.status
+  }
+};
+
+export const DRENaoValidaInclusaoDeAlimentacaoCei = async (uuid, justificativa) => {
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/${FLUXO.DRE_VALIDA}/`;
+  const response = await axios.patch(url, { justificativa });
+  return {
+      data: response.data,
+      status: response.data.status
+  }
 };
 
 export const meusRascunhosDeInclusaoDeAlimentacao = async () => {
