@@ -110,13 +110,6 @@ export class Sidebar extends Component {
             {usuarioEscola() && <SidebarEscola />}
             {usuarioTerceirizada() && <SidebarTerceirizada />}
           </div>
-          <div className="sidebar-wrapper">
-            <div className="text-center mx-auto justify-content-center p-2">
-              <span className="text-bold text-white small">
-                {version} (API: {API_VERSION})
-              </span>
-            </div>
-          </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
               <img
@@ -124,6 +117,13 @@ export class Sidebar extends Component {
                 className="rounded"
                 alt="SME Educação"
               />
+              <div className="sidebar-wrapper">
+                <div className="text-center mx-auto justify-content-center p-2">
+                  <span className="text-bold text-white small">
+                    {version} (API: {API_VERSION})
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </ul>
