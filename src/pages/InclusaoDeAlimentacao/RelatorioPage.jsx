@@ -41,8 +41,10 @@ class RelatorioBase extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
+    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
     this.setState({
-      ehInclusaoContinua
+      ehInclusaoContinua,
+       ehEscolaTipoCei
     });
   }
   render() {
@@ -106,10 +108,8 @@ export class RelatorioDRE extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
     this.setState({
       ehInclusaoContinua,
-      ehEscolaTipoCei
     });
   }
 

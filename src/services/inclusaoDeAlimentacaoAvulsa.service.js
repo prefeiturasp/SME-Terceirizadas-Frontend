@@ -10,8 +10,9 @@ const authToken = {
 const URL_INCLUSAO_AVULSA = `${API_URL}/grupos-inclusao-alimentacao-normal`;
 const URL_INCLUSAO_CEI = `${API_URL}/inclusoes-alimentacao-da-cei`;
 
-export const getInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/`;
+export const getInclusaoDeAlimentacaoAvulsa = (uuid, isCei) => {
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -376,7 +377,8 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
 
 export const terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa = async (
   uuid,
-  payload
+  payload,
+
 ) => {
   const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${
     FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO

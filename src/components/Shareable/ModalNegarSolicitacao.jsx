@@ -20,7 +20,7 @@ export class ModalNegarSolicitacao extends Component {
     if (justificativa === MENSAGEM_VAZIA) {
       toastWarn("Justificativa é obrigatória.");
     } else {
-      const resp = await this.props.endpoint(uuid, `${justificativa}`);
+      const resp = await this.props.endpoint(uuid, `${justificativa}` , this.props.ehEscolaTipoCei);
       if (resp.status === HTTP_STATUS.OK) {
         this.props.closeModal();
         toastSuccess("Solicitação negada com sucesso!");

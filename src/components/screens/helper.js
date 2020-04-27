@@ -6,7 +6,7 @@ import {
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
 
@@ -18,6 +18,7 @@ const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
 const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
+const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -46,6 +47,7 @@ export const ajustarFormatoLog = logs => {
     let tamanhoString = 48;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
+    let param = '';
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
         solicitacao = ALTERACAO_CARDAPIO;
@@ -78,6 +80,12 @@ export const ajustarFormatoLog = logs => {
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
         break;
+
+        case INC_ALIMENTA_CEI:
+          solicitacao = INCLUSAO_ALIMENTACAO;
+          param = '&escolaTipoCei=true'
+          break;
+
       default:
         solicitacao = "FALTA_IMPLEMENTAR";
         break;
@@ -87,7 +95,7 @@ export const ajustarFormatoLog = logs => {
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}${param}`
     };
   });
 };
