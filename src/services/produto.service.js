@@ -131,12 +131,13 @@ export const CODAEHomologaProduto = uuid => {
     });
 };
 
-export const CODAEPedeAnaliseSensorialProduto = uuid => {
+export const CODAEPedeAnaliseSensorialProduto = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-sensorial/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
