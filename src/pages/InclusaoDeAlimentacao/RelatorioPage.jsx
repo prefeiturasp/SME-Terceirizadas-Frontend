@@ -32,7 +32,7 @@ import {
 
 import {
   DREValidaInclusaoDeAlimentacaoCei,
-  DRENaoValidaInclusaoDeAlimentacaoCei,
+  DRENaoValidaInclusaoDeAlimentacaoCei
 } from "../../services/inclusaoAlimentacaoDaCei.service";
 
 class RelatorioBase extends Component {
@@ -46,8 +46,8 @@ class RelatorioBase extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    this.setState({ 
-      ehInclusaoContinua,
+    this.setState({
+      ehInclusaoContinua
     });
   }
   render() {
@@ -76,8 +76,8 @@ export class RelatorioEscola extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    this.setState({ 
-      ehInclusaoContinua,
+    this.setState({
+      ehInclusaoContinua
     });
   }
 
@@ -112,17 +112,13 @@ export class RelatorioDRE extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
     const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
-    this.setState({ 
+    this.setState({
       ehInclusaoContinua,
       ehEscolaTipoCei
     });
   }
 
   render() {
-
-    
-
-
     return (
       <RelatorioBase
         visao={DRE}
@@ -132,16 +128,18 @@ export class RelatorioDRE extends Component {
           "Houve um erro ao validar a Inclusão de Alimentação"
         }
         endpointAprovaSolicitacao={(() => {
-          if(this.state.ehEscolaTipoCei) return DREValidaInclusaoDeAlimentacaoCei;
+          if (this.state.ehEscolaTipoCei)
+            return DREValidaInclusaoDeAlimentacaoCei;
           return this.state.ehInclusaoContinua
             ? DREValidaInclusaoDeAlimentacaoContinua
-            : DREValidaInclusaoDeAlimentacaoAvulsa
+            : DREValidaInclusaoDeAlimentacaoAvulsa;
         })()}
-        endpointNaoAprovaSolicitacao={ (() => {
-          if(this.state.ehEscolaTipoCei) return DRENaoValidaInclusaoDeAlimentacaoCei;
+        endpointNaoAprovaSolicitacao={(() => {
+          if (this.state.ehEscolaTipoCei)
+            return DRENaoValidaInclusaoDeAlimentacaoCei;
           return this.state.ehInclusaoContinua
             ? DRENaoValidaInclusaoDeAlimentacaoContinua
-            : DRENaoValidaInclusaoDeAlimentacaoAvulsa
+            : DRENaoValidaInclusaoDeAlimentacaoAvulsa;
         })()}
         textoBotaoNaoAprova="Não Validar"
         textoBotaoAprova="Validar"

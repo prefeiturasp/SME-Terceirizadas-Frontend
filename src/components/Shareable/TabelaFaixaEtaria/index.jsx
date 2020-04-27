@@ -37,7 +37,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
 };
 
 TabelaFaixaEtaria.propTypes = {
-    faixas: arrayOf(string)
-}
+  faixas: arrayOf(string)
+};
 
 export default TabelaFaixaEtaria;

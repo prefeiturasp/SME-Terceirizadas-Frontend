@@ -194,7 +194,7 @@ export const TIPOS_SOLICITACAO_LISTA = [
     titulo: TIPOS_SOLICITACAO_LABEL.SUSPENSAO_DE_ALIMENTACAO,
     cor: "rgba(1, 154, 200, 1)",
     link: SUSPENSAO_ALIMENTACAO
-  },
+  }
 ];
 
 export const TIPOS_SOLICITACAO_LISTA_DRE = [

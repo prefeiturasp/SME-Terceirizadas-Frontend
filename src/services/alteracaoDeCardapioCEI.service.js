@@ -1,6 +1,6 @@
 import axios from "./_base";
 import { ENDPOINT } from "../constants";
-import { PEDIDOS } from "./constants"
+import { PEDIDOS } from "./constants";
 
 export const getAlunosPorFaixaEtariaNumaData = async (
   periodoUUID,
@@ -44,7 +44,8 @@ export const deleteAlteracaoCardapioCei = async uuid => {
 };
 
 export const getDREPedidosAlteracaoCardapioCei = async filtroAplicado => {
-  const url = `${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  return await axios.get(url)
-
+  const url = `${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${
+    PEDIDOS.DRE
+  }/${filtroAplicado}/`;
+  return await axios.get(url);
 };

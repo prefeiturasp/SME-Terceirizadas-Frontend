@@ -27,22 +27,25 @@ export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
   };
 };
 
-export const DREValidaInclusaoDeAlimentacaoCei = async (uuid) => {
+export const DREValidaInclusaoDeAlimentacaoCei = async uuid => {
   const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const response = await axios.patch(url);
   return {
-      data: response.data,
-      status: response.data.status
-  }
+    data: response.data,
+    status: response.data.status
+  };
 };
 
-export const DRENaoValidaInclusaoDeAlimentacaoCei = async (uuid, justificativa) => {
+export const DRENaoValidaInclusaoDeAlimentacaoCei = async (
+  uuid,
+  justificativa
+) => {
   const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const response = await axios.patch(url, { justificativa });
   return {
-      data: response.data,
-      status: response.data.status
-  }
+    data: response.data,
+    status: response.data.status
+  };
 };
 
 export const meusRascunhosDeInclusaoDeAlimentacao = async () => {
