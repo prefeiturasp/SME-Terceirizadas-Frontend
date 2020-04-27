@@ -42,3 +42,64 @@ export const validaFormularioStep1 = ({
   }
   return arrayValidacao;
 };
+
+export const Step1EstaValido = ({ nome, marca, fabricante, componentes }) => {
+  if (
+    nome !== null &&
+    marca !== null &&
+    fabricante !== null &&
+    componentes !== null
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const retornaObjetoRequest = ({
+  eh_para_alunos_com_dieta,
+  protocolos,
+  detalhes_da_dieta,
+  nome,
+  marca,
+  fabricante,
+  componentes,
+  tem_aditivos_alergenicos,
+  aditivos
+}) => {
+  return {
+    eh_para_alunos_com_dieta: eh_para_alunos_com_dieta,
+    protocolos: protocolos,
+    detalhes_da_dieta: detalhes_da_dieta,
+    nome: nome,
+    marca: marca,
+    fabricante: fabricante,
+    componentes: componentes,
+    tem_aditivos_alergenicos: tem_aditivos_alergenicos,
+    aditivos: aditivos
+  };
+};
+
+export const retornaPayloadDefault = () => {
+  return {
+    protocolos: [],
+    marca: null,
+    fabricante: null,
+    imagens: [],
+    informacoes_nutricionais: [],
+    nome: null,
+    eh_para_alunos_com_dieta: null,
+    detalhes_da_dieta: null,
+    componentes: null,
+    tem_aditivos_alergenicos: null,
+    aditivos: null,
+    tipo: null,
+    embalagem: null,
+    prazo_validade: null,
+    info_armazenamento: null,
+    outras_informacoes: null,
+    numero_registro: null,
+    porcao: null,
+    unidade_caseira: null
+  };
+};

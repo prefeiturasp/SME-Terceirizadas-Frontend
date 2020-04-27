@@ -85,6 +85,10 @@ export const criarMarcaProduto = async data => {
   return await axios.post(`/marcas/`, data);
 };
 
+export const submitProduto = async payload => {
+  return await axios.post(`/produtos/`, payload);
+};
+
 export const criarFabricanteProduto = async data => {
   return await axios.post(`/fabricantes/`, data);
 };

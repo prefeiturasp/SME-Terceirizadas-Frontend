@@ -21,6 +21,8 @@ import {
 import ModalMarca from "./ModalMarca";
 import ModalFabricante from "./ModalFabricante";
 
+import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
+
 const { Option } = Select;
 
 class Step1 extends Component {
@@ -44,7 +46,11 @@ class Step1 extends Component {
         componentes: null,
         tem_aditivos_alergenicos: null,
         aditivos: null
-      }
+      },
+
+      dafaultArrayProtocolo: [],
+      retornadoAoStep: false,
+      marcaDefault: null
     };
     this.enviaMarca = this.enviaMarca.bind(this);
     this.closeModalMarca = this.closeModalMarca.bind(this);
@@ -147,11 +153,33 @@ class Step1 extends Component {
   };
 
   componentDidUpdate = async () => {
-    const { protocolosDieta } = this.props;
-    const { loading, marcasArray, fabricantesArray } = this.state;
+    const { protocolosDieta, payload, concluidoStep1 } = this.props;
+    const {
+      loading,
+      marcasArray,
+      fabricantesArray,
+      dafaultArrayProtocolo,
+      retornadoAoStep
+    } = this.state;
     let listaProtocolos = [];
     let listaMarcas = [];
     let listaFabricantes = [];
+    if (Step1EstaValido(payload) && concluidoStep1 && !retornadoAoStep) {
+      payload.protocolos.forEach(protocoloPayload => {
+        protocolosDieta.forEach(protocolo => {
+          if (protocoloPayload === protocolo.uuid) {
+            dafaultArrayProtocolo.push(`${protocolo.nome}+${protocolo.uuid}`);
+          }
+        });
+      });
+
+      this.setState({
+        payloadStep1: retornaObjetoRequest(payload),
+        dafaultArrayProtocolo,
+        retornadoAoStep: true
+      });
+    }
+
     if (marcasArray.length === 0 && loading && fabricantesArray.length === 0) {
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
@@ -238,6 +266,7 @@ class Step1 extends Component {
   };
 
   addMarca = value => {
+    this.props.setDefaultMarcaStep1(value);
     let { payloadStep1 } = this.state;
     const uuid = this.extrairUuidString(value);
     payloadStep1.marca = uuid;
@@ -246,6 +275,7 @@ class Step1 extends Component {
   };
 
   addFabricante = value => {
+    this.props.setDefaultFabricanteStep1(value);
     let { payloadStep1 } = this.state;
     const uuid = this.extrairUuidString(value);
     payloadStep1.fabricante = uuid;
@@ -260,9 +290,15 @@ class Step1 extends Component {
       fabricantesArray,
       showModalMarca,
       showModalFabricante,
-      loadingDefault
+      loadingDefault,
+      dafaultArrayProtocolo
     } = this.state;
-    const { renderizaFormDietaEspecial, renderizaFormAlergenicos } = this.props;
+    const {
+      renderizaFormDietaEspecial,
+      renderizaFormAlergenicos,
+      defaultMarcaStep1,
+      defaultFabricanteStep1
+    } = this.props;
     return (
       <div className="cadastro-produto-step1">
         <div className="card-title">Identificação do Produto</div>
@@ -320,6 +356,7 @@ class Step1 extends Component {
                   placeholder="Digite o nome do protocolo"
                   onSelect={this.addProtocolo}
                   onDeselect={this.delProtocolo}
+                  defaultValue={dafaultArrayProtocolo}
                 >
                   {protocolosDieta}
                 </Field>
@@ -366,6 +403,7 @@ class Step1 extends Component {
               showSearch
               name="marca"
               onSelect={this.addMarca}
+              defaultValue={defaultMarcaStep1}
             >
               {marcasArray}
             </Field>
@@ -391,6 +429,7 @@ class Step1 extends Component {
               showSearch
               name="fabricante"
               onSelect={this.addFabricante}
+              defaultValue={defaultFabricanteStep1}
             >
               {fabricantesArray}
             </Field>
