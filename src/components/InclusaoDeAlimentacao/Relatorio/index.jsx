@@ -102,7 +102,7 @@ class Relatorio extends Component {
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    const ehEscolaTipoCei = this.state.ehEscolaTipoCei
+    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
     this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {

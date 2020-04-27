@@ -305,7 +305,11 @@ export const CODAEAutorizaInclusaoDeAlimentacaoAvulsa = (
     });
 };
 
-export const CODAENegaInclusaoDeAlimentacaoAvulsa = (uuid, justificativa, isCei) => {
+export const CODAENegaInclusaoDeAlimentacaoAvulsa = (
+  uuid,
+  justificativa,
+  isCei
+) => {
   const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
   const url = `${path}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   let status = 0;

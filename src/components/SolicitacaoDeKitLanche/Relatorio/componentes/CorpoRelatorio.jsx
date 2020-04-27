@@ -13,11 +13,11 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
-  const { 
+  const {
     solicitacaoKitLanche,
-     prazoDoPedidoMensagem,
-     ehEscolaTipoCei,
-     } = props;
+    prazoDoPedidoMensagem,
+    ehEscolaTipoCei
+  } = props;
   return (
     <div>
       <div className="row">
@@ -136,7 +136,11 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
-      {ehEscolaTipoCei && <TabelaFaixaEtaria faixas={solicitacaoKitLanche.quantidade_alunos_por_faixas_etarias} />}
+      {ehEscolaTipoCei && (
+        <TabelaFaixaEtaria
+          faixas={solicitacaoKitLanche.quantidade_alunos_por_faixas_etarias}
+        />
+      )}
       <div className="row">
         <div className="col-12 report-label-value">
           <p>Observações</p>
