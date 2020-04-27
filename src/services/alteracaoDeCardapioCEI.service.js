@@ -1,6 +1,6 @@
 import axios from "./_base";
 import { ENDPOINT } from "../constants";
-import { PEDIDOS, FLUXO } from "./constants";
+import { PEDIDOS } from "./constants";
 
 export const getAlunosPorFaixaEtariaNumaData = async (
   periodoUUID,
