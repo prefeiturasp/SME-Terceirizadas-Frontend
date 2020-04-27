@@ -112,21 +112,21 @@ class HomologacaoProduto extends Component {
                 showModal={showModal}
                 closeModal={this.closeModal}
                 toastSuccessMessage={
-                  qualModal === "nao-homologacao"
+                  qualModal === "nao-homologar"
                     ? "Solicitação de não homologado enviada com sucesso"
                     : qualModal === "corrigir"
                     ? "Solicitação de correção enviada com sucesso"
                     : "Solicitação de análise sensorial enviada com sucesso"
                 }
                 modalTitle={
-                  qualModal === "nao-homologacao"
+                  qualModal === "nao-homologar"
                     ? "Deseja não homologar (indeferir) este produto?"
                     : qualModal === "corrigir"
                     ? "Deseja solicitar correção do cadastro do produto?"
                     : "Deseja solicitar a análise sensorial do produto?"
                 }
                 endpoint={
-                  qualModal === "nao-homologacao"
+                  qualModal === "nao-homologar"
                     ? CODAENaoHomologaProduto
                     : qualModal === "corrigir"
                     ? CODAEPedeCorrecao
