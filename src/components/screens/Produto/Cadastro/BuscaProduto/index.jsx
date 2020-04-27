@@ -238,29 +238,30 @@ export default class BuscaProduto extends Component {
                     </div>
                     {produto.ativo && (
                       <div className="detalhe-produto">
-                        {produto.terceirizada.contatos.map(
-                          (contato, indice) => {
-                            return (
-                              <div
-                                key={indice}
-                                className="contatos-terceirizada"
-                              >
-                                <div>
-                                  <div className="label-item">Telefone</div>
-                                  <div className="value-item">
-                                    {contato.telefone}
+                        {produto.terceirizada &&
+                          produto.terceirizada.contatos.map(
+                            (contato, indice) => {
+                              return (
+                                <div
+                                  key={indice}
+                                  className="contatos-terceirizada"
+                                >
+                                  <div>
+                                    <div className="label-item">Telefone</div>
+                                    <div className="value-item">
+                                      {contato.telefone}
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="label-item">E-mail</div>
+                                    <div className="value-item">
+                                      {contato.email}
+                                    </div>
                                   </div>
                                 </div>
-                                <div>
-                                  <div className="label-item">E-mail</div>
-                                  <div className="value-item">
-                                    {contato.email}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          }
-                        )}
+                              );
+                            }
+                          )}
 
                         <div className="componentes-produto">
                           <div className="label-item">
