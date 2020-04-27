@@ -377,8 +377,7 @@ export const TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa = uuid => {
 
 export const terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa = async (
   uuid,
-  payload,
-
+  payload
 ) => {
   const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${
     FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO

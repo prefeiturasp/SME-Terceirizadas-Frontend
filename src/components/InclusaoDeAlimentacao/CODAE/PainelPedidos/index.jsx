@@ -32,12 +32,12 @@ class PainelPedidos extends Component {
     const inclusoesContinuas = await getCODAEPedidosDeInclusaoAlimentacaoContinua(
       filtro
     );
-    const inclusoesCei = await  getCODAEPedidosDeInclusaoAlimentacaoDaCei(
+    const inclusoesCei = await getCODAEPedidosDeInclusaoAlimentacaoDaCei(
       filtro
-    )
+    );
     const inclusoesMescladas = inclusoesAvulsas.results.concat(
       inclusoesContinuas.results,
-      inclusoesCei. results
+      inclusoesCei.results
     );
     const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);

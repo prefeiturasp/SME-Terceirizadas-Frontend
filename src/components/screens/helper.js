@@ -6,7 +6,7 @@ import {
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO,
+  SUSPENSAO_ALIMENTACAO
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
 
@@ -47,7 +47,7 @@ export const ajustarFormatoLog = logs => {
     let tamanhoString = 48;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
-    let param = '';
+    let param = "";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
         solicitacao = ALTERACAO_CARDAPIO;
@@ -81,10 +81,10 @@ export const ajustarFormatoLog = logs => {
         solicitacao = INCLUSAO_ALIMENTACAO;
         break;
 
-        case INC_ALIMENTA_CEI:
-          solicitacao = INCLUSAO_ALIMENTACAO;
-          param = '&escolaTipoCei=true'
-          break;
+      case INC_ALIMENTA_CEI:
+        solicitacao = INCLUSAO_ALIMENTACAO;
+        param = "&escolaTipoCei=true";
+        break;
 
       default:
         solicitacao = "FALTA_IMPLEMENTAR";
