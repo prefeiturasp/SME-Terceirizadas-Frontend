@@ -22,7 +22,7 @@ export class ModalCODAEQuestiona extends Component {
     resp = await this.props.endpoint(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid);
+      this.props.loadSolicitacao(this.props.uuid, this.props.ehEscolaTipoCei);
       toastSuccess("Questionamento enviado com sucesso!");
     } else {
       toastError(resp.data.detail);

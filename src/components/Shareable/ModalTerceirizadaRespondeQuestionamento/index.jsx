@@ -27,7 +27,7 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
     });
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid);
+      this.props.loadSolicitacao(this.props.uuid, this.props.ehEscolaTipoCei);
       toastSuccess("Questionamento respondido com sucesso!");
     } else {
       toastError(resp.detail);

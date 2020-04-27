@@ -15,7 +15,7 @@ export class ModalAutorizarAposQuestionamento extends Component {
     });
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid);
+      this.props.loadSolicitacao(this.props.uuid, this.props.ehEscolaTipoCei);
       toastSuccess("Solicitação autorizada com sucesso!");
     } else {
       toastError(resp.detail);

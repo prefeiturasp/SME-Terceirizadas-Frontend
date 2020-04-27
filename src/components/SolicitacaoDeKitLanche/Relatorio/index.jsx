@@ -4,10 +4,7 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import {
-  getDetalheKitLancheAvulsa,
-  getDetalheKitLancheAvulsaCei
-} from "../../../services/solicitacaoDeKitLanche.service";
+import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -186,6 +183,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -200,6 +198,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
               />
             )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
@@ -210,6 +209,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   solicitacaoKitLanche={solicitacaoKitLanche}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  ehEscolaTipoCei={this.state.ehEscolaTipoCei}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={solicitacaoKitLanche}

@@ -87,12 +87,12 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid) {
+  loadSolicitacao(uuid, isCei) {
     const { ehInclusaoContinua } = this.state;
     const getInclusaoDeAlimentacao = ehInclusaoContinua
       ? getInclusaoDeAlimentacaoContinua
       : getInclusaoDeAlimentacaoAvulsa;
-    getInclusaoDeAlimentacao(uuid).then(response => {
+    getInclusaoDeAlimentacao(uuid, isCei).then(response => {
       this.setState({
         inclusaoDeAlimentacao: response
       });
@@ -102,11 +102,12 @@ class Relatorio extends Component {
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
+    const ehEscolaTipoCei = this.state.ehEscolaTipoCei
+    this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(uuid);
+          this.loadSolicitacao(uuid, ehEscolaTipoCei);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -188,6 +189,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {ModalQuestionamento && (
@@ -199,6 +201,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {!inclusaoDeAlimentacao ? (
@@ -213,6 +216,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
               />
             )}
             <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${

@@ -8,6 +8,7 @@ const authToken = {
 };
 
 const URL_INCLUSAO_AVULSA = `${API_URL}/grupos-inclusao-alimentacao-normal`;
+const URL_INCLUSAO_CEI = `${API_URL}/inclusoes-alimentacao-da-cei`;
 
 export const getInclusaoDeAlimentacaoAvulsa = uuid => {
   const url = `${URL_INCLUSAO_AVULSA}/${uuid}/`;
@@ -234,8 +235,9 @@ export const escolaCancelaInclusaoDeAlimentacaoAvulsa = async (
   }
 };
 
-export const DREValidaInclusaoDeAlimentacaoAvulsa = uuid => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.DRE_VALIDA}/`;
+export const DREValidaInclusaoDeAlimentacaoAvulsa = (uuid, isCei) => {
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -255,9 +257,11 @@ export const DREValidaInclusaoDeAlimentacaoAvulsa = uuid => {
 
 export const DRENaoValidaInclusaoDeAlimentacaoAvulsa = (
   uuid,
-  justificativa
+  justificativa,
+  isCei
 ) => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -278,9 +282,11 @@ export const DRENaoValidaInclusaoDeAlimentacaoAvulsa = (
 
 export const CODAEAutorizaInclusaoDeAlimentacaoAvulsa = (
   uuid,
-  justificativa = {}
+  justificativa = {},
+  isCei
 ) => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -299,8 +305,9 @@ export const CODAEAutorizaInclusaoDeAlimentacaoAvulsa = (
     });
 };
 
-export const CODAENegaInclusaoDeAlimentacaoAvulsa = (uuid, justificativa) => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+export const CODAENegaInclusaoDeAlimentacaoAvulsa = (uuid, justificativa, isCei) => {
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -321,9 +328,11 @@ export const CODAENegaInclusaoDeAlimentacaoAvulsa = (uuid, justificativa) => {
 
 export const CODAEQuestionaInclusaoDeAlimentacaoAvulsa = async (
   uuid,
-  observacao_questionamento_codae
+  observacao_questionamento_codae,
+  isCei
 ) => {
-  const url = `${URL_INCLUSAO_AVULSA}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const path = isCei ? URL_INCLUSAO_CEI : URL_INCLUSAO_AVULSA;
+  const url = `${path}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",

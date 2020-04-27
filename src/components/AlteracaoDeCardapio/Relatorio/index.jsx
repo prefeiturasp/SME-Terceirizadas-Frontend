@@ -114,7 +114,7 @@ class Relatorio extends Component {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.closeAutorizarModal();
-          this.loadSolicitacao(uuid, this.state.ehEscolaTipoCei);
+          this.loadSolicitacao(uuid, ehEscolaTipoCei);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -196,6 +196,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {ModalQuestionamento && (
@@ -207,6 +208,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
           />
         )}
         {erro && (
@@ -223,6 +225,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
               />
             )}
             <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
@@ -233,6 +236,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  ehEscolaTipoCei={this.state.ehEscolaTipoCei}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={alteracaoDeCardapio}

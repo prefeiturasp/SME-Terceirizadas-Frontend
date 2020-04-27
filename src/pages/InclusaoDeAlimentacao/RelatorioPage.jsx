@@ -30,11 +30,6 @@ import {
   TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
 } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
 
-import {
-  DREValidaInclusaoDeAlimentacaoCei,
-  DRENaoValidaInclusaoDeAlimentacaoCei
-} from "../../services/inclusaoAlimentacaoDaCei.service";
-
 class RelatorioBase extends Component {
   constructor(props) {
     super(props);
@@ -127,20 +122,16 @@ export class RelatorioDRE extends Component {
         toastAprovaMensagemErro={
           "Houve um erro ao validar a Inclusão de Alimentação"
         }
-        endpointAprovaSolicitacao={(() => {
-          if (this.state.ehEscolaTipoCei)
-            return DREValidaInclusaoDeAlimentacaoCei;
-          return this.state.ehInclusaoContinua
+        endpointAprovaSolicitacao={
+          this.state.ehInclusaoContinua
             ? DREValidaInclusaoDeAlimentacaoContinua
-            : DREValidaInclusaoDeAlimentacaoAvulsa;
-        })()}
-        endpointNaoAprovaSolicitacao={(() => {
-          if (this.state.ehEscolaTipoCei)
-            return DRENaoValidaInclusaoDeAlimentacaoCei;
-          return this.state.ehInclusaoContinua
+            : DREValidaInclusaoDeAlimentacaoAvulsa
+        }
+        endpointNaoAprovaSolicitacao={
+          this.state.ehInclusaoContinua
             ? DRENaoValidaInclusaoDeAlimentacaoContinua
-            : DRENaoValidaInclusaoDeAlimentacaoAvulsa;
-        })()}
+            : DRENaoValidaInclusaoDeAlimentacaoAvulsa
+        }
         textoBotaoNaoAprova="Não Validar"
         textoBotaoAprova="Validar"
       />
