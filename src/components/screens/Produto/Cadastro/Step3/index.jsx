@@ -24,6 +24,17 @@ class Step3 extends Component {
               name="tipo"
               type="text"
               placeholder="Digite o tipo"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6 pt-3">
+            <Field
+              component={InputText}
+              label="N° de registro do produto no órgão competente"
+              name="registro"
+              type="text"
+              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
               required
               validate={required}
             />
@@ -73,24 +84,10 @@ class Step3 extends Component {
               placeholder="Digite as informações"
               label={"Outras informações que a empresa julgar necessário"}
               name="resumo_objeto"
-              required
-              validate={required}
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="N° de registro do produto no órgão competente"
-              name="registro"
-              type="text"
-              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
+
         <div className="row pt-3 pb-3">
           <div className="col-9 produto">
             <label>

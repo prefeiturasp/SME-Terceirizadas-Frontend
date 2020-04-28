@@ -362,19 +362,6 @@ class Step1 extends Component {
                 </Field>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-12 pb-5">
-                <Field
-                  component={TextArea}
-                  label={"Detalhes da Dieta Especial"}
-                  name="detalhes_da_dieta"
-                  onChange={event => {
-                    this.setaCampoDetalhesDieta(event.target.value);
-                  }}
-                />
-              </div>
-            </div>
           </Fragment>
         )}
 

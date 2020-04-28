@@ -50,7 +50,6 @@ class cadastroProduto extends Component {
         informacoes_nutricionais: [],
         nome: null,
         eh_para_alunos_com_dieta: null,
-        detalhes_da_dieta: null,
         componentes: null,
         tem_aditivos_alergenicos: null,
         aditivos: null,

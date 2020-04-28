@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
-import { required } from "../../../../../helpers/fieldValidators";
+import {
+  required,
+  numeroDecimal,
+  numeroInteiro
+} from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { ToggleExpandir } from "../../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
@@ -25,6 +29,11 @@ class Step2 extends Component {
   }
   componentDidUpdate() {
     if (this.props.informacoesAgrupadas !== this.state.informacoesAgrupadas) {
+      this.props.informacoesAgrupadas.forEach(item => {
+        item.informacoes_nutricionais.forEach(info => {
+          info["check"] = false;
+        });
+      });
       this.setState({ informacoesAgrupadas: this.props.informacoesAgrupadas });
     }
   }
@@ -57,6 +66,18 @@ class Step2 extends Component {
     payload["porcao"] = values.porcao;
     payload["unidade_caseira"] = values.unidade_caseira;
     this.props.setaValoresStep2(payload);
+  };
+
+  setaInformacaoComoVisto = ({ uuid }) => {
+    let { informacoesAgrupadas } = this.state;
+    informacoesAgrupadas.forEach(item => {
+      item.informacoes_nutricionais.forEach(info => {
+        if (info.uuid === uuid) {
+          info.check = true;
+        }
+      });
+    });
+    this.setState({ informacoesAgrupadas });
   };
 
   render() {
@@ -131,21 +152,35 @@ class Step2 extends Component {
                                             informacaoNutricional.uuid
                                           }`}
                                           type="text"
-                                          required
+                                          validate={
+                                            informacaoNutricional.check &&
+                                            numeroDecimal
+                                          }
                                         />
+                                      </div>
+                                      <div className="col-4 mt-2">
+                                        {informacaoNutricional.medida}
                                       </div>
                                     </div>
                                   </td>
                                   <td className="col-4">
                                     <div className="row">
-                                      <div className="col-8">
+                                      <div className="col-4">
                                         <Field
                                           component={InputText}
                                           name={`vd=${
                                             informacaoNutricional.uuid
                                           }`}
                                           type="text"
-                                          required
+                                          validate={
+                                            informacaoNutricional.check &&
+                                            numeroInteiro
+                                          }
+                                          onBlur={() => {
+                                            this.setaInformacaoComoVisto(
+                                              informacaoNutricional
+                                            );
+                                          }}
                                         />
                                       </div>
                                       <div className="col-2">%</div>
