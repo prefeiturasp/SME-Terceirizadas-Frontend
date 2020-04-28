@@ -8,7 +8,6 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import {
-  getInformacoesNutricionais,
   getProtocolosDietaEspecial,
   submitProduto,
   getInformacoesGrupo
