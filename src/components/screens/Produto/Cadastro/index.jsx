@@ -50,7 +50,6 @@ class cadastroProduto extends Component {
         informacoes_nutricionais: [],
         nome: null,
         eh_para_alunos_com_dieta: null,
-        detalhes_da_dieta: null,
         componentes: null,
         tem_aditivos_alergenicos: null,
         aditivos: null,
@@ -309,13 +308,6 @@ class cadastroProduto extends Component {
                     onClick={() =>
                       this.setState({ currentStep: currentStep - 1 })
                     }
-                  />
-                  <Botao
-                    texto={"Salvar Rascunho"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled
                   />
                   {currentStep !== 2 &&
                     (currentStep === 1 ? (

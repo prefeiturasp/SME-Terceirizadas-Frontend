@@ -1,7 +1,6 @@
 export const validaFormularioStep1 = ({
   eh_para_alunos_com_dieta,
   protocolos,
-  detalhes_da_dieta,
   nome,
   marca,
   fabricante,
@@ -16,8 +15,6 @@ export const validaFormularioStep1 = ({
     );
   } else if (eh_para_alunos_com_dieta !== null) {
     if (eh_para_alunos_com_dieta && protocolos.length === 0) {
-      arrayValidacao.push("Precisa informar ao menos uma patologia");
-    } else if (eh_para_alunos_com_dieta && detalhes_da_dieta === null) {
       arrayValidacao.push("Precisa informar ao menos uma patologia");
     }
   }
