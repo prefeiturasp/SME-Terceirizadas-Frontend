@@ -10,7 +10,8 @@ import Step3 from "./Step3";
 import {
   getInformacoesNutricionais,
   getProtocolosDietaEspecial,
-  submitProduto
+  submitProduto,
+  getInformacoesGrupo
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
@@ -102,18 +103,13 @@ class cadastroProduto extends Component {
     });
   };
 
-  getInformacoesAgrupadas = () => {
-    getInformacoesNutricionais().then(response => {
-      this.setState({ informacoesAgrupadas: response.data.results });
-    });
-  };
-
   componentDidMount = async () => {
-    this.getInformacoesAgrupadas();
+    const infoAgrupada = await getInformacoesGrupo();
 
     const response = await getProtocolosDietaEspecial();
     this.setState({
-      protocolosDieta: response.data.results
+      protocolosDieta: response.data.results,
+      informacoesAgrupadas: infoAgrupada.data.results
     });
   };
 
