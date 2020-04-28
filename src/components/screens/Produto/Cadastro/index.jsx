@@ -309,13 +309,6 @@ class cadastroProduto extends Component {
                       this.setState({ currentStep: currentStep - 1 })
                     }
                   />
-                  <Botao
-                    texto={"Salvar Rascunho"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled
-                  />
                   {currentStep !== 2 &&
                     (currentStep === 1 ? (
                       payload.informacoes_nutricionais.length === 0 ? (
