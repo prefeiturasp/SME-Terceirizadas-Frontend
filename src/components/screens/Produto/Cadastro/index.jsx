@@ -189,6 +189,10 @@ class cadastroProduto extends Component {
     payload["outras_informacoes"] = values.resumo_objeto;
     payload["numero_registro"] = values.registro;
 
+    if (!payload["tem_aditivos_alergenicos"]) {
+      delete payload["aditivos"];
+    }
+
     return new Promise(async (resolve, reject) => {
       const response = await submitProduto(payload);
       if (response.status === HTTP_STATUS.CREATED) {
