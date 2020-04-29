@@ -13,7 +13,7 @@ import {
   CODAEquestionaAlteracaoCardapio,
   TerceirizadaTomaCienciaAlteracaoCardapio,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
+} from "services/alteracaoDeCardapio";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";

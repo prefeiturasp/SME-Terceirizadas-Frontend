@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
-import { getDREPedidosAlteracaoCardapioCei } from "../../../../services/alteracaoDeCardapioCEI.service";
+import { getDREPedidosDeAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+
+const { SOLICITACAO_NORMAL, SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -26,8 +27,8 @@ class PainelPedidos extends Component {
 
   filtrar(filtro) {
     Promise.all([
-      getDiretoriaRegionalPedidosDeAlteracaoCardapio(filtro),
-      getDREPedidosAlteracaoCardapioCei(filtro)
+      getDREPedidosDeAlteracaoCardapio(filtro, SOLICITACAO_NORMAL),
+      getDREPedidosDeAlteracaoCardapio(filtro, SOLICITACAO_CEI)
     ]).then(([response, ceiResponse]) => {
       const results = response.results.concat(ceiResponse.results);
       let pedidosPrioritarios = filtraPrioritarios(results);

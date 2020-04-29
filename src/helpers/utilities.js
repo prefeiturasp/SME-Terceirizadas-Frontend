@@ -1,7 +1,7 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants";
-import { TIPO_PERFIL } from "../constants";
+import { statusEnum } from "../constants/shared";
+import { TIPO_PERFIL } from "../constants/shared";
 
 export const showResults = values =>
   new Promise(resolve => {

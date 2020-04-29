@@ -1,6 +1,8 @@
 import { API_URL } from "../constants/config.constants";
 import authService from "./auth";
 
+export { TIPO_SOLICITACAO } from "constants/shared"
+
 export const FLUXO = {
   INICIO_PEDIDO: "inicio-pedido",
   CODAE_AUTORIZA: "codae-autoriza-pedido",
@@ -31,15 +33,33 @@ export const SOLICITACOES = {
   QUESTIONAMENTOS: "questionamentos"
 };
 
-export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
-
-export const AUTH_TOKEN = {
-  Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
-};
+export const TIPO_MOTIVO = {
+  INCLUSAO_NORMAL:  "motivos-inclusao-normal",
+  INCLUSAO_CONTINUA:  "motivos-inclusao-continua",
+  ALTERACAO_CARDAPIO: "motivos-alteracao-cardapio",
+  NEGACAO:  "motivos-negacao",
+  SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio"
+}
 
 export const RESUMO_POR = {
   TIPO_DE_SOLICITACAO: "desc_doc",
   LOTE: "lote",
   DRE: "dre_nome"
+};
+
+export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
+export const API_ALTERACOES_CARDAPIO = `${API_URL}/alteracoes-cardapio`;
+export const API_ALTERACOES_CARDAPIO_CEI = `${API_URL}/alteracoes-cardapio-cei`;
+
+export const URL_INCLUSAO_NORMAL = `${API_URL}/grupos-inclusao-alimentacao-normal`;
+export const URL_INCLUSAO_CONTINUA = `${API_URL}/inclusoes-alimentacao-continua`;
+export const URL_INCLUSAO_CEI = `${API_URL}/inclusoes-alimentacao-da-cei`;
+
+export const URL_KIT_LANCHES = `${API_URL}/kit-lanches`;
+export const URL_KIT_LANCHES_SOLICITACOES_AVULSA = `${API_URL}/solicitacoes-kit-lanche-avulsa`;
+export const URL_KIT_LANCHES_SOLICITACOES_CEI = `${API_URL}/solicitacoes-kit-lanche-cei-avulsa`;
+
+export const AUTH_TOKEN = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
 };

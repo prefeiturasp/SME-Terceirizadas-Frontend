@@ -17,7 +17,7 @@ import {
   CADASTROS,
   HORARIO_COMBOS_ALIMENTACAO
 } from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants";
+import { PERFIL } from "../../../../constants/shared";
 
 export class SidebarEscola extends Component {
   constructor(props) {

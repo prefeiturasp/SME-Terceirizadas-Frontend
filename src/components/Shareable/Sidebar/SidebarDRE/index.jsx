@@ -9,7 +9,7 @@ import {
   SOLICITACOES_CANCELADAS,
   RELATORIOS
 } from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants";
+import { PERFIL } from "../../../../constants/shared";
 
 export class SidebarDRE extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import { API_URL } from "../constants/config.constants";
-import { ENDPOINT } from "../constants";
+import { ENDPOINT } from "../constants/shared";
 import { SOLICITACOES_DIETA } from "./constants";
 import authService from "./auth";
 

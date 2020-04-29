@@ -19,6 +19,8 @@ const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
 const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
+const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
+const KIT_LANCHE_CEI = "KIT_LANCHE_CEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -83,6 +85,16 @@ export const ajustarFormatoLog = logs => {
 
       case INC_ALIMENTA_CEI:
         solicitacao = INCLUSAO_ALIMENTACAO;
+        param = "&escolaTipoCei=true";
+        break;
+
+      case ALT_CARDAPIO_CEI:
+        solicitacao = ALTERACAO_CARDAPIO;
+        param = "&escolaTipoCei=true";
+        break;
+
+      case KIT_LANCHE_CEI:
+        solicitacao = SOLICITACAO_KIT_LANCHE;
         param = "&escolaTipoCei=true";
         break;
 

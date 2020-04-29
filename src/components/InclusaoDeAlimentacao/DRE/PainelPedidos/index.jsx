@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getDREPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { getDREPedidosDeInclusaoAlimentacaoDaCei } from "../../../../services/inclusaoAlimentacaoDaCei.service";
 import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
 import { Select } from "../../../Shareable/Select";
@@ -36,7 +36,7 @@ class PainelPedidos extends Component {
 
   //FIXME: Nao trata errors, nao faz requisicoes em paralelo
   async atualizarDadosDasInclusoes(filtro) {
-    const inclusoesAvulsas = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+    const inclusoesAvulsas = await getDREPedidosDeInclusaoAlimentacaoAvulsa(
       filtro
     );
     const inclusoesContinuas = await getDREPedidosInclusaoContinuosPendentes(

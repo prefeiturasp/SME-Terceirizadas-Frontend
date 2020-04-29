@@ -7,7 +7,7 @@ import {
   usuarioCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "../../../../../services/diretoriaRegional.service";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
 class BuscaPorPeriodo extends Component {
   constructor(props) {

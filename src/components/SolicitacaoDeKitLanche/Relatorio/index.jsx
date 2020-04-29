@@ -9,8 +9,8 @@ import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE } from "../../../configs/constants";
@@ -130,6 +130,7 @@ class Relatorio extends Component {
         solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
         solicitacaoKitLanche.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
+    // TODO:  Rever se essa lógica ainda está sendo usada
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
@@ -228,7 +229,10 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR &&
+                    
+                    {
+                    
+                    EXIBIR_BOTAO_APROVAR &&
                       (textoBotaoAprova !== "Ciente" && (
                         <Botao
                           texto={textoBotaoAprova}

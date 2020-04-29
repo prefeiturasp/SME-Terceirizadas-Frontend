@@ -1,4 +1,4 @@
-import { VISAO } from "../constants";
+import { VISAO } from "../constants/shared";
 import { API_URL } from "../constants/config.constants";
 import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";

@@ -8,7 +8,7 @@ import {
   SOLICITACOES_RECUSADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants";
+import { PERFIL } from "../../../../constants/shared";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {

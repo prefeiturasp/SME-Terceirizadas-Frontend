@@ -5,7 +5,7 @@ import {
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
-} from "./configs/constants";
+} from "../configs/constants";
 
 export const ENTER = 13;
 export const TAMANHO_RF = 7;
@@ -148,6 +148,13 @@ export const escolaPodeCancelar = status => {
     status === statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO
   );
 };
+
+
+export const TIPO_SOLICITACAO = {
+  SOLICITACAO_NORMAL : "solicitacao-normal",
+  SOLICITACAO_CONTINUA: "solicitacao-continua",
+  SOLICITACAO_CEI: "solicitacao-cei"
+}
 
 export const TIPOS_SOLICITACAO_LABEL = {
   INCLUSAO_DE_ALIMENTACAO: "Inclusão de Alimentação",

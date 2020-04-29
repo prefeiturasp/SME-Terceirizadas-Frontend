@@ -14,7 +14,7 @@ import {
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 import "./style.scss";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import { TIPO_PERFIL, statusEnum } from "../../../../constants";
+import { TIPO_PERFIL, statusEnum } from "../../../../constants/shared";
 import Botao from "../../../Shareable/Botao";
 import InformacoesCODAE from "./componentes/InformacoesCODAE";
 import {

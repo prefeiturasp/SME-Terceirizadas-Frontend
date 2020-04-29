@@ -8,7 +8,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants";
+import { FILTRO_VISAO } from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,

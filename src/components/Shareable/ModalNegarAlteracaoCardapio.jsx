@@ -8,7 +8,7 @@ import {
   CODAENegaAlteracaoCardapio
 } from "../../services/alteracaoDecardapio.service";
 import { toastError, toastSuccess } from "./Toast/dialogs";
-import { statusEnum } from "../../constants";
+import { statusEnum } from "../../constants/shared";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import Select from "./Select";

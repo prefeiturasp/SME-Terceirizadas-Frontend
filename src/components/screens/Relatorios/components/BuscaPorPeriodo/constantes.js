@@ -1,5 +1,5 @@
 import moment from "moment";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
 export const TIPO_SOLICITACAO = [
   { nome: "Todos", uuid: TODOS },

@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 
-import { PERFIL } from "../../../constants";
+import { PERFIL } from "../../../constants/shared";
 import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,

@@ -29,7 +29,7 @@ import {
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
 import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {

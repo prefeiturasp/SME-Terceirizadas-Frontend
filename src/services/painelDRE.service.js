@@ -4,11 +4,11 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../helpers/painelPedidos";
-import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { getDREPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
 import { AUTH_TOKEN, SOLICITACOES } from "./constants";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
+import { getDREPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
+import { getDREPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getDREPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
 import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
@@ -29,7 +29,7 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(
+  const solicitacoes = await getDREPedidosDeAlteracaoCardapio(
     filtro
   );
 
@@ -61,7 +61,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
+  const solicitacoes = await getDREPedidosDeInclusaoAlimentacaoAvulsa(
     filtro
   );
 
@@ -93,7 +93,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(
+  const solicitacoes = await getDREPedidosDeInclusaoAlimentacaoContinua(
     filtro
   );
 
@@ -170,7 +170,7 @@ export const getResumoPendenciasDREKitLanche = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeKitLanche(filtro);
+  const solicitacoes = await getDREPedidosDeKitLanche(filtro);
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);

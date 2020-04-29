@@ -17,7 +17,7 @@ import {
   TIPOS_ALIMENTACAO,
   FAIXAS_ETARIAS
 } from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants";
+import { PERFIL } from "../../../../constants/shared";
 import {
   usuarioCODAEGestaoAlimentacao,
   usuarioCODAEDietaEspecial

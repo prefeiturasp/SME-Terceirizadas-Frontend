@@ -270,7 +270,7 @@ export const terceirizadaTomaCiencia = uuid => {
     });
 };
 
-export const getDiretoriaRegionalPedidosDeInversoes = filtroAplicado => {
+export const getDREPedidosDeInversoes = filtroAplicado => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-diretoria-regional/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,

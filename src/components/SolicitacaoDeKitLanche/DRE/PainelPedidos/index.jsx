@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants/shared";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import {
-  getDiretoriaRegionalPedidosDeKitLanche,
+  getDREPedidosDeKitLanche,
   getDREPedidosDeKitLancheCei
-} from "../../../../services/solicitacaoDeKitLanche.service";
+} from "../../../../services/kit-lanche/kitLanche.service";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
@@ -33,7 +33,7 @@ class PainelPedidos extends Component {
     this.setState({ pedidosCarregados: 0 });
 
     Promise.all([
-      getDiretoriaRegionalPedidosDeKitLanche(filtro),
+      getDREPedidosDeKitLanche(filtro),
       getDREPedidosDeKitLancheCei(filtro)
     ]).then(([response, responseCei]) => {
       const results = response.results.concat(responseCei.results);
