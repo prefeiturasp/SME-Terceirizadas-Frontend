@@ -3,8 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import {
   required,
-  numeroDecimal,
-  numeroInteiro
+  numeroDecimal
 } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { ToggleExpandir } from "../../../../Shareable/ToggleExpandir";
@@ -28,6 +27,7 @@ class Step2 extends Component {
     }
   }
   componentDidUpdate() {
+    const { payload } = this.props;
     if (this.props.informacoesAgrupadas !== this.state.informacoesAgrupadas) {
       this.props.informacoesAgrupadas.forEach(item => {
         item.informacoes_nutricionais.forEach(info => {
@@ -35,6 +35,24 @@ class Step2 extends Component {
         });
       });
       this.setState({ informacoesAgrupadas: this.props.informacoesAgrupadas });
+    }
+    if (
+      payload.porcao !== null &&
+      payload.unidade_caseira !== null &&
+      payload.informacoes_nutricionais.length > 0
+    ) {
+      this.props.change("porcao", payload.porcao);
+      this.props.change("unidade_caseira", payload.unidade_caseira);
+      payload.informacoes_nutricionais.forEach(informacao => {
+        this.props.change(
+          `porcao=${informacao.informacao_nutricional}`,
+          informacao.quantidade_porcao
+        );
+        this.props.change(
+          `vd=${informacao.informacao_nutricional}`,
+          informacao.valor_diario
+        );
+      });
     }
   }
 
@@ -156,6 +174,11 @@ class Step2 extends Component {
                                             informacaoNutricional.check &&
                                             numeroDecimal
                                           }
+                                          onBlur={() => {
+                                            this.setaInformacaoComoVisto(
+                                              informacaoNutricional
+                                            );
+                                          }}
                                         />
                                       </div>
                                       <div className="col-4 mt-2">
@@ -165,7 +188,7 @@ class Step2 extends Component {
                                   </td>
                                   <td className="col-4">
                                     <div className="row">
-                                      <div className="col-4">
+                                      <div className="col-8">
                                         <Field
                                           component={InputText}
                                           name={`vd=${
@@ -174,7 +197,7 @@ class Step2 extends Component {
                                           type="text"
                                           validate={
                                             informacaoNutricional.check &&
-                                            numeroInteiro
+                                            numeroDecimal
                                           }
                                           onBlur={() => {
                                             this.setaInformacaoComoVisto(
@@ -183,7 +206,7 @@ class Step2 extends Component {
                                           }}
                                         />
                                       </div>
-                                      <div className="col-2">%</div>
+                                      <div className="col-4">%</div>
                                     </div>
                                   </td>
                                 </tr>

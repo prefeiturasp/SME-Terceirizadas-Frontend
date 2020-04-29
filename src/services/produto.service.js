@@ -74,7 +74,7 @@ export const getProdutosPorFabricante = async nomeFabricante => {
 };
 
 export const getProtocolosDietaEspecial = async () => {
-  return await axios.get(`/protocolo-dieta-especial/`);
+  return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
 };
 
 export const getMarcasProdutos = async () => {
