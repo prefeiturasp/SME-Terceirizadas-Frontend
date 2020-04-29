@@ -496,6 +496,7 @@ class Step1 extends Component {
                   onChange={event => {
                     this.setaCampoDetalheAlergenico(event.target.value);
                   }}
+                  required
                 />
               </div>
             </div>
