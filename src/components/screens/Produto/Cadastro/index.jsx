@@ -8,9 +8,9 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import {
-  getInformacoesNutricionais,
   getProtocolosDietaEspecial,
-  submitProduto
+  submitProduto,
+  getInformacoesGrupo
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
@@ -102,18 +102,13 @@ class cadastroProduto extends Component {
     });
   };
 
-  getInformacoesAgrupadas = () => {
-    getInformacoesNutricionais().then(response => {
-      this.setState({ informacoesAgrupadas: response.data.results });
-    });
-  };
-
   componentDidMount = async () => {
-    this.getInformacoesAgrupadas();
+    const infoAgrupada = await getInformacoesGrupo();
 
     const response = await getProtocolosDietaEspecial();
     this.setState({
-      protocolosDieta: response.data.results
+      protocolosDieta: response.data.results,
+      informacoesAgrupadas: infoAgrupada.data.results
     });
   };
 
@@ -193,6 +188,10 @@ class cadastroProduto extends Component {
     payload["info_armazenamento"] = values.condicoes;
     payload["outras_informacoes"] = values.resumo_objeto;
     payload["numero_registro"] = values.registro;
+
+    if (!payload["tem_aditivos_alergenicos"]) {
+      delete payload["aditivos"];
+    }
 
     return new Promise(async (resolve, reject) => {
       const response = await submitProduto(payload);

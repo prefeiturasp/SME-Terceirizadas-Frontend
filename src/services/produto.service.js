@@ -45,6 +45,10 @@ export const getInformacoesNutricionais = () => {
     });
 };
 
+export const getInformacoesGrupo = async () => {
+  return await axios.get(`/informacoes-nutricionais/agrupadas/`);
+};
+
 export const getNomesProdutos = async () => {
   return await axios.get(`/produtos/lista-nomes/`);
 };
@@ -70,7 +74,7 @@ export const getProdutosPorFabricante = async nomeFabricante => {
 };
 
 export const getProtocolosDietaEspecial = async () => {
-  return await axios.get(`/protocolo-dieta-especial/`);
+  return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
 };
 
 export const getMarcasProdutos = async () => {

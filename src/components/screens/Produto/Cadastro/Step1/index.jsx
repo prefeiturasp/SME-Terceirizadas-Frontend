@@ -152,6 +152,50 @@ class Step1 extends Component {
     }
   };
 
+  componentDidMount = async () => {
+    let { marcasArray, fabricantesArray, dafaultArrayProtocolo } = this.state;
+    const { payload, protocolosDieta } = this.props;
+    if (dafaultArrayProtocolo.length === 0) {
+      payload.protocolos.forEach(protocoloPayload => {
+        protocolosDieta.forEach(protocolo => {
+          if (protocoloPayload === protocolo.uuid) {
+            dafaultArrayProtocolo.push(`${protocolo.nome}+${protocolo.uuid}`);
+          }
+        });
+      });
+
+      this.setState({
+        payloadStep1: retornaObjetoRequest(payload),
+        dafaultArrayProtocolo,
+        retornadoAoStep: true
+      });
+    }
+
+    let listaMarcas = [];
+    let listaFabricantes = [];
+    if (marcasArray.length === 0 && fabricantesArray.length === 0) {
+      const responseMarcas = await getMarcasProdutos();
+      const responseFabricantes = await getFabricantesProdutos();
+      responseMarcas.data.results.forEach(marca => {
+        listaMarcas.push(
+          <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
+        );
+      });
+      responseFabricantes.data.results.forEach(fabricante => {
+        listaFabricantes.push(
+          <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
+            {fabricante.nome}
+          </Option>
+        );
+      });
+      this.setState({
+        marcasArray: listaMarcas,
+        fabricantesArray: listaFabricantes,
+        loading: false
+      });
+    }
+  };
+
   componentDidUpdate = async () => {
     const { protocolosDieta, payload, concluidoStep1 } = this.props;
     const {
@@ -179,7 +223,6 @@ class Step1 extends Component {
         retornadoAoStep: true
       });
     }
-
     if (marcasArray.length === 0 && loading && fabricantesArray.length === 0) {
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
@@ -380,7 +423,7 @@ class Step1 extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-5 pt-3">
+          <div className="col-4 pt-3">
             <label className="label-formulario-produto">
               <nav>*</nav>Marca do produto
             </label>
@@ -395,9 +438,9 @@ class Step1 extends Component {
               {marcasArray}
             </Field>
           </div>
-          <div className="col-1 adicionar-marca-fornecedor">
+          <div className="col-2 adicionar-marca-fornecedor">
             <Botao
-              texto="+"
+              texto="Adicionar"
               className={"botao-adicionar-marca-fabricante"}
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.BLUE_OUTLINE}
@@ -406,7 +449,7 @@ class Step1 extends Component {
               }}
             />
           </div>
-          <div className="col-5 pt-3">
+          <div className="col-4 pt-3">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do fabricante
             </label>
@@ -421,9 +464,9 @@ class Step1 extends Component {
               {fabricantesArray}
             </Field>
           </div>
-          <div className="col-1 adicionar-marca-fornecedor">
+          <div className="col-2 adicionar-marca-fornecedor">
             <Botao
-              texto="+"
+              texto="Adicionar"
               className={"botao-adicionar-marca-fabricante"}
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.BLUE_OUTLINE}
@@ -441,6 +484,7 @@ class Step1 extends Component {
               name="componentes"
               type="text"
               placeholder="Digite o nome dos componentes"
+              required
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);
               }}
