@@ -423,7 +423,7 @@ class Step1 extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-5 pt-3">
+          <div className="col-4 pt-3">
             <label className="label-formulario-produto">
               <nav>*</nav>Marca do produto
             </label>
@@ -438,9 +438,9 @@ class Step1 extends Component {
               {marcasArray}
             </Field>
           </div>
-          <div className="col-1 adicionar-marca-fornecedor">
+          <div className="col-2 adicionar-marca-fornecedor">
             <Botao
-              texto="+"
+              texto="Adicionar"
               className={"botao-adicionar-marca-fabricante"}
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.BLUE_OUTLINE}
@@ -449,7 +449,7 @@ class Step1 extends Component {
               }}
             />
           </div>
-          <div className="col-5 pt-3">
+          <div className="col-4 pt-3">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do fabricante
             </label>
@@ -464,9 +464,9 @@ class Step1 extends Component {
               {fabricantesArray}
             </Field>
           </div>
-          <div className="col-1 adicionar-marca-fornecedor">
+          <div className="col-2 adicionar-marca-fornecedor">
             <Botao
-              texto="+"
+              texto="Adicionar"
               className={"botao-adicionar-marca-fabricante"}
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.BLUE_OUTLINE}

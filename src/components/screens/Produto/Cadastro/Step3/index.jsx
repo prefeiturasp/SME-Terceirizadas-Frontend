@@ -17,6 +17,17 @@ class Step3 extends Component {
       <div className="cadastro-produto-step3">
         <div className="card-title">Informação do Produto (classificação)</div>
         <div className="row">
+          <div className="col-6 pt-3">
+            <Field
+              component={InputText}
+              label="N° de registro do produto no órgão competente"
+              name="registro"
+              type="text"
+              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
+            />
+          </div>
+        </div>
+        <div className="row">
           <div className="col-12 pt-3">
             <Field
               component={InputText}
@@ -27,19 +38,7 @@ class Step3 extends Component {
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="N° de registro do produto no órgão competente"
-              name="registro"
-              type="text"
-              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
+
         <div className="row">
           <div className="col-6 pt-3">
             <Field
