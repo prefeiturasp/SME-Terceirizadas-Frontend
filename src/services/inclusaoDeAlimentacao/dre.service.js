@@ -1,4 +1,3 @@
-import { API_URL } from "constants/config.constants";
 import { PEDIDOS, FLUXO, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
 

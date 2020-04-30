@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getMotivosInclusao } from "../../services/inclusaoDeAlimentacao";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacaoDaCei from ".";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 class Container extends Component {
   constructor(props) {
@@ -26,7 +27,8 @@ class Container extends Component {
       });
     });
 
-    getMotivosInclusaoNormal().then(response => {
+    // TODO: precisa ter Cei?
+    getMotivosInclusao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(response => {
       const motivos = response.results;
       this.setState({
         motivos

@@ -31,7 +31,7 @@ import {
   getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias
 } from "../../../services/painelCODAE.service";
 import { toastError } from "../../Shareable/Toast/dialogs";
-import corrigeResumo from "../../../helpers/corrigeDadosDodashboard";
+import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
 
 class DashboardCODAE extends Component {
   constructor(props) {

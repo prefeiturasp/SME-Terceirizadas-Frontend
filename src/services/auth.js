@@ -1,5 +1,5 @@
 import decode from "jwt-decode";
-import CONFIG from "../constants/config.constants";
+import CONFIG from "../constants/config";
 import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const TOKEN_ALIAS = "TOKEN";

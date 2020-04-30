@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Relatorio from "components/InclusaoDeAlimentacao/Relatorio";
+import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";

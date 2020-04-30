@@ -71,3 +71,7 @@ export const iniciarInclusoesDaCEI = async uuid => { // escola
     `/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/inicio-pedido/`
   );
 };
+
+export const minhasFaixasEtarias = async () => {
+  return await axios.get(`/faixas-etarias/`);
+};

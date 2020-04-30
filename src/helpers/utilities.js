@@ -1,9 +1,8 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum, TIPO_SOLICITACAO } from "../constants/shared";
+import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { TIPO_PERFIL } from "../constants/shared";
-import { INCLUSAO_ALIMENTACAO, RELATORIO } from "configs/constants";
-import InclusaoDeAlimentacao from "components/InclusaoDeAlimentacao";
+import { RELATORIO } from "../configs/constants";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -360,8 +359,8 @@ export const parseRelatorioURLParams = () => {
   return [ urlParams.get("uuid"), urlParams.get("tipoSolicitacao")];
 }
 
-export const gerarLinkRelatorio = solicitacao => {
-  return `/${INCLUSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
+export const gerarLinkRelatorio = (path, solicitacao)=> {
+  return `/${path}/${RELATORIO}?uuid=${
             solicitacao.uuid
           }&${tipoSolicitacaoComoQuery(solicitacao)}}`
 }

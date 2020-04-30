@@ -4,7 +4,7 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import { getDetalheKitLancheAvulsa } from "../../../services/kitLanche";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";

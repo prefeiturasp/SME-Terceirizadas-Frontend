@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getMotivosInclusaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
+import { getMotivosInclusao } from "../../services/inclusaoDeAlimentacao";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { formatarPeriodos } from "./helper";
 import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacao from ".";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 class Container extends Component {
   constructor(props) {
@@ -31,14 +31,15 @@ class Container extends Component {
       });
     });
 
-    getMotivosInclusaoContinua().then(response => {
+    // TODO: precisa ter cei?
+    getMotivosInclusao(TIPO_SOLICITACAO.SOLICITACAO_CONTINUA).then(response => {
       const motivos_continuos = response.results;
       this.setState({
         motivos_continuos
       });
     });
 
-    getMotivosInclusaoNormal().then(response => {
+    getMotivosInclusao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(response => {
       const motivos_simples = response.results;
       this.setState({
         motivos_simples

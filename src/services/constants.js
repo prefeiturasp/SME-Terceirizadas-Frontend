@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import authService from "./auth";
 
 export { TIPO_SOLICITACAO } from "constants/shared"

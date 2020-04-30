@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 
-import { PERFIL } from "../../../constants/shared";
+import { PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
 import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,
@@ -17,21 +17,17 @@ import {
   validateFormKitLanchePasseio,
   validateFormKitLanchePasseioCei
 } from "./validators";
-import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
+import { converterDDMMYYYYparaYYYYMMDD, comoTipo } from "../../../helpers/utilities";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   getError
 } from "../../../helpers/utilities";
 import {
-  getSolicitacoesKitLancheApi,
-  getSolicitacoesKitLancheCeiRascunho,
+  getSolicitacoesKitLanche,
   inicioPedido,
-  inicioPedidoCei,
   registroAtualizaKitLanche,
-  registroAtualizaKitLancheCei,
   removeKitLanche,
   solicitarKitLanche,
-  solicitarKitLancheCei
 } from "services/kitLanche";
 import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
@@ -52,12 +48,14 @@ import "./style.scss";
 import { isEqual } from "lodash";
 import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
 
+const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
+
 const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ehCei: localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI,
+      ehCei: localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI, // TODO: investigar
       loading: true,
       qtd_kit_lanche: 0,
       kitsChecked: [],
@@ -87,7 +85,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removeKitLanche(uuid).then(
+      removeKitLanche(uuid, this.resolveTipo()).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -221,6 +219,8 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
+  
+
   onSubmit(values) {
     values.kit_lanche = this.state.kitsChecked;
     const { ehCei } = this.state;
@@ -238,11 +238,7 @@ export class SolicitacaoDeKitLanche extends Component {
         validateFormKitLanchePasseioCei(values);
       }
       return new Promise(resolve => {
-        if (ehCei) {
-          this.salvarOuEnviarCei(solicitacao_kit_lanche, values);
-        } else {
-          this.salvarOuEnviar(solicitacao_kit_lanche, values);
-        }
+          this.salvarOuEnviar(solicitacao_kit_lanche, values, ehCei ? TIPO_SOLICITACAO.SOLICITACAO_CEI : TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
         this.handleConfirmation();
         resolve();
       });
@@ -252,8 +248,8 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   iniciarPedido(uuid) {
-    const endpoint = this.state.ehCei ? inicioPedidoCei : inicioPedido;
-    endpoint(uuid).then(
+    const tipo = this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL
+    inicioPedido(uuid, tipo).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess(
@@ -274,6 +270,10 @@ export class SolicitacaoDeKitLanche extends Component {
         );
       }
     );
+  }
+
+  resolveTipo = () => {
+    return this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL
   }
 
   validaTipoMensagemError = response => {
@@ -343,7 +343,9 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
-      solicitarKitLancheCei(solicitacao_kit_lanche).then(resp => {
+      solicitarKitLanche(solicitacao_kit_lanche,
+         this.resolveTipo()
+        ).then(resp => {
         if (resp.status === HTTP_STATUS.CREATED) {
           if (values.status === STATUS_DRE_A_VALIDAR) {
             this.iniciarPedido(resp.data.uuid);
@@ -362,7 +364,7 @@ export class SolicitacaoDeKitLanche extends Component {
         }
       });
     } else {
-      registroAtualizaKitLancheCei(solicitacao_kit_lanche, values.uuid)
+      registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid, this.resolveTipo() )
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -388,12 +390,12 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   refresh() {
-    if (this.state.ehCei) {
-      getSolicitacoesKitLancheCeiRascunho().then(resp => {
+    if (this.state.ehCei) { // FIXME: remove duplicated code
+      getSolicitacoesKitLanche(SOLICITACAO_CEI).then(resp => {
         this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
       });
     } else {
-      getSolicitacoesKitLancheApi().then(resp => {
+      getSolicitacoesKitLanche(SOLICITACAO_NORMAL).then(resp => {
         this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
       });
     }

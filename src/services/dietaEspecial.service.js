@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import { ENDPOINT } from "../constants/shared";
 import { SOLICITACOES_DIETA } from "./constants";
 import authService from "./auth";

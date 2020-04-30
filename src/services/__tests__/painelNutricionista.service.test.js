@@ -1,7 +1,7 @@
 import fetchMock from "fetch-mock";
 
 import { SOLICITACOES, SOLICITACOES_DIETA } from "../constants";
-import { API_URL } from "../../constants/config.constants";
+import { API_URL } from "../../constants/config";
 import {
   getMotivosNegacaoDietaEspecial,
   getSolicitacoesPendentesNutricionista,

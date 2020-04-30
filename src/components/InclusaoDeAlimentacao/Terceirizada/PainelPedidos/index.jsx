@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants/shared";
+import { FiltroEnum, TIPO_SOLICITACAO } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
@@ -25,18 +24,24 @@ class PainelPedidos extends Component {
   }
 
   async atualizarDadosDasInclusoes(filtro) {
-    const inclusoesAvulsas = await getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa(
-      filtro
-    );
-    const inclusoesContinuas = await getTerceirizadaPedidosDeInclusaoAlimentacaoContinua(
-      filtro
-    );
-    const inclusoesMescladas = inclusoesAvulsas.results.concat(
-      inclusoesContinuas.results
-    );
-    const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
-    const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
-    const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);
+    const [avulsas, continuas, cei] = await Promise.all([
+      terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      ),
+      terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI
+      )
+    ]);
+    const inclusoes = avulsas.results.concat(continuas.results, cei.results);
+    const pedidosPrioritarios = filtraPrioritarios(inclusoes);
+    const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
+    const pedidosNoPrazoRegular = filtraRegular(inclusoes);
     this.setState({
       pedidosPrioritarios,
       pedidosNoPrazoLimite,

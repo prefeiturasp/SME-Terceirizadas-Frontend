@@ -1,5 +1,5 @@
 import { VISAO } from "../constants/shared";
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";
 

@@ -2,7 +2,7 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/SolicitacaoUnificada/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   DRE,

@@ -13,12 +13,10 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 import { formataMotivosDias } from "./helper";
-import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
-import { TIPO_SOLICITACAO } from "constants/shared"
-const { SOLICITACAO }
+
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
@@ -114,7 +112,7 @@ export class CorpoRelatorio extends Component {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
               onClick={() => {
-               obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSoliciacao);
+               obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao);
               }}
             />
           </p>
@@ -173,7 +171,7 @@ export class CorpoRelatorio extends Component {
               ]
             )}
 
-        {!ehInclusaoCei(tipoSoliciacao) && (
+        {!ehInclusaoCei(tipoSolicitacao) && (
           <table className="table-report mt-3">
             <tbody>
               <tr>
@@ -201,7 +199,7 @@ export class CorpoRelatorio extends Component {
             </tbody>
           </table>
         )}
-        {ehEscolaTipoCei && (
+        {ehInclusaoCei(tipoSolicitacao) & (
           <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
         )}
         <div className="row">
