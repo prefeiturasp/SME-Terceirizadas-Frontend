@@ -1,7 +1,7 @@
 import { PEDIDOS, FLUXO, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const terceirizadaListarPedidosDeInclusaoDeAlimentacao = async (
+export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao = async (
   filtroAplicado,
   tipoSolicitacao
 ) => {
@@ -23,7 +23,7 @@ export const terceirizadaListarPedidosDeInclusaoDeAlimentacao = async (
 };
 
 // TODO: confirmar necessidade do parametro
-export const terceirizadaListarPedidosDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
+export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
   const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

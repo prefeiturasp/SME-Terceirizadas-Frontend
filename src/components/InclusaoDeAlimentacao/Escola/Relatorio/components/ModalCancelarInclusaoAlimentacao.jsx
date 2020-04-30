@@ -9,10 +9,9 @@ import {
 } from "../../../../Shareable/Toast/dialogs";
 import {
   stringSeparadaPorVirgulas,
-  mensagemCancelamento
+  mensagemCancelamento,
+  ehInclusaoContinua
 } from "../../../../../helpers/utilities";
-import { escolaCancelaInclusaoDeAlimentacaoAvulsa } from "../../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { escolaCancelaInclusaoDeAlimentacaoContinua } from "../../../../../services/inclusaoDeAlimentacaoContinua.service";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -25,6 +24,7 @@ import {
   peloMenosUmCaractere,
   textAreaRequired
 } from "../../../../../helpers/fieldValidators";
+import { escolaCancelarSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
 export class ModalCancelarInclusaoDeAlimentacao extends Component {
   constructor(props) {
@@ -39,11 +39,8 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
     if (justificativa === MENSAGEM_VAZIA) {
       toastWarn("Justificativa é obrigatória.");
     } else {
-      const escolaCancelaInclusao = this.props.ehInclusaoContinua
-        ? escolaCancelaInclusaoDeAlimentacaoContinua
-        : escolaCancelaInclusaoDeAlimentacaoAvulsa;
       let resp = "";
-      resp = await escolaCancelaInclusao(uuid, justificativa);
+      resp = await escolaCancelarSolicitacaoDeInclusaoDeAlimentacao(uuid, this.props.tipoSolicitacao, justificativa);
       if (resp.status === HTTP_STATUS.OK) {
         this.props.closeModal();
         toastSuccess("Solicitação cancelada com sucesso!");
@@ -55,9 +52,9 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
   }
 
   renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    const { tipoSolicitacao, inclusaoDeAlimentacao } = this.props;
     return (
-      !ehInclusaoContinua && (
+      !ehInclusaoContinua(tipoSolicitacao) && (
         <table className="table-periods">
           <tr>
             <th>Data</th>
@@ -77,9 +74,9 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
   }
 
   renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.props;
+    const { tipoSolicitacao, inclusaoDeAlimentacao } = this.props;
     return (
-      ehInclusaoContinua && (
+      ehInclusaoContinua(tipoSolicitacao) && (
         <div>
           <div className="row">
             <div className="col-4 report-label-value">

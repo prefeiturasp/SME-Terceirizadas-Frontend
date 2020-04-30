@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Redirect } from "react-router-dom";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import { stringSeparadaPorVirgulas, gerarLinkRelatorio } from "helpers/utilities";
 import "./style.scss";
-import { INCLUSAO_ALIMENTACAO, RELATORIO } from "../../../../configs/constants";
+
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -56,10 +56,7 @@ export class CardHistorico extends Component {
     if (this.state.redirect) {
       return (
         <Redirect
-          to={`
-          /${INCLUSAO_ALIMENTACAO}/${RELATORIO}?uuid=${
-            pedido.uuid
-          }&ehInclusaoContinua=${pedido.data_inicial !== undefined}`}
+          to={gerarLinkRelatorio(pedido)}
         />
       );
     }

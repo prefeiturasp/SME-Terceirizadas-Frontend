@@ -21,7 +21,7 @@ import {
   codaeNegarSolicitacaoDeInclusaoDeAlimentacao,
   codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao,
   // terceirizada
-  terceirizadaResponderQuestionamentoDeSolicitacaoDeInclusaoDeAlimentacao,
+  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao,
 } from "services/inclusaoDeAlimentacao";
 
 
@@ -58,18 +58,7 @@ class RelatorioBase extends Component {
 export class RelatorioEscola extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    this.setState({
-      ehInclusaoContinua
-    });
-  }
-
   render() {
     return (
       <RelatorioBase
@@ -93,14 +82,6 @@ export class RelatorioDRE extends Component {
       ehInclusaoContinua: false
     };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    this.setState({
-      ehInclusaoContinua
-    });
-  }
-
   render() {
     return (
       <RelatorioBase
@@ -123,14 +104,12 @@ export class RelatorioDRE extends Component {
 export class RelatorioCODAE extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
   componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    // TODO: Remove unused
+    ///const urlParams = new URLSearchParams(window.location.search);
+    //const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    //this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
   }
 
   render() {
@@ -157,23 +136,14 @@ export class RelatorioCODAE extends Component {
 export class RelatorioTerceirizada extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
-  }
-
   render() {
     return (
       <RelatorioBase
         visao={TERCEIRIZADA}
         ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
         ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
-        endpointQuestionamento={terceirizadaResponderQuestionamentoDeSolicitacaoDeInclusaoDeAlimentacao}
+        endpointQuestionamento={terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao}
       />
     );
   }

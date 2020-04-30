@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar } from "../../../../helpers/utilities";
+import { talvezPluralizar, gerarLinkRelatorio } from "../../../../helpers/utilities";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
-import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -100,14 +99,10 @@ export class CardPendenteAcao extends Component {
                   const dataMaisProxima = pedido.inclusoes
                     ? pedido.inclusoes[0].data
                     : pedido.data;
-                  const isCei = !!pedido.isCei;
-                  const isContinua = !!pedido.data_inicial;
                   return (
                     <Link
                       key={key}
-                      to={`/${INCLUSAO_ALIMENTACAO}/relatorio?uuid=${
-                        pedido.uuid
-                      }&ehInclusaoContinua=${isContinua}&escolaTipoCei=${isCei}`}
+                      to={gerarLinkRelatorio(pedido)}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>
