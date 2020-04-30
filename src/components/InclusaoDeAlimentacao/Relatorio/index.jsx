@@ -47,8 +47,9 @@ class Relatorio extends Component {
     if (uuid) {
       obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
         this.setState({
+          uuid,
           inclusaoDeAlimentacao: response,
-          tipoSolicitacao: tipoSolicitacao,
+          tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -91,6 +92,7 @@ class Relatorio extends Component {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     this.props.endpointAprovaSolicitacao(
       this.state.uuid,
+      this.props.justificativa,
       this.state.tipoSolicitacao
       ).then(
       response => {
@@ -177,7 +179,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -189,7 +191,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {!inclusaoDeAlimentacao ? (
@@ -204,7 +206,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${

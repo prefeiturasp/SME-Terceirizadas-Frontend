@@ -289,12 +289,12 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
-  salvarOuEnviar(solicitacao_kit_lanche, values) {
+  salvarOuEnviar(solicitacao_kit_lanche, values, tipoSolicitacao) {
     if (values.status) {
       solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
-      solicitarKitLanche(solicitacao_kit_lanche).then(resp => {
+      solicitarKitLanche(solicitacao_kit_lanche, tipoSolicitacao).then(resp => {
         if (resp.status === HTTP_STATUS.CREATED) {
           if (values.status === STATUS_DRE_A_VALIDAR) {
             this.iniciarPedido(resp.data.uuid);

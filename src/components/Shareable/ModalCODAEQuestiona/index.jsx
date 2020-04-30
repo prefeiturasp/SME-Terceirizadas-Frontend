@@ -19,10 +19,10 @@ export class ModalCODAEQuestiona extends Component {
   async enviarQuestionamento(uuid) {
     const { justificativa } = this.state;
     let resp = "";
-    resp = await this.props.endpoint(uuid, justificativa);
+    resp = await this.props.endpoint(uuid, justificativa, this.props.tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid, this.props.ehEscolaTipoCei);
+      this.props.loadSolicitacao(this.props.uuid, this.props.tipoSolicitacao);
       toastSuccess("Questionamento enviado com sucesso!");
     } else {
       toastError(resp.data.detail);

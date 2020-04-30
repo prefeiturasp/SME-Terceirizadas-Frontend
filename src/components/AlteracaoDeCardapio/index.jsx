@@ -17,18 +17,11 @@ import {
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
-  // FIXME : remove legacy exports
-  //createAlteracaoCardapio,
-  //deleteAlteracaoCardapio,
-  //enviarAlteracaoCardapio,
-  //getMeusRascunhosAlteracoesCardapio,
-  //updateAlteracaoCardapio,
   escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
   escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
-
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -46,6 +39,7 @@ import { construirPeriodosECombos } from "./helper";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 const ENTER = 13;
 
@@ -119,13 +113,14 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao !== null
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      this.atualizaAlteracoesComLancheMesCorrente(vinculo);
+      this.atualizaAlteracoesComLancheMesCorrente(vinculo, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
     }
   }
 
   atualizaAlteracoesComLancheMesCorrente = vinculo => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
-    getAlteracoesComLancheDoMesCorrente(vinculo).then(response => {
+    getAlteracoesComLancheDoMesCorrente(vinculo,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(response => {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
@@ -312,7 +307,7 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio() //FIXME: param required
+    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(TIPO_SOLICITACAO.SOLICITACAO_NORMAL) //FIXME: param required
       .then(response => {
         alteracaoCardapioList =
           response.results.length > 0 ? response.results : [];
@@ -348,7 +343,7 @@ class AlteracaoCardapio extends Component {
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    this.atualizaAlteracoesComLancheMesCorrente(vinculo);
+    this.atualizaAlteracoesComLancheMesCorrente(vinculo, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
   }
 
   enviaAlteracaoCardapio(uuid) {

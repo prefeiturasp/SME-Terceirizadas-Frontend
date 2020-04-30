@@ -105,8 +105,23 @@ export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   }
 };
 
-export const getMotivosInclusao = tipoMotivo => {
-  const url = `${API_URL}/${tipoMotivo}/`;
+export const getMotivosInclusaoNormal = () => {
+  const url = `${API_URL}/motivos-inclusao-normal/`;
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+export const getMotivosInclusaoContinua = () => {
+  const url = `${API_URL}/motivos-inclusao-continua/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

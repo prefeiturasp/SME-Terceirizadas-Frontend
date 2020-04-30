@@ -25,7 +25,7 @@ export class ModalCancelarSolicitacao extends Component {
       this.props.closeModal();
       toastSuccess("Solicitação cancelada com sucesso!");
       if (this.props.loadSolicitacao)
-        this.props.loadSolicitacao(uuid, this.props.ehEscolaTipoCei);
+        this.props.loadSolicitacao(uuid, this.props.tipoSolicitacao);
     } else {
       this.props.closeModal();
       toastError(resp.data.detail);

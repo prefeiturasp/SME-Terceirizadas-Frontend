@@ -104,7 +104,7 @@ export class CardPendenteAcao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={gerarLinkRelatorio(pedido)}
+                      to={gerarLinkRelatorio('alteracao-de-cardapio', pedido)}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

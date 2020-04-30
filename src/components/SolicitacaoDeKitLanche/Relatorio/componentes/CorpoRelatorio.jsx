@@ -1,6 +1,6 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -14,9 +14,9 @@ import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
   const {
+    tipoSolicitacao,
     solicitacaoKitLanche,
     prazoDoPedidoMensagem,
-    ehEscolaTipoCei
   } = props;
   return (
     <div>
@@ -136,7 +136,7 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
-      {ehEscolaTipoCei && (
+      {ehInclusaoCei(tipoSolicitacao) && (
         <TabelaFaixaEtaria
           faixas={solicitacaoKitLanche.quantidade_alunos_por_faixas_etarias}
         />

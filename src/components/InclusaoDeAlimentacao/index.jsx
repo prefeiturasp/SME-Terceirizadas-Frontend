@@ -456,7 +456,7 @@ class InclusaoDeAlimentacao extends Component {
 
   refresh() { // FIXME: Usar Promise.all()
     let rascunhosInclusaoDeAlimentacao = [];
-    obterMinhasSolicitacoesDeInclusaoDeAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_CONTINUA).then(
+    obterMinhasSolicitacoesDeInclusaoDeAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(
       response => {
         rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
           response.results
@@ -599,10 +599,11 @@ class InclusaoDeAlimentacao extends Component {
         error => {
           toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
-      );
+      );  
     } else { 
       // Edicao
       escolaAlterarSolicitacaoDeInclusaoDeAlimentacao(
+        values.uuid,
         payload,
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       ).then(
@@ -700,7 +701,7 @@ class InclusaoDeAlimentacao extends Component {
                   }
                   removerRascunho={this.removerRascunho}
                   resetForm={() => this.resetForm()}
-                  carregarR ascunho={params => this.carregarRascunho(params)}
+                  carregarRascunho={params => this.carregarRascunho(params)}
                 />
               </div>
             )}

@@ -15,7 +15,7 @@ import {
 import { formataMotivosDias } from "./helper";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
-import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 
 
 export class CorpoRelatorio extends Component {
@@ -112,7 +112,7 @@ export class CorpoRelatorio extends Component {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
               onClick={() => {
-               obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao);
+                getRelatorioInclusaoAlimentacao(uuid, tipoSolicitacao);
               }}
             />
           </p>
@@ -199,7 +199,7 @@ export class CorpoRelatorio extends Component {
             </tbody>
           </table>
         )}
-        {ehInclusaoCei(tipoSolicitacao) & (
+        {ehInclusaoCei(tipoSolicitacao) && (
           <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
         )}
         <div className="row">

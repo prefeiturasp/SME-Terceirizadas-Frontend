@@ -1,4 +1,5 @@
 import axios from "services/_base";
+import { API_URL } from "constants/config";
 import {
   PEDIDOS,
   FLUXO,
@@ -6,6 +7,7 @@ import {
   URL_KIT_LANCHES
 } from "services/constants";
 import { getPath } from "./helper";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export const atualizarKitLanche = async values => {
   const OBJ_REQUEST = {
@@ -70,7 +72,7 @@ export const inicioPedido = (uuid, tipoSolicitacao) => {
 export const getSolicitacoesKitLanche = async tipoSolicitacao => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.MEUS}/`;
 
-  if (tipoSolicitacao) {
+  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
     return axios.get(url);
   }
 
@@ -104,13 +106,13 @@ export const getRefeicoes = async () => {
     });
 };
 
-export const getKitLanches = async tipoSolicitacao => {
+export const getKitLanches = () => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
   };
 
-  return await fetch(`${getPath(tipoSolicitacao)}/kit-lanches/`, OBJ_REQUEST)
+  return fetch(`${API_URL}/kit-lanches/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })

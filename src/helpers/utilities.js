@@ -362,5 +362,5 @@ export const parseRelatorioURLParams = () => {
 export const gerarLinkRelatorio = (path, solicitacao)=> {
   return `/${path}/${RELATORIO}?uuid=${
             solicitacao.uuid
-          }&${tipoSolicitacaoComoQuery(solicitacao)}}`
+          }&${tipoSolicitacaoComoQuery(solicitacao)}`
 }

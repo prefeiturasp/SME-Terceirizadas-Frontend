@@ -24,10 +24,10 @@ export class ModalTerceirizadaRespondeQuestionamento extends Component {
     resp = await this.props.endpoint(uuid, {
       resposta_sim_nao: resposta_sim_nao === "Sim",
       justificativa: justificativa
-    });
+    }, this.props.tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid, this.props.ehEscolaTipoCei);
+      this.props.loadSolicitacao(this.props.uuid, this.props.tipoSolicitacao);
       toastSuccess("Questionamento respondido com sucesso!");
     } else {
       toastError(resp.detail);

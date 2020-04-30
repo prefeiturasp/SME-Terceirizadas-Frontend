@@ -41,15 +41,15 @@ class Relatorio extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getAlteracaoCardapio(uuid, ehEscolaTipoCei).then(response => {
+      getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             alteracaoDeCardapio: response.data,
             uuid,
-            ehEscolaTipoCei,
+            tipoSolicitacao,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               response.data.prioridade
             )
@@ -106,15 +106,18 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
+    const { toastAprovaMensagem, toastAprovaMensagemErro, justificativa } = this.props;
     const uuid = this.state.uuid;
-    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
-    this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
+    const tipoSolicitacao = this.state.tipoSolicitacao;
+    this.props.endpointAprovaSolicitacao(
+      uuid, 
+      justificativa,
+      tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.closeAutorizarModal();
-          this.loadSolicitacao(uuid, ehEscolaTipoCei);
+          this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -196,7 +199,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -208,7 +211,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {erro && (
@@ -225,7 +228,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
@@ -236,7 +239,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
-                  ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+                  tipoSolicitacao={this.state.tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={alteracaoDeCardapio}

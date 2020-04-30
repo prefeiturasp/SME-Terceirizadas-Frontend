@@ -1,6 +1,6 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -12,7 +12,7 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
-  const { alteracaoDeCardapio, prazoDoPedidoMensagem, ehEscolaTipoCei } = props;
+  const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
   return (
     <div>
       <div className="row">
@@ -137,7 +137,7 @@ export const CorpoRelatorio = props => {
           }
         )}
       </table>
-      {ehEscolaTipoCei && (
+      {ehInclusaoCei(tipoSolicitacao) && (
         <TabelaFaixaEtaria
           faixas={alteracaoDeCardapio.quantidade_alunos_por_faixas_etarias}
         />

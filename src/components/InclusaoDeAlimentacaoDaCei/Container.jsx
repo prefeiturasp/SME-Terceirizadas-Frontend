@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getMotivosInclusao } from "../../services/inclusaoDeAlimentacao";
+import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacao";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { dataParaUTC } from "../../helpers/utilities";
@@ -28,7 +28,7 @@ class Container extends Component {
     });
 
     // TODO: precisa ter Cei?
-    getMotivosInclusao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(response => {
+    getMotivosInclusaoNormal().then(response => {
       const motivos = response.results;
       this.setState({
         motivos

@@ -5,10 +5,6 @@ import { getPath } from "./helper";
 export const solicitarKitLanche = async (values, tipoSolicitacao) => {
   const url = getPath(tipoSolicitacao);
 
-  if (tipoSolicitacao) {
-    return axios.post(url, values);
-  }
-
   let status = 0;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

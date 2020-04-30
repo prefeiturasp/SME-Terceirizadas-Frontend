@@ -37,14 +37,14 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
 
     if (uuid) {
-      getDetalheKitLancheAvulsa(uuid, ehEscolaTipoCei).then(response => {
+      getDetalheKitLancheAvulsa(uuid, tipoSolicitacao).then(response => {
         this.setState({
           solicitacaoKitLanche: response,
           uuid,
-          ehEscolaTipoCei,
+          tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -84,10 +84,10 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
+    const { toastAprovaMensagem, toastAprovaMensagemErro, justificativa } = this.props;
     const uuid = this.state.uuid;
-    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
-    this.props.endpointAprovaSolicitacao(uuid, ehEscolaTipoCei).then(
+    const tipoSolicitacao = this.state.tipoSolicitacao;
+    this.props.endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
@@ -172,7 +172,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -184,7 +184,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -199,7 +199,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
@@ -210,7 +210,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   solicitacaoKitLanche={solicitacaoKitLanche}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
-                  ehEscolaTipoCei={this.state.ehEscolaTipoCei}
+                  tipoSolicitacao={this.state.tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={solicitacaoKitLanche}

@@ -2,6 +2,9 @@ import { VISAO } from "../constants/shared";
 import { API_URL } from "../constants/config";
 import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";
+import { getPath as getInclusaoPath } from "services/inclusaoDeAlimentacao/helper";
+import { getPath as getAlteracaoPath } from "services/alteracaoDeCardapio/helper";
+import { getPath as getKitLanchePath } from "services/kitLanche/helper";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -25,8 +28,8 @@ export const getRelatorioKitLancheUnificado = uuid => {
     });
 };
 
-export const getRelatorioAlteracaoCardapio = uuid => {
-  const url = `${API_URL}/alteracoes-cardapio/${uuid}/relatorio/`;
+export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+  const url = `${API_URL}/${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
@@ -52,11 +55,8 @@ export const getProtocoloDietaEspecial = uuid => {
   return url;
 };
 
-export const getRelatorioInclusaoAlimentacao = (uuid, ehInclusaoContinua) => {
-  let url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/relatorio/`;
-  if (ehInclusaoContinua) {
-    url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/relatorio/`;
-  }
+export const getRelatorioInclusaoAlimentacao = (uuid, tipoSolicitacao) => {
+  let url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
@@ -72,8 +72,8 @@ export const getRelatorioInclusaoAlimentacao = (uuid, ehInclusaoContinua) => {
     });
 };
 
-export const getDetalheKitLancheAvulso = uuid => {
-  const url = `${API_URL}/solicitacoes-kit-lanche-avulsa/${uuid}/relatorio/`;
+export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
+  const url = `${API_URL}/${getKitLanchePath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,

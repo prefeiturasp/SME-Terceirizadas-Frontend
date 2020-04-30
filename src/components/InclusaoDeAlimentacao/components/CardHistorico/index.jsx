@@ -56,7 +56,7 @@ export class CardHistorico extends Component {
     if (this.state.redirect) {
       return (
         <Redirect
-          to={gerarLinkRelatorio(pedido)}
+          to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)}
         />
       );
     }

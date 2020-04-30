@@ -54,7 +54,7 @@ export const dreListarSolicitacoesDeInclusaoDeAlimentacao = async (filtroAplicad
   };
 
 
-  export const dreReprovarSolicitacaoDeInclusaoDeAlimentacao = (uuid, tipoSolicitacao) => {
+  export const dreReprovarSolicitacaoDeInclusaoDeAlimentacao = (uuid, justificativa, tipoSolicitacao) => {
     const url = `${getPath(tipoSolicitacao)}/${uuid}/${
       FLUXO.DRE_NAO_VALIDA
     }/`;
