@@ -17,7 +17,9 @@ export const getDREPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
 };
 
 export const getDREPedidosDeKitLancheReprovados = tipoSolicitacao => {
-  const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-diretoria-regional/`;
+  const url = `${getPath(
+    tipoSolicitacao
+  )}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

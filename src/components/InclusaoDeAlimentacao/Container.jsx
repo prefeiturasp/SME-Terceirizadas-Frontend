@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoNormal, getMotivosInclusaoContinua } from "../../services/inclusaoDeAlimentacao";
+import {
+  getMotivosInclusaoNormal,
+  getMotivosInclusaoContinua
+} from "../../services/inclusaoDeAlimentacao";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { formatarPeriodos } from "./helper";
 import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacao from ".";
 
-class Container extends Component { 
+class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {

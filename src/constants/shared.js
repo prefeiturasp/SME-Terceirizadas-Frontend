@@ -149,12 +149,11 @@ export const escolaPodeCancelar = status => {
   );
 };
 
-
 export const TIPO_SOLICITACAO = {
-  SOLICITACAO_NORMAL : "solicitacao-normal",
+  SOLICITACAO_NORMAL: "solicitacao-normal",
   SOLICITACAO_CONTINUA: "solicitacao-continua",
   SOLICITACAO_CEI: "solicitacao-cei"
-}
+};
 
 export const TIPOS_SOLICITACAO_LABEL = {
   INCLUSAO_DE_ALIMENTACAO: "Inclusão de Alimentação",

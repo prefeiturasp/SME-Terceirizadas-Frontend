@@ -3,7 +3,10 @@ import { FLUXO, AUTH_TOKEN, TIPO_SOLICITACAO } from "services/constants";
 import { ENDPOINT } from "constants/shared";
 import { getPath } from "./helper";
 
-export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (uuid, tipoSolicitacao) => {
+export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (
+  uuid,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
 
   let status = 0;
@@ -23,8 +26,10 @@ export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (uuid, tipoSolicita
     });
 };
 
-
-export const escolaCriarSolicitacaoDeAlteracaoCardapio = (payload, tipoSolicitacao) => {
+export const escolaCriarSolicitacaoDeAlteracaoCardapio = (
+  payload,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/`;
 
   if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
@@ -49,8 +54,11 @@ export const escolaCriarSolicitacaoDeAlteracaoCardapio = (payload, tipoSolicitac
     });
 };
 
-
-export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (uuid, payload, tipoSolicitacao) => {
+export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (
+  uuid,
+  payload,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
   if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
@@ -78,7 +86,10 @@ export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (uuid, payload, tipoS
     });
 };
 
-export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
+  uuid,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
   if (tipoSolicitacao) {
@@ -117,7 +128,11 @@ export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicit
     });
 };
 
-export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (uuid, justificativa, tipoSolicitacao) => {
+export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
+  uuid,
+  justificativa,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
 
   let status = 0;
@@ -139,8 +154,13 @@ export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (uuid, justificati
 };
 
 // FIXME: Revisar nome do método
-export const getAlteracoesComLancheDoMesCorrente = (escola_uuid, tipoSolicitacao) => {
-  const url = `${getPath(tipoSolicitacao)}/com-lanche-do-mes-corrente/${escola_uuid}/`;
+export const getAlteracoesComLancheDoMesCorrente = (
+  escola_uuid,
+  tipoSolicitacao
+) => {
+  const url = `${getPath(
+    tipoSolicitacao
+  )}/com-lanche-do-mes-corrente/${escola_uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

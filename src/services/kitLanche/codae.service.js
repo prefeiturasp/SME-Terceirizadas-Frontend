@@ -23,7 +23,11 @@ export const CODAEquestionaKitLancheAvulso = async (
   }
 };
 
-export const CODAENegaKitLancheAvulso = async (uuid, justificativa, tipoSolicitacao) => {
+export const CODAENegaKitLancheAvulso = async (
+  uuid,
+  justificativa,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
@@ -66,7 +70,10 @@ export const CODAEAutorizaKitLancheAvulso = (
     });
 };
 
-export const getCODAEPedidosKitLanchePendentes = (filtroAplicado, tipoSolicitacao) => {
+export const getCODAEPedidosKitLanchePendentes = (
+  filtroAplicado,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

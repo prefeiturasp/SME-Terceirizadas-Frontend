@@ -31,7 +31,7 @@ export class ModalNegarSolicitacao extends Component {
         if (this.props.loadSolicitacao) {
           this.props.loadSolicitacao(
             this.props.uuid,
-            this.props.tipoSolicitacao  
+            this.props.tipoSolicitacao
           );
         }
       } else {

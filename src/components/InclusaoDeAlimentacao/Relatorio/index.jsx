@@ -15,9 +15,7 @@ import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHist
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 // services
-import {
-  obterSolicitacaoDeInclusaoDeAlimentacao, 
-} from "services/inclusaoDeAlimentacao";
+import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -45,14 +43,16 @@ class Relatorio extends Component {
     const uuid = urlParams.get("uuid");
     const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     if (uuid) {
-      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
-        this.setState({
-          uuid,
-          inclusaoDeAlimentacao: response,
-          tipoSolicitacao,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
-        });
-      });
+      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
+        response => {
+          this.setState({
+            uuid,
+            inclusaoDeAlimentacao: response,
+            tipoSolicitacao,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
+          });
+        }
+      );
     }
   }
 
@@ -81,32 +81,36 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid, tipoSolicitacao) {
-    obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
-      this.setState({
-        inclusaoDeAlimentacao: response
-      });
-    });
+    obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
+      response => {
+        this.setState({
+          inclusaoDeAlimentacao: response
+        });
+      }
+    );
   }
 
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
-    this.props.endpointAprovaSolicitacao(
-      this.state.uuid,
-      this.props.justificativa,
-      this.state.tipoSolicitacao
-      ).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(this.state.uuid, this.state.tipoSolicitacao);
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+    this.props
+      .endpointAprovaSolicitacao(
+        this.state.uuid,
+        this.props.justificativa,
+        this.state.tipoSolicitacao
+      )
+      .then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(toastAprovaMensagem);
+            this.loadSolicitacao(this.state.uuid, this.state.tipoSolicitacao);
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(toastAprovaMensagemErro);
+          }
+        },
+        function() {
           toastError(toastAprovaMensagemErro);
         }
-      },
-      function() {
-        toastError(toastAprovaMensagemErro);
-      }
-    );
+      );
   }
 
   render() {
@@ -118,7 +122,7 @@ class Relatorio extends Component {
       tipoSolicitacao,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal,
+      showAutorizarModal
     } = this.state;
     const {
       endpointAprovaSolicitacao,

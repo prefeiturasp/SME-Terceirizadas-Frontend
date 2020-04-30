@@ -11,7 +11,7 @@ import authService from "./auth";
 // FIXME: remove commented imports
 //import { getCODAEPedidosInclusaoAvulsoPendentes } from "./inclusaoDeAlimentacaoAvulsa.service";
 //import { getCODAEPedidosInclusaoContinuosPendentes } from "./inclusaoDeAlimentacaoContinua.service";
-import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from  "services/inclusaoDeAlimentacao";
+import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { getCODAEPedidosDeInversoes } from "services/inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "services/kitLanche";
 import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnificada.service";
@@ -158,10 +158,11 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const [solicitacoesContinuas,
-     soliticacoesAvulsas,
-     solicitacoesCei 
-    ] = await Promise.all([
+  const [
+    solicitacoesContinuas,
+    soliticacoesAvulsas,
+    solicitacoesCei
+  ] = await Promise.all([
     codaeListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
@@ -174,12 +175,12 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
     )
-  ])
+  ]);
 
   if (solicitacoesContinuas) {
     const todas = solicitacoesContinuas.results.concat(
       soliticacoesAvulsas.results,
-      solicitacoesCei.results,
+      solicitacoesCei.results
     );
 
     pedidosPrioritarios = filtraPrioritarios(todas);
@@ -195,7 +196,8 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
   return resposta;
 };
 
-export const getResumoPendenciasKitLancheAvulso = async ( //TODO: rename method
+export const getResumoPendenciasKitLancheAvulso = async (
+  //TODO: rename method
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -209,19 +211,16 @@ export const getResumoPendenciasKitLancheAvulso = async ( //TODO: rename method
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const[avulsos, cei] = await Promise.all([
+  const [avulsos, cei] = await Promise.all([
     getCODAEPedidosKitLanchePendentes(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
     ),
-    getCODAEPedidosKitLanchePendentes(
-      filtro,
-      TIPO_SOLICITACAO.SOLICITACAO_CEI
-    ),
-  ])
+    getCODAEPedidosKitLanchePendentes(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+  ]);
 
   if (avulsos) {
-    const todos = avulsos.results.concat(cei.results)
+    const todos = avulsos.results.concat(cei.results);
     pedidosPrioritarios = filtraPrioritarios(todos);
     pedidosLimite = filtraNoLimite(todos);
     pedidosRegular = filtraRegular(todos);
@@ -282,7 +281,9 @@ export const getResumoPendenciasAlteracaoCardapio = async (
   let pedidosRegular = [];
 
   // TODO: renamed from "solicitacoesUnificadas" rename why.
-  const solicitacoes = await codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro);
+  const solicitacoes = await codaeListarSolicitacoesDeAlteracaoDeCardapio(
+    filtro
+  );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);

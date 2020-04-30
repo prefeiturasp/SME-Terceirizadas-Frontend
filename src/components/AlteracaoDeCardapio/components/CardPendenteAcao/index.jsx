@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar,
-gerarLinkRelatorio } from "helpers/utilities";
+import { talvezPluralizar, gerarLinkRelatorio } from "helpers/utilities";
 import { ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 import "../../../Shareable/style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -104,7 +103,7 @@ export class CardPendenteAcao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={gerarLinkRelatorio('alteracao-de-cardapio', pedido)}
+                      to={gerarLinkRelatorio("alteracao-de-cardapio", pedido)}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

@@ -32,7 +32,15 @@ export default class Rascunhos extends Component {
             </div>
             <div className="icon-draft-card">
               Criado em: {inclusaoAlimentacaoCei.criado_em}
-              <span onClick={() => this.removerRascunho(id_externo, uuid, TIPO_SOLICITACAO.SOLICITACAO_CEI)}>
+              <span
+                onClick={() =>
+                  this.removerRascunho(
+                    id_externo,
+                    uuid,
+                    TIPO_SOLICITACAO.SOLICITACAO_CEI
+                  )
+                }
+              >
                 <i className="fas fa-trash" />
               </span>
               <span

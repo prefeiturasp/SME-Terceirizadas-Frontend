@@ -46,7 +46,7 @@ import {
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
-import { 
+import {
   escolaCriarSolicitacaoDeInclusaoDeAlimentacao,
   escolaAlterarSolicitacaoDeInclusaoDeAlimentacao,
   escolaIniciarSolicitacaoDeInclusaoDeAlimentacao,
@@ -54,7 +54,6 @@ import {
   obterMinhasSolicitacoesDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
-
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -232,7 +231,10 @@ class InclusaoDeAlimentacao extends Component {
 
   removerRascunho(id_externo, uuid, tipoSolicitacao) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
+      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        tipoSolicitacao
+      ).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -454,14 +456,19 @@ class InclusaoDeAlimentacao extends Component {
     }
   }
 
-  refresh() { // FIXME: Usar Promise.all()
+  refresh() {
+    // FIXME: Usar Promise.all()
     let rascunhosInclusaoDeAlimentacao = [];
-    obterMinhasSolicitacoesDeInclusaoDeAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(
+    obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(
       response => {
         rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
           response.results
         );
-        obterMinhasSolicitacoesDeInclusaoDeAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_CONTINUA).then(
+        obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+          TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+        ).then(
           responseNormais => {
             rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
               responseNormais.results
@@ -509,10 +516,10 @@ class InclusaoDeAlimentacao extends Component {
 
   // FIXME: Esses dois fluxos na verdade são um só
   // Ele só precisa ser parametrizado para suportar os dois casos
-  fluxoSolicitacaoContinua(values) { 
-    const payload =  JSON.stringify(
+  fluxoSolicitacaoContinua(values) {
+    const payload = JSON.stringify(
       formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
-    )
+    );
     if (!values.uuid) {
       escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
         payload,
@@ -521,7 +528,10 @@ class InclusaoDeAlimentacao extends Component {
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, TIPO_SOLICITACAO.SOLICITACAO_CONTINUA);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+              );
             } else {
               toastSuccess("Rascunho salvo com sucesso");
               this.resetForm();
@@ -546,7 +556,10 @@ class InclusaoDeAlimentacao extends Component {
         res => {
           if (res.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, TIPO_SOLICITACAO.SOLICITACAO_CONTINUA);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+              );
             } else {
               toastSuccess("Rascunho atualizado com sucesso");
               this.resetForm();
@@ -574,9 +587,9 @@ class InclusaoDeAlimentacao extends Component {
   fluxoSolicitacaoNormal(values) {
     const payload = JSON.stringify(
       formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
-    )
+    );
     // Criacao
-    if (!values.uuid) { 
+    if (!values.uuid) {
       escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
         payload,
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
@@ -584,7 +597,10 @@ class InclusaoDeAlimentacao extends Component {
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+              );
             } else {
               toastSuccess("Rascunho salvo com sucesso");
               this.resetForm();
@@ -599,8 +615,8 @@ class InclusaoDeAlimentacao extends Component {
         error => {
           toastError(`Houve um erro ao salvar o rascunho: ${getError(error)}`);
         }
-      );  
-    } else { 
+      );
+    } else {
       // Edicao
       escolaAlterarSolicitacaoDeInclusaoDeAlimentacao(
         values.uuid,
@@ -610,7 +626,10 @@ class InclusaoDeAlimentacao extends Component {
         res => {
           if (res.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+              );
             } else {
               toastSuccess("Rascunho atualizado com sucesso");
               this.resetForm();

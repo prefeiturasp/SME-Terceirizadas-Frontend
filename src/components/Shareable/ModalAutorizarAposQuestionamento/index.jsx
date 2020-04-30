@@ -10,9 +10,13 @@ import { toastSuccess, toastError } from "../Toast/dialogs";
 
 export class ModalAutorizarAposQuestionamento extends Component {
   async autorizarQuestionamento(uuid) {
-    const resp = await this.props.endpoint(uuid, {
-      justificativa: this.props.justificativa
-    }, this.props.tipoSolicitacao);
+    const resp = await this.props.endpoint(
+      uuid,
+      {
+        justificativa: this.props.justificativa
+      },
+      this.props.tipoSolicitacao
+    );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid, this.props.tipoSolicitacao);

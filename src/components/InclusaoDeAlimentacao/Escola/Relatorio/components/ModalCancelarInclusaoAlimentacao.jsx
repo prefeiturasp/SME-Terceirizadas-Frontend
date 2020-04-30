@@ -40,7 +40,11 @@ export class ModalCancelarInclusaoDeAlimentacao extends Component {
       toastWarn("Justificativa é obrigatória.");
     } else {
       let resp = "";
-      resp = await escolaCancelarSolicitacaoDeInclusaoDeAlimentacao(uuid, this.props.tipoSolicitacao, justificativa);
+      resp = await escolaCancelarSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        this.props.tipoSolicitacao,
+        justificativa
+      );
       if (resp.status === HTTP_STATUS.OK) {
         this.props.closeModal();
         toastSuccess("Solicitação cancelada com sucesso!");

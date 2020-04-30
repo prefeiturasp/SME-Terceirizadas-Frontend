@@ -14,7 +14,6 @@ import {
   codaeAutorizarSolicitacaoDeAlteracaoDeCardapio,
   codaeNegarSolicitacaoDeAlteracaoDeCardapio,
   codaeQuestionarSolicitacaoDeAlteracaoDeCardapio,
-
   TerceirizadaTomaCienciaAlteracaoCardapio,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio
 } from "services/alteracaoDeCardapio";
@@ -46,7 +45,9 @@ export const RelatorioEscola = () => (
     visao={ESCOLA}
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Alteração de Cardápio cancelada com sucesso!"}
-    endpointNaoAprovaSolicitacao={escolaCancelarSolicitacaoDeAlteracaoDeCardapio}
+    endpointNaoAprovaSolicitacao={
+      escolaCancelarSolicitacaoDeAlteracaoDeCardapio
+    }
     textoBotaoNaoAprova="Cancelar"
   />
 );

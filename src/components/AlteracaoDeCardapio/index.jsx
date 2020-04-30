@@ -113,14 +113,19 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao !== null
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      this.atualizaAlteracoesComLancheMesCorrente(vinculo, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
+      this.atualizaAlteracoesComLancheMesCorrente(
+        vinculo,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      );
     }
   }
 
   atualizaAlteracoesComLancheMesCorrente = vinculo => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
-    getAlteracoesComLancheDoMesCorrente(vinculo,
-      TIPO_SOLICITACAO.SOLICITACAO_NORMAL).then(response => {
+    getAlteracoesComLancheDoMesCorrente(
+      vinculo,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(response => {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
@@ -307,7 +312,9 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(TIPO_SOLICITACAO.SOLICITACAO_NORMAL) //FIXME: param required
+    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ) //FIXME: param required
       .then(response => {
         alteracaoCardapioList =
           response.results.length > 0 ? response.results : [];
@@ -343,11 +350,15 @@ class AlteracaoCardapio extends Component {
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    this.atualizaAlteracoesComLancheMesCorrente(vinculo, TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
+    this.atualizaAlteracoesComLancheMesCorrente(
+      vinculo,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    );
   }
 
   enviaAlteracaoCardapio(uuid) {
-    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(uuid).then( // FIXME param required
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(uuid).then(
+      // FIXME param required
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -395,7 +406,10 @@ class AlteracaoCardapio extends Component {
               this.refresh();
             });
         } else {
-          escolaAlterarSolicitacaoDeAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          escolaAlterarSolicitacaoDeAlteracaoCardapio(
+            values.uuid,
+            JSON.stringify(values)
+          ).then(
             async res => {
               if (res.status === HTTP_STATUS.OK) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -455,7 +469,8 @@ class AlteracaoCardapio extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      escolaExcluirSolicitacaoDeAlteracaoCardapio(uuid).then( // FIXME: param required
+      escolaExcluirSolicitacaoDeAlteracaoCardapio(uuid).then(
+        // FIXME: param required
         statusCode => {
           if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

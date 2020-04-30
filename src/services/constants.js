@@ -1,7 +1,7 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 
-export { TIPO_SOLICITACAO } from "constants/shared"
+export { TIPO_SOLICITACAO } from "constants/shared";
 
 export const FLUXO = {
   INICIO_PEDIDO: "inicio-pedido",
@@ -34,12 +34,12 @@ export const SOLICITACOES = {
 };
 
 export const TIPO_MOTIVO = {
-  INCLUSAO_NORMAL:  "motivos-inclusao-normal",
-  INCLUSAO_CONTINUA:  "motivos-inclusao-continua",
+  INCLUSAO_NORMAL: "motivos-inclusao-normal",
+  INCLUSAO_CONTINUA: "motivos-inclusao-continua",
   ALTERACAO_CARDAPIO: "motivos-alteracao-cardapio",
-  NEGACAO:  "motivos-negacao",
+  NEGACAO: "motivos-negacao",
   SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio"
-}
+};
 
 export const RESUMO_POR = {
   TIPO_DE_SOLICITACAO: "desc_doc",

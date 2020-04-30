@@ -25,14 +25,20 @@ class PainelPedidos extends Component {
 
   async atualizarDadosDasInclusoes(filtro) {
     const [avulsas, continuas, cei] = await Promise.all([
-      codaeListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      codaeListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_CONTINUA),
-      codaeListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
-    ])
-    const inclusoes = avulsas.results.concat(
-      continuas.results,
-      cei.results
-    );
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      ),
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI
+      )
+    ]);
+    const inclusoes = avulsas.results.concat(continuas.results, cei.results);
     const pedidosPrioritarios = filtraPrioritarios(inclusoes);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
     const pedidosNoPrazoRegular = filtraRegular(inclusoes);

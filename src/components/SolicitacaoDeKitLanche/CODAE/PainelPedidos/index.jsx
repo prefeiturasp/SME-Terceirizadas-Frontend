@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD, TIPO_SOLICITACAO } from "../../../../constants/shared";
+import {
+  FiltroEnum,
+  TIPODECARD,
+  TIPO_SOLICITACAO
+} from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import {
-  getCodaePedidosDeKitLanche,
-} from "services/kitLanche";
+import { getCodaePedidosDeKitLanche } from "services/kitLanche";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 

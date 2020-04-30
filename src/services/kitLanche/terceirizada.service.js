@@ -26,7 +26,9 @@ export const terceirizadaRespondeQuestionamentoKitLanche = async (
 };
 
 export const terceirizadaTomaCienciaKitLanche = (uuid, tipoSolicitacao) => {
-  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${
+    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
+  }/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH"
@@ -45,8 +47,13 @@ export const terceirizadaTomaCienciaKitLanche = (uuid, tipoSolicitacao) => {
     });
 };
 
-export const getTerceirizadasPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
-  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+export const getTerceirizadasPedidosDeKitLanche = (
+  filtroAplicado,
+  tipoSolicitacao
+) => {
+  const url = `${getPath(tipoSolicitacao)}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

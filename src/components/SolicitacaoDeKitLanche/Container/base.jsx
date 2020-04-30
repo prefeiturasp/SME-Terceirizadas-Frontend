@@ -17,7 +17,10 @@ import {
   validateFormKitLanchePasseio,
   validateFormKitLanchePasseioCei
 } from "./validators";
-import { converterDDMMYYYYparaYYYYMMDD, comoTipo } from "../../../helpers/utilities";
+import {
+  converterDDMMYYYYparaYYYYMMDD,
+  comoTipo
+} from "../../../helpers/utilities";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   getError
@@ -27,7 +30,7 @@ import {
   inicioPedido,
   registroAtualizaKitLanche,
   removeKitLanche,
-  solicitarKitLanche,
+  solicitarKitLanche
 } from "services/kitLanche";
 import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
@@ -219,8 +222,6 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
-  
-
   onSubmit(values) {
     values.kit_lanche = this.state.kitsChecked;
     const { ehCei } = this.state;
@@ -238,7 +239,13 @@ export class SolicitacaoDeKitLanche extends Component {
         validateFormKitLanchePasseioCei(values);
       }
       return new Promise(resolve => {
-          this.salvarOuEnviar(solicitacao_kit_lanche, values, ehCei ? TIPO_SOLICITACAO.SOLICITACAO_CEI : TIPO_SOLICITACAO.SOLICITACAO_NORMAL);
+        this.salvarOuEnviar(
+          solicitacao_kit_lanche,
+          values,
+          ehCei
+            ? TIPO_SOLICITACAO.SOLICITACAO_CEI
+            : TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        );
         this.handleConfirmation();
         resolve();
       });
@@ -248,7 +255,7 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   iniciarPedido(uuid) {
-    const tipo = this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL
+    const tipo = this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL;
     inicioPedido(uuid, tipo).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
@@ -273,8 +280,8 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   resolveTipo = () => {
-    return this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL
-  }
+    return this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL;
+  };
 
   validaTipoMensagemError = response => {
     const tipoError = response.tipo_error[0];
@@ -343,28 +350,32 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
-      solicitarKitLanche(solicitacao_kit_lanche,
-         this.resolveTipo()
-        ).then(resp => {
-        if (resp.status === HTTP_STATUS.CREATED) {
-          if (values.status === STATUS_DRE_A_VALIDAR) {
-            this.iniciarPedido(resp.data.uuid);
+      solicitarKitLanche(solicitacao_kit_lanche, this.resolveTipo()).then(
+        resp => {
+          if (resp.status === HTTP_STATUS.CREATED) {
+            if (values.status === STATUS_DRE_A_VALIDAR) {
+              this.iniciarPedido(resp.data.uuid);
+            } else {
+              toastSuccess(
+                "Solicitação de Kit Lanche Passeio salva com sucesso!"
+              );
+              this.resetForm();
+            }
+          } else if (resp.data.tipo_error) {
+            this.validaTipoMensagemError(resp.data);
           } else {
-            toastSuccess(
-              "Solicitação de Kit Lanche Passeio salva com sucesso!"
+            toastError(
+              `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
             );
-            this.resetForm();
           }
-        } else if (resp.data.tipo_error) {
-          this.validaTipoMensagemError(resp.data);
-        } else {
-          toastError(
-            `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
-          );
         }
-      });
+      );
     } else {
-      registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid, this.resolveTipo() )
+      registroAtualizaKitLanche(
+        solicitacao_kit_lanche,
+        values.uuid,
+        this.resolveTipo()
+      )
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -390,7 +401,8 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   refresh() {
-    if (this.state.ehCei) { // FIXME: remove duplicated code
+    if (this.state.ehCei) {
+      // FIXME: remove duplicated code
       getSolicitacoesKitLanche(SOLICITACAO_CEI).then(resp => {
         this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
       });

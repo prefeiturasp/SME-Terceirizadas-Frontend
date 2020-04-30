@@ -31,7 +31,11 @@ export class Rascunhos extends Component {
               Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
                 onClick={() =>
-                  this.props.removerRascunho(id_externo, uuid, comoTipo(inclusaoDeAlimentacao))
+                  this.props.removerRascunho(
+                    id_externo,
+                    uuid,
+                    comoTipo(inclusaoDeAlimentacao)
+                  )
                 }
               >
                 <i className="fas fa-trash" />

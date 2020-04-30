@@ -35,14 +35,20 @@ class PainelPedidos extends Component {
   //FIXME: Nao trata errors, nao faz requisicoes em paralelo
   async atualizarDadosDasInclusoes(filtro) {
     const [avulsas, continuas, cei] = await Promise.all([
-      dreListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      dreListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_CONTINUA),
-      dreListarSolicitacoesDeInclusaoDeAlimentacao(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
-    ])
-    const inclusoes = avulsas.results.concat(
-      continuas.results,
-      cei.results
-    );
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      ),
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI
+      )
+    ]);
+    const inclusoes = avulsas.results.concat(continuas.results, cei.results);
     const pedidosPrioritarios = filtraPrioritarios(inclusoes);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
     const pedidosNoPrazoRegular = filtraRegular(inclusoes);

@@ -1,8 +1,10 @@
-
 import { FLUXO, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
 
-export const obterSolicitacaoDeInclusaoDeAlimentacao = (uuid, tipoSolicitacao) => {
+export const obterSolicitacaoDeInclusaoDeAlimentacao = (
+  uuid,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

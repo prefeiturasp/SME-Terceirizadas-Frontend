@@ -16,7 +16,7 @@ import {
   corDaMensagem,
   stringSeparadaPorVirgulas,
   parseRelatorioURLParams,
-  ehInclusaoContinua,
+  ehInclusaoContinua
 } from "helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
 import { escolaPodeCancelar } from "../../../../constants/shared";
@@ -52,23 +52,24 @@ class Relatorio extends Component {
   };
 
   componentDidMount() {
-    const [uuid, tipoSolicitacao] = parseRelatorioURLParams()
+    const [uuid, tipoSolicitacao] = parseRelatorioURLParams();
     meusDados().then(response => {
       this.setState({
         meusDados: response
       });
     });
-    
 
     if (uuid) {
-      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
-        this.setState({
-          inclusaoDeAlimentacao: response,
-          tipoSolicitacao,
-          uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
-        });
-      });
+      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
+        response => {
+          this.setState({
+            inclusaoDeAlimentacao: response,
+            tipoSolicitacao,
+            uuid,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
+          });
+        }
+      );
     }
   }
 

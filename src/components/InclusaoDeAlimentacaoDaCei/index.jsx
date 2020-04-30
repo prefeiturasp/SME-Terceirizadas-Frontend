@@ -38,7 +38,7 @@ import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
-const { SOLICITACAO_CEI }  = TIPO_SOLICITACAO;
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -246,10 +246,13 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       }
     }
   };
- 
+
   removerRascunho(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(uuid, SOLICITACAO_CEI).then(
+      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        SOLICITACAO_CEI
+      ).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

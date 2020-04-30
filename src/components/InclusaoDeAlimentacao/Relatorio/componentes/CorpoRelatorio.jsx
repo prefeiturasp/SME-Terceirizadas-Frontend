@@ -4,7 +4,7 @@ import {
   corDaMensagem,
   stringSeparadaPorVirgulas,
   ehInclusaoContinua,
-  ehInclusaoCei,
+  ehInclusaoCei
 } from "helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -16,7 +16,6 @@ import { formataMotivosDias } from "./helper";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
-
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
@@ -159,8 +158,8 @@ export class CorpoRelatorio extends Component {
           </div>
         )}
         <hr />
-        {
-          ehInclusaoContinua(tipoSolicitacao)? this.renderParteContinua()
+        {ehInclusaoContinua(tipoSolicitacao)
+          ? this.renderParteContinua()
           : this.renderParteAvulsa(
               inclusoes || [
                 {

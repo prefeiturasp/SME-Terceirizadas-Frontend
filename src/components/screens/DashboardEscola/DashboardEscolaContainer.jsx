@@ -77,7 +77,7 @@ export default class DashboardEscolaContainer extends Component {
         pendentes: ajustarFormatoLog(pendentes.results),
         negadas: ajustarFormatoLog(negadas.results),
         canceladas: ajustarFormatoLog(canceladas.results),
-        numeroAlunos,
+        numeroAlunos
       });
     }
   }

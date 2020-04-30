@@ -1,7 +1,6 @@
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
 
-
 export const getTerceirizadaPedidosReprovados = tipoSolicitacao => {
   const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
@@ -17,7 +16,10 @@ export const getTerceirizadaPedidosReprovados = tipoSolicitacao => {
     });
 };
 
-export const TerceirizadaTomaCienciaAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+export const TerceirizadaTomaCienciaAlteracaoCardapio = (
+  uuid,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
@@ -64,7 +66,9 @@ export const getTerceirizadaPedidosDeAlteracaoCardapio = (
   filtroAplicado,
   tipoSolicitacao
 ) => {
-  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+  const url = `${getPath(tipoSolicitacao)}/${
+    PEDIDOS.TERCEIRIZADA
+  }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

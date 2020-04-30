@@ -115,7 +115,8 @@ export const ajustarFormatoLog = logs => {
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}`
+      }&ehInclusaoContinua=${log.tipo_doc ===
+        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}`
     };
   });
 };

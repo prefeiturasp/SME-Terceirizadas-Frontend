@@ -2,7 +2,10 @@ import { API_URL } from "../../constants/config";
 import { FLUXO, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
 
-export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = (payload, tipoSolicitacao) => {
+export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = (
+  payload,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/`;
   let status = 0;
   return fetch(url, {
@@ -22,8 +25,10 @@ export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = (payload, tipoSolic
     });
 };
 
-
-export const escolaIniciarSolicitacaoDeInclusaoDeAlimentacao = (uuid, tipoSolicitacao) => {
+export const escolaIniciarSolicitacaoDeInclusaoDeAlimentacao = (
+  uuid,
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
 
   let status = 0;
@@ -41,47 +46,53 @@ export const escolaIniciarSolicitacaoDeInclusaoDeAlimentacao = (uuid, tipoSolici
     .catch(error => {
       return error.json();
     });
-  };
+};
 
-
-export const escolaAlterarSolicitacaoDeInclusaoDeAlimentacao = (uuid, payload, tipoSolicitacao) => {
-    const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
-    let status = 0;
-    return fetch(url, {
-      method: "PUT",
-      body: payload,
-      headers: AUTH_TOKEN
+export const escolaAlterarSolicitacaoDeInclusaoDeAlimentacao = (
+  uuid,
+  payload,
+  tipoSolicitacao
+) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PUT",
+    body: payload,
+    headers: AUTH_TOKEN
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
     })
-      .then(res => {
-        status = res.status;
-        return res.json();
-      })
-      .then(data => {
-        return { data: data, status: status };
-      })
-      .catch(error => {
-        return error.json();
-      });
-  };
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
 
-  export const escolaExcluirSolicitacaoDeInclusaoDeAlimentacao = async (uuid, tipoSolicitacao) => {
-    const OBJ_REQUEST = {
-      headers: AUTH_TOKEN,
-      method: "DELETE"
-    };
-    let status = 0;
-    return await fetch(`${getPath(tipoSolicitacao)}/${uuid}/`, OBJ_REQUEST)
-      .then(res => {
-        status = res.status;
-        return res.json();
-      })
-      .then(data => {
-        return { data: data, status: status };
-      })
-      .catch(error => {
-        return { data: error, status: status };
-      });
+export const escolaExcluirSolicitacaoDeInclusaoDeAlimentacao = async (
+  uuid,
+  tipoSolicitacao
+) => {
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "DELETE"
   };
+  let status = 0;
+  return await fetch(`${getPath(tipoSolicitacao)}/${uuid}/`, OBJ_REQUEST)
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return { data: error, status: status };
+    });
+};
 
 export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   uuid,

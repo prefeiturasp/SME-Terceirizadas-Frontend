@@ -33,15 +33,15 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
     getTerceirizadaPedidosDeAlteracaoCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-      ),
-      getTerceirizadaPedidosDeAlteracaoCardapio(
+    ),
+    getTerceirizadaPedidosDeAlteracaoCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    ),
-  ])
+    )
+  ]);
 
   if (avulsos) {
-    const todos = avulsos.results.concat(cei.results)
+    const todos = avulsos.results.concat(cei.results);
     pedidosPrioritarios = filtraPrioritarios(todos);
     pedidosLimite = filtraNoLimite(todos);
     pedidosRegular = filtraRegular(todos);
@@ -70,34 +70,35 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const [solicitacoesContinuas,
+  const [
+    solicitacoesContinuas,
     soliticacoesAvulsas,
-    solicitacoesCei 
-   ] = await Promise.all([
-   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
-     filtro,
-     TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
-   ),
-   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
-     filtro,
-     TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-   ),
-   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
-     filtro,
-     TIPO_SOLICITACAO.SOLICITACAO_CEI
-   )
- ])
+    solicitacoesCei
+  ] = await Promise.all([
+    terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    ),
+    terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
- if (solicitacoesContinuas) {
-   const todas = solicitacoesContinuas.results.concat(
-     soliticacoesAvulsas.results,
-     solicitacoesCei.results,
-   );
+  if (solicitacoesContinuas) {
+    const todas = solicitacoesContinuas.results.concat(
+      soliticacoesAvulsas.results,
+      solicitacoesCei.results
+    );
 
-   pedidosPrioritarios = filtraPrioritarios(todas);
-   pedidosLimite = filtraNoLimite(todas);
-   pedidosRegular = filtraRegular(todas);
- }
+    pedidosPrioritarios = filtraPrioritarios(todas);
+    pedidosLimite = filtraNoLimite(todas);
+    pedidosRegular = filtraRegular(todas);
+  }
 
   resposta.limite = pedidosLimite.length;
   resposta.prioritario = pedidosPrioritarios.length;

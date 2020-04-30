@@ -10,7 +10,7 @@ import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSoli
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 
-import { 
+import {
   // escola
   escolaCancelarSolicitacaoDeInclusaoDeAlimentacao,
   // DRE
@@ -21,10 +21,8 @@ import {
   codaeNegarSolicitacaoDeInclusaoDeAlimentacao,
   codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao,
   // terceirizada
-  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao,
+  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
-
-
 
 class RelatorioBase extends Component {
   constructor(props) {
@@ -34,9 +32,9 @@ class RelatorioBase extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const tipoSolicitacao = urlParams.get("tipoSolicitacao"); // 
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao"); //
     this.setState({
-      tipoSolicitacao,
+      tipoSolicitacao
     });
   }
   render() {
@@ -67,7 +65,9 @@ export class RelatorioEscola extends Component {
         toastNaoAprovaMensagem={
           "Inclusão de Alimentação cancelada com sucesso!"
         }
-        endpointNaoAprovaSolicitacao={escolaCancelarSolicitacaoDeInclusaoDeAlimentacao}
+        endpointNaoAprovaSolicitacao={
+          escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
+        }
         textoBotaoNaoAprova="Cancelar"
       />
     );
@@ -92,7 +92,9 @@ export class RelatorioDRE extends Component {
           "Houve um erro ao validar a Inclusão de Alimentação"
         }
         endpointAprovaSolicitacao={dreValidarSolicitacaoDeInclusaoDeAlimentacao}
-        endpointNaoAprovaSolicitacao={dreReprovarSolicitacaoDeInclusaoDeAlimentacao}
+        endpointNaoAprovaSolicitacao={
+          dreReprovarSolicitacaoDeInclusaoDeAlimentacao
+        }
         textoBotaoNaoAprova="Não Validar"
         textoBotaoAprova="Validar"
       />
@@ -122,9 +124,15 @@ export class RelatorioCODAE extends Component {
         toastAprovaMensagemErro={
           "Houve um erro ao autorizar a Inclusão de Alimentação"
         }
-        endpointNaoAprovaSolicitacao={codaeNegarSolicitacaoDeInclusaoDeAlimentacao}
-        endpointAprovaSolicitacao={codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao}
-        endpointQuestionamento={codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao}
+        endpointNaoAprovaSolicitacao={
+          codaeNegarSolicitacaoDeInclusaoDeAlimentacao
+        }
+        endpointAprovaSolicitacao={
+          codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao
+        }
+        endpointQuestionamento={
+          codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao
+        }
         textoBotaoNaoAprova="Negar"
         textoBotaoAprova="Autorizar"
       />
@@ -143,7 +151,9 @@ export class RelatorioTerceirizada extends Component {
         visao={TERCEIRIZADA}
         ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
         ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
-        endpointQuestionamento={terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao}
+        endpointQuestionamento={
+          terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
+        }
       />
     );
   }

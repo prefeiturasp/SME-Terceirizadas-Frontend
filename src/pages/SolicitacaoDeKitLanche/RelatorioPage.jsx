@@ -88,9 +88,7 @@ export const RelatorioTerceirizada = () => (
       "Houve um erro ao tomar ciência do Kit Lanche Passeio"
     }
     endpointAprovaSolicitacao={terceirizadaTomaCienciaKitLanche}
-    endpointNaoAprovaSolicitacao={
-      terceirizadaRespondeQuestionamentoKitLanche
-    }
+    endpointNaoAprovaSolicitacao={terceirizadaRespondeQuestionamentoKitLanche}
     endpointQuestionamento={terceirizadaRespondeQuestionamentoKitLanche}
     textoBotaoNaoAprova="Não"
     textoBotaoAprova="Ciente"

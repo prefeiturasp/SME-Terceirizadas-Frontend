@@ -328,39 +328,42 @@ export const formatarLotesParaVisao = lotes => {
 
 export const ehInclusaoContinua = tipoSolicitacao => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
-}
+};
 export const ehInclusaoAvulsa = tipoSolicitacao => {
   return tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
-}
+};
 
 export const ehInclusaoCei = tipoSolicitacao => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
-}
-
-export const tipoSolicitacaoComoQuery = inclusao => {
-  if(inclusao.escola.nome.toLowerCase().includes("cei ")) {
-    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI }`
-  }
-  const tipo = inclusao.data_inicial !== undefined ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA :
-   TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-  return `tipoSolicitacao=${tipo}`
 };
 
-export const comoTipo = (inclusao) => {
-  if(inclusao.escola.nome.toLowerCase().includes("cei ")) {
-    return TIPO_SOLICITACAO.SOLICITACAO_CEI
+export const tipoSolicitacaoComoQuery = inclusao => {
+  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI}`;
   }
-  return inclusao.data_inicial !== undefined ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA :
-   TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+  const tipo =
+    inclusao.data_inicial !== undefined
+      ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
+  return `tipoSolicitacao=${tipo}`;
+};
+
+export const comoTipo = inclusao => {
+  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return TIPO_SOLICITACAO.SOLICITACAO_CEI;
+  }
+  return inclusao.data_inicial !== undefined
+    ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };
 
 export const parseRelatorioURLParams = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  return [ urlParams.get("uuid"), urlParams.get("tipoSolicitacao")];
-}
+  return [urlParams.get("uuid"), urlParams.get("tipoSolicitacao")];
+};
 
-export const gerarLinkRelatorio = (path, solicitacao)=> {
+export const gerarLinkRelatorio = (path, solicitacao) => {
   return `/${path}/${RELATORIO}?uuid=${
-            solicitacao.uuid
-          }&${tipoSolicitacaoComoQuery(solicitacao)}`
-}
+    solicitacao.uuid
+  }&${tipoSolicitacaoComoQuery(solicitacao)}`;
+};

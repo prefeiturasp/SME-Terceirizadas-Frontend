@@ -29,7 +29,7 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const[avulsos, cei] = await Promise.all([
+  const [avulsos, cei] = await Promise.all([
     dreListarSolicitacoesDeAlteracaoDeCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
@@ -37,11 +37,11 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
     dreListarSolicitacoesDeAlteracaoDeCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    ),
-  ])
+    )
+  ]);
 
   if (avulsos) {
-    const all = avulsos.results.concat(cei.results)
+    const all = avulsos.results.concat(cei.results);
     pedidosPrioritarios = filtraPrioritarios(all);
     pedidosLimite = filtraNoLimite(all);
     pedidosRegular = filtraRegular(all);
@@ -55,7 +55,8 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   return resposta;
 };
 
-const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async ( //FIXME: must include CEI?
+const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+  //FIXME: must include CEI?
   filtro = "sem_filtro"
 ) => {
   let resposta = {

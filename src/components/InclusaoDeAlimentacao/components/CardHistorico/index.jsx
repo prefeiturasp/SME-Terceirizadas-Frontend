@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { Redirect } from "react-router-dom";
-import { stringSeparadaPorVirgulas, gerarLinkRelatorio } from "helpers/utilities";
+import {
+  stringSeparadaPorVirgulas,
+  gerarLinkRelatorio
+} from "helpers/utilities";
 import "./style.scss";
 
 import Botao from "../../../Shareable/Botao";
@@ -55,9 +58,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Redirect
-          to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)}
-        />
+        <Redirect to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)} />
       );
     }
   }

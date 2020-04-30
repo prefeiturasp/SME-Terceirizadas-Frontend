@@ -34,7 +34,7 @@ import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import {
   getAlunosPorFaixaEtariaNumaData,
   // FIXME: remove unused imports
-/*   getMeusRascunhosAlteracoesCardapioCei,
+  /*   getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
   iniciaFluxoAlteracaoCardapioCei,
   atualizaAlteracaoCardapioCei,
@@ -51,7 +51,7 @@ import { parseFormValues } from "./helper";
 import CheckboxPeriodo from "./CheckboxPeriodo";
 import { TIPO_SOLICITACAO } from "constants/shared";
 
-const { SOLICITACAO_CEI } = TIPO_SOLICITACAO
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -199,7 +199,9 @@ class AlteracaoCardapio extends Component {
   refresh = async () => {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
     try {
-      const response = await escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(SOLICITACAO_CEI);
+      const response = await escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+        SOLICITACAO_CEI
+      );
       if (response.status === HTTP_STATUS.OK) {
         alteracaoCardapioList =
           response.data.results.length > 0 ? response.data.results : [];
@@ -261,10 +263,16 @@ class AlteracaoCardapio extends Component {
 
       if (values.uuid) {
         parsedValues.uuid = values.uuid;
-        response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(parsedValues, SOLICITACAO_CEI);
+        response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.OK;
       } else {
-        response = await escolaCriarSolicitacaoDeAlteracaoCardapio(parsedValues, SOLICITACAO_CEI);
+        response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.CREATED;
       }
 
@@ -313,7 +321,10 @@ class AlteracaoCardapio extends Component {
   OnDeleteButtonClicked = async (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       try {
-        const response = await escolaExcluirSolicitacaoDeAlteracaoCardapio(uuid, SOLICITACAO_CEI);
+        const response = await escolaExcluirSolicitacaoDeAlteracaoCardapio(
+          uuid,
+          SOLICITACAO_CEI
+        );
         if (response.status === HTTP_STATUS.NO_CONTENT) {
           toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
           this.refresh();

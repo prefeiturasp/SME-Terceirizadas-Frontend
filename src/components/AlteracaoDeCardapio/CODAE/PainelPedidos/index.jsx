@@ -25,7 +25,6 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-
     Promise.all([
       codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_NORMAL),
       codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_CEI)
@@ -42,9 +41,7 @@ class PainelPedidos extends Component {
       });
     });
 
-
-    
-    (filtro).then(response => {
+    filtro.then(response => {
       let pedidosPrioritarios = filtraPrioritarios(response.results);
       let pedidosNoPrazoLimite = filtraNoLimite(response.results);
       let pedidosNoPrazoRegular = filtraRegular(response.results);

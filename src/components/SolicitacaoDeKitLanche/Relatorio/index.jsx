@@ -84,22 +84,28 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const { toastAprovaMensagem, toastAprovaMensagemErro, justificativa } = this.props;
+    const {
+      toastAprovaMensagem,
+      toastAprovaMensagemErro,
+      justificativa
+    } = this.props;
     const uuid = this.state.uuid;
     const tipoSolicitacao = this.state.tipoSolicitacao;
-    this.props.endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(uuid);
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+    this.props
+      .endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao)
+      .then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(toastAprovaMensagem);
+            this.loadSolicitacao(uuid);
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(toastAprovaMensagemErro);
+          }
+        },
+        function() {
           toastError(toastAprovaMensagemErro);
         }
-      },
-      function() {
-        toastError(toastAprovaMensagemErro);
-      }
-    );
+      );
   }
 
   render() {
@@ -229,10 +235,8 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    
-                    {
-                    
-                    EXIBIR_BOTAO_APROVAR &&
+
+                    {EXIBIR_BOTAO_APROVAR &&
                       (textoBotaoAprova !== "Ciente" && (
                         <Botao
                           texto={textoBotaoAprova}
