@@ -191,8 +191,8 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
     });
 };
 
-export const getHomologacoesCODAE = () => {
-  const url = `${API_URL}/homologacoes-produtos/`;
+export const getDashboardGestaoProdutos = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/dashboard/`;
   let status = 0;
   return fetch(url, {
     method: "GET",

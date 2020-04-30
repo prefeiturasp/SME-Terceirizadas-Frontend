@@ -6,14 +6,16 @@ export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
   PENDENTE: "card-pending",
   AUTORIZADO: "card-authorized",
-  NEGADO: "card-denied"
+  NEGADO: "card-denied",
+  RECLAMACAO: "card-complained"
 };
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
-  NEGADO: "fa-ban"
+  NEGADO: "fa-ban",
+  RECLAMACAO: "fa-bullhorn"
 };
 
 export const CardStatusDeSolicitacao = props => {

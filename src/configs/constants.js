@@ -9,6 +9,7 @@ export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -18,6 +19,7 @@ export const ALUNO = "aluno";
 
 export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
+export const SOLICITACAOES_HOMOLOGADAS = "solicitacoes-homologadas";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";

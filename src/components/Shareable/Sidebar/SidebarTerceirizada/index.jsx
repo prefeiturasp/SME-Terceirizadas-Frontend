@@ -142,7 +142,7 @@ export class SidebarTerceirizada extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"P&D"}</span>
+          <span>{"Gestão de Produto"}</span>
         </Link>
         <div
           id="collapsePD"
@@ -151,6 +151,13 @@ export class SidebarTerceirizada extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/painel-gestao-produto`}
+            >
+              Painel Inicial
+            </NavLink>
             <NavLink
               activeClassName="active"
               className="collapse-item"
