@@ -4,7 +4,6 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getInclusaoDeAlimentacaoAvulsa } from "../../../services/inclusaoDeAlimentacaoAvulsa.service";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
@@ -13,10 +12,12 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { getInclusaoDeAlimentacaoContinua } from "../../../services/inclusaoDeAlimentacaoContinua.service";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
-import { getInclusaoDeAlimentacaoDaCei } from "../../../services/inclusaoAlimentacaoDaCei.service";
+// services
+import {
+  obterSolicitacaoDeInclusaoDeAlimentacao, 
+} from "services/inclusaoDeAlimentacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -24,13 +25,15 @@ class Relatorio extends Component {
     this.state = {
       uuid: null,
       showNaoAprovaModal: false,
-      ehInclusaoContinua: false,
+      tipoSolicitacao: null,
       showAutorizarModal: false,
       showModal: false,
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null
     };
+
+    //FIXME: migrar para padrao sem binding
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
@@ -40,23 +43,12 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua") === "true";
-    const ehEscolaTipoCei = urlParams.get("escolaTipoCei") === "true";
-    let service;
-    if (ehEscolaTipoCei) {
-      service = getInclusaoDeAlimentacaoDaCei;
-    } else if (ehInclusaoContinua) {
-      service = getInclusaoDeAlimentacaoContinua;
-    } else {
-      service = getInclusaoDeAlimentacaoAvulsa;
-    }
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     if (uuid) {
-      service(uuid).then(response => {
+      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
         this.setState({
           inclusaoDeAlimentacao: response,
-          uuid,
-          ehInclusaoContinua: ehInclusaoContinua,
-          ehEscolaTipoCei: ehEscolaTipoCei,
+          tipoSolicitacao: tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -87,12 +79,8 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid, isCei) {
-    const { ehInclusaoContinua } = this.state;
-    const getInclusaoDeAlimentacao = ehInclusaoContinua
-      ? getInclusaoDeAlimentacaoContinua
-      : getInclusaoDeAlimentacaoAvulsa;
-    getInclusaoDeAlimentacao(uuid, isCei).then(response => {
+  loadSolicitacao(uuid, tipoSolicitacao) {
+    obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(response => {
       this.setState({
         inclusaoDeAlimentacao: response
       });
@@ -101,13 +89,14 @@ class Relatorio extends Component {
 
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
-    const uuid = this.state.uuid;
-    const ehEscolaTipoCei = this.state.ehEscolaTipoCei;
-    this.props.endpointAprovaSolicitacao(uuid, null, ehEscolaTipoCei).then(
+    this.props.endpointAprovaSolicitacao(
+      this.state.uuid,
+      this.state.tipoSolicitacao
+      ).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(uuid, ehEscolaTipoCei);
+          this.loadSolicitacao(this.state.uuid, this.state.tipoSolicitacao);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -124,11 +113,10 @@ class Relatorio extends Component {
       showNaoAprovaModal,
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
-      ehInclusaoContinua,
+      tipoSolicitacao,
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
-      ehEscolaTipoCei
     } = this.state;
     const {
       endpointAprovaSolicitacao,
@@ -227,8 +215,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
-                  ehInclusaoContinua={ehInclusaoContinua}
-                  ehEscolaTipoCei={ehEscolaTipoCei}
+                  tipoSolicitacao={tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={inclusaoDeAlimentacao}

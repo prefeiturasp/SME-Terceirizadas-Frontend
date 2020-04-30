@@ -1,15 +1,15 @@
-import { FLUXO, PEDIDOS, AUTH_TOKEN } from "server/constants";
+import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const getCODAEPedidosAlteracaoCardapio = (filtroAplicado, isCei) => {
-    const url = `${getPath(isCei)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
+export const codaeListarSolicitacoesDeAlteracaoDeCardapio = (filtroAplicado, tipoSolicitacao) => {
+    const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
     const OBJ_REQUEST = {
       headers: AUTH_TOKEN,
       method: "GET"
     };
     return fetch(url, OBJ_REQUEST)
       .then(result => {
-        return result.json(); //FIXME: map results as isCei
+        return result.json(); //FIXME: map results as tipoSolicitacao
       })
       .catch(error => {
         console.log(error);
@@ -17,8 +17,8 @@ export const getCODAEPedidosAlteracaoCardapio = (filtroAplicado, isCei) => {
   };
 
 
-  export const getCodaePedidosReprovados = isCei => {
-    const url = `${getPath(isCei)}/pedidos-reprovados-codae/`;
+  export const codaeListarSolicitacoesDeAlteracaoDeCardapioReprovadas = tipoSolicitacao => {
+    const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-codae/`;
     const OBJ_REQUEST = {
       headers: AUTH_TOKEN,
       method: "GET"
@@ -32,8 +32,8 @@ export const getCODAEPedidosAlteracaoCardapio = (filtroAplicado, isCei) => {
       });
   };
   
-  export const CODAEAutorizaAlteracaoDeCardapio = (uuid, justificativa = {}, isCei) => {
-    const url = `${getPath(isCei)}/${uuid}/codae-autoriza-pedido/`;
+  export const codaeAutorizarSolicitacaoDeAlteracaoDeCardapio = (uuid, justificativa = {}, tipoSolicitacao) => {
+    const url = `${getPath(tipoSolicitacao)}/${uuid}/codae-autoriza-pedido/`;
     let status = 0;
     return fetch(url, {
       method: "PATCH",
@@ -53,8 +53,8 @@ export const getCODAEPedidosAlteracaoCardapio = (filtroAplicado, isCei) => {
   };
 
 
-export const CODAENegaAlteracaoCardapio = (uuid, justificativa, isCei) => {
-    const url = `${getPath(isCei)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+export const codaeNegarSolicitacaoDeAlteracaoDeCardapio = (uuid, justificativa, tipoSolicitacao) => {
+    const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
     let status = 0;
     return fetch(url, {
       method: "PATCH",
@@ -73,12 +73,12 @@ export const CODAENegaAlteracaoCardapio = (uuid, justificativa, isCei) => {
       });
   };
 
-  export const CODAEquestionaAlteracaoCardapio = async (
+  export const codaeQuestionarSolicitacaoDeAlteracaoDeCardapio = async (
     uuid,
     observacao_questionamento_codae,
-    isCei,
+    tipoSolicitacao,
   ) => {
-    const url = `${getPath(isCei)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+    const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
     const OBJ_REQUEST = {
       headers: AUTH_TOKEN,
       method: "PATCH",

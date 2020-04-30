@@ -1,5 +1,4 @@
 import axios from "../_base";
-import { API_URL } from "../../constants/config.constants";
 import authService from "../auth";
 import { PEDIDOS, FLUXO, TIPO_SOLICITACAO } from "../constants";
 import { getPath } from "./helper";
@@ -12,7 +11,7 @@ const authToken = {
 };
 
 
-export const getCODAEPedidosDeInclusaoAlimentacaoAvulsa = async (filtroAplicado, tipoSolicitacao) => {
+export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (filtroAplicado, tipoSolicitacao) => {
     const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
 
     if(tipoSolicitacao === SOLICITACAO_CEI) {
@@ -21,7 +20,7 @@ export const getCODAEPedidosDeInclusaoAlimentacaoAvulsa = async (filtroAplicado,
         return {
             results: results.map(el => ({
             ...el,
-            isCei: true
+            tipoSolicitacao: SOLICITACAO_CEI
             })),
             status: response.status
         };
@@ -43,7 +42,7 @@ export const getCODAEPedidosDeInclusaoAlimentacaoAvulsa = async (filtroAplicado,
   };
 
 
-export const CODAEAutorizaInclusaoDeAlimentacao = (
+export const codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao = (
     uuid,
     justificativa = {},
     tipoSolicitacao
@@ -67,7 +66,7 @@ export const CODAEAutorizaInclusaoDeAlimentacao = (
       });
   };
   
-  export const CODAENegaInclusaoDeAlimentacaoAvulsa = (
+  export const codaeNegarSolicitacaoDeInclusaoDeAlimentacao = (
     uuid,
     justificativa,
     tipoSolicitacao
@@ -91,7 +90,7 @@ export const CODAEAutorizaInclusaoDeAlimentacao = (
       });
   };
   
-  export const CODAEQuestionaInclusaoDeAlimentacao = async (
+  export const codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao = async (
     uuid,
     observacao_questionamento_codae,
     tipoSolicitacao
@@ -113,64 +112,6 @@ export const CODAEAutorizaInclusaoDeAlimentacao = (
     }
   };
 
-
-export const negarInclusaoNormalCodae = uuid => {
-    const url = `${API_URL}/grupos-inclusao-alimentacao-normal/${uuid}/${
-      FLUXO.CODAE_NEGA
-    }/`;
-    let status = 0;
-    return fetch(url, {
-      method: "PATCH",
-      headers: authToken
-    })
-      .then(res => {
-        status = res.status;
-        return res.json();
-      })
-      .then(data => {
-        return { data: data, status: status };
-      })
-      .catch(error => {
-        return error.json();
-      });
-  };
-  
-  export const negarInclusaoContinuaCodae = uuid => {
-    const url = `${API_URL}/inclusoes-alimentacao-continua/${uuid}/${
-      FLUXO.CODAE_NEGA
-    }/`;
-    let status = 0;
-    return fetch(url, {
-      method: "PATCH",
-      headers: authToken
-    })
-      .then(res => {
-        status = res.status;
-        return res.json();
-      })
-      .then(data => {
-        return { data: data, status: status };
-      })
-      .catch(error => {
-        return error.json();
-      });
-  };
-
-
-export const getCODAEPedidosPendentes = (filtroAplicado, tipoSolicitacao) => {
-    const url = `${getPath(tipoSolicitacao)}/pedidos-codae/${filtroAplicado}/`;
-    const OBJ_REQUEST = {
-      headers: authToken,
-      method: "GET"
-    };
-    return fetch(url, OBJ_REQUEST)
-      .then(result => {
-        return result.json();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
 
   
   

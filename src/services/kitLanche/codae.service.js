@@ -4,9 +4,9 @@ import getPath from "./helper";
 export const CODAEquestionaKitLancheAvulso = async (
   uuid,
   observacao_questionamento_codae,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",
@@ -23,8 +23,8 @@ export const CODAEquestionaKitLancheAvulso = async (
   }
 };
 
-export const CODAENegaKitLancheAvulso = async (uuid, justificativa, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
+export const CODAENegaKitLancheAvulso = async (uuid, justificativa, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",
@@ -44,9 +44,9 @@ export const CODAENegaKitLancheAvulso = async (uuid, justificativa, isCei) => {
 export const CODAEAutorizaKitLancheAvulso = (
   uuid,
   justificativa = {},
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     body: JSON.stringify(justificativa),
@@ -66,8 +66,8 @@ export const CODAEAutorizaKitLancheAvulso = (
     });
 };
 
-export const getCODAEPedidosKitLanchePendentes = (filtroAplicado, isCei) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
+export const getCODAEPedidosKitLanchePendentes = (filtroAplicado, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
@@ -81,23 +81,8 @@ export const getCODAEPedidosKitLanchePendentes = (filtroAplicado, isCei) => {
     });
 };
 
-export const getCodaePedidosDeKitLancheCei = (filtroAplicado, isCei) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getCodaePedidosDeKitLanche = (filtroAplicado, isCei) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
+export const getCodaePedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

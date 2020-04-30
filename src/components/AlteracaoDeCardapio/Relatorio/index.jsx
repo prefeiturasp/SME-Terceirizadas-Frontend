@@ -89,8 +89,8 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid, isCei) {
-    getAlteracaoCardapio(uuid, isCei).then(response => {
+  loadSolicitacao(uuid, tipoSolicitacao) {
+    getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
       this.setState({
         alteracaoDeCardapio: response.data
       });

@@ -9,7 +9,7 @@ import {
   criarInclusoesDaCEI,
   atualizarInclusoesDaCEI,
   iniciarInclusoesDaCEI
-} from "../../services/inclusaoAlimentacaoDaCei.service";
+} from "services/inclusaoDeAlimentacao/cei.temp.service";
 import Rascunho from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
 import { Select } from "../Shareable/Select";

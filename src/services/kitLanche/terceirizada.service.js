@@ -1,12 +1,12 @@
 import { PEDIDOS, FLUXO, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const terceirizadaRespondeQuestionamentoKitLancheAvulso = async (
+export const terceirizadaRespondeQuestionamentoKitLanche = async (
   uuid,
   payload,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${
     FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
   }/`;
   const OBJ_REQUEST = {
@@ -25,8 +25,8 @@ export const terceirizadaRespondeQuestionamentoKitLancheAvulso = async (
   }
 };
 
-export const terceirizadaTomaCienciaKitLancheAvulso = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
+export const terceirizadaTomaCienciaKitLanche = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH"
@@ -45,8 +45,8 @@ export const terceirizadaTomaCienciaKitLancheAvulso = (uuid, isCei) => {
     });
 };
 
-export const getTerceirizadasPedidosDeKitLanche = (filtroAplicado, isCei) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+export const terceirizadaGetPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

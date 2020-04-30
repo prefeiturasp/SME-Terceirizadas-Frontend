@@ -1,4 +1,4 @@
-import { TIPO_SOLICITACAO } from "../constants"
+import { TIPO_SOLICITACAO, URL } from "../constants"
 
 export const getPath = (tipoSolicitacao) => {
     switch(tipoSolicitacao) {

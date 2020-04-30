@@ -23,14 +23,14 @@ export const atualizarKitLanche = async values => {
     });
 };
 
-export const removeKitLanche = async (uuid, isCei) => {
+export const removeKitLanche = async (uuid, tipoSolicitacao) => {
   //TODO: conferir params
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "DELETE"
   };
   let status = 0;
-  return await fetch(`${getPath(isCei)}/${uuid}/`, OBJ_REQUEST)
+  return await fetch(`${getPath(tipoSolicitacao)}/${uuid}/`, OBJ_REQUEST)
     .then(res => {
       status = res.status;
       return res.json();
@@ -43,10 +43,10 @@ export const removeKitLanche = async (uuid, isCei) => {
     });
 };
 
-export const inicioPedido = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
+export const inicioPedido = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.patch(url);
   }
 
@@ -67,10 +67,10 @@ export const inicioPedido = (uuid, isCei) => {
     });
 };
 
-export const getSolicitacoesKitLanche = async isCei => {
-  const url = `${getPath(isCei)}/${PEDIDOS.MEUS}/`;
+export const getSolicitacoesKitLanche = async tipoSolicitacao => {
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.MEUS}/`;
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.get(url);
   }
 
@@ -104,13 +104,13 @@ export const getRefeicoes = async () => {
     });
 };
 
-export const getKitLanches = async isCei => {
+export const getKitLanches = async tipoSolicitacao => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
   };
 
-  return await fetch(`${getPath(isCei)}/kit-lanches/`, OBJ_REQUEST)
+  return await fetch(`${getPath(tipoSolicitacao)}/kit-lanches/`, OBJ_REQUEST)
     .then(response => {
       return response.json();
     })
@@ -119,8 +119,8 @@ export const getKitLanches = async isCei => {
     });
 };
 
-export const getDetalheKitLancheAvulsa = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/`;
+export const getDetalheKitLancheAvulsa = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

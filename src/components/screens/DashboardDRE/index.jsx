@@ -53,7 +53,7 @@ class DashboardDRE extends Component {
       canceladasListSolicitacao: [],
       loadingPainelSolicitacoes: true,
 
-      visao: FILTRO_VISAO.TIPO_SOLICITACAO,
+      visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO,
       filtroPorVencimento: FILTRO.SEM_FILTRO
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
@@ -84,7 +84,7 @@ class DashboardDRE extends Component {
       {
         visao,
         cards:
-          visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
+          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? tiposSolicitacao : lotes
       },
       () => {
         this.carregaResumoPendencias();
@@ -235,7 +235,7 @@ class DashboardDRE extends Component {
                     <div key={key} className="col-6 pb-3">
                       <Link
                         to={
-                          visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
                             ? `/${DRE}/${card.link}`
                             : "/"
                         }
@@ -256,7 +256,7 @@ class DashboardDRE extends Component {
                     <div key={key} className="col-6 pb-3">
                       <Link
                         to={
-                          visao === FILTRO_VISAO.TIPO_SOLICITACAO
+                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
                             ? `/${DRE}/${card.link}`
                             : "/"
                         }

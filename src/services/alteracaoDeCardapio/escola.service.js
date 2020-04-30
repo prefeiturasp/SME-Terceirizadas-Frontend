@@ -1,12 +1,33 @@
 import axios from "../_base";
-import { FLUXO, AUTH_TOKEN } from "services/constants";
+import { FLUXO, AUTH_TOKEN, TIPO_SOLICITACAO } from "services/constants";
 import { ENDPOINT } from "constants/shared";
 import getPath from "./helper";
 
-export const createAlteracaoCardapio = (payload, isCei) => {
-  const url = `${getPath(isCei)}/`;
+export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
 
-  if (isCei) {
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: AUTH_TOKEN
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+
+export const escolaCriarSolicitacaoDeAlteracaoCardapio = (payload, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/`;
+
+  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
     return axios.post(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/`, payload);
   }
 
@@ -28,10 +49,11 @@ export const createAlteracaoCardapio = (payload, isCei) => {
     });
 };
 
-export const updateAlteracaoCardapio = (uuid, payload, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/`;
 
-  if (isCei) {
+export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (uuid, payload, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
+
+  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
     return axios.patch(
       `${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${payload.uuid}/`,
       payload
@@ -56,10 +78,10 @@ export const updateAlteracaoCardapio = (uuid, payload, isCei) => {
     });
 };
 
-export const deleteAlteracaoCardapio = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/`;
+export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`);
   }
 
@@ -75,10 +97,10 @@ export const deleteAlteracaoCardapio = (uuid, isCei) => {
     });
 };
 
-export const getMeusRascunhosAlteracoesCardapio = isCei => {
-  const url = `/${getPath(isCei)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
+export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicitacao => {
+  const url = `/${getPath(tipoSolicitacao)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.get(url);
   }
 
@@ -95,33 +117,8 @@ export const getMeusRascunhosAlteracoesCardapio = isCei => {
     });
 };
 
-// enviarAlteracaoCardapio
-export const iniciarFluxoAlteracaoCardapio = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
-
-  if (isCei) {
-    return axios.patch(url);
-  }
-
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
-
-export const escolaCancelaAlteracaoCardapio = (uuid, justificativa, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (uuid, justificativa, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
 
   let status = 0;
   return fetch(url, {
@@ -141,8 +138,9 @@ export const escolaCancelaAlteracaoCardapio = (uuid, justificativa, isCei) => {
     });
 };
 
-export const getAlteracoesComLancheDoMesCorrente = (escola_uuid, isCei) => {
-  const url = `${getPath(isCei)}/com-lanche-do-mes-corrente/${escola_uuid}/`;
+// FIXME: Revisar nome do método
+export const getAlteracoesComLancheDoMesCorrente = (escola_uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/com-lanche-do-mes-corrente/${escola_uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
@@ -156,6 +154,7 @@ export const getAlteracoesComLancheDoMesCorrente = (escola_uuid, isCei) => {
     });
 };
 
+// FIXME: Revisar nome do método
 export const getAlunosPorFaixaEtariaNumaData = async (
   periodoUUID,
   dataReferencia

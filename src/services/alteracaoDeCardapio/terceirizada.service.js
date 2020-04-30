@@ -1,8 +1,9 @@
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const getTerceirizadaPedidosReprovados = isCei => {
-  const url = `${getPath(isCei)}/pedidos-reprovados-terceirizada/`;
+
+export const getTerceirizadaPedidosReprovados = tipoSolicitacao => {
+  const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
@@ -16,8 +17,8 @@ export const getTerceirizadaPedidosReprovados = isCei => {
     });
 };
 
-export const TerceirizadaTomaCienciaAlteracaoCardapio = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/terceirizada-toma-ciencia/`;
+export const TerceirizadaTomaCienciaAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
@@ -38,9 +39,9 @@ export const TerceirizadaTomaCienciaAlteracaoCardapio = (uuid, isCei) => {
 export const terceirizadaRespondeQuestionamentoAlteracaoCardapio = async (
   uuid,
   payload,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${
     FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
   }/`;
   const OBJ_REQUEST = {
@@ -61,9 +62,9 @@ export const terceirizadaRespondeQuestionamentoAlteracaoCardapio = async (
 
 export const getTerceirizadaPedidosDeAlteracaoCardapio = (
   filtroAplicado,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

@@ -13,7 +13,7 @@ import {
 } from "../../../../Shareable/Botao/constants";
 import { required } from "../../../../../helpers/fieldValidators";
 import {
-  TIPO_SOLICITACAO,
+  BUSCA_TIPO_SOLICITACAO,
   STATUS_SOLICITACAO,
   ENTER,
   DATA_MINIMA,
@@ -212,7 +212,7 @@ class FiltrosDeBusca extends Component {
                     <Field
                       name="tipo_de_solicitacao"
                       component={Select}
-                      options={TIPO_SOLICITACAO}
+                      options={BUSCA_TIPO_SOLICITACAO}
                       naoDesabilitarPrimeiraOpcao
                     />
                     <div className="filtrar">

@@ -1,13 +1,18 @@
 import {
     URL_KIT_LANCHES_SOLICITACOES_AVULSA,
-    URL_KIT_LANCHES_SOLICITACOES_CEI
+    URL_KIT_LANCHES_SOLICITACOES_CEI,
+    TIPO_SOLICITACAO
   } from "services/constants";
-  
-  export const getPath = isCei => {
-    //eslint-disable-next-line
-    if (process.env.NODE_ENV === "development") {
-      if (typeof isCei !== "boolean") throw new Error("Argument missing");
+
+  export const getPath = (tipoSolicitacao) => {
+    switch(tipoSolicitacao) {
+        case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
+            return URL_KIT_LANCHES_SOLICITACOES_AVULSA;
+        case TIPO_SOLICITACAO.SOLICITACAO_CEI:
+            return URL_KIT_LANCHES_SOLICITACOES_CEI;
+        default:
+            throw new Error(`Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`);
+
     }
-    return isCei ? URL_KIT_LANCHES_SOLICITACOES_CEI : URL_KIT_LANCHES_SOLICITACOES_AVULSA;
-  };
+}
   

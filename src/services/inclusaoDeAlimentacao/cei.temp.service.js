@@ -2,6 +2,12 @@ import axios from "../_base";
 import { ENDPOINT } from "../../constants/shared";
 import { PEDIDOS } from "../constants";
 
+/*
+    TODO: A funcionalidade provida por esse arquivo 
+    será migrada para services integrados que aceitam input
+    de qualquer tipo (CEI ou nao-CEI)
+*/
+
 const {
   QUANTIDADE_ALUNOS_POR_PERIODO,
   INCLUSOES_ALIMENTACAO_DA_CEI

@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar } from "../../../../helpers/utilities";
+import { talvezPluralizar,
+tipoSolicitacaoAsQuery } from "helpers/utilities";
 import { ALTERACAO_CARDAPIO } from "../../../../configs/constants";
 import "../../../Shareable/style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -100,14 +101,12 @@ export class CardPendenteAcao extends Component {
                 {pedidosFiltrados.map((pedido, key) => {
                   const dataMaisProxima =
                     pedido.inclusoes && pedido.inclusoes[0].data;
-                  const isCei = !!pedido.isCei;
                   return (
                     <Link
                       key={key}
                       to={`/${ALTERACAO_CARDAPIO}/relatorio?uuid=${
                         pedido.uuid
-                      }&ehInclusaoContinua=${pedido.data_inicial !==
-                        undefined}&escolaTipoCei=${isCei}`}
+                      }&${tipoSolicitacaoAsQuery(pedido)}`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

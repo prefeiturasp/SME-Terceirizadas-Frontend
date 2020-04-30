@@ -1,14 +1,10 @@
 import React, { Component } from "react";
-import { removerInclusaoDeAlimentacaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { removerInclusaoDeAlimentacaoContinua } from "../../services/inclusaoDeAlimentacaoContinua.service";
 import "../Shareable/style.scss";
+import { comoTipo, ehInclusaoContinua } from "helpers/utilities";
 
 export class Rascunhos extends Component {
-  removerRascunho(id, uuid, ehInclusaoContinua) {
-    const removerRascunhoEndpointCorreto = ehInclusaoContinua
-      ? removerInclusaoDeAlimentacaoContinua
-      : removerInclusaoDeAlimentacaoNormal;
-    this.props.removerRascunho(id, uuid, removerRascunhoEndpointCorreto);
+  removerRascunho(id, uuid, tipoInclusao) {
+    this.props.removerRascunho(id, uuid, tipoInclusao);
     this.props.resetForm();
   }
 
@@ -17,7 +13,6 @@ export class Rascunhos extends Component {
     const cardsInclusoes = rascunhosInclusaoDeAlimentacao.map(
       (inclusaoDeAlimentacao, key) => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
-        const ehInclusaoContinua = inclusaoDeAlimentacao.data_final;
         let backgroundColor = "#DADADA";
         return (
           <div key={key} className="draft bg-white border rounded mt-1 p-2">
@@ -36,7 +31,7 @@ export class Rascunhos extends Component {
               Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
                 onClick={() =>
-                  this.removerRascunho(id_externo, uuid, ehInclusaoContinua)
+                  this.props.removerRascunho(id_externo, uuid, comoTipo(inclusaoDeAlimentacao))
                 }
               >
                 <i className="fas fa-trash" />
@@ -53,7 +48,7 @@ export class Rascunhos extends Component {
             </div>
             <div className="ml-3">
               <p>
-                {ehInclusaoContinua
+                {ehInclusaoContinua(inclusaoDeAlimentacao)
                   ? `${inclusaoDeAlimentacao.motivo.nome} -
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final

@@ -1,8 +1,8 @@
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const getDREPedidosDeKitLanche = (filtroAplicado, isCei) => {
-  const url = `${getPath(isCei)}/${PEDIDOS.DRE}/${filtroAplicado}/`;
+export const getDREPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.DRE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
@@ -16,8 +16,8 @@ export const getDREPedidosDeKitLanche = (filtroAplicado, isCei) => {
     });
 };
 
-export const getDREPedidosDeKitLancheReprovados = isCei => {
-  const url = `${getPath(isCei)}/pedidos-reprovados-diretoria-regional/`;
+export const getDREPedidosDeKitLancheReprovados = tipoSolicitacao => {
+  const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
@@ -31,8 +31,8 @@ export const getDREPedidosDeKitLancheReprovados = isCei => {
     });
 };
 
-export const DREValidaKitLancheAvulso = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.DRE_VALIDA}/`;
+export const DREValidaKitLancheAvulso = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH"
@@ -54,9 +54,9 @@ export const DREValidaKitLancheAvulso = (uuid, isCei) => {
 export const DRENaoValidaKitLancheAvulso = async (
   uuid,
   justificativa,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",

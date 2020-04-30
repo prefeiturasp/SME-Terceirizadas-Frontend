@@ -1,12 +1,17 @@
 import {
   API_ALTERACOES_CARDAPIO,
-  API_ALTERACOES_CARDAPIO_CEI
+  API_ALTERACOES_CARDAPIO_CEI,
+  TIPO_SOLICITACAO
 } from "services/constants";
 
-export const getPath = isCei => {
-  //eslint-disable-next-line
-  if (process.env.NODE_ENV === "development") {
-    if (typeof isCei !== "boolean") throw new Error("Argument missing");
-  }
-  return isCei ? API_ALTERACOES_CARDAPIO : API_ALTERACOES_CARDAPIO_CEI;
-};
+export const getPath = (tipoSolicitacao) => {
+    switch(tipoSolicitacao) {
+        case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
+            return API_ALTERACOES_CARDAPIO;
+        case TIPO_SOLICITACAO.SOLICITACAO_CEI:
+            return API_ALTERACOES_CARDAPIO_CEI;
+        default:
+            throw new Error(`Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`);
+
+    }
+}

@@ -2,10 +2,10 @@ import axios from "../_base";
 import { FLUXO, AUTH_TOKEN } from "services/constants";
 import getPath from "./helper";
 
-export const solicitarKitLanche = async (values, isCei) => {
-  const url = getPath(isCei);
+export const solicitarKitLanche = async (values, tipoSolicitacao) => {
+  const url = getPath(tipoSolicitacao);
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.post(url, values);
   }
 
@@ -28,10 +28,10 @@ export const solicitarKitLanche = async (values, isCei) => {
     });
 };
 
-export const registroAtualizaKitLanche = (payload, uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/`;
+export const registroAtualizaKitLanche = (payload, uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
-  if (isCei) {
+  if (tipoSolicitacao) {
     return axios.patch(url, payload);
   }
 
@@ -56,9 +56,9 @@ export const registroAtualizaKitLanche = (payload, uuid, isCei) => {
 export const cancelaKitLancheAvulsoEscola = async (
   uuid,
   justificativa,
-  isCei
+  tipoSolicitacao
 ) => {
-  const url = `${getPath(isCei)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",

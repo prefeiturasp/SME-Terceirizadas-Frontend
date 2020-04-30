@@ -2,8 +2,10 @@ import React, { Component, Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
-  stringSeparadaPorVirgulas
-} from "../../../../helpers/utilities";
+  stringSeparadaPorVirgulas,
+  ehInclusaoContinua,
+  ehInclusaoCei,
+} from "helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -14,6 +16,9 @@ import { formataMotivosDias } from "./helper";
 import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
+import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { TIPO_SOLICITACAO } from "constants/shared"
+const { SOLICITACAO }
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
@@ -78,9 +83,8 @@ export class CorpoRelatorio extends Component {
 
   render() {
     const {
-      ehInclusaoContinua,
+      tipoSolicitacao,
       prazoDoPedidoMensagem,
-      ehEscolaTipoCei,
       inclusaoDeAlimentacao: {
         uuid,
         id_externo,
@@ -110,7 +114,7 @@ export class CorpoRelatorio extends Component {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
               onClick={() => {
-                getRelatorioInclusaoAlimentacao(uuid, ehInclusaoContinua);
+               obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSoliciacao);
               }}
             />
           </p>
@@ -157,8 +161,8 @@ export class CorpoRelatorio extends Component {
           </div>
         )}
         <hr />
-        {ehInclusaoContinua
-          ? this.renderParteContinua()
+        {
+          ehInclusaoContinua(tipoSolicitacao)? this.renderParteContinua()
           : this.renderParteAvulsa(
               inclusoes || [
                 {
@@ -169,7 +173,7 @@ export class CorpoRelatorio extends Component {
               ]
             )}
 
-        {!ehEscolaTipoCei && (
+        {!ehInclusaoCei(tipoSoliciacao) && (
           <table className="table-report mt-3">
             <tbody>
               <tr>

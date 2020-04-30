@@ -1,7 +1,8 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants/shared";
+import { statusEnum, TIPO_SOLICITACAO } from "../constants/shared";
 import { TIPO_PERFIL } from "../constants/shared";
+import InclusaoDeAlimentacao from "components/InclusaoDeAlimentacao";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -324,3 +325,33 @@ export const formatarLotesParaVisao = lotes => {
   });
   return lotes;
 };
+
+export const ehInclusaoContinua = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+}
+export const ehInclusaoAvulsa = tipoSolicitacao => {
+  return tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+}
+
+export const ehInclusaoCei = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
+}
+
+export const tipoSolicitacaoAsQuery = inclusao => {
+  if(inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI }`
+  }
+  const tipo = inclusao.data_inicial !== undefined ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA :
+   TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+  return `tipoSolicitacao=${tipo}`
+  } 
+};
+
+export const comoTipo = (inclusao) => {
+  if(inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return TIPO_SOLICITACAO.SOLICITACAO_CEI
+  }
+  return inclusao.data_inicial !== undefined ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA :
+   TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+  } 
+}

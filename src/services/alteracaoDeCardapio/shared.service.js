@@ -17,8 +17,8 @@ export const getMotivosAlteracaoCardapio = () => {
     });
 };
 
-export const getAlteracaoCardapio = (uuid, isCei) => {
-  const url = `${getPath(isCei)}/${uuid}/`;
+export const getAlteracaoCardapio = (uuid, tipoSolicitacao) => {
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"
