@@ -1,7 +1,7 @@
 import axios from "../_base";
 import { FLUXO, AUTH_TOKEN, TIPO_SOLICITACAO } from "services/constants";
 import { ENDPOINT } from "constants/shared";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (uuid, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;

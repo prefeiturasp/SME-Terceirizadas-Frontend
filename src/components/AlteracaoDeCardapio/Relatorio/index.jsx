@@ -4,7 +4,7 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
 import { visualizaBotoesDoFluxo, getError } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";

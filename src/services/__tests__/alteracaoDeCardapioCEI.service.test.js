@@ -10,7 +10,7 @@ import {
   getEscolaPeriodoEscolares,
   getMeusRascunhosAlteracoesCardapioCei,
   iniciaFluxoAlteracaoCardapioCei
-} from "../alteracaoDeCardapioCEI.service";
+} from "services/alteracaoDeCardapio";
 
 test("getAlunosPorFaixaEtariaNumaData", async () => {
   const periodoUUID = "asdf-qwer-1234";

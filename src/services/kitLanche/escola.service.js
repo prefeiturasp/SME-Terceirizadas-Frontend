@@ -1,6 +1,6 @@
 import axios from "../_base";
 import { FLUXO, AUTH_TOKEN } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const solicitarKitLanche = async (values, tipoSolicitacao) => {
   const url = getPath(tipoSolicitacao);

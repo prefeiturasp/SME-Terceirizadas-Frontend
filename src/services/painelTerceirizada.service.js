@@ -5,14 +5,14 @@ import {
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
 import { AUTH_TOKEN, SOLICITACOES } from "./constants";
-import { getTerceirizadaPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getTerceirizadaPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
+import { getTerceirizadaPedidosDeAlteracaoCardapio } from "services/alteracaoDeCardapio";
+import { terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { getTerceirizadaPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
-import { getTerceirizadasPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
+import { getTerceirizadasPedidosDeKitLanche } from "services/kitLanche";
 import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   TerceirizadaUuid,
@@ -29,12 +29,22 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getTerceirizadaPedidosDeAlteracaoCardapio(filtro);
+  const [avulsos, cei] = await Promise.all([
+    getTerceirizadaPedidosDeAlteracaoCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      getTerceirizadaPedidosDeAlteracaoCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ),
+  ])
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = avulsos.results.concat(cei.results)
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;
@@ -45,7 +55,7 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
+const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
   TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
@@ -60,15 +70,34 @@ export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async 
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getTerceirizadaPedidosDeInclusaoAlimentacaoAvulsa(
-    filtro
-  );
+  const [solicitacoesContinuas,
+    soliticacoesAvulsas,
+    solicitacoesCei 
+   ] = await Promise.all([
+   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+     filtro,
+     TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+   ),
+   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+     filtro,
+     TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+   ),
+   terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+     filtro,
+     TIPO_SOLICITACAO.SOLICITACAO_CEI
+   )
+ ])
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
+ if (solicitacoesContinuas) {
+   const todas = solicitacoesContinuas.results.concat(
+     soliticacoesAvulsas.results,
+     solicitacoesCei.results,
+   );
+
+   pedidosPrioritarios = filtraPrioritarios(todas);
+   pedidosLimite = filtraNoLimite(todas);
+   pedidosRegular = filtraRegular(todas);
+ }
 
   resposta.limite = pedidosLimite.length;
   resposta.prioritario = pedidosPrioritarios.length;
@@ -78,7 +107,7 @@ export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async 
   return resposta;
 };
 
-export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua = async (
+const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua = async (
   TerceirizadaUuid,
   filtro = "sem_filtro"
 ) => {
@@ -93,8 +122,9 @@ export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua = asyn
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getTerceirizadaPedidosDeInclusaoAlimentacaoContinua(
-    filtro
+  const solicitacoes = await terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+    filtro,
+    TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
   );
 
   if (solicitacoes) {

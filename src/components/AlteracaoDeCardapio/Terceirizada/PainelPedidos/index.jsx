@@ -8,7 +8,7 @@ import {
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getTerceirizadaPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
+import { getTerceirizadaPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 

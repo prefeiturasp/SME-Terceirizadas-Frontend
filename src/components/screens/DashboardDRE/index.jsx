@@ -22,7 +22,7 @@ import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog } from "../helper";
 import Select from "../../Shareable/Select";
 import { toastError } from "../../Shareable/Toast/dialogs";
-import corrigeResumo from "../../../helpers/corrige-dados-do-dashboard";
+import corrigeResumo from "../../../helpers/corrigeDadosDodashboard";
 import { FILTRO } from "../const";
 import {
   getSolicitacoesPendentesValidacaoDRE,

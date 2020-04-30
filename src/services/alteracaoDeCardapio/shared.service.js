@@ -1,6 +1,6 @@
 import { API_URL } from "../../constants/config.constants";
 import { AUTH_TOKEN } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const getMotivosAlteracaoCardapio = () => {
   const url = `${API_URL}/motivos-alteracao-cardapio/`;

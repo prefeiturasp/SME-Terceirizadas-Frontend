@@ -1,6 +1,6 @@
 import { API_URL } from "constants/config.constants";
 import { PEDIDOS, FLUXO, AUTH_TOKEN } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 
 export const dreListarSolicitacoesDeInclusaoDeAlimentacao = async (filtroAplicado, tipoSolicitacao) => {

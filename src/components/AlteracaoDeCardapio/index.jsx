@@ -17,13 +17,20 @@ import {
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
-  createAlteracaoCardapio,
-  deleteAlteracaoCardapio,
-  enviarAlteracaoCardapio,
-  getMeusRascunhosAlteracoesCardapio,
-  updateAlteracaoCardapio,
+  // FIXME : remove legacy exports
+  //createAlteracaoCardapio,
+  //deleteAlteracaoCardapio,
+  //enviarAlteracaoCardapio,
+  //getMeusRascunhosAlteracoesCardapio,
+  //updateAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+
   getAlteracoesComLancheDoMesCorrente
-} from "../../services/alteracaoDecardapio.service";
+} from "../../services/alteracaoDeCardapio";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
@@ -305,7 +312,7 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    getMeusRascunhosAlteracoesCardapio()
+    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio() //FIXME: param required
       .then(response => {
         alteracaoCardapioList =
           response.results.length > 0 ? response.results : [];
@@ -345,7 +352,7 @@ class AlteracaoCardapio extends Component {
   }
 
   enviaAlteracaoCardapio(uuid) {
-    enviarAlteracaoCardapio(uuid).then(
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(uuid).then( // FIXME param required
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -374,7 +381,7 @@ class AlteracaoCardapio extends Component {
       if (!erros) {
         this.resetaTodoPeriodoCheck();
         if (!values.uuid) {
-          createAlteracaoCardapio(values)
+          escolaCriarSolicitacaoDeAlteracaoCardapio(values)
             .then(async response => {
               if (response.status === HTTP_STATUS.CREATED) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -393,7 +400,7 @@ class AlteracaoCardapio extends Component {
               this.refresh();
             });
         } else {
-          updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          escolaAlterarSolicitacaoDeAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
             async res => {
               if (res.status === HTTP_STATUS.OK) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -453,7 +460,7 @@ class AlteracaoCardapio extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      deleteAlteracaoCardapio(uuid).then(
+      escolaExcluirSolicitacaoDeAlteracaoCardapio(uuid).then( // FIXME: param required
         statusCode => {
           if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

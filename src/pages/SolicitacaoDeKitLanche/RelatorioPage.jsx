@@ -13,7 +13,7 @@ import {
   CODAEAutorizaKitLancheAvulso,
   terceirizadaTomaCienciaKitLancheAvulso,
   terceirizadaRespondeQuestionamentoKitLancheAvulso
-} from "../../services/solicitacaoDeKitLanche.service";
+} from "services/kitLanche.service";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";

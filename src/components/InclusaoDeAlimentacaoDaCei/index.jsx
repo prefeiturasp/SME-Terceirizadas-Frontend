@@ -9,7 +9,7 @@ import {
   criarInclusoesDaCEI,
   atualizarInclusoesDaCEI,
   iniciarInclusoesDaCEI
-} from "services/inclusaoDeAlimentacao/cei.temp.service";
+} from "services/inclusaoDeAlimentacao/cei.legacy.service";
 import Rascunho from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
 import { Select } from "../Shareable/Select";
@@ -35,6 +35,10 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import Botao from "../Shareable/Botao";
 import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+
+const { SOLICITACAO_CEI }  = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -242,10 +246,10 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       }
     }
   };
-
-  removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
+ 
+  removerRascunho(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removerInclusaoDeAlimentacao(uuid).then(
+      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(uuid, SOLICITACAO_CEI).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

@@ -4,14 +4,14 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../helpers/painelPedidos";
-import { getDREPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import { AUTH_TOKEN, SOLICITACOES } from "./constants";
-import { getDREPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getDREPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDREPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { getDREPedidosDeKitLanche } from "services/kitLanche";
+import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+import { getSuspensoesDeAlimentacaoInformadas } from "services/suspensaoDeAlimentacao.service.js";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
 
@@ -29,8 +29,49 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDREPedidosDeAlteracaoCardapio(
-    filtro
+  const[avulsos, cei] = await Promise.all([
+    dreListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    dreListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ),
+  ])
+
+  if (avulsos) {
+    const all = avulsos.results.concat(cei.results)
+    pedidosPrioritarios = filtraPrioritarios(all);
+    pedidosLimite = filtraNoLimite(all);
+    pedidosRegular = filtraRegular(all);
+  }
+
+  resposta.limite = pedidosLimite.length;
+  resposta.prioritario = pedidosPrioritarios.length;
+  resposta.regular = pedidosRegular.length;
+  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
+
+  return resposta;
+};
+
+const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async ( //FIXME: must include CEI?
+  filtro = "sem_filtro"
+) => {
+  let resposta = {
+    total: 0,
+    prioritario: 0,
+    limite: 0,
+    regular: 0
+  };
+
+  let pedidosPrioritarios = [];
+  let pedidosLimite = [];
+  let pedidosRegular = [];
+
+  const solicitacoes = await dreListarSolicitacoesDeInclusaoDeAlimentacao(
+    filtro,
+    TIPO_SOLICITACAO.SOLICITACAO_NORMAL
   );
 
   if (solicitacoes) {
@@ -47,7 +88,7 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -61,40 +102,9 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDREPedidosDeInclusaoAlimentacaoAvulsa(
-    filtro
-  );
-
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
-  }
-
-  resposta.limite = pedidosLimite.length;
-  resposta.prioritario = pedidosPrioritarios.length;
-  resposta.regular = pedidosRegular.length;
-  resposta.total = resposta.limite + resposta.prioritario + resposta.regular;
-
-  return resposta;
-};
-
-export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
-  filtro = "sem_filtro"
-) => {
-  let resposta = {
-    total: 0,
-    prioritario: 0,
-    limite: 0,
-    regular: 0
-  };
-
-  let pedidosPrioritarios = [];
-  let pedidosLimite = [];
-  let pedidosRegular = [];
-
-  const solicitacoes = await getDREPedidosDeInclusaoAlimentacaoContinua(
-    filtro
+  const solicitacoes = await dreListarSolicitacoesDeInclusaoDeAlimentacao(
+    filtro,
+    TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
   );
 
   if (solicitacoes) {

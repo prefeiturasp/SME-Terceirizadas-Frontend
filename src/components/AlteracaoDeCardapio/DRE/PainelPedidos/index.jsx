@@ -8,7 +8,7 @@ import {
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDREPedidosDeAlteracaoCardapio } from "services/alteracaoDeCardapio";
+import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
@@ -27,8 +27,8 @@ class PainelPedidos extends Component {
 
   filtrar(filtro) {
     Promise.all([
-      getDREPedidosDeAlteracaoCardapio(filtro, SOLICITACAO_NORMAL),
-      getDREPedidosDeAlteracaoCardapio(filtro, SOLICITACAO_CEI)
+      dreListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_NORMAL),
+      dreListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_CEI)
     ]).then(([response, ceiResponse]) => {
       const results = response.results.concat(ceiResponse.results);
       let pedidosPrioritarios = filtraPrioritarios(results);

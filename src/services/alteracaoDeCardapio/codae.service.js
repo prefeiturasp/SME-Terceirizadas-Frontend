@@ -1,5 +1,5 @@
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const codaeListarSolicitacoesDeAlteracaoDeCardapio = (filtroAplicado, tipoSolicitacao) => {
     const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;

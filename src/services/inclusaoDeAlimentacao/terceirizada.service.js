@@ -1,5 +1,5 @@
 import { PEDIDOS, FLUXO, AUTH_TOKEN } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao = async (
   filtroAplicado,

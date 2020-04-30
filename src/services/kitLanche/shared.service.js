@@ -5,7 +5,7 @@ import {
   AUTH_TOKEN,
   URL_KIT_LANCHES
 } from "services/constants";
-import getPath from "./helper";
+import { getPath } from "./helper";
 
 export const atualizarKitLanche = async values => {
   const OBJ_REQUEST = {

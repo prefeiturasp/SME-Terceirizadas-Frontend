@@ -6,7 +6,7 @@ import { required } from "../../helpers/fieldValidators";
 import {
   DRENaoValidaAlteracaoCardapio,
   CODAENegaAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
+} from "../../services/alteracaoDeCardapio";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/shared";
 import Botao from "./Botao";

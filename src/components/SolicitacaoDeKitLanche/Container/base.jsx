@@ -32,8 +32,8 @@ import {
   removeKitLanche,
   solicitarKitLanche,
   solicitarKitLancheCei
-} from "../../../services/solicitacaoDeKitLanche.service";
-import { getAlunosPorFaixaEtariaNumaData } from "../../../services/alteracaoDeCardapioCEI.service";
+} from "services/kitLanche";
+import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";

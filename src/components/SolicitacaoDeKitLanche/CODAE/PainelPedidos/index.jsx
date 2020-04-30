@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants/shared";
+import { FiltroEnum, TIPODECARD, TIPO_SOLICITACAO } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
@@ -10,8 +10,7 @@ import {
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import {
   getCodaePedidosDeKitLanche,
-  getCodaePedidosDeKitLancheCei
-} from "../../../../services/solicitacaoDeKitLanche.service";
+} from "services/kitLanche";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
@@ -33,8 +32,8 @@ class PainelPedidos extends Component {
     this.setState({ pedidosCarregados: 0 });
 
     Promise.all([
-      getCodaePedidosDeKitLanche(filtro),
-      getCodaePedidosDeKitLancheCei(filtro)
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
     ]).then(([response, responseCei]) => {
       const results = response.results.concat(responseCei.results);
       pedidosPrioritarios = filtraPrioritarios(results);
