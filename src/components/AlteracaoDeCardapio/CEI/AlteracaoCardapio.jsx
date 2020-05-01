@@ -264,6 +264,7 @@ class AlteracaoCardapio extends Component {
       if (values.uuid) {
         parsedValues.uuid = values.uuid;
         response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
+          values.uuid,
           parsedValues,
           SOLICITACAO_CEI
         );

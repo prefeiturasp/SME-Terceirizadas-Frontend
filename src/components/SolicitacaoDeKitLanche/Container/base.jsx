@@ -17,10 +17,7 @@ import {
   validateFormKitLanchePasseio,
   validateFormKitLanchePasseioCei
 } from "./validators";
-import {
-  converterDDMMYYYYparaYYYYMMDD,
-  comoTipo
-} from "../../../helpers/utilities";
+import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   getError

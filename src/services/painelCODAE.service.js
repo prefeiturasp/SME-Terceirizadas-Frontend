@@ -8,9 +8,6 @@ import {
 import { API_URL } from "../constants/config";
 import { codaeListarSolicitacoesDeAlteracaoDeCardapio } from "./alteracaoDeCardapio";
 import authService from "./auth";
-// FIXME: remove commented imports
-//import { getCODAEPedidosInclusaoAvulsoPendentes } from "./inclusaoDeAlimentacaoAvulsa.service";
-//import { getCODAEPedidosInclusaoContinuosPendentes } from "./inclusaoDeAlimentacaoContinua.service";
 import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { getCODAEPedidosDeInversoes } from "services/inversaoDeDiaDeCardapio.service";
 import { getCODAEPedidosKitLanchePendentes } from "services/kitLanche";

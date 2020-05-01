@@ -34,18 +34,6 @@ class PainelPedidos extends Component {
       let pedidosNoPrazoLimite = filtraNoLimite(results);
       let pedidosNoPrazoRegular = filtraRegular(results);
       this.setState({
-        pedidosCarregados: true,
-        pedidosPrioritarios,
-        pedidosNoPrazoLimite,
-        pedidosNoPrazoRegular
-      });
-    });
-
-    filtro.then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
-      this.setState({
         loading: false,
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

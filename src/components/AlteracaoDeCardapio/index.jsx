@@ -314,7 +314,7 @@ class AlteracaoCardapio extends Component {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
     escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-    ) //FIXME: param required
+    )
       .then(response => {
         alteracaoCardapioList =
           response.results.length > 0 ? response.results : [];

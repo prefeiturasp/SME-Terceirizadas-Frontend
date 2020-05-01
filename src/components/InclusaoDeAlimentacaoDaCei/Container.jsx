@@ -4,7 +4,6 @@ import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { dataParaUTC } from "../../helpers/utilities";
 import InclusaoDeAlimentacaoDaCei from ".";
-import { TIPO_SOLICITACAO } from "constants/shared";
 
 class Container extends Component {
   constructor(props) {

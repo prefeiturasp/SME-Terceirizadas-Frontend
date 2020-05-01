@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import {
   talvezPluralizar,
-  gerarLinkRelatorio,
-  comoTipo
+  gerarLinkRelatorio
 } from "../../../../helpers/utilities";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
