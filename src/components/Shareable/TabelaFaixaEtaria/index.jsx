@@ -17,7 +17,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
       </article>
 
       {faixas.map((item, indice) => {
-        const qtd = item.quantidade || item.quantidade_alunos
+        const qtd = item.quantidade || item.quantidade_alunos;
         return (
           <article key={indice}>
             <div className="faixa-etaria">

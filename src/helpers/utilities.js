@@ -337,10 +337,10 @@ export const ehInclusaoCei = tipoSolicitacao => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
 };
 
-export const ehEscolaTipoCEI = (escola) => {
-  const nome = (escola && escola.nome) || ""
-  return nome.startsWith("CEI") || nome.startsWith("CCI")
-}
+export const ehEscolaTipoCEI = escola => {
+  const nome = (escola && escola.nome) || "";
+  return nome.startsWith("CEI") || nome.startsWith("CCI");
+};
 
 export const tipoSolicitacaoComoQuery = inclusao => {
   if (inclusao.escola.nome.toLowerCase().includes("cei ")) {

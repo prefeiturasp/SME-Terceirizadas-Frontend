@@ -76,11 +76,13 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getDetalheKitLancheAvulsa(uuid, this.state.tipoSolicitacao).then(response => {
-      this.setState({
-        solicitacaoKitLanche: response
-      });
-    });
+    getDetalheKitLancheAvulsa(uuid, this.state.tipoSolicitacao).then(
+      response => {
+        this.setState({
+          solicitacaoKitLanche: response
+        });
+      }
+    );
   }
 
   handleSubmit() {
