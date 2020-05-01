@@ -25,13 +25,17 @@ export class Sidebar extends Component {
     super(props);
     this.state = {
       toggled: false,
-      API_VERSION: null
+      API_VERSION: ""
     };
   }
 
   async componentDidMount() {
-    const response = await getAPIVersion();
-    this.setState({ API_VERSION: response.API_Version });
+    try {
+      const response = await getAPIVersion();
+      this.setState({ API_VERSION: response.API_Version });
+    } catch (error) {
+      // keep going
+    }
   }
 
   render() {
