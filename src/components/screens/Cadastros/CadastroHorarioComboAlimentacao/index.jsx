@@ -404,6 +404,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             arrayOfObjects={vinculosDeCombos}
             currentStep={periodoEscolar}
             nameItem="nome"
+            outerParam="periodo_escolar"
           />
           <section className="conteudo-wizard">
             <article className="numero-alunos">

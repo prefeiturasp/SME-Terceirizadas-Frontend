@@ -25,6 +25,8 @@ export const PERFIL = {
   ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA: `"ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA"`,
   COORDENADOR_DIETA_ESPECIAL: `"COORDENADOR_DIETA_ESPECIAL"`,
   ADMINISTRADOR_DIETA_ESPECIAL: `"ADMINISTRADOR_DIETA_ESPECIAL"`,
+  COORDENADOR_GESTAO_PRODUTO: `"COORDENADOR_GESTAO_PRODUTO"`,
+  ADMINISTRADOR_GESTAO_PRODUTO: `"COORDENADOR_GESTAO_PRODUTO"`,
   NUTRI_ADMIN_RESPONSAVEL: `"NUTRI_ADMIN_RESPONSAVEL"`,
   ADMINISTRADOR_TERCEIRIZADA: `"ADMINISTRADOR_TERCEIRIZADA`
 };
@@ -42,6 +44,7 @@ export const TIPO_PERFIL = {
   DIRETORIA_REGIONAL: `"diretoriaregional"`,
   GESTAO_ALIMENTACAO_TERCEIRIZADA: `"gestao_alimentacao_terceirizada"`,
   DIETA_ESPECIAL: `"dieta_especial"`,
+  GESTAO_PRODUTO: `"gestao_produto"`,
   TERCEIRIZADA: `"terceirizada"`
 };
 
@@ -50,6 +53,7 @@ export const TIPO_USUARIO = {
   DIRETORIA_REGIONAL: `diretoriaregional`,
   GESTAO_ALIMENTACAO_TERCEIRIZADA: `gestao_alimentacao_terceirizada`,
   DIETA_ESPECIAL: `dieta_especial`,
+  GESTAO_PRODUTO: `gestao_produto`,
   TERCEIRIZADA: `terceirizada`
 };
 
@@ -227,16 +231,18 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
   ALTERACOES_CARDAPIO_CEI: "alteracoes-cardapio-cei",
+  CATEGORIA_PERGUNTAS_FREQUENTES: "categorias-pergunta-frequente",
   FAIXAS_ETARIAS: "faixas-etarias",
+  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
+  SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei",
   INICIO_PEDIDO: "inicio-pedido",
   MINHAS_SOLICITACOES: "minhas-solicitacoes",
+  PERGUNTAS_FREQUENTES: "perguntas-frequentes",
   PERIODOS_ESCOLARES: "periodos-escolares",
   QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
-    "solicitacoes-dieta-especial-ativas-inativas",
-  INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
-  SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei"
+    "solicitacoes-dieta-especial-ativas-inativas"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
