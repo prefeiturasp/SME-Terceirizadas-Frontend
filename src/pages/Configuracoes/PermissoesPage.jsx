@@ -3,7 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Permissoes from "../../components/Permissoes";
 import PermissoesTerceirizadas from "../../components/Permissoes/PermissoesTerceirizadas";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import {
   criarEquipeAdministradoraEscola,
   getEquipeAdministradoraEscola,

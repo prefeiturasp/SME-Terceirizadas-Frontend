@@ -2,7 +2,7 @@ import {
   usuarioDiretoriaRegional,
   usuarioCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
 export const formataValues = values => {
   if (

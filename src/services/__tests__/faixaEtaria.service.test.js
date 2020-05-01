@@ -1,7 +1,7 @@
 import mock from "../_mock";
 
-import { API_URL } from "../../constants/config.constants";
-import { ENDPOINT } from "../../constants";
+import { API_URL } from "../../constants/config";
+import { ENDPOINT } from "../../constants/shared";
 
 import { criarFaixasEtarias, getFaixasEtarias } from "../faixaEtaria.service";
 

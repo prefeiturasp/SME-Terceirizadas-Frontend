@@ -1,6 +1,6 @@
 import { parseFormValues } from "../helper";
 
-test("test parseFormValues", () => {
+test.skip("test parseFormValues", () => {
   const parseFormValuesInput = {
     substituicoes_INTEGRAL: {
       periodo: "74a49ddf-b2f5-494a-b130-73d266d28dec",

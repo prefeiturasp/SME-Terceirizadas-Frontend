@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
-import { statusEnum } from "../../../../constants";
+import { statusEnum } from "constants/shared";
 import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 

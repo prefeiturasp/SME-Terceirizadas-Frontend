@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";

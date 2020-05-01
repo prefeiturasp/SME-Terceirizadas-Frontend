@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar } from "../../../../helpers/utilities";
+import {
+  talvezPluralizar,
+  gerarLinkRelatorio
+} from "../../../../helpers/utilities";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
-import { INCLUSAO_ALIMENTACAO } from "../../../../configs/constants";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -97,15 +99,13 @@ export class CardPendenteAcao extends Component {
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
-                  const dataMaisProxima =
-                    pedido.inclusoes && pedido.inclusoes[0].data;
+                  const dataMaisProxima = pedido.inclusoes
+                    ? pedido.inclusoes[0].data
+                    : pedido.data;
                   return (
                     <Link
                       key={key}
-                      to={`/${INCLUSAO_ALIMENTACAO}/relatorio?uuid=${
-                        pedido.uuid
-                      }&ehInclusaoContinua=${pedido.data_inicial !==
-                        undefined}`}
+                      to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

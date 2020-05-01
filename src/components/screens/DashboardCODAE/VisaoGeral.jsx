@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+/* import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
   ALTERACAO_CARDAPIO,
@@ -215,3 +215,4 @@ class VisaoGeral extends Component {
 }
 
 export default VisaoGeral;
+ */

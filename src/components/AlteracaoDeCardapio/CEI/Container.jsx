@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AlteracaoDeCardapio from "./AlteracaoCardapio";
 import { agregarDefault, dataParaUTC } from "../../../helpers/utilities";
-import { getMotivosAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import { getMotivosAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { meusDados } from "../../../services/perfil.service";
 

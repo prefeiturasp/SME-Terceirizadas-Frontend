@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import {
+  FiltroEnum,
+  TIPODECARD,
+  TIPO_SOLICITACAO
+} from "../../../../constants/shared";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
+import { getDREPedidosDeKitLanche } from "services/kitLanche";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
@@ -28,10 +32,15 @@ class PainelPedidos extends Component {
     let pedidosNoPrazoLimite = [];
     let pedidosNoPrazoRegular = [];
     this.setState({ pedidosCarregados: 0 });
-    getDiretoriaRegionalPedidosDeKitLanche(filtro).then(response => {
-      pedidosPrioritarios = filtraPrioritarios(response.results);
-      pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      pedidosNoPrazoRegular = filtraRegular(response.results);
+
+    Promise.all([
+      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
+      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+    ]).then(([response, responseCei]) => {
+      const results = response.results.concat(responseCei.results);
+      pedidosPrioritarios = filtraPrioritarios(results);
+      pedidosNoPrazoLimite = filtraNoLimite(results);
+      pedidosNoPrazoRegular = filtraRegular(results);
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

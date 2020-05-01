@@ -8,7 +8,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants";
+import { FILTRO_VISAO } from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,
@@ -48,7 +48,7 @@ class DashboardTerceirizada extends Component {
       canceladasListSolicitacao: [],
       loadingPainelSolicitacoes: true,
 
-      visao: FILTRO_VISAO.TIPO_SOLICITACAO,
+      visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO,
       filtroPorVencimento: FILTRO.SEM_FILTRO,
 
       minhaTerceirizada: null
@@ -86,7 +86,7 @@ class DashboardTerceirizada extends Component {
       {
         visao,
         cards:
-          visao === FILTRO_VISAO.TIPO_SOLICITACAO ? tiposSolicitacao : lotes
+          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? tiposSolicitacao : lotes
       },
       () => {
         this.carregaResumosQuestionamentos();

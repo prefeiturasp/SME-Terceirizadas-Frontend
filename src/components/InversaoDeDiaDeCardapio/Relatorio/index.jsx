@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import {
   visualizaBotoesDoFluxo,
   prazoDoPedidoMensagem,

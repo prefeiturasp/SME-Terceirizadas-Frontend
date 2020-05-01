@@ -6,7 +6,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
 import { toastSuccess, toastError } from "../../Toast/dialogs";
 import { truncarString } from "../../../../helpers/utilities";
-import { DEZ_MB } from "../../../../constants";
+import { DEZ_MB } from "../../../../constants/shared";
 
 export class InputFileManaged extends Component {
   openFile(file) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "constants/config";
 import * as constants from "../../configs/constants";
 import { statusEnum, TIPO_PERFIL } from "../../constants";
 

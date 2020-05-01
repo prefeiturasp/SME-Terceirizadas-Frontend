@@ -66,22 +66,17 @@ export default class DashboardEscolaContainer extends Component {
     const minhaEscolaUUID = vinculoAtual.instituicao.uuid;
     const numeroAlunos = vinculoAtual.instituicao.quantidade_alunos;
     if (minhaEscolaUUID) {
-      let pendentes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
-      let autorizadas = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
-
-      let negadas = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
-
-      let canceladas = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
-
-      autorizadas = ajustarFormatoLog(autorizadas.results);
-      pendentes = ajustarFormatoLog(pendentes.results);
-      negadas = ajustarFormatoLog(negadas.results);
-      canceladas = ajustarFormatoLog(canceladas.results);
+      const [pendentes, autorizadas, negadas, canceladas] = await Promise.all([
+        getSolicitacoesPendentesEscola(minhaEscolaUUID),
+        getSolicitacoesAutorizadasEscola(minhaEscolaUUID),
+        getSolicitacoesNegadasEscola(minhaEscolaUUID),
+        getSolicitacoesCanceladasEscola(minhaEscolaUUID)
+      ]);
       this.setState({
-        autorizadas,
-        pendentes,
-        negadas,
-        canceladas,
+        autorizadas: ajustarFormatoLog(autorizadas.results),
+        pendentes: ajustarFormatoLog(pendentes.results),
+        negadas: ajustarFormatoLog(negadas.results),
+        canceladas: ajustarFormatoLog(canceladas.results),
         numeroAlunos
       });
     }

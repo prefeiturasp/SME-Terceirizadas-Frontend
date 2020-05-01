@@ -1,6 +1,6 @@
 import axios from "./_base";
 
-import { ENDPOINT } from "../constants";
+import { ENDPOINT } from "../constants/shared";
 
 export const criarFaixasEtarias = async (
   faixas_etarias_ativadas,

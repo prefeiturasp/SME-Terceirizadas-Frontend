@@ -1,6 +1,6 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -10,9 +10,14 @@ import {
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
-  const { solicitacaoKitLanche, prazoDoPedidoMensagem } = props;
+  const {
+    tipoSolicitacao,
+    solicitacaoKitLanche,
+    prazoDoPedidoMensagem
+  } = props;
   return (
     <div>
       <div className="row">
@@ -131,6 +136,9 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
+      {ehInclusaoCei(tipoSolicitacao) && (
+        <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
+      )}
       <div className="row">
         <div className="col-12 report-label-value">
           <p>Observações</p>
