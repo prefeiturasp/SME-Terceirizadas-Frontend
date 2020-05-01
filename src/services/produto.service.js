@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -44,6 +45,58 @@ export const getInformacoesNutricionais = () => {
     });
 };
 
+export const getInformacoesGrupo = async () => {
+  return await axios.get(`/informacoes-nutricionais/agrupadas/`);
+};
+
+export const getNomesProdutos = async () => {
+  return await axios.get(`/produtos/lista-nomes/`);
+};
+
+export const getNomesMarcas = async () => {
+  return await axios.get(`/marcas/lista-nomes/`);
+};
+
+export const getNomesFabricantes = async () => {
+  return await axios.get(`/fabricantes/lista-nomes/`);
+};
+
+export const getProdutosPorNome = async nomeProduto => {
+  return await axios.get(`/produtos/filtro-por-nome/${nomeProduto}/`);
+};
+
+export const getProdutosPorMarca = async nomeMarca => {
+  return await axios.get(`/produtos/filtro-por-marca/${nomeMarca}/`);
+};
+
+export const getProdutosPorFabricante = async nomeFabricante => {
+  return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
+};
+
+export const getProtocolosDietaEspecial = async () => {
+  return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
+};
+
+export const getMarcasProdutos = async () => {
+  return await axios.get(`/marcas/`);
+};
+
+export const getFabricantesProdutos = async () => {
+  return await axios.get(`/fabricantes/`);
+};
+
+export const criarMarcaProduto = async data => {
+  return await axios.post(`/marcas/`, data);
+};
+
+export const submitProduto = async payload => {
+  return await axios.post(`/produtos/`, payload);
+};
+
+export const criarFabricanteProduto = async data => {
+  return await axios.post(`/fabricantes/`, data);
+};
+
 export const getHomologacaoProduto = uuid => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/`;
   let status = 0;
@@ -82,12 +135,13 @@ export const CODAEHomologaProduto = uuid => {
     });
 };
 
-export const CODAEPedeAnaliseSensorialProduto = uuid => {
+export const CODAEPedeAnaliseSensorialProduto = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-sensorial/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;

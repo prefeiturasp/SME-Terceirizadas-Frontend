@@ -5,14 +5,7 @@ import { InputErroMensagem } from "../../../../../../../Shareable/Input/InputErr
 import Diagnosticos from "./index";
 
 export default class DiagnosticosField extends Component {
-  constructor(props) {
-    super(props);
-    this.onSelect = this.onSelect.bind(this);
-    this.addOption = this.addOption.bind(this);
-    this.removeOption = this.removeOption.bind(this);
-  }
-
-  onSelect(index, newValue) {
+  onSelect = (index, newValue) => {
     const {
       input: { value, onChange }
     } = this.props;
@@ -23,21 +16,23 @@ export default class DiagnosticosField extends Component {
             mapIndex === index ? newValue : mapValue
           )
     );
-  }
-  addOption() {
+  };
+
+  addOption = () => {
     const {
       input: { value, onChange }
     } = this.props;
     onChange(value.concat(""));
-  }
-  removeOption(index) {
+  };
+
+  removeOption = index => {
     const {
       input: { value, onChange }
     } = this.props;
     const diagnosticosSelecionados =
-      value.length === 1 ? [""] : value.filter((v, i) => i !== index);
+      value.length === 1 ? "" : value.filter((v, i) => i !== index);
     onChange(diagnosticosSelecionados);
-  }
+  };
   render() {
     const {
       diagnosticos,

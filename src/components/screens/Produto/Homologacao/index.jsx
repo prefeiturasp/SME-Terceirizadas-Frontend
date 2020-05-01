@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import HTTP_STATUS from "http-status-codes";
 import { Field, reduxForm, formValueSelector } from "redux-form";
@@ -17,6 +17,7 @@ import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
+import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 
 class HomologacaoProduto extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class HomologacaoProduto extends Component {
       produto: null,
       uuid: null,
       showModal: false,
-      modalIndeferir: true,
+      qualModal: "indeferir",
       status: null
     };
     this.closeModal = this.closeModal.bind(this);
@@ -70,27 +71,16 @@ class HomologacaoProduto extends Component {
     this.forceUpdate();
   }
 
-  onSubmit = values => {
+  onSubmit = () => {
     const { uuid } = this.state;
-    if (values.necessita_analise_sensorial === "1") {
-      CODAEPedeAnaliseSensorialProduto(uuid).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de análise sensorial enviada com sucesso");
-          this.loadHomologacao(uuid);
-        } else {
-          toastError(response.data.detail);
-        }
-      });
-    } else {
-      CODAEHomologaProduto(uuid).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação de homologado enviada com sucesso");
-          this.loadHomologacao(uuid);
-        } else {
-          toastError(response.data.detail);
-        }
-      });
-    }
+    CODAEHomologaProduto(uuid).then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Solicitação de homologado enviada com sucesso");
+        this.loadHomologacao(uuid);
+      } else {
+        toastError(response.data.detail);
+      }
+    });
   };
 
   render() {
@@ -99,7 +89,7 @@ class HomologacaoProduto extends Component {
       informacoesNutricionais,
       uuid,
       showModal,
-      modalIndeferir,
+      qualModal,
       status,
       terceirizada
     } = this.state;
@@ -122,17 +112,25 @@ class HomologacaoProduto extends Component {
                 showModal={showModal}
                 closeModal={this.closeModal}
                 toastSuccessMessage={
-                  modalIndeferir
+                  qualModal === "nao-homologar"
                     ? "Solicitação de não homologado enviada com sucesso"
-                    : "Solicitação de correção enviada com sucesso"
+                    : qualModal === "corrigir"
+                    ? "Solicitação de correção enviada com sucesso"
+                    : "Solicitação de análise sensorial enviada com sucesso"
                 }
                 modalTitle={
-                  modalIndeferir
+                  qualModal === "nao-homologar"
                     ? "Deseja não homologar (indeferir) este produto?"
-                    : "Deseja solicitar correção do cadastro do produto?"
+                    : qualModal === "corrigir"
+                    ? "Deseja solicitar correção do cadastro do produto?"
+                    : "Deseja solicitar a análise sensorial do produto?"
                 }
                 endpoint={
-                  modalIndeferir ? CODAENaoHomologaProduto : CODAEPedeCorrecao
+                  qualModal === "nao-homologar"
+                    ? CODAENaoHomologaProduto
+                    : qualModal === "corrigir"
+                    ? CODAEPedeCorrecao
+                    : CODAEPedeAnaliseSensorialProduto
                 }
                 uuid={uuid}
                 loadSolicitacao={this.loadHomologacao}
@@ -168,6 +166,24 @@ class HomologacaoProduto extends Component {
                   </p>
                 </div>
               </div>
+              {produto.eh_para_alunos_com_dieta && (
+                <Fragment>
+                  <div className="row">
+                    <div className="col-12 report-label-value">
+                      <p>Protocolos</p>
+                      <p className="value">
+                        {stringSeparadaPorVirgulas(produto.protocolos, "nome")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 report-label-value">
+                      <p>Detalhes da dieta</p>
+                      <p className="value">{produto.detalhes_da_dieta}</p>
+                    </div>
+                  </div>
+                </Fragment>
+              )}
               <div className="row">
                 <div className="col-6 report-label-value">
                   <p>Marca</p>
@@ -406,7 +422,13 @@ class HomologacaoProduto extends Component {
                     <Botao
                       texto={"Análise"}
                       className="mr-3"
-                      type={BUTTON_TYPE.SUBMIT}
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() =>
+                        this.setState({
+                          qualModal: "analise",
+                          showModal: true
+                        })
+                      }
                       style={BUTTON_STYLE.GREEN}
                       disabled={
                         !necessita_analise_sensorial ||
@@ -420,7 +442,7 @@ class HomologacaoProduto extends Component {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       onClick={() =>
                         this.setState({
-                          modalIndeferir: false,
+                          qualModal: "corrigir",
                           showModal: true
                         })
                       }
@@ -429,7 +451,10 @@ class HomologacaoProduto extends Component {
                       texto={"Não homologar"}
                       className="mr-3"
                       onClick={() =>
-                        this.setState({ modalIndeferir: true, showModal: true })
+                        this.setState({
+                          qualModal: "nao-homologar",
+                          showModal: true
+                        })
                       }
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}

@@ -79,7 +79,10 @@ export const getDietasEspeciaisVigentesDeUmAluno = async codigo_eol_aluno => {
   }
 };
 
-export const CODAEAutorizaDietaEspecial = async ({ uuid, ...params }) =>
+export const atualizaDietaEspecial = async (uuid, params) =>
+  await axios.patch(`/solicitacoes-dieta-especial/${uuid}/`, params);
+
+export const CODAEAutorizaDietaEspecial = async (uuid, params) =>
   await axios.patch(`${ENDPOINT.AUTORIZAR_DIETA(uuid)}/`, params);
 
 export const CODAENegaDietaEspecial = async (uuid, payload) => {

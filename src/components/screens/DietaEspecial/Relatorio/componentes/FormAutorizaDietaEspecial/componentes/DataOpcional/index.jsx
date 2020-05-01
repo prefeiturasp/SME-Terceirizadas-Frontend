@@ -18,25 +18,21 @@ export default class DataTermino extends Component {
     this.state = {
       comData: false
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.onComDataTerminoSelected = this.onComDataTerminoSelected.bind(this);
-    this.onSemDataTerminoSelected = this.onSemDataTerminoSelected.bind(this);
-    this.openDatepicker = this.openDatepicker.bind(this);
   }
-  handleChange(data) {
+  handleChange = data => {
     this.props.input.onChange(data);
-  }
-  onComDataTerminoSelected() {
+  };
+  onComDataTerminoSelected = () => {
     this.setState({ comData: true });
-  }
-  onSemDataTerminoSelected() {
-    this.props.input.onChange("");
+  };
+  onSemDataTerminoSelected = () => {
+    this.props.input.onChange(undefined);
     this.setState({ comData: false });
-  }
-  openDatepicker() {
+  };
+  openDatepicker = () => {
     this._calendar.setOpen(true);
     this._calendar.setFocus();
-  }
+  };
   dataSelecionada(data) {
     if (data.length !== 0) {
       return moment(data, "DD/MM/YYYY")["_d"];
@@ -94,7 +90,7 @@ export default class DataTermino extends Component {
           <DatePicker
             {...datePickerProps}
             isClearable={true}
-            selected={this.dataSelecionada(input.value)}
+            selected={input.value}
             className={`form-control ${className} ${meta.touched &&
               meta.error &&
               "invalid-field"}`}

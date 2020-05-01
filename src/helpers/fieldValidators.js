@@ -91,3 +91,11 @@ export const semCaracteresEspeciais = value =>
   value && !/^[\w&.-]+$/i.test(value)
     ? `Não permite caracteres especiais`
     : undefined;
+
+export const numeroDecimal = value => {
+  const er = new RegExp("[0-9],[0-9]");
+  return value ? (er.test(value) ? undefined : "Deve ser um decimal") : [];
+};
+
+export const numeroInteiro = value =>
+  value ? (!/\D/.test(value) ? undefined : "Somente números") : [];

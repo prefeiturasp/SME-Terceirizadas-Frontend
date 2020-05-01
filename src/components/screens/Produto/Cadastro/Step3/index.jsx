@@ -9,27 +9,24 @@ import InputFile from "../../../../Shareable/Input/InputFile";
 class Step3 extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      files: null
-    };
-    this.removeFile = this.removeFile.bind(this);
-    this.setFiles = this.setFiles.bind(this);
-  }
-
-  removeFile(index) {
-    let files = this.state.files;
-    files.splice(index, 1);
-    this.setState({ files });
-  }
-
-  setFiles(files) {
-    this.setState({ files });
+    this.state = {};
   }
 
   render() {
     return (
       <div className="cadastro-produto-step3">
         <div className="card-title">Informação do Produto (classificação)</div>
+        <div className="row">
+          <div className="col-6 pt-3">
+            <Field
+              component={InputText}
+              label="N° de registro do produto no órgão competente"
+              name="registro"
+              type="text"
+              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
+            />
+          </div>
+        </div>
         <div className="row">
           <div className="col-12 pt-3">
             <Field
@@ -38,11 +35,10 @@ class Step3 extends Component {
               name="tipo"
               type="text"
               placeholder="Digite o tipo"
-              required
-              validate={required}
             />
           </div>
         </div>
+
         <div className="row">
           <div className="col-6 pt-3">
             <Field
@@ -87,24 +83,10 @@ class Step3 extends Component {
               placeholder="Digite as informações"
               label={"Outras informações que a empresa julgar necessário"}
               name="resumo_objeto"
-              required
-              validate={required}
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="N° de registro do produto no órgão competente"
-              name="registro"
-              type="text"
-              placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
+
         <div className="row pt-3 pb-3">
           <div className="col-9 produto">
             <label>
@@ -121,8 +103,8 @@ class Step3 extends Component {
               texto="Anexar"
               name="files"
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-              setFiles={this.setFiles}
-              removeFile={this.removeFile}
+              setFiles={this.props.setFiles}
+              removeFile={this.props.removeFile}
               multiple
             />
           </div>
