@@ -21,7 +21,7 @@ const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
 const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
 const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
-const KIT_LANCHE_CEI = "KIT_LANCHE_CEI";
+const KIT_LANCHE_AVULSA_CEI = "KIT_LANCHE_AVULSA_CEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -101,13 +101,13 @@ export const ajustarFormatoLog = logs => {
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
         break;
 
-      case KIT_LANCHE_CEI:
+      case KIT_LANCHE_AVULSA_CEI:
         solicitacao = SOLICITACAO_KIT_LANCHE;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
         break;
 
       default:
-        solicitacao = "INDISPONIVEL";
+        solicitacao = "NAO_ENCONTRADO";
         break;
     }
     return {

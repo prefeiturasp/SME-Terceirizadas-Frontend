@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
-import { talvezPluralizar } from "../../../../helpers/utilities";
+import { talvezPluralizar, ehEscolaTipoCEI } from "../../../../helpers/utilities";
 import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import { TIPO_SOLICITACAO } from "constants/shared";
+const  { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -104,13 +106,13 @@ export class CardPendenteAcao extends Component {
               <tbody>
                 {pedidosFiltrados.length > 0 &&
                   pedidosFiltrados.map((pedido, key) => {
-                    const isCei = !!pedido.isCei;
+                    const tipoSolicitacao = ehEscolaTipoCEI(pedido.escola) ? SOLICITACAO_CEI : SOLICITACAO_NORMAL;
                     return (
                       <Link
                         key={key}
                         to={`/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${
                           pedido.uuid
-                        }&escolaTipoCei=${isCei}`}
+                        }&tipoSolicitacao=${tipoSolicitacao}`}
                       >
                         <tr>
                           <td>{pedido.id_externo}</td>

@@ -138,7 +138,7 @@ export const CorpoRelatorio = props => {
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (
         <TabelaFaixaEtaria
-          faixas={solicitacaoKitLanche.quantidade_alunos_por_faixas_etarias}
+          faixas={solicitacaoKitLanche.faixas_etarias}
         />
       )}
       <div className="row">

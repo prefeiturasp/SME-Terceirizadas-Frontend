@@ -5,7 +5,7 @@ import "./style.scss";
 
 const TabelaFaixaEtaria = ({ faixas = [] }) => {
   const total = faixas.reduce(function(acc, v) {
-    return acc + v.quantidade_alunos;
+    return acc + (v.quantidade || v.quantidade_alunos);
   }, 0);
 
   return (
@@ -17,13 +17,14 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
       </article>
 
       {faixas.map((item, indice) => {
+        const qtd = item.quantidade || item.quantidade_alunos
         return (
           <article key={indice}>
             <div className="faixa-etaria">
               {faixaToString(item.faixa_etaria)}
             </div>
             <div className="alunos-matriculados">{"N/A"}</div>
-            <div>{item.quantidade_alunos}</div>
+            <div>{qtd}</div>
           </article>
         );
       })}

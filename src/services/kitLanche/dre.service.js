@@ -33,7 +33,7 @@ export const getDREPedidosDeKitLancheReprovados = tipoSolicitacao => {
     });
 };
 
-export const DREValidaKitLancheAvulso = (uuid, tipoSolicitacao) => {
+export const DREValidaKitLancheAvulso = (uuid, _, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,

@@ -54,8 +54,10 @@ const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
+    const ehCei = localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI;
     this.state = {
-      ehCei: localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI, // TODO: investigar
+      ehCei,
+      tipoSolicitacao: ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL,
       loading: true,
       qtd_kit_lanche: 0,
       kitsChecked: [],
@@ -252,8 +254,7 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   iniciarPedido(uuid) {
-    const tipo = this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL;
-    inicioPedido(uuid, tipo).then(
+    inicioPedido(uuid, this.state.tipoSolicitacao).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess(
@@ -275,10 +276,6 @@ export class SolicitacaoDeKitLanche extends Component {
       }
     );
   }
-
-  resolveTipo = () => {
-    return this.state.ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL;
-  };
 
   validaTipoMensagemError = response => {
     const tipoError = response.tipo_error[0];
@@ -317,7 +314,7 @@ export class SolicitacaoDeKitLanche extends Component {
         }
       });
     } else {
-      registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid)
+      registroAtualizaKitLanche(solicitacao_kit_lanche, values.uuid, tipoSolicitacao)
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -347,7 +344,7 @@ export class SolicitacaoDeKitLanche extends Component {
       solicitacao_kit_lanche.status = values.status;
     }
     if (!values.uuid) {
-      solicitarKitLanche(solicitacao_kit_lanche, this.resolveTipo()).then(
+      solicitarKitLanche(solicitacao_kit_lanche, this.state.tipoSolicitacao).then(
         resp => {
           if (resp.status === HTTP_STATUS.CREATED) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -371,7 +368,7 @@ export class SolicitacaoDeKitLanche extends Component {
       registroAtualizaKitLanche(
         solicitacao_kit_lanche,
         values.uuid,
-        this.resolveTipo()
+        this.state.tipoSolicitacao
       )
         .then(resp => {
           if (resp.status === HTTP_STATUS.OK) {

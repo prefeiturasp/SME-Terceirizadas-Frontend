@@ -76,7 +76,7 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getDetalheKitLancheAvulsa(uuid).then(response => {
+    getDetalheKitLancheAvulsa(uuid, this.state.tipoSolicitacao).then(response => {
       this.setState({
         solicitacaoKitLanche: response
       });
