@@ -354,22 +354,15 @@ export const ehEscolaTipoCEI = escola => {
   return nome.startsWith("CEI") || nome.startsWith("CCI");
 };
 
-export const tipoSolicitacaoComoQuery = inclusao => {
-  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
-    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI}`;
-  }
-  const tipo =
-    inclusao.data_inicial !== undefined
-      ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
-      : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
-  return `tipoSolicitacao=${tipo}`;
+export const tipoSolicitacaoComoQuery = obj => {
+  return `tipoSolicitacao=${comoTipo(obj)}`;
 };
 
-export const comoTipo = inclusao => {
-  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+export const comoTipo = obj => {
+  if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
-  return inclusao.data_inicial !== undefined
+  return obj.data_inicial && obj.data_inicial !== obj.data_final
     ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
     : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };
