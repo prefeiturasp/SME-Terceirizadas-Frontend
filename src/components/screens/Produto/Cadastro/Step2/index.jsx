@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import {
   required,
-  numeroDecimal
+  inteiroOuDecimal
 } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { ToggleExpandir } from "../../../../Shareable/ToggleExpandir";
@@ -172,7 +172,7 @@ class Step2 extends Component {
                                           type="text"
                                           validate={
                                             informacaoNutricional.check &&
-                                            numeroDecimal
+                                            inteiroOuDecimal
                                           }
                                           onBlur={() => {
                                             this.setaInformacaoComoVisto(
@@ -197,7 +197,7 @@ class Step2 extends Component {
                                           type="text"
                                           validate={
                                             informacaoNutricional.check &&
-                                            numeroDecimal
+                                            inteiroOuDecimal
                                           }
                                           onBlur={() => {
                                             this.setaInformacaoComoVisto(

@@ -176,12 +176,6 @@ class HomologacaoProduto extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-12 report-label-value">
-                      <p>Detalhes da dieta</p>
-                      <p className="value">{produto.detalhes_da_dieta}</p>
-                    </div>
-                  </div>
                 </Fragment>
               )}
               <div className="row">
@@ -286,14 +280,16 @@ class HomologacaoProduto extends Component {
                                           <div className="col-8">
                                             {
                                               informacaoNutricional.quantidade_porcao
-                                            }
+                                            }{" "}
+                                            {informacaoNutricional.medida}
                                           </div>
                                         </div>
                                       </td>
                                       <td className="col-4">
                                         <div className="row">
                                           <div className="col-8">
-                                            {informacaoNutricional.valor_diario}
+                                            {informacaoNutricional.valor_diario}{" "}
+                                            %
                                           </div>
                                         </div>
                                       </td>
