@@ -26,5 +26,8 @@ export const DashboardTerceirizada = () => (
 
 // CODAE
 export const DashboardCODAE = () => (
-  <DashboardGestaoProdutoBase endpointDashboard={getDashboardGestaoProdutos} />
+  <DashboardGestaoProdutoBase
+    endpointDashboard={getDashboardGestaoProdutos}
+    cards={PAINEL_PRODUTOS_CARDS_TERCEIRIZADA}
+  />
 );

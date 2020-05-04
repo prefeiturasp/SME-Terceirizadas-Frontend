@@ -583,25 +583,25 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO}`,
     component: HomologacaoProdutoPage,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
     component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.PRODUTOS_SUSPENSOS}`,
     component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.CORRECAO_DE_PRODUTO}`,
     component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -609,7 +609,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -617,7 +617,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -625,13 +625,13 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.SOLICITACOES_HOMOLOGADAS}`,
     component: StatusSolicitacoesGestaoProduto.Homologados,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -639,7 +639,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.NaoHomologados,
     exact: true,
-    tipoUsuario: usuarioTerceirizada()
+    tipoUsuario: usuarioTerceirizada() || usuarioCODAEGestaoProduto()
   },
   {
     path: "/painel-gestao-produto",
