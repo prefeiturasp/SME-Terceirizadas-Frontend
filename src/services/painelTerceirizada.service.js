@@ -13,6 +13,7 @@ import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnif
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
 import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { safeConcatOn } from "helpers/utilities";
 
 export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   TerceirizadaUuid,
@@ -41,7 +42,7 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   ]);
 
   if (avulsos) {
-    const todos = avulsos.results.concat(cei.results);
+    const todos = safeConcatOn("results", avulsos, cei);
     pedidosPrioritarios = filtraPrioritarios(todos);
     pedidosLimite = filtraNoLimite(todos);
     pedidosRegular = filtraRegular(todos);
@@ -70,11 +71,7 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const [
-    solicitacoesContinuas,
-    soliticacoesAvulsas,
-    solicitacoesCei
-  ] = await Promise.all([
+  const [continuas, avulsas, cei] = await Promise.all([
     terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
@@ -89,12 +86,8 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
     )
   ]);
 
-  if (solicitacoesContinuas) {
-    const todas = solicitacoesContinuas.results.concat(
-      soliticacoesAvulsas.results,
-      solicitacoesCei.results
-    );
-
+  if (continuas) {
+    const todas = safeConcatOn("results", continuas, avulsas, cei);
     pedidosPrioritarios = filtraPrioritarios(todas);
     pedidosLimite = filtraNoLimite(todas);
     pedidosRegular = filtraRegular(todas);
@@ -214,12 +207,19 @@ export const getResumoPendenciasTerceirizadaKitLanche = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getTerceirizadasPedidosDeKitLanche(filtro);
+  const [avulsos, cei] = await Promise.all([
+    getTerceirizadasPedidosDeKitLanche(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    getTerceirizadasPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+  ]);
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;

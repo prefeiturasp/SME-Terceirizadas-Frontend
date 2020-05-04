@@ -15,6 +15,7 @@ import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnifi
 import { getSuspensaoDeAlimentacaoCODAE } from "services/suspensaoDeAlimentacao.service";
 import { SOLICITACOES } from "./constants";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { safeConcatOn } from "helpers/utilities";
 
 // TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
 
@@ -155,11 +156,7 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const [
-    solicitacoesContinuas,
-    soliticacoesAvulsas,
-    solicitacoesCei
-  ] = await Promise.all([
+  const [continuas, avulsas, cei] = await Promise.all([
     codaeListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
@@ -174,12 +171,8 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
     )
   ]);
 
-  if (solicitacoesContinuas) {
-    const todas = solicitacoesContinuas.results.concat(
-      soliticacoesAvulsas.results,
-      solicitacoesCei.results
-    );
-
+  if (continuas) {
+    const todas = safeConcatOn("results", continuas, avulsas, cei);
     pedidosPrioritarios = filtraPrioritarios(todas);
     pedidosLimite = filtraNoLimite(todas);
     pedidosRegular = filtraRegular(todas);
@@ -217,7 +210,7 @@ export const getResumoPendenciasKitLancheAvulso = async (
   ]);
 
   if (avulsos) {
-    const todos = avulsos.results.concat(cei.results);
+    const todos = safeConcatOn("results", avulsos, cei);
     pedidosPrioritarios = filtraPrioritarios(todos);
     pedidosLimite = filtraNoLimite(todos);
     pedidosRegular = filtraRegular(todos);
@@ -277,15 +270,22 @@ export const getResumoPendenciasAlteracaoCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  // TODO: renamed from "solicitacoesUnificadas" rename why.
-  const solicitacoes = await codaeListarSolicitacoesDeAlteracaoDeCardapio(
-    filtro
-  );
+  const [avulsos, cei] = await Promise.all([
+    codaeListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    codaeListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;

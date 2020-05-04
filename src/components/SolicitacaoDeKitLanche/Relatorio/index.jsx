@@ -99,7 +99,7 @@ class Relatorio extends Component {
         response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess(toastAprovaMensagem);
-            this.loadSolicitacao(uuid);
+            this.loadSolicitacao(uuid, tipoSolicitacao);
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError(toastAprovaMensagemErro);
           }

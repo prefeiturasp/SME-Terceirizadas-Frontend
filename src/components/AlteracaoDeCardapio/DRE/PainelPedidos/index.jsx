@@ -7,7 +7,7 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
@@ -30,7 +30,7 @@ class PainelPedidos extends Component {
       dreListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_NORMAL),
       dreListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_CEI)
     ]).then(([response, ceiResponse]) => {
-      const results = response.results.concat(ceiResponse.results);
+      const results = safeConcatOn("results", response, ceiResponse);
       let pedidosPrioritarios = filtraPrioritarios(results);
       let pedidosNoPrazoLimite = filtraNoLimite(results);
       let pedidosNoPrazoRegular = filtraRegular(results);

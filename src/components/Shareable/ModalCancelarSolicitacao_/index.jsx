@@ -20,7 +20,11 @@ export class ModalCancelarSolicitacao extends Component {
   async cancelarSolicitacaoDaEscola(uuid) {
     const { justificativa } = this.state;
     let resp = "";
-    resp = await this.props.endpoint(uuid, justificativa);
+    resp = await this.props.endpoint(
+      uuid,
+      justificativa,
+      this.props.tipoSolicitacao
+    );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação cancelada com sucesso!");

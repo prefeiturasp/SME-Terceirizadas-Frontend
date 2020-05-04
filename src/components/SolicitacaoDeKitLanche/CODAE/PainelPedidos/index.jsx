@@ -11,7 +11,7 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { getCodaePedidosDeKitLanche } from "services/kitLanche";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
@@ -37,7 +37,7 @@ class PainelPedidos extends Component {
       getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
       getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
     ]).then(([response, responseCei]) => {
-      const results = response.results.concat(responseCei.results);
+      const results = safeConcatOn("results", response, responseCei);
       pedidosPrioritarios = filtraPrioritarios(results);
       pedidosNoPrazoLimite = filtraNoLimite(results);
       pedidosNoPrazoRegular = filtraRegular(results);

@@ -7,7 +7,7 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
@@ -38,7 +38,7 @@ class PainelPedidos extends Component {
         TIPO_SOLICITACAO.SOLICITACAO_CEI
       )
     ]);
-    const inclusoes = avulsas.results.concat(continuas.results, cei.results);
+    const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
     const pedidosPrioritarios = filtraPrioritarios(inclusoes);
     const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
     const pedidosNoPrazoRegular = filtraRegular(inclusoes);

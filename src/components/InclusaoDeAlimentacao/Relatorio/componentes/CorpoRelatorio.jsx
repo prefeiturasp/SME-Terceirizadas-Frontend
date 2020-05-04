@@ -85,7 +85,7 @@ export class CorpoRelatorio extends Component {
       inclusaoDeAlimentacao: {
         uuid,
         id_externo,
-        escola,
+        escola = { diretoria_regional: { nome: "" } },
         logs,
         quantidades_periodo,
         descricao,

@@ -1,4 +1,8 @@
-/* import React, { Component } from "react";
+/* 
+
+// TODO: Remover arquivo pq nao está mais em uso
+
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
   ALTERACAO_CARDAPIO,

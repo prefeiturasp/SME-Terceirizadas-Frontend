@@ -384,3 +384,20 @@ export const gerarLinkRelatorio = (path, solicitacao) => {
     solicitacao.uuid
   }&${tipoSolicitacaoComoQuery(solicitacao)}`;
 };
+
+export const safeConcatOn = (propName, a, b, c) => {
+  if (!a || !a[propName] || !Array.isArray(a[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", a);
+    return [];
+  }
+  if (!b || !b[propName] || !Array.isArray(b[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", b);
+    return a[propName];
+  }
+  if (!c || !c[propName] || !Array.isArray(c[propName])) {
+    return a[propName].concat(b[propName]);
+  }
+  return a[propName].concat(b[propName], c[propName]);
+};
