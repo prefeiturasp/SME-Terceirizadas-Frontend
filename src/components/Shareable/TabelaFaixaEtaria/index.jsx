@@ -29,7 +29,7 @@ const TabelaFaixaEtaria = ({ faixas = [], periodo, data }) => {
         setMatriculados(result.data);
         const _total = faixas.reduce(function(acc, v) {
           const n = safeGetMatriculados(result.data, v);
-          return typeof val === "number" ? acc + n : acc 
+          return typeof val === "number" ? acc + n : acc;
         }, 0);
         setTotalMatriculados(_total || "N/A");
       }
