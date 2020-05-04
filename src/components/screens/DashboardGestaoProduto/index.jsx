@@ -4,7 +4,7 @@ import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/Car
 import CardBody from "../../Shareable/CardBody";
 import {
   GESTAO_PRODUTO,
-  SOLICITACAOES_HOMOLOGADAS
+  SOLICITACOES_HOMOLOGADAS
 } from "../../../configs/constants";
 import { formataCards, getCardIcon, getCardStyle } from "./helper";
 import { dataAtual, deepCopy } from "../../../helpers/utilities";
@@ -88,7 +88,7 @@ export default class DashboardGestaoProduto extends Component {
                             dashboardDataFiltered[cards[key]]
                           )}
                           icon={getCardIcon(card)}
-                          href={`/${GESTAO_PRODUTO}/${SOLICITACAOES_HOMOLOGADAS}`}
+                          href={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
                         />
                       </div>
                       <div className="col-6">
@@ -99,7 +99,7 @@ export default class DashboardGestaoProduto extends Component {
                             dashboardDataFiltered[cards[key + 1]]
                           )}
                           icon={getCardIcon(cards[key + 1])}
-                          href={`/${GESTAO_PRODUTO}/${SOLICITACAOES_HOMOLOGADAS}`}
+                          href={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
                         />
                       </div>
                     </div>

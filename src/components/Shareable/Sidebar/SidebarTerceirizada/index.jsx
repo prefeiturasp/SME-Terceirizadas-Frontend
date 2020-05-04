@@ -5,8 +5,12 @@ import {
   RELATORIOS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  GESTAO_PRODUTO,
+  SOLICITACOES_HOMOLOGADAS,
+  SOLICITACOES_NAO_HOMOLOGADAS,
+  SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants/shared";
 
@@ -87,7 +91,7 @@ export class SidebarTerceirizada extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${TERCEIRIZADA}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
@@ -165,6 +169,40 @@ export class SidebarTerceirizada extends Component {
             >
               Cadastro de Produto
             </NavLink>
+            <NavLink
+              onClick={() => this.onSubmenuClick("consulta-solicitacoes-gp")}
+              activeClassName="active"
+              className="collapse-item"
+              to="#"
+            >
+              Consulta de Solicitações
+              <i className="fas fa-chevron-down" />
+            </NavLink>
+            {subMenu === "consulta-solicitacoes-gp" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL}`}
+                >
+                  Aguardando análise sensorial
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
+                >
+                  Homologados
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_NAO_HOMOLOGADAS}`}
+                >
+                  Não homologados
+                </NavLink>
+              </div>
+            )}
           </div>
         </div>
       </li>,

@@ -19,13 +19,19 @@ export const ALUNO = "aluno";
 
 export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
-export const SOLICITACAOES_HOMOLOGADAS = "solicitacoes-homologadas";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+
+export const SOLICITACOES_HOMOLOGADAS = "solicitacoes-homologadas";
+export const SOLICITACOES_NAO_HOMOLOGADAS = "solicitacoes-nao-homologadas";
+export const SOLICITACOES_PENDENTE_HOMOLOGACAO =
+  "solicitacoes-pendente-homologacao";
+export const SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL =
+  "solicitacoes-aguardando-analise-sensorial";
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";

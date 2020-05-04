@@ -7,7 +7,8 @@ export const CARD_TYPE_ENUM = {
   PENDENTE: "card-pending",
   AUTORIZADO: "card-authorized",
   NEGADO: "card-denied",
-  RECLAMACAO: "card-complained"
+  RECLAMACAO: "card-complained",
+  AGUARDANDO_ANALISE_SENSORIAL: "card-awaiting-sensory"
 };
 
 export const ICON_CARD_TYPE_ENUM = {
@@ -15,7 +16,8 @@ export const ICON_CARD_TYPE_ENUM = {
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
   NEGADO: "fa-ban",
-  RECLAMACAO: "fa-bullhorn"
+  RECLAMACAO: "fa-bullhorn",
+  AGUARDANDO_ANALISE_SENSORIAL: "fa-search"
 };
 
 export const CardStatusDeSolicitacao = props => {

@@ -48,7 +48,6 @@ import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada
 import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
 import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
-import StatusSolicitacoesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoesTerceirizadaPage";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
@@ -84,6 +83,7 @@ import {
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
+import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 
 const routesConfig = [
   {
@@ -334,12 +334,6 @@ const routesConfig = [
     tipoUsuario: usuarioDiretoriaRegional()
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES}`,
-    component: StatusSolicitacoesTerceirizadaPage,
-    exact: false,
-    tipoUsuario: usuarioTerceirizada()
-  },
-  {
     path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false,
@@ -584,6 +578,34 @@ const routesConfig = [
     component: HomologacaoProdutoPage,
     exact: true,
     tipoUsuario: usuarioCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO}`,
+    component: HomologacaoProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL
+    }`,
+    component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.SOLICITACOES_HOMOLOGADAS}`,
+    component: StatusSolicitacoesGestaoProduto.Homologados,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.SOLICITACOES_NAO_HOMOLOGADAS
+    }`,
+    component: StatusSolicitacoesGestaoProduto.NaoHomologados,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
   },
   {
     path: "/painel-gestao-produto",

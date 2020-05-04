@@ -7,6 +7,21 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
+const retornoBase = async url => {
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const status = result.status;
+    const json = await result.json();
+    return { results: json.results, status };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getProduto = uuid => {
   const url = `${API_URL}/produtos/${uuid}/`;
   let status = 0;
@@ -212,4 +227,18 @@ export const getDashboardGestaoProdutos = () => {
     .catch(error => {
       return error;
     });
+};
+
+export const getAguardandoAnaliseSensorial = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/aguardando-analise-sensorial/`;
+  return retornoBase(url);
+};
+
+export const getHomologados = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/homologados/`;
+  return retornoBase(url);
+};
+export const getNaoHomologados = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/nao-homologados/`;
+  return retornoBase(url);
 };
