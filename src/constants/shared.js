@@ -2,12 +2,10 @@ import {
   ALTERACAO_CARDAPIO,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
-  INCLUSAO_ALIMENTACAO_CEI,
-  ALTERACAO_CARDAPIO_CEI,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO
-} from "./configs/constants";
+} from "../configs/constants";
 
 export const ENTER = 13;
 export const TAMANHO_RF = 7;
@@ -73,7 +71,7 @@ export const FiltroEnum = {
 };
 
 export const FILTRO_VISAO = {
-  TIPO_SOLICITACAO: "tipo_solicitacao",
+  POR_TIPO_SOLICITACAO: "tipo_solicitacao",
   LOTE: "lote",
   DRE: "dre"
 };
@@ -155,6 +153,12 @@ export const escolaPodeCancelar = status => {
   );
 };
 
+export const TIPO_SOLICITACAO = {
+  SOLICITACAO_NORMAL: "solicitacao-normal",
+  SOLICITACAO_CONTINUA: "solicitacao-continua",
+  SOLICITACAO_CEI: "solicitacao-cei"
+};
+
 export const TIPOS_SOLICITACAO_LABEL = {
   INCLUSAO_DE_ALIMENTACAO: "Inclusão de Alimentação",
   INCLUSAO_DE_ALIMENTACAO_CEI: "Inclusão de Alimentacao de CEI",
@@ -198,21 +202,6 @@ export const TIPOS_SOLICITACAO_LISTA = [
     titulo: TIPOS_SOLICITACAO_LABEL.SUSPENSAO_DE_ALIMENTACAO,
     cor: "rgba(1, 154, 200, 1)",
     link: SUSPENSAO_ALIMENTACAO
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO_CEI,
-    cor: "rgba(41, 120, 5, 1)",
-    link: INCLUSAO_ALIMENTACAO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DE_CARDAPIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
   }
 ];
 
@@ -236,21 +225,6 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
     titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
     cor: "rgba(41, 120, 5, 1)",
     link: INVERSAO_CARDAPIO
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO_CEI,
-    cor: "rgba(41, 120, 5, 1)",
-    link: INCLUSAO_ALIMENTACAO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DE_CARDAPIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
-  },
-  {
-    titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO_CEI,
-    cor: "rgba(1, 154, 200, 1)",
-    link: ALTERACAO_CARDAPIO_CEI
   }
 ];
 

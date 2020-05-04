@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getTerceirizadaPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
+import { getTerceirizadaPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 

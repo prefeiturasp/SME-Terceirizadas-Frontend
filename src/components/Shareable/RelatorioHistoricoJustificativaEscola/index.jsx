@@ -1,5 +1,5 @@
 import React from "react";
-import { TIPO_USUARIO } from "../../../constants";
+import { TIPO_USUARIO } from "../../../constants/shared";
 import "./style.scss";
 import { existeLogDeCancelamentoDaEscola } from "./helper";
 

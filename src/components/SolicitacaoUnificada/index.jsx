@@ -13,7 +13,7 @@ import { Collapse } from "react-collapse";
 import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
-import { getKitLanches } from "../../services/solicitacaoDeKitLanche.service";
+import { getKitLanches } from "../../services/kitLanche";
 import "../Shareable/style.scss";
 import "./style.scss";
 import {

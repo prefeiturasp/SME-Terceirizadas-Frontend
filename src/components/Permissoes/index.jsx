@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { CODAE } from "../../configs/constants";
-import { TAMANHO_RF } from "../../constants";
+import { TAMANHO_RF } from "../../constants/shared";
 import { stringSeparadaPorVirgulas, getError } from "../../helpers/utilities";
 import { meusDados } from "../../services/perfil.service";
 import { getDadosUsuarioEOL } from "../../services/permissoes.service";

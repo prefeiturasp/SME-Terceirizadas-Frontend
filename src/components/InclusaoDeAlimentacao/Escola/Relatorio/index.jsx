@@ -14,13 +14,14 @@ import { meusDados } from "../../../../services/perfil.service";
 import {
   prazoDoPedidoMensagem,
   corDaMensagem,
-  stringSeparadaPorVirgulas
-} from "../../../../helpers/utilities";
+  stringSeparadaPorVirgulas,
+  parseRelatorioURLParams,
+  ehInclusaoContinua
+} from "helpers/utilities";
 import { ModalCancelarInclusaoDeAlimentacao } from "./components/ModalCancelarInclusaoAlimentacao";
-import { escolaPodeCancelar } from "../../../../constants";
-import { getInclusaoDeAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getInclusaoDeAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { escolaPodeCancelar } from "../../../../constants/shared";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -31,7 +32,6 @@ class Relatorio extends Component {
       meusDados: null,
       redirect: false,
       showModal: false,
-      ehInclusaoContinua: false,
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null
     };
@@ -52,13 +52,7 @@ class Relatorio extends Component {
   };
 
   componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    const getInclusaoDeAlimentacao =
-      ehInclusaoContinua === "true"
-        ? getInclusaoDeAlimentacaoContinua
-        : getInclusaoDeAlimentacaoAvulsa;
+    const [uuid, tipoSolicitacao] = parseRelatorioURLParams();
     meusDados().then(response => {
       this.setState({
         meusDados: response
@@ -66,14 +60,16 @@ class Relatorio extends Component {
     });
 
     if (uuid) {
-      getInclusaoDeAlimentacao(uuid).then(response => {
-        this.setState({
-          inclusaoDeAlimentacao: response,
-          ehInclusaoContinua: ehInclusaoContinua === "true",
-          uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
-        });
-      });
+      obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
+        response => {
+          this.setState({
+            inclusaoDeAlimentacao: response,
+            tipoSolicitacao,
+            uuid,
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
+          });
+        }
+      );
     }
   }
 
@@ -86,9 +82,9 @@ class Relatorio extends Component {
   }
 
   renderParteAvulsa() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    const { tipoSolicitacao, inclusaoDeAlimentacao } = this.state;
     return (
-      !ehInclusaoContinua && (
+      !ehInclusaoContinua(tipoSolicitacao) && (
         <table className="table-periods">
           <tr>
             <th>Data</th>
@@ -108,9 +104,9 @@ class Relatorio extends Component {
   }
 
   renderParteContinua() {
-    const { ehInclusaoContinua, inclusaoDeAlimentacao } = this.state;
+    const { tipoSolicitacao, inclusaoDeAlimentacao } = this.state;
     return (
-      ehInclusaoContinua && (
+      ehInclusaoContinua(tipoSolicitacao) && (
         <div>
           <div className="row">
             <div className="col-4 report-label-value">
@@ -145,10 +141,9 @@ class Relatorio extends Component {
       inclusaoDeAlimentacao,
       prazoDoPedidoMensagem,
       meusDados,
-      ehInclusaoContinua,
       uuid
     } = this.state;
-    const { justificativa } = this.props;
+    const { justificativa, tipoSolicitacao } = this.props;
     return (
       <div className="report">
         {!inclusaoDeAlimentacao ? (
@@ -161,7 +156,7 @@ class Relatorio extends Component {
               uuid={uuid}
               justificativa={justificativa}
               meusDados={meusDados}
-              ehInclusaoContinua={ehInclusaoContinua}
+              tipoSolicitacao={tipoSolicitacao}
               inclusaoDeAlimentacao={inclusaoDeAlimentacao}
               setRedirect={this.setRedirect}
             />

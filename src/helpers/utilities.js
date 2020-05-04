@@ -1,7 +1,8 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants";
-import { TIPO_PERFIL } from "../constants";
+import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
+import { TIPO_PERFIL } from "../constants/shared";
+import { RELATORIO } from "../configs/constants";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -335,4 +336,68 @@ export const formatarLotesParaVisao = lotes => {
     lote["link"] = lote["uuid"];
   });
   return lotes;
+};
+
+export const ehInclusaoContinua = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+};
+export const ehInclusaoAvulsa = tipoSolicitacao => {
+  return tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+};
+
+export const ehInclusaoCei = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
+};
+
+export const ehEscolaTipoCEI = escola => {
+  const nome = (escola && escola.nome) || "";
+  return nome.startsWith("CEI") || nome.startsWith("CCI");
+};
+
+export const tipoSolicitacaoComoQuery = inclusao => {
+  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI}`;
+  }
+  const tipo =
+    inclusao.data_inicial !== undefined
+      ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
+  return `tipoSolicitacao=${tipo}`;
+};
+
+export const comoTipo = inclusao => {
+  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+    return TIPO_SOLICITACAO.SOLICITACAO_CEI;
+  }
+  return inclusao.data_inicial !== undefined
+    ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
+};
+
+export const parseRelatorioURLParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return [urlParams.get("uuid"), urlParams.get("tipoSolicitacao")];
+};
+
+export const gerarLinkRelatorio = (path, solicitacao) => {
+  return `/${path}/${RELATORIO}?uuid=${
+    solicitacao.uuid
+  }&${tipoSolicitacaoComoQuery(solicitacao)}`;
+};
+
+export const safeConcatOn = (propName, a, b, c) => {
+  if (!a || !a[propName] || !Array.isArray(a[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", a);
+    return [];
+  }
+  if (!b || !b[propName] || !Array.isArray(b[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", b);
+    return a[propName];
+  }
+  if (!c || !c[propName] || !Array.isArray(c[propName])) {
+    return a[propName].concat(b[propName]);
+  }
+  return a[propName].concat(b[propName], c[propName]);
 };

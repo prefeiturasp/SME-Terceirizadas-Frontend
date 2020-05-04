@@ -4,7 +4,7 @@ import SolicitacaoDietaEspecial from "../../components/screens/DietaEspecial/Alu
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import {
   getDietaEspecialAutorizadasCODAE,
   getDietaEspecialAutorizadasDRE,

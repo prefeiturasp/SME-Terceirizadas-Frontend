@@ -13,7 +13,7 @@ import {
   fluxoDietaEspecialPartindoEscola,
   formatarFluxoDietaEspecial
 } from "../../../../../Shareable/FluxoDeStatus/helper";
-import { statusEnum } from "../../../../../../constants";
+import { statusEnum } from "../../../../../../constants/shared";
 
 export const CorpoRelatorio = props => {
   const {

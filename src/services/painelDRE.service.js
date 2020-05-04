@@ -1,17 +1,18 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../helpers/painelPedidos";
-import { getDiretoriaRegionalPedidosDeAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import { AUTH_TOKEN, SOLICITACOES } from "./constants";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua } from "./inclusaoDeAlimentacaoContinua.service";
-import { getDiretoriaRegionalPedidosDeKitLanche } from "./solicitacaoDeKitLanche.service";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
+import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { getDREPedidosDeKitLanche } from "services/kitLanche";
+import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnificada.service";
 // TODO Verificar/Resolver porque Kit Lanche tem um services exclusivo.
-import { getSuspensoesDeAlimentacaoInformadas } from "./suspensaoDeAlimentacao.service.js";
+import { getSuspensoesDeAlimentacaoInformadas } from "services/suspensaoDeAlimentacao.service.js";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import { safeConcatOn } from "helpers/utilities";
 
 const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
 
@@ -29,14 +30,22 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeAlteracaoCardapio(
-    filtro
-  );
+  const [avulsos, cei] = await Promise.all([
+    dreListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    dreListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;
@@ -47,7 +56,8 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
+  //FIXME: must include CEI?
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -61,14 +71,22 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
-    filtro
-  );
+  const [avulsos, cei] = await Promise.all([
+    dreListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    dreListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;
@@ -79,7 +97,7 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
   return resposta;
 };
 
-export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
+const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -93,8 +111,9 @@ export const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoContinua(
-    filtro
+  const solicitacoes = await dreListarSolicitacoesDeInclusaoDeAlimentacao(
+    filtro,
+    TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
   );
 
   if (solicitacoes) {
@@ -170,12 +189,16 @@ export const getResumoPendenciasDREKitLanche = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await getDiretoriaRegionalPedidosDeKitLanche(filtro);
+  const [avulsos, cei] = await Promise.all([
+    getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
+    getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+  ]);
 
-  if (solicitacoes) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
-    pedidosLimite = filtraNoLimite(solicitacoes.results);
-    pedidosRegular = filtraRegular(solicitacoes.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;

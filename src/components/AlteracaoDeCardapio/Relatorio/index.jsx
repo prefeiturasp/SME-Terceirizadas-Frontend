@@ -4,13 +4,13 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
 import { visualizaBotoesDoFluxo, getError } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { CODAE } from "../../../configs/constants";
@@ -41,13 +41,15 @@ class Relatorio extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getAlteracaoCardapio(uuid).then(response => {
+      getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             alteracaoDeCardapio: response.data,
             uuid,
+            tipoSolicitacao,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               response.data.prioridade
             )
@@ -87,8 +89,8 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid) {
-    getAlteracaoCardapio(uuid).then(response => {
+  loadSolicitacao(uuid, tipoSolicitacao) {
+    getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
       this.setState({
         alteracaoDeCardapio: response.data
       });
@@ -106,12 +108,13 @@ class Relatorio extends Component {
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
+    const tipoSolicitacao = this.state.tipoSolicitacao;
+    this.props.endpointAprovaSolicitacao(uuid, tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.closeAutorizarModal();
-          this.loadSolicitacao(uuid);
+          this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -193,6 +196,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -204,6 +208,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {erro && (
@@ -220,6 +225,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
@@ -230,6 +236,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  tipoSolicitacao={this.state.tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={alteracaoDeCardapio}

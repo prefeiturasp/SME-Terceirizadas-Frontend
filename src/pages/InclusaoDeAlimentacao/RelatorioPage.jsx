@@ -2,46 +2,40 @@ import React, { Component } from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+
 import {
-  escolaCancelaInclusaoDeAlimentacaoContinua,
-  DREValidaInclusaoDeAlimentacaoContinua,
-  DRENaoValidaInclusaoDeAlimentacaoContinua,
-  CODAENegaInclusaoDeAlimentacaoContinua,
-  CODAEAutorizaInclusaoDeAlimentacaoContinua,
-  terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua,
-  TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua,
-  CODAEQuestionaInclusaoDeAlimentacaoContinua
-} from "../../services/inclusaoDeAlimentacaoContinua.service";
-import {
-  escolaCancelaInclusaoDeAlimentacaoAvulsa,
-  DREValidaInclusaoDeAlimentacaoAvulsa,
-  DRENaoValidaInclusaoDeAlimentacaoAvulsa,
-  CODAENegaInclusaoDeAlimentacaoAvulsa,
-  CODAEAutorizaInclusaoDeAlimentacaoAvulsa,
-  CODAEQuestionaInclusaoDeAlimentacaoAvulsa,
-  terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa,
-  TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
-} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+  // escola
+  escolaCancelarSolicitacaoDeInclusaoDeAlimentacao,
+  // DRE
+  dreValidarSolicitacaoDeInclusaoDeAlimentacao,
+  dreReprovarSolicitacaoDeInclusaoDeAlimentacao,
+  // CODAE
+  codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao,
+  codaeNegarSolicitacaoDeInclusaoDeAlimentacao,
+  codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao,
+  // terceirizada
+  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
+} from "services/inclusaoDeAlimentacao";
 
 class RelatorioBase extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
+    this.state = {};
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao"); //
+    this.setState({
+      tipoSolicitacao
+    });
   }
   render() {
     const atual = {
@@ -62,16 +56,7 @@ class RelatorioBase extends Component {
 export class RelatorioEscola extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
-  }
-
   render() {
     return (
       <RelatorioBase
@@ -81,9 +66,7 @@ export class RelatorioEscola extends Component {
           "Inclusão de Alimentação cancelada com sucesso!"
         }
         endpointNaoAprovaSolicitacao={
-          !this.state.ehInclusaoContinua
-            ? escolaCancelaInclusaoDeAlimentacaoAvulsa
-            : escolaCancelaInclusaoDeAlimentacaoContinua
+          escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
         }
         textoBotaoNaoAprova="Cancelar"
       />
@@ -99,12 +82,6 @@ export class RelatorioDRE extends Component {
       ehInclusaoContinua: false
     };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
-  }
-
   render() {
     return (
       <RelatorioBase
@@ -114,15 +91,9 @@ export class RelatorioDRE extends Component {
         toastAprovaMensagemErro={
           "Houve um erro ao validar a Inclusão de Alimentação"
         }
-        endpointAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? DREValidaInclusaoDeAlimentacaoContinua
-            : DREValidaInclusaoDeAlimentacaoAvulsa
-        }
+        endpointAprovaSolicitacao={dreValidarSolicitacaoDeInclusaoDeAlimentacao}
         endpointNaoAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? DRENaoValidaInclusaoDeAlimentacaoContinua
-            : DRENaoValidaInclusaoDeAlimentacaoAvulsa
+          dreReprovarSolicitacaoDeInclusaoDeAlimentacao
         }
         textoBotaoNaoAprova="Não Validar"
         textoBotaoAprova="Validar"
@@ -135,14 +106,12 @@ export class RelatorioDRE extends Component {
 export class RelatorioCODAE extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
   componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
+    // TODO: Remove unused
+    ///const urlParams = new URLSearchParams(window.location.search);
+    //const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
+    //this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
   }
 
   render() {
@@ -156,19 +125,13 @@ export class RelatorioCODAE extends Component {
           "Houve um erro ao autorizar a Inclusão de Alimentação"
         }
         endpointNaoAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? CODAENegaInclusaoDeAlimentacaoContinua
-            : CODAENegaInclusaoDeAlimentacaoAvulsa
+          codaeNegarSolicitacaoDeInclusaoDeAlimentacao
         }
         endpointAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? CODAEAutorizaInclusaoDeAlimentacaoContinua
-            : CODAEAutorizaInclusaoDeAlimentacaoAvulsa
+          codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao
         }
         endpointQuestionamento={
-          this.state.ehInclusaoContinua
-            ? CODAEQuestionaInclusaoDeAlimentacaoContinua
-            : CODAEQuestionaInclusaoDeAlimentacaoAvulsa
+          codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao
         }
         textoBotaoNaoAprova="Negar"
         textoBotaoAprova="Autorizar"
@@ -181,45 +144,16 @@ export class RelatorioCODAE extends Component {
 export class RelatorioTerceirizada extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      ehInclusaoContinua: false
-    };
   }
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const ehInclusaoContinua = urlParams.get("ehInclusaoContinua");
-    this.setState({ ehInclusaoContinua: ehInclusaoContinua === "true" });
-  }
-
   render() {
     return (
       <RelatorioBase
         visao={TERCEIRIZADA}
         ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
         ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
-        toastAprovaMensagem={
-          "Ciência de Inclusão de Alimentação enviado com sucesso!"
-        }
-        toastAprovaMensagemErro={
-          "Houve um erro ao tomar ciência da Inclusão de Alimentação"
-        }
-        endpointAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? TerceirizadaTomaCienciaInclusaoDeAlimentacaoContinua
-            : TerceirizadaTomaCienciaInclusaoDeAlimentacaoAvulsa
-        }
-        endpointNaoAprovaSolicitacao={
-          this.state.ehInclusaoContinua
-            ? terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua
-            : terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa
-        }
         endpointQuestionamento={
-          this.state.ehInclusaoContinua
-            ? terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoContinua
-            : terceirizadaRespondeQuestionamentoInclusaoDeAlimentacaoAvulsa
+          terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
         }
-        textoBotaoNaoAprova="Não"
-        textoBotaoAprova="Ciente"
       />
     );
   }

@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getCODAEPedidosDeAlteracaoCardapio } from "../../../../services/alteracaoDecardapio.service";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
+import { codaeListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+const { SOLICITACAO_NORMAL, SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -24,10 +25,14 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    getCODAEPedidosDeAlteracaoCardapio(filtro).then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
+    Promise.all([
+      codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_NORMAL),
+      codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_CEI)
+    ]).then(([response, ceiResponse]) => {
+      const results = safeConcatOn("results", response, ceiResponse);
+      let pedidosPrioritarios = filtraPrioritarios(results);
+      let pedidosNoPrazoLimite = filtraNoLimite(results);
+      let pedidosNoPrazoRegular = filtraRegular(results);
       this.setState({
         loading: false,
         pedidosPrioritarios,

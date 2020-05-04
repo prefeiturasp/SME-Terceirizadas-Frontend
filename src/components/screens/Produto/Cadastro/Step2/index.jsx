@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
-import { required } from "../../../../../helpers/fieldValidators";
+import {
+  required,
+  numeroDecimal
+} from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { ToggleExpandir } from "../../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
@@ -24,8 +27,32 @@ class Step2 extends Component {
     }
   }
   componentDidUpdate() {
+    const { payload } = this.props;
     if (this.props.informacoesAgrupadas !== this.state.informacoesAgrupadas) {
+      this.props.informacoesAgrupadas.forEach(item => {
+        item.informacoes_nutricionais.forEach(info => {
+          info["check"] = false;
+        });
+      });
       this.setState({ informacoesAgrupadas: this.props.informacoesAgrupadas });
+    }
+    if (
+      payload.porcao !== null &&
+      payload.unidade_caseira !== null &&
+      payload.informacoes_nutricionais.length > 0
+    ) {
+      this.props.change("porcao", payload.porcao);
+      this.props.change("unidade_caseira", payload.unidade_caseira);
+      payload.informacoes_nutricionais.forEach(informacao => {
+        this.props.change(
+          `porcao=${informacao.informacao_nutricional}`,
+          informacao.quantidade_porcao
+        );
+        this.props.change(
+          `vd=${informacao.informacao_nutricional}`,
+          informacao.valor_diario
+        );
+      });
     }
   }
 
@@ -57,6 +84,18 @@ class Step2 extends Component {
     payload["porcao"] = values.porcao;
     payload["unidade_caseira"] = values.unidade_caseira;
     this.props.setaValoresStep2(payload);
+  };
+
+  setaInformacaoComoVisto = ({ uuid }) => {
+    let { informacoesAgrupadas } = this.state;
+    informacoesAgrupadas.forEach(item => {
+      item.informacoes_nutricionais.forEach(info => {
+        if (info.uuid === uuid) {
+          info.check = true;
+        }
+      });
+    });
+    this.setState({ informacoesAgrupadas });
   };
 
   render() {
@@ -131,8 +170,19 @@ class Step2 extends Component {
                                             informacaoNutricional.uuid
                                           }`}
                                           type="text"
-                                          required
+                                          validate={
+                                            informacaoNutricional.check &&
+                                            numeroDecimal
+                                          }
+                                          onBlur={() => {
+                                            this.setaInformacaoComoVisto(
+                                              informacaoNutricional
+                                            );
+                                          }}
                                         />
+                                      </div>
+                                      <div className="col-4 mt-2">
+                                        {informacaoNutricional.medida}
                                       </div>
                                     </div>
                                   </td>
@@ -145,10 +195,18 @@ class Step2 extends Component {
                                             informacaoNutricional.uuid
                                           }`}
                                           type="text"
-                                          required
+                                          validate={
+                                            informacaoNutricional.check &&
+                                            numeroDecimal
+                                          }
+                                          onBlur={() => {
+                                            this.setaInformacaoComoVisto(
+                                              informacaoNutricional
+                                            );
+                                          }}
                                         />
                                       </div>
-                                      <div className="col-2">%</div>
+                                      <div className="col-4">%</div>
                                     </div>
                                   </td>
                                 </tr>

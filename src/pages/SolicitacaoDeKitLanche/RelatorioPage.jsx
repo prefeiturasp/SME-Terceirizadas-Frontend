@@ -2,7 +2,7 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/SolicitacaoDeKitLanche/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
   cancelaKitLancheAvulsoEscola,
@@ -11,9 +11,9 @@ import {
   CODAENegaKitLancheAvulso,
   CODAEquestionaKitLancheAvulso,
   CODAEAutorizaKitLancheAvulso,
-  terceirizadaTomaCienciaKitLancheAvulso,
-  terceirizadaRespondeQuestionamentoKitLancheAvulso
-} from "../../services/solicitacaoDeKitLanche.service";
+  terceirizadaTomaCienciaKitLanche,
+  terceirizadaRespondeQuestionamentoKitLanche
+} from "services/kitLanche";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -87,11 +87,9 @@ export const RelatorioTerceirizada = () => (
     toastAprovaMensagemErro={
       "Houve um erro ao tomar ciência do Kit Lanche Passeio"
     }
-    endpointAprovaSolicitacao={terceirizadaTomaCienciaKitLancheAvulso}
-    endpointNaoAprovaSolicitacao={
-      terceirizadaRespondeQuestionamentoKitLancheAvulso
-    }
-    endpointQuestionamento={terceirizadaRespondeQuestionamentoKitLancheAvulso}
+    endpointAprovaSolicitacao={terceirizadaTomaCienciaKitLanche}
+    endpointNaoAprovaSolicitacao={terceirizadaRespondeQuestionamentoKitLanche}
+    endpointQuestionamento={terceirizadaRespondeQuestionamentoKitLanche}
     textoBotaoNaoAprova="Não"
     textoBotaoAprova="Ciente"
   />

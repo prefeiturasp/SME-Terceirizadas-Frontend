@@ -11,7 +11,7 @@ import { toastError } from "../../../Shareable/Toast/dialogs";
 import { obtemDadosAlunoPeloEOL } from "../../../../services/perfil.service";
 
 import "./FormFiltros.scss";
-import { TIPO_PERFIL } from "../../../../constants";
+import { TIPO_PERFIL } from "../../../../constants/shared";
 
 class Filtros extends Component {
   constructor(props) {

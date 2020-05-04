@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants/shared";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getTerceirizadasPedidosDeKitLanche } from "../../../../services/solicitacaoDeKitLanche.service";
+import { getTerceirizadasPedidosDeKitLanche } from "services/kitLanche";
 import Select from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {

@@ -14,8 +14,8 @@ import {
   formatarPedidos
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { FiltroEnum } from "../../../../constants";
-import { TIPODECARD } from "../../../../constants";
+import { FiltroEnum } from "../../../../constants/shared";
+import { TIPODECARD } from "../../../../constants/shared";
 import Select from "../../../Shareable/Select";
 
 class PainelPedidos extends Component {
