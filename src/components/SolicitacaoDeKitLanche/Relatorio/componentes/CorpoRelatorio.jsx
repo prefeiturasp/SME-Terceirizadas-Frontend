@@ -18,6 +18,17 @@ export const CorpoRelatorio = props => {
     solicitacaoKitLanche,
     prazoDoPedidoMensagem
   } = props;
+
+  let periodo = "";
+  let dataEvento;
+  try {
+    periodo = solicitacaoKitLanche.periodo_escolar || solicitacaoKitLanche.escola.periodos_escolares[0]
+    dataEvento = solicitacaoKitLanche.solicitacao_kit_lanche && solicitacaoKitLanche.solicitacao_kit_lanche.data
+  }catch(error){
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+  
   return (
     <div>
       <div className="row">
@@ -137,7 +148,11 @@ export const CorpoRelatorio = props => {
         </tr>
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (
-        <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
+        <TabelaFaixaEtaria
+        faixas={solicitacaoKitLanche.faixas_etarias}
+        periodo={periodo}
+        data={dataEvento}
+         />
       )}
       <div className="row">
         <div className="col-12 report-label-value">

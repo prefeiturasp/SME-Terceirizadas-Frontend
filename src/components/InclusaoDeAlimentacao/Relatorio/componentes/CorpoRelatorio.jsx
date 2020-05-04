@@ -90,6 +90,7 @@ export class CorpoRelatorio extends Component {
         quantidades_periodo,
         descricao,
         quantidade_alunos_por_faixas_etarias,
+        periodo_escolar,
         inclusoes,
         data,
         motivo,
@@ -199,7 +200,11 @@ export class CorpoRelatorio extends Component {
           </table>
         )}
         {ehInclusaoCei(tipoSolicitacao) && (
-          <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
+          <TabelaFaixaEtaria
+            faixas={quantidade_alunos_por_faixas_etarias}
+            periodo={periodo_escolar}
+            data={data}
+           />
         )}
         <div className="row">
           <div className="col-12 report-label-value">

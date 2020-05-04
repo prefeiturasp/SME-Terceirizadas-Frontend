@@ -24,7 +24,8 @@ const TabelaFaixaEtaria = ({ faixas = [], periodo, data }) => {
   // FIXME: Remover essa solucao temporária quando o endpoint da solicitacao incluir esses dados
   useEffect(() => {
     async function fetchAlunosMatriculados() {
-      const result = await getQuantidadeAlunosFaixaEtaria(periodo, data);
+      if(!periodo.uuid || !data) return
+      const result = await getQuantidadeAlunosFaixaEtaria(periodo.uuid, data.split("/").reverse().join("-"));
       if (result.data) {
         setMatriculados(result.data);
         const _total = faixas.reduce(function(acc, v) {

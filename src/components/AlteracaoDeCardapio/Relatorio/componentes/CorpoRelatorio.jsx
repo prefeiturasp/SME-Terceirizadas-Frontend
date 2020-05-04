@@ -140,6 +140,8 @@ export const CorpoRelatorio = props => {
       {ehInclusaoCei(tipoSolicitacao) && (
         <TabelaFaixaEtaria
           faixas={alteracaoDeCardapio.quantidade_alunos_por_faixas_etarias}
+          periodo={alteracaoDeCardapio.periodo_escolar}
+          data={alteracaoDeCardapio.data_inicial}
         />
       )}
       <table className="table-periods">
