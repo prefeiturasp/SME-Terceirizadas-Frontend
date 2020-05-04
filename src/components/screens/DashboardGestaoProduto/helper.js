@@ -1,5 +1,16 @@
 import { truncarString } from "../../../helpers/utilities";
-import { RELATORIO, GESTAO_PRODUTO } from "../../../configs/constants";
+import {
+  RELATORIO,
+  GESTAO_PRODUTO,
+  RECLAMACAO_DE_PRODUTO,
+  PRODUTOS_SUSPENSOS,
+  CORRECAO_DE_PRODUTO,
+  AGUARDANDO_ANALISE_RECLAMACAO,
+  AGUARDANDO_ANALISE_SENSORIAL,
+  SOLICITACOES_HOMOLOGADAS,
+  SOLICITACOES_NAO_HOMOLOGADAS,
+  SOLICITACOES_PENDENTE_HOMOLOGACAO
+} from "../../../configs/constants";
 
 export const getCardIcon = cardTitle => {
   switch (cardTitle) {
@@ -42,6 +53,28 @@ export const getCardStyle = cardTitle => {
     case "Pendente homologação":
     default:
       return "card-pending";
+  }
+};
+
+export const getCardHREF = cardTitle => {
+  switch (cardTitle) {
+    case "Reclamação de produto":
+      return RECLAMACAO_DE_PRODUTO;
+    case "Produtos suspensos":
+      return PRODUTOS_SUSPENSOS;
+    case "Correção de produto":
+      return CORRECAO_DE_PRODUTO;
+    case "Aguardando análise de reclamação":
+      return AGUARDANDO_ANALISE_RECLAMACAO;
+    case "Aguardando análise sensorial":
+      return AGUARDANDO_ANALISE_SENSORIAL;
+    case "Homologados":
+      return SOLICITACOES_HOMOLOGADAS;
+    case "Não homologados":
+      return SOLICITACOES_NAO_HOMOLOGADAS;
+    case "Pendente homologação":
+    default:
+      return SOLICITACOES_PENDENTE_HOMOLOGACAO;
   }
 };
 

@@ -586,10 +586,44 @@ const routesConfig = [
     tipoUsuario: usuarioTerceirizada()
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
+    component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.PRODUTOS_SUSPENSOS}`,
+    component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.CORRECAO_DE_PRODUTO}`,
+    component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
     path: `/${constants.GESTAO_PRODUTO}/${
-      constants.SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL
+      constants.AGUARDANDO_ANALISE_RECLAMACAO
+    }`,
+    component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AGUARDANDO_ANALISE_SENSORIAL
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.SOLICITACOES_PENDENTE_HOMOLOGACAO
+    }`,
+    component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
     exact: true,
     tipoUsuario: usuarioTerceirizada()
   },

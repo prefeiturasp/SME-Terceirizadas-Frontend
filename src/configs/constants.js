@@ -26,12 +26,15 @@ export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
-export const SOLICITACOES_HOMOLOGADAS = "solicitacoes-homologadas";
-export const SOLICITACOES_NAO_HOMOLOGADAS = "solicitacoes-nao-homologadas";
+export const RECLAMACAO_DE_PRODUTO = "reclamacao-de-produto";
+export const PRODUTOS_SUSPENSOS = "produtos-suspensos";
+export const CORRECAO_DE_PRODUTO = "correcao-de-produto";
+export const AGUARDANDO_ANALISE_RECLAMACAO = "aguardando-analise-reclamacao";
+export const AGUARDANDO_ANALISE_SENSORIAL = "aguardando-analise-sensorial";
 export const SOLICITACOES_PENDENTE_HOMOLOGACAO =
   "solicitacoes-pendente-homologacao";
-export const SOLICITACOES_AGUARDANDO_ANALISE_SENSORIAL =
-  "solicitacoes-aguardando-analise-sensorial";
+export const SOLICITACOES_HOMOLOGADAS = "solicitacoes-homologadas";
+export const SOLICITACOES_NAO_HOMOLOGADAS = "solicitacoes-nao-homologadas";
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";

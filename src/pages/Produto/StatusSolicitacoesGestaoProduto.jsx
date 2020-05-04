@@ -8,7 +8,12 @@ import { ICON_CARD_TYPE_ENUM } from "../../components/Shareable/CardStatusDeSoli
 import {
   getHomologados,
   getNaoHomologados,
-  getAguardandoAnaliseSensorial
+  getPendenteHomologacao,
+  getAguardandoAnaliseSensorial,
+  getAguardandoAnaliseReclamacao,
+  getProdutosSuspensos,
+  getReclamacaoDeProduto,
+  getCorrecaoDeProduto
 } from "../../services/produto.service";
 import { formataCards } from "components/screens/DashboardGestaoProduto/helper";
 
@@ -28,12 +33,57 @@ class StatusSolicitacoesBase extends React.Component {
   }
 }
 
+export const ReclamacaoDeProduto = () => (
+  <StatusSolicitacoesBase
+    endpointGetSolicitacoes={getReclamacaoDeProduto}
+    tipoCard={CARD_TYPE_ENUM.RECLAMACAO}
+    icone={ICON_CARD_TYPE_ENUM.RECLAMACAO}
+    titulo="Reclamação de produto"
+  />
+);
+
+export const ProdutosSuspensos = () => (
+  <StatusSolicitacoesBase
+    endpointGetSolicitacoes={getProdutosSuspensos}
+    tipoCard={CARD_TYPE_ENUM.CANCELADO}
+    icone={ICON_CARD_TYPE_ENUM.SUSPENSO}
+    titulo="Produtos suspensos"
+  />
+);
+
+export const CorrecaoDeProduto = () => (
+  <StatusSolicitacoesBase
+    endpointGetSolicitacoes={getCorrecaoDeProduto}
+    tipoCard={CARD_TYPE_ENUM.CORRECAO}
+    icone={ICON_CARD_TYPE_ENUM.CORRECAO}
+    titulo="Correção de produto"
+  />
+);
+
+export const AguardandoAnaliseReclamacao = () => (
+  <StatusSolicitacoesBase
+    endpointGetSolicitacoes={getAguardandoAnaliseReclamacao}
+    tipoCard={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+    icone={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+    titulo="Aguardando análise de reclamação"
+  />
+);
+
 export const AguardandoAnaliseSensorial = () => (
   <StatusSolicitacoesBase
     endpointGetSolicitacoes={getAguardandoAnaliseSensorial}
     tipoCard={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_SENSORIAL}
     icone={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_SENSORIAL}
     titulo="Aguardando análise sensorial"
+  />
+);
+
+export const PendenteHomologacao = () => (
+  <StatusSolicitacoesBase
+    endpointGetSolicitacoes={getPendenteHomologacao}
+    tipoCard={CARD_TYPE_ENUM.PENDENTE}
+    icone={ICON_CARD_TYPE_ENUM.PENDENTE}
+    titulo="Pendente homologação"
   />
 );
 

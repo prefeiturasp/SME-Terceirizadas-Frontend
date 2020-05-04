@@ -2,11 +2,8 @@ import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardBody from "../../Shareable/CardBody";
-import {
-  GESTAO_PRODUTO,
-  SOLICITACOES_HOMOLOGADAS
-} from "../../../configs/constants";
-import { formataCards, getCardIcon, getCardStyle } from "./helper";
+import { GESTAO_PRODUTO } from "../../../configs/constants";
+import { formataCards, getCardIcon, getCardStyle, getCardHREF } from "./helper";
 import { dataAtual, deepCopy } from "../../../helpers/utilities";
 
 export default class DashboardGestaoProduto extends Component {
@@ -88,7 +85,7 @@ export default class DashboardGestaoProduto extends Component {
                             dashboardDataFiltered[cards[key]]
                           )}
                           icon={getCardIcon(card)}
-                          href={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
+                          href={`/${GESTAO_PRODUTO}/${getCardHREF(card)}`}
                         />
                       </div>
                       <div className="col-6">
@@ -99,7 +96,9 @@ export default class DashboardGestaoProduto extends Component {
                             dashboardDataFiltered[cards[key + 1]]
                           )}
                           icon={getCardIcon(cards[key + 1])}
-                          href={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
+                          href={`/${GESTAO_PRODUTO}/${getCardHREF(
+                            cards[key + 1]
+                          )}`}
                         />
                       </div>
                     </div>

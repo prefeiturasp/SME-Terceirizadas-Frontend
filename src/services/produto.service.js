@@ -229,8 +229,33 @@ export const getDashboardGestaoProdutos = () => {
     });
 };
 
+export const getReclamacaoDeProduto = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/reclamacao-de-produto/`;
+  return retornoBase(url);
+};
+
+export const getProdutosSuspensos = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/produtos-suspensos/`;
+  return retornoBase(url);
+};
+
+export const getCorrecaoDeProduto = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/correcao-de-produto/`;
+  return retornoBase(url);
+};
+
+export const getAguardandoAnaliseReclamacao = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/aguardando-analise-reclamacao/`;
+  return retornoBase(url);
+};
+
 export const getAguardandoAnaliseSensorial = () => {
   const url = `${API_URL}/painel-gerencial-homologacoes-produtos/aguardando-analise-sensorial/`;
+  return retornoBase(url);
+};
+
+export const getPendenteHomologacao = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/pendente-homologacao/`;
   return retornoBase(url);
 };
 
@@ -238,6 +263,7 @@ export const getHomologados = () => {
   const url = `${API_URL}/painel-gerencial-homologacoes-produtos/homologados/`;
   return retornoBase(url);
 };
+
 export const getNaoHomologados = () => {
   const url = `${API_URL}/painel-gerencial-homologacoes-produtos/nao-homologados/`;
   return retornoBase(url);
