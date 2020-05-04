@@ -15,7 +15,8 @@ export const formataInformacoesNutricionais = produto => {
           {
             nome: informacao.informacao_nutricional.nome,
             quantidade_porcao: informacao.quantidade_porcao,
-            valor_diario: informacao.valor_diario
+            valor_diario: informacao.valor_diario,
+            medida: informacao.informacao_nutricional.medida
           }
         ],
         active: false
@@ -29,7 +30,8 @@ export const formataInformacoesNutricionais = produto => {
       informacoesFormatadas[index].valores.push({
         nome: informacao.informacao_nutricional.nome,
         quantidade_porcao: informacao.quantidade_porcao,
-        valor_diario: informacao.valor_diario
+        valor_diario: informacao.valor_diario,
+        medida: informacao.informacao_nutricional.medida
       });
     }
   });

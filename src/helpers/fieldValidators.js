@@ -97,5 +97,11 @@ export const numeroDecimal = value => {
   return value ? (er.test(value) ? undefined : "Deve ser um decimal") : [];
 };
 
+export const inteiroOuDecimal = value => {
+  return value && !/^[0-9]+([,.][0-9]+)?$/g.test(value)
+    ? "Somente números inteiros ou decimais"
+    : undefined;
+};
+
 export const numeroInteiro = value =>
   value ? (!/\D/.test(value) ? undefined : "Somente números") : [];
