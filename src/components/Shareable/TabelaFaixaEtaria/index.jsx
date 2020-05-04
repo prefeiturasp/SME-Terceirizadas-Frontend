@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { string, arrayOf } from "prop-types";
 import { faixaToString } from "../../../helpers/faixasEtarias";
 import "./style.scss";
+import { getQuantidadeAlunosFaixaEtaria } from "services/inclusaoDeAlimentacao/cei.legacy.service";
 
-const TabelaFaixaEtaria = ({ faixas = [] }) => {
+const safeGetMatriculados = (obj, faixa) => {
+  try {
+    const filtered = obj.faixas.some(el => {
+      return el.uuid === faixa.faixa_etaria.uuid;
+    });
+    return filtered.length ? filtered[0].quantidade : "N/A";
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }
+  return "N/A";
+};
+
+const TabelaFaixaEtaria = ({ faixas = [], periodo, data }) => {
+  const [matriculados, setMatriculados] = useState({ faixas: [] });
+  const [totalMatriculados, setTotalMatriculados] = useState("N/A");
+
+  // FIXME: Remover essa solucao temporária quando o endpoint da solicitacao incluir esses dados
+  useEffect(() => {
+    async function fetchAlunosMatriculados() {
+      const result = await getQuantidadeAlunosFaixaEtaria(periodo, data);
+      if (result.data) {
+        setMatriculados(result.data);
+        const _total = faixas.reduce(function(acc, v) {
+          const n = safeGetMatriculados(result.data, v);
+          return typeof val === "number" ? acc + n : acc 
+        }, 0);
+        setTotalMatriculados(_total || "N/A");
+      }
+    }
+    fetchAlunosMatriculados();
+  }, [faixas, periodo, data]);
+
   const total = faixas.reduce(function(acc, v) {
     return acc + (v.quantidade || v.quantidade_alunos);
   }, 0);
@@ -23,14 +56,16 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
             <div className="faixa-etaria">
               {faixaToString(item.faixa_etaria)}
             </div>
-            <div className="alunos-matriculados">{"N/A"}</div>
+            <div className="alunos-matriculados">
+              {safeGetMatriculados(matriculados, item)}
+            </div>
             <div>{qtd}</div>
           </article>
         );
       })}
       <article>
         <div className="faixa-etaria">Total {">>"} </div>
-        <div className="alunos-matriculados">{"N/A"}</div>
+        <div className="alunos-matriculados">{totalMatriculados}</div>
         <div className="quantidade">{total}</div>
       </article>
     </section>
