@@ -14,7 +14,6 @@ export const getPath = tipoSolicitacao => {
     case TIPO_SOLICITACAO.SOLICITACAO_CEI:
       return URL_INCLUSAO_CEI;
     default:
-      //throw new Error(
       console.error(
         `Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`
       );
