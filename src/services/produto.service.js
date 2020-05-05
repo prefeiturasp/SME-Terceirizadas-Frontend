@@ -230,41 +230,41 @@ export const getDashboardGestaoProdutos = () => {
 };
 
 export const getReclamacaoDeProduto = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/reclamacao-de-produto/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_autorizou_reclamacao/`;
   return retornoBase(url);
 };
 
 export const getProdutosSuspensos = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/produtos-suspensos/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_suspendeu/`;
   return retornoBase(url);
 };
 
 export const getCorrecaoDeProduto = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/correcao-de-produto/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_questionado/`;
   return retornoBase(url);
 };
 
 export const getAguardandoAnaliseReclamacao = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/aguardando-analise-reclamacao/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pediu_analise_reclamacao/`;
   return retornoBase(url);
 };
 
 export const getAguardandoAnaliseSensorial = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/aguardando-analise-sensorial/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pediu_analise_sensorial/`;
   return retornoBase(url);
 };
 
 export const getPendenteHomologacao = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/pendente-homologacao/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pendente_homologacao/`;
   return retornoBase(url);
 };
 
 export const getHomologados = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/homologados/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_homologado/`;
   return retornoBase(url);
 };
 
 export const getNaoHomologados = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/nao-homologados/`;
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_nao_homologado/`;
   return retornoBase(url);
 };
