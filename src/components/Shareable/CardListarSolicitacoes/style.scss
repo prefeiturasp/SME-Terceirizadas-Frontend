@@ -87,6 +87,30 @@
       color: $black;
     }
   }
+  &.card-complained {
+    border-left-color: $bordeaux !important;
+    i {
+      color: $bordeaux;
+    }
+  }
+  &.card-product-correction {
+    border-left-color: $purple !important;
+    i {
+      color: $purple;
+    }
+  }
+  &.card-awaiting-complain {
+    border-left-color: $blue !important;
+    i {
+      color: $blue;
+    }
+  }
+  &.card-awaiting-sensory {
+    border-left-color: $yellow !important;
+    i {
+      color: $yellow;
+    }
+  }
 }
 
 .ajuste-icones {

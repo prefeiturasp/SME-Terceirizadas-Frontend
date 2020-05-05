@@ -5,8 +5,17 @@ import {
   RELATORIOS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  GESTAO_PRODUTO,
+  SOLICITACOES_HOMOLOGADAS,
+  SOLICITACOES_NAO_HOMOLOGADAS,
+  AGUARDANDO_ANALISE_SENSORIAL,
+  SOLICITACOES_PENDENTE_HOMOLOGACAO,
+  RECLAMACAO_DE_PRODUTO,
+  PRODUTOS_SUSPENSOS,
+  CORRECAO_DE_PRODUTO,
+  AGUARDANDO_ANALISE_RECLAMACAO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants/shared";
 
@@ -87,7 +96,7 @@ export class SidebarTerceirizada extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${TERCEIRIZADA}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
@@ -142,7 +151,7 @@ export class SidebarTerceirizada extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"P&D"}</span>
+          <span>{"Gestão de Produto"}</span>
         </Link>
         <div
           id="collapsePD"
@@ -154,10 +163,86 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to={`/painel-gestao-produto`}
+            >
+              Painel Inicial
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/pesquisa-desenvolvimento/produto`}
             >
               Cadastro de Produto
             </NavLink>
+            <NavLink
+              onClick={() => this.onSubmenuClick("consulta-solicitacoes-gp")}
+              activeClassName="active"
+              className="collapse-item"
+              to="#"
+            >
+              Consulta de Solicitações
+              <i className="fas fa-chevron-down" />
+            </NavLink>
+            {subMenu === "consulta-solicitacoes-gp" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}
+                >
+                  Reclamação de produto
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${PRODUTOS_SUSPENSOS}`}
+                >
+                  Produtos suspensos
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${CORRECAO_DE_PRODUTO}`}
+                >
+                  Correção de produto
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${AGUARDANDO_ANALISE_RECLAMACAO}`}
+                >
+                  Aguardando análise de reclamação
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${AGUARDANDO_ANALISE_SENSORIAL}`}
+                >
+                  Aguardando análise sensorial
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_PENDENTE_HOMOLOGACAO}`}
+                >
+                  Pendente homologação
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
+                >
+                  Homologados
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_NAO_HOMOLOGADAS}`}
+                >
+                  Não homologados
+                </NavLink>
+              </div>
+            )}
           </div>
         </div>
       </li>,

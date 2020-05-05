@@ -9,6 +9,7 @@ export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -24,6 +25,16 @@ export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+
+export const RECLAMACAO_DE_PRODUTO = "reclamacao-de-produto";
+export const PRODUTOS_SUSPENSOS = "produtos-suspensos";
+export const CORRECAO_DE_PRODUTO = "correcao-de-produto";
+export const AGUARDANDO_ANALISE_RECLAMACAO = "aguardando-analise-reclamacao";
+export const AGUARDANDO_ANALISE_SENSORIAL = "aguardando-analise-sensorial";
+export const SOLICITACOES_PENDENTE_HOMOLOGACAO =
+  "solicitacoes-pendente-homologacao";
+export const SOLICITACOES_HOMOLOGADAS = "solicitacoes-homologadas";
+export const SOLICITACOES_NAO_HOMOLOGADAS = "solicitacoes-nao-homologadas";
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";

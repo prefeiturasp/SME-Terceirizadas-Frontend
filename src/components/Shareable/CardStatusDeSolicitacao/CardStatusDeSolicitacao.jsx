@@ -6,14 +6,23 @@ export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
   PENDENTE: "card-pending",
   AUTORIZADO: "card-authorized",
-  NEGADO: "card-denied"
+  NEGADO: "card-denied",
+  RECLAMACAO: "card-complained",
+  AGUARDANDO_ANALISE_SENSORIAL: "card-awaiting-sensory",
+  CORRECAO: "card-product-correction",
+  AGUARDANDO_ANALISE_RECLAMACAO: "card-awaiting-complain"
 };
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
-  NEGADO: "fa-ban"
+  NEGADO: "fa-ban",
+  RECLAMACAO: "fa-bullhorn",
+  AGUARDANDO_ANALISE_SENSORIAL: "fa-search",
+  SUSPENSO: "fa-hand-paper",
+  CORRECAO: "fa-pencil-alt",
+  AGUARDANDO_ANALISE_RECLAMACAO: "fa-history"
 };
 
 export const CardStatusDeSolicitacao = props => {

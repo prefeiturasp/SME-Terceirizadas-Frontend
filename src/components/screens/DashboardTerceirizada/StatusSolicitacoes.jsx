@@ -1,22 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import {
-  getSolicitacoesCanceladasTerceirizada,
-  getSolicitacoesPendentesTerceirizada,
-  getSolicitacoesAutorizadasTerceirizada,
-  getSolicitacoesNegadasTerceirizada
-} from "../../../services/painelTerceirizada.service";
 import { meusDados } from "../../../services/perfil.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
-import {
-  CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
-import { STATUS } from "../const";
-import { ajustarFormatoLog, LOG_PARA } from "../helper";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -76,69 +64,20 @@ export class StatusSolicitacoes extends Component {
   }
 
   async componentDidMount() {
-    let solicitacoes = "";
-    let tipoCard = "";
-    let icone = "";
-    let titulo = "";
+    const { endpointGetSolicitacoes, funcaoFormatar } = this.props;
     const dadosMeus = await meusDados();
-    //TODO aguardando definicao de perfil
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
-
-    switch (this.props.tipoStatus) {
-      case STATUS.AUTORIZADAS:
-        tipoCard = CARD_TYPE_ENUM.AUTORIZADO;
-        icone = ICON_CARD_TYPE_ENUM.AUTORIZADO;
-        titulo = "Autorizadas";
-        solicitacoes = await getSolicitacoesAutorizadasTerceirizada(
-          terceirizadaUUID
-        );
-        break;
-
-      case STATUS.PENDENTES:
-        tipoCard = CARD_TYPE_ENUM.PENDENTE;
-        icone = ICON_CARD_TYPE_ENUM.PENDENTE;
-        titulo = "Aguardando Autorização";
-        solicitacoes = await getSolicitacoesPendentesTerceirizada(
-          terceirizadaUUID
-        );
-        break;
-
-      case STATUS.CANCELADAS:
-        tipoCard = CARD_TYPE_ENUM.CANCELADO;
-        icone = ICON_CARD_TYPE_ENUM.CANCELADO;
-        titulo = "Canceladas";
-        solicitacoes = await getSolicitacoesCanceladasTerceirizada(
-          terceirizadaUUID
-        );
-        break;
-
-      case STATUS.RECUSADAS:
-        tipoCard = CARD_TYPE_ENUM.NEGADO;
-        icone = ICON_CARD_TYPE_ENUM.NEGADO;
-        titulo = "Negadas";
-        solicitacoes = await getSolicitacoesNegadasTerceirizada(
-          terceirizadaUUID
-        );
-        break;
-      default:
-        break;
-    }
-
-    solicitacoes = ajustarFormatoLog(
-      solicitacoes.results,
-      LOG_PARA.TERCEIRIZADA
-    );
+    let solicitacoes = await endpointGetSolicitacoes(terceirizadaUUID);
+    solicitacoes = funcaoFormatar(solicitacoes.results);
     this.setState({
       solicitacoes,
-      tipoCard,
-      icone,
-      titulo,
       solicitacoesFiltrados: solicitacoes
     });
   }
 
   render() {
-    const { solicitacoesFiltrados, titulo, tipoCard, icone } = this.state;
+    const { solicitacoesFiltrados } = this.state;
+    const { titulo, tipoCard, icone } = this.props;
     return (
       <form onSubmit={this.props.handleSubmit}>
         <div className="card mt-3">
