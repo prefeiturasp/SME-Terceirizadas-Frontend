@@ -93,6 +93,10 @@ export const submitProduto = async payload => {
   return await axios.post(`/produtos/`, payload);
 };
 
+export const updateProduto = async payload => {
+  return await axios.patch(`/produtos/${payload.uuid}/`, payload);
+};
+
 export const criarFabricanteProduto = async data => {
   return await axios.post(`/fabricantes/`, data);
 };

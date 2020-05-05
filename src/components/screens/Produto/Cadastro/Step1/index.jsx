@@ -22,6 +22,7 @@ import ModalMarca from "./ModalMarca";
 import ModalFabricante from "./ModalFabricante";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
+import { required } from "helpers/fieldValidators";
 
 const { Option } = Select;
 
@@ -362,6 +363,7 @@ class Step1 extends Component {
                   onClick={() => {
                     this.abreOuFechaFormDietaEspecial(1);
                   }}
+                  required
                 />
                 <span className="checkmark" />
               </label>

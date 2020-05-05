@@ -10,7 +10,8 @@ import Step3 from "./Step3";
 import {
   getProtocolosDietaEspecial,
   submitProduto,
-  getInformacoesGrupo
+  getInformacoesGrupo,
+  updateProduto
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
@@ -43,6 +44,7 @@ class cadastroProduto extends Component {
       ],
 
       payload: {
+        uuid: null,
         protocolos: [],
         marca: null,
         fabricante: null,
@@ -60,7 +62,8 @@ class cadastroProduto extends Component {
         outras_informacoes: null,
         numero_registro: null,
         porcao: null,
-        unidade_caseira: null
+        unidade_caseira: null,
+        cadastro_finalizado: false
       },
       renderizaFormDietaEspecial: false,
       renderizaFormAlergenicos: false,
@@ -220,6 +223,61 @@ class cadastroProduto extends Component {
     });
   };
 
+  updateOrCreateProduto(values) {
+    const { payload, currentStep } = this.state;
+    payload["tipo"] = values.tipo;
+    payload["embalagem"] = values.embalagem_primaria;
+    payload["prazo_validade"] = values.prazo_validade;
+    payload["info_armazenamento"] = values.condicoes;
+    payload["outras_informacoes"] = values.resumo_objeto;
+    payload["numero_registro"] = values.registro;
+
+    if (!payload["tem_aditivos_alergenicos"]) {
+      delete payload["aditivos"];
+    }
+    let erros = [];
+    if (currentStep === 0) {
+      erros = validaFormularioStep1(payload);
+    }
+    if (erros.length > 0) {
+      toastError("Preencha todos os campos corretamente");
+    } else {
+      if (!payload.uuid) {
+        return new Promise(async (resolve, reject) => {
+          const response = await submitProduto(payload);
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Rascunho salvo com sucesso.");
+            payload.uuid = response.data.uuid;
+            this.setState({ payload });
+            resolve();
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(getError(response.data));
+            reject();
+          } else {
+            toastError(`Erro ao salvar rascunho: ${getError(response.data)}`);
+            reject();
+          }
+        });
+      } else {
+        return new Promise(async (resolve, reject) => {
+          const response = await updateProduto(payload);
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Rascunho atualizado com sucesso.");
+            resolve();
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(getError(response.data));
+            reject();
+          } else {
+            toastError(
+              `Erro ao atualizar rascunho: ${getError(response.data)}`
+            );
+            reject();
+          }
+        });
+      }
+    }
+  }
+
   validarFormulario = () => {
     const { payload, currentStep } = this.state;
 
@@ -308,6 +366,17 @@ class cadastroProduto extends Component {
                       this.setState({ currentStep: currentStep - 1 })
                     }
                   />
+                  <Botao
+                    texto={"Salvar Rascunho"}
+                    className="mr-3"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    onClick={handleSubmit(values =>
+                      this.updateOrCreateProduto({
+                        ...values
+                      })
+                    )}
+                  />
                   {currentStep !== 2 &&
                     (currentStep === 1 ? (
                       payload.informacoes_nutricionais.length === 0 ? (
@@ -334,6 +403,7 @@ class cadastroProduto extends Component {
                         onClick={() => this.validarFormulario()}
                       />
                     ))}
+
                   {currentStep === 2 && (
                     <Botao
                       texto={"Enviar"}
