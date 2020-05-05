@@ -62,8 +62,7 @@ class cadastroProduto extends Component {
         outras_informacoes: null,
         numero_registro: null,
         porcao: null,
-        unidade_caseira: null,
-        cadastro_finalizado: false
+        unidade_caseira: null
       },
       renderizaFormDietaEspecial: false,
       renderizaFormAlergenicos: false,
@@ -184,21 +183,24 @@ class cadastroProduto extends Component {
   onSubmit = values => {
     const { payload } = this.state;
     payload["tipo"] = values.tipo;
-
-    payload["tipo"] = values.tipo;
     payload["embalagem"] = values.embalagem_primaria;
     payload["prazo_validade"] = values.prazo_validade;
     payload["info_armazenamento"] = values.condicoes;
     payload["outras_informacoes"] = values.resumo_objeto;
     payload["numero_registro"] = values.registro;
+    payload["cadastro_finalizado"] = true;
 
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
 
     return new Promise(async (resolve, reject) => {
-      const response = await submitProduto(payload);
-      if (response.status === HTTP_STATUS.CREATED) {
+      const endpoint = payload.uuid ? updateProduto : submitProduto;
+      const response = await endpoint(payload);
+      if (
+        response.status === HTTP_STATUS.CREATED ||
+        response.status === HTTP_STATUS.OK
+      ) {
         toastSuccess("Produto cadastrado com sucesso.");
         this.setState({
           payload: retornaPayloadDefault(),
@@ -376,6 +378,10 @@ class cadastroProduto extends Component {
                         ...values
                       })
                     )}
+                    disabled={
+                      currentStep === 1 &&
+                      payload.informacoes_nutricionais.length === 0
+                    }
                   />
                   {currentStep !== 2 &&
                     (currentStep === 1 ? (
@@ -427,7 +433,8 @@ class cadastroProduto extends Component {
 }
 
 const componentNameForm = reduxForm({
-  form: "cadastroProduto"
+  form: "cadastroProduto",
+  enableReinitialize: true
 })(cadastroProduto);
 
 export default componentNameForm;

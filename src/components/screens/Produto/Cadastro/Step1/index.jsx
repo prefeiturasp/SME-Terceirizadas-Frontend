@@ -421,6 +421,8 @@ class Step1 extends Component {
               onChange={event => {
                 this.setaNomeProduto(event.target.value);
               }}
+              required
+              validate={required}
             />
           </div>
         </div>
