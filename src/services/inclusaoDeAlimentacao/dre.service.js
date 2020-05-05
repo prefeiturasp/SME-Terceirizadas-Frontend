@@ -39,6 +39,7 @@ export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolici
 
 export const dreValidarSolicitacaoDeInclusaoDeAlimentacao = (
   uuid,
+  justificativa,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_VALIDA}/`;

@@ -14,5 +14,6 @@ export const getPath = tipoSolicitacao => {
       console.error(
         `Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`
       );
+      return "tipo----solicitacao----invalido";
   }
 };
