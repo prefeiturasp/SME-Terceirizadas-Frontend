@@ -2,7 +2,9 @@ const initialState = {
   list: [],
   nomesProdutos: [],
   nomesMarcas: [],
-  nomesFabricantes: []
+  nomesFabricantes: [],
+  produtoRelatorio: {},
+  produtosFiltrados: []
 };
 
 export const produtoReducer = (state = initialState, action) => {
@@ -10,7 +12,7 @@ export const produtoReducer = (state = initialState, action) => {
     case "PRODUTOS_SEARCH":
       return {
         ...state,
-        list: action.payload.data.results
+        list: action.payload
       };
     case "NOMES_PRODUTOS":
       return {
@@ -32,6 +34,16 @@ export const produtoReducer = (state = initialState, action) => {
         nomesFabricantes: action.payload.data.results.map(res => {
           return res.nome;
         })
+      };
+    case "PRODUTO_RELATORIO":
+      return {
+        ...state,
+        produtoRelatorio: action.payload
+      };
+    case "PRODUTO_FILTRADO":
+      return {
+        ...state,
+        produtosFiltrados: action.payload
       };
     default:
       return state;

@@ -4,12 +4,14 @@ import {
   getNomesMarcas,
   getNomesFabricantes
 } from "../../../../services/produto.service";
+import { retornaProdutosComUltimaHomolagacao } from "./helpers";
 
 export const buscaProdutos = async () => {
   const response = await getTodosOsProdutos();
+  const produtos = retornaProdutosComUltimaHomolagacao(response);
   return {
     type: "PRODUTOS_SEARCH",
-    payload: response
+    payload: produtos
   };
 };
 
@@ -34,5 +36,19 @@ export const buscaNomesFabricantes = async () => {
   return {
     type: "NOMES_FABRICANTES",
     payload: response
+  };
+};
+
+export const setaProdutoRelatorio = async produto => {
+  return {
+    type: "PRODUTO_RELATORIO",
+    payload: produto
+  };
+};
+
+export const setaProdutosFiltrados = async retornoProdutos => {
+  return {
+    type: "PRODUTO_FILTRADO",
+    payload: retornoProdutos
   };
 };
