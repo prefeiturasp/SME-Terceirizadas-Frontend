@@ -78,7 +78,8 @@ class cadastroProduto extends Component {
       defaultMarcaStep1: null,
       defaultFabricanteStep1: null,
       informacoesAgrupadas: null,
-      renderBuscaProduto: true
+      renderBuscaProduto: true,
+      blockProximoStep3: false
     };
     this.exibeFormularioInicial = this.exibeFormularioInicial.bind(this);
     this.setaAtributosPrimeiroStep = this.setaAtributosPrimeiroStep.bind(this);
@@ -91,6 +92,7 @@ class cadastroProduto extends Component {
     this.removeFile = this.removeFile.bind(this);
     this.setFiles = this.setFiles.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
+    this.setBlockProximo = this.setBlockProximo.bind(this);
   }
 
   setaValoresStep2 = ({
@@ -103,7 +105,7 @@ class cadastroProduto extends Component {
     payload["porcao"] = porcao;
     payload["unidade_caseira"] = unidade_caseira;
 
-    this.setState({ payload });
+    this.setState({ payload, blockProximoStep3: false });
   };
 
   setArrayErrosStep1 = erros => {
@@ -117,6 +119,10 @@ class cadastroProduto extends Component {
       const rascunhos = response.results;
       this.setState({ rascunhos });
     });
+  }
+
+  setBlockProximo() {
+    this.setState({ blockProximoStep3: true });
   }
 
   removerRascunho(id_externo, uuid) {
@@ -383,7 +389,8 @@ class cadastroProduto extends Component {
       concluidoStep1,
       defaultMarcaStep1,
       defaultFabricanteStep1,
-      rascunhos
+      rascunhos,
+      blockProximoStep3
     } = this.state;
     const { handleSubmit } = this.props;
     return (
@@ -435,6 +442,7 @@ class cadastroProduto extends Component {
                     informacoesAgrupadas={informacoesAgrupadas}
                     payload={payload}
                     setaValoresStep2={this.setaValoresStep2}
+                    setBlockProximo={this.setBlockProximo}
                   />
                 )}
                 {currentStep === 2 && (
@@ -467,13 +475,15 @@ class cadastroProduto extends Component {
                         })
                       )}
                       disabled={
-                        currentStep === 1 &&
-                        payload.informacoes_nutricionais.length === 0
+                        (currentStep === 1 &&
+                          payload.informacoes_nutricionais.length === 0) ||
+                        blockProximoStep3
                       }
                     />
                     {currentStep !== 2 &&
                       (currentStep === 1 ? (
-                        payload.informacoes_nutricionais.length === 0 ? (
+                        payload.informacoes_nutricionais.length === 0 ||
+                        blockProximoStep3 ? (
                           <Botao
                             texto={"Próximo"}
                             type={BUTTON_TYPE.BUTTON}

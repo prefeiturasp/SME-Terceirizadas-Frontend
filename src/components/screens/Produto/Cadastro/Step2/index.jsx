@@ -186,6 +186,9 @@ class Step2 extends Component {
                                               informacaoNutricional
                                             );
                                           }}
+                                          onChange={() => {
+                                            this.props.setBlockProximo();
+                                          }}
                                         />
                                       </div>
                                       <div className="col-4 mt-2">

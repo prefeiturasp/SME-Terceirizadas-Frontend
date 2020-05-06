@@ -13,6 +13,7 @@ class Step3 extends Component {
   }
 
   render() {
+    const { payload } = this.props;
     return (
       <div className="cadastro-produto-step3">
         <div className="card-title">Informação do Produto (classificação)</div>
@@ -108,6 +109,23 @@ class Step3 extends Component {
               multiple
             />
           </div>
+        </div>
+        <div className="report-label-value">
+          <p>Fotos salvas</p>
+          {payload.imagens.map((anexo, key) => {
+            return (
+              <div key={key}>
+                <a
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  href={anexo.arquivo}
+                  className="link"
+                >
+                  {anexo.nome}
+                </a>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
