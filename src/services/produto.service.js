@@ -37,7 +37,7 @@ export const getProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -56,7 +56,7 @@ export const getInformacoesNutricionais = () => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -131,7 +131,7 @@ export const getHomologacaoProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -150,7 +150,7 @@ export const CODAEHomologaProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -170,7 +170,7 @@ export const CODAEPedeAnaliseSensorialProduto = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -190,7 +190,7 @@ export const CODAENaoHomologaProduto = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -210,7 +210,7 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -230,6 +230,25 @@ export const getDashboardGestaoProdutos = () => {
     })
     .catch(error => {
       return error;
+    });
+};
+
+export const getRascunhosDeProduto = () => {
+  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/rascunho/`;
+  return retornoBase(url);
+};
+
+export const excluirRascunhoDeProduto = uuid => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/`;
+  return fetch(url, {
+    method: "DELETE",
+    headers: authToken
+  })
+    .then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return error.json();
     });
 };
 

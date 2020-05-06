@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { reduxForm } from "redux-form";
 import Wizard from "../../../Shareable/Wizard";
@@ -11,18 +11,22 @@ import {
   getProtocolosDietaEspecial,
   submitProduto,
   getInformacoesGrupo,
-  updateProduto
+  updateProduto,
+  getRascunhosDeProduto,
+  excluirRascunhoDeProduto
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
 import { validaFormularioStep1, retornaPayloadDefault } from "./helpers";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { getError } from "../../../../helpers/utilities";
+import { Rascunhos } from "./Rascunhos";
 
 class cadastroProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      rascunhos: [],
       protocolosDieta: [],
       currentStep: 0,
       wizardSteps: [
@@ -83,6 +87,7 @@ class cadastroProduto extends Component {
     this.setaValoresStep2 = this.setaValoresStep2.bind(this);
     this.removeFile = this.removeFile.bind(this);
     this.setFiles = this.setFiles.bind(this);
+    this.removerRascunho = this.removerRascunho.bind(this);
   }
 
   setaValoresStep2 = ({
@@ -104,6 +109,31 @@ class cadastroProduto extends Component {
     });
   };
 
+  getRascunhos() {
+    getRascunhosDeProduto().then(response => {
+      const rascunhos = response.results;
+      this.setState({ rascunhos });
+    });
+  }
+
+  removerRascunho(id_externo, uuid) {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      excluirRascunhoDeProduto(uuid).then(
+        res => {
+          if (res === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            this.getRascunhos();
+          } else {
+            toastError(`Erro ao remover rascunho`);
+          }
+        },
+        function() {
+          toastError("Houve um erro ao excluir o rascunho");
+        }
+      );
+    }
+  }
+
   componentDidMount = async () => {
     const infoAgrupada = await getInformacoesGrupo();
 
@@ -112,6 +142,7 @@ class cadastroProduto extends Component {
       protocolosDieta: response.data.results,
       informacoesAgrupadas: infoAgrupada.data.results
     });
+    this.getRascunhos();
   };
 
   exibeFormularioInicial = () => {
@@ -307,92 +338,113 @@ class cadastroProduto extends Component {
       payload,
       concluidoStep1,
       defaultMarcaStep1,
-      defaultFabricanteStep1
+      defaultFabricanteStep1,
+      rascunhos
     } = this.state;
     const { handleSubmit } = this.props;
     return (
-      <div className="card">
-        <div className="card-body">
-          {renderBuscaProduto ? (
-            <BuscaProduto
-              exibeFormularioInicial={this.exibeFormularioInicial}
+      <Fragment>
+        {rascunhos.length > 0 && renderBuscaProduto && (
+          <div className="mt-3">
+            <span className="page-title">Rascunhos</span>
+            <Rascunhos
+              rascunhos={rascunhos}
+              removerRascunho={this.removerRascunho}
+              resetForm={() => this.resetForm()}
+              carregarRascunho={params => this.carregarRascunho(params)}
             />
-          ) : (
-            <form className="special-diet" onSubmit={handleSubmit}>
-              <Wizard
-                arrayOfObjects={wizardSteps}
-                currentStep={currentStep}
-                outerParam="step"
-                nameItem="nome"
+          </div>
+        )}
+        <div className="card mt-3">
+          <div className="card-body">
+            {renderBuscaProduto ? (
+              <BuscaProduto
+                exibeFormularioInicial={this.exibeFormularioInicial}
               />
-              {currentStep === 0 && (
-                <Step1
-                  protocolosDieta={protocolosDieta}
-                  setaAtributosPrimeiroStep={this.setaAtributosPrimeiroStep}
-                  renderizaFormDietaEspecial={renderizaFormDietaEspecial}
-                  mostrarFormDieta={this.mostrarFormDieta}
-                  mostrarFormAlergenico={this.mostrarFormAlergenico}
-                  renderizaFormAlergenicos={renderizaFormAlergenicos}
-                  setArrayErrosStep1={this.setArrayErrosStep1}
-                  payload={payload}
-                  concluidoStep1={concluidoStep1}
-                  setDefaultMarcaStep1={this.setDefaultMarcaStep1}
-                  defaultMarcaStep1={defaultMarcaStep1}
-                  setDefaultFabricanteStep1={this.setDefaultFabricanteStep1}
-                  defaultFabricanteStep1={defaultFabricanteStep1}
+            ) : (
+              <form className="special-diet" onSubmit={handleSubmit}>
+                <Wizard
+                  arrayOfObjects={wizardSteps}
+                  currentStep={currentStep}
+                  outerParam="step"
+                  nameItem="nome"
                 />
-              )}
-              {currentStep === 1 && (
-                <Step2
-                  informacoesAgrupadas={informacoesAgrupadas}
-                  payload={payload}
-                  setaValoresStep2={this.setaValoresStep2}
-                />
-              )}
-              {currentStep === 2 && (
-                <Step3
-                  payload={payload}
-                  removeFile={this.removeFile}
-                  setFiles={this.setFiles}
-                />
-              )}
-              <div className="row">
-                <div className="col-12 text-right pt-3">
-                  <Botao
-                    texto={"Anterior"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled={currentStep === 0}
-                    onClick={() =>
-                      this.setState({ currentStep: currentStep - 1 })
-                    }
+                {currentStep === 0 && (
+                  <Step1
+                    protocolosDieta={protocolosDieta}
+                    setaAtributosPrimeiroStep={this.setaAtributosPrimeiroStep}
+                    renderizaFormDietaEspecial={renderizaFormDietaEspecial}
+                    mostrarFormDieta={this.mostrarFormDieta}
+                    mostrarFormAlergenico={this.mostrarFormAlergenico}
+                    renderizaFormAlergenicos={renderizaFormAlergenicos}
+                    setArrayErrosStep1={this.setArrayErrosStep1}
+                    payload={payload}
+                    concluidoStep1={concluidoStep1}
+                    setDefaultMarcaStep1={this.setDefaultMarcaStep1}
+                    defaultMarcaStep1={defaultMarcaStep1}
+                    setDefaultFabricanteStep1={this.setDefaultFabricanteStep1}
+                    defaultFabricanteStep1={defaultFabricanteStep1}
                   />
-                  <Botao
-                    texto={"Salvar Rascunho"}
-                    className="mr-3"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    onClick={handleSubmit(values =>
-                      this.updateOrCreateProduto({
-                        ...values
-                      })
-                    )}
-                    disabled={
-                      currentStep === 1 &&
-                      payload.informacoes_nutricionais.length === 0
-                    }
+                )}
+                {currentStep === 1 && (
+                  <Step2
+                    informacoesAgrupadas={informacoesAgrupadas}
+                    payload={payload}
+                    setaValoresStep2={this.setaValoresStep2}
                   />
-                  {currentStep !== 2 &&
-                    (currentStep === 1 ? (
-                      payload.informacoes_nutricionais.length === 0 ? (
-                        <Botao
-                          texto={"Próximo"}
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          onClick={() => this.validarFormulario()}
-                          disabled
-                        />
+                )}
+                {currentStep === 2 && (
+                  <Step3
+                    payload={payload}
+                    removeFile={this.removeFile}
+                    setFiles={this.setFiles}
+                  />
+                )}
+                <div className="row">
+                  <div className="col-12 text-right pt-3">
+                    <Botao
+                      texto={"Anterior"}
+                      className="mr-3"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      disabled={currentStep === 0}
+                      onClick={() =>
+                        this.setState({ currentStep: currentStep - 1 })
+                      }
+                    />
+                    <Botao
+                      texto={"Salvar Rascunho"}
+                      className="mr-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      onClick={handleSubmit(values =>
+                        this.updateOrCreateProduto({
+                          ...values
+                        })
+                      )}
+                      disabled={
+                        currentStep === 1 &&
+                        payload.informacoes_nutricionais.length === 0
+                      }
+                    />
+                    {currentStep !== 2 &&
+                      (currentStep === 1 ? (
+                        payload.informacoes_nutricionais.length === 0 ? (
+                          <Botao
+                            texto={"Próximo"}
+                            type={BUTTON_TYPE.SUBMIT}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => this.validarFormulario()}
+                            disabled
+                          />
+                        ) : (
+                          <Botao
+                            texto={"Próximo"}
+                            type={BUTTON_TYPE.SUBMIT}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => this.validarFormulario()}
+                          />
+                        )
                       ) : (
                         <Botao
                           texto={"Próximo"}
@@ -400,34 +452,27 @@ class cadastroProduto extends Component {
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           onClick={() => this.validarFormulario()}
                         />
-                      )
-                    ) : (
-                      <Botao
-                        texto={"Próximo"}
-                        type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        onClick={() => this.validarFormulario()}
-                      />
-                    ))}
+                      ))}
 
-                  {currentStep === 2 && (
-                    <Botao
-                      texto={"Enviar"}
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                      onClick={handleSubmit(values =>
-                        this.onSubmit({
-                          ...values
-                        })
-                      )}
-                    />
-                  )}
+                    {currentStep === 2 && (
+                      <Botao
+                        texto={"Enviar"}
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        onClick={handleSubmit(values =>
+                          this.onSubmit({
+                            ...values
+                          })
+                        )}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </form>
-          )}
+              </form>
+            )}
+          </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
