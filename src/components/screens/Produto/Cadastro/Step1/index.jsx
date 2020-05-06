@@ -23,6 +23,7 @@ import ModalFabricante from "./ModalFabricante";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
 import { required } from "helpers/fieldValidators";
+import { ASelect } from "components/Shareable/MakeField";
 
 const { Option } = Select;
 
@@ -426,13 +427,13 @@ class Step1 extends Component {
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-4 pt-3">
+        <div className="row pt-3">
+          <div className="col-4">
             <label className="label-formulario-produto">
               <nav>*</nav>Marca do produto
             </label>
             <Field
-              component={Select}
+              component={ASelect}
               className={"select-form-produto"}
               showSearch
               name="marca"
@@ -453,12 +454,12 @@ class Step1 extends Component {
               }}
             />
           </div>
-          <div className="col-4 pt-3">
+          <div className="col-4">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do fabricante
             </label>
             <Field
-              component={Select}
+              component={ASelect}
               className={"select-form-produto"}
               showSearch
               name="fabricante"

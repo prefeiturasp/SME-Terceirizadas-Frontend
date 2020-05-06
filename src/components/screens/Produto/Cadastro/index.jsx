@@ -22,7 +22,7 @@ import BuscaProduto from "./BuscaProduto";
 
 import { validaFormularioStep1, retornaPayloadDefault } from "./helpers";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { getError } from "../../../../helpers/utilities";
+import { getError, deepCopy } from "../../../../helpers/utilities";
 import { Rascunhos } from "./Rascunhos";
 
 class cadastroProduto extends Component {
@@ -138,9 +138,14 @@ class cadastroProduto extends Component {
   }
 
   carregarRascunho(param) {
+    const produtoRaw = deepCopy(param.produto);
     const produto = param.produto;
     this.props.reset("cadastroProduto");
     this.props.loadProduto(produto);
+    produto.eh_para_alunos_com_dieta = produtoRaw.eh_para_alunos_com_dieta;
+    produto.tem_aditivos_alergenicos = produtoRaw.tem_aditivos_alergenicos;
+    produto.marca = produtoRaw.marca.uuid;
+    produto.fabricante = produtoRaw.fabricante.uuid;
     this.setState({
       renderBuscaProduto: false,
       payload: produto
@@ -295,7 +300,7 @@ class cadastroProduto extends Component {
       erros = validaFormularioStep1(payload);
     }
     if (erros.length > 0) {
-      toastError("Preencha todos os campos corretamente");
+      toastError(erros[0]);
     } else {
       if (!payload.uuid) {
         return new Promise(async (resolve, reject) => {

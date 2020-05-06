@@ -12,7 +12,8 @@ export default function reducer(state = {}, action) {
           .tem_aditivos_alergenicos
           ? "1"
           : "0";
-        action.data.marca = action.data.marca.uuid;
+        action.data.marca = action.data.marca.nome;
+        action.data.fabricante = action.data.fabricante.nome;
       }
       return {
         data: {
