@@ -5,8 +5,11 @@ import Wizard from "../../../Shareable/Wizard";
 import Step1 from "./Step1";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import { loadProduto } from "../../../../reducers/produto.reducer";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
   getProtocolosDietaEspecial,
   submitProduto,
@@ -132,6 +135,25 @@ class cadastroProduto extends Component {
         }
       );
     }
+  }
+
+  carregarRascunho(param) {
+    const produto = param.produto;
+    this.props.reset("cadastroProduto");
+    this.props.loadProduto(produto);
+    this.setState({
+      renderBuscaProduto: false,
+      payload: produto
+    });
+    /*
+    this.setState({
+      status: inversaoDeDiaDeCardapio.status,
+      title: `Inversão de dia de Cardápio # ${
+        inversaoDeDiaDeCardapio.id_externo
+      }`,
+      salvarAtualizarLbl: "Atualizar"
+    });
+    */
   }
 
   componentDidMount = async () => {
@@ -482,4 +504,21 @@ const componentNameForm = reduxForm({
   enableReinitialize: true
 })(cadastroProduto);
 
-export default componentNameForm;
+const mapStateToProps = state => {
+  return {
+    initialValues: state.cadastroProduto.data
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadProduto
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(componentNameForm);
