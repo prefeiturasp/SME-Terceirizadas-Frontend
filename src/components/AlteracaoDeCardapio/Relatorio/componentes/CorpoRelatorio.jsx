@@ -107,7 +107,9 @@ export const CorpoRelatorio = props => {
           <td>{alteracaoDeCardapio.motivo.nome}</td>
           {alteracaoDeCardapio.data_inicial ===
           alteracaoDeCardapio.data_final ? (
-            <td>{alteracaoDeCardapio.data_inicial || alteracaoDeCardapio.data}</td>
+            <td>
+              {alteracaoDeCardapio.data_inicial || alteracaoDeCardapio.data}
+            </td>
           ) : (
             [
               <td key={0}>{alteracaoDeCardapio.data_inicial}</td>,

@@ -106,23 +106,29 @@ class Relatorio extends Component {
   }
 
   handleSubmit() {
-    const { toastAprovaMensagem, toastAprovaMensagemErro, justificativa } = this.props;
+    const {
+      toastAprovaMensagem,
+      toastAprovaMensagemErro,
+      justificativa
+    } = this.props;
     const uuid = this.state.uuid;
     const tipoSolicitacao = this.state.tipoSolicitacao;
-    this.props.endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(toastAprovaMensagem);
-          this.closeAutorizarModal();
-          this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+    this.props
+      .endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao)
+      .then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(toastAprovaMensagem);
+            this.closeAutorizarModal();
+            this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(toastAprovaMensagemErro);
+          }
+        },
+        function() {
           toastError(toastAprovaMensagemErro);
         }
-      },
-      function() {
-        toastError(toastAprovaMensagemErro);
-      }
-    );
+      );
   }
 
   render() {
