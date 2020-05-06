@@ -291,3 +291,7 @@ export const getNaoHomologados = () => {
   const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_nao_homologado/`;
   return retornoBase(url);
 };
+
+export const getTodosOsProdutos = async () => {
+  return await axios.get(`/produtos/todos-produtos/`);
+};
