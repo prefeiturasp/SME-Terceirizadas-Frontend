@@ -213,3 +213,7 @@ export const getHomologacoesCODAE = () => {
       return error;
     });
 };
+
+export const getTodosOsProdutos = async () => {
+  return await axios.get(`/produtos/todos-produtos/`);
+};
