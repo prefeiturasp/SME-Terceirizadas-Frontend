@@ -395,7 +395,7 @@ class Step1 extends Component {
                   <nav>*</nav>Nome do protocolo de Dieta Especial
                 </label>
                 <Field
-                  component={Select}
+                  component={ASelect}
                   className={"select-form-produto"}
                   mode="multiple"
                   name="protocolos"

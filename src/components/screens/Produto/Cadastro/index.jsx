@@ -146,9 +146,26 @@ class cadastroProduto extends Component {
     produto.tem_aditivos_alergenicos = produtoRaw.tem_aditivos_alergenicos;
     produto.marca = produtoRaw.marca.uuid;
     produto.fabricante = produtoRaw.fabricante.uuid;
+    let protocolos = [];
+    produtoRaw.protocolos.forEach(protocolo => {
+      protocolos.push(protocolo.uuid);
+    });
+    produto.protocolos = protocolos;
+    let informacoes_nutricionais = [];
+    produtoRaw.informacoes_nutricionais.forEach(informacaoNutricional => {
+      informacoes_nutricionais.push({
+        informacao_nutricional:
+          informacaoNutricional.informacao_nutricional.uuid,
+        valor_diario: informacaoNutricional.valor_diario,
+        quantidade_porcao: informacaoNutricional.quantidade_porcao
+      });
+    });
+    produto.informacoes_nutricionais = informacoes_nutricionais;
     this.setState({
       renderBuscaProduto: false,
-      payload: produto
+      payload: produto,
+      renderizaFormDietaEspecial: produtoRaw.eh_para_alunos_com_dieta,
+      renderizaFormAlergenicos: produtoRaw.tem_aditivos_alergenicos
     });
     /*
     this.setState({
@@ -241,11 +258,11 @@ class cadastroProduto extends Component {
   onSubmit = values => {
     const { payload } = this.state;
     payload["tipo"] = values.tipo;
-    payload["embalagem"] = values.embalagem_primaria;
+    payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;
-    payload["info_armazenamento"] = values.condicoes;
-    payload["outras_informacoes"] = values.resumo_objeto;
-    payload["numero_registro"] = values.registro;
+    payload["info_armazenamento"] = values.info_armazenamento;
+    payload["outras_informacoes"] = values.outras_informacoes;
+    payload["numero_registro"] = values.numero_registro;
     payload["cadastro_finalizado"] = true;
 
     if (!payload["tem_aditivos_alergenicos"]) {
@@ -286,11 +303,11 @@ class cadastroProduto extends Component {
   updateOrCreateProduto(values) {
     const { payload, currentStep } = this.state;
     payload["tipo"] = values.tipo;
-    payload["embalagem"] = values.embalagem_primaria;
+    payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;
-    payload["info_armazenamento"] = values.condicoes;
-    payload["outras_informacoes"] = values.resumo_objeto;
-    payload["numero_registro"] = values.registro;
+    payload["info_armazenamento"] = values.info_armazenamento;
+    payload["outras_informacoes"] = values.outras_informacoes;
+    payload["numero_registro"] = values.numero_registro;
 
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
@@ -459,7 +476,7 @@ class cadastroProduto extends Component {
                         payload.informacoes_nutricionais.length === 0 ? (
                           <Botao
                             texto={"Próximo"}
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() => this.validarFormulario()}
                             disabled
@@ -467,7 +484,7 @@ class cadastroProduto extends Component {
                         ) : (
                           <Botao
                             texto={"Próximo"}
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() => this.validarFormulario()}
                           />
@@ -475,7 +492,7 @@ class cadastroProduto extends Component {
                       ) : (
                         <Botao
                           texto={"Próximo"}
-                          type={BUTTON_TYPE.SUBMIT}
+                          type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           onClick={() => this.validarFormulario()}
                         />

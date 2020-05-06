@@ -21,7 +21,7 @@ class Step3 extends Component {
             <Field
               component={InputText}
               label="N° de registro do produto no órgão competente"
-              name="registro"
+              name="numero_registro"
               type="text"
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
             />
@@ -44,7 +44,7 @@ class Step3 extends Component {
             <Field
               component={InputText}
               label="Embalagem primária"
-              name="embalagem_primaria"
+              name="embalagem"
               type="text"
               placeholder="Digite os dados"
               required
@@ -68,7 +68,7 @@ class Step3 extends Component {
             <Field
               component={InputText}
               label="Condições de armazenamento, conservação e prazo máximo para consumo após a abertura da embalagem"
-              name="condicoes"
+              name="info_armazenamento"
               type="text"
               placeholder="Digite as informações necessárias"
               required
@@ -82,7 +82,7 @@ class Step3 extends Component {
               component={TextArea}
               placeholder="Digite as informações"
               label={"Outras informações que a empresa julgar necessário"}
-              name="resumo_objeto"
+              name="outras_informacoes"
             />
           </div>
         </div>

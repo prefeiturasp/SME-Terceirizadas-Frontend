@@ -14,6 +14,11 @@ export default function reducer(state = {}, action) {
           : "0";
         action.data.marca = action.data.marca.nome;
         action.data.fabricante = action.data.fabricante.nome;
+        let protocolos = [];
+        action.data.protocolos.forEach(protocolo => {
+          protocolos.push(protocolo.nome);
+        });
+        action.data.protocolos = protocolos;
       }
       return {
         data: {
