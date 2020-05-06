@@ -1,5 +1,5 @@
 import React from "react";
-import { string, arrayOf } from "prop-types";
+import { array } from "prop-types";
 import { faixaToString } from "../../../helpers/faixasEtarias";
 import "./style.scss";
 
@@ -38,7 +38,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
 };
 
 TabelaFaixaEtaria.propTypes = {
-  faixas: arrayOf(string)
+  faixas: array
 };
 
 export default TabelaFaixaEtaria;

@@ -5,7 +5,7 @@ export const formataMotivosDias = inclusoes => {
   inclusoes.forEach(inclusao => {
     const motivo =
       inclusao.motivo.nome === "Outro"
-        ? inclusao.outro_motivo
+        ? (inclusao.outro_motivo || "-")
         : inclusao.motivo.nome;
     if (motivosDias[motivo]) {
       motivosDias[motivo].push(inclusao.data);
