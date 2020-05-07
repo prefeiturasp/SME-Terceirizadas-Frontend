@@ -7,7 +7,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
-import { usuarioTerceirizada } from "../../../../../../helpers/utilities";
+import { checarSeUsuarioEhTerceirizada } from "../../../../../../helpers/utilities";
 import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
 import {
   fluxoDietaEspecialPartindoEscola,
@@ -173,7 +173,7 @@ export const CorpoRelatorio = props => {
           </div>
         )}
       </div>
-      {!usuarioTerceirizada() && (
+      {!checarSeUsuarioEhTerceirizada() && (
         <section className="row attachments">
           <div className="report-label-value col-8">
             <p>Laudo</p>

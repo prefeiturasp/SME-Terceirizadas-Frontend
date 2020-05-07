@@ -19,7 +19,7 @@ class DashboardGestaoProdutoBase extends React.Component {
 // Terceirizada
 export const DashboardTerceirizada = () => (
   <DashboardGestaoProdutoBase
-    endpointDashboard={getDashboardGestaoProdutos}
+    fetchDataDashboard={getDashboardGestaoProdutos}
     cards={PAINEL_PRODUTOS_CARDS_TERCEIRIZADA}
   />
 );
@@ -27,7 +27,7 @@ export const DashboardTerceirizada = () => (
 // CODAE
 export const DashboardCODAE = () => (
   <DashboardGestaoProdutoBase
-    endpointDashboard={getDashboardGestaoProdutos}
+    fetchDataDashboard={getDashboardGestaoProdutos}
     cards={PAINEL_PRODUTOS_CARDS_TERCEIRIZADA}
   />
 );

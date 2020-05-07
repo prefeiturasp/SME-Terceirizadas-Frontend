@@ -243,12 +243,12 @@ export const visualizaBotoesDoFluxo = solicitacao => {
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioEscola() || usuarioCODAEDietaEspecial();
+      return checarSeUsuarioEhEscola() || checarSeUsuarioEhCODAEDietaEspecial();
     case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
-      return usuarioCODAEDietaEspecial();
+      return checarSeUsuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
-      return usuarioTerceirizada();
+      return checarSeUsuarioEhTerceirizada();
     default:
       return false;
   }
@@ -265,38 +265,38 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
-export const usuarioEscola = () => {
+export const checarSeUsuarioEhEscola = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
 };
 
-export const usuarioDiretoriaRegional = () => {
+export const checarSeUsuarioEhDiretoriaRegional = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
-export const usuarioCODAEGestaoAlimentacao = () => {
+export const checarSeUsuarioEhCODAEGestaoAlimentacao = () => {
   return (
     localStorage.getItem("tipo_perfil") ===
     TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 
-export const usuarioCODAEDietaEspecial = () => {
+export const checarSeUsuarioEhCODAEDietaEspecial = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
-export const usuarioCODAEGestaoProduto = () => {
+export const checarSeUsuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
 };
 
-export const algumaCODAE = () => {
+export const checarSeUsuarioEhAlgumaCODAE = () => {
   return (
-    usuarioCODAEGestaoAlimentacao() ||
-    usuarioCODAEDietaEspecial() ||
-    usuarioCODAEGestaoProduto()
+    checarSeUsuarioEhCODAEGestaoAlimentacao() ||
+    checarSeUsuarioEhCODAEDietaEspecial() ||
+    checarSeUsuarioEhCODAEGestaoProduto()
   );
 };
 
-export const usuarioTerceirizada = () => {
+export const checarSeUsuarioEhTerceirizada = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
 };
 

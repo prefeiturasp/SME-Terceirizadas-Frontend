@@ -2,15 +2,15 @@ import { truncarString } from "../../../helpers/utilities";
 import {
   RELATORIO,
   GESTAO_PRODUTO,
-  RECLAMACAO_DE_PRODUTO,
-  PRODUTOS_SUSPENSOS,
-  CORRECAO_DE_PRODUTO,
-  AGUARDANDO_ANALISE_RECLAMACAO,
-  AGUARDANDO_ANALISE_SENSORIAL,
-  SOLICITACOES_HOMOLOGADAS,
-  SOLICITACOES_NAO_HOMOLOGADAS,
-  SOLICITACOES_PENDENTE_HOMOLOGACAO
+  ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
 } from "../../../configs/constants";
+
+export const CARDS_CONFIG = {
+  "Reclamação de produto": {
+    icone: "blabla",
+    style: "blabla"
+  }
+};
 
 export const getCardIcon = cardTitle => {
   switch (cardTitle) {
@@ -59,37 +59,29 @@ export const getCardStyle = cardTitle => {
 export const getCardHREF = cardTitle => {
   switch (cardTitle) {
     case "Reclamação de produto":
-      return RECLAMACAO_DE_PRODUTO;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO;
     case "Produtos suspensos":
-      return PRODUTOS_SUSPENSOS;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.PRODUTOS_SUSPENSOS;
     case "Correção de produto":
-      return CORRECAO_DE_PRODUTO;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO;
     case "Aguardando análise de reclamação":
-      return AGUARDANDO_ANALISE_RECLAMACAO;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_RECLAMACAO;
     case "Aguardando análise sensorial":
-      return AGUARDANDO_ANALISE_SENSORIAL;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_SENSORIAL;
     case "Homologados":
-      return SOLICITACOES_HOMOLOGADAS;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_HOMOLOGADAS;
     case "Não homologados":
-      return SOLICITACOES_NAO_HOMOLOGADAS;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS;
     case "Pendente homologação":
     default:
-      return SOLICITACOES_PENDENTE_HOMOLOGACAO;
+      return ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_PENDENTE_HOMOLOGACAO;
   }
 };
 
 export const formataCards = cards => {
-  if (cards.length) {
-    let cardsFormatados = [];
-    cards.forEach(card => {
-      cardsFormatados.push({
-        text: `${card.id_externo} - ${truncarString(card.nome_produto, 48)}`,
-        date: card.log_mais_recente,
-        link: `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
-      });
-    });
-    return cardsFormatados;
-  } else {
-    return [];
-  }
+  return cards.map(card => ({
+    text: `${card.id_externo} - ${truncarString(card.nome_produto, 48)}`,
+    date: card.log_mais_recente,
+    link: `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
+  }));
 };

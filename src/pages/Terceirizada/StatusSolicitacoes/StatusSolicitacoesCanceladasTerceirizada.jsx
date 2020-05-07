@@ -25,7 +25,7 @@ export default () => (
       tipoCard={CARD_TYPE_ENUM.CANCELADO}
       icone={ICON_CARD_TYPE_ENUM.CANCELADO}
       titulo="Canceladas"
-      funcaoFormatar={ajustarFormatoLog}
+      formatarDadosSolicitacao={ajustarFormatoLog}
     />
   </Page>
 );

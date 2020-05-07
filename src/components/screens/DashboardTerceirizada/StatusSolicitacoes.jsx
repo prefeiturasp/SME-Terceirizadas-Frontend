@@ -64,11 +64,17 @@ export class StatusSolicitacoes extends Component {
   }
 
   async componentDidMount() {
-    const { endpointGetSolicitacoes, funcaoFormatar } = this.props;
+    const {
+      endpointGetSolicitacoes,
+      formatarDadosSolicitacao,
+      status
+    } = this.props;
     const dadosMeus = await meusDados();
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
-    let solicitacoes = await endpointGetSolicitacoes(terceirizadaUUID);
-    solicitacoes = funcaoFormatar(solicitacoes.results);
+    let solicitacoes = await endpointGetSolicitacoes(
+      status || terceirizadaUUID
+    );
+    solicitacoes = formatarDadosSolicitacao(solicitacoes.data.results);
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes

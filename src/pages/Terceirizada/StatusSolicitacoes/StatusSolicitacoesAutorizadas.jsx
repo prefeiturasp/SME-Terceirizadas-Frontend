@@ -25,7 +25,7 @@ export default () => (
       tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
       icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
       titulo="Autorizadas"
-      funcaoFormatar={ajustarFormatoLog}
+      formatarDadosSolicitacao={ajustarFormatoLog}
     />
   </Page>
 );

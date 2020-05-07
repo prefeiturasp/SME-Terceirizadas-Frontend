@@ -1,21 +1,14 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config";
-import StatusSolicitacoes from "../../components/screens/DashboardTerceirizada/StatusSolicitacoes";
-import { CARD_TYPE_ENUM } from "../../components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { ICON_CARD_TYPE_ENUM } from "../../components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import {
-  getHomologados,
-  getNaoHomologados,
-  getPendenteHomologacao,
-  getAguardandoAnaliseSensorial,
-  getAguardandoAnaliseReclamacao,
-  getProdutosSuspensos,
-  getReclamacaoDeProduto,
-  getCorrecaoDeProduto
-} from "../../services/produto.service";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import { HOME } from "constants/config";
+import StatusSolicitacoes from "components/screens/DashboardTerceirizada/StatusSolicitacoes";
+import { CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { getHomologacoesDeProdutoPorStatus } from "services/produto.service";
 import { formataCards } from "components/screens/DashboardGestaoProduto/helper";
+import { GESTAO_PRODUTO_CARDS } from "configs/constants";
+import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
@@ -27,7 +20,11 @@ class StatusSolicitacoesBase extends React.Component {
     return (
       <Page>
         <Breadcrumb home={HOME} atual={atual} />
-        <StatusSolicitacoes funcaoFormatar={formataCards} {...this.props} />
+        <StatusSolicitacoes
+          formatarDadosSolicitacao={formataCards}
+          endpointGetSolicitacoes={getHomologacoesDeProdutoPorStatus}
+          {...this.props}
+        />
       </Page>
     );
   }
@@ -35,72 +32,72 @@ class StatusSolicitacoesBase extends React.Component {
 
 export const ReclamacaoDeProduto = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getReclamacaoDeProduto}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_AUTORIZOU_RECLAMACAO}
     tipoCard={CARD_TYPE_ENUM.RECLAMACAO}
     icone={ICON_CARD_TYPE_ENUM.RECLAMACAO}
-    titulo="Reclamação de produto"
+    titulo={GESTAO_PRODUTO_CARDS.RECLAMACAO_DE_PRODUTO}
   />
 );
 
 export const ProdutosSuspensos = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getProdutosSuspensos}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_SUSPENDEU}
     tipoCard={CARD_TYPE_ENUM.CANCELADO}
     icone={ICON_CARD_TYPE_ENUM.SUSPENSO}
-    titulo="Produtos suspensos"
+    titulo={GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS}
   />
 );
 
 export const CorrecaoDeProduto = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getCorrecaoDeProduto}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO}
     tipoCard={CARD_TYPE_ENUM.CORRECAO}
     icone={ICON_CARD_TYPE_ENUM.CORRECAO}
-    titulo="Correção de produto"
+    titulo={GESTAO_PRODUTO_CARDS.CORRECAO_DE_PRODUTO}
   />
 );
 
 export const AguardandoAnaliseReclamacao = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getAguardandoAnaliseReclamacao}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO}
     tipoCard={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
     icone={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
-    titulo="Aguardando análise de reclamação"
+    titulo={GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_RECLAMACAO}
   />
 );
 
 export const AguardandoAnaliseSensorial = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getAguardandoAnaliseSensorial}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_SENSORIAL}
     tipoCard={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_SENSORIAL}
     icone={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_SENSORIAL}
-    titulo="Aguardando análise sensorial"
+    titulo={GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_SENSORIAL}
   />
 );
 
 export const PendenteHomologacao = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getPendenteHomologacao}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO}
     tipoCard={CARD_TYPE_ENUM.PENDENTE}
     icone={ICON_CARD_TYPE_ENUM.PENDENTE}
-    titulo="Pendente homologação"
+    titulo={GESTAO_PRODUTO_CARDS.PENDENTE_HOMOLOGACAO}
   />
 );
 
 export const Homologados = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getHomologados}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_HOMOLOGADO}
     tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
     icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-    titulo="Homologados"
+    titulo={GESTAO_PRODUTO_CARDS.HOMOLOGADOS}
   />
 );
 
 export const NaoHomologados = () => (
   <StatusSolicitacoesBase
-    endpointGetSolicitacoes={getNaoHomologados}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_NAO_HOMOLOGADO}
     tipoCard={CARD_TYPE_ENUM.NEGADO}
     icone={ICON_CARD_TYPE_ENUM.NEGADO}
-    titulo="Não homologados"
+    titulo={GESTAO_PRODUTO_CARDS.NAO_HOMOLOGADOS}
   />
 );

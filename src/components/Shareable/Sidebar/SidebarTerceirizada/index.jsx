@@ -8,14 +8,9 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_NEGADAS,
   GESTAO_PRODUTO,
-  SOLICITACOES_HOMOLOGADAS,
-  SOLICITACOES_NAO_HOMOLOGADAS,
-  AGUARDANDO_ANALISE_SENSORIAL,
-  SOLICITACOES_PENDENTE_HOMOLOGACAO,
-  RECLAMACAO_DE_PRODUTO,
-  PRODUTOS_SUSPENSOS,
-  CORRECAO_DE_PRODUTO,
-  AGUARDANDO_ANALISE_RECLAMACAO
+  PAINEL_GESTAO_PRODUTO,
+  GESTAO_PRODUTO_CARDS,
+  ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants/shared";
 
@@ -151,7 +146,7 @@ export class SidebarTerceirizada extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"Gestão de Produto"}</span>
+          <span>Gestão de Produto</span>
         </Link>
         <div
           id="collapsePD"
@@ -163,7 +158,7 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
-              to={`/painel-gestao-produto`}
+              to={`/${PAINEL_GESTAO_PRODUTO}`}
             >
               Painel Inicial
             </NavLink>
@@ -188,58 +183,74 @@ export class SidebarTerceirizada extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO
+                  }`}
                 >
-                  Reclamação de produto
+                  {GESTAO_PRODUTO_CARDS.RECLAMACAO_DE_PRODUTO}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${PRODUTOS_SUSPENSOS}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.PRODUTOS_SUSPENSOS
+                  }`}
                 >
-                  Produtos suspensos
+                  {GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${CORRECAO_DE_PRODUTO}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO
+                  }`}
                 >
-                  Correção de produto
+                  {GESTAO_PRODUTO_CARDS.CORRECAO_DE_PRODUTO}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${AGUARDANDO_ANALISE_RECLAMACAO}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_RECLAMACAO
+                  }`}
                 >
-                  Aguardando análise de reclamação
+                  {GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_RECLAMACAO}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${AGUARDANDO_ANALISE_SENSORIAL}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_SENSORIAL
+                  }`}
                 >
-                  Aguardando análise sensorial
+                  {GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_SENSORIAL}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_PENDENTE_HOMOLOGACAO}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_PENDENTE_HOMOLOGACAO
+                  }`}
                 >
-                  Pendente homologação
+                  {GESTAO_PRODUTO_CARDS.PENDENTE_HOMOLOGACAO}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_HOMOLOGADAS}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_HOMOLOGADAS
+                  }`}
                 >
-                  Homologados
+                  {GESTAO_PRODUTO_CARDS.HOMOLOGADOS}
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${GESTAO_PRODUTO}/${SOLICITACOES_NAO_HOMOLOGADAS}`}
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS
+                  }`}
                 >
-                  Não homologados
+                  {GESTAO_PRODUTO_CARDS.NAO_HOMOLOGADOS}
                 </NavLink>
               </div>
             )}

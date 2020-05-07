@@ -28,7 +28,7 @@ export const ICON_CARD_TYPE_ENUM = {
 export const CardStatusDeSolicitacao = props => {
   const { cardTitle, cardType, solicitations, icon, href, loading } = props;
   return (
-    <div className={"card card-panel " + cardType}>
+    <div className={"card card-panel card-colored " + cardType}>
       <div className="card-title-status ajuste-icones">
         <div>
           <i className={"fas " + icon} />

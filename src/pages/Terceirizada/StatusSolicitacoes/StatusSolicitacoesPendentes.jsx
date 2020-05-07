@@ -25,7 +25,7 @@ export default () => (
       tipoCard={CARD_TYPE_ENUM.PENDENTE}
       icone={ICON_CARD_TYPE_ENUM.PENDENTE}
       titulo="Aguardando Autorização"
-      funcaoFormatar={ajustarFormatoLog}
+      formatarDadosSolicitacao={ajustarFormatoLog}
     />
   </Page>
 );

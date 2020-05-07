@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import CardStatusDeSolicitacao from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import CardBody from "../../Shareable/CardBody";
-import { GESTAO_PRODUTO } from "../../../configs/constants";
+import CardStatusDeSolicitacao from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardBody from "components/Shareable/CardBody";
+import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, getCardIcon, getCardStyle, getCardHREF } from "./helper";
-import { dataAtual, deepCopy } from "../../../helpers/utilities";
+import { dataAtual, deepCopy } from "helpers/utilities";
 
 export default class DashboardGestaoProduto extends Component {
   constructor(props) {
@@ -14,12 +14,11 @@ export default class DashboardGestaoProduto extends Component {
       dashboardDataFiltered: null,
       erro: false
     };
-    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
   }
 
   componentDidMount() {
-    const { endpointDashboard } = this.props;
-    endpointDashboard()
+    const { fetchDataDashboard } = this.props;
+    fetchDataDashboard()
       .then(response => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
@@ -35,15 +34,14 @@ export default class DashboardGestaoProduto extends Component {
       });
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  onPesquisaChanged = (event = { target: { value: "" } }) => {
     const { dashboardData } = this.state;
     let dashboardDataFiltered = deepCopy(dashboardData);
     dashboardDataFiltered = this.filtrarNome(dashboardDataFiltered, event);
     this.setState({ dashboardDataFiltered });
-  }
+  };
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome = (listaFiltro, event) => {
     const { cards } = this.props;
     cards.forEach(card => {
       listaFiltro[card] = listaFiltro[card].filter(function(item) {
@@ -55,18 +53,16 @@ export default class DashboardGestaoProduto extends Component {
       });
     });
     return listaFiltro;
-  }
+  };
 
   render() {
     const { dashboardDataFiltered, erro } = this.state;
     const { cards } = this.props;
     return (
       <div>
-        {erro ? (
-          <div>Erro ao carregar painel gerencial</div>
-        ) : !dashboardDataFiltered ? (
-          <div>Carregando...</div>
-        ) : (
+        {erro && <div>Erro ao carregar painel gerencial</div>}
+        {!erro && !dashboardDataFiltered && <div>Carregando...</div>}
+        {!erro && dashboardDataFiltered && (
           <CardBody
             titulo="Acompanhamento de produtos cadastrados"
             dataAtual={dataAtual()}
@@ -88,19 +84,21 @@ export default class DashboardGestaoProduto extends Component {
                           href={`/${GESTAO_PRODUTO}/${getCardHREF(card)}`}
                         />
                       </div>
-                      <div className="col-6">
-                        <CardStatusDeSolicitacao
-                          cardTitle={cards[key + 1]}
-                          cardType={getCardStyle(cards[key + 1])}
-                          solicitations={formataCards(
-                            dashboardDataFiltered[cards[key + 1]]
-                          )}
-                          icon={getCardIcon(cards[key + 1])}
-                          href={`/${GESTAO_PRODUTO}/${getCardHREF(
-                            cards[key + 1]
-                          )}`}
-                        />
-                      </div>
+                      {cards[key + 1] && (
+                        <div className="col-6">
+                          <CardStatusDeSolicitacao
+                            cardTitle={cards[key + 1]}
+                            cardType={getCardStyle(cards[key + 1])}
+                            solicitations={formataCards(
+                              dashboardDataFiltered[cards[key + 1]]
+                            )}
+                            icon={getCardIcon(cards[key + 1])}
+                            href={`/${GESTAO_PRODUTO}/${getCardHREF(
+                              cards[key + 1]
+                            )}`}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

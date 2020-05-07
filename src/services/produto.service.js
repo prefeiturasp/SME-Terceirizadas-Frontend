@@ -7,21 +7,6 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-const retornoBase = async url => {
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getProduto = uuid => {
   const url = `${API_URL}/produtos/${uuid}/`;
   let status = 0;
@@ -210,61 +195,12 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
     });
 };
 
-export const getDashboardGestaoProdutos = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/dashboard/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+export const getDashboardGestaoProdutos = async () => {
+  return await axios.get(`/painel-gerencial-homologacoes-produtos/dashboard/`);
 };
 
-export const getReclamacaoDeProduto = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_autorizou_reclamacao/`;
-  return retornoBase(url);
-};
-
-export const getProdutosSuspensos = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_suspendeu/`;
-  return retornoBase(url);
-};
-
-export const getCorrecaoDeProduto = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_questionado/`;
-  return retornoBase(url);
-};
-
-export const getAguardandoAnaliseReclamacao = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pediu_analise_reclamacao/`;
-  return retornoBase(url);
-};
-
-export const getAguardandoAnaliseSensorial = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pediu_analise_sensorial/`;
-  return retornoBase(url);
-};
-
-export const getPendenteHomologacao = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_pendente_homologacao/`;
-  return retornoBase(url);
-};
-
-export const getHomologados = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_homologado/`;
-  return retornoBase(url);
-};
-
-export const getNaoHomologados = () => {
-  const url = `${API_URL}/painel-gerencial-homologacoes-produtos/filtro-por-status/codae_nao_homologado/`;
-  return retornoBase(url);
+export const getHomologacoesDeProdutoPorStatus = async status => {
+  return await axios.get(
+    `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`
+  );
 };
