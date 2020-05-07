@@ -156,6 +156,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       periodo_escolar: values.periodo_escolar,
       tipos_alimentacao: values.tipos_alimentacao,
       motivo: values.motivo,
+      outro_motivo: values.outro_motivo,
       quantidade_alunos_por_faixas_etarias: listaFaixas,
       descricao: values.outro_motivo === undefined ? "" : values.outro_motivo,
       data: values.data,
