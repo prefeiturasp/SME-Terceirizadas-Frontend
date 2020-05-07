@@ -293,6 +293,7 @@ class cadastroProduto extends Component {
           renderBuscaProduto: true,
           currentStep: 0
         });
+        this.getRascunhos();
         this.props.reset("cadastroProduto");
 
         resolve();
@@ -314,7 +315,12 @@ class cadastroProduto extends Component {
     payload["info_armazenamento"] = values.info_armazenamento;
     payload["outras_informacoes"] = values.outras_informacoes;
     payload["numero_registro"] = values.numero_registro;
-
+    if (!payload["porcao"]) {
+      delete payload["porcao"];
+    }
+    if (!payload["unidade_caseira"]) {
+      delete payload["unidade_caseira"];
+    }
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
@@ -326,19 +332,15 @@ class cadastroProduto extends Component {
       toastError(erros[0]);
     } else {
       if (!payload.uuid) {
-        return new Promise(async (resolve, reject) => {
-          const response = await submitProduto(payload);
+        submitProduto(payload).then(response => {
           if (response.status === HTTP_STATUS.CREATED) {
             toastSuccess("Rascunho salvo com sucesso.");
             payload.uuid = response.data.uuid;
             this.setState({ payload });
-            resolve();
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError(getError(response.data));
-            reject();
           } else {
             toastError(`Erro ao salvar rascunho: ${getError(response.data)}`);
-            reject();
           }
         });
       } else {

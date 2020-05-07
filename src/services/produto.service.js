@@ -105,11 +105,43 @@ export const criarMarcaProduto = async data => {
 };
 
 export const submitProduto = async payload => {
-  return await axios.post(`/produtos/`, payload);
+  const url = `${API_URL}/produtos/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
 };
 
 export const updateProduto = async payload => {
-  return await axios.patch(`/produtos/${payload.uuid}/`, payload);
+  const url = `${API_URL}/produtos/${payload.uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
 };
 
 export const criarFabricanteProduto = async data => {
