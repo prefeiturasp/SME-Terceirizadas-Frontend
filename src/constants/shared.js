@@ -251,3 +251,14 @@ ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
   `${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/informa-suspensao/`;
 
 export { ENDPOINT };
+
+export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
+  CODAE_AUTORIZOU_RECLAMACAO: "codae_autorizou_reclamacao",
+  CODAE_SUSPENDEU: "codae_suspendeu",
+  CODAE_QUESTIONADO: "codae_questionado",
+  CODAE_PEDIU_ANALISE_RECLAMACAO: "codae_pediu_analise_reclamacao",
+  CODAE_PEDIU_ANALISE_SENSORIAL: "codae_pediu_analise_sensorial",
+  CODAE_PENDENTE_HOMOLOGACAO: "codae_pendente_homologacao",
+  CODAE_HOMOLOGADO: "codae_homologado",
+  CODAE_NAO_HOMOLOGADO: "codae_nao_homologado"
+};
