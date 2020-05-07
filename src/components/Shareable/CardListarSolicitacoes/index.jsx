@@ -25,7 +25,7 @@ export class CardListarSolicitacoes extends Component {
     } = this.props;
     return (
       <Fragment>
-        <div className={`card card-list-panel ${tipo} mb-4 mr-4`}>
+        <div className={`card card-list-panel card-colored ${tipo} mb-4 mr-4`}>
           <div className="card-title-status">
             <i className={"fas " + icone} />
             {titulo}

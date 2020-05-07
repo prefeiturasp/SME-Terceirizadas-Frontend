@@ -36,6 +36,19 @@ export const painelGestaoAlimentacao = () => {
   }
 };
 
+export const painelGestaoProduto = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return DashboardGestaoProduto.DashboardCODAE;
+    case TIPO_PERFIL.GESTAO_PRODUTO:
+      return DashboardGestaoProduto.DashboardCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return DashboardGestaoProduto.DashboardTerceirizada;
+    default:
+      return DashboardGestaoProduto.DashboardCODAE;
+  }
+};
+
 export const permissoes = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:

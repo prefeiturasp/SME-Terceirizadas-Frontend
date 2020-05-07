@@ -5,8 +5,12 @@ import {
   RELATORIOS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_NEGADAS,
+  GESTAO_PRODUTO,
+  PAINEL_GESTAO_PRODUTO,
+  GESTAO_PRODUTO_CARDS,
+  ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants/shared";
 
@@ -87,7 +91,7 @@ export class SidebarTerceirizada extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${TERCEIRIZADA}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
@@ -142,7 +146,7 @@ export class SidebarTerceirizada extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"P&D"}</span>
+          <span>Gestão de Produto</span>
         </Link>
         <div
           id="collapsePD"
@@ -154,10 +158,102 @@ export class SidebarTerceirizada extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to={`/${PAINEL_GESTAO_PRODUTO}`}
+            >
+              Painel Inicial
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/pesquisa-desenvolvimento/produto`}
             >
               Cadastro de Produto
             </NavLink>
+            <NavLink
+              onClick={() => this.onSubmenuClick("consulta-solicitacoes-gp")}
+              activeClassName="active"
+              className="collapse-item"
+              to="#"
+            >
+              Consulta de Solicitações
+              <i className="fas fa-chevron-down" />
+            </NavLink>
+            {subMenu === "consulta-solicitacoes-gp" && (
+              <div className="submenu">
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.RECLAMACAO_DE_PRODUTO}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.PRODUTOS_SUSPENSOS
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.CORRECAO_DE_PRODUTO}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_RECLAMACAO
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_RECLAMACAO}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_SENSORIAL
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_SENSORIAL}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_PENDENTE_HOMOLOGACAO
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.PENDENTE_HOMOLOGACAO}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_HOMOLOGADAS
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.HOMOLOGADOS}
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${GESTAO_PRODUTO}/${
+                    ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS
+                  }`}
+                >
+                  {GESTAO_PRODUTO_CARDS.NAO_HOMOLOGADOS}
+                </NavLink>
+              </div>
+            )}
           </div>
         </div>
       </li>,
