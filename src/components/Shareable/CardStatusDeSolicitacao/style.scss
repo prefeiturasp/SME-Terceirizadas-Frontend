@@ -39,54 +39,6 @@
     color: $blue;
     padding: 10px 0;
   }
-  &.card-authorized {
-    border-left-color: $greenPanel !important;
-    i {
-      color: $greenPanel;
-    }
-  }
-  &.card-pending {
-    border-left-color: $orange !important;
-    i {
-      color: $orange;
-    }
-  }
-  &.card-denied {
-    border-left-color: $red !important;
-    i {
-      color: $red;
-    }
-  }
-  &.card-cancelled {
-    border-left-color: $black !important;
-    i {
-      color: $black;
-    }
-  }
-  &.card-complained {
-    border-left-color: $bordeaux !important;
-    i {
-      color: $bordeaux;
-    }
-  }
-  &.card-product-correction {
-    border-left-color: $purple !important;
-    i {
-      color: $purple;
-    }
-  }
-  &.card-awaiting-complain {
-    border-left-color: $blue !important;
-    i {
-      color: $blue;
-    }
-  }
-  &.card-awaiting-sensory {
-    border-left-color: $yellow !important;
-    i {
-      color: $yellow;
-    }
-  }
 }
 
 .ajuste-icones {

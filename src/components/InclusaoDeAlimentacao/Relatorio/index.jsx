@@ -36,6 +36,7 @@ class Relatorio extends Component {
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -201,7 +202,7 @@ class Relatorio extends Component {
         {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit}>
+          <form onSubmit={this.props.handleSubmit || (() => {})}>
             {endpointAprovaSolicitacao && (
               <ModalAutorizarAposQuestionamento
                 showModal={showAutorizarModal}
@@ -244,7 +245,7 @@ class Relatorio extends Component {
                       (textoBotaoAprova !== "Ciente" && (
                         <Botao
                           texto={textoBotaoAprova}
-                          type={BUTTON_TYPE.SUBMIT}
+                          type={BUTTON_TYPE.BUTTON}
                           onClick={() =>
                             EXIBIR_MODAL_AUTORIZACAO
                               ? this.showAutorizarModal()

@@ -109,7 +109,7 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
 };
 
 export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicitacao => {
-  const url = `/${getPath(tipoSolicitacao)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
+  const url = `${getPath(tipoSolicitacao)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
 
   if (tipoSolicitacao) {
     return axios.get(url);

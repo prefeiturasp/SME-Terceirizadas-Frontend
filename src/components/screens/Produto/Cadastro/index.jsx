@@ -116,7 +116,7 @@ class cadastroProduto extends Component {
 
   getRascunhos() {
     getRascunhosDeProduto().then(response => {
-      const rascunhos = response.results;
+      const rascunhos = response.data.results;
       this.setState({ rascunhos });
     });
   }
@@ -129,7 +129,7 @@ class cadastroProduto extends Component {
     if (window.confirm("Deseja remover este rascunho?")) {
       excluirRascunhoDeProduto(uuid).then(
         res => {
-          if (res === HTTP_STATUS.NO_CONTENT) {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.getRascunhos();
           } else {

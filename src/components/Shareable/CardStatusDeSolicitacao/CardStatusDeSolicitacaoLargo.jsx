@@ -7,7 +7,7 @@ import { RELATORIO } from "../../../configs/constants";
 export const CardStatusDeSolicitacaoLargo = props => {
   const { titulo, tipo, solicitacoes, icone } = props;
   return (
-    <div className={`card card-panel ${tipo} mb-4 mr-4`}>
+    <div className={`card card-panel card-colored ${tipo} mb-4 mr-4`}>
       <div className="card-title-status">
         <i className={"fas " + icone} />
         {titulo}
