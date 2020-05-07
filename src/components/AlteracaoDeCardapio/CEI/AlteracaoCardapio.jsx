@@ -233,7 +233,10 @@ class AlteracaoCardapio extends Component {
   }
 
   enviaAlteracaoCardapio(uuid) {
-    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(uuid).then(
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
