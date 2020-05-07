@@ -80,6 +80,10 @@ class BuscaAvancada extends Component {
     values["produtos_alergenicos"] = produto_alergenico;
 
     const retornoProdutos = filtrarProdutosNaListagem(values, produtos);
+
+    retornoProdutos.forEach(produto => {
+      produto["ativo"] = false;
+    });
     this.props.setaProdutosFiltrados(retornoProdutos);
 
     this.setState({ pesquisado: true });

@@ -158,6 +158,13 @@ export class SidebarTerceirizada extends Component {
             >
               Cadastro de Produto
             </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/pesquisa-desenvolvimento/busca-produto`}
+            >
+              Busca de Produto
+            </NavLink>
           </div>
         </div>
       </li>,
