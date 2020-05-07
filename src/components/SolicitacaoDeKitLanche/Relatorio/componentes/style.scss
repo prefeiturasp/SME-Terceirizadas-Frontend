@@ -1,0 +1,49 @@
+.table-report-dieta-especial {
+  border-radius: 4px;
+  border: 1px solid #e9eaea;
+  margin: 0 0 2em 0;
+
+  article {
+    display: grid;
+    grid-template-columns: 2fr 8fr;
+    border-bottom: 1px solid #e9eaea;
+    min-height: 48px;
+    height: auto;
+    font-weight: 500;
+    line-height: 18px;
+    color: #686868;
+
+    div {
+      font-style: normal;
+      font-size: 14px;
+
+      /* identical to box height */
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    div:first-child {
+      justify-content: flex-start;
+      margin-left: 15px;
+    }
+
+    .codigo-eol {
+      text-align: left;
+      border-right: 0.5px solid #e9eaea;
+    }
+
+    .nome {
+      display: flex;
+      border-left: 0.5px solid #e9eaea;
+    }
+  }
+
+  article:first-child {
+    background-color: #f5f6f8;
+    font-weight: bold;
+    line-height: 16px;
+    color: #42474a;
+  }
+}
