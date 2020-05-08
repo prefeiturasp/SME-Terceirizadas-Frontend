@@ -106,27 +106,38 @@ class Step3 extends Component {
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
               setFiles={this.props.setFiles}
               removeFile={this.props.removeFile}
+              toastSuccess={"Imagem do produto incluída com sucesso!"}
               multiple
             />
           </div>
         </div>
-        <div className="report-label-value">
-          <p>Fotos salvas</p>
-          {payload.imagens.map((anexo, key) => {
-            return (
-              <div key={key}>
-                <a
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  href={anexo.arquivo}
-                  className="link"
-                >
-                  {anexo.nome}
-                </a>
-              </div>
-            );
-          })}
-        </div>
+        {payload.imagens_salvas && payload.imagens_salvas.length > 0 && (
+          <div className="report-label-value">
+            <p>Fotos salvas</p>
+            {payload.imagens_salvas
+              .filter(anexo => anexo.arquivo.includes("media"))
+              .map((anexo, key) => {
+                return (
+                  <div key={key} className="pt-2">
+                    <a
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      href={anexo.arquivo}
+                      className="link"
+                    >
+                      {anexo.nome}
+                    </a>
+                    <span
+                      onClick={() => this.props.removerAnexo(anexo.uuid, key)}
+                      className="delete"
+                    >
+                      x
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+        )}
       </div>
     );
   }

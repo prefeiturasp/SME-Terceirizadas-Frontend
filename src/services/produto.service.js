@@ -254,3 +254,7 @@ export const getHomologacoesDeProdutoPorStatus = async status => {
 export const getTodosOsProdutos = async () => {
   return await axios.get(`/produtos/todos-produtos/`);
 };
+
+export const excluirImagemDoProduto = async uuid => {
+  return await axios.delete(`/produto-imagens/${uuid}/`);
+};

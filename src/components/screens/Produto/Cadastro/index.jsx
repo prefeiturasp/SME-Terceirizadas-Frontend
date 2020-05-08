@@ -16,7 +16,8 @@ import {
   getInformacoesGrupo,
   updateProduto,
   getRascunhosDeProduto,
-  excluirRascunhoDeProduto
+  excluirRascunhoDeProduto,
+  excluirImagemDoProduto
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
@@ -166,6 +167,8 @@ class cadastroProduto extends Component {
         quantidade_porcao: informacaoNutricional.quantidade_porcao
       });
     });
+    produto.imagens_salvas = produtoRaw.imagens;
+    produto.imagens = [];
     produto.informacoes_nutricionais = informacoes_nutricionais;
     this.setState({
       renderBuscaProduto: false,
@@ -183,6 +186,26 @@ class cadastroProduto extends Component {
     });
     */
   }
+
+  removerAnexo = async (uuid, index) => {
+    if (window.confirm("Deseja remover este anexo do rascunho?")) {
+      excluirImagemDoProduto(uuid)
+        .then(response => {
+          if (response.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess("Arquivo excluído do rascunho com sucesso!");
+            let payload = this.state.payload;
+            payload.imagens_salvas.splice(index, 1);
+            this.setState({ payload });
+            this.getRascunhos();
+          } else {
+            toastError("Erro ao excluir o arquivo");
+          }
+        })
+        .catch(() => {
+          toastError("Erro ao excluir o arquivo");
+        });
+    }
+  };
 
   componentDidMount = async () => {
     const infoAgrupada = await getInformacoesGrupo();
@@ -452,6 +475,7 @@ class cadastroProduto extends Component {
                     payload={payload}
                     removeFile={this.removeFile}
                     setFiles={this.setFiles}
+                    removerAnexo={this.removerAnexo}
                   />
                 )}
                 <div className="row">
