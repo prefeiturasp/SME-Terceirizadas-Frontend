@@ -34,7 +34,10 @@ export const CorpoRelatorio = props => {
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {
-              getDetalheKitLancheAvulso(solicitacaoKitLanche.uuid);
+              getDetalheKitLancheAvulso(
+                solicitacaoKitLanche.uuid,
+                tipoSolicitacao
+              );
             }}
           />
         </p>
