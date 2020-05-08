@@ -221,7 +221,6 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.CODAE_A_AUTORIZAR:
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
-        TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
@@ -235,6 +234,26 @@ export const visualizaBotoesDoFluxo = solicitacao => {
       return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
         tipoPerfil
       );
+    default:
+      return false;
+  }
+};
+
+export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  switch (solicitacao.status) {
+    case statusEnum.CODAE_A_AUTORIZAR:
+    case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
+      return [
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.DIETA_ESPECIAL
+      ].includes(tipoPerfil);
+    case statusEnum.CODAE_AUTORIZADO:
+    case statusEnum.CODAE_QUESTIONADO:
+      return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL].includes(tipoPerfil);
     default:
       return false;
   }

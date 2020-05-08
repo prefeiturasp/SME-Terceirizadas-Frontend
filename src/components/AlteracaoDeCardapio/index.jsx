@@ -317,7 +317,7 @@ class AlteracaoCardapio extends Component {
     )
       .then(response => {
         alteracaoCardapioList =
-          response.results.length > 0 ? response.results : [];
+          response.data.results.length > 0 ? response.data.results : [];
         this.setState({
           alteracaoCardapioList
         });
