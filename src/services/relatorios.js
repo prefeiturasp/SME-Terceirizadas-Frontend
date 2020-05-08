@@ -76,11 +76,6 @@ export const getRelatorioInclusaoAlimentacao = (uuid, tipoSolicitacao) => {
 
 export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
   const url = `${getKitLanchePath(tipoSolicitacao)}/${uuid}/relatorio/`;
-  console.log(
-    "getKitLanchePath(tipoSolicitacao)",
-    getKitLanchePath(tipoSolicitacao)
-  );
-  console.log("url", url);
   fetch(url, {
     method: "GET",
     headers: authToken,
