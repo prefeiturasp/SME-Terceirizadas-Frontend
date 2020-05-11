@@ -84,6 +84,7 @@ import {
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 
 const routesConfig = [
   {
@@ -580,6 +581,14 @@ const routesConfig = [
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.RELATORIO_PRODUTO
+    }`,
+    component: RelatorioProduto,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
   },

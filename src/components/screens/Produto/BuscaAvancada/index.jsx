@@ -16,7 +16,8 @@ import {
   buscaNomesProduto,
   buscaNomesMarcas,
   buscaNomesFabricantes,
-  setaProdutosFiltrados
+  setaProdutosFiltrados,
+  buscaInformacoesNutricionais
 } from "./produtoAction";
 import "antd/dist/antd.css";
 import { Spin } from "antd";
@@ -126,6 +127,7 @@ class BuscaAvancada extends Component {
     this.props.buscaNomesMarcas();
     this.props.buscaNomesFabricantes();
     this.props.buscaProdutos();
+    this.props.buscaInformacoesNutricionais();
 
     statusOptions = retornaArrayDeAcordoComPerfil();
     this.setState({ statusOptions });
@@ -231,7 +233,8 @@ const mapDispatchToProps = dispatch =>
       buscaNomesProduto,
       buscaNomesMarcas,
       buscaNomesFabricantes,
-      setaProdutosFiltrados
+      setaProdutosFiltrados,
+      buscaInformacoesNutricionais
     },
     dispatch
   );

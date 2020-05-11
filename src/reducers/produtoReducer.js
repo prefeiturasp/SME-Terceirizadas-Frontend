@@ -4,7 +4,8 @@ const initialState = {
   nomesMarcas: [],
   nomesFabricantes: [],
   produtoRelatorio: {},
-  produtosFiltrados: []
+  produtosFiltrados: [],
+  informacoesNutricionais: []
 };
 
 export const produtoReducer = (state = initialState, action) => {
@@ -44,6 +45,14 @@ export const produtoReducer = (state = initialState, action) => {
       return {
         ...state,
         produtosFiltrados: action.payload
+      };
+    case "INFORMACOES_NUTRICIONAIS":
+      return {
+        ...state,
+        informacoesNutricionais: action.payload.data.results.map(res => {
+          res["ativo"] = false;
+          return res;
+        })
       };
     default:
       return state;

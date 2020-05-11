@@ -2,7 +2,8 @@ import {
   getTodosOsProdutos,
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes
+  getNomesFabricantes,
+  getInformacoesGrupo
 } from "../../../../services/produto.service";
 import { retornaProdutosComUltimaHomolagacao } from "./helpers";
 
@@ -50,5 +51,13 @@ export const setaProdutosFiltrados = async retornoProdutos => {
   return {
     type: "PRODUTO_FILTRADO",
     payload: retornoProdutos
+  };
+};
+
+export const buscaInformacoesNutricionais = async () => {
+  const response = getInformacoesGrupo();
+  return {
+    type: "INFORMACOES_NUTRICIONAIS",
+    payload: response
   };
 };

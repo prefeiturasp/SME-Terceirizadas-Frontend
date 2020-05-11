@@ -27,10 +27,25 @@ const retornaUltimaHomologacao = homologacoes => {
   return homologacoes;
 };
 
+const reatornaLogsOrdenados = logs => {
+  logs.forEach((logI, i) => {
+    logs.forEach((logJ, j) => {
+      if (verificaData(logI, logJ)) {
+        let tmp = logI;
+        logs[i] = logJ;
+        logs[j] = tmp;
+      }
+    });
+  });
+  return logs;
+};
+
 const retornaTodosOsLogs = homologacoes => {
   let logs = [];
   homologacoes.forEach(hom => {
     hom.logs.forEach(log => {
+      log["ativo"] = false;
+      log["empresa"] = hom.rastro_terceirizada.nome_fantasia;
       logs.push(log);
     });
   });
@@ -45,7 +60,9 @@ export const retornaProdutosComUltimaHomolagacao = response => {
       homologacoes.push(homolog);
     });
     produto["status"] = retornaUltimaHomologacao(homologacoes)[0]["status"];
-    produto["todos_logs"] = retornaTodosOsLogs(homologacoes);
+
+    const todosLogs = retornaTodosOsLogs(homologacoes);
+    produto["todos_logs"] = reatornaLogsOrdenados(todosLogs);
     return produto;
   });
   return produtos;
