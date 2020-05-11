@@ -1,0 +1,390 @@
+.corpo-reatorio-produto {
+  .label-relatorio {
+    color: #686868;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .value-relatorio {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #353535;
+    margin: 6px 0 0 0;
+  }
+
+  .flex-botoes-relatorio {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .header-informacao {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin: 20px 0;
+  }
+
+  header {
+    display: grid;
+    grid-template-columns: 35% 25% 20% 20%;
+    margin: 20px 0;
+  }
+
+  .informacoes-gerais {
+    margin: 20px 0;
+
+    .log-justificativa {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .justificativa-logs {
+      border-bottom: 1px solid rgba(129, 41, 41, 0.1);
+      padding: 0 0 15px 0;
+    }
+
+    .spaco-log {
+      margin: 0 5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .grid-empresa-info {
+      margin: 20px 0;
+      display: grid;
+      grid-template-columns: 40% 20% 40%;
+    }
+
+    .info-sem-grid {
+      margin: 20px 0 10px 0;
+    }
+
+    .grid-marca-fabricante-info {
+      display: grid;
+      grid-template-columns: 50% 50%;
+    }
+
+    .informativo-importante {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 10px;
+      line-height: 13px;
+      color: #b40c02;
+      width: 400px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #b40c02;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .listagem-proteinas {
+      margin: 25px 0 10px 0;
+      nav {
+        margin: 5px 0;
+        background: #ffffff;
+        border: 1px solid #e8e8e8;
+        box-sizing: border-box;
+        border-radius: 4px;
+        height: 56px;
+        cursor: pointer;
+
+        .header-listagem {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 56px;
+          padding: 0 25px;
+
+          .descricao-proteina {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+            color: #323c47;
+          }
+        }
+      }
+
+      .detalhe-item-listagem {
+        display: grid;
+        grid-template-columns: 50% 25% 25%;
+        min-height: 40px;
+        padding: 0 25px;
+
+        box-sizing: border-box;
+        border-bottom: 1px solid #e8e8e8;
+        margin-top: 2px;
+        font-weight: bold;
+        color: #323c47;
+        font-size: 14px;
+
+        div {
+          display: flex;
+          align-items: center;
+        }
+
+        .header-item-detalhe {
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
+
+      .corpo-itens-listagem {
+        border-radius: 4px;
+        border: 1px solid #e8e8e8;
+      }
+    }
+  }
+
+  .aviso-importante-nutricional {
+    margin: 25px 0;
+    width: 596px;
+    height: 58px;
+    background: #ffffff;
+    border: 1px solid #a4a4a4;
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 13px;
+    color: #a4a4a4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 25px;
+  }
+}
+
+.ant-modal-footer {
+  div {
+    button:first-child {
+      display: none;
+    }
+
+    button {
+      background: #198459;
+      border-radius: 3px;
+    }
+  }
+}
+
+.ant-modal-body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.body-modal-produto {
+  height: 350px;
+  margin: 10px;
+  display: grid;
+  grid-template-columns: 39% 59%;
+  column-gap: 2%;
+
+  .detail-log {
+    border: 1px solid #219653;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 1% 99%;
+
+    div:last-child {
+      height: 100%;
+    }
+  }
+
+  .descricao-do-log {
+    .header-log {
+      display: grid;
+      grid-template-columns: 10% 70% 20%;
+      border-bottom: 1px solid #dadada;
+
+      .usuario {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        div {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+          background: #219653;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #f2f2f2;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+
+      .nome-fantasia-empresa {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 20px 10px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.01em;
+        color: #42474a;
+      }
+
+      div:last-child {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 0 0 0;
+
+        div:first-child {
+          margin: 10px 0 0 0;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          margin: 0 10px 0 0;
+        }
+
+        div:last-child {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          margin: 0 10px 0 0;
+        }
+      }
+    }
+  }
+
+  .body-log-item {
+    margin: 10px;
+    header {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      color: #5a5a5a;
+    }
+
+    article {
+      margin: 10px 0;
+    }
+
+    .criado-em {
+      display: flex;
+      flex-direction: row;
+
+      div:last-child {
+        background: #bdbdbd;
+        opacity: 0.5;
+        margin: 0 10px;
+        padding: 0 10px;
+        color: #000000;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.01em;
+      }
+    }
+  }
+
+  .list-logs {
+    overflow: auto;
+  }
+  .body-logs {
+    position: relative;
+    height: 320px;
+    overflow-x: hidden;
+
+    .ativo-item {
+      background: #4f4f4f !important;
+      color: #f2f2f2 !important;
+
+      .descicao-titulo {
+        color: #f2f2f2 !important;
+      }
+    }
+
+    .grid-item-log {
+      display: grid;
+      grid-template-columns: 20% 50% 30%;
+      background: #f3f3f3;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      height: 50px;
+      margin: 10px 5px;
+      color: #5a5a5a;
+
+      cursor: pointer;
+
+      .usuario {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        div {
+          height: 32px;
+          width: 32px;
+          border-radius: 50%;
+          background: #219653;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #f2f2f2;
+          font-weight: normal;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+
+      .descricao {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 5px 0;
+
+        .descicao-titulo {
+          color: #5a5a5a;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        .hora {
+          display: flex;
+          justify-content: flex-end;
+          width: 90%;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 10px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+}

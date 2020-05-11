@@ -1,38 +1,34 @@
 import React, { Component, Fragment } from "react";
-import { Field, reduxForm } from "redux-form";
-import { InputComData } from "../../../Shareable/DatePicker";
-import { SelectWithHideOptions } from "../../../Shareable/SelectWithHideOptions";
+import { reduxForm } from "redux-form";
 import "antd/dist/antd.css";
 import "./style.scss";
-import CheckboxField from "components/Shareable/Checkbox/Field";
-import { InputText } from "components/Shareable/Input/InputText";
-import Botao from "components/Shareable/Botao";
-import { AAutoComplete } from "components/Shareable/MakeField";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import { tranformaEmobjetoDeBusca } from "./helpers";
+
+import {
+  tranformaEmobjetoDeBusca,
+  retornaArrayDeAcordoComPerfil,
+  filtrarProdutosNaListagem,
+  MIN_DATE
+} from "./helpers";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
   buscaProdutos,
   buscaNomesProduto,
   buscaNomesMarcas,
-  buscaNomesFabricantes
+  buscaNomesFabricantes,
+  setaProdutosFiltrados,
+  buscaInformacoesNutricionais
 } from "./produtoAction";
 import "antd/dist/antd.css";
 import { Spin } from "antd";
+import ListagemProdutos from "./ListagemProdutos";
+import FormBuscaProduto from "./FormBuscaProduto";
 
 class BuscaAvancada extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      statusOptions: [
-        "Homologado",
-        "Não homologado",
-        "Aguardando análise sensorial",
-        "Pendente de homologação",
-        "Suspenso",
-        "Correção"
-      ],
+      statusOptions: [],
       tipos_produto: [
         { nome: "comum", check: false, label: "Comum" },
         { nome: "dieta_especial", check: false, label: "Dieta especial" }
@@ -41,9 +37,16 @@ class BuscaAvancada extends Component {
       produtoDieta: false,
       produto_alergenico: false,
       selectedItems: [],
-      loading: true
+      loading: true,
+      pesquisado: false
     };
     this.handleChange = this.handleChange.bind(this);
+    this.onSelectStatus = this.onSelectStatus.bind(this);
+    this.onDeselectStatus = this.onDeselectStatus.bind(this);
+    this.checkTipoProduto = this.checkTipoProduto.bind(this);
+    this.checkProdutoAlergenico = this.checkProdutoAlergenico.bind(this);
+    this.onClear = this.onClear.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   checkTipoProduto = (indice, check, nome) => {
@@ -70,10 +73,21 @@ class BuscaAvancada extends Component {
       produto_alergenico
     } = this.state;
 
+    const { produtos } = this.props;
+
     values["status"] = tranformaEmobjetoDeBusca(selectedItems);
     values["check_comum"] = produtoComum;
     values["check_dieta_especial"] = produtoDieta;
     values["produtos_alergenicos"] = produto_alergenico;
+
+    const retornoProdutos = filtrarProdutosNaListagem(values, produtos);
+
+    retornoProdutos.forEach(produto => {
+      produto["ativo"] = false;
+    });
+    this.props.setaProdutosFiltrados(retornoProdutos);
+
+    this.setState({ pesquisado: true });
   };
 
   onClear = () => {
@@ -96,7 +110,9 @@ class BuscaAvancada extends Component {
       selectedItems: [],
       produto_alergenico: false,
       produtoComum: false,
-      produtoDieta: false
+      produtoDieta: false,
+      statusOptions: retornaArrayDeAcordoComPerfil(),
+      pesquisado: false
     });
   };
 
@@ -105,15 +121,42 @@ class BuscaAvancada extends Component {
   };
 
   componentDidMount() {
+    let { statusOptions } = this.state;
+
     this.props.buscaNomesProduto();
     this.props.buscaNomesMarcas();
     this.props.buscaNomesFabricantes();
     this.props.buscaProdutos();
+    this.props.buscaInformacoesNutricionais();
 
-    setTimeout(() => {
-      this.setState({ loading: false });
-    }, 1000);
+    statusOptions = retornaArrayDeAcordoComPerfil();
+    this.setState({ statusOptions });
   }
+
+  componentDidUpdate() {
+    let { statusOptions } = this.state;
+    const { produtos } = this.props;
+    if (statusOptions.length > 0 && produtos.length > 0) {
+      setTimeout(() => {
+        this.setState({ loading: false });
+      }, 500);
+    }
+  }
+
+  onSelectStatus = value => {
+    if (value === "Todos") {
+      const statusOptions = ["Todos"];
+      const selectedItems = ["Todos"];
+      this.setState({ statusOptions, selectedItems });
+    }
+  };
+
+  onDeselectStatus = value => {
+    if (value === "Todos") {
+      const statusOptions = retornaArrayDeAcordoComPerfil();
+      this.setState({ statusOptions, selectedItems: [] });
+    }
+  };
 
   render() {
     const {
@@ -127,136 +170,47 @@ class BuscaAvancada extends Component {
       tipos_produto,
       produto_alergenico,
       selectedItems,
-      loading
+      loading,
+      pesquisado
     } = this.state;
     return (
       <div className="card">
         <div className="card-body">
           {!loading ? (
             <Fragment>
-              <form>
-                <div className="descricao-topo-busca-produto">
-                  Consulte por produtos no sistema
-                </div>
-                <div className="tipo-status-barra-busca">
-                  <label>Data cadastro</label>
-                  <label>Status</label>
-                  <label>Tipo de produto</label>
-
-                  <div className="input-datas-inicio-termino">
-                    <Field
-                      className="input-data"
-                      component={InputComData}
-                      name="data-de"
-                    />
-                    <Field
-                      className="input-data"
-                      component={InputComData}
-                      name="data-ate"
-                    />
-                  </div>
-                  <div>
-                    <Field
-                      component={SelectWithHideOptions}
-                      options={statusOptions}
-                      name="status"
-                      handleChange={this.handleChange}
-                      selectedItems={selectedItems}
-                    />
-                  </div>
-                  <div className="check-tipos-prod">
-                    {tipos_produto.map((tipo, indice) => {
-                      return (
-                        <Field
-                          key={indice}
-                          className="check-tipo-produto"
-                          component={CheckboxField}
-                          name={`check_${tipo.nome}`}
-                          check={tipo.check}
-                          nomeInput={`${tipo.label}`}
-                          onChange={() => {
-                            this.checkTipoProduto(
-                              indice,
-                              tipo.check,
-                              tipo.nome
-                            );
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="grid-produtos-alergenicos">
-                  <label>Ingredientes/aditivos alegênicos?</label>
-                  <label>Quais?</label>
-                  <div className="check-produto_alergenico">
-                    <Field
-                      component={CheckboxField}
-                      name={`produtos_alergenicos`}
-                      check={produto_alergenico}
-                      nomeInput={"Sim"}
-                      onChange={() => {
-                        this.checkProdutoAlergenico();
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Field component={InputText} name="aditivos" />
-                  </div>
-                </div>
-                <div className="produto-input">
-                  <label>Nome do Produto</label>
-                </div>
-                <div>
-                  <Field
-                    name="nome"
-                    component={AAutoComplete}
-                    dataSource={nomesProdutos}
-                    filterOption
-                  />
-                </div>
-
-                <div className="marca-fabricante-produto">
-                  <label>Marca do produto</label>
-                  <label>Fabricante do produto</label>
-                  <Field
-                    name="marca"
-                    component={AAutoComplete}
-                    dataSource={nomesMarcas}
-                    filterOption
-                  />
-                  <Field
-                    name="fabricante"
-                    component={AAutoComplete}
-                    dataSource={nomesFabricantes}
-                    filterOption
-                  />
-                </div>
-
-                <div className="botoes-de-pesquisa-produto">
-                  <Botao
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    texto="Cancelar"
-                    onClick={() => {
-                      this.onClear();
-                    }}
-                  />
-                  <Botao
-                    style={BUTTON_STYLE.GREEN}
-                    texto="Consultar"
-                    onClick={handleSubmit(values =>
-                      this.onSearch({
-                        ...values
-                      })
-                    )}
-                  />
-                </div>
-              </form>
-              <div>fdkjsflgjlfgdsjlfdgjdgf</div>
+              <FormBuscaProduto
+                statusOptions={statusOptions}
+                tipos_produto={tipos_produto}
+                produto_alergenico={produto_alergenico}
+                selectedItems={selectedItems}
+                handleSubmit={handleSubmit}
+                nomesMarcas={nomesMarcas}
+                nomesFabricantes={nomesFabricantes}
+                nomesProdutos={nomesProdutos}
+                minDate={MIN_DATE}
+                handleChange={this.handleChange}
+                onDeselectStatus={this.onDeselectStatus}
+                onSelectStatus={this.onSelectStatus}
+                checkTipoProduto={this.checkTipoProduto}
+                checkProdutoAlergenico={this.checkProdutoAlergenico}
+                onClear={this.onClear}
+                onSearch={this.onSearch}
+              />
+              <ListagemProdutos pesquisado={pesquisado} />
             </Fragment>
           ) : (
             <Spin tip="Carregando...">
-              <div className="background-loading" />
+              <FormBuscaProduto
+                statusOptions={statusOptions}
+                tipos_produto={tipos_produto}
+                produto_alergenico={produto_alergenico}
+                selectedItems={selectedItems}
+                handleSubmit={handleSubmit}
+                nomesMarcas={nomesMarcas}
+                nomesFabricantes={nomesFabricantes}
+                nomesProdutos={nomesProdutos}
+                minDate={MIN_DATE}
+              />
             </Spin>
           )}
         </div>
@@ -278,7 +232,9 @@ const mapDispatchToProps = dispatch =>
       buscaProdutos,
       buscaNomesProduto,
       buscaNomesMarcas,
-      buscaNomesFabricantes
+      buscaNomesFabricantes,
+      setaProdutosFiltrados,
+      buscaInformacoesNutricionais
     },
     dispatch
   );
