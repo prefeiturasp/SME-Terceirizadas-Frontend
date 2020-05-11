@@ -221,7 +221,6 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.CODAE_A_AUTORIZAR:
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
-        TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
@@ -240,15 +239,35 @@ export const visualizaBotoesDoFluxo = solicitacao => {
   }
 };
 
+export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  switch (solicitacao.status) {
+    case statusEnum.CODAE_A_AUTORIZAR:
+    case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
+      return [
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.DIETA_ESPECIAL
+      ].includes(tipoPerfil);
+    case statusEnum.CODAE_AUTORIZADO:
+    case statusEnum.CODAE_QUESTIONADO:
+      return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL].includes(tipoPerfil);
+    default:
+      return false;
+  }
+};
+
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioEscola() || usuarioCODAEDietaEspecial();
+      return checarSeUsuarioEhEscola() || checarSeUsuarioEhCODAEDietaEspecial();
     case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
-      return usuarioCODAEDietaEspecial();
+      return checarSeUsuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
-      return usuarioTerceirizada();
+      return checarSeUsuarioEhTerceirizada();
     default:
       return false;
   }
@@ -265,38 +284,38 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
-export const usuarioEscola = () => {
+export const checarSeUsuarioEhEscola = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
 };
 
-export const usuarioDiretoriaRegional = () => {
+export const checarSeUsuarioEhDiretoriaRegional = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
-export const usuarioCODAEGestaoAlimentacao = () => {
+export const checarSeUsuarioEhCODAEGestaoAlimentacao = () => {
   return (
     localStorage.getItem("tipo_perfil") ===
     TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 
-export const usuarioCODAEDietaEspecial = () => {
+export const checarSeUsuarioEhCODAEDietaEspecial = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
-export const usuarioCODAEGestaoProduto = () => {
+export const checarSeUsuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
 };
 
-export const algumaCODAE = () => {
+export const checarSeUsuarioEhAlgumaCODAE = () => {
   return (
-    usuarioCODAEGestaoAlimentacao() ||
-    usuarioCODAEDietaEspecial() ||
-    usuarioCODAEGestaoProduto()
+    checarSeUsuarioEhCODAEGestaoAlimentacao() ||
+    checarSeUsuarioEhCODAEDietaEspecial() ||
+    checarSeUsuarioEhCODAEGestaoProduto()
   );
 };
 
-export const usuarioTerceirizada = () => {
+export const checarSeUsuarioEhTerceirizada = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
 };
 
@@ -354,22 +373,15 @@ export const ehEscolaTipoCEI = escola => {
   return nome.startsWith("CEI") || nome.startsWith("CCI");
 };
 
-export const tipoSolicitacaoComoQuery = inclusao => {
-  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
-    return `tipoSolicitacao=${TIPO_SOLICITACAO.SOLICITACAO_CEI}`;
-  }
-  const tipo =
-    inclusao.data_inicial !== undefined
-      ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
-      : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
-  return `tipoSolicitacao=${tipo}`;
+export const tipoSolicitacaoComoQuery = obj => {
+  return `tipoSolicitacao=${comoTipo(obj)}`;
 };
 
-export const comoTipo = inclusao => {
-  if (inclusao.escola.nome.toLowerCase().includes("cei ")) {
+export const comoTipo = obj => {
+  if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
-  return inclusao.data_inicial !== undefined
+  return obj.data_inicial && obj.data_inicial !== obj.data_final
     ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
     : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };

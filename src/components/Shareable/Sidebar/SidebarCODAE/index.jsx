@@ -19,8 +19,8 @@ import {
 } from "../../../../configs/constants";
 import { PERFIL } from "../../../../constants/shared";
 import {
-  usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial
+  checarSeUsuarioEhCODAEGestaoAlimentacao,
+  checarSeUsuarioEhCODAEDietaEspecial
 } from "../../../../helpers/utilities";
 
 export class SidebarCODAE extends Component {
@@ -46,7 +46,7 @@ export class SidebarCODAE extends Component {
           <span>Painel Inicial</span>
         </NavLink>
       </li>,
-      usuarioCODAEGestaoAlimentacao() && (
+      checarSeUsuarioEhCODAEGestaoAlimentacao() && (
         <li key={1} className="nav-item">
           <Link
             className={`nav-link collapsed`}
@@ -118,7 +118,7 @@ export class SidebarCODAE extends Component {
           </div>
         </li>
       ),
-      usuarioCODAEDietaEspecial() && (
+      checarSeUsuarioEhCODAEDietaEspecial() && (
         <li key={2} className="nav-item">
           <Link
             className={`nav-link collapsed`}

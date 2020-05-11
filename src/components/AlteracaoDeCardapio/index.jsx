@@ -317,7 +317,7 @@ class AlteracaoCardapio extends Component {
     )
       .then(response => {
         alteracaoCardapioList =
-          response.results.length > 0 ? response.results : [];
+          response.data.results.length > 0 ? response.data.results : [];
         this.setState({
           alteracaoCardapioList
         });
@@ -357,8 +357,10 @@ class AlteracaoCardapio extends Component {
   }
 
   enviaAlteracaoCardapio(uuid) {
-    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(uuid).then(
-      // FIXME param required
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -387,7 +389,10 @@ class AlteracaoCardapio extends Component {
       if (!erros) {
         this.resetaTodoPeriodoCheck();
         if (!values.uuid) {
-          escolaCriarSolicitacaoDeAlteracaoCardapio(values)
+          escolaCriarSolicitacaoDeAlteracaoCardapio(
+            values,
+            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+          )
             .then(async response => {
               if (response.status === HTTP_STATUS.CREATED) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -408,7 +413,8 @@ class AlteracaoCardapio extends Component {
         } else {
           escolaAlterarSolicitacaoDeAlteracaoCardapio(
             values.uuid,
-            JSON.stringify(values)
+            JSON.stringify(values),
+            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
           ).then(
             async res => {
               if (res.status === HTTP_STATUS.OK) {
@@ -469,8 +475,10 @@ class AlteracaoCardapio extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      escolaExcluirSolicitacaoDeAlteracaoCardapio(uuid).then(
-        // FIXME: param required
+      escolaExcluirSolicitacaoDeAlteracaoCardapio(
+        uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ).then(
         statusCode => {
           if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

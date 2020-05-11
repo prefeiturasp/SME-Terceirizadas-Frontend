@@ -8,7 +8,10 @@ export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
+export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
+
 export const DIETA_ESPECIAL = "dieta-especial";
+export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -25,6 +28,17 @@ export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
+export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
+  RECLAMACAO_DE_PRODUTO: "reclamacao-de-produto",
+  PRODUTOS_SUSPENSOS: "produtos-suspensos",
+  CORRECAO_DE_PRODUTO: "correcao-de-produto",
+  AGUARDANDO_ANALISE_RECLAMACAO: "aguardando-analise-reclamacao",
+  AGUARDANDO_ANALISE_SENSORIAL: "aguardando-analise-sensorial",
+  SOLICITACOES_PENDENTE_HOMOLOGACAO: "solicitacoes-pendente-homologacao",
+  SOLICITACOES_HOMOLOGADAS: "solicitacoes-homologadas",
+  SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas"
+};
+
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";
 export const NEGADOS_DIETA = "negados-dieta";
@@ -35,6 +49,17 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
   ESCOLA: "escola-solicitacoes",
   TERCEIRIZADA: "terceirizada-solicitacoes",
   DRE: "diretoria-regional-solicitacoes"
+};
+
+export const GESTAO_PRODUTO_CARDS = {
+  RECLAMACAO_DE_PRODUTO: "Reclamação de produto",
+  PRODUTOS_SUSPENSOS: "Produtos suspensos",
+  CORRECAO_DE_PRODUTO: "Correção de produto",
+  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise de reclamação",
+  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensorial",
+  PENDENTE_HOMOLOGACAO: "Pendente homologação",
+  HOMOLOGADOS: "Homologados",
+  NAO_HOMOLOGADOS: "Não homologados"
 };
 
 export const SOLICITACOES_CODAE = "codae-solicitacoes";

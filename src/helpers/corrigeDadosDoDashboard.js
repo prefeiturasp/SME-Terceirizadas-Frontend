@@ -10,22 +10,22 @@ const sumObjectsByKey = (...objs) => {
 
 export default results => {
   try {
-    if (results["Inclusão de Alimentacao de Cei"]) {
+    if (results["Inclusão de Alimentacao de CEI"]) {
       results["Inclusão de Alimentação"] = sumObjectsByKey(
         results["Inclusão de Alimentação"],
-        results["Inclusão de Alimentacao de Cei"]
+        results["Inclusão de Alimentacao de CEI"]
       );
     }
-    if (results["Kit Lanche Passeio de Cei"]) {
+    if (results["Kit Lanche Passeio de CEI"]) {
       results["Kit Lanche Passeio"] = sumObjectsByKey(
         results["Kit Lanche Passeio"],
-        results["Kit Lanche Passeio de Cei"]
+        results["Kit Lanche Passeio de CEI"]
       );
     }
-    if (results["Alteração de Cardápio de Cei"]) {
+    if (results["Alteração de Cardápio de CEI"]) {
       results["Alteração de Cardápio"] = sumObjectsByKey(
         results["Alteração de Cardápio"],
-        results["Alteração de Cardápio de Cei"]
+        results["Alteração de Cardápio de CEI"]
       );
     }
   } catch (error) {

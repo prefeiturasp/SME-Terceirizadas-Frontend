@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
@@ -11,6 +11,7 @@ import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
+import "./style.scss";
 
 export const CorpoRelatorio = props => {
   const {
@@ -33,7 +34,10 @@ export const CorpoRelatorio = props => {
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {
-              getDetalheKitLancheAvulso(solicitacaoKitLanche.uuid);
+              getDetalheKitLancheAvulso(
+                solicitacaoKitLanche.uuid,
+                tipoSolicitacao
+              );
             }}
           />
         </p>
@@ -137,8 +141,37 @@ export const CorpoRelatorio = props => {
         </tr>
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (
-        <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
+        <Fragment>
+          <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
+          {!!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
+            .length && (
+            <Fragment>
+              <div className="row report-label-value">
+                <div className="col-12 report-label-value">
+                  <p>Alunos com dieta especial</p>
+                </div>
+              </div>
+              <section className="table-report-dieta-especial">
+                <article>
+                  <div className="codigo-eol">Código EOL</div>
+                  <div className="nome">Nome</div>
+                </article>
+                {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
+                  (aluno, key) => {
+                    return (
+                      <article key={key}>
+                        <div className="codigo-eol">{aluno.codigo_eol}</div>
+                        <div className="nome">{aluno.nome}</div>
+                      </article>
+                    );
+                  }
+                )}
+              </section>
+            </Fragment>
+          )}
+        </Fragment>
       )}
+
       <div className="row">
         <div className="col-12 report-label-value">
           <p>Observações</p>

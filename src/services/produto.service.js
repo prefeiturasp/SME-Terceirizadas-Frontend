@@ -195,23 +195,14 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
     });
 };
 
-export const getHomologacoesCODAE = () => {
-  const url = `${API_URL}/homologacoes-produtos/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+export const getDashboardGestaoProdutos = async () => {
+  return await axios.get(`/painel-gerencial-homologacoes-produtos/dashboard/`);
+};
+
+export const getHomologacoesDeProdutoPorStatus = async status => {
+  return await axios.get(
+    `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`
+  );
 };
 
 export const getTodosOsProdutos = async () => {

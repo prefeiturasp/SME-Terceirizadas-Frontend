@@ -11,9 +11,9 @@ export const getPath = tipoSolicitacao => {
     case TIPO_SOLICITACAO.SOLICITACAO_CEI:
       return URL_KIT_LANCHES_SOLICITACOES_CEI;
     default:
-      //throw new Error(
       console.log(
         `Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`
       );
+      return "tipo----solicitacao----invalido";
   }
 };

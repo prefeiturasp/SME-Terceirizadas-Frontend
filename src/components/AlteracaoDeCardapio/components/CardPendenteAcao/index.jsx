@@ -109,7 +109,11 @@ export class CardPendenteAcao extends Component {
                         <td>{pedido.id_externo}</td>
                         <td>{pedido.escola.codigo_eol}</td>
                         <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial || dataMaisProxima}</td>
+                        <td>
+                          {pedido.data_inicial ||
+                            dataMaisProxima ||
+                            pedido.data}
+                        </td>
                       </tr>
                     </Link>
                   );

@@ -5,7 +5,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getSolicitacaoUnificada } from "../../../services/solicitacaoUnificada.service";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
+import { visualizaBotoesDoFluxoSolicitacaoUnificada } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
@@ -209,7 +209,9 @@ class Relatorio extends Component {
                 <RelatorioHistoricoQuestionamento
                   solicitacao={solicitacaoUnificada}
                 />
-                {visualizaBotoesDoFluxo(solicitacaoUnificada) && (
+                {visualizaBotoesDoFluxoSolicitacaoUnificada(
+                  solicitacaoUnificada
+                ) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao

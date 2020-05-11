@@ -36,14 +36,12 @@ export const codaeListarSolicitacoesDeAlteracaoDeCardapioReprovadas = tipoSolici
 
 export const codaeAutorizarSolicitacaoDeAlteracaoDeCardapio = (
   uuid,
-  justificativa = {},
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/codae-autoriza-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    body: JSON.stringify(justificativa),
     headers: AUTH_TOKEN
   })
     .then(res => {

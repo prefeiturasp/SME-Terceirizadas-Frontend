@@ -11,8 +11,9 @@ export const getPath = tipoSolicitacao => {
     case TIPO_SOLICITACAO.SOLICITACAO_CEI:
       return API_ALTERACOES_CARDAPIO_CEI;
     default:
-      throw new Error(
+      console.error(
         `Unexpected value for param 'tipoSolicitacao': ${tipoSolicitacao}`
       );
+      return "tipo----solicitacao----invalido";
   }
 };

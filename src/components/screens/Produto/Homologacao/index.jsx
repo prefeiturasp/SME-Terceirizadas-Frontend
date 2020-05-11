@@ -17,7 +17,10 @@ import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import {
+  stringSeparadaPorVirgulas,
+  checarSeUsuarioEhCODAEGestaoProduto
+} from "../../../../helpers/utilities";
 
 class HomologacaoProduto extends Component {
   constructor(props) {
@@ -176,12 +179,6 @@ class HomologacaoProduto extends Component {
                       </p>
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-12 report-label-value">
-                      <p>Detalhes da dieta</p>
-                      <p className="value">{produto.detalhes_da_dieta}</p>
-                    </div>
-                  </div>
                 </Fragment>
               )}
               <div className="row">
@@ -286,14 +283,16 @@ class HomologacaoProduto extends Component {
                                           <div className="col-8">
                                             {
                                               informacaoNutricional.quantidade_porcao
-                                            }
+                                            }{" "}
+                                            {informacaoNutricional.medida}
                                           </div>
                                         </div>
                                       </td>
                                       <td className="col-4">
                                         <div className="row">
                                           <div className="col-8">
-                                            {informacaoNutricional.valor_diario}
+                                            {informacaoNutricional.valor_diario}{" "}
+                                            %
                                           </div>
                                         </div>
                                       </td>
@@ -382,99 +381,101 @@ class HomologacaoProduto extends Component {
                   })}
                 </div>
               </section>
-              {status === "CODAE_PENDENTE_HOMOLOGACAO" && (
-                <div className="link-with-student pt-4">
-                  <div className="label">
-                    <span className="required-asterisk">*</span>Precisa
-                    solicitar análise sensorial?
+              {checarSeUsuarioEhCODAEGestaoProduto() &&
+                status === "CODAE_PENDENTE_HOMOLOGACAO" && (
+                  <div className="link-with-student pt-4">
+                    <div className="label">
+                      <span className="required-asterisk">*</span>Precisa
+                      solicitar análise sensorial?
+                    </div>
+                    <div className="row">
+                      <div className="col-3">
+                        <label className="container-radio">
+                          Sim
+                          <Field
+                            component={"input"}
+                            type="radio"
+                            value="1"
+                            name="necessita_analise_sensorial"
+                          />
+                          <span className="checkmark" />
+                        </label>
+                      </div>
+                      <div className="col-3">
+                        <label className="container-radio">
+                          Não
+                          <Field
+                            component={"input"}
+                            type="radio"
+                            value="0"
+                            name="necessita_analise_sensorial"
+                          />
+                          <span className="checkmark" />
+                        </label>
+                      </div>
+                    </div>
                   </div>
+                )}
+              {checarSeUsuarioEhCODAEGestaoProduto() &&
+                status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                   <div className="row">
-                    <div className="col-3">
-                      <label className="container-radio">
-                        Sim
-                        <Field
-                          component={"input"}
-                          type="radio"
-                          value="1"
-                          name="necessita_analise_sensorial"
-                        />
-                        <span className="checkmark" />
-                      </label>
-                    </div>
-                    <div className="col-3">
-                      <label className="container-radio">
-                        Não
-                        <Field
-                          component={"input"}
-                          type="radio"
-                          value="0"
-                          name="necessita_analise_sensorial"
-                        />
-                        <span className="checkmark" />
-                      </label>
+                    <div className="col-12 text-right pt-3">
+                      <Botao
+                        texto={"Análise"}
+                        className="mr-3"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          this.setState({
+                            qualModal: "analise",
+                            showModal: true
+                          })
+                        }
+                        style={BUTTON_STYLE.GREEN}
+                        disabled={
+                          !necessita_analise_sensorial ||
+                          necessita_analise_sensorial === "0"
+                        }
+                      />
+                      <Botao
+                        texto={"Corrigir"}
+                        className="mr-3"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() =>
+                          this.setState({
+                            qualModal: "corrigir",
+                            showModal: true
+                          })
+                        }
+                      />
+                      <Botao
+                        texto={"Não homologar"}
+                        className="mr-3"
+                        onClick={() =>
+                          this.setState({
+                            qualModal: "nao-homologar",
+                            showModal: true
+                          })
+                        }
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        disabled={
+                          !necessita_analise_sensorial ||
+                          necessita_analise_sensorial === "1"
+                        }
+                      />
+                      <Botao
+                        texto={"Homologar"}
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        disabled={
+                          !necessita_analise_sensorial ||
+                          necessita_analise_sensorial === "1"
+                        }
+                      />
                     </div>
                   </div>
-                </div>
-              )}
-              {status === "CODAE_PENDENTE_HOMOLOGACAO" && (
-                <div className="row">
-                  <div className="col-12 text-right pt-3">
-                    <Botao
-                      texto={"Análise"}
-                      className="mr-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() =>
-                        this.setState({
-                          qualModal: "analise",
-                          showModal: true
-                        })
-                      }
-                      style={BUTTON_STYLE.GREEN}
-                      disabled={
-                        !necessita_analise_sensorial ||
-                        necessita_analise_sensorial === "0"
-                      }
-                    />
-                    <Botao
-                      texto={"Corrigir"}
-                      className="mr-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      onClick={() =>
-                        this.setState({
-                          qualModal: "corrigir",
-                          showModal: true
-                        })
-                      }
-                    />
-                    <Botao
-                      texto={"Não homologar"}
-                      className="mr-3"
-                      onClick={() =>
-                        this.setState({
-                          qualModal: "nao-homologar",
-                          showModal: true
-                        })
-                      }
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={
-                        !necessita_analise_sensorial ||
-                        necessita_analise_sensorial === "1"
-                      }
-                    />
-                    <Botao
-                      texto={"Homologar"}
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                      disabled={
-                        !necessita_analise_sensorial ||
-                        necessita_analise_sensorial === "1"
-                      }
-                    />
-                  </div>
-                </div>
-              )}
+                )}
             </form>
           )}
         </div>

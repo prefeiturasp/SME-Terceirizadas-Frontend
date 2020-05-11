@@ -11,12 +11,12 @@ import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import {
-  usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial,
-  usuarioDiretoriaRegional,
-  usuarioEscola,
-  usuarioTerceirizada,
-  usuarioCODAEGestaoProduto
+  checarSeUsuarioEhCODAEGestaoAlimentacao,
+  checarSeUsuarioEhCODAEDietaEspecial,
+  checarSeUsuarioEhDiretoriaRegional,
+  checarSeUsuarioEhEscola,
+  checarSeUsuarioEhTerceirizada,
+  checarSeUsuarioEhCODAEGestaoProduto
 } from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
 
@@ -71,12 +71,12 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {(usuarioCODAEDietaEspecial() ||
-                usuarioCODAEGestaoAlimentacao() ||
-                usuarioCODAEGestaoProduto()) && <AvatarCODAE />}
-              {usuarioDiretoriaRegional() && <AvatarDRE />}
-              {usuarioEscola() && <AvatarEscola />}
-              {usuarioTerceirizada() && <AvatarTerceirizada />}
+              {(checarSeUsuarioEhCODAEDietaEspecial() ||
+                checarSeUsuarioEhCODAEGestaoAlimentacao() ||
+                checarSeUsuarioEhCODAEGestaoProduto()) && <AvatarCODAE />}
+              {checarSeUsuarioEhDiretoriaRegional() && <AvatarDRE />}
+              {checarSeUsuarioEhEscola() && <AvatarEscola />}
+              {checarSeUsuarioEhTerceirizada() && <AvatarTerceirizada />}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
@@ -107,12 +107,12 @@ export class Sidebar extends Component {
             </div>
           )}
           <div className="sidebar-wrapper div-submenu">
-            {(usuarioCODAEDietaEspecial() ||
-              usuarioCODAEGestaoAlimentacao() ||
-              usuarioCODAEGestaoProduto()) && <SidebarCODAE />}
-            {usuarioDiretoriaRegional() && <SidebarDRE />}
-            {usuarioEscola() && <SidebarEscola />}
-            {usuarioTerceirizada() && <SidebarTerceirizada />}
+            {(checarSeUsuarioEhCODAEDietaEspecial() ||
+              checarSeUsuarioEhCODAEGestaoAlimentacao() ||
+              checarSeUsuarioEhCODAEGestaoProduto()) && <SidebarCODAE />}
+            {checarSeUsuarioEhDiretoriaRegional() && <SidebarDRE />}
+            {checarSeUsuarioEhEscola() && <SidebarEscola />}
+            {checarSeUsuarioEhTerceirizada() && <SidebarTerceirizada />}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
