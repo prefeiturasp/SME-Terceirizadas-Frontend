@@ -84,6 +84,7 @@ import {
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
+import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
 
 const routesConfig = [
   {
@@ -570,6 +571,12 @@ const routesConfig = [
     component: CadastroProdutoPage,
     exact: true,
     tipoUsuario: checarSeUsuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
+    component: BuscaAvancadaProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${

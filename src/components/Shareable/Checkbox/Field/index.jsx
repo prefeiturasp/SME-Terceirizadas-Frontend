@@ -14,7 +14,9 @@ export default class CheckboxField extends Component {
       name,
       texto,
       children,
-      input: { checked }
+      input: { checked },
+      check,
+      nomeInput
     } = this.props;
     return (
       <div className="checkbox-field-component">
@@ -23,10 +25,10 @@ export default class CheckboxField extends Component {
             component="input"
             type="checkbox"
             name={name}
-            checked={checked}
+            checked={check || checked}
           />
           <span onClick={this.onClick} className="checkbox-field-span" />{" "}
-          {texto || children}
+          {nomeInput ? <div>{nomeInput}</div> : texto || children}
         </label>
       </div>
     );
