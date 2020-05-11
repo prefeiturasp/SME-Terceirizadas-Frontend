@@ -83,8 +83,9 @@ import {
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
-import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import RelatorioProduto from "../pages/Produto/RelatorioProduto";
+import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 
 const routesConfig = [
   {
