@@ -22,6 +22,8 @@ import ModalMarca from "./ModalMarca";
 import ModalFabricante from "./ModalFabricante";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
+import { required } from "helpers/fieldValidators";
+import { ASelect } from "components/Shareable/MakeField";
 
 const { Option } = Select;
 
@@ -362,6 +364,7 @@ class Step1 extends Component {
                   onClick={() => {
                     this.abreOuFechaFormDietaEspecial(1);
                   }}
+                  required
                 />
                 <span className="checkmark" />
               </label>
@@ -392,7 +395,7 @@ class Step1 extends Component {
                   <nav>*</nav>Nome do protocolo de Dieta Especial
                 </label>
                 <Field
-                  component={Select}
+                  component={ASelect}
                   className={"select-form-produto"}
                   mode="multiple"
                   name="protocolos"
@@ -419,16 +422,18 @@ class Step1 extends Component {
               onChange={event => {
                 this.setaNomeProduto(event.target.value);
               }}
+              required
+              validate={required}
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col-4 pt-3">
+        <div className="row pt-3">
+          <div className="col-4">
             <label className="label-formulario-produto">
               <nav>*</nav>Marca do produto
             </label>
             <Field
-              component={Select}
+              component={ASelect}
               className={"select-form-produto"}
               showSearch
               name="marca"
@@ -449,12 +454,12 @@ class Step1 extends Component {
               }}
             />
           </div>
-          <div className="col-4 pt-3">
+          <div className="col-4">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do fabricante
             </label>
             <Field
-              component={Select}
+              component={ASelect}
               className={"select-form-produto"}
               showSearch
               name="fabricante"

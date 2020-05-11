@@ -22,7 +22,7 @@ export const getProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -41,7 +41,7 @@ export const getInformacoesNutricionais = () => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -90,7 +90,43 @@ export const criarMarcaProduto = async data => {
 };
 
 export const submitProduto = async payload => {
-  return await axios.post(`/produtos/`, payload);
+  const url = `${API_URL}/produtos/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const updateProduto = async payload => {
+  const url = `${API_URL}/produtos/${payload.uuid}/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
 };
 
 export const criarFabricanteProduto = async data => {
@@ -112,7 +148,7 @@ export const getHomologacaoProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -131,7 +167,7 @@ export const CODAEHomologaProduto = uuid => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -151,7 +187,7 @@ export const CODAEPedeAnaliseSensorialProduto = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -171,7 +207,7 @@ export const CODAENaoHomologaProduto = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 
@@ -191,8 +227,18 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
+};
+
+export const getRascunhosDeProduto = async () => {
+  return await axios.get(
+    `/painel-gerencial-homologacoes-produtos/filtro-por-status/rascunho/`
+  );
+};
+
+export const excluirRascunhoDeProduto = async uuid => {
+  return await axios.delete(`/homologacoes-produtos/${uuid}/`);
 };
 
 export const getDashboardGestaoProdutos = async () => {
@@ -207,4 +253,8 @@ export const getHomologacoesDeProdutoPorStatus = async status => {
 
 export const getTodosOsProdutos = async () => {
   return await axios.get(`/produtos/todos-produtos/`);
+};
+
+export const excluirImagemDoProduto = async uuid => {
+  return await axios.delete(`/produto-imagens/${uuid}/`);
 };

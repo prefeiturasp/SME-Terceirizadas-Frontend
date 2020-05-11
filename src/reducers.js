@@ -10,6 +10,7 @@ import editalReducer from "./reducers/edital.reducer";
 import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
 import loadEmpresa from "./reducers/empresa.reducer";
 import loadFiltroBusca from "./reducers/loadFiltroBusca";
+import loadProduto from "./reducers/produto.reducer";
 import kitLancheReducer from "./reducers/kitLanche.reducer";
 import { produtoReducer } from "./reducers/produtoReducer";
 
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   cadastroEmpresaForm: loadEmpresa,
   FiltrosDeBuscaForm: loadFiltroBusca,
   kitLanche: kitLancheReducer,
+  cadastroProduto: loadProduto,
   produtos: produtoReducer
 });
 

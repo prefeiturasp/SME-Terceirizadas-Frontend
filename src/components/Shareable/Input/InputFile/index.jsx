@@ -76,7 +76,9 @@ export class InputFile extends Component {
           })
           .then(() => {
             if (files.length === QUANTIDADE_ARQUIVOS) {
-              toastSuccess("Laudo(s) incluso(s) com sucesso");
+              toastSuccess(
+                this.props.toastSuccess || "Laudo(s) incluso(s) com sucesso"
+              );
               if (this.props.concatenarNovosArquivos) {
                 const allFiles = this.state.files.concat(files);
                 this.props.setFiles(allFiles);
