@@ -17,6 +17,11 @@
 
 .react-datepicker-popper {
   z-index: 5;
+  position: absolute;
+  will-change: transform;
+  top: 0px;
+  left: 0px;
+  transform: translate3d(0px, 38px, 0px) !important;
 }
 
 .ant-select-search__field {
