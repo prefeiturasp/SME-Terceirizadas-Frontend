@@ -5,8 +5,7 @@ import "../styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 
 import "antd/dist/antd.css";
@@ -122,14 +121,7 @@ export default class CorpoRelatorio extends Component {
             type={BUTTON_TYPE.BUTTON}
             texto="historico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="mr-2"
             onClick={this.showModal}
-          />
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
           />
         </article>
         <header>
@@ -376,21 +368,6 @@ export default class CorpoRelatorio extends Component {
               </Fragment>
             );
           })}
-        </article>
-        <article className="flex-botoes-relatorio">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            texto="historico"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="mr-2"
-            onClick={this.showModal}
-          />
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-          />
         </article>
 
         <div>

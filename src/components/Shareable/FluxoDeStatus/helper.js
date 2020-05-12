@@ -115,7 +115,12 @@ export const tipoDeStatus = status => {
     case "DRE validou":
     case "DRE revisou":
     case "Homologado":
-    case "CODAE autorizou":
+    case "CODAE homologou":
+      return "prosseguiu";
+    case "CODAE não homologou":
+      return "cancelado";
+    case "CODAE pediu correção":
+      return "questionado";
     case "Terceirizada tomou ciência":
     case "Escola solicitou inativação":
     case "CODAE autorizou inativação":
