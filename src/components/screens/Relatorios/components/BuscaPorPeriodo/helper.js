@@ -1,18 +1,17 @@
 import {
-  checarSeUsuarioEhDiretoriaRegional,
-  checarSeUsuarioEhCODAEGestaoAlimentacao
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
 import { TODOS } from "../../../../../constants/shared";
 
 export const formataValues = values => {
   if (
-    (checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEGestaoAlimentacao()) &&
+    (usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()) &&
     !values.unidade_escolar
   ) {
     values.unidade_escolar = TODOS;
   }
-  if (checarSeUsuarioEhCODAEGestaoAlimentacao() && !values.diretoria_regional) {
+  if (usuarioEhCODAEGestaoAlimentacao() && !values.diretoria_regional) {
     values.diretoria_regional = TODOS;
   }
   return values;

@@ -1,17 +1,25 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
-  DRE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  ALTERACAO_CARDAPIO,
+  DIETA_ESPECIAL,
+  ESCOLA,
+  INCLUSAO_ALIMENTACAO,
+  INVERSAO_CARDAPIO,
+  RELATORIOS,
+  SOLICITACAO_KIT_LANCHE,
   SOLICITACOES_AUTORIZADAS,
+  SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_RECUSADAS,
-  SOLICITACOES_CANCELADAS,
-  RELATORIOS
-} from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants/shared";
+  SUSPENSAO_ALIMENTACAO,
+  CONFIGURACOES,
+  CADASTROS,
+  HORARIO_COMBOS_ALIMENTACAO
+} from "../../../../../configs/constants";
+import { PERFIL } from "../../../../../constants/shared";
 
-export class SidebarDRE extends Component {
+export class SidebarMenuEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -74,9 +82,37 @@ export class SidebarDRE extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
+                  to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
                 >
-                  Solicitação Unificada
+                  Inclusão de Alimentação
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}
+                >
+                  Alteração de Cardápio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
+                >
+                  Kit Lanche Passeio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}
+                >
+                  Inversão de Dia de Cardápio
+                </NavLink>
+                <NavLink
+                  activeClassName="active"
+                  className="collapse-item"
+                  to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
+                >
+                  Suspensão de Alimentação
                 </NavLink>
               </div>
             )}
@@ -94,28 +130,28 @@ export class SidebarDRE extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
+                  to={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
                 >
                   Aguardando autorização
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                  to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
                 >
                   Autorizadas
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
                 >
                   Negadas
                 </NavLink>
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                  to={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
                 >
                   Canceladas
                 </NavLink>
@@ -146,6 +182,20 @@ export class SidebarDRE extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to="/painel-dieta-especial"
+            >
+              Painel de Solicitações
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${ESCOLA}/${DIETA_ESPECIAL}`}
+            >
+              Nova Solicitação
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/dieta-especial/ativas-inativas`}
             >
               Consulta Dieta de Alunos
@@ -159,10 +209,37 @@ export class SidebarDRE extends Component {
           <span>Relatórios</span>
         </NavLink>
       </li>,
-      [PERFIL.SUPLENTE, PERFIL.COGESTOR].includes(
-        localStorage.getItem("perfil")
-      ) && (
-        <li key={4} className="nav-item">
+      <li key={4} className="nav-item">
+        <Link
+          className={`nav-link collapsed`}
+          href="#teste"
+          data-toggle="collapse"
+          data-target="#collapseCadastros"
+          aria-expanded="false"
+          aria-controls="collapseTwo"
+        >
+          <i className="fas fa-user-plus" />
+          <span>Cadastros</span>
+        </Link>
+        <div
+          id="collapseCadastros"
+          className={`collapse`}
+          aria-labelledby="headingConfig"
+          data-parent="#accordionSidebar"
+        >
+          <div className="bg-white py-2 collapse-inner rounded">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to={`/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`}
+            >
+              Horários de Alimentações
+            </NavLink>
+          </div>
+        </div>
+      </li>,
+      localStorage.getItem("perfil") === PERFIL.DIRETOR && (
+        <li key={5} className="nav-item">
           <Link
             className={`nav-link collapsed`}
             href="#teste"

@@ -11,8 +11,8 @@ import {
   PAINEL_GESTAO_PRODUTO,
   GESTAO_PRODUTO_CARDS,
   ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
-} from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants/shared";
+} from "../../../../../configs/constants";
+import { PERFIL } from "../../../../../constants/shared";
 
 export class SidebarTerceirizada extends Component {
   constructor(props) {
@@ -266,7 +266,7 @@ export class SidebarTerceirizada extends Component {
       [PERFIL.NUTRI_ADMIN_RESPONSAVEL].includes(
         localStorage.getItem("perfil")
       ) && (
-        <li key={4} className="nav-item">
+        <li key={5} className="nav-item">
           <Link
             className={`nav-link collapsed`}
             href="#teste"
