@@ -68,8 +68,7 @@ import {
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoCardapio,
-  painelGestaoProduto
+  inclusaoCardapio
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
@@ -84,6 +83,7 @@ import {
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
+import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 
 const routesConfig = [
   {
@@ -655,7 +655,7 @@ const routesConfig = [
   },
   {
     path: "/painel-gestao-produto",
-    component: painelGestaoProduto(),
+    component: DashboardGestaoProdutoPage,
     exact: true,
     tipoUsuario:
       usuarioEhEscola() ||
