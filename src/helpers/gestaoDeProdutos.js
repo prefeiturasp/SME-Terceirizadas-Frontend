@@ -49,14 +49,6 @@ const CARDS_COMUNS = [
 ];
 const CARDS_GESTAO = [
   {
-    id: CARD_ID.CORRECAO_DE_PRODUTO,
-    titulo: "Correção de produto",
-    icon: "fa-pencil-alt",
-    style: "card-product-correction",
-    rota: ROTA.CORRECAO_DE_PRODUTO,
-    incluir_status: [CODAE_AUTORIZOU_RECLAMACAO]
-  },
-  {
     id: CARD_ID.AGUARDANDO_ANALISE_RECLAMACAO,
     titulo: "Aguardando análise de reclamação",
     titulo_menu: "Ag. análise de reclamação", // FIXME: Confirmar nome no menu
@@ -84,17 +76,25 @@ const CARDS_GESTAO = [
   }
 ];
 
+const CARD_CORRECAO = {
+  id: CARD_ID.CORRECAO_DE_PRODUTO,
+  titulo: "Correção de produto",
+  icon: "fa-pencil-alt",
+  style: "card-product-correction",
+  rota: ROTA.CORRECAO_DE_PRODUTO,
+  incluir_status: [CODAE_AUTORIZOU_RECLAMACAO]
+}
+
 export const listarCardsPermitidos = () => {
   const perfil = localStorage.getItem("tipo_perfil");
-
   const cards = CARDS_COMUNS.concat();
 
   switch (perfil) {
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      cards.push(...CARDS_GESTAO);
+    case TIPO_PERFIL.TERCEIRIZADA:
+      cards.push(...CARDS_GESTAO, CARD_CORRECAO);
       break;
-    case TIPO_PERFIL.DIETA_ESPECIAL:
-      cards.push(...CARDS_GESTAO);
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      cards.push(...CARDS_GESTAO, CARD_CORRECAO);
       break;
     case TIPO_PERFIL.GESTAO_PRODUTO:
       cards.push(...CARDS_GESTAO);
@@ -103,6 +103,8 @@ export const listarCardsPermitidos = () => {
         .incluir_status.push(CODAE_QUESTIONADO);
       break;
     default:
-      return CARDS_COMUNS;
+      return cards;
   }
+
+  return cards;
 };
