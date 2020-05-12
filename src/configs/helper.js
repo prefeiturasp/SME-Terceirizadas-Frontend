@@ -10,7 +10,7 @@ import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPa
 import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
-import * as DashboardGestaoProduto from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
@@ -172,7 +172,7 @@ export const painelInicial = () => {
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return DashboardCODAEPage;
     case TIPO_PERFIL.GESTAO_PRODUTO:
-      return DashboardGestaoProduto;
+      return DashboardGestaoProdutoPage;
     default:
       return PainelInicialPage;
   }

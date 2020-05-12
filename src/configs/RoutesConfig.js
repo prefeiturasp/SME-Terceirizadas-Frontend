@@ -658,10 +658,10 @@ const routesConfig = [
     component: DashboardGestaoProdutoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhTerceirizada()
+      (usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola())
   }
 ];
 
