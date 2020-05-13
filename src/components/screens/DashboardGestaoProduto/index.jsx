@@ -52,21 +52,16 @@ export default class DashboardGestaoProduto extends Component {
     this.setState({ cardsFiltered });
   };
 
-  filtrarNome = () => {
-    /*
-    //FIX-ME:  Precisa reimplementar
-    const { cards } = this.props;
-    return cards; //FIXME: needs to be re implemented
-     cards.forEach(card => {
-      listaFiltro[card] = listaFiltro[card].filter(function(item) {
-        const wordToFilter = event.target.value.toLowerCase();
-        return (
+  filtrarNome = (listaFiltro, event) => {
+    const wordToFilter = event.target.value.toLowerCase();
+    return listaFiltro.map(card => {
+      card.items = card.items.filter(
+        item =>
           item.nome_produto.toLowerCase().search(wordToFilter) !== -1 ||
           item.id_externo.toLowerCase().search(wordToFilter) !== -1
-        );
-      });
+      );
+      return card;
     });
-    return listaFiltro; */
   };
 
   render() {

@@ -100,7 +100,7 @@ export const listarCardsPermitidos = () => {
       cards.push(...CARDS_GESTAO);
       cards
         .filter(card => card.id === CARD_ID.PENDENTE_HOMOLOGACAO)[0]
-        .incluir_status.push(CODAE_QUESTIONADO);
+        .incluir_status.push(CODAE_AUTORIZOU_RECLAMACAO);
       break;
     default:
       return cards;
