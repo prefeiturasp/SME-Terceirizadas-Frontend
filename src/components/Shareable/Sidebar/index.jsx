@@ -1,22 +1,19 @@
 import React, { Component } from "react";
 import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
-import { SidebarCODAE } from "./SidebarCODAE";
-import { SidebarDRE } from "./SidebarDRE";
-import { SidebarEscola } from "./SidebarEscola";
-import { SidebarTerceirizada } from "./SidebarTerceirizada";
+import { SidebarContent } from "./SidebarContent";
+import { SidebarContentDRE } from "./__legacy/SideBarContentDRE";
+import { SidebarContentEscola } from "./__legacy/SidebarContentEscola";
 import { AvatarEscola } from "../Avatar/AvatarEscola";
 import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import {
-  checarSeUsuarioEhCODAEGestaoAlimentacao,
-  checarSeUsuarioEhCODAEDietaEspecial,
-  checarSeUsuarioEhDiretoriaRegional,
-  checarSeUsuarioEhEscola,
-  checarSeUsuarioEhTerceirizada,
-  checarSeUsuarioEhCODAEGestaoProduto
+  usuarioEhQualquerCODAE,
+  usuarioEhEscola,
+  usuarioEhTerceirizada,
+  usuarioEhDRE
 } from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
 
@@ -71,12 +68,10 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {(checarSeUsuarioEhCODAEDietaEspecial() ||
-                checarSeUsuarioEhCODAEGestaoAlimentacao() ||
-                checarSeUsuarioEhCODAEGestaoProduto()) && <AvatarCODAE />}
-              {checarSeUsuarioEhDiretoriaRegional() && <AvatarDRE />}
-              {checarSeUsuarioEhEscola() && <AvatarEscola />}
-              {checarSeUsuarioEhTerceirizada() && <AvatarTerceirizada />}
+              {usuarioEhQualquerCODAE() && <AvatarCODAE />}
+              {usuarioEhDRE() && <AvatarDRE />}
+              {usuarioEhEscola() && <AvatarEscola />}
+              {usuarioEhTerceirizada() && <AvatarTerceirizada />}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
@@ -107,12 +102,11 @@ export class Sidebar extends Component {
             </div>
           )}
           <div className="sidebar-wrapper div-submenu">
-            {(checarSeUsuarioEhCODAEDietaEspecial() ||
-              checarSeUsuarioEhCODAEGestaoAlimentacao() ||
-              checarSeUsuarioEhCODAEGestaoProduto()) && <SidebarCODAE />}
-            {checarSeUsuarioEhDiretoriaRegional() && <SidebarDRE />}
-            {checarSeUsuarioEhEscola() && <SidebarEscola />}
-            {checarSeUsuarioEhTerceirizada() && <SidebarTerceirizada />}
+            {(usuarioEhQualquerCODAE() || usuarioEhTerceirizada()) && (
+              <SidebarContent />
+            )}
+            {usuarioEhDRE() && <SidebarContentDRE />}
+            {usuarioEhEscola() && <SidebarContentEscola />}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">

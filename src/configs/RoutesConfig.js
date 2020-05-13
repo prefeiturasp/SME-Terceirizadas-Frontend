@@ -68,24 +68,24 @@ import {
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoCardapio,
-  painelGestaoProduto
+  inclusaoCardapio
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
-  checarSeUsuarioEhEscola,
-  checarSeUsuarioEhDiretoriaRegional,
-  checarSeUsuarioEhCODAEGestaoAlimentacao,
-  checarSeUsuarioEhTerceirizada,
-  checarSeUsuarioEhCODAEDietaEspecial,
-  checarSeUsuarioEhCODAEGestaoProduto,
-  checarSeUsuarioEhAlgumaCODAE
+  usuarioEhEscola,
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhTerceirizada,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhQualquerCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
+import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 
 const routesConfig = [
   {
@@ -105,10 +105,10 @@ const routesConfig = [
     component: painelGestaoAlimentacao(),
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEGestaoAlimentacao() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhEscola() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhTerceirizada()
   },
   {
     path: "/login",
@@ -133,219 +133,219 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialEscolaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
 
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesEscolaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasEscolaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_RECUSADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/status-solicitacoes`,
     component: StatusSolicitacoesPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoCardapio(),
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
     component: alteracaoCardapio(),
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     //AQUI POW
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: suspensaoAlimentacao(),
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES}`,
     component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_RECUSADAS}`,
     component: StatusSolicitacoesRecusadasDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosDRE,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: SolicitacaoUnificadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesNegadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhDiretoriaRegional()
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosTerceirizada,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -353,7 +353,7 @@ const routesConfig = [
     }`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
@@ -365,7 +365,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,
@@ -377,7 +377,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/editais-cadastrados`,
     component: EditaisCadastradosPage,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/lote`,
@@ -389,37 +389,37 @@ const routesConfig = [
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
     component: CadastroHorarioComboAlimentacaoPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhEscola()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
     component: EditaisContratosPage,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/faixas-etarias`,
     component: FaixasEtariasPage,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/configuracoes/cadastros`,
@@ -431,7 +431,7 @@ const routesConfig = [
     path: `/configuracoes/mensagem`,
     component: MensagemPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/permissoes`,
@@ -443,7 +443,7 @@ const routesConfig = [
     path: `/configuracoes`,
     component: ConfigEmailPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhAlgumaCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
@@ -493,29 +493,29 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosCODAE,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.CODAE}/${constants.DETALHE_DASHBOARD_DRE}`,
     component: DashboardCODAEDetailDRE,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/painel-dieta-especial`,
     component: dashBoardDietaEspecial(),
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEDietaEspecial() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhEscola() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -524,10 +524,10 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEDietaEspecial() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhEscola() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -536,10 +536,10 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEDietaEspecial() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhEscola() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -548,10 +548,10 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEDietaEspecial() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhEscola() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -559,7 +559,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !checarSeUsuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: !usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/ajuda`,
@@ -571,7 +571,7 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
     component: CadastroProdutoPage,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
@@ -593,14 +593,16 @@ const routesConfig = [
     }`,
     component: HomologacaoProdutoPage,
     exact: true,
-    tipoUsuario: checarSeUsuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO}`,
     component: HomologacaoProdutoPage,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -609,7 +611,9 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -618,7 +622,9 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -626,8 +632,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
     exact: true,
-    tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -636,8 +641,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
-    tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -646,8 +650,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
     exact: true,
-    tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -656,8 +659,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
     exact: true,
-    tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -666,7 +668,9 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.Homologados,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -676,17 +680,19 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.NaoHomologados,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhTerceirizada() || checarSeUsuarioEhCODAEGestaoProduto()
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: "/painel-gestao-produto",
-    component: painelGestaoProduto(),
+    component: DashboardGestaoProdutoPage,
     exact: true,
     tipoUsuario:
-      checarSeUsuarioEhEscola() ||
-      checarSeUsuarioEhDiretoriaRegional() ||
-      checarSeUsuarioEhCODAEGestaoProduto() ||
-      checarSeUsuarioEhTerceirizada()
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola()
   }
 ];
 
