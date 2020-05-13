@@ -91,8 +91,6 @@ export const listarCardsPermitidos = () => {
 
   switch (perfil) {
     case TIPO_PERFIL.TERCEIRIZADA:
-      cards.push(...CARDS_GESTAO);
-      break;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       cards.push(...CARDS_GESTAO, CARD_CORRECAO);
       break;
