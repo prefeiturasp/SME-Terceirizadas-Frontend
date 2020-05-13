@@ -52,7 +52,7 @@ export default class DashboardGestaoProduto extends Component {
     this.setState({ cardsFiltered });
   };
 
-  filtrarNome = (listaFiltro, event) => {
+  filtrarNome = () => {
     /*
     //FIX-ME:  Precisa reimplementar
     const { cards } = this.props;

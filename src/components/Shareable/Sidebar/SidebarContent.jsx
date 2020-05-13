@@ -38,7 +38,7 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirDietaEspecial =
     usuarioEhCODAEDietaEspecial() || usuarioEhTerceirizada();
-  const exibirPeD = usuarioEhCODAEGestaoAlimentacao();
+  const exibirPeD = usuarioEhCODAEGestaoAlimentacao(); // TODO: Verificar se essa busca migrou para dentro de Gestao
 
   const _props = {
     activeMenu,

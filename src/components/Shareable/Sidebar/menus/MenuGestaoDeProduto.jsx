@@ -10,7 +10,7 @@ import { usuarioEhTerceirizada } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
-  const exibirBusca = true; //TODO: confirmar se precisa ser desabilitado para algum perfil
+  const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
