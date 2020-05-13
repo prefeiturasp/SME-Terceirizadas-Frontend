@@ -116,6 +116,13 @@ export class Sidebar extends Component {
                 alt="SME Educação"
               />
               <div className="sidebar-wrapper">
+                <div className="text-center mx-auto justify-content-center p-2 conteudo-detalhes">
+                  <span className="text-bold text-white small detalhes-licenca">
+                    SME-SP-SGA - Distribuído sob a Licença AGPL V3
+                  </span>
+                </div>
+              </div>
+              <div className="sidebar-wrapper">
                 <div className="text-center mx-auto justify-content-center p-2">
                   <span className="text-bold text-white small">
                     {version} (API: {API_VERSION})
