@@ -599,7 +599,10 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO}`,
     component: HomologacaoProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -607,7 +610,10 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -615,7 +621,10 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -658,7 +667,10 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.Homologados,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -667,7 +679,10 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.NaoHomologados,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial()
   },
   {
     path: "/painel-gestao-produto",

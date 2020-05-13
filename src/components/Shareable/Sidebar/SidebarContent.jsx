@@ -33,7 +33,9 @@ export const SidebarContent = () => {
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhTerceirizada();
   const exibirGestaoProduto =
-    usuarioEhCODAEGestaoProduto() || usuarioEhCODAEDietaEspecial();
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhTerceirizada();
   const exibirDietaEspecial =
     usuarioEhCODAEDietaEspecial() || usuarioEhTerceirizada();
   const exibirPeD = usuarioEhCODAEGestaoAlimentacao();

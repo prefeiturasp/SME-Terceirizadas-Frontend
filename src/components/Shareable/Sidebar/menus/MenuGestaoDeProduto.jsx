@@ -6,15 +6,22 @@ import {
   PESQUISA_DESENVOLVIMENTO
 } from "configs/constants";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+import { usuarioEhTerceirizada } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true; //TODO: confirmar se precisa ser desabilitado para algum perfil
+  const exibirCadastro = usuarioEhTerceirizada();
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
         Painel de Solicitações
       </LeafItem>
+      {exibirCadastro && (
+        <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/produto`}>
+          Cadastro de Produto
+        </LeafItem>
+      )}
       {exibirBusca && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto`}>
           Busca de Produto
