@@ -2,7 +2,9 @@ import React, { useState, useCallback } from "react";
 import { RELATORIOS } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhCODAEDietaEspecial
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAE,
+  usuarioEhTerceirizada
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -23,8 +25,14 @@ export const SidebarContent = () => {
     [activeMenu]
   );
 
-  const exibirGestaoAlimentacao = usuarioEhCODAEGestaoAlimentacao();
-  const exibirDietaEspecial = usuarioEhCODAEDietaEspecial();
+  // NOTE: essas condicoes consideram apenas codae e terceirizada.
+  // Para utilizar esse componente com outros perfis precisa atualizar os
+  // criterios de exibicao abaixo
+  const exibirCadastros = usuarioEhCODAE();
+  const exibirGestaoAlimentacao =
+    usuarioEhCODAEGestaoAlimentacao() || usuarioEhTerceirizada();
+  const exibirDietaEspecial =
+    usuarioEhCODAEDietaEspecial() || usuarioEhTerceirizada();
   const _props = {
     activeMenu,
     onSubmenuClick: onSubmenuClick
@@ -40,7 +48,7 @@ export const SidebarContent = () => {
     <ListItem key={4} icon="fa-file-alt" to={`/${RELATORIOS}/`}>
       Relatórios
     </ListItem>,
-    <MenuCadastros key={5} />,
+    exibirCadastros && <MenuCadastros key={5} />,
     <MenuConfiguracoes key={6} />
   ];
 };

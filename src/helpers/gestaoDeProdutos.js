@@ -83,7 +83,7 @@ const CARD_CORRECAO = {
   style: "card-product-correction",
   rota: ROTA.CORRECAO_DE_PRODUTO,
   incluir_status: [CODAE_AUTORIZOU_RECLAMACAO]
-}
+};
 
 export const listarCardsPermitidos = () => {
   const perfil = localStorage.getItem("tipo_perfil");
@@ -91,7 +91,7 @@ export const listarCardsPermitidos = () => {
 
   switch (perfil) {
     case TIPO_PERFIL.TERCEIRIZADA:
-      cards.push(...CARDS_GESTAO, CARD_CORRECAO);
+      cards.push(...CARDS_GESTAO);
       break;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       cards.push(...CARDS_GESTAO, CARD_CORRECAO);

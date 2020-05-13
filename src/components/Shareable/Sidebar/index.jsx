@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
 import { SidebarContent } from "./SidebarContent";
-import { SidebarMenuDRE } from "./__legacy/SideBarMenuDRE";
-import { SidebarMenuEscola } from "./__legacy/SidebarMenuEscola";
+import { SidebarContentDRE } from "./__legacy/SideBarContentDRE";
+import { SidebarContentEscola } from "./__legacy/SidebarContentEscola";
 import { AvatarEscola } from "../Avatar/AvatarEscola";
 import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
@@ -105,8 +105,8 @@ export class Sidebar extends Component {
             {(usuarioEhCODAE() || usuarioEhTerceirizada()) && (
               <SidebarContent />
             )}
-            {usuarioEhDRE() && <SidebarMenuDRE />}
-            {usuarioEhEscola() && <SidebarMenuEscola />}
+            {usuarioEhDRE() && <SidebarContentDRE />}
+            {usuarioEhEscola() && <SidebarContentEscola />}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">

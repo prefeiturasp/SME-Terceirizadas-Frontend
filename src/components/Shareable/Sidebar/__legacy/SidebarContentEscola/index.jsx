@@ -19,7 +19,11 @@ import {
 } from "../../../../../configs/constants";
 import { PERFIL } from "../../../../../constants/shared";
 
-export class SidebarMenuEscola extends Component {
+// TODO:
+// A funcionalidade desse component deve ser migrada para o componente SidebarContent
+// que deve atenter a todos os perfis.
+
+export class SidebarContentEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
