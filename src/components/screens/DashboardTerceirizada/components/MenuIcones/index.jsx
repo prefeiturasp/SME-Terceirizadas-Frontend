@@ -7,7 +7,7 @@ import IconeFinancas from "../../../../Shareable/Icones/IconeFinancas";
 import IconePD from "../../../../Shareable/Icones/IconePD";
 import IconeSupervisao from "../../../../Shareable/Icones/IconeSupervisao";
 import IconePlanejamentoCardapio from "../../../../Shareable/Icones/IconePlanejamentoCardapio";
-
+// FIXME: Esse componente aparentemente não está em uso no projeto e deve ser removido
 export const MenuIcones = props => {
   return (
     <div>

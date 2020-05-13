@@ -10,7 +10,7 @@ import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import {
-  usuarioEhCODAE,
+  usuarioEhQualquerCODAE,
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhDRE
@@ -68,7 +68,7 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {usuarioEhCODAE() && <AvatarCODAE />}
+              {usuarioEhQualquerCODAE() && <AvatarCODAE />}
               {usuarioEhDRE() && <AvatarDRE />}
               {usuarioEhEscola() && <AvatarEscola />}
               {usuarioEhTerceirizada() && <AvatarTerceirizada />}
@@ -102,7 +102,7 @@ export class Sidebar extends Component {
             </div>
           )}
           <div className="sidebar-wrapper div-submenu">
-            {(usuarioEhCODAE() || usuarioEhTerceirizada()) && (
+            {(usuarioEhQualquerCODAE() || usuarioEhTerceirizada()) && (
               <SidebarContent />
             )}
             {usuarioEhDRE() && <SidebarContentDRE />}

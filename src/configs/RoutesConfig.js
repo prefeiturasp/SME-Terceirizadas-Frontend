@@ -78,7 +78,7 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhCODAE
+  usuarioEhQualquerCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
@@ -375,7 +375,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/editais-cadastrados`,
     component: EditaisCadastradosPage,
     exact: true,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/lote`,
@@ -387,7 +387,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
@@ -399,19 +399,19 @@ const routesConfig = [
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
     component: EditaisContratosPage,
     exact: true,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/cadastros/faixas-etarias`,
@@ -429,7 +429,7 @@ const routesConfig = [
     path: `/configuracoes/mensagem`,
     component: MensagemPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/permissoes`,
@@ -441,7 +441,7 @@ const routesConfig = [
     path: `/configuracoes`,
     component: ConfigEmailPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,

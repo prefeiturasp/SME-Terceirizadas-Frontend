@@ -307,7 +307,7 @@ export const usuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
 };
 
-export const usuarioEhCODAE = () => {
+export const usuarioEhQualquerCODAE = () => {
   return (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||

@@ -3,8 +3,8 @@ import { RELATORIOS } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhCODAE,
-  usuarioEhTerceirizada
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -12,7 +12,8 @@ import {
   MenuDietaEspecial,
   MenuCadastros,
   MenuConfiguracoes,
-  MenuGestaoDeProduto
+  MenuGestaoDeProduto,
+  MenuPesquisaDesenvolvimento
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -28,11 +29,15 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirCadastros = usuarioEhCODAE();
+  const exibirCadastros = usuarioEhCODAEGestaoAlimentacao();
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhTerceirizada();
+  const exibirGestaoProduto =
+    usuarioEhCODAEGestaoProduto() || usuarioEhCODAEDietaEspecial();
   const exibirDietaEspecial =
     usuarioEhCODAEDietaEspecial() || usuarioEhTerceirizada();
+  const exibirPeD = usuarioEhCODAEGestaoAlimentacao();
+
   const _props = {
     activeMenu,
     onSubmenuClick: onSubmenuClick
@@ -44,11 +49,12 @@ export const SidebarContent = () => {
     </ListItem>,
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
-    <MenuGestaoDeProduto key={3} {..._props} />,
-    <ListItem key={4} icon="fa-file-alt" to={`/${RELATORIOS}/`}>
+    exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
+    exibirPeD && <MenuPesquisaDesenvolvimento key={4} />,
+    <ListItem key={5} icon="fa-file-alt" to={`/${RELATORIOS}/`}>
       Relatórios
     </ListItem>,
-    exibirCadastros && <MenuCadastros key={5} />,
-    <MenuConfiguracoes key={6} />
+    exibirCadastros && <MenuCadastros key={6} />,
+    <MenuConfiguracoes key={7} />
   ];
 };
