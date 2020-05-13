@@ -82,6 +82,8 @@ import {
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
+import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 
@@ -570,6 +572,20 @@ const routesConfig = [
     component: CadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
+    component: BuscaAvancadaProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.RELATORIO_PRODUTO
+    }`,
+    component: RelatorioProduto,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${

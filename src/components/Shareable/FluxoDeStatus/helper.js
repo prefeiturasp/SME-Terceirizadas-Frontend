@@ -93,13 +93,34 @@ export const fluxoInformativoPartindoEscola = [
   }
 ];
 
+export const fluxoPartindoTerceirizada = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
+  },
+  {
+    titulo: "CODAE",
+    status: "",
+    criado_em: "",
+    usuario: null
+  }
+];
+
 export const tipoDeStatus = status => {
   switch (status) {
     case "Solicitação Realizada":
     case "Escola revisou":
     case "DRE validou":
     case "DRE revisou":
-    case "CODAE autorizou":
+    case "Homologado":
+    case "CODAE homologou":
+      return "prosseguiu";
+    case "CODAE não homologou":
+      return "cancelado";
+    case "CODAE pediu correção":
+      return "questionado";
     case "Terceirizada tomou ciência":
     case "Escola solicitou inativação":
     case "CODAE autorizou inativação":

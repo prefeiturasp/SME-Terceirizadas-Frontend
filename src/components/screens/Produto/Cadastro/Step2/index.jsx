@@ -65,18 +65,25 @@ class Step2 extends Component {
   onSubmit = values => {
     const { informacoesAgrupadas } = this.state;
     const { payload } = this.props;
-
     informacoesAgrupadas.forEach(item => {
       item.informacoes_nutricionais.forEach(informacao => {
         const temPorcao = values.hasOwnProperty(`porcao=${informacao.uuid}`);
         const temVd = values.hasOwnProperty(`vd=${informacao.uuid}`);
-
         if (temPorcao && temVd) {
-          payload.informacoes_nutricionais.push({
-            informacao_nutricional: informacao.uuid,
-            quantidade_porcao: values[`porcao=${informacao.uuid}`],
-            valor_diario: values[`vd=${informacao.uuid}`]
-          });
+          let inf_nutr_atualizada = payload.informacoes_nutricionais.find(
+            inf_nutr => inf_nutr.informacao_nutricional === informacao.uuid
+          );
+          if (inf_nutr_atualizada) {
+            inf_nutr_atualizada.quantidade_porcao =
+              values[`porcao=${informacao.uuid}`];
+            inf_nutr_atualizada.valor_diario = values[`vd=${informacao.uuid}`];
+          } else {
+            payload.informacoes_nutricionais.push({
+              informacao_nutricional: informacao.uuid,
+              quantidade_porcao: values[`porcao=${informacao.uuid}`],
+              valor_diario: values[`vd=${informacao.uuid}`]
+            });
+          }
         }
       });
     });
@@ -178,6 +185,9 @@ class Step2 extends Component {
                                             this.setaInformacaoComoVisto(
                                               informacaoNutricional
                                             );
+                                          }}
+                                          onChange={() => {
+                                            this.props.setBlockProximo();
                                           }}
                                         />
                                       </div>

@@ -1,0 +1,133 @@
+.tipo-status-barra-busca {
+  padding-top: 2em;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1.5fr;
+  column-gap: 2%;
+
+  label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    padding-bottom: 0.5em;
+  }
+}
+
+.react-datepicker-popper {
+  z-index: 5;
+  position: absolute;
+  will-change: transform;
+  top: 0px;
+  left: 0px;
+  transform: translate3d(0px, 38px, 0px) !important;
+}
+
+.ant-select-search__field {
+  height: 38px !important;
+}
+
+.check-tipos-prod {
+  padding-top: 0.5em;
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+
+  label {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+
+    span {
+      margin-right: 5px;
+    }
+
+    div {
+      width: 200px;
+    }
+  }
+}
+
+.input-datas-inicio-termino {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.check-produto_alergenico {
+  label {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0.5em;
+
+    span {
+      margin-right: 5px;
+    }
+
+    div {
+      width: 200px;
+    }
+  }
+}
+
+.grid-produtos-alergenicos {
+  margin-top: 1em;
+  display: grid;
+  grid-template-columns: 28% 72%;
+
+  label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    padding-bottom: 0.5em;
+  }
+}
+
+.produto-input {
+  margin-top: 1em;
+  label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    padding-bottom: 0.5em;
+  }
+}
+
+.marca-fabricante-produto {
+  margin-top: 1em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2%;
+
+  label {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    padding-bottom: 0.5em;
+  }
+}
+
+.botoes-de-pesquisa-produto {
+  margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 10px;
+  }
+}
+
+.ant-select-selection__rendered {
+  ul {
+    li {
+      height: 100% !important;
+    }
+  }
+}

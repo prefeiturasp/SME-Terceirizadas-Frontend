@@ -22,4 +22,16 @@ div.cadastro-produto-step3 {
       color: $gray;
     }
   }
+  span.delete {
+    margin-left: 2em;
+    font-weight: bold;
+    background-color: $blue;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue;
+    }
+  }
 }
