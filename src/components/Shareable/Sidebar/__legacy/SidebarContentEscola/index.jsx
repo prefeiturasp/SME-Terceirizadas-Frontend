@@ -229,6 +229,13 @@ export class SidebarContentEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to={`/painel-gestao-produto`}
+            >
+              Painel de Solicitações
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/pesquisa-desenvolvimento/busca-produto`}
             >
               Busca de Produto
