@@ -602,7 +602,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial()
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -613,7 +614,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial()
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -624,7 +626,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial()
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -670,7 +673,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial()
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -682,7 +686,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial()
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhEscola()
   },
   {
     path: "/painel-gestao-produto",

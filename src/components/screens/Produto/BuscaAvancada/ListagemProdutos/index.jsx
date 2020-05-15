@@ -64,7 +64,7 @@ class ListagemProdutos extends Component {
           <div className="grid-produto-table header-table-produtos">
             <div>Tipo</div>
             <div>Status</div>
-            <div>Data</div>
+            <div>Data cadastro</div>
             <div>Nome do Produto</div>
             <div>Marca</div>
             <div>Fabricante</div>

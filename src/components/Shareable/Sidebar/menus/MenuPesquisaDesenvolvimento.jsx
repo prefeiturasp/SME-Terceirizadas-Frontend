@@ -4,9 +4,13 @@ import { PESQUISA_DESENVOLVIMENTO } from "configs/constants";
 
 const MenuPesquisaDesenvolvimento = () => {
   return (
-    <Menu id="PesquisaDesenvolvimento" icon="fa-atom" title={"P&D"}>
+    <Menu
+      id="PesquisaDesenvolvimento"
+      icon="fa-atom"
+      title={"Gestão de Produto"}
+    >
       <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto`}>
-        Busca de Produto
+        Consulta de Produto
       </LeafItem>
     </Menu>
   );
