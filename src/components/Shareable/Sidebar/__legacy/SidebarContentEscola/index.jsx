@@ -217,7 +217,7 @@ export class SidebarContentEscola extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"P&D"}</span>
+          <span>{"Gestão de Produtos"}</span>
         </Link>
         <div
           id="collapsePD"
@@ -238,7 +238,7 @@ export class SidebarContentEscola extends Component {
               className="collapse-item"
               to={`/pesquisa-desenvolvimento/busca-produto`}
             >
-              Busca de Produto
+              Consulta de Produto
             </NavLink>
           </div>
         </div>

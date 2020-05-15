@@ -24,7 +24,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       )}
       {exibirBusca && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto`}>
-          Busca de Produto
+          Consulta de Produto
         </LeafItem>
       )}
       <SubMenu
