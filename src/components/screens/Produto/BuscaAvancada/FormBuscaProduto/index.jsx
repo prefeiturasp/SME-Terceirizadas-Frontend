@@ -140,6 +140,7 @@ class FormBuscaProduto extends Component {
             component={AAutoComplete}
             dataSource={nomesProdutos}
             filterOption
+            className="campos-customizados"
           />
         </div>
 
@@ -151,12 +152,14 @@ class FormBuscaProduto extends Component {
             component={AAutoComplete}
             dataSource={nomesMarcas}
             filterOption
+            className="campos-customizados"
           />
           <Field
             name="fabricante"
             component={AAutoComplete}
             dataSource={nomesFabricantes}
             filterOption
+            className="campos-customizados"
           />
         </div>
 
