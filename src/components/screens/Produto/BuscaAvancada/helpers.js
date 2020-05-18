@@ -16,17 +16,53 @@ const retornaTodosOsLogs = homologacoes => {
   return logs;
 };
 
+const verificaData = (hom1, hom2) => {
+  if (
+    moment(hom1["criado_em"], "DD/MM/YYYY") <
+    moment(hom2["criado_em"], "DD/MM/YYYY")
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const retornaUltimaHomologacao = homologacoes => {
+  homologacoes.forEach((homologI, i) => {
+    homologacoes.forEach((homologJ, j) => {
+      if (verificaData(homologI, homologJ)) {
+        let tmp = homologI;
+        homologacoes[i] = homologJ;
+        homologacoes[j] = tmp;
+      }
+    });
+  });
+  return homologacoes;
+};
+
+const reatornaLogsOrdenados = logs => {
+  logs.forEach((logI, i) => {
+    logs.forEach((logJ, j) => {
+      if (verificaData(logI, logJ)) {
+        let tmp = logI;
+        logs[i] = logJ;
+        logs[j] = tmp;
+      }
+    });
+  });
+  return logs;
+};
+
 export const retornaProdutosComUltimaHomolagacao = response => {
   const produtos = response.data.results.map(produto => {
     let homologacoes = [];
     produto.homologacoes.forEach(homolog => {
       homologacoes.push(homolog);
     });
-    const homologReverse = homologacoes.reverse();
-    produto["status"] = homologReverse[0]["status"];
+    produto["status"] = retornaUltimaHomologacao(homologacoes)[0]["status"];
 
     const todosLogs = retornaTodosOsLogs(homologacoes);
-    produto["todos_logs"] = todosLogs.reverse();
+    produto["todos_logs"] = reatornaLogsOrdenados(todosLogs);
     return produto;
   });
   return produtos;
