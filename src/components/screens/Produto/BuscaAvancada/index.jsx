@@ -134,15 +134,11 @@ class BuscaAvancada extends Component {
   }
 
   componentDidUpdate() {
-    if (
-      this.props.produtos.length > 0 &&
-      this.props.nomesProdutos.length > 0 &&
-      this.props.nomesMarcas.length > 0 &&
-      this.props.nomesFabricantes.length > 0
-    ) {
+    const { statusOptions } = this.state;
+    if (statusOptions.length > 0) {
       setTimeout(() => {
         this.setState({ loading: false });
-      }, 100);
+      }, 500);
     }
   }
 
