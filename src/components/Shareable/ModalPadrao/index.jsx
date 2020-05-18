@@ -1,13 +1,13 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
-import { Field } from "redux-form";
+import { Form, Field } from "react-final-form";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../Toast/dialogs";
 import "./style.scss";
-import { required } from "../../../helpers/fieldValidators";
+import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 
 export class ModalPadrao extends Component {
   constructor(props) {
@@ -52,45 +52,48 @@ export class ModalPadrao extends Component {
         show={showModal}
         onHide={closeModal}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>{modalTitle}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row">
-            <div className="col-12">
-              <Field
-                component={TextAreaWYSIWYG}
-                label="Justificativa"
-                placeholder={textAreaPlaceholder}
-                name="justificativa"
-                required
-                validate={required}
-              />
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="row mt-5">
-            <div className="col-12">
-              <Botao
-                texto="Cancelar"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={closeModal}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                className="ml-3"
-              />
-              <Botao
-                texto="Enviar"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => {
-                  this.enviarJustificativa(uuid);
-                }}
-                style={BUTTON_STYLE.BLUE}
-                className="ml-3"
-              />
-            </div>
-          </div>
-        </Modal.Footer>
+        <Form
+          onSubmit={() => this.enviarJustificativa(uuid)}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Modal.Header closeButton>
+                <Modal.Title>{modalTitle}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="row">
+                  <div className="col-12">
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Justificativa"
+                      placeholder={textAreaPlaceholder}
+                      name="justificativa"
+                      validate={textAreaRequiredAndAtLeastOneCharacter}
+                    />
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="row mt-5">
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={closeModal}
+                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      className="ml-3"
+                    />
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.BLUE}
+                      className="ml-3"
+                    />
+                  </div>
+                </div>
+              </Modal.Footer>
+            </form>
+          )}
+        />
       </Modal>
     );
   }
