@@ -54,7 +54,7 @@ export const CardStatusDeSolicitacao = props => {
           </NavLink>
         );
       })}
-      {solicitations.length > 3 && (
+      {solicitations.length > 5 && (
         <div className="container-link">
           <NavLink
             to={`${href}`}

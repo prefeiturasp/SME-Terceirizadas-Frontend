@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 
@@ -111,7 +110,6 @@ export class StatusSolicitacoes extends Component {
               selecionarTodos={this.selecionarTodos}
               onCheckClicked={this.onCheckClicked}
             />
-            <CardLegendas />
           </div>
         </div>
       </form>

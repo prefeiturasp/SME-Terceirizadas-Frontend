@@ -467,7 +467,7 @@ class HomologacaoProduto extends Component {
                       <Botao
                         texto={"Homologar"}
                         type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
                         disabled={
                           !necessita_analise_sensorial ||
                           necessita_analise_sensorial === "1"
