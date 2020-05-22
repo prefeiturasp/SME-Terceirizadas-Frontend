@@ -7,9 +7,12 @@ import {
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
+import CardAtalho from "../../Shareable/CardAtalho";
 import { dataAtual } from "../../../helpers/utilities";
 
 import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
+
+const TEXTO_ATALHO_DIETA = `Quando houver necessidade de incluir Dieta Especial para os alunos matriculados na unidade.`;
 
 class DashBoardDietaEspecial extends Component {
   constructor(props) {
@@ -197,6 +200,17 @@ class DashBoardDietaEspecial extends Component {
               </div>
             </CardBody>
           )}
+        <div className="row row-shortcuts">
+          <div className="col-3">
+            <CardAtalho
+              titulo={"Inclusão de Dieta Especial"}
+              nome="card-inclusao"
+              texto={TEXTO_ATALHO_DIETA}
+              textoLink={"Novo pedido"}
+              href={"/escola/dieta-especial"}
+            />
+          </div>
+        </div>
       </div>
     );
   }

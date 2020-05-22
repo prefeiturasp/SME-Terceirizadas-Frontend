@@ -2,18 +2,21 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 import {
-  escolaCancelaAlteracaoCardapio,
-  DRENaoValidaAlteracaoCardapio,
-  DREValidaAlteracaoCardapio,
-  CODAEAutorizaAlteracaoDeCardapio,
-  CODAENegaAlteracaoCardapio,
-  CODAEquestionaAlteracaoCardapio,
+  // escola
+  escolaCancelarSolicitacaoDeAlteracaoDeCardapio,
+  // DRE
+  dreValidarSolicitacaoDeAlteracaoDeCardapio,
+  dreReprovarSolicitacaoDeAlteracaoDeCardapio,
+  // CODAE
+  codaeAutorizarSolicitacaoDeAlteracaoDeCardapio,
+  codaeNegarSolicitacaoDeAlteracaoDeCardapio,
+  codaeQuestionarSolicitacaoDeAlteracaoDeCardapio,
   TerceirizadaTomaCienciaAlteracaoCardapio,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio
-} from "../../services/alteracaoDecardapio.service";
+} from "services/alteracaoDeCardapio";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -42,7 +45,9 @@ export const RelatorioEscola = () => (
     visao={ESCOLA}
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Alteração de Cardápio cancelada com sucesso!"}
-    endpointNaoAprovaSolicitacao={escolaCancelaAlteracaoCardapio}
+    endpointNaoAprovaSolicitacao={
+      escolaCancelarSolicitacaoDeAlteracaoDeCardapio
+    }
     textoBotaoNaoAprova="Cancelar"
   />
 );
@@ -54,8 +59,8 @@ export const RelatorioDRE = () => (
     ModalNaoAprova={ModalNaoValidarSolicitacao}
     toastAprovaMensagem={"Alteração de Cardápio validada com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao validar a Alteração de Cardápio"}
-    endpointNaoAprovaSolicitacao={DRENaoValidaAlteracaoCardapio}
-    endpointAprovaSolicitacao={DREValidaAlteracaoCardapio}
+    endpointNaoAprovaSolicitacao={dreReprovarSolicitacaoDeAlteracaoDeCardapio}
+    endpointAprovaSolicitacao={dreValidarSolicitacaoDeAlteracaoDeCardapio}
     textoBotaoNaoAprova="Não Validar"
     textoBotaoAprova="Validar"
   />
@@ -71,9 +76,9 @@ export const RelatorioCODAE = () => (
     toastAprovaMensagemErro={
       "Houve um erro ao autorizar a Alteração de Cardápio"
     }
-    endpointNaoAprovaSolicitacao={CODAENegaAlteracaoCardapio}
-    endpointAprovaSolicitacao={CODAEAutorizaAlteracaoDeCardapio}
-    endpointQuestionamento={CODAEquestionaAlteracaoCardapio}
+    endpointNaoAprovaSolicitacao={codaeNegarSolicitacaoDeAlteracaoDeCardapio}
+    endpointAprovaSolicitacao={codaeAutorizarSolicitacaoDeAlteracaoDeCardapio}
+    endpointQuestionamento={codaeQuestionarSolicitacaoDeAlteracaoDeCardapio}
     textoBotaoNaoAprova="Negar"
     textoBotaoAprova="Autorizar"
   />

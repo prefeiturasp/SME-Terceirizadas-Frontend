@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { FiltroEnum, TIPODECARD, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getCODAEPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getCODAEPedidosDeInclusaoAlimentacaoContinua } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -25,18 +24,24 @@ class PainelPedidos extends Component {
   }
 
   async atualizarDadosDasInclusoes(filtro) {
-    const inclusoesAvulsas = await getCODAEPedidosDeInclusaoAlimentacaoAvulsa(
-      filtro
-    );
-    const inclusoesContinuas = await getCODAEPedidosDeInclusaoAlimentacaoContinua(
-      filtro
-    );
-    const inclusoesMescladas = inclusoesAvulsas.results.concat(
-      inclusoesContinuas.results
-    );
-    const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
-    const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
-    const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);
+    const [avulsas, continuas, cei] = await Promise.all([
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      ),
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI
+      )
+    ]);
+    const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
+    const pedidosPrioritarios = filtraPrioritarios(inclusoes);
+    const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
+    const pedidosNoPrazoRegular = filtraRegular(inclusoes);
     this.setState({
       pedidosPrioritarios,
       pedidosNoPrazoLimite,

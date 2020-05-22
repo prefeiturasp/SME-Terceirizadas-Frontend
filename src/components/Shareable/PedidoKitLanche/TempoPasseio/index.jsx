@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import "./style.scss";
 import InputErroMensagem from "../../Input/InputErroMensagem";
-import { PERFIL } from "../../../../constants";
+import { PERFIL } from "../../../../constants/shared";
 
 export class TempoPasseio extends Component {
   render() {

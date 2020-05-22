@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { textAreaRequired } from "../../helpers/fieldValidators";
 import { mensagemCancelamento } from "../../helpers/utilities";
-import { cancelaKitLancheAvulsoEscola } from "../../services/solicitacaoDeKitLanche.service";
+import { cancelaKitLancheAvulsoEscola } from "../../services/kitLanche";
 import { cancelaKitLancheUnificadoDre } from "../../services/solicitacaoUnificada.service";
 import Botao from "./Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "./Botao/constants";

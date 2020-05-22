@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { CardKit } from "./CardKit";
-import { getKitLanches } from "../../../../services/solicitacaoDeKitLanche.service";
+import { getKitLanches } from "../../../../services/kitLanche";
 import { extrairKitsLanche } from "./helper";
-import { TEMPO_PASSEIO } from "../../../../constants";
+import { TEMPO_PASSEIO } from "../../../../constants/shared";
 import "./style.scss";
 
 export class OpcoesKits extends Component {

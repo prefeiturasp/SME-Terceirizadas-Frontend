@@ -3,7 +3,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
 import Container from "../../components/InversaoDeDiaDeCardapio/Container";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
 
 import {

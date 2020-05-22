@@ -1,6 +1,6 @@
 import mock from "../_mock";
 
-import { API_URL } from "../../constants/config.constants";
+import { API_URL } from "../../constants/config";
 import { AUTH_TOKEN } from "../constants";
 import axios from "../_base";
 

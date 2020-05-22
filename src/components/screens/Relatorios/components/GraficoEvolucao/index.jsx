@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Line as LineChart } from "react-chartjs-2";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../../../constants";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../../../constants/shared";
 import { chartData, DATA_DEFAULT_SOLICITACAO, OPTIONS } from "../../constants";
 import "./style.scss";
 

@@ -10,11 +10,11 @@ import IconeTipoAlimentacao from "../../Shareable/Icones/Cadastros/IconeTipoAlim
 import IconeHorarioCombo from "../../Shareable/Icones/Cadastros/IconeCadastroHorarioComboAlimentacao";
 import "./style.scss";
 import {
-  usuarioEscola,
-  usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial,
-  usuarioDiretoriaRegional,
-  usuarioTerceirizada
+  usuarioEhEscola,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhDRE,
+  usuarioEhTerceirizada
 } from "../../../helpers/utilities";
 
 class Cadastros extends Component {
@@ -40,9 +40,8 @@ class Cadastros extends Component {
       gestaoDeAlimentacao
     } = this.state;
     const USUARIO_CODAE =
-      usuarioCODAEGestaoAlimentacao() || usuarioCODAEDietaEspecial();
-    const USUARIO_SEM_PERMISSAO =
-      usuarioDiretoriaRegional() || usuarioTerceirizada();
+      usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();
+    const USUARIO_SEM_PERMISSAO = usuarioEhDRE() || usuarioEhTerceirizada();
     return (
       <div>
         {USUARIO_SEM_PERMISSAO && (
@@ -119,7 +118,7 @@ class Cadastros extends Component {
           </div>
         )}
 
-        {usuarioEscola() && (
+        {usuarioEhEscola() && (
           <div className="row mt-3">
             <div
               onMouseEnter={() => this.setState({ hoverHorarios: true })}

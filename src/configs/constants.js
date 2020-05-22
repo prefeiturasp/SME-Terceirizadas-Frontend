@@ -1,12 +1,17 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
 export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
+export const ALTERACAO_CARDAPIO_CEI = "alteracao-de-cardapio-de-cei";
+export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
+export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
+
 export const DIETA_ESPECIAL = "dieta-especial";
+export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -23,6 +28,17 @@ export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
 
+export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
+  RECLAMACAO_DE_PRODUTO: "reclamacao-de-produto",
+  PRODUTOS_SUSPENSOS: "produtos-suspensos",
+  CORRECAO_DE_PRODUTO: "correcao-de-produto",
+  AGUARDANDO_ANALISE_RECLAMACAO: "aguardando-analise-reclamacao",
+  AGUARDANDO_ANALISE_SENSORIAL: "aguardando-analise-sensorial",
+  SOLICITACOES_PENDENTE_HOMOLOGACAO: "solicitacoes-pendente-homologacao",
+  SOLICITACOES_HOMOLOGADAS: "solicitacoes-homologadas",
+  SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas"
+};
+
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";
 export const NEGADOS_DIETA = "negados-dieta";
@@ -35,6 +51,17 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
   DRE: "diretoria-regional-solicitacoes"
 };
 
+export const GESTAO_PRODUTO_CARDS = {
+  RECLAMACAO_DE_PRODUTO: "Reclamação de produto",
+  PRODUTOS_SUSPENSOS: "Produtos suspensos",
+  CORRECAO_DE_PRODUTO: "Correção de produto",
+  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise de reclamação",
+  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensorial",
+  PENDENTE_HOMOLOGACAO: "Pendente homologação",
+  HOMOLOGADOS: "Homologados",
+  NAO_HOMOLOGADOS: "Não homologados"
+};
+
 export const SOLICITACOES_CODAE = "codae-solicitacoes";
 
 export const RELATORIO = "relatorio";
@@ -45,7 +72,11 @@ export const CONFIGURACOES = "configuracoes";
 export const MENSAGEM = "mensagem";
 export const PERMISSOES = "permissoes";
 export const PERFIL = "perfil";
-
+export const PESQUISA_DESENVOLVIMENTO = "pesquisa-desenvolvimento";
+export const PRODUTO = "produto";
+export const BUSCA_PRODUTO = "busca-produto";
+export const RELATORIO_PRODUTO = "relatorio-produto";
+export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";

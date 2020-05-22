@@ -2,7 +2,7 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorios from "../../components/screens/Relatorios";
 import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import { ESCOLA, DRE, CODAE } from "../../configs/constants";
 import {
   getEvolucaoSolicitacoesEscola,

@@ -7,7 +7,7 @@ class Wizard extends Component {
     this.state = {};
   }
   render() {
-    const { currentStep, arrayOfObjects, nameItem } = this.props;
+    const { currentStep, arrayOfObjects, nameItem, outerParam } = this.props;
     return (
       <ul className="wizard">
         {arrayOfObjects &&
@@ -25,7 +25,7 @@ class Wizard extends Component {
                     : "next-step"
                 }
               >
-                <div>{item.periodo_escolar[`${nameItem}`]}</div>
+                <div>{item[outerParam][`${nameItem}`]}</div>
               </li>
             );
           })}

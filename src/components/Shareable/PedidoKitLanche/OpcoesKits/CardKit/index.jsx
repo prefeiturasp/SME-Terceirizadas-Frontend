@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { TEMPO_PASSEIO } from "../../../../../constants";
+import { TEMPO_PASSEIO } from "../../../../../constants/shared";
 import "./style.scss";
 
 export class CardKit extends Component {

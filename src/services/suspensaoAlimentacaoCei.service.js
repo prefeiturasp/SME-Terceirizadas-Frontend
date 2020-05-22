@@ -1,4 +1,4 @@
-import { ENDPOINT } from "../constants";
+import { ENDPOINT } from "../constants/shared";
 
 import axios from "./_base";
 

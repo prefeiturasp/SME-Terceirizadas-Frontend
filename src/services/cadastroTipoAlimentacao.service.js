@@ -1,4 +1,4 @@
-import CONFIG from "../constants/config.constants";
+import CONFIG from "../constants/config";
 import authService from "./auth";
 
 const authHeader = {

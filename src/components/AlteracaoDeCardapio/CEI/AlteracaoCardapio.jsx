@@ -31,19 +31,27 @@ import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  getMeusRascunhosAlteracoesCardapioCei,
+  // FIXME: remove unused imports
+  /*   getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
   iniciaFluxoAlteracaoCardapioCei,
   atualizaAlteracaoCardapioCei,
-  deleteAlteracaoCardapioCei
-} from "../../../services/alteracaoDeCardapioCEI.service";
+  deleteAlteracaoCardapioCei */
+  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio
+} from "services/alteracaoDeCardapio";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import moment from "moment";
 import { parseFormValues } from "./helper";
 import CheckboxPeriodo from "./CheckboxPeriodo";
+import { TIPO_SOLICITACAO } from "constants/shared";
+
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -191,7 +199,9 @@ class AlteracaoCardapio extends Component {
   refresh = async () => {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
     try {
-      const response = await getMeusRascunhosAlteracoesCardapioCei();
+      const response = await escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+        SOLICITACAO_CEI
+      );
       if (response.status === HTTP_STATUS.OK) {
         alteracaoCardapioList =
           response.data.results.length > 0 ? response.data.results : [];
@@ -223,7 +233,10 @@ class AlteracaoCardapio extends Component {
   }
 
   enviaAlteracaoCardapio(uuid) {
-    enviarAlteracaoCardapio(uuid).then(
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -253,16 +266,24 @@ class AlteracaoCardapio extends Component {
 
       if (values.uuid) {
         parsedValues.uuid = values.uuid;
-        response = await atualizaAlteracaoCardapioCei(parsedValues);
+        response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
+          values.uuid,
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.OK;
       } else {
-        response = await criaAlteracaoCardapioCei(parsedValues);
+        response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.CREATED;
       }
 
       if (response.status === statusOk && !rascunho) {
-        const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
-          response.data.uuid
+        const responseInicia = await escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+          response.data.uuid,
+          SOLICITACAO_CEI
         );
         if (responseInicia.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio salva com sucesso");
@@ -304,7 +325,10 @@ class AlteracaoCardapio extends Component {
   OnDeleteButtonClicked = async (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       try {
-        const response = await deleteAlteracaoCardapioCei(uuid);
+        const response = await escolaExcluirSolicitacaoDeAlteracaoCardapio(
+          uuid,
+          SOLICITACAO_CEI
+        );
         if (response.status === HTTP_STATUS.NO_CONTENT) {
           toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
           this.refresh();

@@ -8,7 +8,7 @@ import { BUTTON_STYLE, BUTTON_ICON, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
 import { toastSuccess, toastError } from "../../Toast/dialogs";
 import { truncarString } from "../../../../helpers/utilities";
-import { DEZ_MB } from "../../../../constants";
+import { DEZ_MB } from "../../../../constants/shared";
 
 export class InputFile extends Component {
   constructor(props) {
@@ -76,7 +76,9 @@ export class InputFile extends Component {
           })
           .then(() => {
             if (files.length === QUANTIDADE_ARQUIVOS) {
-              toastSuccess("Laudo(s) incluso(s) com sucesso");
+              toastSuccess(
+                this.props.toastSuccess || "Laudo(s) incluso(s) com sucesso"
+              );
               if (this.props.concatenarNovosArquivos) {
                 const allFiles = this.state.files.concat(files);
                 this.props.setFiles(allFiles);

@@ -17,13 +17,13 @@ import {
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
-  createAlteracaoCardapio,
-  deleteAlteracaoCardapio,
-  enviarAlteracaoCardapio,
-  getMeusRascunhosAlteracoesCardapio,
-  updateAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
   getAlteracoesComLancheDoMesCorrente
-} from "../../services/alteracaoDecardapio.service";
+} from "../../services/alteracaoDeCardapio";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
@@ -39,6 +39,7 @@ import { construirPeriodosECombos } from "./helper";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 const ENTER = 13;
 
@@ -112,13 +113,19 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao !== null
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      this.atualizaAlteracoesComLancheMesCorrente(vinculo);
+      this.atualizaAlteracoesComLancheMesCorrente(
+        vinculo,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      );
     }
   }
 
   atualizaAlteracoesComLancheMesCorrente = vinculo => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
-    getAlteracoesComLancheDoMesCorrente(vinculo).then(response => {
+    getAlteracoesComLancheDoMesCorrente(
+      vinculo,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(response => {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
@@ -305,10 +312,12 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    getMeusRascunhosAlteracoesCardapio()
+    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    )
       .then(response => {
         alteracaoCardapioList =
-          response.results.length > 0 ? response.results : [];
+          response.data.results.length > 0 ? response.data.results : [];
         this.setState({
           alteracaoCardapioList
         });
@@ -341,11 +350,17 @@ class AlteracaoCardapio extends Component {
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    this.atualizaAlteracoesComLancheMesCorrente(vinculo);
+    this.atualizaAlteracoesComLancheMesCorrente(
+      vinculo,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    );
   }
 
   enviaAlteracaoCardapio(uuid) {
-    enviarAlteracaoCardapio(uuid).then(
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -374,7 +389,10 @@ class AlteracaoCardapio extends Component {
       if (!erros) {
         this.resetaTodoPeriodoCheck();
         if (!values.uuid) {
-          createAlteracaoCardapio(values)
+          escolaCriarSolicitacaoDeAlteracaoCardapio(
+            values,
+            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+          )
             .then(async response => {
               if (response.status === HTTP_STATUS.CREATED) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -393,7 +411,11 @@ class AlteracaoCardapio extends Component {
               this.refresh();
             });
         } else {
-          updateAlteracaoCardapio(values.uuid, JSON.stringify(values)).then(
+          escolaAlterarSolicitacaoDeAlteracaoCardapio(
+            values.uuid,
+            JSON.stringify(values),
+            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+          ).then(
             async res => {
               if (res.status === HTTP_STATUS.OK) {
                 if (status === STATUS_DRE_A_VALIDAR) {
@@ -453,7 +475,10 @@ class AlteracaoCardapio extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      deleteAlteracaoCardapio(uuid).then(
+      escolaExcluirSolicitacaoDeAlteracaoCardapio(
+        uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ).then(
         statusCode => {
           if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);

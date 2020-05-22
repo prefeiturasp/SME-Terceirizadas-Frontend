@@ -1,5 +1,6 @@
 import moment from "moment";
 import strip_tags from "locutus/php/strings/strip_tags";
+
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
@@ -19,9 +20,19 @@ export const textAreaRequired = value => {
 };
 
 export const peloMenosUmCaractere = value => {
-  return /[a-zA-Z0-9]/i.test(strip_tags(value))
+  let valorLimpo = strip_tags(value);
+  valorLimpo = valorLimpo.replace(/&nbsp;/g, "");
+  return /[a-zA-Z0-9]/i.test(valorLimpo)
     ? undefined
     : "Pelo menos um caractere deve ser digitado";
+};
+
+export const textAreaRequiredAndAtLeastOneCharacter = value => {
+  let result = textAreaRequired(value);
+  if (result !== undefined) {
+    return result;
+  }
+  return peloMenosUmCaractere(value);
 };
 
 export const requiredCheck = value =>
@@ -91,3 +102,17 @@ export const semCaracteresEspeciais = value =>
   value && !/^[\w&.-]+$/i.test(value)
     ? `Não permite caracteres especiais`
     : undefined;
+
+export const numeroDecimal = value => {
+  const er = new RegExp("[0-9],[0-9]");
+  return value ? (er.test(value) ? undefined : "Deve ser um decimal") : [];
+};
+
+export const inteiroOuDecimal = value => {
+  return value && !/^[0-9]+([,.][0-9]+)?$/g.test(value)
+    ? "Somente números inteiros ou decimais"
+    : undefined;
+};
+
+export const numeroInteiro = value =>
+  value ? (!/\D/.test(value) ? undefined : "Somente números") : [];

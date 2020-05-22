@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum } from "../../../../constants";
+import { FiltroEnum, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
-import { getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa } from "../../../../services/inclusaoDeAlimentacaoAvulsa.service";
-import { getDREPedidosInclusaoContinuosPendentes } from "../../../../services/inclusaoDeAlimentacaoContinua.service";
+import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
+import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
@@ -33,19 +32,26 @@ class PainelPedidos extends Component {
     this.atualizarDadosDasInclusoes(filtro);
   }
 
+  //FIXME: Nao trata errors, nao faz requisicoes em paralelo
   async atualizarDadosDasInclusoes(filtro) {
-    const inclusoesAvulsas = await getDiretoriaRegionalPedidosDeInclusaoAlimentacaoAvulsa(
-      filtro
-    );
-    const inclusoesContinuas = await getDREPedidosInclusaoContinuosPendentes(
-      filtro
-    );
-    const inclusoesMescladas = inclusoesAvulsas.results.concat(
-      inclusoesContinuas.results
-    );
-    const pedidosPrioritarios = filtraPrioritarios(inclusoesMescladas);
-    const pedidosNoPrazoLimite = filtraNoLimite(inclusoesMescladas);
-    const pedidosNoPrazoRegular = filtraRegular(inclusoesMescladas);
+    const [avulsas, continuas, cei] = await Promise.all([
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      ),
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      ),
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI
+      )
+    ]);
+    const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
+    const pedidosPrioritarios = filtraPrioritarios(inclusoes);
+    const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
+    const pedidosNoPrazoRegular = filtraRegular(inclusoes);
     this.setState({
       pedidosPrioritarios,
       pedidosNoPrazoLimite,

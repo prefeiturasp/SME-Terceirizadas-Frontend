@@ -1,7 +1,8 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-import { statusEnum } from "../constants";
-import { TIPO_PERFIL } from "../constants";
+import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
+import { TIPO_PERFIL } from "../constants/shared";
+import { RELATORIO } from "../configs/constants";
 
 export const showResults = values =>
   new Promise(resolve => {
@@ -220,7 +221,6 @@ export const visualizaBotoesDoFluxo = solicitacao => {
     case statusEnum.CODAE_A_AUTORIZAR:
     case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
       return [
-        TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.DIETA_ESPECIAL,
         TIPO_PERFIL.ESCOLA
@@ -239,15 +239,35 @@ export const visualizaBotoesDoFluxo = solicitacao => {
   }
 };
 
+export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  switch (solicitacao.status) {
+    case statusEnum.CODAE_A_AUTORIZAR:
+    case statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO:
+      return [
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.DIETA_ESPECIAL
+      ].includes(tipoPerfil);
+    case statusEnum.CODAE_AUTORIZADO:
+    case statusEnum.CODAE_QUESTIONADO:
+      return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
+    case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
+      return [TIPO_PERFIL.DIRETORIA_REGIONAL].includes(tipoPerfil);
+    default:
+      return false;
+  }
+};
+
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioEscola() || usuarioCODAEDietaEspecial();
+      return usuarioEhEscola() || usuarioEhCODAEDietaEspecial();
     case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
-      return usuarioCODAEDietaEspecial();
+      return usuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
-      return usuarioTerceirizada();
+      return usuarioEhTerceirizada();
     default:
       return false;
   }
@@ -264,26 +284,38 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
-export const usuarioEscola = () => {
+export const usuarioEhEscola = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
 };
 
-export const usuarioDiretoriaRegional = () => {
+export const usuarioEhDRE = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
-export const usuarioCODAEGestaoAlimentacao = () => {
+export const usuarioEhCODAEGestaoAlimentacao = () => {
   return (
     localStorage.getItem("tipo_perfil") ===
     TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 
-export const usuarioCODAEDietaEspecial = () => {
+export const usuarioEhCODAEDietaEspecial = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
-export const usuarioTerceirizada = () => {
+export const usuarioEhCODAEGestaoProduto = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
+};
+
+export const usuarioEhQualquerCODAE = () => {
+  return (
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAEGestaoProduto()
+  );
+};
+
+export const usuarioEhTerceirizada = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
 };
 
@@ -323,4 +355,61 @@ export const formatarLotesParaVisao = lotes => {
     lote["link"] = lote["uuid"];
   });
   return lotes;
+};
+
+export const ehInclusaoContinua = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+};
+export const ehInclusaoAvulsa = tipoSolicitacao => {
+  return tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+};
+
+export const ehInclusaoCei = tipoSolicitacao => {
+  return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
+};
+
+export const ehEscolaTipoCEI = escola => {
+  const nome = (escola && escola.nome) || "";
+  return nome.startsWith("CEI") || nome.startsWith("CCI");
+};
+
+export const tipoSolicitacaoComoQuery = obj => {
+  return `tipoSolicitacao=${comoTipo(obj)}`;
+};
+
+export const comoTipo = obj => {
+  if (ehEscolaTipoCEI(obj.escola)) {
+    return TIPO_SOLICITACAO.SOLICITACAO_CEI;
+  }
+  return obj.data_inicial && obj.data_inicial !== obj.data_final
+    ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
+};
+
+export const parseRelatorioURLParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return [urlParams.get("uuid"), urlParams.get("tipoSolicitacao")];
+};
+
+export const gerarLinkRelatorio = (path, solicitacao) => {
+  return `/${path}/${RELATORIO}?uuid=${
+    solicitacao.uuid
+  }&${tipoSolicitacaoComoQuery(solicitacao)}`;
+};
+
+export const safeConcatOn = (propName, a, b, c) => {
+  if (!a || !a[propName] || !Array.isArray(a[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", a);
+    return [];
+  }
+  if (!b || !b[propName] || !Array.isArray(b[propName])) {
+    // eslint-disable-next-line no-console
+    console.error("Invalid array concatenation on value: ", b);
+    return a[propName];
+  }
+  if (!c || !c[propName] || !Array.isArray(c[propName])) {
+    return a[propName].concat(b[propName]);
+  }
+  return a[propName].concat(b[propName], c[propName]);
 };

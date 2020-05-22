@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { FiltroEnum, TIPODECARD } from "../../../../constants";
+import { FiltroEnum, TIPODECARD } from "../../../../constants/shared";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import Select from "../../../Shareable/Select";
 import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAcao";
@@ -10,7 +10,7 @@ import {
   filtraNoLimite,
   filtraRegular
 } from "./../../../../helpers/painelPedidos";
-import { getDiretoriaRegionalPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
+import { getDREPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class PainelPedidos extends Component {
   }
 
   filtrar(filtro) {
-    getDiretoriaRegionalPedidosDeInversoes(filtro).then(response => {
+    getDREPedidosDeInversoes(filtro).then(response => {
       let pedidosPrioritarios = filtraPrioritarios(response.results);
       let pedidosNoPrazoLimite = filtraNoLimite(response.results);
       let pedidosNoPrazoRegular = filtraRegular(response.results);

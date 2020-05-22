@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import { getDiretoriaregionalSimplissima } from "../../../services/diretoriaRegional.service";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../constants";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/shared";
 import { formatarLotesParaVisao } from "../../../helpers/utilities";
 import DashboardCODAE from ".";
 import { getLotesSimples } from "../../../services/lote.service";

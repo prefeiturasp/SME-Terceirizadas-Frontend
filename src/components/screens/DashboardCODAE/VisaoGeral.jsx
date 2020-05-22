@@ -1,3 +1,7 @@
+/* 
+
+// TODO: Remover arquivo pq nao está mais em uso
+
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -215,3 +219,4 @@ class VisaoGeral extends Component {
 }
 
 export default VisaoGeral;
+ */

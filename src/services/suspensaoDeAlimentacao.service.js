@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import { PEDIDOS, FLUXO } from "./constants";
 import authService from "./auth";
 

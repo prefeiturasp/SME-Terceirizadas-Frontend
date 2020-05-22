@@ -64,29 +64,6 @@
     color: $blue;
     padding: 10px 0;
   }
-  &.card-authorized {
-    i {
-      color: $greenPanel;
-    }
-  }
-  &.card-pending {
-    border-left-color: $orange !important;
-    i {
-      color: $orange;
-    }
-  }
-  &.card-denied {
-    border-left-color: $red !important;
-    i {
-      color: $red;
-    }
-  }
-  &.card-cancelled {
-    border-left-color: $black !important;
-    i {
-      color: $black;
-    }
-  }
 }
 
 .ajuste-icones {
