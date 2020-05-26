@@ -18,10 +18,12 @@ export const incluirDados = (statuses, arr) => {
   return result;
 };
 
-export const formataCards = cards => {
+export const formataCards = (cards, apontaParaEdicao) => {
   return cards.map(card => ({
     text: `${card.id_externo} - ${truncarString(card.nome_produto, 48)}`,
     date: card.log_mais_recente,
-    link: `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
+    link: apontaParaEdicao
+      ? "/xxx"
+      : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
   }));
 };
