@@ -142,7 +142,7 @@ export default class CorpoRelatorio extends Component {
         <article>
           <hr />
           <FluxoDeStatus
-            listaDeStatus={historico.logs}
+            listaDeStatus={historico.logs.reverse()}
             fluxo={fluxoPartindoTerceirizada}
           />
           <hr />
