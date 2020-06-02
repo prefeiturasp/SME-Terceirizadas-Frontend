@@ -1,0 +1,253 @@
+@import "../../../../../styles/variables.scss";
+
+div.cadastro-produto-step3 {
+  .card-title {
+    padding-top: 1.5em;
+    font-weight: bold;
+    font-size: 14px;
+    color: $blackInput;
+  }
+  textarea::placeholder {
+    text-align: left;
+  }
+  div.produto {
+    font-size: 14px;
+    label {
+      color: $blackInput;
+      span {
+        color: $red;
+      }
+    }
+    div.explicacao {
+      color: $gray;
+    }
+  }
+  span.delete {
+    margin-left: 2em;
+    font-weight: bold;
+    background-color: $blue;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: $blue;
+    }
+  }
+}
+
+.identificacao-produto {
+  header {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin: 10px 0;
+  }
+
+  section.componentes-alergenicos {
+    .checks {
+      display: flex;
+      margin-bottom: 10px;
+      label {
+        padding: 0 30px;
+      }
+    }
+  }
+
+  section.dieta-especial-form {
+    .checks {
+      display: flex;
+      margin-bottom: 10px;
+      label {
+        padding: 0 30px;
+      }
+    }
+
+    article {
+      display: inline;
+    }
+
+    .ant-row,
+    .ant-form-item {
+      margin: 0;
+    }
+
+    .ant-select-selection,
+    .ant-select-selection--multiple {
+      li {
+        line-height: 28px;
+        padding: 5px 20px 0 10px;
+      }
+    }
+  }
+
+  .section-produto-nome {
+    margin: 10px 0;
+  }
+
+  .section-marca-fabricante-produto {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    column-gap: 2%;
+
+    .botoes-adicionar-m-f {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ant-row,
+    .ant-form-item {
+      margin: 0;
+    }
+
+    article {
+      .ant-select-selection--single {
+        height: 38px;
+
+        .ant-select-selection__rendered {
+          line-height: 32px;
+        }
+      }
+    }
+  }
+
+  .componentes-do-produto {
+    margin: 10px 0;
+  }
+
+  .label-formulario-produto {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #686868;
+    span {
+      color: #a50e05;
+      padding-right: 5px;
+    }
+  }
+}
+
+.rodape-botoes-acao {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 60px 0 0 0;
+}
+
+.segundo-formulario {
+  header {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin: 10px 0;
+  }
+
+  .porcao-unidade-caseira {
+    display: grid;
+    grid-template-columns: 48% 48%;
+    column-gap: 4%;
+  }
+
+  .secao-informacoes-nutricionais {
+    margin-top: 20px;
+
+    .header-tipo-informacao {
+      display: flex;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid #e8e8e8;
+      box-sizing: border-box;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 18px;
+      display: flex;
+      align-items: center;
+      color: #323c47;
+      height: 56px;
+      padding: 0 15px;
+      margin: 0 0 5px 0;
+    }
+
+    .informacoes-nutri {
+      .campos-informacoes-nutri-header {
+        display: grid;
+        grid-template-columns: 3.5fr 3fr 2.5fr;
+        color: #686868;
+        font-weight: bold;
+        padding: 0 15px;
+        background: #f5f6f8;
+        border: 1px solid #e9eaea;
+        box-sizing: border-box;
+        border-radius: 0px;
+        height: 48px;
+
+        div {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .campos-informacoes-nutri {
+        display: grid;
+        grid-template-columns: 4fr 2fr 1fr 2fr 1fr;
+        column-gap: 2%;
+        margin: 10px 0;
+        height: 48px;
+        padding: 0 15px;
+
+        div {
+          display: flex;
+          align-items: center;
+        }
+
+        .medida {
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .footer-botoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+
+    div {
+      width: 30%;
+      display: grid;
+      grid-template-columns: 47% 47%;
+      column-gap: 6%;
+    }
+  }
+}
+
+.section-cards-imagens {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  margin: 20px 0 0 0;
+
+  span {
+    margin: 0 0 0 10px;
+
+    cursor: pointer;
+  }
+}
+
+.header-card-title {
+  padding: 20px 0 0 0;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  color: #42474a;
+  margin: 10px 0;
+}
+
+.section-botoes {
+  display: flex;
+  justify-content: flex-end;
+}

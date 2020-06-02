@@ -7,6 +7,7 @@ import { formataCards, incluirDados } from "./helper";
 import { dataAtual, deepCopy } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import { getDashboardGestaoProdutos } from "services/produto.service";
+import { TIPO_PERFIL } from "constants/shared";
 
 export default class DashboardGestaoProduto extends Component {
   constructor(props) {
@@ -15,15 +16,22 @@ export default class DashboardGestaoProduto extends Component {
       cards: [],
       dashboardData: null,
       dashboardDataFiltered: null,
-      erro: false
+      erro: false,
+      ehTerceirizada: false
     };
   }
+
+  ehPerfilTerceirizada = () => {
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    return tipoPerfil === TIPO_PERFIL.TERCEIRIZADA;
+  };
 
   componentDidMount() {
     getDashboardGestaoProdutos()
       .then(response => {
         if (response.status === HTTP_STATUS.OK) {
           const cards = listarCardsPermitidos();
+          const ehTerceirizada = this.ehPerfilTerceirizada();
           cards.forEach(card => {
             card.items = incluirDados(
               card.incluir_status,
@@ -32,7 +40,8 @@ export default class DashboardGestaoProduto extends Component {
           });
           this.setState({
             cards: cards,
-            cardsFiltered: cards.concat()
+            cardsFiltered: cards.concat(),
+            ehTerceirizada
           });
         } else {
           this.setState({ erro: true });
@@ -64,9 +73,30 @@ export default class DashboardGestaoProduto extends Component {
     });
   };
 
+  retornaCenarioPorTitulo = titulo => {
+    switch (titulo) {
+      case "Produtos suspensos":
+        return true;
+      case "Reclamação de produto":
+        return true;
+      case "Correção de produto":
+        return true;
+      case "Homologados":
+        return true;
+      case "Não homologados":
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  apontaParaFormularioDeAlteracao = titulo => {
+    const { ehTerceirizada } = this.state;
+    return this.retornaCenarioPorTitulo(titulo) && ehTerceirizada;
+  };
+
   render() {
     const { cardsFiltered, erro } = this.state;
-
     return (
       <div>
         {erro && <div>Erro ao carregar painel gerencial</div>}
@@ -89,7 +119,10 @@ export default class DashboardGestaoProduto extends Component {
                         <CardStatusDeSolicitacao
                           cardTitle={card.titulo}
                           cardType={card.style}
-                          solicitations={formataCards(card.items)}
+                          solicitations={formataCards(
+                            card.items,
+                            this.apontaParaFormularioDeAlteracao(card.titulo)
+                          )}
                           icon={card.icon}
                           href={`/${GESTAO_PRODUTO}/${card.rota}`}
                         />
@@ -99,7 +132,10 @@ export default class DashboardGestaoProduto extends Component {
                           <CardStatusDeSolicitacao
                             cardTitle={card2.titulo}
                             cardType={card2.style}
-                            solicitations={formataCards(card2.items)}
+                            solicitations={formataCards(
+                              card2.items,
+                              this.apontaParaFormularioDeAlteracao(card2.titulo)
+                            )}
                             icon={card2.icon}
                             href={`/${GESTAO_PRODUTO}/${card2.rota}`}
                           />

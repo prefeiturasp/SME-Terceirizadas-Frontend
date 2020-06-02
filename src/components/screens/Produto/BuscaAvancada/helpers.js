@@ -6,7 +6,8 @@ export const MIN_DATE = moment("01/01/1960", "DD/MM/YYYY")["_d"];
 const retornaTodosOsLogs = homologacoes => {
   let logs = [];
   homologacoes.forEach(hom => {
-    hom.logs.forEach(log => {
+    const todosLogs = hom.logs.reverse();
+    todosLogs.forEach(log => {
       log["ativo"] = false;
       log["empresa"] = hom.rastro_terceirizada.nome_fantasia;
       logs.push(log);
@@ -23,7 +24,7 @@ export const retornaProdutosComUltimaHomolagacao = response => {
       homologacoes.push(homolog);
     });
 
-    produto["status"] = homologacoes[homologacoes.length - 1]["status"];
+    produto["status"] = homologacoes[0]["status"];
 
     produto["todos_logs"] = retornaTodosOsLogs(homologacoes);
 
