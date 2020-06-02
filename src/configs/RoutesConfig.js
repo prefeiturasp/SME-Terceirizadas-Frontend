@@ -81,6 +81,7 @@ import {
   usuarioEhQualquerCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
+import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
@@ -570,6 +571,12 @@ const routesConfig = [
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
     component: CadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.EDITAR}`,
+    component: AtualizacaoProdutoFormPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
   },

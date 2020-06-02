@@ -1,5 +1,5 @@
 import { truncarString } from "../../../helpers/utilities";
-import { RELATORIO, GESTAO_PRODUTO } from "../../../configs/constants";
+import { RELATORIO, GESTAO_PRODUTO, EDITAR } from "../../../configs/constants";
 
 export const CARDS_CONFIG = {
   "Reclamação de produto": {
@@ -23,7 +23,7 @@ export const formataCards = (cards, apontaParaEdicao) => {
     text: `${card.id_externo} - ${truncarString(card.nome_produto, 48)}`,
     date: card.log_mais_recente,
     link: apontaParaEdicao
-      ? "/xxx"
+      ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${card.uuid}`
       : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
   }));
 };
