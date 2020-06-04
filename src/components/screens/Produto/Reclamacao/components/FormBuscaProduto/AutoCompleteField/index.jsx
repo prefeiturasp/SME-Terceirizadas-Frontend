@@ -6,7 +6,7 @@ export default class AutoCompleteField extends Component {
     const { label, onSearch, input, ...props } = this.props;
     return (
       <div>
-        <label>Nome do Produto</label>
+        <label>{label}</label>
         <AutoComplete {...props} {...input} onSearch={onSearch}>
           <Input.Search size="large" onSearch={onSearch} />
         </AutoComplete>
