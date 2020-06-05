@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
-
-import AutoCompleteField from "./AutoCompleteField";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -14,156 +13,115 @@ import {
   getNomesFabricantes
 } from "services/produto.service";
 
-export default class FormBuscaProduto extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nomesProdutos: null,
-      optionsProdutos: [],
-      nomesMarcas: null,
-      optionsMarcas: null,
-      nomesFabricantes: null,
-      optionsFabricantes: null,
+const initialState = {
+  dados: {},
+  produtos: [],
+  marcas: [],
+  fabricantes: []
+};
 
-      resultadosProduto: [],
-
-      parametrosBusca: {
-        nome_fabricante: "",
-        nome_marca: "",
-        nome_produto: ""
+function reducer(state, { type: actionType, payload }) {
+  switch (actionType) {
+    case "popularDados":
+      return { ...state, dados: payload };
+    case "atualizarFiltro": {
+      if (!payload.searchText.length) {
+        return { ...state, [payload.filtro]: [] };
       }
-    };
-  }
-  retornaListaDeNomes = arrayObjetos => {
-    let arrayNomes = [];
-    arrayObjetos.forEach(objeto => {
-      arrayNomes.push(objeto.nome);
-    });
-    return arrayNomes;
-  };
-  componentWillMount = async () => {
-    const { nomesProdutos, nomesMarcas, nomesFabricantes } = this.state;
-    if (
-      nomesProdutos === null &&
-      nomesMarcas === null &&
-      nomesFabricantes === null
-    ) {
-      const produtos = await getNomesProdutos();
-      const marcas = await getNomesMarcas();
-      const fabricantes = await getNomesFabricantes();
-
-      this.setState({
-        nomesProdutos: this.retornaListaDeNomes(produtos.data.results),
-        nomesMarcas: this.retornaListaDeNomes(marcas.data.results),
-        nomesFabricantes: this.retornaListaDeNomes(fabricantes.data.results)
-      });
+      const reg = new RegExp(payload.searchText, "i");
+      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      return { ...state, [payload.filtro]: filtrado };
     }
-  };
-  onSearchProduto = searchText => {
-    const { nomesProdutos } = this.state;
-    let options = !searchText
-      ? []
-      : nomesProdutos.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsProdutos: options
-    });
-  };
-
-  onSearchMarca = searchText => {
-    const { nomesMarcas } = this.state;
-    let options = !searchText
-      ? []
-      : nomesMarcas.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsMarcas: options
-    });
-  };
-
-  onSearchFabricantes = searchText => {
-    const { nomesFabricantes } = this.state;
-    let options = !searchText
-      ? []
-      : nomesFabricantes.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsFabricantes: options
-    });
-  };
-  onSelectProduto = async nomeProduto => {
-    this.setState(
-      {
-        "parametrosBusca.nome_produto": nomeProduto
-      },
-      this.atualizaBusca
-    );
-  };
-
-  onSelectMarca = async nomeMarca => {
-    this.setState(
-      {
-        "parametrosBusca.nome_marca": nomeMarca
-      },
-      this.atualizaBusca
-    );
-  };
-
-  onSelectFabricante = async nomeFabricante => {
-    this.setState(
-      {
-        "parametrosBusca.nome_fabricante": nomeFabricante
-      },
-      this.atualizaBusca
-    );
-  };
-
-  render() {
-    const { optionsProdutos, optionsMarcas, optionsFabricantes } = this.state;
-    return (
-      <Form
-        onSubmit={this.props.onSubmit}
-        render={({ form, handleSubmit, submitting }) => (
-          <form onSubmit={handleSubmit} className="busca-produtos-formulario">
-            <Field
-              component={AutoCompleteField}
-              dataSource={optionsProdutos}
-              label="Nome do Produto"
-              className="input-busca-produto"
-              onSearch={this.onSearchProduto}
-              name="nome_produto"
-            />
-            <div className="marca-fabricante-inputs">
-              <Field
-                component={AutoCompleteField}
-                dataSource={optionsMarcas}
-                label="Marca do Produto"
-                onSearch={this.onSearchMarca}
-                name="nome_marca"
-              />
-              <Field
-                component={AutoCompleteField}
-                dataSource={optionsFabricantes}
-                label="Fabricante do Produto"
-                onSearch={this.onSearchFabricantes}
-                name="nome_fabricante"
-              />
-            </div>
-            <div className="mt-4">
-              <Botao
-                texto="Consultar"
-                type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
-                disabled={submitting}
-              />
-            </div>
-          </form>
-        )}
-      />
-    );
+    case "resetar":
+      return { ...initialState, dados: state.dados };
+    default:
+      throw new Error("Invalid action type: ", actionType);
   }
 }
+
+const FormBuscaProduto = ({ onSubmit }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    async function fetchData() {
+      Promise.all([
+        getNomesProdutos(),
+        getNomesMarcas(),
+        getNomesFabricantes()
+      ]).then(([produtos, marcas, fabricantes]) => {
+        dispatch({
+          type: "popularDados",
+          payload: {
+            produtos: produtos.data.results.map(el => el.nome),
+            marcas: marcas.data.results.map(el => el.nome),
+            fabricantes: fabricantes.data.results.map(el => el.nome)
+          }
+        });
+      });
+    }
+    fetchData();
+  }, []);
+
+  const onSearch = (filtro, searchText) => {
+    dispatch({
+      type: "atualizarFiltro",
+      payload: {
+        filtro,
+        searchText
+      }
+    });
+  };
+
+  return (
+    <Form
+      onSubmit={onSubmit}
+      render={({ form, handleSubmit, submitting }) => (
+        <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+          <Field
+            component={AutoCompleteField}
+            dataSource={state.produtos}
+            label="Nome do Produto"
+            className="input-busca-produto"
+            onSearch={v => onSearch("produtos", v)}
+            name="nome_produto"
+          />
+          <div className="marca-fabricante-inputs">
+            <Field
+              component={AutoCompleteField}
+              dataSource={state.marcas}
+              label="Marca do Produto"
+              onSearch={v => onSearch("marcas", v)}
+              name="nome_marca"
+            />
+            <Field
+              component={AutoCompleteField}
+              dataSource={state.fabricantes}
+              label="Fabricante do Produto"
+              onSearch={v => onSearch("fabricantes", v)}
+              name="nome_fabricante"
+            />
+          </div>
+          <div className="mt-4 mb-4">
+            <Botao
+              texto="Consultar"
+              type={BUTTON_TYPE.SUBMIT}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              disabled={submitting}
+            />
+            <Botao
+              texto="Limpar Filtros"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => form.reset()}
+              className="float-right ml-3"
+              disabled={submitting}
+            />
+          </div>
+        </form>
+      )}
+    />
+  );
+};
+
+export default FormBuscaProduto;
