@@ -180,12 +180,8 @@ export const StatusSolicitacoesDietaEspecial = () => {
 
 export const painelInicial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIETA_ESPECIAL:
-      return DashBoardDietaEspecial.DietaEspecialCODAE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return DashboardCODAEPage;
-    case TIPO_PERFIL.GESTAO_PRODUTO:
-      return DashboardGestaoProduto.DashboardCODAE;
     default:
       return PainelInicialPage;
   }
