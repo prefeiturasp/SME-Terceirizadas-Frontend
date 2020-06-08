@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
-import CardLegendas from "../../Shareable/CardLegendas";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 
@@ -69,12 +68,20 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
+    const listaStatus = Array.isArray(status) ? status : [status];
     const dadosMeus = await meusDados();
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
-    let solicitacoes = await endpointGetSolicitacoes(
-      status || terceirizadaUUID
+    const promises = listaStatus.map(status =>
+      endpointGetSolicitacoes(status || terceirizadaUUID)
     );
-    solicitacoes = formatarDadosSolicitacao(solicitacoes.data.results);
+    const retornos = await Promise.all(promises);
+    let solicitacoes = [];
+    retornos.forEach(
+      retorno =>
+        (solicitacoes = solicitacoes.concat(
+          formatarDadosSolicitacao(retorno.data.results)
+        ))
+    );
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes
@@ -103,7 +110,6 @@ export class StatusSolicitacoes extends Component {
               selecionarTodos={this.selecionarTodos}
               onCheckClicked={this.onCheckClicked}
             />
-            <CardLegendas />
           </div>
         </div>
       </form>

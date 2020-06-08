@@ -10,6 +10,8 @@ import { formataCards } from "components/screens/DashboardGestaoProduto/helper";
 import { GESTAO_PRODUTO_CARDS } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
+import { escolheStatusPendenteHomologacao } from "./helpers";
+
 class StatusSolicitacoesBase extends React.Component {
   render() {
     const atual = {
@@ -32,7 +34,7 @@ class StatusSolicitacoesBase extends React.Component {
 
 export const ReclamacaoDeProduto = () => (
   <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_AUTORIZOU_RECLAMACAO}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO}
     tipoCard={CARD_TYPE_ENUM.RECLAMACAO}
     icone={ICON_CARD_TYPE_ENUM.RECLAMACAO}
     titulo={GESTAO_PRODUTO_CARDS.RECLAMACAO_DE_PRODUTO}
@@ -50,7 +52,7 @@ export const ProdutosSuspensos = () => (
 
 export const CorrecaoDeProduto = () => (
   <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_AUTORIZOU_RECLAMACAO}
     tipoCard={CARD_TYPE_ENUM.CORRECAO}
     icone={ICON_CARD_TYPE_ENUM.CORRECAO}
     titulo={GESTAO_PRODUTO_CARDS.CORRECAO_DE_PRODUTO}
@@ -59,7 +61,7 @@ export const CorrecaoDeProduto = () => (
 
 export const AguardandoAnaliseReclamacao = () => (
   <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO}
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO}
     tipoCard={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
     icone={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
     titulo={GESTAO_PRODUTO_CARDS.AGUARDANDO_ANALISE_RECLAMACAO}
@@ -77,7 +79,7 @@ export const AguardandoAnaliseSensorial = () => (
 
 export const PendenteHomologacao = () => (
   <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO}
+    status={escolheStatusPendenteHomologacao()}
     tipoCard={CARD_TYPE_ENUM.PENDENTE}
     icone={ICON_CARD_TYPE_ENUM.PENDENTE}
     titulo={GESTAO_PRODUTO_CARDS.PENDENTE_HOMOLOGACAO}

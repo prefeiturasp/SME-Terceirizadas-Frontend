@@ -22,9 +22,9 @@ import {
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import {
-  checarSeUsuarioEhEscola,
-  checarSeUsuarioEhDiretoriaRegional,
-  checarSeUsuarioEhCODAEGestaoAlimentacao,
+  usuarioEhEscola,
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoAlimentacao,
   converterDDMMYYYYparaYYYYMMDD
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
@@ -154,10 +154,7 @@ class FiltrosDeBusca extends Component {
                         this.onDiretoriaRegionalChanged(event.target.value)
                       }
                       options={diretoriasRegionais}
-                      disabled={
-                        checarSeUsuarioEhEscola() ||
-                        checarSeUsuarioEhDiretoriaRegional()
-                      }
+                      disabled={usuarioEhEscola() || usuarioEhDRE()}
                       naoDesabilitarPrimeiraOpcao
                     />
                   </div>
@@ -202,8 +199,8 @@ class FiltrosDeBusca extends Component {
                       component={Select}
                       options={escolasState || escolas}
                       disabled={
-                        checarSeUsuarioEhEscola() ||
-                        (checarSeUsuarioEhCODAEGestaoAlimentacao() &&
+                        usuarioEhEscola() ||
+                        (usuarioEhCODAEGestaoAlimentacao() &&
                           (!diretoria_regional || diretoria_regional === TODOS))
                       }
                       naoDesabilitarPrimeiraOpcao

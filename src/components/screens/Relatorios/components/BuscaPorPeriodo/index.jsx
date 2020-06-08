@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { meusDados } from "../../../../../services/perfil.service";
 import FiltrosDeBusca from "./FiltrosDeBusca";
 import {
-  checarSeUsuarioEhEscola,
-  checarSeUsuarioEhDiretoriaRegional,
-  checarSeUsuarioEhCODAEGestaoAlimentacao
+  usuarioEhEscola,
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "../../../../../services/diretoriaRegional.service";
 import { TODOS } from "../../../../../constants/shared";
@@ -22,7 +22,7 @@ class BuscaPorPeriodo extends Component {
   componentDidMount() {
     let escolas = null;
     let diretoriasRegionais = null;
-    if (checarSeUsuarioEhCODAEGestaoAlimentacao()) {
+    if (usuarioEhCODAEGestaoAlimentacao()) {
       getDiretoriaregionalSimplissima().then(response => {
         diretoriasRegionais = [{ nome: TODOS, uuid: TODOS }].concat(
           response.data.results
@@ -35,7 +35,7 @@ class BuscaPorPeriodo extends Component {
       });
     } else {
       meusDados().then(meusDados => {
-        if (checarSeUsuarioEhEscola()) {
+        if (usuarioEhEscola()) {
           escolas = [
             {
               nome: meusDados.vinculo_atual.instituicao.nome,
@@ -45,7 +45,7 @@ class BuscaPorPeriodo extends Component {
           diretoriasRegionais = [
             meusDados.vinculo_atual.instituicao.diretoria_regional
           ];
-        } else if (checarSeUsuarioEhDiretoriaRegional()) {
+        } else if (usuarioEhDRE()) {
           escolas = [{ nome: TODOS, uuid: TODOS }].concat(
             meusDados.vinculo_atual.instituicao.escolas
           );

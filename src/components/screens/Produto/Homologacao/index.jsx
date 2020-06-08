@@ -19,7 +19,7 @@ import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import {
   stringSeparadaPorVirgulas,
-  checarSeUsuarioEhCODAEGestaoProduto
+  usuarioEhCODAEGestaoProduto
 } from "../../../../helpers/utilities";
 
 class HomologacaoProduto extends Component {
@@ -381,7 +381,7 @@ class HomologacaoProduto extends Component {
                   })}
                 </div>
               </section>
-              {checarSeUsuarioEhCODAEGestaoProduto() &&
+              {usuarioEhCODAEGestaoProduto() &&
                 status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                   <div className="link-with-student pt-4">
                     <div className="label">
@@ -416,7 +416,7 @@ class HomologacaoProduto extends Component {
                     </div>
                   </div>
                 )}
-              {checarSeUsuarioEhCODAEGestaoProduto() &&
+              {usuarioEhCODAEGestaoProduto() &&
                 status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                   <div className="row">
                     <div className="col-12 text-right pt-3">
@@ -467,7 +467,7 @@ class HomologacaoProduto extends Component {
                       <Botao
                         texto={"Homologar"}
                         type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
                         disabled={
                           !necessita_analise_sensorial ||
                           necessita_analise_sensorial === "1"

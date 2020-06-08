@@ -69,6 +69,10 @@ export const getProdutosPorMarca = async nomeMarca => {
   return await axios.get(`/produtos/filtro-por-marca/${nomeMarca}/`);
 };
 
+export const getHomologacao = async uuid => {
+  return await axios.get(`/homologacoes-produtos/${uuid}/`);
+};
+
 export const getProdutosPorFabricante = async nomeFabricante => {
   return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
 };

@@ -1,7 +1,11 @@
 import moment from "moment";
 import strip_tags from "locutus/php/strings/strip_tags";
+
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
+
+export const requiredMultiselect = array =>
+  array !== [] ? undefined : "Campo obrigatório";
 
 export const deveSerNoAnoCorrente = value => {
   const dataSelecionada = moment(value, "DD/MM/YYYY").year();
@@ -19,9 +23,19 @@ export const textAreaRequired = value => {
 };
 
 export const peloMenosUmCaractere = value => {
-  return /[a-zA-Z0-9]/i.test(strip_tags(value))
+  let valorLimpo = strip_tags(value);
+  valorLimpo = valorLimpo.replace(/&nbsp;/g, "");
+  return /[a-zA-Z0-9]/i.test(valorLimpo)
     ? undefined
     : "Pelo menos um caractere deve ser digitado";
+};
+
+export const textAreaRequiredAndAtLeastOneCharacter = value => {
+  let result = textAreaRequired(value);
+  if (result !== undefined) {
+    return result;
+  }
+  return peloMenosUmCaractere(value);
 };
 
 export const requiredCheck = value =>

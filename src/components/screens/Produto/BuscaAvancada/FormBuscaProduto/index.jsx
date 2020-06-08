@@ -107,8 +107,11 @@ class FormBuscaProduto extends Component {
           </div>
         </div>
         <div className="grid-produtos-alergenicos">
-          <label>Ingredientes/aditivos alegênicos?</label>
-          <label>Quais?</label>
+          <label>Ingredientes/aditivos alergênicos?</label>
+          <label>
+            Quais? (Possível Informar um ou mais ingredientes separados por
+            vírgula)
+          </label>
           <div className="check-produto_alergenico">
             <Field
               component={CheckboxField}
@@ -121,7 +124,11 @@ class FormBuscaProduto extends Component {
             />
           </div>
           <div>
-            <Field component={InputText} name="aditivos" />
+            <Field
+              component={InputText}
+              name="aditivos"
+              disabled={!produto_alergenico}
+            />
           </div>
         </div>
         <div className="produto-input">
@@ -133,6 +140,7 @@ class FormBuscaProduto extends Component {
             component={AAutoComplete}
             dataSource={nomesProdutos}
             filterOption
+            className="campos-customizados"
           />
         </div>
 
@@ -144,12 +152,14 @@ class FormBuscaProduto extends Component {
             component={AAutoComplete}
             dataSource={nomesMarcas}
             filterOption
+            className="campos-customizados"
           />
           <Field
             name="fabricante"
             component={AAutoComplete}
             dataSource={nomesFabricantes}
             filterOption
+            className="campos-customizados"
           />
         </div>
 

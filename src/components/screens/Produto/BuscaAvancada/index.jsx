@@ -134,7 +134,7 @@ class BuscaAvancada extends Component {
   }
 
   componentDidUpdate() {
-    let { statusOptions } = this.state;
+    const { statusOptions } = this.state;
     const { produtos } = this.props;
     if (statusOptions.length > 0 && produtos.length > 0) {
       setTimeout(() => {

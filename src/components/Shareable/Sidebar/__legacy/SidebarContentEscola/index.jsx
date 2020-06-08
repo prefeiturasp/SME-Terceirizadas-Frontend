@@ -16,10 +16,14 @@ import {
   CONFIGURACOES,
   CADASTROS,
   HORARIO_COMBOS_ALIMENTACAO
-} from "../../../../configs/constants";
-import { PERFIL } from "../../../../constants/shared";
+} from "../../../../../configs/constants";
+import { PERFIL } from "../../../../../constants/shared";
 
-export class SidebarEscola extends Component {
+// TODO:
+// A funcionalidade desse component deve ser migrada para o componente SidebarContent
+// que deve atenter a todos os perfis.
+
+export class SidebarContentEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -213,7 +217,7 @@ export class SidebarEscola extends Component {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-atom" />
-          <span>{"P&D"}</span>
+          <span>{"Gestão de Produtos"}</span>
         </Link>
         <div
           id="collapsePD"
@@ -225,9 +229,16 @@ export class SidebarEscola extends Component {
             <NavLink
               activeClassName="active"
               className="collapse-item"
+              to={`/painel-gestao-produto`}
+            >
+              Painel de Solicitações
+            </NavLink>
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
               to={`/pesquisa-desenvolvimento/busca-produto`}
             >
-              Busca de Produto
+              Consulta de Produto
             </NavLink>
           </div>
         </div>

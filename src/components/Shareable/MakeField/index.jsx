@@ -21,6 +21,13 @@ export const makeField = Component => ({
       validateStatus={hasError ? "error" : "success"}
       hasFeedback={hasFeedback && hasError}
       help={hasError && meta.error}
+      rules={[
+        {
+          required: true,
+          message: "Please select your favourite colors!",
+          type: "array"
+        }
+      ]}
     >
       <Component
         className="input-make-field"

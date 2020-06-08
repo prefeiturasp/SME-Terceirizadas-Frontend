@@ -3,47 +3,11 @@ import moment from "moment";
 
 export const MIN_DATE = moment("01/01/1960", "DD/MM/YYYY")["_d"];
 
-const verificaData = (hom1, hom2) => {
-  if (
-    moment(hom1["criado_em"], "DD/MM/YYYY") <
-    moment(hom2["criado_em"], "DD/MM/YYYY")
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const retornaUltimaHomologacao = homologacoes => {
-  homologacoes.forEach((homologI, i) => {
-    homologacoes.forEach((homologJ, j) => {
-      if (verificaData(homologI, homologJ)) {
-        let tmp = homologI;
-        homologacoes[i] = homologJ;
-        homologacoes[j] = tmp;
-      }
-    });
-  });
-  return homologacoes;
-};
-
-const reatornaLogsOrdenados = logs => {
-  logs.forEach((logI, i) => {
-    logs.forEach((logJ, j) => {
-      if (verificaData(logI, logJ)) {
-        let tmp = logI;
-        logs[i] = logJ;
-        logs[j] = tmp;
-      }
-    });
-  });
-  return logs;
-};
-
 const retornaTodosOsLogs = homologacoes => {
   let logs = [];
   homologacoes.forEach(hom => {
-    hom.logs.forEach(log => {
+    const todosLogs = hom.logs.reverse();
+    todosLogs.forEach(log => {
       log["ativo"] = false;
       log["empresa"] = hom.rastro_terceirizada.nome_fantasia;
       logs.push(log);
@@ -59,10 +23,11 @@ export const retornaProdutosComUltimaHomolagacao = response => {
     produto.homologacoes.forEach(homolog => {
       homologacoes.push(homolog);
     });
-    produto["status"] = retornaUltimaHomologacao(homologacoes)[0]["status"];
 
-    const todosLogs = retornaTodosOsLogs(homologacoes);
-    produto["todos_logs"] = reatornaLogsOrdenados(todosLogs);
+    produto["status"] = homologacoes[0]["status"];
+
+    produto["todos_logs"] = retornaTodosOsLogs(homologacoes);
+
     return produto;
   });
   return produtos;
