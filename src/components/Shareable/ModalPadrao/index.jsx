@@ -10,18 +10,10 @@ import "./style.scss";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 
 export class ModalPadrao extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      justificativa: ""
-    };
-  }
-
-  async enviarJustificativa(uuid) {
-    const { justificativa } = this.state;
-    const { toastSuccessMessage } = this.props;
-    let resp = "";
-    resp = await this.props.endpoint(uuid, justificativa);
+  enviarJustificativa = async formValues => {
+    const { justificativa } = formValues;
+    const { uuid, toastSuccessMessage } = this.props;
+    const resp = await this.props.endpoint(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
@@ -29,20 +21,12 @@ export class ModalPadrao extends Component {
     } else {
       toastError(resp.data.detail);
     }
-  }
+  };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.justificativa !== this.props.justificativa) {
-      this.setState({
-        justificativa: this.props.justificativa
-      });
-    }
-  }
   render() {
     const {
       showModal,
       closeModal,
-      uuid,
       modalTitle,
       textAreaPlaceholder
     } = this.props;
@@ -53,7 +37,7 @@ export class ModalPadrao extends Component {
         onHide={closeModal}
       >
         <Form
-          onSubmit={() => this.enviarJustificativa(uuid)}
+          onSubmit={this.enviarJustificativa}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Header closeButton>
@@ -67,6 +51,7 @@ export class ModalPadrao extends Component {
                       label="Justificativa"
                       placeholder={textAreaPlaceholder}
                       name="justificativa"
+                      required
                       validate={textAreaRequiredAndAtLeastOneCharacter}
                     />
                   </div>
