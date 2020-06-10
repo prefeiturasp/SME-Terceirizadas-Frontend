@@ -156,7 +156,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEscola()
   },
   {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_RECUSADAS}`,
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
     tipoUsuario: usuarioEhEscola()
@@ -217,7 +217,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhDRE()
   },
   {
-    path: `/${constants.DRE}/${constants.SOLICITACOES_RECUSADAS}`,
+    path: `/${constants.DRE}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()

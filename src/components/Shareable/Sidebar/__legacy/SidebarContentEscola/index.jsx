@@ -11,7 +11,7 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
-  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_NEGADAS,
   SUSPENSAO_ALIMENTACAO,
   CONFIGURACOES,
   CADASTROS,
@@ -148,7 +148,7 @@ export class SidebarContentEscola extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
