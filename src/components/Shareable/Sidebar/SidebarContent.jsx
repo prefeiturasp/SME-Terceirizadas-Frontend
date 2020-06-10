@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { RELATORIOS } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
@@ -13,7 +12,8 @@ import {
   MenuDietaEspecial,
   MenuCadastros,
   MenuConfiguracoes,
-  MenuGestaoDeProduto
+  MenuGestaoDeProduto,
+  MenuRelatorios
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -57,10 +57,8 @@ export const SidebarContent = () => {
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
-    <ListItem key={4} icon="fa-file-alt" to={`/${RELATORIOS}/`}>
-      Relatórios
-    </ListItem>,
     exibirCadastros && <MenuCadastros key={5} />,
-    <MenuConfiguracoes key={6} />
+    <MenuRelatorios key={6} />,
+    <MenuConfiguracoes key={8} />
   ];
 };

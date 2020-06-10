@@ -51,6 +51,7 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
+import RelatorioProdutosHomologados from "pages/RelatorioProdutosHomologados";
 
 import * as constants from "./constants";
 import {
@@ -705,6 +706,16 @@ const routesConfig = [
     component: ReclamacaoDeProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
+  },
+  {
+    path: "/relatorio-produtos-homologados",
+    component: RelatorioProdutosHomologados,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola()
   }
 ];
 
