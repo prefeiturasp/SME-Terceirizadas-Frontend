@@ -24,6 +24,7 @@ class RelatorioProduto extends Component {
       prevProps.produto !== this.props.produto
     ) {
       const ultimoHistorico = this.props.produto.ultima_homologacao;
+      ultimoHistorico.logs = ultimoHistorico.logs.reverse();
       this.setState({ historico: ultimoHistorico });
 
       setTimeout(() => {
