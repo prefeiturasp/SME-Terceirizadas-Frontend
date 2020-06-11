@@ -1,7 +1,9 @@
 import HTTP_STATUS from "http-status-codes";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
+
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
@@ -10,6 +12,14 @@ import "./style.scss";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 
 export class ModalPadrao extends Component {
+  propTypes = {
+    labelJustificativa: PropTypes.string
+  };
+
+  defaultProps = {
+    labelJustificativa: "Justificativa"
+  };
+
   enviarJustificativa = async formValues => {
     const { justificativa } = formValues;
     const { uuid, toastSuccessMessage } = this.props;
@@ -27,8 +37,10 @@ export class ModalPadrao extends Component {
     const {
       showModal,
       closeModal,
+      labelJustificativa,
       modalTitle,
-      textAreaPlaceholder
+      textAreaPlaceholder,
+      ...textAreaProps
     } = this.props;
     return (
       <Modal
@@ -48,11 +60,12 @@ export class ModalPadrao extends Component {
                   <div className="col-12">
                     <Field
                       component={TextAreaWYSIWYG}
-                      label="Justificativa"
+                      label={labelJustificativa}
                       placeholder={textAreaPlaceholder}
                       name="justificativa"
                       required
                       validate={textAreaRequiredAndAtLeastOneCharacter}
+                      {...textAreaProps}
                     />
                   </div>
                 </div>

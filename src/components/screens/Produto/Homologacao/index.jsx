@@ -138,6 +138,16 @@ class HomologacaoProduto extends Component {
                 uuid={uuid}
                 loadSolicitacao={this.loadHomologacao}
                 justificativa={justificativa}
+                labelJustificativa={
+                  qualModal === "corrigir"
+                    ? "Informações Adicionais"
+                    : "Justificativa"
+                }
+                helpText={
+                  qualModal === "corrigir"
+                    ? "Solicitamos que seja informado a quantidade e descrição para análise sensorial"
+                    : undefined
+                }
               />
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
