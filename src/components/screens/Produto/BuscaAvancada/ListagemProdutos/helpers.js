@@ -48,7 +48,6 @@ export const retornaProdutosComHomologacoesOrdenadas = produtos => {
     produto["homologacoes"] = ordenaHomologacoesPorData(
       produto["homologacoes"]
     );
-    produto["ultima_homologacao"] = produto["homologacoes"][0];
   });
   return produtos;
 };

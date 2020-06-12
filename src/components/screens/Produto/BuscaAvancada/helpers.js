@@ -14,7 +14,7 @@ const retornaTodosOsLogs = homologacoes => {
     });
   });
 
-  return logs;
+  return logs.reverse();
 };
 
 export const retornaProdutosComUltimaHomolagacao = response => {
@@ -23,8 +23,8 @@ export const retornaProdutosComUltimaHomolagacao = response => {
     produto.homologacoes.forEach(homolog => {
       homologacoes.push(homolog);
     });
-
     produto["status"] = homologacoes[0]["status"];
+    produto["ultima_homologacao"] = homologacoes[0];
 
     produto["todos_logs"] = retornaTodosOsLogs(homologacoes);
 

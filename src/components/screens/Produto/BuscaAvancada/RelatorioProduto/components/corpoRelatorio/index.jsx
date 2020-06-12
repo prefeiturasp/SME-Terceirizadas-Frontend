@@ -5,11 +5,13 @@ import "../styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
 import "antd/dist/antd.css";
 import { Modal } from "antd";
+import { getRelatorioProduto } from "services/relatorios";
 
 export default class CorpoRelatorio extends Component {
   constructor(props) {
@@ -119,6 +121,15 @@ export default class CorpoRelatorio extends Component {
         <article className="flex-botoes-relatorio">
           <Botao
             type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            onClick={() => {
+              getRelatorioProduto(produto);
+            }}
+            className="mr-2"
+          />
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
             texto="historico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={this.showModal}
@@ -142,7 +153,7 @@ export default class CorpoRelatorio extends Component {
         <article>
           <hr />
           <FluxoDeStatus
-            listaDeStatus={historico.logs.reverse()}
+            listaDeStatus={historico.logs}
             fluxo={fluxoPartindoTerceirizada}
           />
           <hr />

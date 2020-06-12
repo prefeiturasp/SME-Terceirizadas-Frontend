@@ -91,6 +91,23 @@ export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
     });
 };
 
+export const getRelatorioProduto = ({ uuid, id_externo }) => {
+  const url = `${API_URL}/produtos/${uuid}/relatorio/`;
+  fetch(url, {
+    method: "GET",
+    headers: authToken,
+    responseType: "blob"
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `relatorio_produto_${id_externo}.pdf`;
+      a.click();
+    });
+};
+
 export const getDetalheInversaoCardapio = uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
   return url;
