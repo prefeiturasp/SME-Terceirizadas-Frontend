@@ -46,6 +46,7 @@
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.16.4",
+    "ramda": "^0.27.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.6",
     "react-burgers": "^1.3.0",

@@ -89,7 +89,7 @@ export class InputFileManaged extends Component {
     } = this.props;
     const files = value === "" ? [] : value;
     return (
-      <div className={`input input-file ${icone && "icon"}`}>
+      <div className={`input input-file`}>
         <input
           accept={accept}
           ref={i => (this.inputRef = i)}

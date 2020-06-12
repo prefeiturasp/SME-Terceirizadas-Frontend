@@ -87,6 +87,7 @@ import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage"
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import ReclamacaoDeProdutoPage from "../pages/Produto/ReclamacaoProduto";
 
 const routesConfig = [
   {
@@ -705,6 +706,12 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhTerceirizada() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
+    component: ReclamacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
   }
 ];
 

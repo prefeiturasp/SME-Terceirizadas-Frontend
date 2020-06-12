@@ -5,10 +5,18 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  ESCOLA,
+  INCLUSAO_ALIMENTACAO,
+  ALTERACAO_CARDAPIO,
+  SOLICITACAO_KIT_LANCHE,
+  INVERSAO_CARDAPIO,
+  SUSPENSAO_ALIMENTACAO
 } from "configs/constants";
+import { usuarioEhEscola } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
+  const exibeMenuNovasSolicitacoes = usuarioEhEscola();
   return (
     <Menu
       id="GestaoAlimentacao"
@@ -16,6 +24,31 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       title={"Gestão de Alimentação"}
     >
       <LeafItem to="/">Painel de Solicitações</LeafItem>
+      {exibeMenuNovasSolicitacoes && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="novas-solicitacoes"
+          onClick={onSubmenuClick}
+          title="Novas Solicitações"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
+            Inclusão de Alimentação
+          </LeafItem>
+          <LeafItem to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}>
+            Alteração de Cardápio
+          </LeafItem>
+          <LeafItem to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}>
+            Kit Lanche Passeio
+          </LeafItem>
+          <LeafItem to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}>
+            Inversão de Dia de Cardápio
+          </LeafItem>
+          <LeafItem to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}>
+            Suspensão de Alimentação
+          </LeafItem>
+        </SubMenu>
+      )}
       <SubMenu
         icon="fa-chevron-down"
         path="consulta-solicitacoes"

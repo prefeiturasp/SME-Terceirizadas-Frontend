@@ -3,15 +3,21 @@ import { Menu, SubMenu, LeafItem } from "./shared";
 import {
   PAINEL_GESTAO_PRODUTO,
   GESTAO_PRODUTO,
-  PESQUISA_DESENVOLVIMENTO
+  PESQUISA_DESENVOLVIMENTO,
+  RECLAMACAO_DE_PRODUTO
 } from "configs/constants";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhEscola,
+  usuarioEhTerceirizada
+} from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
+  const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
@@ -25,6 +31,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       {exibirBusca && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto`}>
           Consulta de Produto
+        </LeafItem>
+      )}
+      {exibirReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}>
+          Reclamação de Produto
         </LeafItem>
       )}
       <SubMenu
