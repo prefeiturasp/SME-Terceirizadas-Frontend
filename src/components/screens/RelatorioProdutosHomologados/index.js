@@ -71,7 +71,9 @@ const RelatorioProdutosHomologados = () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          <h3 className="font-weight-bold">Relatório de Produtos Homologados</h3>
+          <h3 className="font-weight-bold">
+            Relatório de Produtos Homologados
+          </h3>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
