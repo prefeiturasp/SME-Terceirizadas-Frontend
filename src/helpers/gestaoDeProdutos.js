@@ -10,7 +10,8 @@ const {
   CODAE_PEDIU_ANALISE_SENSORIAL,
   CODAE_PENDENTE_HOMOLOGACAO,
   CODAE_HOMOLOGADO,
-  CODAE_NAO_HOMOLOGADO
+  CODAE_NAO_HOMOLOGADO,
+  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 const CARD_RECLAMACAO_DE_PRODUTO = {
@@ -52,7 +53,7 @@ const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   icon: "fa-history",
   style: "card-awaiting-complain",
   rota: ROTA.AGUARDANDO_ANALISE_RECLAMACAO,
-  incluir_status: [CODAE_QUESTIONADO]
+  incluir_status: [ESCOLA_OU_NUTRICIONISTA_RECLAMOU]
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
@@ -69,7 +70,7 @@ const CARD_PENDENTE_HOMOLOGACAO = {
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.SOLICITACOES_PENDENTE_HOMOLOGACAO,
-  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO]
+  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO, CODAE_QUESTIONADO]
 };
 
 const CARD_CORRECAO_DE_PRODUTO = {
@@ -116,10 +117,12 @@ export const listarCardsPermitidos = () => {
       CARD_NAO_HOMOLOGADOS
     ];
   }
+  const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
+  cardHomologados.incluir_status.push(ESCOLA_OU_NUTRICIONISTA_RECLAMOU);
   return [
     CARD_RECLAMACAO_DE_PRODUTO,
     CARD_PRODUTOS_SUSPENSOS,
     CARD_NAO_HOMOLOGADOS,
-    CARD_HOMOLOGADOS
+    cardHomologados
   ];
 };
