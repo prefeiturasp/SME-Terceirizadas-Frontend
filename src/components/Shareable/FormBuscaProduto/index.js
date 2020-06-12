@@ -91,7 +91,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
           <Row gutter={[16, 16]}>
-            <Col md={24} lg={16}>
+            <Col md={24} lg={12} xl={16}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.terceirizadas}
@@ -100,7 +100,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_terceirizada"
               />
             </Col>
-            <Col md={24} lg={4}>
+            <Col md={24} lg={6} xl={4}>
               <Field
                 component={InputComData}
                 label="Início do Período"
@@ -109,7 +109,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 minDate={null}
               />
             </Col>
-            <Col md={24} lg={4}>
+            <Col md={24} lg={6} xl={4}>
               <Field
                 component={InputComData}
                 label={"Até"}
