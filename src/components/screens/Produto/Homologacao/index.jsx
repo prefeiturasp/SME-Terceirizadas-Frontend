@@ -139,12 +139,12 @@ class HomologacaoProduto extends Component {
                 loadSolicitacao={this.loadHomologacao}
                 justificativa={justificativa}
                 labelJustificativa={
-                  qualModal === "corrigir"
+                  qualModal === "analise"
                     ? "Informações Adicionais"
                     : "Justificativa"
                 }
                 helpText={
-                  qualModal === "corrigir"
+                  qualModal === "analise"
                     ? "Solicitamos que seja informado a quantidade e descrição para análise sensorial"
                     : undefined
                 }
