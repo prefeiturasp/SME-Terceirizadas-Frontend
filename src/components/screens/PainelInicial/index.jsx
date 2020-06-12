@@ -10,21 +10,28 @@ import {
   usuarioEhTerceirizada,
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAEDietaEspecial,
   usuarioEhDRE
 } from "helpers/utilities";
 
 const PainelInicial = ({ history }) => {
   return (
     <Row className="mt-3" gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-        <CardLogo
-          titulo={"Gestão de Alimentação"}
-          onClick={() => history.push("/painel-gestao-alimentacao")}
-        >
-          <IconeGestaoDeAlimentacao />
-        </CardLogo>
-      </Col>
       {(usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhTerceirizada() ||
+        usuarioEhDRE() ||
+        usuarioEhEscola()) && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Gestão de Alimentação"}
+            onClick={() => history.push("/painel-gestao-alimentacao")}
+          >
+            <IconeGestaoDeAlimentacao />
+          </CardLogo>
+        </Col>
+      )}
+      {(usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhCODAEDietaEspecial() ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscola()) && (
