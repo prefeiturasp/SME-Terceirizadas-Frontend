@@ -19,7 +19,6 @@ export const DRE = "dre";
 export const ESCOLA = "escola";
 export const ALUNO = "aluno";
 
-export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
