@@ -71,7 +71,7 @@ const RelatorioProdutosHomologados = () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          <h3 className="font-weight-bold">Relatório de Produto</h3>
+          <h3 className="font-weight-bold">Relatório de Produtos Homologados</h3>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
@@ -106,14 +106,6 @@ const RelatorioProdutosHomologados = () => {
         </section>
 
         <section className="m-3">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            titulo="imprimir"
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right ml-2"
-          />
           <Botao
             texto="voltar"
             titulo="voltar"
