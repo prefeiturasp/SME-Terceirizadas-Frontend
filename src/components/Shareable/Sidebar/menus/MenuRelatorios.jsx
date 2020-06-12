@@ -12,7 +12,7 @@ const MenuRelatorios = () => {
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
-      <LeafItem to={`/${RELATORIOS}/`}>Relatórios</LeafItem>,
+      <LeafItem to={`/${RELATORIOS}/`}>Relatórios</LeafItem>
       {exibirProdutosHomologados && (
         <LeafItem to={`/relatorio-produtos-homologados`}>
           Produtos Homologados

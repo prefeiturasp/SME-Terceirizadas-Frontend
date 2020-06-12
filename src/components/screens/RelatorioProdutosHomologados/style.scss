@@ -1,0 +1,48 @@
+.page-relatorio-produtos-homologados {
+  .header-busca-produto {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin-bottom: 20px;
+  }
+}
+
+.tabela-produtos-homologados {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
+}
+
+.tabela-header-produtos-homologados {
+  background: #f5f6f8;
+  height: 48px;
+
+  div {
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #42474a;
+    border: 1px solid #e9eaea;
+  }
+}
+
+.tabela-body-produtos-homologados {
+  height: 48px;
+}
+
+.item-produtos-homologados > div {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 5px 10px;
+
+  display: flex;
+  align-items: center;
+
+  color: #686868;
+
+  border: 1px solid #e9eaea;
+}

@@ -51,7 +51,7 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
-import RelatorioProdutosHomologados from "pages/RelatorioProdutosHomologados";
+import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 
 import * as constants from "./constants";
 import {
@@ -709,7 +709,7 @@ const routesConfig = [
   },
   {
     path: "/relatorio-produtos-homologados",
-    component: RelatorioProdutosHomologados,
+    component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
