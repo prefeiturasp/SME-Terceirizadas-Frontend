@@ -712,10 +712,7 @@ const routesConfig = [
     component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhTerceirizada() ||
-      usuarioEhEscola()
+      usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
   }
 ];
 

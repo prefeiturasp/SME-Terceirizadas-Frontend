@@ -43,7 +43,7 @@ export const Menu = ({ id, title, icon, children }) => (
   <li className="nav-item">
     <Link
       className={`nav-link collapsed`}
-      href="#teste"
+      to="#"
       data-toggle="collapse"
       data-target={`#collapse${id}`}
       aria-expanded="false"

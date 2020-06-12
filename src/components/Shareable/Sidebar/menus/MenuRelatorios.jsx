@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import { PERFIL } from "constants/shared";
-import { RELATORIOS } from "configs/constants";
 
 const MenuRelatorios = () => {
   const exibirProdutosHomologados = [
@@ -12,7 +11,6 @@ const MenuRelatorios = () => {
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
-      <LeafItem to={`/${RELATORIOS}/`}>Relatórios</LeafItem>
       {exibirProdutosHomologados && (
         <LeafItem to={`/relatorio-produtos-homologados`}>
           Produtos Homologados

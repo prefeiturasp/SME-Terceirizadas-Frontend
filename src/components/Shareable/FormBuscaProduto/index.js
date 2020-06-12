@@ -1,28 +1,36 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
+import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import "./style.scss";
 
 import {
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes
+  getNomesFabricantes,
+  getNomesTerceirizadas
 } from "services/produto.service";
 
 const initialState = {
   dados: {},
+  terceirizadas: [],
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
+  inicio: ""
 };
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
+    case "atualizarInicio":
+      return { ...state, inicio: payload };
     case "popularDados":
       return { ...state, dados: payload };
     case "atualizarFiltro": {
@@ -48,14 +56,18 @@ const FormBuscaProduto = ({ onSubmit }) => {
       Promise.all([
         getNomesProdutos(),
         getNomesMarcas(),
-        getNomesFabricantes()
-      ]).then(([produtos, marcas, fabricantes]) => {
+        getNomesFabricantes(),
+        getNomesTerceirizadas()
+      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
         dispatch({
           type: "popularDados",
           payload: {
             produtos: produtos.data.results.map(el => el.nome),
             marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
+            fabricantes: fabricantes.data.results.map(el => el.nome),
+            terceirizadas: terceirizadas.data.results.map(
+              el => el.nome_fantasia
+            )
           }
         });
       });
@@ -76,8 +88,41 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, submitting }) => (
+      render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+          <Row gutter={[16, 16]}>
+            <Col md={24} lg={16}>
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.terceirizadas}
+                label="Nome da terceirizada"
+                onSearch={v => onSearch("terceirizadas", v)}
+                name="nome_terceirizada"
+              />
+            </Col>
+            <Col md={24} lg={4}>
+              <Field
+                component={InputComData}
+                label="Início do Período"
+                name="data_inicial"
+                labelClassName="datepicker-fixed-padding"
+                minDate={null}
+              />
+            </Col>
+            <Col md={24} lg={4}>
+              <Field
+                component={InputComData}
+                label={"Até"}
+                name="data_final"
+                labelClassName="datepicker-fixed-padding"
+                minDate={
+                  values.data_inicial
+                    ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                    : null
+                }
+              />
+            </Col>
+          </Row>
           <Row>
             <Col>
               <Field
@@ -95,6 +140,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
+                className="input-busca-produto"
                 label="Marca do Produto"
                 onSearch={v => onSearch("marcas", v)}
                 name="nome_marca"
