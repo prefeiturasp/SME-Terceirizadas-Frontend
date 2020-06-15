@@ -4,13 +4,15 @@ import {
   PAINEL_GESTAO_PRODUTO,
   GESTAO_PRODUTO,
   PESQUISA_DESENVOLVIMENTO,
-  RECLAMACAO_DE_PRODUTO
+  RECLAMACAO_DE_PRODUTO,
+  ATIVACAO_DE_PRODUTO
 } from "configs/constants";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
-  usuarioEhTerceirizada
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -18,6 +20,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
+  const exibirAtivacao = usuarioEhCODAEGestaoProduto;
+
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
@@ -36,6 +40,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       {exibirReclamacao && (
         <LeafItem to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}>
           Reclamação de Produto
+        </LeafItem>
+      )}
+      {exibirAtivacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}`}>
+          Ativar/Suspender Produto
         </LeafItem>
       )}
       <SubMenu
