@@ -71,7 +71,9 @@ const RelatorioProdutosHomologados = () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          <h3 className="font-weight-bold">Relatório de Produtos Homologados</h3>
+          <h3 className="font-weight-bold">
+            Relatório de Produtos Homologados
+          </h3>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
@@ -92,7 +94,7 @@ const RelatorioProdutosHomologados = () => {
       >
         <section className="m-3">
           <h4 className="font-weight-normal text-secondary">
-            Relatório de Produto
+            Relatório de Produtos Homologados
           </h4>
           <p className="text-black font-weight-bold mb-1">
             {`Resultados da busca${

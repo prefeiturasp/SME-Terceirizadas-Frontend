@@ -89,7 +89,10 @@ const FormBuscaProduto = ({ onSubmit }) => {
     <Form
       onSubmit={onSubmit}
       render={({ form, handleSubmit, submitting, values }) => (
-        <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+        <form
+          onSubmit={handleSubmit}
+          className="busca-produtos-formulario-shared"
+        >
           <Row gutter={[16, 16]}>
             <Col md={24} lg={12} xl={16}>
               <Field
@@ -115,6 +118,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 label={"Até"}
                 name="data_final"
                 labelClassName="datepicker-fixed-padding"
+                popperPlacement="bottom-end"
                 minDate={
                   values.data_inicial
                     ? moment(values.data_inicial, "DD/MM/YYYY")._d
