@@ -14,8 +14,6 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-import { usuarioEhCODAEDietaEspecial } from "helpers/utilities";
-
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
 
 import "./style.scss";
@@ -40,9 +38,9 @@ export default class ModalReclamacaoProduto extends Component {
 
   getDadosIniciais = () => {
     const meusDados = this.state.meusDados;
-    return meusDados && usuarioEhCODAEDietaEspecial()
+    return meusDados
       ? {
-          reclamante_registro_funcional: meusDados.crn_numero,
+          reclamante_registro_funcional: meusDados.registro_funcional,
           reclamante_nome: meusDados.nome
         }
       : {};
@@ -96,7 +94,7 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="RF/CRN/CRF"
                       name="reclamante_registro_funcional"
-                      disabled={usuarioEhCODAEDietaEspecial()}
+                      disabled={true}
                       required
                       validate={required}
                     />
@@ -117,7 +115,7 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="Nome"
                       name="reclamante_nome"
-                      disabled={usuarioEhCODAEDietaEspecial()}
+                      disabled={true}
                       required
                       validate={required}
                     />
