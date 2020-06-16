@@ -3,7 +3,7 @@ import { Spin } from "antd";
 import { getProdutosPorParametros } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
+import FormBuscaProduto from "./FormBuscaProduto";
 import "./style.scss";
 
 // FIXME: remove test data
