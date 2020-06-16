@@ -48,7 +48,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit }) => {
+const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -176,6 +176,14 @@ const FormBuscaProduto = ({ onSubmit }) => {
               className="float-right ml-3"
               disabled={submitting}
             />
+            {!!exibirBotaoVoltar && (
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                texto={"Voltar"}
+                style={BUTTON_STYLE.BLUE_OUTLINE}
+                onClick={() => history.goBack()}
+              />
+            )}
           </div>
         </form>
       )}
