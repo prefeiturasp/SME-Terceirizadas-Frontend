@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import moment from "moment";
@@ -17,6 +17,7 @@ import {
   getNomesFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
+import { SelectWithHideOptions } from "../SelectWithHideOptions";
 
 const initialState = {
   dados: {},
@@ -24,6 +25,7 @@ const initialState = {
   produtos: [],
   marcas: [],
   fabricantes: [],
+  status: [],
   inicio: ""
 };
 
@@ -48,9 +50,13 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit }) => {
+export const FormBuscaProduto = ({
+  onSubmit,
+  naoExibirRowTerceirizadas,
+  statusSelect
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [status_, setStatus] = useState([]);
   useEffect(() => {
     async function fetchData() {
       Promise.all([
@@ -93,40 +99,42 @@ const FormBuscaProduto = ({ onSubmit }) => {
           onSubmit={handleSubmit}
           className="busca-produtos-formulario-shared"
         >
-          <Row gutter={[16, 16]}>
-            <Col md={24} lg={12} xl={16}>
-              <Field
-                component={AutoCompleteField}
-                dataSource={state.terceirizadas}
-                label="Nome da terceirizada"
-                onSearch={v => onSearch("terceirizadas", v)}
-                name="nome_terceirizada"
-              />
-            </Col>
-            <Col md={24} lg={6} xl={4}>
-              <Field
-                component={InputComData}
-                label="Início do Período"
-                name="data_inicial"
-                labelClassName="datepicker-fixed-padding"
-                minDate={null}
-              />
-            </Col>
-            <Col md={24} lg={6} xl={4}>
-              <Field
-                component={InputComData}
-                label={"Até"}
-                name="data_final"
-                labelClassName="datepicker-fixed-padding"
-                popperPlacement="bottom-end"
-                minDate={
-                  values.data_inicial
-                    ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                    : null
-                }
-              />
-            </Col>
-          </Row>
+          {!naoExibirRowTerceirizadas && (
+            <Row gutter={[16, 16]}>
+              <Col md={24} lg={12} xl={16}>
+                <Field
+                  component={AutoCompleteField}
+                  dataSource={state.terceirizadas}
+                  label="Nome da terceirizada"
+                  onSearch={v => onSearch("terceirizadas", v)}
+                  name="nome_terceirizada"
+                />
+              </Col>
+              <Col md={24} lg={6} xl={4}>
+                <Field
+                  component={InputComData}
+                  label="Início do Período"
+                  name="data_inicial"
+                  labelClassName="datepicker-fixed-padding"
+                  minDate={null}
+                />
+              </Col>
+              <Col md={24} lg={6} xl={4}>
+                <Field
+                  component={InputComData}
+                  label={"Até"}
+                  name="data_final"
+                  labelClassName="datepicker-fixed-padding"
+                  popperPlacement="bottom-end"
+                  minDate={
+                    values.data_inicial
+                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                      : null
+                  }
+                />
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
               <Field
@@ -140,7 +148,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
-            <Col md={24} lg={12}>
+            <Col md={24} lg={statusSelect ? 8 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
@@ -150,7 +158,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_marca"
               />
             </Col>
-            <Col md={24} lg={12}>
+            <Col md={24} lg={statusSelect ? 8 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
@@ -159,6 +167,21 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_fabricante"
               />
             </Col>
+            {statusSelect && (
+              <Col md={24} lg={8}>
+                <div className="pb-1">
+                  <label>Status</label>
+                </div>
+                <Field
+                  component={SelectWithHideOptions}
+                  mode="default"
+                  options={["a", "b"]}
+                  name="status"
+                  handleChange={setStatus}
+                  selectedItems={status_}
+                />
+              </Col>
+            )}
           </Row>
           <div className="mt-4 mb-4">
             <Botao

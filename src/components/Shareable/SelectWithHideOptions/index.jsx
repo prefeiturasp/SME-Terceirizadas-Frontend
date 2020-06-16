@@ -13,12 +13,13 @@ export class SelectWithHideOptions extends React.Component {
       handleChange,
       selectedItems,
       onSelect,
-      onDeselect
+      onDeselect,
+      mode
     } = this.props;
     const filteredOptions = options.filter(o => !selectedItems.includes(o));
     return (
       <Select
-        mode="multiple"
+        mode={mode || "multiple"}
         placeholder={placeholder}
         value={selectedItems}
         onChange={handleChange}
