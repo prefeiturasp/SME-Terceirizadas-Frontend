@@ -8,6 +8,7 @@ export class SelectWithHideOptions extends React.Component {
 
   render() {
     const {
+      input,
       options,
       placeholder,
       handleChange,
@@ -26,6 +27,8 @@ export class SelectWithHideOptions extends React.Component {
         style={{ width: "100%" }}
         onSelect={onSelect}
         onDeselect={onDeselect}
+        {...this.props}
+        {...input}
       >
         {filteredOptions.map(item => (
           <Select.Option key={item} value={item}>

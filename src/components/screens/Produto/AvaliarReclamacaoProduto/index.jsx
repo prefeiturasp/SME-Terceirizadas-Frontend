@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
+import "./style.scss";
+import { getProdutosPorParametros } from "services/produto.service";
+import { TabelaProdutos } from "./TabelaProdutos";
 
 export const AvaliarReclamacaoProduto = () => {
-  const onSubmit = () => {};
+  const [produtos, setProdutos] = useState(null);
+
+  const onSubmit = async values => {
+    const response = await getProdutosPorParametros(values);
+    setProdutos(response.data.results);
+  };
 
   return (
-    <div className="card">
+    <div className="card avaliar-reclamacao-produto">
       <div className="card-body">
+        <h2>
+          Consulte cadastro completo de produto antes de avaliar reclamação
+        </h2>
         <FormBuscaProduto
-          onSubmit={onSubmit}
           naoExibirRowTerceirizadas
+          onSubmit={onSubmit}
           statusSelect
         />
+        <TabelaProdutos produtos={produtos} />
       </div>
     </div>
   );

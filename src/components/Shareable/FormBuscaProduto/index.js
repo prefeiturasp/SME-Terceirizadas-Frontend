@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import moment from "moment";
@@ -18,6 +18,7 @@ import {
   getNomesTerceirizadas
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
+import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
 
 const initialState = {
   dados: {},
@@ -25,7 +26,7 @@ const initialState = {
   produtos: [],
   marcas: [],
   fabricantes: [],
-  status: [],
+  status: "",
   inicio: ""
 };
 
@@ -56,27 +57,30 @@ export const FormBuscaProduto = ({
   statusSelect
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [status_, setStatus] = useState([]);
   useEffect(() => {
+    const endpoints = [
+      getNomesProdutos(),
+      getNomesMarcas(),
+      getNomesFabricantes()
+    ];
+    if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
-      Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes(),
-        getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
-        dispatch({
-          type: "popularDados",
-          payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
-            terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
-            )
-          }
-        });
-      });
+      Promise.all(endpoints).then(
+        ([produtos, marcas, fabricantes, terceirizadas]) => {
+          dispatch({
+            type: "popularDados",
+            payload: {
+              produtos: produtos.data.results.map(el => el.nome),
+              marcas: marcas.data.results.map(el => el.nome),
+              fabricantes: fabricantes.data.results.map(el => el.nome),
+              terceirizadas:
+                terceirizadas &&
+                terceirizadas.data.results.map(el => el.nome_fantasia),
+              status: STATUS_RECLAMACAO_PRODUTO
+            }
+          });
+        }
+      );
     }
     fetchData();
   }, []);
@@ -175,10 +179,10 @@ export const FormBuscaProduto = ({
                 <Field
                   component={SelectWithHideOptions}
                   mode="default"
-                  options={["a", "b"]}
-                  name="status"
-                  handleChange={setStatus}
-                  selectedItems={status_}
+                  options={STATUS_RECLAMACAO_PRODUTO}
+                  name="nome_status"
+                  handleChange={v => onSearch("status", v)}
+                  selectedItems={state.status}
                 />
               </Col>
             )}
