@@ -9,17 +9,17 @@ import {
 } from "configs/constants";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
-  usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
-  usuarioEhTerceirizada
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
-  const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
-  const exibirAvaliarReclamacao = usuarioEhTerceirizada();
+  const exibirReclamacao = usuarioEhCODAEGestaoProduto() || usuarioEhEscola();
+  const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>

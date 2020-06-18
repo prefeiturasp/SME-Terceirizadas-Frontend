@@ -1,5 +1,48 @@
+@import "styles/variables.scss";
+
 div.tabela-lista-produtos {
   table {
+    font-size: 14px;
     width: 100%;
+    border-radius: 4px;
+    border: 1px solid #e9eaea;
+    thead {
+      background: #f5f6f8;
+      border: 1px solid #e9eaea;
+      color: $blackInput;
+      tr {
+        th {
+          padding: 10px;
+          &:not(:last-child) {
+            border-right: 1px solid #e9eaea;
+          }
+          &:first-child {
+            padding-left: 2em;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          color: $gray;
+          padding: 10px;
+          &:not(:last-child) {
+            border-right: 1px solid #e9eaea;
+          }
+          &:first-child {
+            padding-left: 2em;
+          }
+          i {
+            cursor: pointer;
+            margin-left: 1em;
+          }
+        }
+      }
+    }
+    div.produto-exibir {
+      border-top: 1px solid #e9eaea;
+      padding-left: 1em;
+    }
   }
 }

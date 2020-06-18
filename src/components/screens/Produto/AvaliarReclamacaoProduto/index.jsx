@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
-import "./style.scss";
-import { getProdutosPorParametros } from "services/produto.service";
+import { getProdutosPorParametrosGenerico } from "services/produto.service";
 import { TabelaProdutos } from "./TabelaProdutos";
+import { deepCopy } from "helpers/utilities";
+import { formatarValues } from "./helpers";
+import "./style.scss";
 
 export const AvaliarReclamacaoProduto = () => {
   const [produtos, setProdutos] = useState(null);
 
   const onSubmit = async values => {
-    const response = await getProdutosPorParametros(values);
+    const values_ = deepCopy(values);
+    const response = await getProdutosPorParametrosGenerico(
+      formatarValues(values_)
+    );
     setProdutos(response.data.results);
+  };
+
+  const exibirDadosProduto = key => {
+    const produtos_ = deepCopy(produtos);
+    produtos_[key].exibir = !produtos_[key].exibir;
+    setProdutos(produtos_);
   };
 
   return (
@@ -23,7 +34,10 @@ export const AvaliarReclamacaoProduto = () => {
           onSubmit={onSubmit}
           statusSelect
         />
-        <TabelaProdutos produtos={produtos} />
+        <TabelaProdutos
+          produtos={produtos}
+          exibirDadosProduto={exibirDadosProduto}
+        />
       </div>
     </div>
   );

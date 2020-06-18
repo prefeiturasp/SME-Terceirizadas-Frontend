@@ -82,6 +82,13 @@ export const getProdutosPorFabricante = async nomeFabricante => {
 };
 
 export const getProdutosPorParametros = async parametros => {
+  return await axios.post(
+    `/produtos/filtro-homologados-por-parametros/`,
+    parametros
+  );
+};
+
+export const getProdutosPorParametrosGenerico = async parametros => {
   return await axios.post(`/produtos/filtro-por-parametros/`, parametros);
 };
 

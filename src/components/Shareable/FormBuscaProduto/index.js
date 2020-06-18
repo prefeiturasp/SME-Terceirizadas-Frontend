@@ -180,7 +180,7 @@ export const FormBuscaProduto = ({
                   component={SelectWithHideOptions}
                   mode="default"
                   options={STATUS_RECLAMACAO_PRODUTO}
-                  name="nome_status"
+                  name="status"
                   handleChange={v => onSearch("status", v)}
                   selectedItems={state.status}
                 />
