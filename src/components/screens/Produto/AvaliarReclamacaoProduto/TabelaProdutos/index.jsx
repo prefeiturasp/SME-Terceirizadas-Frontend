@@ -1,13 +1,9 @@
 import React, { Fragment, useState } from "react";
 import "./style.scss";
 import { NOME_STATUS } from "./helpers";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "components/Shareable/Botao/constants";
 import { DadosReclamacaoProduto } from "./components/DadosReclamacao";
 import { DadosProduto } from "./components/DadosProduto";
+import { Botoes } from "./components/Botoes";
 
 export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
   const [verProduto, setVerProduto] = useState(false);
@@ -51,35 +47,16 @@ export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
                 </tr>,
                 produto.exibir && (
                   <Fragment>
-                    <DadosReclamacaoProduto produto={produto} />
+                    <DadosReclamacaoProduto
+                      produto={produto}
+                      verProduto={verProduto}
+                      setVerProduto={setVerProduto}
+                    />
                     {verProduto && <DadosProduto produto={produto} />}
-                    <div className="row mb-3">
-                      <div className="col-12 text-right">
-                        <Botao
-                          onClick={() => setVerProduto(!verProduto)}
-                          texto={verProduto ? "Voltar" : "Ver produto"}
-                          style={
-                            verProduto ? BUTTON_STYLE.BLUE : BUTTON_STYLE.GREEN
-                          }
-                          icon={verProduto && BUTTON_ICON.ARROW_LEFT}
-                        />
-                        <Botao
-                          className="ml-3"
-                          texto="Questionar terceirizada"
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                        <Botao
-                          className="ml-3"
-                          texto="Recusar"
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                        <Botao
-                          className="ml-3 mr-3"
-                          texto="Aceitar"
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                      </div>
-                    </div>
+                    <Botoes
+                      verProduto={verProduto}
+                      setVerProduto={setVerProduto}
+                    />
                   </Fragment>
                 )
               ];

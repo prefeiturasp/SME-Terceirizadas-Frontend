@@ -1,8 +1,18 @@
 import React from "react";
+import { Botoes } from "../Botoes";
 
-export const DadosReclamacaoProduto = ({ produto }) => {
+export const DadosReclamacaoProduto = ({
+  produto,
+  verProduto,
+  setVerProduto
+}) => {
   return (
     <div className="produto-exibir">
+      {verProduto && (
+        <div className="mt-3">
+          <Botoes verProduto={verProduto} setVerProduto={setVerProduto} />
+        </div>
+      )}
       <div className="row">
         <div className="col-5 report-label-value">
           <p>Empresa solicitante (Terceirizada)</p>
@@ -88,7 +98,7 @@ export const DadosReclamacaoProduto = ({ produto }) => {
                     rel="noopener noreferrer"
                     target="_blank"
                     href={anexo.arquivo}
-                    className="link"
+                    className="link font-weight-bold"
                   >
                     {`Anexo ${key + 1}`}
                   </a>
