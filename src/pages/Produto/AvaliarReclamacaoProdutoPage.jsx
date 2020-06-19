@@ -2,13 +2,13 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import {
-  PESQUISA_DESENVOLVIMENTO,
-  AVALIAR_RECLAMACAO_PRODUTO
+  AVALIAR_RECLAMACAO_PRODUTO,
+  GESTAO_PRODUTO
 } from "../../configs/constants";
 import { AvaliarReclamacaoProduto } from "components/screens/Produto/AvaliarReclamacaoProduto";
 
 const atual = {
-  href: `/${PESQUISA_DESENVOLVIMENTO}/${AVALIAR_RECLAMACAO_PRODUTO}`,
+  href: `/${GESTAO_PRODUTO}/${AVALIAR_RECLAMACAO_PRODUTO}`,
   titulo: "Avaliar Reclamação de Produto"
 };
 
