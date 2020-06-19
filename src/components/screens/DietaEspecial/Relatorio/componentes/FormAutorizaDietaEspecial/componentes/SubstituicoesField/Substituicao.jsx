@@ -1,36 +1,15 @@
 import React, { Component } from "react";
 import MultiSelect from "./MultiSelect";
 import { Field } from "redux-form";
-
-import Select from "../../../../../../../Shareable/Select";
-import Botao from "../../../../../../../Shareable/Botao";
+import SelectSelecione from "components/Shareable/SelectSelecione";
+import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_ICON
-} from "../../../../../../../Shareable/Botao/constants";
-import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
+} from "components/Shareable/Botao/constants";
+import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
 
 import "./style.scss";
-
-const SelectSelecione = props => {
-  const {
-    input: { onChange, value },
-    options,
-    ...rest
-  } = props;
-  return (
-    <Select
-      naoDesabilitarPrimeiraOpcao={value !== undefined}
-      options={
-        value === ""
-          ? [{ uuid: "0", nome: "Selecione..." }].concat(options)
-          : options
-      }
-      input={{ value: value || "0", onChange }}
-      {...rest}
-    />
-  );
-};
 
 export default class SubstituicoesField extends Component {
   render() {

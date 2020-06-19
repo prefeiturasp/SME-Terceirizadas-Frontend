@@ -7,7 +7,6 @@ import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
   return (
     <div className="tabela-lista-produtos">
-      {!produtos && <div>Nenhum resultado encontrado.</div>}
       {produtos && (
         <table>
           <thead>
@@ -19,6 +18,9 @@ export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
             </tr>
           </thead>
           <tbody>
+            {produtos.length === 0 && (
+              <div className="p-3">Nenhum resultado encontrado.</div>
+            )}
             {produtos.map((produto, key) => {
               return [
                 <tr className="row" key={key}>

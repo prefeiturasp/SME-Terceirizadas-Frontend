@@ -88,8 +88,8 @@ export const getProdutosPorParametros = async parametros => {
   );
 };
 
-export const getProdutosPorParametrosGenerico = async parametros => {
-  return await axios.post(`/produtos/filtro-por-parametros/`, parametros);
+export const getProdutosPorFiltro = async filtro => {
+  return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
 };
 
 export const getProtocolosDietaEspecial = async () => {
@@ -283,4 +283,19 @@ export const escolaOuNutriReclamaDoProduto = async (uuid, payload) => {
     `/homologacoes-produtos/${uuid}/escola-ou-nutri-reclama/`,
     payload
   );
+};
+
+export const ativarProduto = async (uuid, payload) => {
+  return await axios.patch(`/homologacoes-produtos/${uuid}/ativar/`, payload);
+};
+
+export const suspenderProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/suspender/`,
+    payload
+  );
+};
+
+export const getNumeroProtocoloAnaliseSensorial = async () => {
+  return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
 };

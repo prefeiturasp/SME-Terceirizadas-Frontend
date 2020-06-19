@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
-import { getProdutosPorParametrosGenerico } from "services/produto.service";
+import { getProdutosPorFiltro } from "services/produto.service";
 import { TabelaProdutos } from "./TabelaProdutos";
 import { deepCopy } from "helpers/utilities";
 import { formatarValues } from "./helpers";
@@ -11,9 +11,7 @@ export const AvaliarReclamacaoProduto = () => {
 
   const onSubmit = async values => {
     const values_ = deepCopy(values);
-    const response = await getProdutosPorParametrosGenerico(
-      formatarValues(values_)
-    );
+    const response = await getProdutosPorFiltro(formatarValues(values_));
     setProdutos(response.data.results);
   };
 

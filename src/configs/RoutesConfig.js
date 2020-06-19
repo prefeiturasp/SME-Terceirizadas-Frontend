@@ -89,7 +89,11 @@ import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProd
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
-import ReclamacaoDeProdutoPage from "../pages/Produto/ReclamacaoProduto";
+import {
+  ReclamacaoDeProdutoPage,
+  ConsultaAtivacaoDeProdutoPage,
+  AtivacaoDeProdutoPage
+} from "../pages/Produto";
 
 const routesConfig = [
   {
@@ -722,6 +726,22 @@ const routesConfig = [
     component: ReclamacaoDeProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/consulta`,
+    component: ConsultaAtivacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/detalhe`,
+    component: AtivacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto
   },
   {
     path: "/relatorio-produtos-homologados",
