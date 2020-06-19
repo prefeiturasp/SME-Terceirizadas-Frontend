@@ -20,7 +20,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
-  const exibirAtivacao = usuarioEhCODAEGestaoProduto;
+  const exibirAtivacao = usuarioEhCODAEGestaoProduto()
+  const exibirResponderReclamacao = usuarioEhTerceirizada()
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
@@ -45,6 +46,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       {exibirAtivacao && (
         <LeafItem to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/consulta`}>
           Suspensão/Ativação do Produto
+        </LeafItem>
+      )}
+      {exibirResponderReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/responder-reclamacao/consulta`}>
+          Responder Reclamação
         </LeafItem>
       )}
       <SubMenu

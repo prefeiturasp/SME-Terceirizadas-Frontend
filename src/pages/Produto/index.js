@@ -52,3 +52,31 @@ export const AtivacaoDeProdutoPage = () => {
     </Page>
   );
 };
+
+export const ConsultaResponderReclamacaoPage = () => {
+  const atual = {
+    href: `/${GESTAO_PRODUTO}/responder-reclamacao/consulta`,
+    titulo: "Responder reclamação de produto"
+  };
+
+  return (
+    <Page titulo={atual.titulo}>
+      <Breadcrumb home={"/"} atual={atual} />
+      <div></div>
+    </Page>
+  );
+};
+
+export const ResponderReclamacaoPage = () => {
+  const atual = {
+    href: `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
+    titulo: "Responder reclamação de produto"
+  };
+
+  return (
+    <Page titulo={atual.titulo}>
+      <Breadcrumb home={"/"} atual={atual} />
+      <div></div>
+    </Page>
+  );
+};
