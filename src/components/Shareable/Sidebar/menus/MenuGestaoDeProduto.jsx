@@ -43,8 +43,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
       {exibirAtivacao && (
-        <LeafItem to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}`}>
-          Ativar/Suspender Produto
+        <LeafItem to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/consulta`}>
+          Suspensão/Ativação do Produto
         </LeafItem>
       )}
       <SubMenu

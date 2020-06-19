@@ -90,6 +90,7 @@ import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicit
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 import {
   ReclamacaoDeProdutoPage,
+  ConsultaAtivacaoDeProdutoPage,
   AtivacaoDeProdutoPage
 } from "../pages/Produto";
 
@@ -718,7 +719,17 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
   },
   {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}`,
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/consulta`,
+    component: ConsultaAtivacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/detalhe`,
     component: AtivacaoDeProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto

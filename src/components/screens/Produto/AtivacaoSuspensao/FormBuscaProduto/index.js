@@ -1,13 +1,15 @@
 import React, { useEffect, useReducer } from "react";
+import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 import {
   getNomesProdutos,
   getNomesMarcas,
@@ -38,7 +40,8 @@ function reducer(state, { type: actionType, payload }) {
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
-      throw new Error("Invalid action type: ", actionType);
+      // eslint-disable-next-line no-console
+      console.error("Invalid action type: ", actionType);
   }
 }
 
@@ -86,6 +89,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 component={AutoCompleteField}
                 dataSource={state.produtos}
                 label="Nome do Produto"
+                placeholder="Digite nome do produto"
                 className="input-busca-produto"
                 onSearch={v => onSearch("produtos", v)}
                 name="nome_produto"
@@ -99,6 +103,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 dataSource={state.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
+                placeholder="Digite marca do produto"
                 onSearch={v => onSearch("marcas", v)}
                 name="nome_marca"
               />
@@ -108,21 +113,21 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
+                placeholder="Digite fabricante do produto"
                 onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </Col>
             <Col md={24} lg={6}>
               <div className="">
-                <label className="mb-1">Status</label>
                 <Field
-                  component={SelectWithHideOptions}
-                  options={state.status}
+                  component={SelectSelecione}
+                  label="Status"
                   name="status"
-                  selectedItems={[]}
-                  handleChange={() => {}}
-                  onSelect={() => {}}
-                  onDeselect={() => {}}
+                  options={[
+                    { nome: "Ativo", uuid: "ativo" },
+                    { nome: "Suspenso", uuid: "suspenso" }
+                  ]}
                 />
               </div>
             </Col>
@@ -135,20 +140,14 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
               className="float-right ml-3"
               disabled={submitting}
             />
-            <Botao
-              texto="Limpar Filtros"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              onClick={() => form.reset()}
-              className="float-right ml-3"
-              disabled={submitting}
-            />
             {!!exibirBotaoVoltar && (
               <Botao
                 type={BUTTON_TYPE.BUTTON}
+                icon={BUTTON_ICON.ARROW_LEFT}
                 texto={"Voltar"}
                 style={BUTTON_STYLE.BLUE_OUTLINE}
-                onClick={() => history.goBack()}
+                onClick={() => history.push("/")}
+                className="float-right ml-3"
               />
             )}
           </div>
@@ -158,4 +157,4 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
   );
 };
 
-export default FormBuscaProduto;
+export default withRouter(FormBuscaProduto);

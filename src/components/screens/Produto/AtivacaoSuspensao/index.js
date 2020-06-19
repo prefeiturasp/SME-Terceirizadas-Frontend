@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { getProdutosPorParametros } from "services/produto.service";
+import { Link } from "react-router-dom";
+import { getProdutosPorFiltro } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "./FormBuscaProduto";
+import { ATIVACAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
 import "./style.scss";
 
-// FIXME: remove test data
-const testData = [
-  {
-    nome: "Suco de Laranja",
-    marca: { nome: "Teste" },
-    fabricante: { nome: "Teste" },
-    status: "Ativo"
-  },
-  {
-    nome: "Suco de Uva",
-    marca: { nome: "Teste" },
-    fabricante: { nome: "Teste" },
-    status: "Ativo"
-  }
-];
+const checaStatus = obj =>
+  obj.status === "CODAE_HOMOLOGADO" ||
+  obj.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU";
 
 const TabelaProdutos = ({ produtos }) => {
   if (!produtos) return false;
@@ -42,14 +35,22 @@ const TabelaProdutos = ({ produtos }) => {
               <div>{produto.nome}</div>
               <div>{produto.marca.nome}</div>
               <div>{produto.fabricante.nome}</div>
-              <div>{produto.status}</div>
               <div>
-                {" "}
-                <Botao
-                  texto="Visualizar"
-                  icon={undefined}
-                  style={BUTTON_STYLE.GREEN}
-                />
+                {checaStatus(produto.ultima_homologacao) ? "Ativo" : "Suspenso"}
+              </div>
+              <div>
+                <Link
+                  to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
+                    produto.ultima_homologacao.uuid
+                  }`}
+                >
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    texto="Visualizar"
+                    icon={undefined}
+                    style={BUTTON_STYLE.GREEN}
+                  />
+                </Link>
               </div>
             </div>
           </div>
@@ -60,7 +61,7 @@ const TabelaProdutos = ({ produtos }) => {
 };
 
 const AtivacaoSuspencaoProduto = () => {
-  const [produtos, setProdutos] = useState(testData);
+  const [produtos, setProdutos] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
@@ -68,7 +69,7 @@ const AtivacaoSuspencaoProduto = () => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosPorParametros(filtros);
+      const response = await getProdutosPorFiltro(filtros);
       setCarregando(false);
       setProdutos(response.data.results);
     }
@@ -76,14 +77,28 @@ const AtivacaoSuspencaoProduto = () => {
   }, [filtros, setProdutos]);
 
   const onSubmitForm = formValues => {
-    setFiltros(formValues);
+    const status = [];
+    switch (formValues.status) {
+      case "ativo":
+        status.push("CODAE_HOMOLOGADO", "ESCOLA_OU_NUTRICIONISTA_RECLAMOU");
+        break;
+      case "suspenso":
+        status.push("CODAE_SUSPENDEU");
+        break;
+      default:
+        status.push(
+          "CODAE_HOMOLOGADO",
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+          "CODAE_SUSPENDEU"
+        );
+    }
+    setFiltros({ ...formValues, status });
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 screen-ativacao-suspensao-produto">
         <div className="card-body">
-          <h3 className="font-weight-bold">Ativar/suspender produto</h3>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
@@ -98,6 +113,9 @@ const AtivacaoSuspencaoProduto = () => {
 
         {produtos && produtos.length && (
           <div className="container-tabela">
+            <div className="texto-veja-resultados">{`Veja resultados para "${
+              filtros && filtros.nome_produto ? filtros.nome_produto : ""
+            }" :`}</div>
             <TabelaProdutos produtos={produtos} />
           </div>
         )}

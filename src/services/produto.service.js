@@ -88,6 +88,10 @@ export const getProdutosPorParametros = async parametros => {
   );
 };
 
+export const getProdutosPorFiltro = async filtro => {
+  return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
+};
+
 export const getProtocolosDietaEspecial = async () => {
   return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
 };
@@ -277,6 +281,17 @@ export const excluirImagemDoProduto = async uuid => {
 export const escolaOuNutriReclamaDoProduto = async (uuid, payload) => {
   return await axios.patch(
     `/homologacoes-produtos/${uuid}/escola-ou-nutri-reclama/`,
+    payload
+  );
+};
+
+export const ativarProduto = async (uuid, payload) => {
+  return await axios.patch(`/homologacoes-produtos/${uuid}/ativar/`, payload);
+};
+
+export const suspenderProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/suspender/`,
     payload
   );
 };
