@@ -6,6 +6,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
+  getNumeroProtocoloAnaliseSensorial,
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
@@ -28,6 +29,7 @@ class HomologacaoProduto extends Component {
     this.state = {
       produto: null,
       uuid: null,
+      protocoloAnalise: null,
       showModal: false,
       qualModal: "indeferir",
       status: null
@@ -39,7 +41,7 @@ class HomologacaoProduto extends Component {
     this.setState({ showModal: false });
   };
 
-  componentDidMount() {
+  componentDidMount = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     getHomologacaoProduto(uuid).then(response => {
@@ -53,7 +55,15 @@ class HomologacaoProduto extends Component {
         uuid
       });
     });
-  }
+  };
+
+  componentDidUpdate = async () => {
+    const { qualModal, protocoloAnalise } = this.state;
+    if (qualModal === "analise" && protocoloAnalise === null) {
+      let response = await getNumeroProtocoloAnaliseSensorial();
+      this.setState({ protocoloAnalise: response.data });
+    }
+  };
 
   loadHomologacao = () => {
     const { uuid } = this.state;
@@ -94,7 +104,8 @@ class HomologacaoProduto extends Component {
       showModal,
       qualModal,
       status,
-      terceirizada
+      terceirizada,
+      protocoloAnalise
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -136,6 +147,7 @@ class HomologacaoProduto extends Component {
                     : CODAEPedeAnaliseSensorialProduto
                 }
                 uuid={uuid}
+                protocoloAnalise={protocoloAnalise}
                 loadSolicitacao={this.loadHomologacao}
                 justificativa={justificativa}
                 labelJustificativa={
