@@ -36,7 +36,7 @@ export const Botoes = ({
         <Botao
           className="ml-3"
           onClick={() => {
-            setModal("aceitar");
+            setModal("recusar");
             setProdutoAAtualizar(produto);
           }}
           texto="Recusar"
@@ -46,7 +46,7 @@ export const Botoes = ({
         <Botao
           className="ml-3 mr-3"
           onClick={() => {
-            setModal("recusar");
+            setModal("aceitar");
             setProdutoAAtualizar(produto);
           }}
           texto="Aceitar"

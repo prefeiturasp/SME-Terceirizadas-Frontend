@@ -13,15 +13,24 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { CODAEPedeAnaliseReclamacao } from "services/produto.service";
+import {
+  CODAEPedeAnaliseReclamacao,
+  CODAERecusaReclamacao,
+  CODAEAceitaReclamacao
+} from "services/produto.service";
 
 export default class ModalProsseguirReclamacao extends Component {
   onSubmit = async values => {
-    const { produto } = this.props;
+    const { produto, tituloModal } = this.props;
     const homologacaoComReclamacao = produto.homologacoes.find(
       h => h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
     );
-    const endpoint = CODAEPedeAnaliseReclamacao;
+    const endpoint =
+      tituloModal === "Questionar terceirizada"
+        ? CODAEPedeAnaliseReclamacao
+        : tituloModal === "Recusar reclamação"
+        ? CODAERecusaReclamacao
+        : CODAEAceitaReclamacao;
     const response = await endpoint(homologacaoComReclamacao.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Reclamação de produto registrada com sucesso!");
