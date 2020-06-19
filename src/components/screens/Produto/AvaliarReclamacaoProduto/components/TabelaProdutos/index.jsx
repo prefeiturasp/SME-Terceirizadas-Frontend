@@ -1,13 +1,15 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import "./style.scss";
 import { NOME_STATUS } from "./helpers";
-import { DadosReclamacaoProduto } from "./components/DadosReclamacao";
-import { DadosProduto } from "./components/DadosProduto";
-import { Botoes } from "./components/Botoes";
+import { DadosReclamacaoProduto } from "../DadosReclamacao";
+import { Botoes } from "../Botoes";
 
-export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
-  const [verProduto, setVerProduto] = useState(false);
-
+export const TabelaProdutos = ({
+  produtos,
+  exibirDadosProduto,
+  verProduto,
+  setVerProduto
+}) => {
   return (
     <div className="tabela-lista-produtos">
       {produtos && (
@@ -47,14 +49,10 @@ export const TabelaProdutos = ({ produtos, exibirDadosProduto }) => {
                 </tr>,
                 produto.exibir && (
                   <Fragment>
-                    <DadosReclamacaoProduto
-                      produto={produto}
-                      verProduto={verProduto}
-                      setVerProduto={setVerProduto}
-                    />
-                    {verProduto && <DadosProduto produto={produto} />}
+                    <DadosReclamacaoProduto produto={produto} />
                     <Botoes
-                      verProduto={verProduto}
+                      produto={produto}
+                      verUnicoProduto={verProduto}
                       setVerProduto={setVerProduto}
                     />
                   </Fragment>

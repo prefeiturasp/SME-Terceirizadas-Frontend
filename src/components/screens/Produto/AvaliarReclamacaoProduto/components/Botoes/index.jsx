@@ -5,15 +5,15 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-export const Botoes = ({ verProduto, setVerProduto }) => {
+export const Botoes = ({ produto, setVerProduto, verUnicoProduto }) => {
   return (
     <div className="row mb-3">
       <div className="col-12 text-right">
         <Botao
-          onClick={() => setVerProduto(!verProduto)}
-          texto={verProduto ? "Voltar" : "Ver produto"}
-          style={verProduto ? BUTTON_STYLE.BLUE : BUTTON_STYLE.GREEN}
-          icon={verProduto && BUTTON_ICON.ARROW_LEFT}
+          onClick={() => setVerProduto(verUnicoProduto ? null : produto)}
+          texto={verUnicoProduto ? "Voltar" : "Ver produto"}
+          style={verUnicoProduto ? BUTTON_STYLE.BLUE : BUTTON_STYLE.GREEN}
+          icon={verUnicoProduto && BUTTON_ICON.ARROW_LEFT}
         />
         <Botao
           className="ml-3"
