@@ -9,28 +9,24 @@ import { VerProduto } from "./components/VerProduto";
 import ModalProsseguirReclamacao from "./components/Modal";
 
 export const AvaliarReclamacaoProduto = () => {
-  const [endpointModal, setEndpointModal] = useState(null);
   const [tituloModal, setTituloModal] = useState(null);
   const [produtos, setProdutos] = useState(null);
   const [verProduto, setVerProduto] = useState(null);
+  const [produtoAAtualizar, setProdutoAAtualizar] = useState(null);
   const [exibirModal, setExibirModal] = useState(false);
 
   const setModal = modal => {
     switch (modal) {
       case "questionar":
-        setEndpointModal(null);
         setTituloModal("Questionar terceirizada");
         break;
       case "recusar":
-        setEndpointModal(null);
         setTituloModal("Recusar reclamação");
         break;
       case "aceitar":
-        setEndpointModal(null);
         setTituloModal("Aceitar reclamação");
         break;
       default:
-        setEndpointModal(null);
         setTituloModal(null);
     }
     setExibirModal(!exibirModal);
@@ -55,7 +51,7 @@ export const AvaliarReclamacaoProduto = () => {
           showModal={exibirModal}
           closeModal={() => setExibirModal(!exibirModal)}
           tituloModal={tituloModal}
-          endpointModal={endpointModal}
+          produto={produtoAAtualizar}
         />
         {!verProduto && (
           <Fragment>
@@ -73,6 +69,7 @@ export const AvaliarReclamacaoProduto = () => {
               produtos={produtos}
               exibirDadosProduto={exibirDadosProduto}
               setModal={setModal}
+              setProdutoAAtualizar={setProdutoAAtualizar}
             />
           </Fragment>
         )}
@@ -81,6 +78,7 @@ export const AvaliarReclamacaoProduto = () => {
             setModal={setModal}
             setVerProduto={setVerProduto}
             produto={verProduto}
+            setProdutoAAtualizar={setProdutoAAtualizar}
           />
         )}
       </div>

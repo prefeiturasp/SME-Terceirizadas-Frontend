@@ -13,27 +13,23 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import { CODAEPedeAnaliseReclamacao } from "services/produto.service";
 
 export default class ModalProsseguirReclamacao extends Component {
   onSubmit = async values => {
-    return new Promise(async (resolve, reject) => {
-      const homologacaoAtiva = this.props.produto.homologacoes.find(
-        h => h.status === "CODAE_HOMOLOGADO"
-      );
-      const response = await this.props.endpointModal(
-        homologacaoAtiva.uuid,
-        values
-      );
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Reclamação de produto registrada com sucesso!");
-        resolve();
-        this.props.closeModal();
-        this.props.onAtualizarProduto();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError("Houve um erro ao registrar a reclamação de produto");
-        reject(response.data);
-      }
-    });
+    const { produto } = this.props;
+    const homologacaoComReclamacao = produto.homologacoes.find(
+      h => h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+    );
+    const endpoint = CODAEPedeAnaliseReclamacao;
+    const response = await endpoint(homologacaoComReclamacao.uuid, values);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Reclamação de produto registrada com sucesso!");
+      this.props.closeModal();
+      //this.props.onAtualizarProduto();
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Houve um erro ao registrar a reclamação de produto");
+    }
   };
 
   render() {
