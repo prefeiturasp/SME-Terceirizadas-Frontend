@@ -5,7 +5,12 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-export const Botoes = ({ produto, setVerProduto, verUnicoProduto }) => {
+export const Botoes = ({
+  produto,
+  setVerProduto,
+  verUnicoProduto,
+  setModal
+}) => {
   return (
     <div className="row mb-3">
       <div className="col-12 text-right">
@@ -17,16 +22,19 @@ export const Botoes = ({ produto, setVerProduto, verUnicoProduto }) => {
         />
         <Botao
           className="ml-3"
+          onClick={() => setModal("questionar")}
           texto="Questionar terceirizada"
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />
         <Botao
           className="ml-3"
+          onClick={() => setModal("recusar")}
           texto="Recusar"
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />
         <Botao
           className="ml-3 mr-3"
+          onClick={() => setModal("aceitar")}
           texto="Aceitar"
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />

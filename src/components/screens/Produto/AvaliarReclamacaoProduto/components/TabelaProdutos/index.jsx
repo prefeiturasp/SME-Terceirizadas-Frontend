@@ -8,7 +8,8 @@ export const TabelaProdutos = ({
   produtos,
   exibirDadosProduto,
   verProduto,
-  setVerProduto
+  setVerProduto,
+  setModal
 }) => {
   return (
     <div className="tabela-lista-produtos">
@@ -54,6 +55,7 @@ export const TabelaProdutos = ({
                       produto={produto}
                       verUnicoProduto={verProduto}
                       setVerProduto={setVerProduto}
+                      setModal={setModal}
                     />
                   </Fragment>
                 )
