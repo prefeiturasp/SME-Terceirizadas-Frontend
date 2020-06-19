@@ -20,7 +20,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
-  const exibirAtivacao = usuarioEhCODAEGestaoProduto;
+  const exibirAtivacao = usuarioEhCODAEGestaoProduto();
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
