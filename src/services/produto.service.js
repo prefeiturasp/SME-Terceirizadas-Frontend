@@ -190,6 +190,66 @@ export const CODAEHomologaProduto = uuid => {
     });
 };
 
+export const CODAEPedeAnaliseReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAERecusaReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-recusa-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAEAceitaReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-aceita-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const CODAEPedeAnaliseSensorialProduto = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-sensorial/`;
   let status = 0;

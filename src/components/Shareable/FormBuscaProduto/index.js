@@ -17,6 +17,8 @@ import {
   getNomesFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
+import { SelectWithHideOptions } from "../SelectWithHideOptions";
+import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
 
 const initialState = {
   dados: {},
@@ -24,6 +26,7 @@ const initialState = {
   produtos: [],
   marcas: [],
   fabricantes: [],
+  status: "",
   inicio: ""
 };
 
@@ -48,29 +51,38 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
+export const FormBuscaProduto = ({
+  onSubmit,
+  naoExibirRowTerceirizadas,
+  statusSelect,
+  exibirBotaoVoltar,
+  history
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   useEffect(() => {
+    const endpoints = [
+      getNomesProdutos(),
+      getNomesMarcas(),
+      getNomesFabricantes()
+    ];
+    if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
-      Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes(),
-        getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
-        dispatch({
-          type: "popularDados",
-          payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
-            terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
-            )
-          }
-        });
-      });
+      Promise.all(endpoints).then(
+        ([produtos, marcas, fabricantes, terceirizadas]) => {
+          dispatch({
+            type: "popularDados",
+            payload: {
+              produtos: produtos.data.results.map(el => el.nome),
+              marcas: marcas.data.results.map(el => el.nome),
+              fabricantes: fabricantes.data.results.map(el => el.nome),
+              terceirizadas:
+                terceirizadas &&
+                terceirizadas.data.results.map(el => el.nome_fantasia),
+              status: STATUS_RECLAMACAO_PRODUTO
+            }
+          });
+        }
+      );
     }
     fetchData();
   }, []);
@@ -93,40 +105,42 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
           onSubmit={handleSubmit}
           className="busca-produtos-formulario-shared"
         >
-          <Row gutter={[16, 16]}>
-            <Col md={24} lg={12} xl={16}>
-              <Field
-                component={AutoCompleteField}
-                dataSource={state.terceirizadas}
-                label="Nome da terceirizada"
-                onSearch={v => onSearch("terceirizadas", v)}
-                name="nome_terceirizada"
-              />
-            </Col>
-            <Col md={24} lg={6} xl={4}>
-              <Field
-                component={InputComData}
-                label="Início do Período"
-                name="data_inicial"
-                labelClassName="datepicker-fixed-padding"
-                minDate={null}
-              />
-            </Col>
-            <Col md={24} lg={6} xl={4}>
-              <Field
-                component={InputComData}
-                label={"Até"}
-                name="data_final"
-                labelClassName="datepicker-fixed-padding"
-                popperPlacement="bottom-end"
-                minDate={
-                  values.data_inicial
-                    ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                    : null
-                }
-              />
-            </Col>
-          </Row>
+          {!naoExibirRowTerceirizadas && (
+            <Row gutter={[16, 16]}>
+              <Col md={24} lg={12} xl={16}>
+                <Field
+                  component={AutoCompleteField}
+                  dataSource={state.terceirizadas}
+                  label="Nome da terceirizada"
+                  onSearch={v => onSearch("terceirizadas", v)}
+                  name="nome_terceirizada"
+                />
+              </Col>
+              <Col md={24} lg={6} xl={4}>
+                <Field
+                  component={InputComData}
+                  label="Início do Período"
+                  name="data_inicial"
+                  labelClassName="datepicker-fixed-padding"
+                  minDate={null}
+                />
+              </Col>
+              <Col md={24} lg={6} xl={4}>
+                <Field
+                  component={InputComData}
+                  label={"Até"}
+                  name="data_final"
+                  labelClassName="datepicker-fixed-padding"
+                  popperPlacement="bottom-end"
+                  minDate={
+                    values.data_inicial
+                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                      : null
+                  }
+                />
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
               <Field
@@ -140,7 +154,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
-            <Col md={24} lg={12}>
+            <Col md={24} lg={statusSelect ? 8 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
@@ -150,7 +164,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 name="nome_marca"
               />
             </Col>
-            <Col md={24} lg={12}>
+            <Col md={24} lg={statusSelect ? 8 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
@@ -159,6 +173,21 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 name="nome_fabricante"
               />
             </Col>
+            {statusSelect && (
+              <Col md={24} lg={8}>
+                <div className="pb-1">
+                  <label>Status</label>
+                </div>
+                <Field
+                  component={SelectWithHideOptions}
+                  mode="default"
+                  options={STATUS_RECLAMACAO_PRODUTO}
+                  name="status"
+                  handleChange={v => onSearch("status", v)}
+                  selectedItems={state.status}
+                />
+              </Col>
+            )}
           </Row>
           <div className="mt-4 mb-4">
             <Botao

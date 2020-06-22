@@ -85,6 +85,7 @@ import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
@@ -589,6 +590,14 @@ const routesConfig = [
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AVALIAR_RECLAMACAO_PRODUTO
+    }`,
+    component: AvaliarReclamacaoProdutoPage,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
