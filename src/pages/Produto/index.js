@@ -3,6 +3,9 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import ReclamacaoProduto from "components/screens/Produto/Reclamacao";
 import AtivacaoSuspensaoDetalheProduto from "components/screens/Produto/AtivacaoSuspensao/AtivacaoSuspensaoDetalheProduto";
 import AtivacaoSuspensao from "components/screens/Produto/AtivacaoSuspensao";
+import ResponderReclamacaoDetalheProduto from "components/screens/Produto/ResponderReclamacao/ResponderReclamacaoDetalheProduto";
+import ResponderReclamacao from "components/screens/Produto/ResponderReclamacao";
+
 import Page from "components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
@@ -62,7 +65,7 @@ export const ConsultaResponderReclamacaoPage = () => {
   return (
     <Page titulo={atual.titulo}>
       <Breadcrumb home={"/"} atual={atual} />
-      <div></div>
+      <ResponderReclamacao />
     </Page>
   );
 };
@@ -76,7 +79,7 @@ export const ResponderReclamacaoPage = () => {
   return (
     <Page titulo={atual.titulo}>
       <Breadcrumb home={"/"} atual={atual} />
-      <div></div>
+      <ResponderReclamacaoDetalheProduto />
     </Page>
   );
 };

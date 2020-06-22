@@ -7,7 +7,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
-import Botao from "components/screens/Produto/ResponderReclamacao/ModalResponderReclamacao/node_modules/components/Shareable/Botao";
+import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalAtivacaoSuspensaoProduto from "./ModalResponderReclamacao";

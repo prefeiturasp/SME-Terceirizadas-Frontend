@@ -298,4 +298,11 @@ export const suspenderProduto = async (uuid, payload) => {
 
 export const getNumeroProtocoloAnaliseSensorial = async () => {
   return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
+}; 
+
+export const responderReclamacaoProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/terceirizada-responde-reclamacao/`,
+    payload
+  );
 };

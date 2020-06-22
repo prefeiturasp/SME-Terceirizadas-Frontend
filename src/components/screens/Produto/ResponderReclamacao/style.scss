@@ -1,4 +1,4 @@
-.screen-ativacao-suspensao-produto {
+.screen-responder-reclamacao-produto {
   .texto-veja-resultados {
     font-size: 14px;
     font-weight: bold;
@@ -6,54 +6,105 @@
     margin-bottom: 0.3rem;
   }
 
-  .header-busca-produto {
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    color: #42474a;
-    margin-bottom: 20px;
+  .container-tabela {
+    padding: 0 2rem 2rem 2rem;
   }
 }
 
-.container-tabela {
-  padding: 2rem;
-}
+.tabela-resultado-consultar-reclamacao-produto {
 
-.tabela-ativacao-suspensao-produto {
-  display: grid;
-  grid-template-columns: auto 20% 20% 10% 108px;
-}
+  font-size: 14px;
+  border-left: 1px solid #e9eaea;
+  border-right: 1px solid #e9eaea;
 
-.tabela-header-ativacao-suspensao-produto {
-  background: #f5f6f8;
-  height: 52px;
+  .table-grid {
+    height: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 
-  div {
-    padding: 5px 10px;
+  .table-header {
+    background: #f5f6f8;
+  }
+
+  .table-header-cell {
+    border: 1px solid #e9eaea;
+    color: #42474A;
+    text-align: left;
     font-weight: bold;
+    padding-left: 1rem;
+    line-height: 48px;
+  }
+
+  .table-body {
+    position: relative;
+    font-weight: 500;
+    color: #686868;
+
+    .reclamacao-collapse {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
+
+  }
+
+  .table-body-cell {
+    box-sizing: border-box;
+    border: 1px solid #e9eaea;
     font-size: 14px;
+    text-align: left;
+    padding-left: 1rem;
+    line-height: 48px;
+  }
+
+  
+
+  .fas {
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 18px;
     display: flex;
     align-items: center;
+    text-align: center;
+    letter-spacing: 0.01em;
     color: #42474a;
-    border: 1px solid #e9eaea;
   }
-}
 
-.tabela-body-ativacao-suspensao-produto {
-  height: 48px;
-}
+  hr {
+    margin: 2rem 1rem;
+  }
 
-.item-ativacao-suspensao-produto > div {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 18px;
-  padding: 5px 10px;
+  .grid-detalhe {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 1rem;
 
-  display: flex;
-  align-items: center;
 
-  color: #686868;
+    .grid-detalhe-cell {
+      padding-left: 1rem;
+    }
 
-  border: 1px solid #e9eaea;
+    .template-contatos-terc {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .label-empresa {
+    color: #686868;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .value-empresa {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #353535;
+    margin: 6px 0 0 0;
+  }
 }

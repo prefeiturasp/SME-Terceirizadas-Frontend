@@ -1,62 +1,175 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { Spin } from "antd";
 import { Link } from "react-router-dom";
 import { getProdutosPorFiltro } from "services/produto.service";
-import Botao from "components/screens/Produto/ResponderReclamacao/ModalResponderReclamacao/node_modules/components/Shareable/Botao";
+import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import FormBuscaProduto from "./FormBuscaProduto";
+import FormBuscaProduto from "../AtivacaoSuspensao/FormBuscaProduto";
 import { ATIVACAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
 import "./style.scss";
 
-const checaStatus = obj =>
-  obj.status === "CODAE_HOMOLOGADO" ||
-  obj.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU";
+
+const produtos1 = [{
+  nome: "SUCO DE UVA",
+  marca: { nome: "Maguari"},
+  fabricante: { nome: "Unilever"},
+  ultima_homologacao: {
+    rastro_terceirizada: {
+      nome_fantasia: "Fabrica SSS",
+      contatos: [{
+        telefone: "33 333 333",
+        email: "test@test.com"
+      },
+      {
+        telefone: "33 4444444",
+        email: "admin@admin.com"
+      }]
+    }
+  }
+},
+{
+  nome: "LEITE INTEGRAL",
+  marca: { nome: "Maguari"},
+  fabricante: { nome: "Unilever"},
+  ultima_homologacao: {
+    rastro_terceirizada: {
+      nome_fantasia: "Fabrica SSS",
+      contatos: [{
+        telefone: "33 333 333",
+        email: "test@test.com"
+      },
+      {
+        telefone: "33 4444444",
+        email: "admin@admin.com"
+      }]
+    }
+  }
+}]
+
 
 const TabelaProdutos = ({ produtos }) => {
+
+  const [ativos, setAtivos] = useState([0]);
+
   if (!produtos) return false;
+
   return (
-    <section>
-      <section>
-        <div className="tabela-ativacao-suspensao-produto tabela-header-ativacao-suspensao-produto">
-          <div>Nome do Produto</div>
-          <div>Marca</div>
-          <div>Fabricante</div>
-          <div>Status</div>
-          <div />
-        </div>
-      </section>
-      {produtos.map((produto, index) => {
-        return (
-          <div key={index}>
-            <div className="tabela-ativacao-suspensao-produto tabela-body-ativacao-suspensao-produto item-ativacao-suspensao-produto">
-              <div>{produto.nome}</div>
-              <div>{produto.marca.nome}</div>
-              <div>{produto.fabricante.nome}</div>
-              <div>
-                {checaStatus(produto.ultima_homologacao) ? "Ativo" : "Suspenso"}
-              </div>
-              <div>
-                <Link
-                  to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
-                    produto.ultima_homologacao.uuid
-                  }`}
-                >
-                  <Botao
-                    type={BUTTON_TYPE.BUTTON}
-                    texto="Visualizar"
-                    icon={undefined}
-                    style={BUTTON_STYLE.GREEN}
-                  />
-                </Link>
-              </div>
-            </div>
+    <section className="tabela-resultado-consultar-reclamacao-produto">
+          <div className="table-grid table-header">
+            <div className="table-header-cell">Nome do Produto</div>
+            <div className="table-header-cell">Marca</div>
+            <div className="table-header-cell">Fabricante</div>
           </div>
-        );
-      })}
-    </section>
+          {produtos.map((produto, index) => {
+            const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
+            const bordas = "";
+            const icone = produto ? "angle-up" : "angle-down";
+            return (
+              <Fragment key={index}>
+                <div className="table-grid table-body">
+                  <div className={`table-body-cell ${bordas}`}>{produto.nome}</div>
+                  <div className={`table-body-cell ${bordas}`}>{produto.marca.nome}</div>
+                  <div className={`table-body-cell ${bordas}`}>{produto.fabricante.nome}</div>
+                  <div className="reclamacao-collapse">
+                    <i
+                      className={`fas fa-${icone}`}
+                      onClick={() => {
+                        ativos.includes(index)
+                          ? setAtivos(ativos.filter(el => el !== index))
+                          : setAtivos([...ativos, index]);
+                      }}
+                    />
+                  </div>
+                </div>
+                {ativos.includes(index) && (
+                   <>
+                    <div className="grid-detalhe mt-3">
+                      <div className="grid-detalhe-cell label-empresa">
+                        Empresa solicitante (Terceirizada)
+                      </div>
+                      <div className="grid-detalhe-cell label-empresa">Telefone</div>
+                      <div className="grid-detalhe-cell label-empresa">E-mail</div>
+                      <div className="grid-detalhe-cell value-empresa">
+                        {terceirizada.nome_fantasia}
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa template-contatos-terc">
+                        {terceirizada.contatos.map((contato, index) => {
+                          return <div key={index}>{contato.telefone}</div>;
+                        })}
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa template-contatos-terc">
+                        {terceirizada.contatos.map((contato, index) => {
+                          return <div key={index}>{contato.email}</div>;
+                        })}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="grid-detalhe">
+                      <div className="grid-detalhe-cell label-empresa">
+                        Nome da Escola
+                      </div>
+                      <div className="grid-detalhe-cell label-empresa">Código EOL</div>
+                      <div className="grid-detalhe-cell label-empresa"></div>
+                      <div className="grid-detalhe-cell value-empresa">
+                        {terceirizada.nome_fantasia}
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa">
+                        XXXX
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa">
+
+                      </div>
+                    </div>
+                    <div className="grid-detalhe">
+                      <div className="grid-detalhe-cell label-empresa">
+                        Nome do Reclamante
+                      </div>
+                      <div className="grid-detalhe-cell label-empresa">RF/CRN/CFN</div>
+                      <div className="grid-detalhe-cell label-empresa">Cargo</div>
+                      <div className="grid-detalhe-cell value-empresa">
+                        Joao da Silva
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa">
+                        XXXX
+                      </div>
+                      <div className="grid-detalhe-cell value-empresa">
+
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="label-empresa">Reclamação</div>
+                    <div className="value-empresa mb-3">XXXXXXXXX</div>
+                    <div className="label-empresa">Questionamento CODAE</div>
+                    <div className="value-empresa">XXXXXXXXX</div>
+                    <hr />
+                    
+                    <div className="float-right">
+                  <Botao
+                    texto="Responder"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => {}}
+                    className="ml-3"
+
+                  />
+                  <Botao
+                    texto="Ver Produto"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3 mr-3"
+                  />
+                </div>
+                <div className="mt-4 mb-5"> &nbsp;</div>
+                    </>
+                    
+                )}
+              </Fragment>
+            );
+          })}
+      </section>
   );
 };
 
@@ -77,32 +190,18 @@ const AtivacaoSuspencaoProduto = () => {
   }, [filtros, setProdutos]);
 
   const onSubmitForm = formValues => {
-    const status = [];
-    switch (formValues.status) {
-      case "ativo":
-        status.push("CODAE_HOMOLOGADO", "ESCOLA_OU_NUTRICIONISTA_RECLAMOU");
-        break;
-      case "suspenso":
-        status.push("CODAE_SUSPENDEU");
-        break;
-      default:
-        status.push(
-          "CODAE_HOMOLOGADO",
-          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-          "CODAE_SUSPENDEU"
-        );
-    }
-    setFiltros({ ...formValues, status });
+    setFiltros({ ...formValues, status: ["CODAE_AUTORIZOU_RECLAMACAO"] });
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 screen-ativacao-suspensao-produto">
+      <div className="card mt-3 screen-responder-reclamacao-produto">
         <div className="card-body">
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
             exibirBotaoVoltar
+            exibirStatus={false}
           />
         </div>
         {produtos && !produtos.length && (
@@ -111,12 +210,9 @@ const AtivacaoSuspencaoProduto = () => {
           </div>
         )}
 
-        {produtos && produtos.length && (
+        {produtos1 && produtos1.length && (
           <div className="container-tabela">
-            <div className="texto-veja-resultados">{`Veja resultados para "${
-              filtros && filtros.nome_produto ? filtros.nome_produto : ""
-            }" :`}</div>
-            <TabelaProdutos produtos={produtos} />
+            <TabelaProdutos produtos={produtos1} />
           </div>
         )}
       </div>
