@@ -10,7 +10,9 @@ div.tabela-lista-produtos {
       background: #f5f6f8;
       border: 1px solid #e9eaea;
       color: $blackInput;
-      tr {
+      tr.row {
+        margin-left: 0;
+        margin-right: 0;
         th {
           padding: 10px;
           &:not(:last-child) {
@@ -23,7 +25,15 @@ div.tabela-lista-produtos {
       }
     }
     tbody {
-      tr {
+      tr.row {
+        &.active {
+          border-top: 1px solid #e9eaea !important;
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid #e9eaea !important;
+        }
+        margin-left: 0;
+        margin-right: 0;
         td {
           color: $gray;
           padding: 10px;
@@ -41,7 +51,6 @@ div.tabela-lista-produtos {
       }
     }
     div.produto-exibir {
-      border-top: 1px solid #e9eaea;
       padding-left: 1em;
     }
   }

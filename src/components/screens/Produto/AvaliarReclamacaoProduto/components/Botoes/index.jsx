@@ -26,32 +26,49 @@ export const Botoes = ({
         <Botao
           className="ml-3"
           onClick={() => {
-            setModal("questionar");
+            setModal("Questionar terceirizada");
             setProdutoAAtualizar(produto);
           }}
           texto="Questionar terceirizada"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
+          disabled={
+            !["ESCOLA_OU_NUTRICIONISTA_RECLAMOU"].includes(
+              produto.ultima_homologacao.status
+            )
+          }
         />
         <Botao
           className="ml-3"
           onClick={() => {
-            setModal("recusar");
+            setModal("Recusar reclamação");
             setProdutoAAtualizar(produto);
           }}
           texto="Recusar"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
+          disabled={
+            ![
+              "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+            ].includes(produto.ultima_homologacao.status)
+          }
         />
         <Botao
           className="ml-3 mr-3"
           onClick={() => {
-            setModal("aceitar");
+            setModal("Aceitar reclamação");
             setProdutoAAtualizar(produto);
           }}
           texto="Aceitar"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
+          disabled={
+            ![
+              "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+            ].includes(produto.ultima_homologacao.status)
+          }
         />
       </div>
     </div>

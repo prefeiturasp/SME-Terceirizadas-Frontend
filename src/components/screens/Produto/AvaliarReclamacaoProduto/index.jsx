@@ -4,9 +4,9 @@ import { getProdutosPorFiltro } from "services/produto.service";
 import { TabelaProdutos } from "./components/TabelaProdutos";
 import { deepCopy } from "helpers/utilities";
 import { formatarValues } from "./helpers";
-import "./style.scss";
 import { VerProduto } from "./components/VerProduto";
 import ModalProsseguirReclamacao from "./components/Modal";
+import "./style.scss";
 
 export const AvaliarReclamacaoProduto = () => {
   const [tituloModal, setTituloModal] = useState(null);
@@ -16,19 +16,7 @@ export const AvaliarReclamacaoProduto = () => {
   const [exibirModal, setExibirModal] = useState(false);
 
   const setModal = modal => {
-    switch (modal) {
-      case "questionar":
-        setTituloModal("Questionar terceirizada");
-        break;
-      case "recusar":
-        setTituloModal("Recusar reclamação");
-        break;
-      case "aceitar":
-        setTituloModal("Aceitar reclamação");
-        break;
-      default:
-        setTituloModal(null);
-    }
+    setTituloModal(modal);
     setExibirModal(!exibirModal);
   };
 
@@ -44,6 +32,15 @@ export const AvaliarReclamacaoProduto = () => {
     setProdutos(produtos_);
   };
 
+  const onAtualizarProduto = hom_produto => {
+    const index = produtos.findIndex(
+      produto_ => produto_.uuid === hom_produto.produto.uuid
+    );
+    const produtos_ = deepCopy(produtos);
+    produtos_[index].ultima_homologacao.status = hom_produto.status;
+    setProdutos(produtos_);
+  };
+
   return (
     <div className="card avaliar-reclamacao-produto">
       <div className="card-body">
@@ -52,6 +49,7 @@ export const AvaliarReclamacaoProduto = () => {
           closeModal={() => setExibirModal(!exibirModal)}
           tituloModal={tituloModal}
           produto={produtoAAtualizar}
+          onAtualizarProduto={onAtualizarProduto}
         />
         {!verProduto && (
           <Fragment>

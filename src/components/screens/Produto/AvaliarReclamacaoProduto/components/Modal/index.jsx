@@ -18,12 +18,16 @@ import {
   CODAERecusaReclamacao,
   CODAEAceitaReclamacao
 } from "services/produto.service";
+import { getMensagemSucesso } from "./helpers";
 
 export default class ModalProsseguirReclamacao extends Component {
   onSubmit = async values => {
     const { produto, tituloModal } = this.props;
-    const homologacaoComReclamacao = produto.homologacoes.find(
-      h => h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+    const homologacaoComReclamacao = produto.homologacoes.find(h =>
+      [
+        "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+        "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+      ].includes(h.status)
     );
     const endpoint =
       tituloModal === "Questionar terceirizada"
@@ -33,9 +37,9 @@ export default class ModalProsseguirReclamacao extends Component {
         : CODAEAceitaReclamacao;
     const response = await endpoint(homologacaoComReclamacao.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("Reclamação de produto registrada com sucesso!");
+      toastSuccess(getMensagemSucesso(tituloModal));
       this.props.closeModal();
-      //this.props.onAtualizarProduto();
+      this.props.onAtualizarProduto(response.data);
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       toastError("Houve um erro ao registrar a reclamação de produto");
     }

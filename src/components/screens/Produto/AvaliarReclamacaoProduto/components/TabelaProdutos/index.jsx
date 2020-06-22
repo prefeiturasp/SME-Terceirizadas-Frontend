@@ -30,7 +30,14 @@ export const TabelaProdutos = ({
             )}
             {produtos.map((produto, key) => {
               return [
-                <tr className="row" key={key}>
+                <tr
+                  className={`row ${
+                    key - 1 >= 0 && produtos[key - 1].exibir
+                      ? "active"
+                      : undefined
+                  }`}
+                  key={key}
+                >
                   <td className="col-3">{produto.nome}</td>
                   <td className="col-2">
                     {produto.marca && produto.marca.nome}

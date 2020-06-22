@@ -261,7 +261,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   CODAE_PENDENTE_HOMOLOGACAO: "codae_pendente_homologacao",
   CODAE_HOMOLOGADO: "codae_homologado",
   CODAE_NAO_HOMOLOGADO: "codae_nao_homologado",
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "escola_ou_nutricionista_reclamou"
+  ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "escola_ou_nutricionista_reclamou",
+  TERCEIRIZADA_RESPONDEU_RECLAMACAO: "terceirizada_respondeu_reclamacao"
 };
 
 export const STATUS_RECLAMACAO_PRODUTO = [
