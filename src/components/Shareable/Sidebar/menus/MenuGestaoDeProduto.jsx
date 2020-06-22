@@ -37,6 +37,13 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           Consulta de Produto
         </LeafItem>
       )}
+      {exibirCadastro && (
+        <LeafItem
+          to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto-analise-sensorial`}
+        >
+          Responder análise sensorial
+        </LeafItem>
+      )}
       {exibirReclamacao && (
         <LeafItem to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}>
           Reclamação de Produto
