@@ -12,7 +12,8 @@ import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhCODAEGestaoProduto
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhCODAEDietaEspecial
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -20,7 +21,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
-  const exibirReclamacao = usuarioEhCODAEGestaoProduto() || usuarioEhEscola();
+  const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
 
   return (
