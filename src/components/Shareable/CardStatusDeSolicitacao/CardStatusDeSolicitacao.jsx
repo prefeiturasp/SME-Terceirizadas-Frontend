@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
 
 export const CARD_TYPE_ENUM = {
@@ -26,10 +26,24 @@ export const ICON_CARD_TYPE_ENUM = {
 };
 
 export const CardStatusDeSolicitacao = props => {
-  const { cardTitle, cardType, solicitations, icon, href, loading } = props;
+  const {
+    cardTitle,
+    cardType,
+    solicitations,
+    icon,
+    href,
+    loading,
+    hrefCard
+  } = props;
+  let history = useHistory();
   return (
-    <div className={"card card-panel card-colored " + cardType}>
-      <div className="card-title-status ajuste-icones">
+    <div className={`card card-panel card-colored ${cardType}`}>
+      <div
+        className={`card-title-status ajuste-icones ${
+          hrefCard ? "card-com-href" : undefined
+        }`}
+        onClick={() => hrefCard && history.push(hrefCard)}
+      >
         <div>
           <i className={"fas " + icon} />
           {cardTitle}

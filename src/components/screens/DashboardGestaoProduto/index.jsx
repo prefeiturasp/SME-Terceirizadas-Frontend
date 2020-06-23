@@ -125,6 +125,7 @@ export default class DashboardGestaoProduto extends Component {
                           )}
                           icon={card.icon}
                           href={`/${GESTAO_PRODUTO}/${card.rota}`}
+                          hrefCard={card.href_card}
                         />
                       </div>
                       {card2 && (
@@ -138,6 +139,7 @@ export default class DashboardGestaoProduto extends Component {
                             )}
                             icon={card2.icon}
                             href={`/${GESTAO_PRODUTO}/${card2.rota}`}
+                            hrefCard={card2.href_card}
                           />
                         </div>
                       )}
