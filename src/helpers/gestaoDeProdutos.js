@@ -2,7 +2,6 @@ import { TIPO_PERFIL } from "constants/shared";
 import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS as CARD_ID } from "configs/constants";
-import { usuarioEhCODAEGestaoProduto } from "./utilities";
 const {
   CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_SUSPENDEU,
@@ -59,10 +58,7 @@ const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
     CODAE_PEDIU_ANALISE_RECLAMACAO,
     ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
     TERCEIRIZADA_RESPONDEU_RECLAMACAO
-  ],
-  href_card:
-    usuarioEhCODAEGestaoProduto() &&
-    "/gestao-produto/avaliar-reclamacao-produto"
+  ]
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
