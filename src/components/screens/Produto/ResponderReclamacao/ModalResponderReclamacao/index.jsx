@@ -1,6 +1,5 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import * as R from "ramda";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
@@ -14,11 +13,9 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { ativarProduto, suspenderProduto } from "services/produto.service";
+import { responderReclamacaoProduto } from "services/produto.service";
 import "./style.scss";
 import { meusDados } from "services/perfil.service";
-
-const capitalizar = R.replace(/^./, R.toUpper);
 
 export default class ModalResponderReclamacao extends Component {
   constructor(props) {
@@ -48,19 +45,13 @@ export default class ModalResponderReclamacao extends Component {
 
   onSubmit = async values => {
     return new Promise(async (resolve, reject) => {
-      const endpoint =
-        this.props.acao === "ativação" ? ativarProduto : suspenderProduto;
-      const response = await endpoint(this.props.idHomologacao, values);
+      const response = await responderReclamacaoProduto("fsfsdf", values);
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess(
-          `${capitalizar(this.props.acao)} de produto enviada com sucesso.`
-        );
+        toastSuccess("Resposta de reclamação enviada com sucesso.");
+        this.props.atualizarDados(this.props.idHomologacao);
         resolve();
-        this.props.atualizarDados();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError(
-          `Houve um erro ao registrar a ${this.props.acao} de produto`
-        );
+        toastError("Houve um erro ao responder a reclamação de produto");
         reject(response.data);
       }
     });
@@ -75,10 +66,7 @@ export default class ModalResponderReclamacao extends Component {
         onHide={closeModal}
       >
         <Modal.Header className="border-0" closeButton>
-          <Modal.Title>
-            {" "}
-            {`${capitalizar(this.props.acao || "")} de Produto`}{" "}
-          </Modal.Title>
+          <Modal.Title>Responder reclamação de produto</Modal.Title>
         </Modal.Header>
         <Form
           onSubmit={this.onSubmit}

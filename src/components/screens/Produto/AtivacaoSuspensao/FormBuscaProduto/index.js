@@ -45,7 +45,12 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history, exibirStatus = true }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  exibirBotaoVoltar,
+  history,
+  exibirStatus = true
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -120,18 +125,18 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history, exibirStatus =
             </Col>
             {exibirStatus && (
               <Col md={24} lg={6}>
-              <div className="">
-                <Field
-                  component={SelectSelecione}
-                  label="Status"
-                  name="status"
-                  options={[
-                    { nome: "Ativo", uuid: "ativo" },
-                    { nome: "Suspenso", uuid: "suspenso" }
-                  ]}
-                />
-              </div>
-            </Col>
+                <div className="">
+                  <Field
+                    component={SelectSelecione}
+                    label="Status"
+                    name="status"
+                    options={[
+                      { nome: "Ativo", uuid: "ativo" },
+                      { nome: "Suspenso", uuid: "suspenso" }
+                    ]}
+                  />
+                </div>
+              </Col>
             )}
           </Row>
           <div className="mt-4 mb-4">

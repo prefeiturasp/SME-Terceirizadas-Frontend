@@ -12,7 +12,6 @@
 }
 
 .tabela-resultado-consultar-reclamacao-produto {
-
   font-size: 14px;
   border-left: 1px solid #e9eaea;
   border-right: 1px solid #e9eaea;
@@ -29,7 +28,7 @@
 
   .table-header-cell {
     border: 1px solid #e9eaea;
-    color: #42474A;
+    color: #42474a;
     text-align: left;
     font-weight: bold;
     padding-left: 1rem;
@@ -46,7 +45,6 @@
       right: 1rem;
       top: 1rem;
     }
-
   }
 
   .table-body-cell {
@@ -57,8 +55,6 @@
     padding-left: 1rem;
     line-height: 48px;
   }
-
-  
 
   .fas {
     cursor: pointer;
@@ -81,7 +77,6 @@
     grid-template-columns: 1fr 1fr 1fr;
     margin-bottom: 1rem;
 
-
     .grid-detalhe-cell {
       padding-left: 1rem;
     }
@@ -90,6 +85,10 @@
       display: flex;
       flex-wrap: wrap;
     }
+  }
+
+  .log-reclamacao {
+    margin-left: 1rem;
   }
 
   .label-empresa {

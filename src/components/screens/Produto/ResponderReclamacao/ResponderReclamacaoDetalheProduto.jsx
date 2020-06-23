@@ -21,10 +21,10 @@ const checaStatus = obj =>
   obj.status === CODAE_HOMOLOGADO.toUpperCase() ||
   obj.status === ESCOLA_OU_NUTRICIONISTA_RECLAMOU.toUpperCase();
 
-const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
+const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [produto, setProduto] = useState(null);
   const [ativo, setAtivo] = useState(false);
-  const [acao, setAcao] = useState();
+  const [exibirModal, setExibirModal] = useState();
   const [uuid, setUuid] = useState();
 
   const carregaHomologacao = useCallback(
@@ -56,7 +56,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
       <>
         <ModalAtivacaoSuspensaoProduto
           showModal={!!acao}
-          closeModal={() => setAcao()}
+          closeModal={() => setExibirModal(false)}
           acao={acao}
           produto={produto || {}}
           idHomologacao={uuid}
@@ -75,20 +75,12 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao
-                  texto={"Ativar"}
-                  className="mr-3"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled={ativo}
-                  onClick={() => setAcao("ativação")}
-                />
-                <Botao
-                  texto={"Suspender"}
+                  texto={"Responder"}
                   className="mr-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={!ativo}
-                  onClick={() => setAcao("suspensão")}
+                  onClick={() => setExibirModal(true)}
                 />
               </div>
             </div>
@@ -135,4 +127,4 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
     </Spin>
   );
 };
-export default withRouter(AtivacaoSuspensaoDetalheProduto);
+export default withRouter(ResponderReclamacaoDetalheProduto);
