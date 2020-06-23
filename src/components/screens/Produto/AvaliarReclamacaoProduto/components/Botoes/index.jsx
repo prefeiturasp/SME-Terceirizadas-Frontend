@@ -17,7 +17,10 @@ export const Botoes = ({
     <div className="row mb-3">
       <div className="col-12 text-right">
         <Botao
-          onClick={() => setVerProduto(verUnicoProduto ? null : produto)}
+          onClick={() => {
+            setVerProduto(verUnicoProduto ? null : produto);
+            window.scrollTo(0, 0);
+          }}
           texto={verUnicoProduto ? "Voltar" : "Ver produto"}
           style={verUnicoProduto ? BUTTON_STYLE.BLUE : BUTTON_STYLE.GREEN}
           type={BUTTON_TYPE.BUTTON}

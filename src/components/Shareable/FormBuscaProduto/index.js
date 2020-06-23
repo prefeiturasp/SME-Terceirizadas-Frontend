@@ -7,9 +7,11 @@ import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import { useHistory } from "react-router-dom";
 
 import {
   getNomesProdutos,
@@ -56,8 +58,9 @@ export const FormBuscaProduto = ({
   naoExibirRowTerceirizadas,
   statusSelect,
   exibirBotaoVoltar,
-  history
+  naoExibirLimparFiltros
 }) => {
+  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
@@ -189,30 +192,35 @@ export const FormBuscaProduto = ({
               </Col>
             )}
           </Row>
-          <div className="mt-4 mb-4">
-            <Botao
-              texto="Consultar"
-              type={BUTTON_TYPE.SUBMIT}
-              style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
-              disabled={submitting}
-            />
-            <Botao
-              texto="Limpar Filtros"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              onClick={() => form.reset()}
-              className="float-right ml-3"
-              disabled={submitting}
-            />
-            {!!exibirBotaoVoltar && (
+          <div className="row">
+            <div className="col-12 text-right">
+              {!!exibirBotaoVoltar && (
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto={"Voltar"}
+                  className="mr-3"
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  icon={BUTTON_ICON.ARROW_LEFT}
+                  onClick={() => history.goBack()}
+                />
+              )}
               <Botao
-                type={BUTTON_TYPE.BUTTON}
-                texto={"Voltar"}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                onClick={() => history.goBack()}
+                texto="Consultar"
+                type={BUTTON_TYPE.SUBMIT}
+                style={BUTTON_STYLE.GREEN}
+                disabled={submitting}
               />
-            )}
+              {!naoExibirLimparFiltros && (
+                <Botao
+                  texto="Limpar Filtros"
+                  type={BUTTON_TYPE.BUTTON}
+                  className="ml-3"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => form.reset()}
+                  disabled={submitting}
+                />
+              )}
+            </div>
           </div>
         </form>
       )}
