@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from "react";
-import HTTP_STATUS from "http-status-codes";
 import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
 import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
 import { TabelaProdutos } from "./components/TabelaProdutos";
