@@ -1,8 +1,15 @@
-import { truncarString } from "../../../helpers/utilities";
+import {
+  truncarString,
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto
+} from "helpers/utilities";
 import { RELATORIO, GESTAO_PRODUTO, EDITAR } from "configs/constants";
-import { usuarioEhTerceirizada } from "helpers/utilities";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
-const { CODAE_PEDIU_ANALISE_RECLAMACAO } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
+const {
+  CODAE_PEDIU_ANALISE_RECLAMACAO,
+  TERCEIRIZADA_RESPONDEU_RECLAMACAO,
+  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+} = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
   "Reclamação de produto": {
@@ -27,6 +34,16 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     usuarioEhTerceirizada()
   ) {
     return `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${item.uuid}
+      `;
+  } else if (
+    usuarioEhCODAEGestaoProduto() &&
+    [
+      TERCEIRIZADA_RESPONDEU_RECLAMACAO,
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+      CODAE_PEDIU_ANALISE_RECLAMACAO
+    ].includes(item.status.toLowerCase())
+  ) {
+    return `/${GESTAO_PRODUTO}/avaliar-reclamacao-produto?uuid=${item.uuid}
       `;
   }
   return apontaParaEdicao

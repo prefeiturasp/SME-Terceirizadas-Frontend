@@ -1,11 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
-import { getProdutosPorFiltro } from "services/produto.service";
+import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
 import { TabelaProdutos } from "./components/TabelaProdutos";
 import { deepCopy } from "helpers/utilities";
 import { formatarValues } from "./helpers";
 import { VerProduto } from "./components/VerProduto";
 import ModalProsseguirReclamacao from "./components/Modal";
+import { Spin } from "antd";
 import "./style.scss";
 
 export const AvaliarReclamacaoProduto = () => {
@@ -14,16 +15,39 @@ export const AvaliarReclamacaoProduto = () => {
   const [verProduto, setVerProduto] = useState(null);
   const [produtoAAtualizar, setProdutoAAtualizar] = useState(null);
   const [exibirModal, setExibirModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [erroNaAPI, setErroNaAPI] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    if (uuid) {
+      getHomologacao(uuid)
+        .then(response => {
+          setLoading(false);
+          setVerProduto(response.data.produto);
+        })
+        .catch(() => {
+          setLoading(false);
+          setErroNaAPI(true);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const setModal = modal => {
     setTituloModal(modal);
     setExibirModal(!exibirModal);
   };
 
-  const onSubmit = async values => {
+  const onSubmit = values => {
+    setLoading(true);
     const values_ = deepCopy(values);
-    const response = await getProdutosPorFiltro(formatarValues(values_));
-    setProdutos(response.data.results);
+    getProdutosPorFiltro(formatarValues(values_)).then(response => {
+      setProdutos(response.data.results);
+      setLoading(false);
+    });
   };
 
   const exibirDadosProduto = key => {
@@ -33,54 +57,66 @@ export const AvaliarReclamacaoProduto = () => {
   };
 
   const onAtualizarProduto = hom_produto => {
-    const index = produtos.findIndex(
-      produto_ => produto_.uuid === hom_produto.produto.uuid
-    );
-    const produtos_ = deepCopy(produtos);
-    produtos_[index].ultima_homologacao.status = hom_produto.status;
-    setProdutos(produtos_);
+    if (produtos) {
+      const index = produtos.findIndex(
+        produto_ => produto_.uuid === hom_produto.produto.uuid
+      );
+      const produtos_ = deepCopy(produtos);
+      produtos_[index].ultima_homologacao.status = hom_produto.status;
+      setProdutos(produtos_);
+    } else setVerProduto(hom_produto.produto);
   };
 
   return (
-    <div className="card avaliar-reclamacao-produto">
-      <div className="card-body">
-        <ModalProsseguirReclamacao
-          showModal={exibirModal}
-          closeModal={() => setExibirModal(!exibirModal)}
-          tituloModal={tituloModal}
-          produto={produtoAAtualizar}
-          onAtualizarProduto={onAtualizarProduto}
-        />
-        {!verProduto && (
-          <Fragment>
-            <h2>
-              Consulte cadastro completo de produto antes de avaliar reclamação
-            </h2>
-            <FormBuscaProduto
-              naoExibirRowTerceirizadas
-              onSubmit={onSubmit}
-              statusSelect
-            />
-            <TabelaProdutos
-              verProduto={verProduto}
-              setVerProduto={setVerProduto}
-              produtos={produtos}
-              exibirDadosProduto={exibirDadosProduto}
-              setModal={setModal}
-              setProdutoAAtualizar={setProdutoAAtualizar}
-            />
-          </Fragment>
-        )}
-        {verProduto && (
-          <VerProduto
-            setModal={setModal}
-            setVerProduto={setVerProduto}
-            produto={verProduto}
-            setProdutoAAtualizar={setProdutoAAtualizar}
-          />
-        )}
+    <Spin tip="Carregando..." spinning={loading}>
+      <div className="card avaliar-reclamacao-produto">
+        <div className="card-body">
+          {erroNaAPI && (
+            <div>Erro ao carregar dados de Homologação de Produto</div>
+          )}
+          {!erroNaAPI && (
+            <Fragment>
+              <ModalProsseguirReclamacao
+                showModal={exibirModal}
+                closeModal={() => setExibirModal(!exibirModal)}
+                tituloModal={tituloModal}
+                produto={produtoAAtualizar}
+                onAtualizarProduto={onAtualizarProduto}
+              />
+              {!verProduto && (
+                <Fragment>
+                  <h2>
+                    Consulte cadastro completo de produto antes de avaliar
+                    reclamação
+                  </h2>
+                  <FormBuscaProduto
+                    naoExibirRowTerceirizadas
+                    onSubmit={onSubmit}
+                    statusSelect
+                  />
+                  <TabelaProdutos
+                    verProduto={verProduto}
+                    setVerProduto={setVerProduto}
+                    produtos={produtos}
+                    exibirDadosProduto={exibirDadosProduto}
+                    setModal={setModal}
+                    setProdutoAAtualizar={setProdutoAAtualizar}
+                  />
+                </Fragment>
+              )}
+              {verProduto && (
+                <VerProduto
+                  setModal={setModal}
+                  setVerProduto={setVerProduto}
+                  produto={verProduto}
+                  setProdutoAAtualizar={setProdutoAAtualizar}
+                />
+              )}
+            </Fragment>
+          )}
+        </div>
       </div>
-    </div>
+    </Spin>
   );
 };
 

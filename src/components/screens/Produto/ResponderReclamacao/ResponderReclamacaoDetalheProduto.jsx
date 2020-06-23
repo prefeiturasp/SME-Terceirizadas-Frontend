@@ -6,11 +6,14 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalResponderReclamacao from "./ModalResponderReclamacao";
 import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
+
+const { CODAE_PEDIU_ANALISE_RECLAMACAO } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [produto, setProduto] = useState(null);
@@ -43,6 +46,12 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
     fetchData();
   }, []);
 
+  const desabilitarAcao =
+    produto &&
+    (produto.respondido ||
+      produto.ultima_homologacao.status.toLowerCase() !==
+        CODAE_PEDIU_ANALISE_RECLAMACAO.toLowerCase());
+
   return (
     <Spin tip="Carregando..." spinning={!produto}>
       <>
@@ -51,7 +60,10 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
           closeModal={() => setExibirModal(false)}
           produto={produto || {}}
           idHomologacao={uuid}
-          atualizarDados={() => setProduto({ ...produto, respondido: true })}
+          atualizarDados={() => {
+            setProduto({ ...produto, respondido: true });
+            setExibirModal(false);
+          }}
         />
         <div className="card">
           <div className="card-body">
@@ -70,7 +82,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                   className="mr-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled={produto && produto.respondido}
+                  disabled={desabilitarAcao}
                   onClick={() => setExibirModal(true)}
                 />
               </div>
@@ -97,7 +109,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                       className="mr-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={produto && produto.respondido}
+                      disabled={desabilitarAcao}
                       onClick={() => setExibirModal(true)}
                     />
                   </div>

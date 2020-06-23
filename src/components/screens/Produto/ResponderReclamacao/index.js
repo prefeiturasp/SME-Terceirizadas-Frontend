@@ -183,7 +183,7 @@ const ResponderReclamacaoProduto = ({ history }) => {
           </div>
         )}
 
-        {produtos && produtos.length && (
+        {produtos && produtos.length > 0 && (
           <div className="container-tabela">
             <TabelaProdutos
               produtos={produtos}
