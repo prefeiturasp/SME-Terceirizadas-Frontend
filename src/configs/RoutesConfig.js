@@ -92,7 +92,9 @@ import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/Dashboar
 import {
   ReclamacaoDeProdutoPage,
   ConsultaAtivacaoDeProdutoPage,
-  AtivacaoDeProdutoPage
+  AtivacaoDeProdutoPage,
+  ConsultaResponderReclamacaoPage,
+  ResponderReclamacaoPage
 } from "../pages/Produto";
 
 const routesConfig = [
@@ -749,6 +751,18 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
+    component: ConsultaResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
+    component: ResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   }
 ];
 

@@ -4,51 +4,31 @@ import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
 import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import "./styles.scss";
-import InformacaoDeReclamante from "components/Shareable/InformacaoDeReclamante";
 
-const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
+const DetalheDoProduto = ({ produto, status }) => {
   const [ativos, setAtivos] = useState([]);
   const infoNutri = formataInformacoesNutricionais(produto);
   const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
 
   return (
-    <div className="shareable-detalhe-produto">
+    <div className="shareable-detalhe-reclamacao">
       <header>
         <div className="label-relatorio">Nome do produto</div>
         <div className="label-relatorio">Marca</div>
-        <div className="label-relatorio">Fabricante</div>
         <div className="label-relatorio">Tipo</div>
         <div className="label-relatorio">Data</div>
 
         <div className="value-relatorio">{produto.nome}</div>
         <div className="value-relatorio">{produto.marca.nome}</div>
-        <div className="value-relatorio">{produto.fabricante.nome}</div>
         <div className="value-relatorio">
           {produto.eh_para_alunos_com_dieta ? "DIETA ESPECIAL" : "COMUM"}
         </div>
         <div className="value-relatorio">{produto.criado_em.split(" ")[0]}</div>
       </header>
-      {!!status && (
-        <>
-          <hr />
-          <span className="label-relatorio">Status: </span>
-          <span className="value-relatorio"> {status} </span>
-          <hr />
-        </>
-      )}
-
-      {!!reclamacao && (
-        <>
-          <InformacaoDeReclamante
-            reclamacao={reclamacao}
-            questionamento={questionamento}
-            showTitle
-          />
-          <div className="mb-4 mt-4">
-            <hr />
-          </div>
-        </>
-      )}
+      <hr />
+      <span className="label-relatorio">Status: </span>
+      <span className="value-relatorio"> {status} </span>
+      <hr />
       <div className="title">
         Informação de empresa solicitante (Terceirizada)
       </div>
@@ -66,9 +46,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           <p className="value">{terceirizada.contatos[0].email}</p>
         </div>
       </div>
-      <div className="mb-4 mt-4">
-        <hr />
-      </div>
+      <hr />
       <div className="title">Identificação do Produto</div>
       <div className="row">
         <div className="col-12 report-label-value">
@@ -142,9 +120,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           </div>
         </div>
       </div>
-      <div className="mb-4 mt-4">
-        <hr />
-      </div>
+      <hr />
       <div className="title">Informações nutricionais</div>
       <div className="row">
         <div className="col-6 report-label-value">
@@ -226,9 +202,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           </div>
         </div>
       </div>
-      <div className="mb-4 mt-4">
-        <hr />
-      </div>
+      <hr />
       <div className="title">Informação do Produto (classificação)</div>
       <div className="row">
         <div className="col-6 report-label-value">
