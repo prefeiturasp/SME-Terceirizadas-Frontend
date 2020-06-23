@@ -13,7 +13,7 @@ const atual = {
 };
 
 export default () => (
-  <Page titulo={"Avaliar Reclamação de Produto"}>
+  <Page titulo={"Avaliar Reclamação de Produto"} botaoVoltar voltarPara={"/"}>
     <Breadcrumb home={"/"} atual={atual} />
     <AvaliarReclamacaoProduto />
   </Page>

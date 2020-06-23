@@ -204,22 +204,22 @@ export const FormBuscaProduto = ({
                   onClick={() => history.goBack()}
                 />
               )}
+              {!naoExibirLimparFiltros && (
+                <Botao
+                  texto="Limpar Filtros"
+                  type={BUTTON_TYPE.BUTTON}
+                  className="mr-3"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => form.reset()}
+                  disabled={submitting}
+                />
+              )}
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
               />
-              {!naoExibirLimparFiltros && (
-                <Botao
-                  texto="Limpar Filtros"
-                  type={BUTTON_TYPE.BUTTON}
-                  className="ml-3"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  onClick={() => form.reset()}
-                  disabled={submitting}
-                />
-              )}
             </div>
           </div>
         </form>

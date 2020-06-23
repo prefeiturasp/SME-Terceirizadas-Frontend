@@ -92,8 +92,6 @@ export const AvaliarReclamacaoProduto = () => {
                   <FormBuscaProduto
                     naoExibirRowTerceirizadas
                     onSubmit={onSubmit}
-                    exibirBotaoVoltar
-                    naoExibirLimparFiltros
                     statusSelect
                   />
                   <TabelaProdutos
