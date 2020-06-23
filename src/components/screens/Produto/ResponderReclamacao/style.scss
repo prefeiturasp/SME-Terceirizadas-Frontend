@@ -15,6 +15,7 @@
   font-size: 14px;
   border-left: 1px solid #e9eaea;
   border-right: 1px solid #e9eaea;
+  border-bottom: 1px solid #e9eaea;
 
   .table-grid {
     height: 48px;
@@ -54,6 +55,12 @@
     text-align: left;
     padding-left: 1rem;
     line-height: 48px;
+  }
+
+  .desativar-borda {
+    border-bottom: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
   }
 
   .fas {

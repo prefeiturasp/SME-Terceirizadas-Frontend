@@ -1,10 +1,9 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { withRouter } from "react-router-dom";
-import moment from "moment";
-import * as R from "ramda";
 import { Spin } from "antd";
 import { getProdutosPorFiltro } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
+import InformacaoDeReclamante from "components/Shareable/InformacaoDeReclamante";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
@@ -12,36 +11,11 @@ import {
 import { GESTAO_PRODUTO } from "configs/constants";
 import FormBuscaProduto from "../AtivacaoSuspensao/FormBuscaProduto";
 import ModalResponderReclamacao from "./ModalResponderReclamacao";
+import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
 import "./style.scss";
 
-const ordenaLogs = logs => {
-  const sortedLogs = logs
-    .concat()
-    .sort((a, b) => moment(a.criado_em) - moment(b.criado_em));
-  return sortedLogs;
-};
-
-const getReclamacao = logs => {
-  const arr = R.filter(
-    R.propEq(
-      "status_evento_explicacao",
-      "Escola/Nutricionista reclamou do produto"
-    ),
-    logs
-  );
-  return arr[0];
-};
-
-const getQuestionamentoCodae = logs => {
-  const arr = R.filter(
-    R.propEq("status_evento_explicacao", "CODAE autorizou reclamação"),
-    logs
-  );
-  return arr[0];
-};
-
 const TabelaProdutos = ({ produtos, history, setProdutos }) => {
-  const [ativos, setAtivos] = useState([0]);
+  const [ativos, setAtivos] = useState([]);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
   if (!produtos) return false;
@@ -74,12 +48,11 @@ const TabelaProdutos = ({ produtos, history, setProdutos }) => {
         </div>
         {produtos.map((produto, index) => {
           const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
-          const bordas = "";
-          const icone = produto ? "angle-up" : "angle-down";
+          const bordas = ativos.includes(index) ? "desativar-borda" : "";
+          const icone = ativos.includes(index) ? "angle-up" : "angle-down";
           const logs = ordenaLogs(produto.ultima_homologacao.logs);
           // eslint-disable-next-line no-console
-          console.dir(logs);
-          const reclamacao = getReclamacao(logs);
+          const reclamacao = produto.ultima_homologacao.reclamacoes[0]; //getReclamacao(logs);
           const questionamento = getQuestionamentoCodae(logs);
 
           return (
@@ -131,59 +104,11 @@ const TabelaProdutos = ({ produtos, history, setProdutos }) => {
                       })}
                     </div>
                   </div>
-                  <hr />
-                  <div className="grid-detalhe">
-                    <div className="grid-detalhe-cell label-empresa">
-                      Nome da Escola
-                    </div>
-                    <div className="grid-detalhe-cell label-empresa">
-                      Código EOL
-                    </div>
-                    <div className="grid-detalhe-cell label-empresa" />
-                    <div className="grid-detalhe-cell value-empresa">
-                      {terceirizada.nome_fantasia}
-                    </div>
-                    <div className="grid-detalhe-cell value-empresa">XXXX</div>
-                    <div className="grid-detalhe-cell value-empresa" />
-                  </div>
-                  <div className="grid-detalhe">
-                    <div className="grid-detalhe-cell label-empresa">
-                      Nome do Reclamante
-                    </div>
-                    <div className="grid-detalhe-cell label-empresa">
-                      RF/CRN/CFN
-                    </div>
-                    <div className="grid-detalhe-cell label-empresa">Cargo</div>
-                    <div className="grid-detalhe-cell value-empresa">
-                      {reclamacao.usuario.nome}
-                    </div>
-                    <div className="grid-detalhe-cell value-empresa">
-                      {reclamacao.usuario.registro_funcional || ""}
-                    </div>
-                    <div className="grid-detalhe-cell value-empresa">
-                      {reclamacao.usuario.cargo || ""}
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="log-reclamacao">
-                    <div className="label-empresa">Reclamação</div>
-                    <div className="value-empresa mb-3">
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: reclamacao.justificativa
-                        }}
-                      />
-                    </div>
-                    <div className="label-empresa">Questionamento CODAE</div>
-                    <div className="value-empresa">
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: questionamento.justificativa
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <hr />
+
+                  <InformacaoDeReclamante
+                    reclamacao={reclamacao}
+                    questionamento={questionamento}
+                  />
 
                   <div className="float-right">
                     <Botao

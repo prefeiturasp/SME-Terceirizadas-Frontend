@@ -6,24 +6,14 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalResponderReclamacao from "./ModalResponderReclamacao";
-
-const {
-  CODAE_HOMOLOGADO,
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
-} = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
-
-const checaStatus = obj =>
-  obj.status === CODAE_HOMOLOGADO.toUpperCase() ||
-  obj.status === ESCOLA_OU_NUTRICIONISTA_RECLAMOU.toUpperCase();
+import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
 
 const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [produto, setProduto] = useState(null);
-  const [ativo, setAtivo] = useState(false);
   const [exibirModal, setExibirModal] = useState();
   const [uuid, setUuid] = useState();
 
@@ -31,10 +21,12 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
     _uuid => {
       async function fetchData() {
         setProduto(null);
-        setExibirModal(false)
+        setExibirModal(false);
         const response = await getHomologacaoProduto(_uuid || uuid);
-        setAtivo(checaStatus(response.data));
-        setProduto(response.data.produto);
+        const _produto = response.data.produto;
+        const logOrdenado = ordenaLogs(_produto.ultima_homologacao.logs);
+        _produto.logOrdenado = logOrdenado;
+        setProduto(_produto);
       }
       fetchData();
     },
@@ -59,7 +51,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
           closeModal={() => setExibirModal(false)}
           produto={produto || {}}
           idHomologacao={uuid}
-          atualizarDados={carregaHomologacao}
+          atualizarDados={() => setProduto({ ...produto, respondido: true })}
         />
         <div className="card">
           <div className="card-body">
@@ -78,8 +70,8 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                   className="mr-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled={!ativo}
-                  onClick={() => setExibirModal (true)}
+                  disabled={produto && produto.respondido}
+                  onClick={() => setExibirModal(true)}
                 />
               </div>
             </div>
@@ -87,9 +79,9 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
               <>
                 <DetalheDoProduto
                   produto={produto}
-                  status={ativo ? "ativo" : "suspenso"}
+                  reclamacao={produto.ultima_homologacao.reclamacoes[0]}
+                  questionamento={getQuestionamentoCodae(produto.logOrdenado)}
                 />
-
                 <div className="row">
                   <div className="col-12 text-right">
                     <Botao
@@ -105,8 +97,8 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                       className="mr-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={!ativo}
-                      onClick={() => setExibirModal (true)}
+                      disabled={produto && produto.respondido}
+                      onClick={() => setExibirModal(true)}
                     />
                   </div>
                 </div>
