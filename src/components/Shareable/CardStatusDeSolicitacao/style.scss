@@ -6,6 +6,9 @@
   color: $blackInput;
   letter-spacing: 0.01em;
   padding-top: 5px;
+  &.card-com-href {
+    cursor: pointer;
+  }
   span {
     color: $grayPlaceholder;
     font-weight: normal;
