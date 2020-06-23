@@ -10,7 +10,7 @@ import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
-import ModalAtivacaoSuspensaoProduto from "./ModalResponderReclamacao";
+import ModalResponderReclamacao from "./ModalResponderReclamacao";
 
 const {
   CODAE_HOMOLOGADO,
@@ -31,7 +31,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
     _uuid => {
       async function fetchData() {
         setProduto(null);
-        setAcao(null);
+        setExibirModal(false)
         const response = await getHomologacaoProduto(_uuid || uuid);
         setAtivo(checaStatus(response.data));
         setProduto(response.data.produto);
@@ -54,10 +54,9 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
   return (
     <Spin tip="Carregando..." spinning={!produto}>
       <>
-        <ModalAtivacaoSuspensaoProduto
-          showModal={!!acao}
+        <ModalResponderReclamacao
+          showModal={exibirModal}
           closeModal={() => setExibirModal(false)}
-          acao={acao}
           produto={produto || {}}
           idHomologacao={uuid}
           atualizarDados={carregaHomologacao}
@@ -75,12 +74,12 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao
-                  texto={"Responder"}
+                  texto="Responder"
                   className="mr-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={!ativo}
-                  onClick={() => setExibirModal(true)}
+                  onClick={() => setExibirModal (true)}
                 />
               </div>
             </div>
@@ -102,20 +101,12 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                       type={BUTTON_TYPE.BUTTON}
                     />
                     <Botao
-                      texto={"Ativar"}
-                      className="mr-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={ativo}
-                      onClick={() => setAcao("ativação")}
-                    />
-                    <Botao
-                      texto={"Suspender"}
+                      texto={"Responder"}
                       className="mr-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={!ativo}
-                      onClick={() => setAcao("suspensão")}
+                      onClick={() => setExibirModal (true)}
                     />
                   </div>
                 </div>
