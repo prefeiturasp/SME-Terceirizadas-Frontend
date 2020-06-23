@@ -1,5 +1,8 @@
 import { truncarString } from "../../../helpers/utilities";
-import { RELATORIO, GESTAO_PRODUTO, EDITAR } from "../../../configs/constants";
+import { RELATORIO, GESTAO_PRODUTO, EDITAR } from "configs/constants";
+import { usuarioEhTerceirizada } from "helpers/utilities";
+import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
+const { CODAE_PEDIU_ANALISE_RECLAMACAO } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
   "Reclamação de produto": {
@@ -18,12 +21,23 @@ export const incluirDados = (statuses, arr) => {
   return result;
 };
 
-export const formataCards = (cards, apontaParaEdicao) => {
-  return cards.map(card => ({
-    text: `${card.id_externo} - ${truncarString(card.nome_produto, 48)}`,
-    date: card.log_mais_recente,
-    link: apontaParaEdicao
-      ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${card.uuid}`
-      : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${card.uuid}`
+const gerarLinkDoItem = (item, apontaParaEdicao) => {
+  if (
+    item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
+    usuarioEhTerceirizada()
+  ) {
+    return `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${item.uuid}
+      `;
+  }
+  return apontaParaEdicao
+    ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`
+    : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
+};
+
+export const formataCards = (items, apontaParaEdicao) => {
+  return items.map(item => ({
+    text: `${item.id_externo} - ${truncarString(item.nome_produto, 48)}`,
+    date: item.log_mais_recente,
+    link: gerarLinkDoItem(item, apontaParaEdicao)
   }));
 };

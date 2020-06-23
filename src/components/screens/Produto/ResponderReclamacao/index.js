@@ -163,7 +163,7 @@ const ResponderReclamacaoProduto = ({ history }) => {
   }, [filtros, setProdutos]);
 
   const onSubmitForm = formValues => {
-    setFiltros({ ...formValues, status: ["CODAE_AUTORIZOU_RECLAMACAO"] });
+    setFiltros({ ...formValues, status: ["CODAE_PEDIU_ANALISE_RECLAMACAO"] });
   };
 
   return (

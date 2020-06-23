@@ -21,7 +21,7 @@ export const getReclamacao = logs => {
 
 export const getQuestionamentoCodae = logs => {
   const arr = R.filter(
-    R.propEq("status_evento_explicacao", "CODAE autorizou reclamação"),
+    R.propEq("status_evento_explicacao", "CODAE pediu análise da reclamação"),
     logs
   );
   return arr[0];
