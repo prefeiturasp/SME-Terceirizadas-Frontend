@@ -45,7 +45,12 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  exibirBotaoVoltar,
+  history,
+  exibirStatus = true
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -97,7 +102,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
-            <Col md={24} lg={9}>
+            <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
@@ -108,7 +113,7 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 name="nome_marca"
               />
             </Col>
-            <Col md={24} lg={9}>
+            <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
@@ -118,19 +123,21 @@ const FormBuscaProduto = ({ onSubmit, exibirBotaoVoltar, history }) => {
                 name="nome_fabricante"
               />
             </Col>
-            <Col md={24} lg={6}>
-              <div className="">
-                <Field
-                  component={SelectSelecione}
-                  label="Status"
-                  name="status"
-                  options={[
-                    { nome: "Ativo", uuid: "ativo" },
-                    { nome: "Suspenso", uuid: "suspenso" }
-                  ]}
-                />
-              </div>
-            </Col>
+            {exibirStatus && (
+              <Col md={24} lg={6}>
+                <div className="">
+                  <Field
+                    component={SelectSelecione}
+                    label="Status"
+                    name="status"
+                    options={[
+                      { nome: "Ativo", uuid: "ativo" },
+                      { nome: "Suspenso", uuid: "suspenso" }
+                    ]}
+                  />
+                </div>
+              </Col>
+            )}
           </Row>
           <div className="mt-4 mb-4">
             <Botao

@@ -1,9 +1,9 @@
 @import "styles/variables.scss";
 
-.shareable-detalhe-produto {
+.shareable-detalhe-reclamacao {
   header {
     display: grid;
-    grid-template-columns: 28% 18% 18% 18% 18%;
+    grid-template-columns: 35% 25% 20% 20%;
     margin: 20px 0;
   }
 
@@ -21,13 +21,6 @@
     line-height: 18px;
     color: #353535;
     margin: 6px 0 0 0;
-  }
-
-  .componente-informacao-de-reclamante .responder-reclamacao-anexos {
-    margin-left: 0 !important;
-  }
-  .componente-informacao-de-reclamante .responder-reclamacao-anexos .col-12 {
-    padding-left: 0 !important;
   }
 
   min-width: 100%;
