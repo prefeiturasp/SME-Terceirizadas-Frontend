@@ -49,16 +49,22 @@ export const getInformacoesGrupo = async () => {
   return await axios.get(`/informacoes-nutricionais/agrupadas/`);
 };
 
-export const getNomesProdutos = async () => {
-  return await axios.get(`/produtos/lista-nomes/`);
+export const getNomesProdutos = async queryparams => {
+  let url = `/produtos/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
 };
 
-export const getNomesMarcas = async () => {
-  return await axios.get(`/marcas/lista-nomes/`);
+export const getNomesMarcas = async queryparams => {
+  let url = `/marcas/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
 };
 
-export const getNomesFabricantes = async () => {
-  return await axios.get(`/fabricantes/lista-nomes/`);
+export const getNomesFabricantes = async queryparams => {
+  let url = `/fabricantes/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
 };
 
 export const getNomesTerceirizadas = async () => {
