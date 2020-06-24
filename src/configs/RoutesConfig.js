@@ -87,13 +87,16 @@ import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
 import BuscaProdutoAnaliseSensorial from "../pages/Produto/BuscaProdutoAnaliseSensorial";
 import RelatorioAnaliseSensorial from "../pages/Produto/RelatorioAnaliseSensorial";
+import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 import {
   ReclamacaoDeProdutoPage,
   ConsultaAtivacaoDeProdutoPage,
-  AtivacaoDeProdutoPage
+  AtivacaoDeProdutoPage,
+  ConsultaResponderReclamacaoPage,
+  ResponderReclamacaoPage
 } from "../pages/Produto";
 
 const routesConfig = [
@@ -595,6 +598,14 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AVALIAR_RECLAMACAO_PRODUTO
+    }`,
+    component: AvaliarReclamacaoProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
       constants.BUSCA_PRODUTO_ANALISE_SENSORIAL
     }`,
@@ -758,6 +769,18 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
+    component: ConsultaResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
+    component: ResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   }
 ];
 

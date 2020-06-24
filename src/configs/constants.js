@@ -77,6 +77,7 @@ export const BUSCA_PRODUTO = "busca-produto";
 export const BUSCA_PRODUTO_ANALISE_SENSORIAL =
   "busca-produto-analise-sensorial";
 export const RELATORIO_ANALISE_SENSORIAL = "relatorio-analise-sensorial";
+export const AVALIAR_RECLAMACAO_PRODUTO = "avaliar-reclamacao-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";

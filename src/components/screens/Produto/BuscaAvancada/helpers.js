@@ -23,7 +23,9 @@ export const retornaProdutosComUltimaHomolagacao = response => {
     produto.homologacoes.forEach(homolog => {
       homologacoes.push(homolog);
     });
-    produto["status"] = homologacoes[0]["status"];
+    if (homologacoes.length > 0) {
+      produto["status"] = homologacoes[0]["status"];
+    }
     produto["ultima_homologacao"] = homologacoes[0];
 
     produto["todos_logs"] = retornaTodosOsLogs(homologacoes);
