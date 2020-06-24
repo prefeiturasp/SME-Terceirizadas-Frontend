@@ -3,12 +3,18 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
-import { RELATORIO, GESTAO_PRODUTO, EDITAR } from "configs/constants";
+import {
+  RELATORIO,
+  GESTAO_PRODUTO,
+  EDITAR,
+  PESQUISA_DESENVOLVIMENTO
+} from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 const {
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+  ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+  CODAE_PEDIU_ANALISE_SENSORIAL
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
@@ -33,8 +39,14 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
     usuarioEhTerceirizada()
   ) {
-    return `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${item.uuid}
-      `;
+    return `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${item.uuid}`;
+  } else if (
+    item.status.toLowerCase() === CODAE_PEDIU_ANALISE_SENSORIAL &&
+    usuarioEhTerceirizada()
+  ) {
+    return `/${PESQUISA_DESENVOLVIMENTO}/relatorio-analise-sensorial?uuid=${
+      item.uuid
+    }`;
   } else if (
     usuarioEhCODAEGestaoProduto() &&
     [
