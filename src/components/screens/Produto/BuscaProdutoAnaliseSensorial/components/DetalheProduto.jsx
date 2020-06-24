@@ -45,13 +45,7 @@ export default class DetalheProduto extends Component {
           <section>
             <div>
               <label>Quais?</label>
-              <p className="texto-em-upper">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Posuere
-                erat tincidunt arcu varius. Vitae fermentum nam cras fringilla
-                velit aliquet. Dictum viverra lacinia cursus enim at arcu in
-                diam tincidunt. Nisl, vel id rhoncus consectetur purus sit a
-                amet.
-              </p>
+              <p className="texto-em-upper">{produto.aditivos}</p>
             </div>
           </section>
         )}
@@ -89,7 +83,12 @@ export default class DetalheProduto extends Component {
         <section>
           <div>
             <label>Solicitação de análise sensorial </label>
-            <p className="texto-em-upper">{justificativa}</p>
+            <p
+              className="texto-em-upper"
+              dangerouslySetInnerHTML={{
+                __html: justificativa
+              }}
+            />
           </div>
         </section>
 

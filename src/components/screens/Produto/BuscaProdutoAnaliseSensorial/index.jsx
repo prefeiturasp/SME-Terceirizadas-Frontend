@@ -10,6 +10,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
+import { Link } from "react-router-dom";
 
 class BuscaProdutoAnaliseSensorial extends Component {
   constructor(props) {
@@ -95,11 +96,17 @@ class BuscaProdutoAnaliseSensorial extends Component {
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
-                        <Botao
-                          texto={"Ver produto"}
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
+                        <Link
+                          to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${
+                            homologacao.uuid
+                          }`}
+                        >
+                          <Botao
+                            texto="Ver produto"
+                            icon={undefined}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </Link>
                         <Botao
                           texto={"Responder"}
                           type={BUTTON_TYPE.SUBMIT}
