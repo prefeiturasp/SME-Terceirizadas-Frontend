@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { FormBuscaProduto } from "components/Shareable/FormBuscaProduto";
+import { FormBuscaProduto } from "./components/FormBuscaProduto";
 import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
 import { TabelaProdutos } from "./components/TabelaProdutos";
 import { deepCopy } from "helpers/utilities";
