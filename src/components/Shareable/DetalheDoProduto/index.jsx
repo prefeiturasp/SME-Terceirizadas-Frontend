@@ -31,7 +31,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       {!!status && (
         <>
           <hr />
-          <span className="label-relatorio">Status: </span>
+          <span className="label-relatorio">Status do produto: </span>
           <span className="value-relatorio"> {status} </span>
           <hr />
         </>

@@ -113,9 +113,11 @@ const AtivacaoSuspencaoProduto = () => {
 
         {produtos && produtos.length && (
           <div className="container-tabela">
-            <div className="texto-veja-resultados">{`Veja resultados para "${
-              filtros && filtros.nome_produto ? filtros.nome_produto : ""
-            }" :`}</div>
+            <div className="texto-veja-resultados">
+              {filtros && filtros.nome_produto && filtros.nome_produto.length
+                ? `Veja resultados para "${filtros.nome_produto}":`
+                : "Resultados da busca:"}
+            </div>
             <TabelaProdutos produtos={produtos} />
           </div>
         )}
