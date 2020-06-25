@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import {
@@ -12,9 +12,19 @@ const atual = {
   titulo: "Avaliar Reclamação de Produto"
 };
 
-export default () => (
-  <Page titulo={"Avaliar Reclamação de Produto"} botaoVoltar voltarPara={"/"}>
-    <Breadcrumb home={"/"} atual={atual} />
-    <AvaliarReclamacaoProduto />
-  </Page>
-);
+export const AvaliarReclamacaoProdutoPage = () => {
+  const [produto, setProduto] = useState(null);
+
+  return (
+    <Page
+      titulo={"Avaliar Reclamação de Produto"}
+      botaoVoltar={produto === null}
+      voltarPara={"/"}
+    >
+      <Breadcrumb home={"/"} atual={atual} />
+      <AvaliarReclamacaoProduto setPropsPageProduto={setProduto} />
+    </Page>
+  );
+};
+
+export default AvaliarReclamacaoProdutoPage;

@@ -9,7 +9,7 @@ import ModalProsseguirReclamacao from "./components/Modal";
 import { Spin } from "antd";
 import "./style.scss";
 
-export const AvaliarReclamacaoProduto = () => {
+export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
   const [tituloModal, setTituloModal] = useState(null);
   const [produtos, setProdutos] = useState(null);
   const [verProduto, setVerProduto] = useState(null);
@@ -17,6 +17,7 @@ export const AvaliarReclamacaoProduto = () => {
   const [exibirModal, setExibirModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
+  const [nomeDoProduto, setNomeDoProduto] = useState(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -25,6 +26,7 @@ export const AvaliarReclamacaoProduto = () => {
       getHomologacao(uuid)
         .then(response => {
           setLoading(false);
+          setPropsPageProduto(response.data.produto);
           setVerProduto(response.data.produto);
         })
         .catch(() => {
@@ -43,6 +45,14 @@ export const AvaliarReclamacaoProduto = () => {
 
   const onSubmit = values => {
     setLoading(true);
+    if (
+      values.nome_produto &&
+      !values.nome_fabricante &&
+      !values.nome_marca &&
+      !values.status
+    )
+      setNomeDoProduto(values.nome_produto);
+    else setNomeDoProduto(null);
     const values_ = deepCopy(values);
     getProdutosPorFiltro(formatarValues(values_)).then(response => {
       setProdutos(response.data.results);
@@ -101,6 +111,8 @@ export const AvaliarReclamacaoProduto = () => {
                     exibirDadosProduto={exibirDadosProduto}
                     setModal={setModal}
                     setProdutoAAtualizar={setProdutoAAtualizar}
+                    nomeDoProduto={nomeDoProduto}
+                    setPropsPageProduto={setPropsPageProduto}
                   />
                 </Fragment>
               )}
@@ -110,6 +122,7 @@ export const AvaliarReclamacaoProduto = () => {
                   setVerProduto={setVerProduto}
                   produto={verProduto}
                   setProdutoAAtualizar={setProdutoAAtualizar}
+                  setPropsPageProduto={setPropsPageProduto}
                 />
               )}
             </Fragment>

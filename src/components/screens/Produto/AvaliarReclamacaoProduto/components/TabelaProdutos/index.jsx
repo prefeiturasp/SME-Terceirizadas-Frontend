@@ -10,13 +10,19 @@ export const TabelaProdutos = ({
   verProduto,
   setVerProduto,
   setModal,
-  setProdutoAAtualizar
+  setProdutoAAtualizar,
+  nomeDoProduto,
+  setPropsPageProduto
 }) => {
   return (
     <div className="tabela-lista-produtos">
       {produtos && (
         <Fragment>
-          <h2>Veja resultados para a busca:</h2>
+          <h2>
+            {nomeDoProduto
+              ? `Veja os resultados para: "${nomeDoProduto}"`
+              : "Veja os resultados para a busca:"}
+          </h2>
           <table>
             <thead>
               <tr className="row">
@@ -67,6 +73,7 @@ export const TabelaProdutos = ({
                         setVerProduto={setVerProduto}
                         setModal={setModal}
                         setProdutoAAtualizar={setProdutoAAtualizar}
+                        setPropsPageProduto={setPropsPageProduto}
                       />
                     </Fragment>
                   )
