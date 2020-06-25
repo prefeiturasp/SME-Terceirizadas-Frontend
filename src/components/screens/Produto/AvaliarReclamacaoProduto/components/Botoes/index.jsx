@@ -11,7 +11,8 @@ export const Botoes = ({
   setVerProduto,
   verUnicoProduto,
   setModal,
-  setProdutoAAtualizar
+  setProdutoAAtualizar,
+  setPropsPageProduto
 }) => {
   return (
     <div className="row mb-3">
@@ -19,6 +20,8 @@ export const Botoes = ({
         <Botao
           onClick={() => {
             setVerProduto(verUnicoProduto ? null : produto);
+            setPropsPageProduto &&
+              setPropsPageProduto(verUnicoProduto ? null : produto);
             window.scrollTo(0, 0);
           }}
           texto={verUnicoProduto ? "Voltar" : "Ver produto"}
