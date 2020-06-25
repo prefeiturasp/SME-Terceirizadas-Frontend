@@ -372,3 +372,10 @@ export const responderReclamacaoProduto = async (uuid, payload) => {
     payload
   );
 };
+
+export const getProdutosPorTerceirizada = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-terceirizada/`,
+    filtro
+  );
+};
