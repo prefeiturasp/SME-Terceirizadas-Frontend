@@ -3,10 +3,12 @@ import { DadosReclamacaoProduto } from "../DadosReclamacao";
 import { DadosProduto } from "../DadosProduto";
 import { Botoes } from "../Botoes";
 import { NOME_STATUS } from "../TabelaProdutos/helpers";
+import "./style.scss";
+import { DadosEmpresa } from "../DadosEmpresa";
 
 export const VerProduto = ({ ...props }) => {
   return (
-    <div>
+    <div className="ver-produto-pagina">
       <Botoes {...props} verUnicoProduto />
       <div className="row">
         <div className="col-3 report-label-value">
@@ -34,7 +36,13 @@ export const VerProduto = ({ ...props }) => {
         </div>
       </div>
       <hr />
-      <DadosReclamacaoProduto {...props} />
+      <div className="subtitle">Informação de reclamante</div>
+      <DadosReclamacaoProduto paginaInteira {...props} />
+      <hr />
+      <div className="subtitle">
+        Informação de empresa solicitante (Terceirizada)
+      </div>
+      <DadosEmpresa {...props} />
       <DadosProduto {...props} />
       <Botoes {...props} verUnicoProduto />
     </div>

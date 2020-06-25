@@ -1,9 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
-import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -16,15 +14,13 @@ import { useHistory } from "react-router-dom";
 import {
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes,
-  getNomesTerceirizadas
+  getNomesFabricantes
 } from "services/produto.service";
-import { SelectWithHideOptions } from "../SelectWithHideOptions";
+import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
 
 const initialState = {
   dados: {},
-  terceirizadas: [],
   produtos: [],
   marcas: [],
   fabricantes: [],
@@ -55,8 +51,6 @@ function reducer(state, { type: actionType, payload }) {
 
 export const FormBuscaProduto = ({
   onSubmit,
-  naoExibirRowTerceirizadas,
-  statusSelect,
   exibirBotaoVoltar,
   naoExibirLimparFiltros
 }) => {
@@ -64,28 +58,22 @@ export const FormBuscaProduto = ({
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
-      getNomesProdutos(),
-      getNomesMarcas(),
-      getNomesFabricantes()
+      getNomesProdutos("?filtrar_por=reclamacoes"),
+      getNomesMarcas("?filtrar_por=reclamacoes"),
+      getNomesFabricantes("?filtrar_por=reclamacoes")
     ];
-    if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
-      Promise.all(endpoints).then(
-        ([produtos, marcas, fabricantes, terceirizadas]) => {
-          dispatch({
-            type: "popularDados",
-            payload: {
-              produtos: produtos.data.results.map(el => el.nome),
-              marcas: marcas.data.results.map(el => el.nome),
-              fabricantes: fabricantes.data.results.map(el => el.nome),
-              terceirizadas:
-                terceirizadas &&
-                terceirizadas.data.results.map(el => el.nome_fantasia),
-              status: STATUS_RECLAMACAO_PRODUTO
-            }
-          });
-        }
-      );
+      Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
+        dispatch({
+          type: "popularDados",
+          payload: {
+            produtos: produtos.data.results.map(el => el.nome),
+            marcas: marcas.data.results.map(el => el.nome),
+            fabricantes: fabricantes.data.results.map(el => el.nome),
+            status: STATUS_RECLAMACAO_PRODUTO
+          }
+        });
+      });
     }
     fetchData();
   }, []);
@@ -103,47 +91,11 @@ export const FormBuscaProduto = ({
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, submitting, values }) => (
+      render={({ form, handleSubmit, submitting }) => (
         <form
           onSubmit={handleSubmit}
           className="busca-produtos-formulario-shared"
         >
-          {!naoExibirRowTerceirizadas && (
-            <Row gutter={[16, 16]}>
-              <Col md={24} lg={12} xl={16}>
-                <Field
-                  component={AutoCompleteField}
-                  dataSource={state.terceirizadas}
-                  label="Nome da terceirizada"
-                  onSearch={v => onSearch("terceirizadas", v)}
-                  name="nome_terceirizada"
-                />
-              </Col>
-              <Col md={24} lg={6} xl={4}>
-                <Field
-                  component={InputComData}
-                  label="Início do Período"
-                  name="data_inicial"
-                  labelClassName="datepicker-fixed-padding"
-                  minDate={null}
-                />
-              </Col>
-              <Col md={24} lg={6} xl={4}>
-                <Field
-                  component={InputComData}
-                  label={"Até"}
-                  name="data_final"
-                  labelClassName="datepicker-fixed-padding"
-                  popperPlacement="bottom-end"
-                  minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
-                  }
-                />
-              </Col>
-            </Row>
-          )}
           <Row>
             <Col>
               <Field
@@ -157,7 +109,7 @@ export const FormBuscaProduto = ({
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
-            <Col md={24} lg={statusSelect ? 8 : 12}>
+            <Col md={24} lg={8}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
@@ -167,7 +119,7 @@ export const FormBuscaProduto = ({
                 name="nome_marca"
               />
             </Col>
-            <Col md={24} lg={statusSelect ? 8 : 12}>
+            <Col md={24} lg={8}>
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
@@ -176,21 +128,19 @@ export const FormBuscaProduto = ({
                 name="nome_fabricante"
               />
             </Col>
-            {statusSelect && (
-              <Col md={24} lg={8}>
-                <div className="pb-1">
-                  <label>Status</label>
-                </div>
-                <Field
-                  component={SelectWithHideOptions}
-                  mode="default"
-                  options={STATUS_RECLAMACAO_PRODUTO}
-                  name="status"
-                  handleChange={v => onSearch("status", v)}
-                  selectedItems={state.status}
-                />
-              </Col>
-            )}
+            <Col md={24} lg={8}>
+              <div className="pb-1">
+                <label>Status</label>
+              </div>
+              <Field
+                component={SelectWithHideOptions}
+                mode="default"
+                options={STATUS_RECLAMACAO_PRODUTO}
+                name="status"
+                handleChange={v => onSearch("status", v)}
+                selectedItems={state.status}
+              />
+            </Col>
           </Row>
           <div className="row">
             <div className="col-12 text-right">

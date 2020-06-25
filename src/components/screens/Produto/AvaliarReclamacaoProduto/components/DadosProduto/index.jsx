@@ -191,6 +191,12 @@ export class DadosProduto extends Component {
         <div className="title">Informação do Produto (classificação)</div>
         <div className="row">
           <div className="col-6 report-label-value">
+            <p>Tipo</p>
+            <p className="value">{produto.tipo || "Sem tipo"}</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6 report-label-value">
             <p>Embalagem primária</p>
             <p className="value">{produto.embalagem || "Sem embalagem"}</p>
           </div>
