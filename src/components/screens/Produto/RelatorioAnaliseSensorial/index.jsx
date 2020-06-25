@@ -11,14 +11,18 @@ import {
 import Botao from "components/Shareable/Botao";
 import "./styles.scss";
 import { Fragment } from "react";
+import ModalResponderAnaliseSensorial from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
 
 class RelatorioAnaliseSensorial extends Component {
   constructor(props) {
     super(props);
     this.state = {
       homologacao: null,
-      informacoes: null
+      informacoes: null,
+      showModal: false
     };
+    this.showModal = this.showModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount = async () => {
@@ -50,6 +54,14 @@ class RelatorioAnaliseSensorial extends Component {
     });
   };
 
+  showModal() {
+    this.setState({ ...this.state, showModal: true });
+  }
+
+  closeModal() {
+    this.setState({ ...this.state, showModal: false });
+  }
+
   retornaDataSolicitacao = ({ logs }) => {
     return logs[logs.length - 1].criado_em.split(" ")[0];
   };
@@ -65,26 +77,29 @@ class RelatorioAnaliseSensorial extends Component {
   };
 
   render() {
-    const { homologacao, informacoes } = this.state;
+    const { homologacao, informacoes, showModal } = this.state;
     const justificativa =
       homologacao &&
       homologacao.logs[homologacao.logs.length - 1].justificativa;
     return (
       <div className="card">
         <div className="card-body">
-          <article className="botoes-header">
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-            />
-            <Botao
-              texto={"Responder"}
-              type={BUTTON_TYPE.SUBMIT}
-              style={BUTTON_STYLE.GREEN}
-            />
-          </article>
+          {homologacao !== null && (
+            <article className="botoes-header">
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                titulo="imprimir"
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+              />
+              <Botao
+                texto={"Responder"}
+                type={BUTTON_TYPE.SUBMIT}
+                style={BUTTON_STYLE.GREEN}
+                onClick={() => this.showModal()}
+              />
+            </article>
+          )}
 
           {homologacao !== null ? (
             <section>
@@ -381,6 +396,11 @@ class RelatorioAnaliseSensorial extends Component {
           ) : (
             <div> Carregando...</div>
           )}
+          <ModalResponderAnaliseSensorial
+            showModal={showModal}
+            closeModal={this.closeModal}
+            homologacao={homologacao}
+          />
         </div>
       </div>
     );

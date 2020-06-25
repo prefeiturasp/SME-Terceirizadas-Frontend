@@ -148,6 +148,26 @@ export const updateProduto = async payload => {
     });
 };
 
+export const respostaAnaliseSensorial = async payload => {
+  const url = `${API_URL}/analise-sensorial/terceirizada-responde-analise-sensorial/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const criarFabricanteProduto = async data => {
   return await axios.post(`/fabricantes/`, data);
 };
@@ -371,4 +391,8 @@ export const responderReclamacaoProduto = async (uuid, payload) => {
     `/homologacoes-produtos/${uuid}/terceirizada-responde-reclamacao/`,
     payload
   );
+};
+
+export const flegarHomologacaoPDF = async uuid => {
+  return await axios.post(`/homologacoes-produtos/${uuid}/gerar-pdf/`);
 };
