@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
-import moment from "moment";
 import { Spin } from "antd";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { getProdutosPorTerceirizada } from "services/produto.service";
+import { Link } from "react-router-dom";
+
+import {
+  getProdutosPorTerceirizada,
+  getRelatorioProdutosHomologados
+} from "services/produto.service";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -157,18 +162,27 @@ const RelatorioProdutosHomologados = () => {
         </section>
 
         <section className="m-3">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            titulo="imprimir"
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right ml-3"
-            onClick={() => {
-              setFiltros(null);
-              setGrupos(null);
+          <Link
+            to="route"
+            target="_blank"
+            onClick={event => {
+              event.preventDefault();
+              window.open(getRelatorioProdutosHomologados(filtros));
             }}
-          />
+          >
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              titulo="imprimir"
+              texto="imprimir"
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right ml-3"
+              onClick={() => {
+                setFiltros(null);
+                setGrupos(null);
+              }}
+            />
+          </Link>
           <Botao
             texto="voltar"
             titulo="voltar"
