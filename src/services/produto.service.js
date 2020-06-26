@@ -372,3 +372,23 @@ export const responderReclamacaoProduto = async (uuid, payload) => {
     payload
   );
 };
+
+export const getProdutosPorTerceirizada = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-terceirizada/`,
+    filtro
+  );
+};
+
+export const getRelatorioProdutosHomologados = filtros => {
+  let url = `${API_URL}/produtos/relatorio-por-parametros-agrupado-terceirizada/`;
+  const entries = Object.entries(filtros);
+  if (entries.length) {
+    const urlParams = new URLSearchParams();
+    for (let [key, value] of entries) {
+      urlParams.append(key, value);
+    }
+    return `${url}?${urlParams.toString()}`;
+  }
+  return url;
+};

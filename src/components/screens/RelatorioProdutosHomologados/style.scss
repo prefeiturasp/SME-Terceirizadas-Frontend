@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .page-relatorio-produtos-homologados {
   .header-busca-produto {
     font-style: normal;
@@ -10,39 +12,63 @@
 }
 
 .tabela-produtos-homologados {
-  display: grid;
-  grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
-}
+  .header-homologados {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
 
-.tabela-header-produtos-homologados {
-  background: #f5f6f8;
-  height: 52px;
+    background: #f5f6f8;
+    height: 52px;
 
-  div {
-    padding: 5px 10px;
-    font-weight: bold;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    color: #42474a;
-    border: 1px solid #e9eaea;
+    div {
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: #42474a;
+      border: 1px solid #e9eaea;
+    }
   }
-}
 
-.tabela-body-produtos-homologados {
-  height: 48px;
-}
+  .body-homologados {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
+    height: 48px;
 
-.item-produtos-homologados > div {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 18px;
-  padding: 5px 10px;
+    div {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 5px 10px;
 
-  display: flex;
-  align-items: center;
+      display: flex;
+      align-items: center;
 
-  color: #686868;
+      color: #686868;
 
-  border: 1px solid #e9eaea;
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .linha-totalizacao {
+    background-color: #e9eaea;
+    text-align: right;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 48px;
+    color: $gray;
+
+    span {
+      span {
+        padding-left: 100px;
+        padding-right: 8px;
+      }
+    }
+  }
+
+  .linha-totalizacao-geral {
+    font-size: 16 px;
+    margin-top: 2px;
+    color: #000;
+  }
 }
