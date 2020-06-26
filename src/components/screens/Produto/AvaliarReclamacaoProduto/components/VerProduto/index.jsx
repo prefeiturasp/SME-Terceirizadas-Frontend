@@ -9,7 +9,11 @@ import { DadosEmpresa } from "../DadosEmpresa";
 export const VerProduto = ({ ...props }) => {
   return (
     <div className="ver-produto-pagina">
-      <Botoes {...props} verUnicoProduto />
+      <Botoes
+        {...props}
+        verUnicoProduto
+        setPropsPageProduto={props.setPropsPageProduto}
+      />
       <div className="row">
         <div className="col-3 report-label-value">
           <p>Nome do produto</p>
@@ -44,7 +48,11 @@ export const VerProduto = ({ ...props }) => {
       </div>
       <DadosEmpresa {...props} />
       <DadosProduto {...props} />
-      <Botoes {...props} verUnicoProduto />
+      <Botoes
+        {...props}
+        verUnicoProduto
+        setPropsPageProduto={props.setPropsPageProduto}
+      />
     </div>
   );
 };
