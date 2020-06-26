@@ -3,6 +3,7 @@ import { Spin } from "antd";
 import { Link } from "react-router-dom";
 import { getProdutosPorFiltro } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
+import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
@@ -113,11 +114,7 @@ const AtivacaoSuspencaoProduto = () => {
 
         {produtos && produtos.length && (
           <div className="container-tabela">
-            <div className="texto-veja-resultados">
-              {filtros && filtros.nome_produto && filtros.nome_produto.length
-                ? `Veja resultados para "${filtros.nome_produto}":`
-                : "Resultados da busca:"}
-            </div>
+            <LabelResultadoDaBusca filtros={filtros} />
             <TabelaProdutos produtos={produtos} />
           </div>
         )}

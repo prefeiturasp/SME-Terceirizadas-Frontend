@@ -4,7 +4,6 @@ import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
-import InputText from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
@@ -15,33 +14,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { responderReclamacaoProduto } from "services/produto.service";
 import "./style.scss";
-import { meusDados } from "services/perfil.service";
 
 export default class ModalResponderReclamacao extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      meusDados: undefined
-    };
+    this.state = {};
   }
 
-  componentWillMount = async () => {
-    const resposta = await meusDados();
-    this.setState({
-      meusDados: resposta
-    });
-  };
-
-  getDadosIniciais = () => {
-    const meusDados = this.state.meusDados;
-    return meusDados
-      ? {
-          funcionario_registro_funcional: meusDados.registro_funcional,
-          funcionario_nome: meusDados.nome,
-          funcionario_cargo: meusDados.cargo || ""
-        }
-      : {};
-  };
+  componentWillMount = async () => {};
 
   onSubmit = async values => {
     try {
@@ -70,48 +50,20 @@ export default class ModalResponderReclamacao extends Component {
         show={showModal}
         onHide={closeModal}
       >
-        <Modal.Header className="border-0" closeButton>
+        <Modal.Header className="border-0">
           <Modal.Title>Responder reclamação de produto</Modal.Title>
         </Modal.Header>
         <Form
           onSubmit={this.onSubmit}
-          initialValues={this.getDadosIniciais()}
+          initialValues={{}}
           render={({ handleSubmit, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
-                <div className="form-row">
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="RF/CRN/CRF"
-                      name="funcionario_registro_funcional"
-                      disabled
-                    />
-                  </div>
-                  <div className="col-8">
-                    <Field
-                      component={InputText}
-                      label="Cargo"
-                      name="funcionario_cargo"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="col-12">
-                    <Field
-                      component={InputText}
-                      label="Nome"
-                      name="funcionario_nome"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div className="form-row row-textarea mt-3">
+                <div className="form-row row-textarea">
                   <div className="col-12">
                     <Field
                       component={TextAreaWYSIWYG}
-                      label="Justificativa"
+                      label="Resposta"
                       name="justificativa"
                       required
                       validate={value => {

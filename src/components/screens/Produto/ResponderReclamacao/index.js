@@ -4,6 +4,7 @@ import { Spin } from "antd";
 import { getProdutosPorFiltro } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
 import InformacaoDeReclamante from "components/Shareable/InformacaoDeReclamante";
+import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
@@ -14,7 +15,7 @@ import ModalResponderReclamacao from "./ModalResponderReclamacao";
 import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
 import "./style.scss";
 
-const TabelaProdutos = ({ produtos, history, setProdutos }) => {
+const TabelaProdutos = ({ produtos, history, setProdutos, filtros }) => {
   const [ativos, setAtivos] = useState([]);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
@@ -40,6 +41,8 @@ const TabelaProdutos = ({ produtos, history, setProdutos }) => {
           setProdutoSelecionado(null);
         }}
       />
+
+      <LabelResultadoDaBusca filtros={filtros} />
       <section className="tabela-resultado-consultar-reclamacao-produto">
         <div className="table-grid table-header">
           <div className="table-header-cell">Nome do Produto</div>
@@ -189,6 +192,7 @@ const ResponderReclamacaoProduto = ({ history }) => {
               produtos={produtos}
               setProdutos={setProdutos}
               history={history}
+              filtros={filtros}
             />
           </div>
         )}
