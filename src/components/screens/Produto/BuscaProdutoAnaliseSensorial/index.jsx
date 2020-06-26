@@ -15,6 +15,7 @@ import {
 import Botao from "components/Shareable/Botao";
 import { Link } from "react-router-dom";
 import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+import { getRelatorioProdutoAnaliseSensorialRecebimento } from "services/relatorios";
 
 class BuscaProdutoAnaliseSensorial extends Component {
   constructor(props) {
@@ -121,7 +122,12 @@ class BuscaProdutoAnaliseSensorial extends Component {
                           texto={"Documento de entrega"}
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          onClick={() => this.pdfGerado(homologacao)}
+                          onClick={() => {
+                            this.pdfGerado(homologacao);
+                            getRelatorioProdutoAnaliseSensorialRecebimento(
+                              homologacao.produto
+                            );
+                          }}
                         />
                         <Link
                           to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${

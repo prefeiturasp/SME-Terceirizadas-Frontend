@@ -12,6 +12,7 @@ import Botao from "components/Shareable/Botao";
 import "./styles.scss";
 import { Fragment } from "react";
 import ModalResponderAnaliseSensorial from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
+import { getRelatorioProdutoAnaliseSensorial } from "services/relatorios";
 
 class RelatorioAnaliseSensorial extends Component {
   constructor(props) {
@@ -91,6 +92,9 @@ class RelatorioAnaliseSensorial extends Component {
                 titulo="imprimir"
                 style={BUTTON_STYLE.BLUE}
                 icon={BUTTON_ICON.PRINT}
+                onClick={() => {
+                  getRelatorioProdutoAnaliseSensorial(homologacao.produto);
+                }}
               />
               <Botao
                 texto={"Responder"}
