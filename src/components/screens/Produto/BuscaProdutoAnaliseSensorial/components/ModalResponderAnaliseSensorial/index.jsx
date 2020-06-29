@@ -204,8 +204,8 @@ class ModalResponderAnaliseSensorial extends Component {
               <Botao
                 texto="Voltar"
                 type={BUTTON_TYPE.BUTTON}
-                onClick={() => {}}
                 style={BUTTON_STYLE.BLUE_OUTLINE}
+                onClick={closeModal}
               />
               <Botao
                 texto="Enviar"
