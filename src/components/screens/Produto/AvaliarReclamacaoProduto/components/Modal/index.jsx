@@ -98,7 +98,7 @@ export default class ModalProsseguirReclamacao extends Component {
                       name="anexos"
                       accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                       icone={BUTTON_ICON.ATTACH}
-                      toastSuccessMessage="Anexo incluído com sucesso"
+                      toastSuccessMessage="Anexo incluso com sucesso"
                       concatenarNovosArquivos
                     />
                   </div>
