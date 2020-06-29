@@ -1,11 +1,4 @@
 .screen-responder-reclamacao-produto {
-  .texto-veja-resultados {
-    font-size: 14px;
-    font-weight: bold;
-    color: #42474a;
-    margin-bottom: 0.3rem;
-  }
-
   .container-tabela {
     padding: 0 2rem 2rem 2rem;
   }
@@ -34,12 +27,19 @@
     font-weight: bold;
     padding-left: 1rem;
     line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .table-body {
     position: relative;
     font-weight: 500;
     color: #686868;
+
+    div:nth-last-child(2) {
+      padding-right: 2rem;
+    }
 
     .reclamacao-collapse {
       position: absolute;
@@ -55,6 +55,9 @@
     text-align: left;
     padding-left: 1rem;
     line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .desativar-borda {

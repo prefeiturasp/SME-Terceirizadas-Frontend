@@ -33,7 +33,8 @@ export class InputFileManaged extends Component {
       value,
       onChange,
       concatenarNovosArquivos,
-      nomeNovoArquivo
+      nomeNovoArquivo,
+      toastSuccessMessage
     } = this.props;
     const files = event.target.files;
     let valido = true;
@@ -64,7 +65,9 @@ export class InputFileManaged extends Component {
           })
           .then(() => {
             if (filesBase64.length === QUANTIDADE_ARQUIVOS) {
-              toastSuccess("Protocolo incluso com sucesso");
+              toastSuccess(
+                toastSuccessMessage || "Protocolo incluso com sucesso"
+              );
               onChange(
                 !concatenarNovosArquivos || value === ""
                   ? filesBase64
