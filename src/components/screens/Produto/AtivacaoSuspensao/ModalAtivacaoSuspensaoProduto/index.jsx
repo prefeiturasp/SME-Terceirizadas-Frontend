@@ -151,6 +151,7 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
                       name="anexos"
                       accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                       icone={BUTTON_ICON.ATTACH}
+                      toastSuccessMessage="Anexo incluso com sucesso"
                       concatenarNovosArquivos
                     />
                   </div>
