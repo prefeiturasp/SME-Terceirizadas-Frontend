@@ -20,7 +20,7 @@ export default class DetalheProduto extends Component {
             <p>{produto.eh_para_alunos_com_dieta ? "SIM" : "NÃO"}</p>
           </div>
           <div>
-            <label>Protocolo de dieta especial</label>
+            <label>Nome do protocolo de dieta especial</label>
             <p>{homologacao.protocolo_analise_sensorial}</p>
           </div>
         </section>
