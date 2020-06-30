@@ -154,7 +154,7 @@ export const updateProduto = async payload => {
     });
 };
 
-export const respostaAnaliseSensorial = async payload => {
+export const respostaAnaliseSensorial = payload => {
   const url = `${API_URL}/analise-sensorial/terceirizada-responde-analise-sensorial/`;
   let status = 0;
   return fetch(url, {

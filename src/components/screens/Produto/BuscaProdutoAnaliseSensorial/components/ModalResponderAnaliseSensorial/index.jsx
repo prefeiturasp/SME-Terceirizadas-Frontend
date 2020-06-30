@@ -3,7 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { Modal } from "react-bootstrap";
-import { required, minLength } from "../../../../../../helpers/fieldValidators";
+import {
+  required,
+  minLength,
+  numericInteger
+} from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import InputFile from "components/Shareable/Input/InputFile";
@@ -15,15 +19,14 @@ import {
 import { withRouter } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
 import "antd/dist/antd.css";
-import { TimePicker } from "antd";
 import moment from "moment";
 import "./styles.scss";
 import { formataData } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
+import { ATimePicker } from "../../../../../Shareable/MakeField";
 
-const format = "HH:mm";
 const minLength8 = minLength(8);
 
 class ModalResponderAnaliseSensorial extends Component {
@@ -31,10 +34,12 @@ class ModalResponderAnaliseSensorial extends Component {
     super(props);
     this.state = {
       arquivos: [],
-      hora: null
+      hora: null,
+      texto: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   removeFile(index) {
@@ -54,57 +59,46 @@ class ModalResponderAnaliseSensorial extends Component {
   };
 
   onSubmit = values => {
-    const { hora, arquivos } = this.state;
+    const { arquivos } = this.state;
     const { uuid } = this.props.homologacao;
-    const horaInput = moment(hora, "h:mm:ss").format("HH:mm:ss");
-    values["hora"] = horaInput;
-    values["data"] = formataData(values.data);
-    values["anexos"] = arquivos.map(anexo => {
-      return {
-        nome: anexo.nome,
-        base64: anexo.arquivo
-      };
-    });
-    values["homologacao_de_produto"] = uuid;
 
-    return new Promise(async (resolve, reject) => {
-      const response = await respostaAnaliseSensorial(values);
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Resposta para análise sensorial enviada com sucesso.");
-        this.props.history.push(
-          "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
-        );
-        this.props.history.go();
-        resolve();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError(getError(response.data));
-        reject();
-      } else {
-        toastError(`Erro ao enviar resposta`);
-        reject();
-      }
-    });
+    if (arquivos.length <= 0) {
+      toastError(`insira um documento de entrega ou lado do produto`);
+    } else {
+      values["hora"] = moment(values.hora_min._i, "HH:mm:ss").format(
+        "HH:mm:ss"
+      );
+      values["data"] = formataData(values.data_resp);
+
+      values["anexos"] = arquivos.map(anexo => {
+        return {
+          nome: anexo.nome,
+          base64: anexo.arquivo
+        };
+      });
+      values["homologacao_de_produto"] = uuid;
+
+      delete values["hora_min"];
+      delete values["data_resp"];
+
+      respostaAnaliseSensorial(values).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Resposta para análise sensorial enviada com sucesso.");
+          this.props.history.push(
+            "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
+          );
+        } else {
+          toastError(getError(response.data));
+        }
+      });
+    }
   };
 
-  habilitarSubmit = () => {
-    const { responsavel_produto, registro_funcional, data } = this.props;
-    const { hora } = this.state;
-    const { arquivos } = this.state;
-    const validResponsavel = responsavel_produto !== undefined;
-    const validRegistro = registro_funcional !== undefined;
-    const validData = data !== undefined;
-    const validArquivos = arquivos.length > 0;
-    if (
-      validResponsavel &&
-      validRegistro &&
-      validData &&
-      validArquivos &&
-      hora !== null
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+  resetForm = () => {
+    const { closeModal } = this.props;
+    this.props.reset();
+    closeModal();
+    this.setState({ arquivos: [] });
   };
 
   render() {
@@ -138,7 +132,7 @@ class ModalResponderAnaliseSensorial extends Component {
                 <Field
                   component={InputText}
                   name="registro_funcional"
-                  validate={[required, minLength8]}
+                  validate={[required, minLength8, numericInteger]}
                   maxlength="10"
                 />
               </article>
@@ -149,7 +143,7 @@ class ModalResponderAnaliseSensorial extends Component {
                 </label>
                 <Field
                   component={InputComData}
-                  name="data"
+                  name="data_resp"
                   validate={required}
                 />
               </article>
@@ -158,10 +152,13 @@ class ModalResponderAnaliseSensorial extends Component {
                 <label>
                   Hora <span className="obrigatorio">*</span>
                 </label>
-                <TimePicker
-                  format={format}
+                <Field
+                  component={ATimePicker}
+                  className="campo-hora"
+                  name="hora_min"
+                  validate={required}
                   placeholder=""
-                  onChange={this.setHora}
+                  allowClear={false}
                 />
               </article>
             </section>
@@ -193,7 +190,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                   setFiles={this.setFiles}
                   removeFile={this.removeFile}
-                  toastSuccess={"Imagem do produto incluída com sucesso!"}
+                  toastSuccess={"Anexo do documento incluído com sucesso!"}
                   multiple
                 />
               </div>
@@ -205,12 +202,13 @@ class ModalResponderAnaliseSensorial extends Component {
                 texto="Voltar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.BLUE_OUTLINE}
-                onClick={closeModal}
+                onClick={() => {
+                  this.resetForm();
+                }}
               />
               <Botao
                 texto="Enviar"
                 type={BUTTON_TYPE.SUBMIT}
-                disabled={this.habilitarSubmit()}
                 onClick={handleSubmit(values => this.onSubmit(values))}
                 style={BUTTON_STYLE.GREEN}
               />
@@ -231,7 +229,6 @@ const selector = formValueSelector("analiseSensorial");
 
 const mapStateToProps = state => {
   return {
-    // initialValues: state.analiseSensorial.data,
     responsavel_produto: selector(state, "responsavel_produto"),
     registro_funcional: selector(state, "registro_funcional"),
     data: selector(state, "data"),

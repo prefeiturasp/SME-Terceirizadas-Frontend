@@ -175,7 +175,7 @@ class RelatorioAnaliseSensorial extends Component {
                   </div>
 
                   <div>
-                    <label>Protocolo de dieta especial</label>
+                    <label>Nome do protocolo de dieta especial</label>
                     <p>{homologacao.protocolo_analise_sensorial}</p>
                   </div>
                 </section>
