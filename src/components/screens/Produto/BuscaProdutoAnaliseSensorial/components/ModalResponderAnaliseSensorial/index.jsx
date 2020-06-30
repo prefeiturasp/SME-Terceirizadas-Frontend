@@ -3,7 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { Modal } from "react-bootstrap";
-import { required, minLength } from "../../../../../../helpers/fieldValidators";
+import {
+  required,
+  minLength,
+  numericInteger
+} from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import InputFile from "components/Shareable/Input/InputFile";
@@ -76,21 +80,15 @@ class ModalResponderAnaliseSensorial extends Component {
 
       delete values["hora_min"];
       delete values["data_resp"];
-      toastSuccess("Resposta para análise sensorial enviada com sucesso.");
-      return new Promise(async (resolve, reject) => {
-        const response = await respostaAnaliseSensorial(values);
+
+      respostaAnaliseSensorial(values).then(response => {
         if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Resposta para análise sensorial enviada com sucesso.");
           this.props.history.push(
             "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
           );
-          this.props.history.go();
-          resolve();
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(getError(response.data));
-          reject();
         } else {
-          toastError(`Erro ao enviar resposta`);
-          reject();
+          toastError(getError(response.data));
         }
       });
     }
@@ -134,7 +132,7 @@ class ModalResponderAnaliseSensorial extends Component {
                 <Field
                   component={InputText}
                   name="registro_funcional"
-                  validate={[required, minLength8]}
+                  validate={[required, minLength8, numericInteger]}
                   maxlength="10"
                 />
               </article>
@@ -160,6 +158,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   name="hora_min"
                   validate={required}
                   placeholder=""
+                  allowClear={false}
                 />
               </article>
             </section>
@@ -230,7 +229,6 @@ const selector = formValueSelector("analiseSensorial");
 
 const mapStateToProps = state => {
   return {
-    // initialValues: state.analiseSensorial.data,
     responsavel_produto: selector(state, "responsavel_produto"),
     registro_funcional: selector(state, "registro_funcional"),
     data: selector(state, "data"),
