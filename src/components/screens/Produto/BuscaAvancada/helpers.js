@@ -222,7 +222,6 @@ const buscarDataAte = payload => {
 
 const retornaProdutosDentroDoRange = (objetoDeBusca, arrayProdutos) => {
   let arrayFiltrados = [];
-  // console.log(arrayProdutos)
   arrayProdutos.forEach(produto => {
     if (datadoProdutoEstaNoRange(objetoDeBusca, produto)) {
       arrayFiltrados.push(produto);
