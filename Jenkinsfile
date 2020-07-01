@@ -1,7 +1,7 @@
 pipeline {
     agent {
       node { 
-        label 'smenode'
+        label 'sme-nodes10'
 	    }
     }
     
@@ -22,14 +22,15 @@ pipeline {
       
        stage('Testes') {
           steps {
-                    sh 'nvm install 10'
-                    sh 'npm ci'
-                    sh 'npm run-script coverage'
-                    sh 'npm run-script eslint'
-                    sh 'npm run-script prettier'
-                    sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
-                    checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
-                    
+                sh 'npm install'
+                sh 'npm run-script coverage'
+                sh 'npm run-script eslint'
+                sh 'npm run-script prettier'
+                
+                sh 'npm install -g jshint'
+                sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
+                checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
+                
             }
         }
        
