@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const MIN_DATE = moment("01/01/2020", "DD/MM/YYYY")["_d"];
+export const DATA_MINIMA = moment("01/01/2020", "DD/MM/YYYY")["_d"];
 
 export const formataData = data => {
   const dataSplit = data.split("/");
