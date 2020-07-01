@@ -162,7 +162,7 @@ export default class CorpoRelatorio extends Component {
           />
           <hr />
         </article>
-        
+
         <article className="informacoes-gerais">
           <div className="header-informacao">
             Informação de empresa solicitante (Terceirizada)
