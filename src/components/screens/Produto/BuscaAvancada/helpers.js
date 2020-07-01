@@ -35,25 +35,6 @@ export const retornaProdutosComUltimaHomolagacao = response => {
   return produtos;
 };
 
-const retornaStatusBackend = status => {
-  switch (status) {
-    case "Homologado":
-      return "CODAE_HOMOLOGADO";
-    case "Não homologado":
-      return "CODAE_NAO_HOMOLOGADO";
-    case "Aguardando análise sensorial":
-      return "CODAE_PEDIU_ANALISE_SENSORIAL";
-    case "Pendente de homologação":
-      return "CODAE_PENDENTE_HOMOLOGACAO";
-    case "Suspenso":
-      return "TERCEIRIZADA_CANCELOU";
-    case "Correção":
-      return "CODAE_QUESTIONADO";
-    default:
-      return "TODOS";
-  }
-};
-
 export const retornaArrayDeAcordoComPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA) {
@@ -78,6 +59,25 @@ export const retornaArrayDeAcordoComPerfil = () => {
     ];
   } else {
     return ["Todos", "Homologado", "Suspenso", "Correção"];
+  }
+};
+
+const retornaStatusBackend = status => {
+  switch (status) {
+    case "Homologado":
+      return "CODAE_HOMOLOGADO";
+    case "Não homologado":
+      return "CODAE_NAO_HOMOLOGADO";
+    case "Aguardando análise sensorial":
+      return "CODAE_PEDIU_ANALISE_SENSORIAL";
+    case "Pendente de homologação":
+      return "CODAE_PENDENTE_HOMOLOGACAO";
+    case "Suspenso":
+      return "CODAE_SUSPENDEU";
+    case "Correção":
+      return "CODAE_QUESTIONADO";
+    default:
+      return "TODOS";
   }
 };
 
@@ -308,7 +308,6 @@ export const filtrarProdutosNaListagem = (payload, arrayProdutos) => {
     payload["status"][0] === "TODOS"
       ? tranformaEmobjetoDeBusca(retornaArrayDeAcordoComPerfil())
       : payload["status"];
-
   const arrayFiltradoPorData = retornaProdutosDentroDoRange(
     objetoDeBusca,
     arrayProdutos

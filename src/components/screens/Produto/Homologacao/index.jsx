@@ -23,6 +23,7 @@ import {
 } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
+import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
@@ -40,6 +41,7 @@ class HomologacaoProduto extends Component {
       status: null,
       reclamacaoProduto: null,
       verificado: false
+      logs: []
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -59,7 +61,8 @@ class HomologacaoProduto extends Component {
         ),
         status: response.data.status,
         terceirizada: response.data.rastro_terceirizada,
-        uuid
+        uuid,
+        logs: response.data.logs
       });
     });
   };
@@ -126,6 +129,7 @@ class HomologacaoProduto extends Component {
       terceirizada,
       protocoloAnalise,
       reclamacaoProduto
+      logs
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -198,6 +202,7 @@ class HomologacaoProduto extends Component {
                     </article>
                   </section>
                 )}
+              {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>

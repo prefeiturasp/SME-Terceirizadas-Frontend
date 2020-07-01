@@ -21,7 +21,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import "antd/dist/antd.css";
 import moment from "moment";
 import "./styles.scss";
-import { formataData } from "./helper";
+import { formataData, DATA_MINIMA } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
@@ -145,6 +145,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   component={InputComData}
                   name="data_resp"
                   validate={required}
+                  minDate={DATA_MINIMA}
                 />
               </article>
 
