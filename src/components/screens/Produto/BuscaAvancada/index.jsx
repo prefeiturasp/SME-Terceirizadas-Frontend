@@ -76,6 +76,7 @@ class BuscaAvancada extends Component {
     const { produtos } = this.props;
 
     values["status"] = tranformaEmobjetoDeBusca(selectedItems);
+
     values["check_comum"] = produtoComum;
     values["check_dieta_especial"] = produtoDieta;
     values["produtos_alergenicos"] = produto_alergenico;
@@ -144,17 +145,25 @@ class BuscaAvancada extends Component {
   }
 
   onSelectStatus = value => {
+    let { selectedItems, statusOptions } = this.state;
     if (value === "Todos") {
-      const statusOptions = ["Todos"];
-      const selectedItems = ["Todos"];
+      statusOptions = ["Todos"];
+      selectedItems = ["Todos"];
+      this.setState({ statusOptions, selectedItems });
+    } else {
+      selectedItems.push(value);
       this.setState({ statusOptions, selectedItems });
     }
   };
 
   onDeselectStatus = value => {
+    let { selectedItems, statusOptions } = this.state;
     if (value === "Todos") {
-      const statusOptions = retornaArrayDeAcordoComPerfil();
+      statusOptions = retornaArrayDeAcordoComPerfil();
       this.setState({ statusOptions, selectedItems: [] });
+    } else {
+      const filtered = selectedItems.filter(item => item !== value);
+      this.setState({ selectedItems: filtered });
     }
   };
 
