@@ -44,3 +44,7 @@ export const produtoEhReclamacao = produto => {
   const statusReclamacao = "CODAE autorizou reclamação";
   return statusReclamacao === statusDoUltimoLog;
 };
+
+export const retornaData = ({ criado_em }) => {
+  return criado_em.split(" ")[0];
+};

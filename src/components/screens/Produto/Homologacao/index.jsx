@@ -16,7 +16,11 @@ import {
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
-import { formataInformacoesNutricionais, produtoEhReclamacao } from "./helper";
+import {
+  formataInformacoesNutricionais,
+  produtoEhReclamacao,
+  retornaData
+} from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import {
@@ -180,10 +184,19 @@ class HomologacaoProduto extends Component {
               {reclamacaoProduto !== null &&
                 produto !== null &&
                 produto.eh_reclamacao && (
-                  <div>
-                    <div>fdskhdshjks</div>
-                    <div>fdskhdshjks</div>
-                  </div>
+                  <section className="descricao-reclamação">
+                    <article className="motivo-data-reclamacao">
+                      <div>Motivo da reclamação:</div>
+                      <div>Data: {retornaData(reclamacaoProduto)}</div>
+                    </article>
+                    <article className="box-detalhe-reclamacao">
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: reclamacaoProduto.reclamacao
+                        }}
+                      />
+                    </article>
+                  </section>
                 )}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)

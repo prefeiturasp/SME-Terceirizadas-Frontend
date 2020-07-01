@@ -302,6 +302,7 @@ class WizardFormPrimeiraPagina extends React.Component {
               <article>
                 <Field
                   component={TextArea}
+                  className="field-aditivos"
                   label={"Quais?"}
                   name="aditivos"
                   required
