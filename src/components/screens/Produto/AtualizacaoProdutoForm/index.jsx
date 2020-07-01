@@ -215,7 +215,7 @@ class AtualizacaoProdutoForm extends Component {
       segundoStep,
       valoresterceiroForm,
       terceiroStep,
-      reclamacaoProduto
+      reclamacaoProduto,
       logs
     } = this.state;
     return (

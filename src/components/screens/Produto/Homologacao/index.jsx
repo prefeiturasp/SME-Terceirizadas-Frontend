@@ -40,7 +40,7 @@ class HomologacaoProduto extends Component {
       qualModal: "indeferir",
       status: null,
       reclamacaoProduto: null,
-      verificado: false
+      verificado: false,
       logs: []
     };
     this.closeModal = this.closeModal.bind(this);
@@ -128,7 +128,7 @@ class HomologacaoProduto extends Component {
       status,
       terceirizada,
       protocoloAnalise,
-      reclamacaoProduto
+      reclamacaoProduto,
       logs
     } = this.state;
     const {
