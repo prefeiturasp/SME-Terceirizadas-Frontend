@@ -105,6 +105,7 @@ class BuscaAvancada extends Component {
     change("nome", null);
     change("marca", null);
     change("fabricante", null);
+    change("status", null);
 
     this.setState({
       tipos_produto,
