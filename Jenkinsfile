@@ -1,7 +1,7 @@
 pipeline {
     agent {
       node { 
-        label 'sme-nodes10'
+        label 'smenode'
 	    }
     }
     
@@ -19,21 +19,26 @@ pipeline {
           checkout scm	
         }
        }
-
+      
+       stage('Testes') {
+          steps {
+                    sh 'nvm install 10'
+                    sh 'npm ci'
+                    sh 'npm run-script coverage'
+                    sh 'npm run-script eslint'
+                    sh 'npm run-script prettier'
+                    sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
+                    checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
+                    
+            }
+        }
        
        stage('Analise codigo') {
           when {
               branch 'developmet'
             }
             steps {
-                    sh 'npm install'
-                    sh 'npm run-script coverage'
-                    sh 'npm run-script eslint'
-                    sh 'npm run-script prettier'
-                    sh 'npm install -g jshint'
-                    sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
-                    checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
-                    sh 'sonar-scanner \
+                sh 'sonar-scanner \
                     -Dsonar.projectKey=SME-Terceirizadas-Front \
                     -Dsonar.sources=src \
                     -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
