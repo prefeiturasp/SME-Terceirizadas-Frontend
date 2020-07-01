@@ -6,16 +6,16 @@ export const retornaStatusFormatado = status => {
       return "Não homologado";
     case "CODAE_HOMOLOGADO":
       return "Homologado";
-    case "Não CODAE_PEDIU_ANALISE_SENSORIAL":
+    case "CODAE_PEDIU_ANALISE_SENSORIAL":
       return "Aguardando análise sensorial";
     case "CODAE_PENDENTE_HOMOLOGACAO":
       return "Pendente de homologação";
-    case "TERCEIRIZADA_CANCELOU":
+    case "CODAE_SUSPENDEU":
       return "Suspenso";
     case "CODAE_QUESTIONADO":
       return "Correção";
     default:
-      return "TODOS";
+      return "TODOS-TESTE";
   }
 };
 

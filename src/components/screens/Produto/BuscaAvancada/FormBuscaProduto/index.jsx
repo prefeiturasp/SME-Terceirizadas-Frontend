@@ -75,6 +75,7 @@ class FormBuscaProduto extends Component {
               className="input-data"
               component={InputComData}
               name="data-ate"
+              minDate={minDate}
             />
           </div>
           <div>

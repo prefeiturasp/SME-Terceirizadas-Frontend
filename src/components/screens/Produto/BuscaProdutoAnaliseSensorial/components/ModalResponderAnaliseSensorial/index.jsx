@@ -145,6 +145,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   component={InputComData}
                   name="data_resp"
                   validate={required}
+                  minDate={null}
                 />
               </article>
 
