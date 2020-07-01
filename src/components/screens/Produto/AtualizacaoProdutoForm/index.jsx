@@ -7,6 +7,7 @@ import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
 import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
 import WizardFormTerceiraPagina from "./components/WizardFormTerceiraPagina";
 import Wizard from "components/Shareable/Wizard";
+import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import {
   getProtocolosDietaEspecial,
   getHomologacao,
@@ -36,6 +37,7 @@ class AtualizacaoProdutoForm extends Component {
       uuid: null,
       loading: true,
       produto: null,
+      logs: [],
       informacoesNutricionais: null,
       protocolos: [],
       erro: false,
@@ -109,13 +111,14 @@ class AtualizacaoProdutoForm extends Component {
   };
 
   componentDidMount = async () => {
-    let { produto, informacoesNutricionais } = this.state;
+    let { produto, informacoesNutricionais, logs } = this.state;
     let homologacao = null;
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     try {
       homologacao = await getHomologacao(uuid);
       produto = homologacao.data.produto;
+      logs = homologacao.data.logs;
     } catch {
       this.setState({
         loading: false,
@@ -138,6 +141,7 @@ class AtualizacaoProdutoForm extends Component {
       arrayMarcas,
       arrayFabricantes,
       produto,
+      logs,
       informacoesNutricionais
     });
   };
@@ -194,13 +198,15 @@ class AtualizacaoProdutoForm extends Component {
       valoresSegundoForm,
       segundoStep,
       valoresterceiroForm,
-      terceiroStep
+      terceiroStep,
+      logs
     } = this.state;
     return (
       <div className="card">
         <div className="card-body">
           {!loading && !erro ? (
             <Fragment>
+              {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}
