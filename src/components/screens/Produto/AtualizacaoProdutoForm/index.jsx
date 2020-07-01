@@ -13,10 +13,12 @@ import {
   getHomologacao,
   getMarcasProdutos,
   getFabricantesProdutos,
-  getInformacoesGrupo
+  getInformacoesGrupo,
+  getReclamacaoDeProduto
 } from "../../../../services/produto.service";
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
+import { produtoEhReclamacao, retornaData } from "../Homologacao/helper";
 
 const { Option } = Select;
 
@@ -47,6 +49,8 @@ class AtualizacaoProdutoForm extends Component {
       valoresPrimeiroForm: null,
       valoresSegundoForm: null,
       valoresterceiroForm: null,
+      reclamacaoProduto: null,
+      verificado: false,
       wizardSteps: [
         {
           step: {
@@ -111,7 +115,7 @@ class AtualizacaoProdutoForm extends Component {
   };
 
   componentDidMount = async () => {
-    let { produto, informacoesNutricionais, logs } = this.state;
+    let { produto, informacoesNutricionais, logs, verificado } = this.state;
     let homologacao = null;
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -144,6 +148,18 @@ class AtualizacaoProdutoForm extends Component {
       logs,
       informacoesNutricionais
     });
+
+    if (produto !== null && !verificado) {
+      if (produtoEhReclamacao(produto)) {
+        produto["eh_reclamacao"] = true;
+        const { uuid } = produto.ultima_homologacao;
+        let response = await getReclamacaoDeProduto(uuid);
+        this.setState({ reclamacaoProduto: response.data });
+      } else {
+        produto["eh_reclamacao"] = false;
+      }
+      this.setState({ verificado: true, produto });
+    }
   };
 
   componentDidUpdate() {
@@ -199,6 +215,7 @@ class AtualizacaoProdutoForm extends Component {
       segundoStep,
       valoresterceiroForm,
       terceiroStep,
+      reclamacaoProduto
       logs
     } = this.state;
     return (
@@ -206,6 +223,23 @@ class AtualizacaoProdutoForm extends Component {
         <div className="card-body">
           {!loading && !erro ? (
             <Fragment>
+              {reclamacaoProduto !== null &&
+                produto !== null &&
+                produto.eh_reclamacao && (
+                  <section className="descricao-reclamação">
+                    <article className="motivo-data-reclamacao">
+                      <div>Motivo da reclamação:</div>
+                      <div>Data: {retornaData(reclamacaoProduto)}</div>
+                    </article>
+                    <article className="box-detalhe-reclamacao">
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: reclamacaoProduto.reclamacao
+                        }}
+                      />
+                    </article>
+                  </section>
+                )}
               {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
               <Wizard
                 arrayOfObjects={wizardSteps}

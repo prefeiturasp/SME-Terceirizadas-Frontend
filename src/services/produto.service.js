@@ -386,6 +386,10 @@ export const getNumeroProtocoloAnaliseSensorial = async () => {
   return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
 };
 
+export const getReclamacaoDeProduto = async uuid => {
+  return await axios.get(`/homologacoes-produtos/${uuid}/reclamacao/`);
+};
+
 export const getHomologacoesDeProdutoAnaliseSensorial = async () => {
   return await axios.get(
     `/homologacoes-produtos/aguardando-analise-sensorial/`
