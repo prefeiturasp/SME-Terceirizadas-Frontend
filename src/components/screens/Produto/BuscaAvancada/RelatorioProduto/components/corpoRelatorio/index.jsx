@@ -136,6 +136,9 @@ export default class CorpoRelatorio extends Component {
             onClick={this.showModal}
           />
         </article>
+        {!!logs.length && (
+          <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+        )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
@@ -159,9 +162,7 @@ export default class CorpoRelatorio extends Component {
           />
           <hr />
         </article>
-        {!!logs.length && (
-          <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
-        )}
+        
         <article className="informacoes-gerais">
           <div className="header-informacao">
             Informação de empresa solicitante (Terceirizada)
