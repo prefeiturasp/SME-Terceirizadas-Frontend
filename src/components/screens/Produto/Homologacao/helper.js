@@ -37,3 +37,10 @@ export const formataInformacoesNutricionais = produto => {
   });
   return informacoesFormatadas;
 };
+
+export const produtoEhReclamacao = produto => {
+  const { logs } = produto.ultima_homologacao;
+  const statusDoUltimoLog = logs[logs.length - 1].status_evento_explicacao;
+  const statusReclamacao = "CODAE autorizou reclamação";
+  return statusReclamacao === statusDoUltimoLog;
+};

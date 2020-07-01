@@ -10,12 +10,13 @@ import {
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
-  CODAEPedeCorrecao
+  CODAEPedeCorrecao,
+  getReclamacaoDeProduto
 } from "../../../../services/produto.service";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
-import { formataInformacoesNutricionais } from "./helper";
+import { formataInformacoesNutricionais, produtoEhReclamacao } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import {
@@ -32,7 +33,9 @@ class HomologacaoProduto extends Component {
       protocoloAnalise: null,
       showModal: false,
       qualModal: "indeferir",
-      status: null
+      status: null,
+      reclamacaoProduto: null,
+      verificado: false
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -58,10 +61,22 @@ class HomologacaoProduto extends Component {
   };
 
   componentDidUpdate = async () => {
-    const { qualModal, protocoloAnalise } = this.state;
+    const { qualModal, protocoloAnalise, produto, verificado } = this.state;
     if (qualModal === "analise" && protocoloAnalise === null) {
       let response = await getNumeroProtocoloAnaliseSensorial();
       this.setState({ protocoloAnalise: response.data });
+    }
+
+    if (produto !== null && !verificado) {
+      if (produtoEhReclamacao(produto)) {
+        produto["eh_reclamacao"] = true;
+        const { uuid } = produto.ultima_homologacao;
+        let response = await getReclamacaoDeProduto(uuid);
+        this.setState({ reclamacaoProduto: response.data });
+      } else {
+        produto["eh_reclamacao"] = false;
+      }
+      this.setState({ verificado: true, produto });
     }
   };
 
@@ -105,7 +120,8 @@ class HomologacaoProduto extends Component {
       qualModal,
       status,
       terceirizada,
-      protocoloAnalise
+      protocoloAnalise,
+      reclamacaoProduto
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -161,6 +177,14 @@ class HomologacaoProduto extends Component {
                     : undefined
                 }
               />
+              {reclamacaoProduto !== null &&
+                produto !== null &&
+                produto.eh_reclamacao && (
+                  <div>
+                    <div>fdskhdshjks</div>
+                    <div>fdskhdshjks</div>
+                  </div>
+                )}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
