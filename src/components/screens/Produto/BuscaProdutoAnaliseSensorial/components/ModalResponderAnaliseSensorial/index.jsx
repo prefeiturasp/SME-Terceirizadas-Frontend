@@ -88,7 +88,6 @@ class ModalResponderAnaliseSensorial extends Component {
             "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
           );
           this.resetForm();
-          this.props.history.go();
         } else {
           toastError(getError(response.data));
         }
