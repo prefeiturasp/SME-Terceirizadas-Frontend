@@ -8,6 +8,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 
 import "antd/dist/antd.css";
 import { Modal } from "antd";
@@ -135,6 +136,9 @@ export default class CorpoRelatorio extends Component {
             onClick={this.showModal}
           />
         </article>
+        {!!logs.length && (
+          <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+        )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
@@ -158,6 +162,7 @@ export default class CorpoRelatorio extends Component {
           />
           <hr />
         </article>
+
         <article className="informacoes-gerais">
           <div className="header-informacao">
             Informação de empresa solicitante (Terceirizada)
