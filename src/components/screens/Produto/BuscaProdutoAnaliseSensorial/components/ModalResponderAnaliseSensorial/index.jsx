@@ -63,7 +63,7 @@ class ModalResponderAnaliseSensorial extends Component {
     const { uuid } = this.props.homologacao;
 
     if (arquivos.length <= 0) {
-      toastError(`insira um documento de entrega ou lado do produto`);
+      toastError(`Obrigatório anexar documento.`);
     } else {
       values["hora"] = moment(values.hora_min._i, "HH:mm:ss").format(
         "HH:mm:ss"
