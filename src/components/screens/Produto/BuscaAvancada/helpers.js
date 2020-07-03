@@ -37,45 +37,50 @@ export const retornaProdutosComUltimaHomolagacao = response => {
 
 export const retornaArrayDeAcordoComPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
-  if (tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA) {
+  if (
+    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
+    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA
+  ) {
     return [
       "Todos",
-      "Homologado",
-      "Não homologado",
+      "Reclamação de produto",
+      "Produtos Suspensos",
+      "Correção de produto",
+      "Aguardando análise de reclamação",
       "Aguardando análise sensorial",
       "Pendente de homologação",
-      "Suspenso",
-      "Correção"
-    ];
-  } else if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
-    return [
-      "Todos",
       "Homologado",
-      "Não homologado",
-      "Aguardando análise sensorial",
-      "Pendente de homologação",
-      "Suspenso",
-      "Correção"
+      "Não homologado"
     ];
   } else {
-    return ["Todos", "Homologado", "Suspenso", "Correção"];
+    return [
+      "Todos",
+      "Homologado",
+      "Não homologado",
+      "Produtos Suspensos",
+      "Reclamação de produto"
+    ];
   }
 };
 
 const retornaStatusBackend = status => {
   switch (status) {
+    case "Reclamação de produto":
+      return "CODAE_AUTORIZOU_RECLAMACAO";
+    case "Produtos Suspensos":
+      return "CODAE_SUSPENDEU";
+    case "Correção de produto":
+      return "CODAE_QUESTIONADO";
+    case "Aguardando análise de reclamação":
+      return "CODAE_PEDIU_ANALISE_RECLAMACAO";
+    case "Aguardando análise sensorial":
+      return "CODAE_PEDIU_ANALISE_SENSORIAL";
+    case "Pendente de homologaçã":
+      return "CODAE_PENDENTE_HOMOLOGACAO";
     case "Homologado":
       return "CODAE_HOMOLOGADO";
     case "Não homologado":
       return "CODAE_NAO_HOMOLOGADO";
-    case "Aguardando análise sensorial":
-      return "CODAE_PEDIU_ANALISE_SENSORIAL";
-    case "Pendente de homologação":
-      return "CODAE_PENDENTE_HOMOLOGACAO";
-    case "Suspenso":
-      return "CODAE_SUSPENDEU";
-    case "Correção":
-      return "CODAE_QUESTIONADO";
     default:
       return "TODOS";
   }
@@ -304,10 +309,9 @@ export const filtrarProdutosNaListagem = (payload, arrayProdutos) => {
   objetoDeBusca["eh_para_alunos_com_dieta"] = tiposDieta;
   objetoDeBusca["data_inicio"] = buscarDataDe(payload)._d;
   objetoDeBusca["data_fim"] = buscarDataAte(payload)._d;
-  objetoDeBusca["status"] =
-    payload["status"][0] === "TODOS"
-      ? tranformaEmobjetoDeBusca(retornaArrayDeAcordoComPerfil())
-      : payload["status"];
+  objetoDeBusca["status"] = payload["status"].includes("TODOS")
+    ? tranformaEmobjetoDeBusca(retornaArrayDeAcordoComPerfil())
+    : payload["status"];
   const arrayFiltradoPorData = retornaProdutosDentroDoRange(
     objetoDeBusca,
     arrayProdutos
