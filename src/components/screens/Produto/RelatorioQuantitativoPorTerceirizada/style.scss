@@ -1,0 +1,74 @@
+@import "styles/variables.scss";
+
+.page-relatorio-quantitativo-por-terceirizada {
+  .header-busca-produto {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+    margin-bottom: 20px;
+  }
+}
+
+.tabela-quantitativo-terceirizada {
+  .header-quantitativo-por-terceirizada {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
+
+    background: #f5f6f8;
+    height: 52px;
+
+    div {
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: #42474a;
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .body-quantitativo-por-terceirizada {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
+    height: 48px;
+
+    div {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 5px 10px;
+
+      display: flex;
+      align-items: center;
+
+      color: #686868;
+
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .linha-totalizacao {
+    background-color: #e9eaea;
+    text-align: right;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 48px;
+    color: $gray;
+
+    span {
+      span {
+        padding-left: 100px;
+        padding-right: 8px;
+      }
+    }
+  }
+
+  .linha-totalizacao-geral {
+    font-size: 16 px;
+    margin-top: 2px;
+    color: #000;
+  }
+}
