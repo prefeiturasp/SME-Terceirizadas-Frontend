@@ -49,16 +49,26 @@ export const getInformacoesGrupo = async () => {
   return await axios.get(`/informacoes-nutricionais/agrupadas/`);
 };
 
-export const getNomesProdutos = async () => {
-  return await axios.get(`/produtos/lista-nomes/`);
+export const getNomesProdutos = async queryparams => {
+  let url = `/produtos/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
 };
 
-export const getNomesMarcas = async () => {
-  return await axios.get(`/marcas/lista-nomes/`);
+export const getNomesMarcas = async queryparams => {
+  let url = `/marcas/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
 };
 
-export const getNomesFabricantes = async () => {
-  return await axios.get(`/fabricantes/lista-nomes/`);
+export const getNomesFabricantes = async queryparams => {
+  let url = `/fabricantes/lista-nomes/`;
+  if (queryparams) url += queryparams + "/";
+  return await axios.get(url);
+};
+
+export const getNomesTerceirizadas = async () => {
+  return await axios.get(`/terceirizadas/lista-nomes/`);
 };
 
 export const getProdutosPorNome = async nomeProduto => {
@@ -69,8 +79,23 @@ export const getProdutosPorMarca = async nomeMarca => {
   return await axios.get(`/produtos/filtro-por-marca/${nomeMarca}/`);
 };
 
+export const getHomologacao = async uuid => {
+  return await axios.get(`/homologacoes-produtos/${uuid}/`);
+};
+
 export const getProdutosPorFabricante = async nomeFabricante => {
   return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
+};
+
+export const getProdutosPorParametros = async parametros => {
+  return await axios.post(
+    `/produtos/filtro-homologados-por-parametros/`,
+    parametros
+  );
+};
+
+export const getProdutosPorFiltro = async filtro => {
+  return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
 };
 
 export const getProtocolosDietaEspecial = async () => {
@@ -129,6 +154,26 @@ export const updateProduto = async payload => {
     });
 };
 
+export const respostaAnaliseSensorial = payload => {
+  const url = `${API_URL}/analise-sensorial/terceirizada-responde-analise-sensorial/`;
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const criarFabricanteProduto = async data => {
   return await axios.post(`/fabricantes/`, data);
 };
@@ -158,6 +203,66 @@ export const CODAEHomologaProduto = uuid => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAEPedeAnaliseReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAERecusaReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-recusa-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const CODAEAceitaReclamacao = (uuid, payload) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-aceita-reclamacao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify(payload)
   })
     .then(res => {
       status = res.status;
@@ -257,4 +362,67 @@ export const getTodosOsProdutos = async () => {
 
 export const excluirImagemDoProduto = async uuid => {
   return await axios.delete(`/produto-imagens/${uuid}/`);
+};
+
+export const escolaOuNutriReclamaDoProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/escola-ou-nutri-reclama/`,
+    payload
+  );
+};
+
+export const ativarProduto = async (uuid, payload) => {
+  return await axios.patch(`/homologacoes-produtos/${uuid}/ativar/`, payload);
+};
+
+export const suspenderProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/suspender/`,
+    payload
+  );
+};
+
+export const getNumeroProtocoloAnaliseSensorial = async () => {
+  return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
+};
+
+export const getReclamacaoDeProduto = async uuid => {
+  return await axios.get(`/homologacoes-produtos/${uuid}/reclamacao/`);
+};
+
+export const getHomologacoesDeProdutoAnaliseSensorial = async () => {
+  return await axios.get(
+    `/homologacoes-produtos/aguardando-analise-sensorial/`
+  );
+};
+
+export const responderReclamacaoProduto = async (uuid, payload) => {
+  return await axios.patch(
+    `/homologacoes-produtos/${uuid}/terceirizada-responde-reclamacao/`,
+    payload
+  );
+};
+
+export const flegarHomologacaoPDF = async uuid => {
+  return await axios.post(`/homologacoes-produtos/${uuid}/gerar-pdf/`);
+};
+
+export const getProdutosPorTerceirizada = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-terceirizada/`,
+    filtro
+  );
+};
+
+export const getRelatorioProdutosHomologados = filtros => {
+  let url = `${API_URL}/produtos/relatorio-por-parametros-agrupado-terceirizada/`;
+  const entries = Object.entries(filtros);
+  if (entries.length) {
+    const urlParams = new URLSearchParams();
+    for (let [key, value] of entries) {
+      urlParams.append(key, value);
+    }
+    return `${url}?${urlParams.toString()}`;
+  }
+  return url;
 };

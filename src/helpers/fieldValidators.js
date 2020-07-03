@@ -4,6 +4,9 @@ import strip_tags from "locutus/php/strings/strip_tags";
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
+export const requiredMultiselect = array =>
+  array !== [] ? undefined : "Campo obrigatório";
+
 export const deveSerNoAnoCorrente = value => {
   const dataSelecionada = moment(value, "DD/MM/YYYY").year();
   const dataAtual = moment().year();

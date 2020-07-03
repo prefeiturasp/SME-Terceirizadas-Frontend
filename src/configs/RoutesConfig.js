@@ -51,6 +51,7 @@ import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/S
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
+import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 
 import * as constants from "./constants";
 import {
@@ -81,11 +82,22 @@ import {
   usuarioEhQualquerCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
+import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
 import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
 import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import BuscaProdutoAnaliseSensorial from "../pages/Produto/BuscaProdutoAnaliseSensorial";
+import RelatorioAnaliseSensorial from "../pages/Produto/RelatorioAnaliseSensorial";
+import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import {
+  ReclamacaoDeProdutoPage,
+  ConsultaAtivacaoDeProdutoPage,
+  AtivacaoDeProdutoPage,
+  ConsultaResponderReclamacaoPage,
+  ResponderReclamacaoPage
+} from "../pages/Produto";
 
 const routesConfig = [
   {
@@ -155,7 +167,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEscola()
   },
   {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_RECUSADAS}`,
+    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
     tipoUsuario: usuarioEhEscola()
@@ -216,7 +228,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhDRE()
   },
   {
-    path: `/${constants.DRE}/${constants.SOLICITACOES_RECUSADAS}`,
+    path: `/${constants.DRE}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
@@ -574,10 +586,40 @@ const routesConfig = [
     tipoUsuario: usuarioEhTerceirizada()
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.EDITAR}`,
+    component: AtualizacaoProdutoFormPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AVALIAR_RECLAMACAO_PRODUTO
+    }`,
+    component: AvaliarReclamacaoProdutoPage,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.BUSCA_PRODUTO_ANALISE_SENSORIAL
+    }`,
+    component: BuscaProdutoAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
+      constants.RELATORIO_ANALISE_SENSORIAL
+    }`,
+    component: RelatorioAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
@@ -698,6 +740,47 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhTerceirizada() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
+    component: ReclamacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/consulta`,
+    component: ConsultaAtivacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ATIVACAO_DE_PRODUTO
+    }/detalhe`,
+    component: AtivacaoDeProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto
+  },
+  {
+    path: "/relatorio-produtos-homologados",
+    component: RelatorioProdutosHomologadosPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
+    component: ConsultaResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
+    component: ResponderReclamacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   }
 ];
 

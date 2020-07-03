@@ -15,21 +15,19 @@
   }
 }
 
-.react-datepicker-popper {
-  z-index: 5;
-  position: absolute;
-  will-change: transform;
-  top: 0px;
-  left: 0px;
-  transform: translate3d(0px, 38px, 0px) !important;
+.form-busca-avancada {
+  .react-datepicker-popper {
+    z-index: 5;
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(0px, 38px, 0px) !important;
+  }
 }
 
 .ant-select-search__field {
   height: 38px !important;
-}
-
-.ant-select-selection--multiple {
-  height: 32px !important;
 }
 
 .check-tipos-prod {

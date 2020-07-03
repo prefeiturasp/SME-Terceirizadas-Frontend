@@ -1,0 +1,88 @@
+@import "styles/variables.scss";
+
+.shareable-detalhe-produto {
+  header {
+    display: grid;
+    grid-template-columns: 28% 18% 18% 18% 18%;
+    margin: 20px 0;
+  }
+
+  .label-relatorio {
+    color: #686868;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .value-relatorio {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18px;
+    color: #353535;
+    margin: 6px 0 0 0;
+  }
+
+  .componente-informacao-de-reclamante .responder-reclamacao-anexos {
+    margin-left: 0 !important;
+  }
+  .componente-informacao-de-reclamante .responder-reclamacao-anexos .col-12 {
+    padding-left: 0 !important;
+  }
+
+  min-width: 100%;
+  font-size: 14px;
+  div.title {
+    color: $blackInput;
+    font-weight: bold;
+  }
+  table.table-informacoes-nutricionais {
+    width: 100%;
+    thead {
+      font-weight: bold;
+      th {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        border-top: 1px solid #e9eaea;
+        border-bottom: 1px solid #a7a7a7;
+        background-color: #f5f6f8;
+      }
+    }
+    tbody {
+      tr {
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #a7a7a7;
+        color: $blackInput;
+      }
+    }
+  }
+  .link-with-student {
+    .container-radio {
+      input {
+        &:checked ~ .checkmark {
+          background-color: $green;
+        }
+      }
+    }
+    div.label {
+      span.required-asterisk {
+        color: $red;
+        padding-right: 5px;
+      }
+      color: $gray;
+      padding-top: 0.5em;
+      padding-bottom: 1em;
+    }
+    label.container-radio {
+      color: $blackInput;
+    }
+  }
+  .card-warning {
+    border-radius: 4px;
+    &.gray {
+      border-color: $grayPlaceholder;
+      color: $grayPlaceholder;
+    }
+  }
+}

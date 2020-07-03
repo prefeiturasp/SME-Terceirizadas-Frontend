@@ -19,7 +19,6 @@ export const DRE = "dre";
 export const ESCOLA = "escola";
 export const ALUNO = "aluno";
 
-export const SOLICITACOES_RECUSADAS = "solicitacoes-recusadas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
@@ -75,8 +74,14 @@ export const PERFIL = "perfil";
 export const PESQUISA_DESENVOLVIMENTO = "pesquisa-desenvolvimento";
 export const PRODUTO = "produto";
 export const BUSCA_PRODUTO = "busca-produto";
+export const BUSCA_PRODUTO_ANALISE_SENSORIAL =
+  "busca-produto-analise-sensorial";
+export const RELATORIO_ANALISE_SENSORIAL = "relatorio-analise-sensorial";
+export const AVALIAR_RECLAMACAO_PRODUTO = "avaliar-reclamacao-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
+export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
+export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";

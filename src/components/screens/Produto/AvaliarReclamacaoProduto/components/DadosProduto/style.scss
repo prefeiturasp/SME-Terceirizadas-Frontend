@@ -1,0 +1,36 @@
+@import "styles/variables.scss";
+
+div.ver-dados-produto {
+  div.title {
+    color: $blackInput;
+    font-weight: bold;
+  }
+  div.card-warning {
+    border-radius: 4px;
+    &.gray {
+      color: $grayPlaceholder;
+      border-color: $grayPlaceholder;
+    }
+  }
+  table.table-informacoes-nutricionais {
+    width: 100%;
+    thead {
+      font-weight: bold;
+      th {
+        padding-top: 1em;
+        padding-bottom: 1em;
+        border-top: 1px solid #e9eaea;
+        border-bottom: 1px solid #a7a7a7;
+        background-color: #f5f6f8;
+      }
+    }
+    tbody {
+      tr {
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #a7a7a7;
+        color: $blackInput;
+      }
+    }
+  }
+}

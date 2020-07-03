@@ -3,11 +3,11 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import StatusSolicitacoes from "../../../components/screens/DashboardDRE/StatusSolicitacoes";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { DRE, SOLICITACOES_RECUSADAS } from "../../../configs/constants";
+import { DRE, SOLICITACOES_NEGADAS } from "../../../configs/constants";
 import { STATUS } from "../../../components/screens/const";
 
 const atual = {
-  href: `/${DRE}/${SOLICITACOES_RECUSADAS}`,
+  href: `/${DRE}/${SOLICITACOES_NEGADAS}`,
   titulo: "Solicitações Negadas"
 };
 

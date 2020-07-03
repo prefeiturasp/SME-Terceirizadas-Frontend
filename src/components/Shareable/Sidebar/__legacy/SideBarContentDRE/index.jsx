@@ -5,7 +5,7 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
-  SOLICITACOES_RECUSADAS,
+  SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
   RELATORIOS
 } from "../../../../../configs/constants";
@@ -112,7 +112,7 @@ export class SidebarContentDRE extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${DRE}/${SOLICITACOES_RECUSADAS}`}
+                  to={`/${DRE}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>

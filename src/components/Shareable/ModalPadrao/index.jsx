@@ -1,7 +1,9 @@
 import HTTP_STATUS from "http-status-codes";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
+
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
@@ -10,18 +12,18 @@ import "./style.scss";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 
 export class ModalPadrao extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      justificativa: ""
-    };
-  }
+  propTypes = {
+    labelJustificativa: PropTypes.string
+  };
 
-  async enviarJustificativa(uuid) {
-    const { justificativa } = this.state;
-    const { toastSuccessMessage } = this.props;
-    let resp = "";
-    resp = await this.props.endpoint(uuid, justificativa);
+  defaultProps = {
+    labelJustificativa: "Justificativa"
+  };
+
+  enviarJustificativa = async formValues => {
+    const { justificativa } = formValues;
+    const { uuid, toastSuccessMessage } = this.props;
+    const resp = await this.props.endpoint(uuid, justificativa);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
@@ -29,22 +31,17 @@ export class ModalPadrao extends Component {
     } else {
       toastError(resp.data.detail);
     }
-  }
+  };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.justificativa !== this.props.justificativa) {
-      this.setState({
-        justificativa: this.props.justificativa
-      });
-    }
-  }
   render() {
     const {
       showModal,
       closeModal,
-      uuid,
+      labelJustificativa,
       modalTitle,
-      textAreaPlaceholder
+      textAreaPlaceholder,
+      protocoloAnalise,
+      ...textAreaProps
     } = this.props;
     return (
       <Modal
@@ -53,21 +50,28 @@ export class ModalPadrao extends Component {
         onHide={closeModal}
       >
         <Form
-          onSubmit={() => this.enviarJustificativa(uuid)}
+          onSubmit={this.enviarJustificativa}
           render={({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
+                {protocoloAnalise !== null && (
+                  <div className="numero-protocolo">
+                    <div>Número Protocolo: {protocoloAnalise}</div>
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-12">
                     <Field
                       component={TextAreaWYSIWYG}
-                      label="Justificativa"
+                      label={labelJustificativa}
                       placeholder={textAreaPlaceholder}
                       name="justificativa"
+                      required
                       validate={textAreaRequiredAndAtLeastOneCharacter}
+                      {...textAreaProps}
                     />
                   </div>
                 </div>

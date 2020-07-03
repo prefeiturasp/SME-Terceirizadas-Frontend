@@ -44,7 +44,7 @@ export class Header extends Component {
                   <p className="title">Ajuda</p>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link">
+                  <Link to="#" className="nav-link">
                     <img
                       src="/assets/image/vinculo.svg"
                       alt="Ícone de vínculo"
@@ -53,9 +53,9 @@ export class Header extends Component {
                   <p className="title">Vínculo</p>
                 </li>
                 <li onClick={() => authService.logout()} className="nav-item">
-                  <Link className="nav-link">
+                  <div className="nav-link">
                     <img src="/assets/image/sair.svg" alt="Ícone de logout" />
-                  </Link>
+                  </div>
                   <p className="title">Sair</p>
                 </li>
               </ul>

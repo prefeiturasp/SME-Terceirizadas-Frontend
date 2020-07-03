@@ -1,0 +1,119 @@
+.screen-responder-reclamacao-produto {
+  .container-tabela {
+    padding: 0 2rem 2rem 2rem;
+  }
+}
+
+.tabela-resultado-consultar-reclamacao-produto {
+  font-size: 14px;
+  border-left: 1px solid #e9eaea;
+  border-right: 1px solid #e9eaea;
+  border-bottom: 1px solid #e9eaea;
+
+  .table-grid {
+    height: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .table-header {
+    background: #f5f6f8;
+  }
+
+  .table-header-cell {
+    border: 1px solid #e9eaea;
+    color: #42474a;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 1rem;
+    line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .table-body {
+    position: relative;
+    font-weight: 500;
+    color: #686868;
+
+    div:nth-last-child(2) {
+      padding-right: 2rem;
+    }
+
+    .reclamacao-collapse {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
+  }
+
+  .table-body-cell {
+    box-sizing: border-box;
+    border: 1px solid #e9eaea;
+    font-size: 14px;
+    text-align: left;
+    padding-left: 1rem;
+    line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .desativar-borda {
+    border-bottom: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+  }
+
+  .fas {
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #42474a;
+  }
+
+  hr {
+    margin: 2rem 1rem;
+  }
+
+  .grid-detalhe {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 1rem;
+
+    .grid-detalhe-cell {
+      padding-left: 1rem;
+    }
+
+    .template-contatos-terc {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .log-reclamacao {
+    margin-left: 1rem;
+  }
+
+  .label-empresa {
+    color: #686868;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .value-empresa {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #353535;
+    margin: 6px 0 0 0;
+  }
+}

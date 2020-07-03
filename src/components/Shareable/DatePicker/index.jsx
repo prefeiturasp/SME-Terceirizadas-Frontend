@@ -85,7 +85,8 @@ export class InputComData extends Component {
       required,
       showMonthDropdown,
       showYearDropdown,
-      textoLabel
+      textoLabel,
+      popperPlacement
     } = this.props;
     return (
       <div className="datepicker">
@@ -135,6 +136,7 @@ export class InputComData extends Component {
             onChange={this.handleChange}
             locale={ptBR}
             name={name}
+            popperPlacement={popperPlacement || undefined}
           />
           {hasIcon && (
             <i onClick={this.openDatepicker} className="fas fa-calendar-alt" />

@@ -1,32 +1,64 @@
-import React, { Component } from "react";
+import React from "react";
 import { withRouter } from "react-router-dom";
+import { Row, Col } from "antd";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconeGestaoDeProduto from "../../Shareable/Icones/IconeGestaoDeProduto";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
+import {
+  usuarioEhEscola,
+  usuarioEhTerceirizada,
+  usuarioEhQualquerCODAE,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhDRE
+} from "helpers/utilities";
 
-class PainelInicial extends Component {
-  render() {
-    return (
-      <div className="row mt-3">
-        <div
-          className="col-4"
-          onClick={() => this.props.history.push("/painel-gestao-alimentacao")}
-        >
-          <CardLogo titulo={"Gestão de Alimentação"}>
+const PainelInicial = ({ history }) => {
+  return (
+    <Row className="mt-3" gutter={[16, 16]}>
+      {(usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhTerceirizada() ||
+        usuarioEhDRE() ||
+        usuarioEhEscola()) && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Gestão de Alimentação"}
+            onClick={() => history.push("/painel-gestao-alimentacao")}
+          >
             <IconeGestaoDeAlimentacao />
           </CardLogo>
-        </div>
-        <div
-          className="col-4"
-          onClick={() => this.props.history.push("/painel-dieta-especial")}
-        >
-          <CardLogo titulo={"Dieta Especial"}>
+        </Col>
+      )}
+      {(usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhCODAEDietaEspecial() ||
+        usuarioEhTerceirizada() ||
+        usuarioEhDRE() ||
+        usuarioEhEscola()) && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Dieta Especial"}
+            onClick={() => history.push("/painel-dieta-especial")}
+          >
             <IconeDietaEspecial />
           </CardLogo>
-        </div>
-      </div>
-    );
-  }
-}
+        </Col>
+      )}
+
+      {(usuarioEhQualquerCODAE() ||
+        usuarioEhTerceirizada() ||
+        usuarioEhEscola()) && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Gestão de Produto"}
+            onClick={() => history.push("/painel-gestao-produto")}
+          >
+            <IconeGestaoDeProduto />
+          </CardLogo>
+        </Col>
+      )}
+    </Row>
+  );
+};
 
 export default withRouter(PainelInicial);

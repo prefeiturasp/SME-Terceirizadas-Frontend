@@ -3,15 +3,28 @@ import { Menu, SubMenu, LeafItem } from "./shared";
 import {
   PAINEL_GESTAO_PRODUTO,
   GESTAO_PRODUTO,
-  PESQUISA_DESENVOLVIMENTO
+  PESQUISA_DESENVOLVIMENTO,
+  RECLAMACAO_DE_PRODUTO,
+  AVALIAR_RECLAMACAO_PRODUTO,
+  ATIVACAO_DE_PRODUTO
 } from "configs/constants";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  usuarioEhEscola,
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhCODAEDietaEspecial
+} from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
+  const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
+  const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
+  const exibirAtivacao = usuarioEhCODAEGestaoProduto();
+  const exibirResponderReclamacao = usuarioEhTerceirizada();
+
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
@@ -25,6 +38,33 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       {exibirBusca && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto`}>
           Consulta de Produto
+        </LeafItem>
+      )}
+      {exibirCadastro && (
+        <LeafItem
+          to={`/${PESQUISA_DESENVOLVIMENTO}/busca-produto-analise-sensorial`}
+        >
+          Responder análise sensorial
+        </LeafItem>
+      )}
+      {exibirReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/${RECLAMACAO_DE_PRODUTO}`}>
+          Reclamação de Produto
+        </LeafItem>
+      )}
+      {exibirAvaliarReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/${AVALIAR_RECLAMACAO_PRODUTO}`}>
+          Avaliar Reclamação de Produto
+        </LeafItem>
+      )}
+      {exibirAtivacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/consulta`}>
+          Suspensão/Ativação do Produto
+        </LeafItem>
+      )}
+      {exibirResponderReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/responder-reclamacao/consulta`}>
+          Responder Reclamação
         </LeafItem>
       )}
       <SubMenu

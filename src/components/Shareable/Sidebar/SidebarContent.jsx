@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
-import { RELATORIOS } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
+  usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
@@ -13,7 +13,7 @@ import {
   MenuCadastros,
   MenuConfiguracoes,
   MenuGestaoDeProduto,
-  MenuPesquisaDesenvolvimento
+  MenuRelatorios
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -29,16 +29,21 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirCadastros = usuarioEhCODAEGestaoAlimentacao();
+  const exibirCadastros =
+    usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
   const exibirGestaoAlimentacao =
-    usuarioEhCODAEGestaoAlimentacao() || usuarioEhTerceirizada();
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
+    usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirDietaEspecial =
-    usuarioEhCODAEDietaEspecial() || usuarioEhTerceirizada();
-  const exibirPeD = usuarioEhCODAEGestaoAlimentacao(); // TODO: Verificar se essa busca migrou para dentro de Gestao
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
 
   const _props = {
     activeMenu,
@@ -52,11 +57,8 @@ export const SidebarContent = () => {
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
-    exibirPeD && <MenuPesquisaDesenvolvimento key={4} />,
-    <ListItem key={5} icon="fa-file-alt" to={`/${RELATORIOS}/`}>
-      Relatórios
-    </ListItem>,
-    exibirCadastros && <MenuCadastros key={6} />,
-    <MenuConfiguracoes key={7} />
+    exibirCadastros && <MenuCadastros key={5} />,
+    <MenuRelatorios key={6} />,
+    <MenuConfiguracoes key={8} />
   ];
 };

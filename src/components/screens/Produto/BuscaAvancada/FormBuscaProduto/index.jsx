@@ -55,7 +55,7 @@ class FormBuscaProduto extends Component {
       minDate
     } = this.props;
     return (
-      <form>
+      <form className="form-busca-avancada">
         <div className="descricao-topo-busca-produto">
           Consulte por produtos no sistema
         </div>
@@ -75,6 +75,7 @@ class FormBuscaProduto extends Component {
               className="input-data"
               component={InputComData}
               name="data-ate"
+              minDate={minDate}
             />
           </div>
           <div>
