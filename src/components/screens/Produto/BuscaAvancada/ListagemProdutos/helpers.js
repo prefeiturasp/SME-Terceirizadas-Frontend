@@ -2,20 +2,24 @@ import moment from "moment";
 
 export const retornaStatusFormatado = status => {
   switch (status) {
-    case "CODAE_NAO_HOMOLOGADO":
-      return "Não homologado";
-    case "CODAE_HOMOLOGADO":
-      return "Homologado";
+    case "CODAE_AUTORIZOU_RECLAMACAO":
+      return "Reclamação de produto";
+    case "CODAE_SUSPENDEU":
+      return "Produtos Suspensos";
+    case "CODAE_QUESTIONADO":
+      return "Correção de produto";
+    case "CODAE_PEDIU_ANALISE_RECLAMACAO":
+      return "Aguardando análise de reclamação";
     case "CODAE_PEDIU_ANALISE_SENSORIAL":
       return "Aguardando análise sensorial";
     case "CODAE_PENDENTE_HOMOLOGACAO":
       return "Pendente de homologação";
-    case "CODAE_SUSPENDEU":
-      return "Suspenso";
-    case "CODAE_QUESTIONADO":
-      return "Correção";
+    case "CODAE_HOMOLOGADO":
+      return "Homologado";
+    case "CODAE_NAO_HOMOLOGADO":
+      return "Não homologado";
     default:
-      return "TODOS-TESTE";
+      return "TODOS";
   }
 };
 

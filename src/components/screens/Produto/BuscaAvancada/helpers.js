@@ -39,7 +39,8 @@ export const retornaArrayDeAcordoComPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (
     tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA
+    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ||
+    tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
   ) {
     return [
       "Todos",
@@ -75,7 +76,7 @@ const retornaStatusBackend = status => {
       return "CODAE_PEDIU_ANALISE_RECLAMACAO";
     case "Aguardando análise sensorial":
       return "CODAE_PEDIU_ANALISE_SENSORIAL";
-    case "Pendente de homologaçã":
+    case "Pendente de homologação":
       return "CODAE_PENDENTE_HOMOLOGACAO";
     case "Homologado":
       return "CODAE_HOMOLOGADO";
