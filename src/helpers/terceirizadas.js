@@ -14,10 +14,11 @@ const MAPEAMENTO_STATUS_LABEL = {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Produtos em análise de reclamação"
 };
 
-export const relatorioQuantitativo = async nomeTerceirizada => {
-  const dadosRelatorio = await getRelatorioQuantitativo(nomeTerceirizada);
+export const relatorioQuantitativo = async params => {
+  const dadosRelatorio = await getRelatorioQuantitativo(params);
   const qtdePorStatusZerado = {};
   const relatorio = [];
+  let totalProdutos = 0;
 
   Object.values(MAPEAMENTO_STATUS_LABEL).forEach(
     status => (qtdePorStatusZerado[status] = 0)
@@ -25,16 +26,22 @@ export const relatorioQuantitativo = async nomeTerceirizada => {
 
   dadosRelatorio.data.results.forEach(dadosTerceirizada => {
     const qtdePorStatus = Object.assign({}, qtdePorStatusZerado);
-    dadosTerceirizada.qtde_por_status.forEach(
-      statusEQtde =>
-        (qtdePorStatus[MAPEAMENTO_STATUS_LABEL[statusEQtde.status]] +=
-          statusEQtde.qtde)
-    );
+    let totalProdutosTerceirizada = 0;
+    dadosTerceirizada.qtde_por_status.forEach(statusEQtde => {
+      totalProdutosTerceirizada += statusEQtde.qtde;
+      totalProdutos += statusEQtde.qtde;
+      qtdePorStatus[MAPEAMENTO_STATUS_LABEL[statusEQtde.status]] +=
+        statusEQtde.qtde;
+    });
     relatorio.push({
       nomeTerceirizada: dadosTerceirizada.nome_terceirizada,
-      qtdePorStatus
+      qtdePorStatus,
+      totalProdutos: totalProdutosTerceirizada
     });
   });
 
-  return relatorio;
+  return {
+    totalProdutos,
+    detalhes: relatorio
+  };
 };

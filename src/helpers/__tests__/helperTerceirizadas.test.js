@@ -37,32 +37,37 @@ const DADOS_TESTE_RELATORIO_QUANTITATIVO = {
   ]
 };
 
-const RESULTADO_RELATORIO_QUANTITATIVO = [
-  {
-    nomeTerceirizada: "Pedreira bebidas",
-    qtdePorStatus: {
-      "Reclamação de produto": 0,
-      "Produtos suspensos": 0,
-      "Produtos pendentes de homologação": 0,
-      "Produtos em análise de reclamação": 1,
-      "Produtos aguardando análise sensorial": 0,
-      "Produtos homologados": 0,
-      "Produtos não homologados": 1
+const RESULTADO_RELATORIO_QUANTITATIVO = {
+  totalProdutos: 5,
+  detalhes: [
+    {
+      nomeTerceirizada: "Pedreira bebidas",
+      totalProdutos: 2,
+      qtdePorStatus: {
+        "Reclamação de produto": 0,
+        "Produtos suspensos": 0,
+        "Produtos pendentes de homologação": 0,
+        "Produtos em análise de reclamação": 1,
+        "Produtos aguardando análise sensorial": 0,
+        "Produtos homologados": 0,
+        "Produtos não homologados": 1
+      }
+    },
+    {
+      nomeTerceirizada: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
+      totalProdutos: 3,
+      qtdePorStatus: {
+        "Reclamação de produto": 0,
+        "Produtos suspensos": 0,
+        "Produtos pendentes de homologação": 0,
+        "Produtos em análise de reclamação": 1,
+        "Produtos aguardando análise sensorial": 0,
+        "Produtos homologados": 1,
+        "Produtos não homologados": 1
+      }
     }
-  },
-  {
-    nomeTerceirizada: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
-    qtdePorStatus: {
-      "Reclamação de produto": 0,
-      "Produtos suspensos": 0,
-      "Produtos pendentes de homologação": 0,
-      "Produtos em análise de reclamação": 1,
-      "Produtos aguardando análise sensorial": 0,
-      "Produtos homologados": 1,
-      "Produtos não homologados": 1
-    }
-  }
-];
+  ]
+};
 
 describe("test helperTerceirizadas", () => {
   mock
