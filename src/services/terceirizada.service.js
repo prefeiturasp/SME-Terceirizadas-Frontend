@@ -1,6 +1,9 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 
+import axios from "./_base";
+import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
+
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json"
@@ -84,4 +87,13 @@ export const updateTerceirizada = (uuid, payload) => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const getRelatorioQuantitativo = async nome_terceirizada => {
+  if (nome_terceirizada) {
+    return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, {
+      nome_terceirizada
+    });
+  }
+  return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO);
 };
