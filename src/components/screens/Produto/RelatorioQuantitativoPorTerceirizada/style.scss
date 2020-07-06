@@ -11,11 +11,16 @@
   }
 }
 
-.tabela-quantitativo-terceirizada {
+.tabela-quantitativo-por-terceirizada {
+
+  .row-quantitativo-card {
+    border: 1px solid #DFDFDF;
+    padding: 10px 15px 30px 15px;
+  }
+
   .header-quantitativo-por-terceirizada {
     display: grid;
-    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
-
+    grid-template-columns: 50% 25% 25%;
     background: #f5f6f8;
     height: 52px;
 
@@ -30,10 +35,11 @@
     }
   }
 
-  .body-quantitativo-por-terceirizada {
+  .row-quantitativo-nome {
     display: grid;
-    grid-template-columns: 20% 20% 20% 10% 10% 10% 10%;
+    grid-template-columns: 50% 25% 25%;
     height: 48px;
+    background-color: #F9F9F9;
 
     div {
       font-weight: 500;
@@ -50,25 +56,39 @@
     }
   }
 
-  .linha-totalizacao {
-    background-color: #e9eaea;
-    text-align: right;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 48px;
-    color: $gray;
+  .row-quantitativo-status {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    height: 68px;
 
-    span {
-      span {
-        padding-left: 100px;
-        padding-right: 8px;
+    .status-flex-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      div {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        color: #686868; 
+
+        &:first-child {
+          font-weight: bold;
+          color: #42474a;
+        }
       }
+
+      
+      
+    }
+
+    > div {
+      border-bottom: 1px solid #e9eaea;
     }
   }
 
-  .linha-totalizacao-geral {
-    font-size: 16 px;
-    margin-top: 2px;
-    color: #000;
-  }
 }

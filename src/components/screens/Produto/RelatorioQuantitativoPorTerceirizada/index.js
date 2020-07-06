@@ -1,6 +1,6 @@
 import { Spin } from "antd";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -40,91 +40,71 @@ const gerarLabelPorFiltro = filtros => {
   }
 };
 
-const gerarLabelTotal = filtros => {
-  if (filtros.data_inicial || filtros.data_final) return " no período";
-  return "";
-};
+const data = [
+  {
 
-const TabelaQuantitativoPorTerceirizada = ({ grupos, filtros }) => {
-  if (!grupos) return false;
+  }
+]
+
+const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
+  if (!terceirizadas) return false;
   return (
-    <section className="tabela-quantitativo-por-terceirizadas">
-      <div className="header-homologados">
+    <section className="tabela-quantitativo-por-terceirizada">
+      <div className="header-quantitativo-por-terceirizada">
         <div>Terceirizada</div>
-        <div>Nome do Produto</div>
-        <div>Marca</div>
-        <div>Dieta Especial</div>
-        <div>Aditivos Alergênicos</div>
-        <div>Data de Cadastro</div>
-        <div>Data de Homologação</div>
+        <div>Período (dias)</div>
+        <div>Quantidade total de produtos</div>
       </div>
-      {grupos.map((grupo, index) => {
-        return (
-          <>
-            {grupo.produtos.map((produto, index2) => {
+            {terceirizadas.map((item, index) => {
               return (
-                <div key={index2} className="body-homologados">
-                  <div>
-                    {
-                      produto.ultima_homologacao.rastro_terceirizada
-                        .nome_fantasia
-                    }
-                  </div>
-                  <div>{produto.nome}</div>
-                  <div>{produto.marca.nome}</div>
-                  <div>{produto.eh_para_alunos_com_dieta ? "Sim" : "Não"}</div>
-                  <div>{produto.tem_aditivos_alergenicos ? "Sim" : "Não"}</div>
-                  <div>{produto.criado_em}</div>
-                  <div>{produto.ultima_homologacao.criado_em}</div>
+                <Fragment key={index}>
+                <div className="row-quantitativo-nome">
+                  <div>Mezanino Distribuidora</div>
+                  <div>30 dias </div>
+                  <div>25</div>
                 </div>
+               <div className="row-quantitativo-card">
+               <div className="row-quantitativo-status">
+                  <div className="status-flex-container"><div>Produtos homologados</div><div>{"3"}</div></div>
+                  <div className="status-flex-container"><div>Produtos não homologados</div><div>{"3"}</div> </div>
+                  <div className="status-flex-container"><div>Produtos pendentes de homolog.</div><div>{"3"}</div></div>
+                  <div className="status-flex-container"><div>Produtos aguardando a. sensorial</div><div>{"3"}</div></div>
+                </div>
+                <div className="row-quantitativo-status">
+                  <div className="status-flex-container"><div>Produtos aguardando correção</div><div>{"3"}</div></div>
+                  <div className="status-flex-container"><div>Reclamação de produto</div><div>{"3"}</div></div>
+                  <div className="status-flex-container"><div>Produtos em análise de reclamação</div><div>{"3"}</div></div>
+                  <div className="status-flex-container"><div>Produtos suspensos</div><div>{"3"}</div></div>
+                </div>
+               </div>
+              </Fragment>
               );
             })}
-            <div className="linha-totalizacao" key={index}>
-              <span>
-                {`Total de itens por ${grupo.terceirizada.nome_fantasia}: `}
-                <span>{grupo.produtos.length.toString().padStart(2, "0")}</span>
-              </span>
-            </div>
-          </>
-        );
-      })}
-      <div className="linha-totalizacao linha-totalizacao-geral">
-        <span>
-          {`Total de produtos cadastrados ${gerarLabelTotal(filtros)}:`}
-          <span>
-            {grupos
-              .reduce((acc, v) => {
-                return acc + v.produtos.length;
-              }, 0)
-              .toString()
-              .padStart(2, "0")}
-          </span>
-        </span>
-      </div>
     </section>
   );
 };
 
 const RelatorioQuantitativoPorTerdeirizada = () => {
-  const [grupos, setGrupos] = useState(null);
+  const [terceirizadas, setTerceirizadas] = useState(data);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  useEffect(() => {
+/*   useEffect(() => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
       const response = await getProdutosPorTerceirizada(filtros);
       setCarregando(false);
       //console.log(response.data)
-      setGrupos(response.data);
+      setTerceirizadas(response.data);
     }
     fetchData();
-  }, [filtros, setGrupos]);
+  }, [filtros, setTerceirizadas]);
+  */
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
-  };
+  }; 
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -140,7 +120,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
         </div>
       </div>
 
-      {grupos && !grupos.length && (
+      {terceirizadas && !terceirizadas.length && (
         <div className="text-center mt-5">
           A consulta retornou 0 resultados.
         </div>
@@ -148,7 +128,8 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
 
       <Modal
         dialogClassName="modal-90w"
-        show={Boolean(grupos && grupos.length)}
+        show2={Boolean(terceirizadas && terceirizadas.length)}
+        show={true}
         onHide={() => {}}
       >
         <section className="m-3">
@@ -158,7 +139,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           <p className="text-black font-weight-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
-          <TabelaQuantitativoPorTerceirizada grupos={grupos} filtros={filtros} />
+          <TabelaQuantitativoPorTerceirizada terceirizadas={terceirizadas} />
         </section>
 
         <section className="m-3">
@@ -179,7 +160,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               className="float-right ml-3"
               onClick={() => {
                 setFiltros(null);
-                setGrupos(null);
+                setTerceirizadas(null);
               }}
             />
           </Link>
@@ -191,7 +172,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
             icon={BUTTON_ICON.ARROW_LEFT}
             onClick={() => {
               setFiltros(null);
-              setGrupos(null);
+              setTerceirizadas(null);
             }}
             className="float-right"
           />
