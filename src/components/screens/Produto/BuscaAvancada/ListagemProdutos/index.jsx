@@ -38,6 +38,12 @@ class ListagemProdutos extends Component {
     }
   };
 
+  changePaginacao = pagina => {
+    this.setState({
+      indexPaginacao: pagina
+    });
+  };
+
   detalhesProduto = (index, ativo) => {
     let { produtos } = this.state;
     produtos.forEach(produto => {
@@ -162,6 +168,9 @@ class ListagemProdutos extends Component {
           defaultCurrent={1}
           total={produtos.length}
           showSizeChanger={false}
+          onChange={page => {
+            this.changePaginacao(page);
+          }}
         />
       </section>
     ) : (
