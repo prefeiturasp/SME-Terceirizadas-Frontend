@@ -85,7 +85,6 @@ export const ResponderReclamacaoPage = () => {
   );
 };
 
-
 const atual = {
   href: `/${GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
   titulo: "Relatório quantitativo por terceirizada"

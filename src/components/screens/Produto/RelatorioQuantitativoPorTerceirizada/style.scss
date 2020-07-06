@@ -12,9 +12,8 @@
 }
 
 .tabela-quantitativo-por-terceirizada {
-
   .row-quantitativo-card {
-    border: 1px solid #DFDFDF;
+    border: 1px solid #dfdfdf;
     padding: 10px 15px 30px 15px;
   }
 
@@ -39,7 +38,7 @@
     display: grid;
     grid-template-columns: 50% 25% 25%;
     height: 48px;
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
 
     div {
       font-weight: 500;
@@ -74,21 +73,17 @@
         padding: 10px;
         display: flex;
         align-items: center;
-        color: #686868; 
+        color: #686868;
 
         &:first-child {
           font-weight: bold;
           color: #42474a;
         }
       }
-
-      
-      
     }
 
     > div {
       border-bottom: 1px solid #e9eaea;
     }
   }
-
 }

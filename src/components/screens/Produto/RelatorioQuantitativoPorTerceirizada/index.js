@@ -2,12 +2,9 @@ import { Spin } from "antd";
 import moment from "moment";
 import React, { Fragment, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
-import {
-  getProdutosPorTerceirizada,
-  getRelatorioProdutosHomologados
-} from "services/produto.service";
+import { obterRelatorioQuantitativo } from "helpers/terceirizadas";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -40,12 +37,6 @@ const gerarLabelPorFiltro = filtros => {
   }
 };
 
-const data = [
-  {
-
-  }
-]
-
 const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
   if (!terceirizadas) return false;
   return (
@@ -55,56 +46,80 @@ const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
         <div>Período (dias)</div>
         <div>Quantidade total de produtos</div>
       </div>
-            {terceirizadas.map((item, index) => {
-              return (
-                <Fragment key={index}>
-                <div className="row-quantitativo-nome">
-                  <div>Mezanino Distribuidora</div>
-                  <div>30 dias </div>
-                  <div>25</div>
+      {terceirizadas.map((item, index) => {
+        return (
+          <Fragment key={index}>
+            <div className="row-quantitativo-nome">
+              <div>{item.nomeTerceirizada}</div>
+              <div />
+              <div>{item.totalProdutos}</div>
+            </div>
+            <div className="row-quantitativo-card">
+              <div className="row-quantitativo-status">
+                <div className="status-flex-container">
+                  <div>Produtos homologados</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_HOMOLOGADOS}</div>
                 </div>
-               <div className="row-quantitativo-card">
-               <div className="row-quantitativo-status">
-                  <div className="status-flex-container"><div>Produtos homologados</div><div>{"3"}</div></div>
-                  <div className="status-flex-container"><div>Produtos não homologados</div><div>{"3"}</div> </div>
-                  <div className="status-flex-container"><div>Produtos pendentes de homolog.</div><div>{"3"}</div></div>
-                  <div className="status-flex-container"><div>Produtos aguardando a. sensorial</div><div>{"3"}</div></div>
+                <div className="status-flex-container">
+                  <div>Produtos não homologados</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_NAO_HOMOLOGADOS}</div>{" "}
                 </div>
-                <div className="row-quantitativo-status">
-                  <div className="status-flex-container"><div>Produtos aguardando correção</div><div>{"3"}</div></div>
-                  <div className="status-flex-container"><div>Reclamação de produto</div><div>{"3"}</div></div>
-                  <div className="status-flex-container"><div>Produtos em análise de reclamação</div><div>{"3"}</div></div>
-                  <div className="status-flex-container"><div>Produtos suspensos</div><div>{"3"}</div></div>
+                <div className="status-flex-container">
+                  <div>Produtos pendentes de homolog.</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_PENDENTES_HOMOLOGACAO}</div>
                 </div>
-               </div>
-              </Fragment>
-              );
-            })}
+                <div className="status-flex-container">
+                  <div>Produtos aguardando a. sensorial</div>
+                  <div>
+                    {item.qtdePorStatus.PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL}
+                  </div>
+                </div>
+              </div>
+              <div className="row-quantitativo-status">
+                <div className="status-flex-container">
+                  <div>Produtos aguardando correção</div>
+                  <div />
+                </div>
+                <div className="status-flex-container">
+                  <div>Reclamação de produto</div>
+                  <div>{item.qtdePorStatus.RECLAMACAO_DE_PRODUTO}</div>
+                </div>
+                <div className="status-flex-container">
+                  <div>Produtos em análise de reclamação</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_ANALISE_RECLAMACAO}</div>
+                </div>
+                <div className="status-flex-container">
+                  <div>Produtos suspensos</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_SUSPENSOS}</div>
+                </div>
+              </div>
+            </div>
+          </Fragment>
+        );
+      })}
     </section>
   );
 };
 
 const RelatorioQuantitativoPorTerdeirizada = () => {
-  const [terceirizadas, setTerceirizadas] = useState(data);
+  const [terceirizadas, setTerceirizadas] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-/*   useEffect(() => {
+  useEffect(() => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosPorTerceirizada(filtros);
+      const response = await obterRelatorioQuantitativo(filtros);
       setCarregando(false);
-      //console.log(response.data)
-      setTerceirizadas(response.data);
+      setTerceirizadas(response.detalhes);
     }
     fetchData();
   }, [filtros, setTerceirizadas]);
-  */
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
-  }; 
+  };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -128,8 +143,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
 
       <Modal
         dialogClassName="modal-90w"
-        show2={Boolean(terceirizadas && terceirizadas.length)}
-        show={true}
+        show={Boolean(terceirizadas && terceirizadas.length)}
         onHide={() => {}}
       >
         <section className="m-3">
@@ -143,27 +157,6 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
         </section>
 
         <section className="m-3">
-          <Link
-            to="route"
-            target="_blank"
-            onClick={event => {
-              event.preventDefault();
-              window.open(getRelatorioProdutosHomologados(filtros));
-            }}
-          >
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              texto="imprimir"
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right ml-3"
-              onClick={() => {
-                setFiltros(null);
-                setTerceirizadas(null);
-              }}
-            />
-          </Link>
           <Botao
             texto="voltar"
             titulo="voltar"

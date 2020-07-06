@@ -1,4 +1,4 @@
-import { relatorioQuantitativo } from "helpers/terceirizadas";
+import { obterRelatorioQuantitativo } from "helpers/terceirizadas";
 import mock from "services/_mock";
 import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
 
@@ -74,7 +74,7 @@ describe("test helperTerceirizadas", () => {
     .onGet(ENDPOINT_RELATORIO_QUANTITATIVO)
     .reply(200, DADOS_TESTE_RELATORIO_QUANTITATIVO);
   test("sem parâmetros", async () => {
-    const resultado = await relatorioQuantitativo();
+    const resultado = await obterRelatorioQuantitativo();
     expect(resultado).toEqual(RESULTADO_RELATORIO_QUANTITATIVO);
   });
 });

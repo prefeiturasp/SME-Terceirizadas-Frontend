@@ -97,9 +97,8 @@ import {
   AtivacaoDeProdutoPage,
   ConsultaResponderReclamacaoPage,
   ResponderReclamacaoPage,
-  RelatorioQuantitativoPorTerceirizadaPage,
+  RelatorioQuantitativoPorTerceirizadaPage
 } from "../pages/Produto";
-
 
 const routesConfig = [
   {
@@ -766,7 +765,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoProduto
   },
   {
-    path: "/relatorio-produtos-homologados",
+    path: `/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`,
     component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
@@ -785,7 +784,9 @@ const routesConfig = [
     tipoUsuario: usuarioEhTerceirizada()
   },
   {
-    path: `/${constants.GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
+    path: `/${
+      constants.GESTAO_PRODUTO
+    }/relatorios/quantitativo-por-terceirizada`,
     component: RelatorioQuantitativoPorTerceirizadaPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto()

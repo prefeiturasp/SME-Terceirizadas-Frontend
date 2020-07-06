@@ -14,7 +14,7 @@ const MAPEAMENTO_STATUS_LABEL = {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "PRODUTOS_ANALISE_RECLAMACAO"
 };
 
-export const relatorioQuantitativo = async params => {
+export const obterRelatorioQuantitativo = async params => {
   const dadosRelatorio = await getRelatorioQuantitativo(params);
   const qtdePorStatusZerado = {};
   const relatorio = [];
