@@ -24,6 +24,7 @@ import {
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
@@ -203,6 +204,7 @@ class HomologacaoProduto extends Component {
                   </section>
                 )}
               {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
+              {!!logs.length && <MotivoHomologacao logs={logs} />}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>

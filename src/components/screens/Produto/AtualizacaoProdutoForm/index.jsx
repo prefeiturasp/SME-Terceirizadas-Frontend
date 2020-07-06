@@ -19,6 +19,7 @@ import {
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
 import { produtoEhReclamacao, retornaData } from "../Homologacao/helper";
+import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 
 const { Option } = Select;
 
@@ -241,6 +242,7 @@ class AtualizacaoProdutoForm extends Component {
                   </section>
                 )}
               {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
+              {!!logs.length && <MotivoHomologacao logs={logs} />}
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}
