@@ -44,26 +44,26 @@ const RESULTADO_RELATORIO_QUANTITATIVO = {
       nomeTerceirizada: "Pedreira bebidas",
       totalProdutos: 2,
       qtdePorStatus: {
-        "Reclamação de produto": 0,
-        "Produtos suspensos": 0,
-        "Produtos pendentes de homologação": 0,
-        "Produtos em análise de reclamação": 1,
-        "Produtos aguardando análise sensorial": 0,
-        "Produtos homologados": 0,
-        "Produtos não homologados": 1
+        RECLAMACAO_DE_PRODUTO: 0,
+        PRODUTOS_SUSPENSOS: 0,
+        PRODUTOS_PENDENTES_HOMOLOGACAO: 0,
+        PRODUTOS_ANALISE_RECLAMACAO: 1,
+        PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL: 0,
+        PRODUTOS_HOMOLOGADOS: 0,
+        PRODUTOS_NAO_HOMOLOGADOS: 1
       }
     },
     {
       nomeTerceirizada: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
       totalProdutos: 3,
       qtdePorStatus: {
-        "Reclamação de produto": 0,
-        "Produtos suspensos": 0,
-        "Produtos pendentes de homologação": 0,
-        "Produtos em análise de reclamação": 1,
-        "Produtos aguardando análise sensorial": 0,
-        "Produtos homologados": 1,
-        "Produtos não homologados": 1
+        RECLAMACAO_DE_PRODUTO: 0,
+        PRODUTOS_SUSPENSOS: 0,
+        PRODUTOS_PENDENTES_HOMOLOGACAO: 0,
+        PRODUTOS_ANALISE_RECLAMACAO: 1,
+        PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL: 0,
+        PRODUTOS_HOMOLOGADOS: 1,
+        PRODUTOS_NAO_HOMOLOGADOS: 1
       }
     }
   ]
