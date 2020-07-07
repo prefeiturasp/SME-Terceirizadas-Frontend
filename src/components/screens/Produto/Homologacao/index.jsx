@@ -202,7 +202,12 @@ class HomologacaoProduto extends Component {
                     </article>
                   </section>
                 )}
-              {!!logs.length && <MotivoDaRecusaDeHomologacao logs={logs} />}
+              {!!logs.length && (
+                <Fragment>
+                  <MotivoDaRecusaDeHomologacao logs={logs} />
+                  <MotivoHomologacao logs={logs} />
+                </Fragment>
+              )}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
