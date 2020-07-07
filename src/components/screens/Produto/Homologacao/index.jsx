@@ -24,6 +24,7 @@ import {
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto

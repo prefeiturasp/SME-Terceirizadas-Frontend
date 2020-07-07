@@ -39,14 +39,24 @@ export const retornaArrayDeAcordoComPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (
     tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
+    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA
   ) {
     return [
       "Todos",
       "Reclamação de produto",
       "Produtos Suspensos",
       "Correção de produto",
+      "Aguardando análise de reclamação",
+      "Aguardando análise sensorial",
+      "Pendente de homologação",
+      "Homologado",
+      "Não homologado"
+    ];
+  } else if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
+    return [
+      "Todos",
+      "Reclamação de produto",
+      "Produtos Suspensos",
       "Aguardando análise de reclamação",
       "Aguardando análise sensorial",
       "Pendente de homologação",
