@@ -29,6 +29,9 @@ import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
 } from "../../../../helpers/utilities";
+import { TIPO_PERFIL } from "../../../../constants/shared";
+import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
+import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 
 class HomologacaoProduto extends Component {
   constructor(props) {
@@ -119,6 +122,22 @@ class HomologacaoProduto extends Component {
     });
   };
 
+  renderFluxoAnaliseSensorial = homologacao => {
+    const { logs } = homologacao;
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    const ultimoLog = logs[logs.length - 1].status_evento_explicacao;
+    if (
+      ultimoLog === "CODAE pediu análise sensorial" &&
+      tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
+    ) {
+      return (
+        <FluxoDeStatus listaDeStatus={logs} fluxo={fluxoPartindoTerceirizada} />
+      );
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const {
       produto,
@@ -137,6 +156,7 @@ class HomologacaoProduto extends Component {
       handleSubmit,
       justificativa
     } = this.props;
+    const { ultima_homologacao } = produto !== null && produto;
     return (
       <div className="card">
         <div className="card-body">
@@ -226,6 +246,9 @@ class HomologacaoProduto extends Component {
                   <p className="value">{terceirizada.contatos[0].email}</p>
                 </div>
               </div>
+              <hr />
+              {ultima_homologacao &&
+                this.renderFluxoAnaliseSensorial(ultima_homologacao)}
               <hr />
               <div className="title">Identificação do Produto</div>
               <div className="row">

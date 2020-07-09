@@ -36,7 +36,6 @@
     text-align: center;
     z-index: 0;
     &.active {
-      color: $green !important;
       &:before {
         font-family: "Font Awesome 5 Free";
         font-size: 18px;
