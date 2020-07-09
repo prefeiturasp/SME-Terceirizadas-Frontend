@@ -36,7 +36,7 @@ pipeline {
        
        stage('Analise codigo') {
           when {
-              branch 'developmet'
+              branch 'development'
             }
             steps {
                 sh 'sonar-scanner \

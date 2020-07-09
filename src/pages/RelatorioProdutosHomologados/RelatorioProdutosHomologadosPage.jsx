@@ -6,7 +6,7 @@ import Page from "../../components/Shareable/Page/Page";
 import RelatorioProdutosHomologados from "components/screens/RelatorioProdutosHomologados";
 
 const atual = {
-  href: "/relatorio-produtos-homologados",
+  href: "/relatorios/produtos-homologados",
   titulo: "Relatório de Produto"
 };
 

@@ -252,6 +252,9 @@ ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
 
 export { ENDPOINT };
 
+export const ENDPOINT_RELATORIO_QUANTITATIVO =
+  "/terceirizadas/relatorio-quantitativo/";
+
 export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   CODAE_AUTORIZOU_RECLAMACAO: "codae_autorizou_reclamacao",
   CODAE_SUSPENDEU: "codae_suspendeu",

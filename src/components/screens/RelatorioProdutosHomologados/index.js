@@ -116,7 +116,6 @@ const RelatorioProdutosHomologados = () => {
       setCarregando(true);
       const response = await getProdutosPorTerceirizada(filtros);
       setCarregando(false);
-      //console.log(response.data)
       setGrupos(response.data);
     }
     fetchData();
