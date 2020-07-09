@@ -4,7 +4,7 @@ import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
-import InputFile from "../../../../Shareable/Input/InputFile";
+import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 
 class Step3 extends Component {
   constructor(props) {
@@ -13,7 +13,6 @@ class Step3 extends Component {
   }
 
   render() {
-    const { payload } = this.props;
     return (
       <div className="cadastro-produto-step3">
         <div className="card-title">Informação do Produto (classificação)</div>
@@ -88,56 +87,31 @@ class Step3 extends Component {
           </div>
         </div>
 
-        <div className="row pt-3 pb-3">
-          <div className="col-9 produto">
-            <label>
-              <span>* </span>Foto do produto
-            </label>
-            <div className="explicacao pt-2">
-              Anexar uma ou mais fotos do produto.
+        <section className="row attachments">
+          <div className="col-9">
+            <div className="card-title font-weight-bold cinza-escuro mt-4">
+              Imagens do Produto
+            </div>
+            <div className="text">Anexe uma ou mais imagens do produto.</div>
+            <div className="card-warning mt-2">
+              <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
+              .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br />
             </div>
           </div>
           <div className="col-3 btn">
             <Field
-              component={InputFile}
+              component={ManagedInputFileField}
+              concatenarNovosArquivos
               className="inputfile"
               texto="Anexar"
-              name="files"
+              name="anexos"
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-              setFiles={this.props.setFiles}
+              onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
-              toastSuccess={"Imagem do produto incluída com sucesso!"}
-              multiple
+              validate={[required]}
             />
           </div>
-        </div>
-        {payload.imagens_salvas && payload.imagens_salvas.length > 0 && (
-          <div className="report-label-value">
-            <p>Fotos salvas</p>
-            {payload.imagens_salvas
-              .filter(anexo => anexo.arquivo.includes("media"))
-              .map((anexo, key) => {
-                return (
-                  <div key={key} className="pt-2">
-                    <a
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href={anexo.arquivo}
-                      className="link"
-                    >
-                      {anexo.nome}
-                    </a>
-                    <span
-                      onClick={() => this.props.removerAnexo(anexo.uuid, key)}
-                      className="delete"
-                    >
-                      x
-                    </span>
-                  </div>
-                );
-              })}
-          </div>
-        )}
+        </section>
       </div>
     );
   }
