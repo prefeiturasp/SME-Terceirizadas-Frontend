@@ -91,7 +91,7 @@ export const updateTerceirizada = (uuid, payload) => {
 
 export const getRelatorioQuantitativo = async params => {
   if (params) {
-    return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, params);
+    return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });
   }
   return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO);
 };

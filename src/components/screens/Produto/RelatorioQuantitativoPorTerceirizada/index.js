@@ -1,17 +1,23 @@
-import { Spin } from "antd";
+import { Row, Col, Spin } from "antd";
 import moment from "moment";
 import React, { Fragment, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import { Form, Field } from "react-final-form";
 
+import { required } from "helpers/fieldValidators";
 import { obterRelatorioQuantitativo } from "helpers/terceirizadas";
 
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
+
+import { getNomesTerceirizadas } from "services/produto.service";
+
 import "./style.scss";
 
 const gerarLabelPorFiltro = filtros => {
@@ -37,8 +43,8 @@ const gerarLabelPorFiltro = filtros => {
   }
 };
 
-const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
-  if (!terceirizadas) return false;
+const TabelaQuantitativoPorTerceirizada = ({ dadosRelatorio }) => {
+  if (!dadosRelatorio) return false;
   return (
     <section className="tabela-quantitativo-por-terceirizada">
       <div className="header-quantitativo-por-terceirizada">
@@ -46,12 +52,12 @@ const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
         <div>Período (dias)</div>
         <div>Quantidade total de produtos</div>
       </div>
-      {terceirizadas.map((item, index) => {
+      {dadosRelatorio.detalhes.map((item, index) => {
         return (
           <Fragment key={index}>
             <div className="row-quantitativo-nome">
               <div>{item.nomeTerceirizada}</div>
-              <div />
+              <div>{dadosRelatorio.qtdeDias}</div>
               <div>{item.totalProdutos}</div>
             </div>
             <div className="row-quantitativo-card">
@@ -78,7 +84,7 @@ const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
               <div className="row-quantitativo-status">
                 <div className="status-flex-container">
                   <div>Produtos aguardando correção</div>
-                  <div />
+                  <div>{"0"}</div>
                 </div>
                 <div className="status-flex-container">
                   <div>Reclamação de produto</div>
@@ -102,9 +108,30 @@ const TabelaQuantitativoPorTerceirizada = ({ terceirizadas }) => {
 };
 
 const RelatorioQuantitativoPorTerdeirizada = () => {
-  const [terceirizadas, setTerceirizadas] = useState(null);
+  const [dadosRelatorio, setDadosRelatorio] = useState(null);
+  const [terceirizadas, setTerceirizadas] = useState([]);
+  const [terceirizadasFiltrado, setTerceirizadasFiltrado] = useState([]);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
+
+  const onSearch = searchText => {
+    if (!searchText.length) {
+      setTerceirizadasFiltrado(terceirizadas);
+    }
+    const reg = new RegExp(searchText, "i");
+    setTerceirizadasFiltrado(terceirizadas.filter(el => reg.test(el)));
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      getNomesTerceirizadas().then(response => {
+        const results = response.data.results.map(el => el.nome_fantasia);
+        setTerceirizadas(results);
+        setTerceirizadasFiltrado(results);
+      });
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (!filtros) return;
@@ -112,10 +139,10 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
       setCarregando(true);
       const response = await obterRelatorioQuantitativo(filtros);
       setCarregando(false);
-      setTerceirizadas(response.detalhes);
+      setDadosRelatorio(response);
     }
     fetchData();
-  }, [filtros, setTerceirizadas]);
+  }, [filtros, setDadosRelatorio]);
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
@@ -128,14 +155,74 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           <h3 className="font-weight-bold">
             Relatório quantitativo por terceirizada
           </h3>
-          <FormBuscaProduto
+          <Form
             onSubmit={onSubmitForm}
-            onAtualizaProdutos={() => {}}
+            render={({ form, handleSubmit, submitting, values }) => (
+              <form
+                onSubmit={handleSubmit}
+                className="busca-produtos-formulario-shared"
+              >
+                <Row gutter={[16, 16]}>
+                  <Col md={24} lg={12} xl={16}>
+                    <Field
+                      component={AutoCompleteField}
+                      dataSource={terceirizadasFiltrado}
+                      label="Nome da terceirizada"
+                      onSearch={onSearch}
+                      name="nome_terceirizada"
+                    />
+                  </Col>
+                  <Col md={24} lg={6} xl={4}>
+                    <Field
+                      component={InputComData}
+                      label="Início do Período"
+                      name="data_inicial"
+                      labelClassName="datepicker-fixed-padding"
+                      minDate={null}
+                      validate={required}
+                    />
+                  </Col>
+                  <Col md={24} lg={6} xl={4}>
+                    <Field
+                      component={InputComData}
+                      label={"Até"}
+                      name="data_final"
+                      labelClassName="datepicker-fixed-padding"
+                      popperPlacement="bottom-end"
+                      minDate={
+                        values.data_inicial
+                          ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                          : null
+                      }
+                      validate={required}
+                    />
+                  </Col>
+                </Row>
+                <div className="row">
+                  <div className="col-12 text-right col-botoes">
+                    <Botao
+                      texto="Limpar Filtros"
+                      type={BUTTON_TYPE.BUTTON}
+                      className="mr-3"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() => form.reset()}
+                      disabled={submitting}
+                    />
+                    <Botao
+                      texto="Consultar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      disabled={submitting}
+                    />
+                  </div>
+                </div>
+              </form>
+            )}
           />
         </div>
       </div>
 
-      {terceirizadas && !terceirizadas.length && (
+      {dadosRelatorio && !dadosRelatorio.detalhes.length && (
         <div className="text-center mt-5">
           A consulta retornou 0 resultados.
         </div>
@@ -143,7 +230,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
 
       <Modal
         dialogClassName="modal-90w"
-        show={Boolean(terceirizadas && terceirizadas.length)}
+        show={Boolean(dadosRelatorio && dadosRelatorio.detalhes.length)}
         onHide={() => {}}
       >
         <section className="m-3">
@@ -153,7 +240,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           <p className="text-black font-weight-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
-          <TabelaQuantitativoPorTerceirizada terceirizadas={terceirizadas} />
+          <TabelaQuantitativoPorTerceirizada dadosRelatorio={dadosRelatorio} />
         </section>
 
         <section className="m-3">
@@ -165,7 +252,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
             icon={BUTTON_ICON.ARROW_LEFT}
             onClick={() => {
               setFiltros(null);
-              setTerceirizadas(null);
+              setDadosRelatorio(null);
             }}
             className="float-right"
           />

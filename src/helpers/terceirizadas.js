@@ -42,6 +42,7 @@ export const obterRelatorioQuantitativo = async params => {
 
   return {
     totalProdutos,
-    detalhes: relatorio
+    detalhes: relatorio,
+    qtdeDias: dadosRelatorio.data.dias
   };
 };
