@@ -1,7 +1,7 @@
 import moment from "moment";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
-export const TIPO_SOLICITACAO = [
+export const BUSCA_TIPO_SOLICITACAO = [
   { nome: "Todos", uuid: TODOS },
   { nome: "Alteração de Cardapio", uuid: "ALT_CARDAPIO" },
   { nome: "Inversão de Cardapio", uuid: "INV_CARDAPIO" },

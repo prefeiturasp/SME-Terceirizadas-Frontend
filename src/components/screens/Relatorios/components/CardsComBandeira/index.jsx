@@ -4,7 +4,7 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
-  SOLICITACOES_RECUSADAS
+  SOLICITACOES_NEGADAS
 } from "../../../../../configs/constants";
 import { getRelatorioResumoMesAno } from "../../../../../services/relatorios";
 import Botao from "../../../../Shareable/Botao";
@@ -137,7 +137,7 @@ class CardsComBandeira extends Component {
               quantidadeMesPassado={
                 totais_tipo_solicitacao.total_negados_mes_passado
               }
-              href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
+              href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               tipo={TIPO_CARD.NEGADO}
             />
           </div>

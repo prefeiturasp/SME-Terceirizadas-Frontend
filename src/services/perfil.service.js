@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { AUTH_TOKEN } from "./constants";
 
@@ -87,7 +87,7 @@ export const meusDados = () => {
       return result.json();
     })
     .catch(error => {
-      return error.json();
+      return error;
     });
 };
 

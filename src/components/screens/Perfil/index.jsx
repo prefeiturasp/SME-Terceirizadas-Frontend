@@ -11,7 +11,7 @@ import { AvatarCODAE } from "../../Shareable/Avatar/AvatarCODAE";
 import { AvatarDRE } from "../../Shareable/Avatar/AvatarDRE";
 import { AvatarEscola } from "../../Shareable/Avatar/AvatarEscola";
 import { AvatarTerceirizada } from "../../Shareable/Avatar/AvatarTerceirizada";
-import { TIPO_PERFIL, ENTER } from "../../../constants";
+import { TIPO_PERFIL, ENTER } from "../../../constants/shared";
 import { formataCPF } from "../../../helpers/utilities";
 import InputText from "../../Shareable/Input/InputText";
 import "./style.scss";

@@ -4,17 +4,18 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
+import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
 import { visualizaBotoesDoFluxo, getError } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import { CODAE } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -27,23 +28,28 @@ class Relatorio extends Component {
       alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
-      error: false
+      error: false,
+      showModalConfirm: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModalConfirm = this.closeModalConfirm.bind(this);
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getAlteracaoCardapio(uuid).then(response => {
+      getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             alteracaoDeCardapio: response.data,
             uuid,
+            tipoSolicitacao,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               response.data.prioridade
             )
@@ -83,23 +89,32 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
-  loadSolicitacao(uuid) {
-    getAlteracaoCardapio(uuid).then(response => {
+  loadSolicitacao(uuid, tipoSolicitacao) {
+    getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
       this.setState({
         alteracaoDeCardapio: response.data
       });
     });
   }
 
+  showModalConfirm() {
+    this.setState({ showModalConfirm: true });
+  }
+
+  closeModalConfirm() {
+    this.setState({ showModalConfirm: false });
+  }
+
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
+    const tipoSolicitacao = this.state.tipoSolicitacao;
+    this.props.endpointAprovaSolicitacao(uuid, tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.closeAutorizarModal();
-          this.loadSolicitacao(uuid);
+          this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(toastAprovaMensagemErro);
         }
@@ -119,7 +134,8 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
-      erro
+      erro,
+      showModalConfirm
     } = this.state;
     const {
       justificativa,
@@ -180,6 +196,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -191,6 +208,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {erro && (
@@ -207,6 +225,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
@@ -217,6 +236,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  tipoSolicitacao={this.state.tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={alteracaoDeCardapio}
@@ -235,19 +255,43 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() =>
-                          EXIBIR_MODAL_AUTORIZACAO
-                            ? this.showAutorizarModal()
-                            : this.handleSubmit()
-                        }
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" &&
+                        (textoBotaoAprova === "Validar" ? (
+                          alteracaoDeCardapio.eh_alteracao_com_lanche_repetida ? (
+                            <Botao
+                              texto={textoBotaoAprova}
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() => this.showModalConfirm()}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          ) : (
+                            <Botao
+                              texto={textoBotaoAprova}
+                              type={BUTTON_TYPE.SUBMIT}
+                              onClick={() =>
+                                EXIBIR_MODAL_AUTORIZACAO
+                                  ? this.showAutorizarModal()
+                                  : this.handleSubmit()
+                              }
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          )
+                        ) : (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() =>
+                              EXIBIR_MODAL_AUTORIZACAO
+                                ? this.showAutorizarModal()
+                                : this.handleSubmit()
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />
+                        )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
@@ -266,6 +310,11 @@ class Relatorio extends Component {
                 )}
               </div>
             </div>
+            <ModalConfirmaAlteracaoDuplicada
+              showModal={showModalConfirm}
+              closeModal={this.closeModalConfirm}
+              handleSubmit={this.handleSubmit}
+            />
           </form>
         )}
       </div>

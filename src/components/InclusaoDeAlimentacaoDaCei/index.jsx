@@ -9,7 +9,7 @@ import {
   criarInclusoesDaCEI,
   atualizarInclusoesDaCEI,
   iniciarInclusoesDaCEI
-} from "../../services/inclusaoAlimentacaoDaCei.service";
+} from "services/inclusaoDeAlimentacao/cei.legacy.service";
 import Rascunho from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
 import { Select } from "../Shareable/Select";
@@ -35,6 +35,10 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import Botao from "../Shareable/Botao";
 import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -69,6 +73,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       ehOutroMotivo,
       totalQuantidade
     } = this.state;
+    totalQuantidade = 0;
     const periodosEscolares = this.props.meusDados.vinculo_atual.instituicao
       .periodos_escolares;
     const inclusaoDeAlimentacao = param.inclusaoAlimentacaoCei;
@@ -151,6 +156,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       periodo_escolar: values.periodo_escolar,
       tipos_alimentacao: values.tipos_alimentacao,
       motivo: values.motivo,
+      outro_motivo: values.outro_motivo,
       quantidade_alunos_por_faixas_etarias: listaFaixas,
       descricao: values.outro_motivo === undefined ? "" : values.outro_motivo,
       data: values.data,
@@ -242,9 +248,12 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     }
   };
 
-  removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
+  removerRascunho(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removerInclusaoDeAlimentacao(uuid).then(
+      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        SOLICITACAO_CEI
+      ).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -525,6 +534,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     name="data"
                     required
                     validate={required}
+                    maxDate={moment()
+                      .endOf("year")
+                      .toDate()}
                     onChange={value => {
                       this.setadiaInclusao(value);
                     }}

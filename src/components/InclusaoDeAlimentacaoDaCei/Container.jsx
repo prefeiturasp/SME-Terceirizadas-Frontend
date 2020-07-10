@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacaoAvulsa.service";
+import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacao";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { dataParaUTC } from "../../helpers/utilities";
@@ -26,6 +26,7 @@ class Container extends Component {
       });
     });
 
+    // TODO: precisa ter Cei?
     getMotivosInclusaoNormal().then(response => {
       const motivos = response.results;
       this.setState({

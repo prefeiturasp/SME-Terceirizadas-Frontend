@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import {
   visualizaBotoesDoFluxo,
   prazoDoPedidoMensagem,
@@ -274,19 +274,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() =>
-                          EXIBIR_MODAL_AUTORIZACAO
-                            ? this.showAutorizarModal()
-                            : this.handleSubmit()
-                        }
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" && (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={

@@ -5,7 +5,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
 
 import "./Painel.scss";
-import { TIPO_PERFIL } from "../../../../constants";
+import { TIPO_PERFIL } from "../../../../constants/shared";
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { excluirInclusoesDaCei } from "../../services/inclusaoAlimentacaoDaCei.service";
 import "./style.scss";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export default class Rascunhos extends Component {
   removerRascunho(id, uuid) {
-    this.props.removerRascunho(id, uuid, excluirInclusoesDaCei);
+    this.props.removerRascunho(id, uuid, TIPO_SOLICITACAO.SOLICITACAO_CEI);
     this.props.resetForm();
   }
 
@@ -32,7 +32,15 @@ export default class Rascunhos extends Component {
             </div>
             <div className="icon-draft-card">
               Criado em: {inclusaoAlimentacaoCei.criado_em}
-              <span onClick={() => this.removerRascunho(id_externo, uuid)}>
+              <span
+                onClick={() =>
+                  this.removerRascunho(
+                    id_externo,
+                    uuid,
+                    TIPO_SOLICITACAO.SOLICITACAO_CEI
+                  )
+                }
+              >
                 <i className="fas fa-trash" />
               </span>
               <span

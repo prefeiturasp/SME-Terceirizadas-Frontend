@@ -4,7 +4,7 @@ import {
   ESCOLA,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
-  SOLICITACOES_RECUSADAS
+  SOLICITACOES_NEGADAS
 } from "../../../configs/constants";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
@@ -118,7 +118,7 @@ export default class DashboardNutricionista extends Component {
                 cardType={CARD_TYPE_ENUM.NEGADO}
                 solicitations={negadasListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                href={`/${ESCOLA}/${SOLICITACOES_RECUSADAS}`}
+                href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
               />
             </div>
           </div>

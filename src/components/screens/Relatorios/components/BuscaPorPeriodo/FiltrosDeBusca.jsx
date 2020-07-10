@@ -13,7 +13,7 @@ import {
 } from "../../../../Shareable/Botao/constants";
 import { required } from "../../../../../helpers/fieldValidators";
 import {
-  TIPO_SOLICITACAO,
+  BUSCA_TIPO_SOLICITACAO,
   STATUS_SOLICITACAO,
   ENTER,
   DATA_MINIMA,
@@ -22,14 +22,14 @@ import {
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import {
-  usuarioEscola,
-  usuarioDiretoriaRegional,
-  usuarioCODAEGestaoAlimentacao,
+  usuarioEhEscola,
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoAlimentacao,
   converterDDMMYYYYparaYYYYMMDD
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
 import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
-import { TODOS } from "../../../../../constants";
+import { TODOS } from "../../../../../constants/shared";
 
 class FiltrosDeBusca extends Component {
   constructor(props) {
@@ -154,7 +154,7 @@ class FiltrosDeBusca extends Component {
                         this.onDiretoriaRegionalChanged(event.target.value)
                       }
                       options={diretoriasRegionais}
-                      disabled={usuarioEscola() || usuarioDiretoriaRegional()}
+                      disabled={usuarioEhEscola() || usuarioEhDRE()}
                       naoDesabilitarPrimeiraOpcao
                     />
                   </div>
@@ -199,8 +199,8 @@ class FiltrosDeBusca extends Component {
                       component={Select}
                       options={escolasState || escolas}
                       disabled={
-                        usuarioEscola() ||
-                        (usuarioCODAEGestaoAlimentacao() &&
+                        usuarioEhEscola() ||
+                        (usuarioEhCODAEGestaoAlimentacao() &&
                           (!diretoria_regional || diretoria_regional === TODOS))
                       }
                       naoDesabilitarPrimeiraOpcao
@@ -212,7 +212,7 @@ class FiltrosDeBusca extends Component {
                     <Field
                       name="tipo_de_solicitacao"
                       component={Select}
-                      options={TIPO_SOLICITACAO}
+                      options={BUSCA_TIPO_SOLICITACAO}
                       naoDesabilitarPrimeiraOpcao
                     />
                     <div className="filtrar">

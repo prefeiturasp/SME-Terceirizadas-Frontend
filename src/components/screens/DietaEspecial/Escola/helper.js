@@ -1,4 +1,4 @@
-import { usuarioEscola } from "../../../../helpers/utilities";
+import { usuarioEhEscola } from "../../../../helpers/utilities";
 
 export const formatarSolicitacoesVigentes = solicitacoes => {
   solicitacoes.forEach(solicitacao => {
@@ -11,7 +11,7 @@ export const exibirParteInativacao = (solicitacao, uuid) => {
   return (
     solicitacao.ativo &&
     uuid &&
-    usuarioEscola() &&
+    usuarioEhEscola() &&
     ["CODAE_AUTORIZADO", "TERCEIRIZADA_TOMOU_CIENCIA"].includes(
       solicitacao.status_solicitacao
     )

@@ -1,0 +1,8 @@
+.tabela-substituicao th {
+  width: 33.33%;
+}
+.tabela-substituicao.tabela-substituicao-parcial {
+  th:first-child {
+    width: 66.66%;
+  }
+}

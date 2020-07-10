@@ -5,16 +5,17 @@ import {
   filtraPrioritarios,
   filtraRegular
 } from "../helpers/painelPedidos";
-import { API_URL } from "../constants/config.constants";
-import { getCODAEPedidosAlteracaoCardapio } from "./alteracaoDecardapio.service";
+import { API_URL } from "../constants/config";
+import { codaeListarSolicitacoesDeAlteracaoDeCardapio } from "./alteracaoDeCardapio";
 import authService from "./auth";
-import { getCODAEPedidosInclusaoAvulsoPendentes } from "./inclusaoDeAlimentacaoAvulsa.service";
-import { getCODAEPedidosInclusaoContinuosPendentes } from "./inclusaoDeAlimentacaoContinua.service";
-import { getCODAEPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
-import { getCODAEPedidosKitLanchePendentes } from "./solicitacaoDeKitLanche.service";
-import { getCODAEPedidosSolicitacoesUnificadas } from "./solicitacaoUnificada.service";
-import { getSuspensaoDeAlimentacaoCODAE } from "./suspensaoDeAlimentacao.service";
+import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { getCODAEPedidosDeInversoes } from "services/inversaoDeDiaDeCardapio.service";
+import { getCODAEPedidosKitLanchePendentes } from "services/kitLanche";
+import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnificada.service";
+import { getSuspensaoDeAlimentacaoCODAE } from "services/suspensaoDeAlimentacao.service";
 import { SOLICITACOES } from "./constants";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import { safeConcatOn } from "helpers/utilities";
 
 // TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
 
@@ -155,21 +156,26 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoesContinuas = await getCODAEPedidosInclusaoContinuosPendentes(
-    filtro
-  );
-  const soliticacoesAvulsas = await getCODAEPedidosInclusaoAvulsoPendentes(
-    filtro
-  );
+  const [continuas, avulsas, cei] = await Promise.all([
+    codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    ),
+    codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
-  if (solicitacoesContinuas && soliticacoesAvulsas) {
-    const todasTmp = solicitacoesContinuas.results.concat(
-      soliticacoesAvulsas.results
-    );
-
-    pedidosPrioritarios = filtraPrioritarios(todasTmp);
-    pedidosLimite = filtraNoLimite(todasTmp);
-    pedidosRegular = filtraRegular(todasTmp);
+  if (continuas) {
+    const todas = safeConcatOn("results", continuas, avulsas, cei);
+    pedidosPrioritarios = filtraPrioritarios(todas);
+    pedidosLimite = filtraNoLimite(todas);
+    pedidosRegular = filtraRegular(todas);
   }
 
   resposta.limite = pedidosLimite.length;
@@ -181,6 +187,7 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
 };
 
 export const getResumoPendenciasKitLancheAvulso = async (
+  //TODO: rename method
   filtro = "sem_filtro"
 ) => {
   let resposta = {
@@ -194,12 +201,19 @@ export const getResumoPendenciasKitLancheAvulso = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoesContinuas = await getCODAEPedidosKitLanchePendentes(filtro);
+  const [avulsos, cei] = await Promise.all([
+    getCODAEPedidosKitLanchePendentes(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    getCODAEPedidosKitLanchePendentes(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+  ]);
 
-  if (solicitacoesContinuas) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoesContinuas.results);
-    pedidosLimite = filtraNoLimite(solicitacoesContinuas.results);
-    pedidosRegular = filtraRegular(solicitacoesContinuas.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;
@@ -256,12 +270,22 @@ export const getResumoPendenciasAlteracaoCardapio = async (
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoesUnificadas = await getCODAEPedidosAlteracaoCardapio(filtro);
+  const [avulsos, cei] = await Promise.all([
+    codaeListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ),
+    codaeListarSolicitacoesDeAlteracaoDeCardapio(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    )
+  ]);
 
-  if (solicitacoesUnificadas) {
-    pedidosPrioritarios = filtraPrioritarios(solicitacoesUnificadas.results);
-    pedidosLimite = filtraNoLimite(solicitacoesUnificadas.results);
-    pedidosRegular = filtraRegular(solicitacoesUnificadas.results);
+  if (avulsos) {
+    const todos = safeConcatOn("results", avulsos, cei);
+    pedidosPrioritarios = filtraPrioritarios(todos);
+    pedidosLimite = filtraNoLimite(todos);
+    pedidosRegular = filtraRegular(todos);
   }
 
   resposta.limite = pedidosLimite.length;

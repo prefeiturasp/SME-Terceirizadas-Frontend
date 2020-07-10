@@ -6,6 +6,9 @@
   color: $blackInput;
   letter-spacing: 0.01em;
   padding-top: 5px;
+  &.card-com-href {
+    cursor: pointer;
+  }
   span {
     color: $grayPlaceholder;
     font-weight: normal;
@@ -38,30 +41,6 @@
     text-align: center;
     color: $blue;
     padding: 10px 0;
-  }
-  &.card-authorized {
-    border-left-color: $greenPanel !important;
-    i {
-      color: $greenPanel;
-    }
-  }
-  &.card-pending {
-    border-left-color: $orange !important;
-    i {
-      color: $orange;
-    }
-  }
-  &.card-denied {
-    border-left-color: $red !important;
-    i {
-      color: $red;
-    }
-  }
-  &.card-cancelled {
-    border-left-color: $black !important;
-    i {
-      color: $black;
-    }
   }
 }
 

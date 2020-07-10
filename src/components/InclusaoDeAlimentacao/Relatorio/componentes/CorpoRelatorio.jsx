@@ -2,8 +2,10 @@ import React, { Component, Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
-  stringSeparadaPorVirgulas
-} from "../../../../helpers/utilities";
+  stringSeparadaPorVirgulas,
+  ehInclusaoContinua,
+  ehInclusaoCei
+} from "helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -11,15 +13,13 @@ import {
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
 import { formataMotivosDias } from "./helper";
-import { getRelatorioInclusaoAlimentacao } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
+import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 
 export class CorpoRelatorio extends Component {
-  renderParteAvulsa() {
-    const { inclusaoDeAlimentacao } = this.props;
-    const diasMotivosFormatados = formataMotivosDias(
-      inclusaoDeAlimentacao.inclusoes
-    );
+  renderParteAvulsa(inclusoes) {
+    const diasMotivosFormatados = formataMotivosDias(inclusoes);
     return (
       <table className="table-reasons">
         <tbody>
@@ -50,27 +50,28 @@ export class CorpoRelatorio extends Component {
   }
 
   renderParteContinua() {
-    const { inclusaoDeAlimentacao } = this.props;
+    const {
+      inclusaoDeAlimentacao: {
+        data_final,
+        data_inicial,
+        motivo,
+        dias_semana_explicacao
+      }
+    } = this.props;
     return (
       <div>
         <div className="row">
           <div className="col-4 report-label-value">
             <p>Período</p>
-            <p className="value">
-              {`${inclusaoDeAlimentacao.data_inicial} - ${
-                inclusaoDeAlimentacao.data_final
-              }`}
-            </p>
+            <p className="value">{`${data_inicial} - ${data_final}`}</p>
           </div>
           <div className="col-4 report-label-value">
             <p>Motivo</p>
-            <p className="value">{inclusaoDeAlimentacao.motivo.nome}</p>
+            <p className="value">{motivo.nome}</p>
           </div>
           <div className="col-4 report-label-value">
             <p>Dias da Semana</p>
-            <p className="value">
-              {inclusaoDeAlimentacao.dias_semana_explicacao}
-            </p>
+            <p className="value">{dias_semana_explicacao}</p>
           </div>
         </div>
       </div>
@@ -79,9 +80,21 @@ export class CorpoRelatorio extends Component {
 
   render() {
     const {
-      ehInclusaoContinua,
-      inclusaoDeAlimentacao,
-      prazoDoPedidoMensagem
+      tipoSolicitacao,
+      prazoDoPedidoMensagem,
+      inclusaoDeAlimentacao: {
+        uuid,
+        id_externo,
+        escola = { diretoria_regional: { nome: "" } },
+        logs,
+        quantidades_periodo,
+        descricao,
+        quantidade_alunos_por_faixas_etarias,
+        inclusoes,
+        data,
+        motivo,
+        outro_motivo
+      }
     } = this.props;
     return (
       <div>
@@ -98,18 +111,13 @@ export class CorpoRelatorio extends Component {
               icon={BUTTON_ICON.PRINT}
               className="float-right"
               onClick={() => {
-                getRelatorioInclusaoAlimentacao(
-                  inclusaoDeAlimentacao.uuid,
-                  ehInclusaoContinua
-                );
+                getRelatorioInclusaoAlimentacao(uuid, tipoSolicitacao);
               }}
             />
           </p>
           <div className="col-2">
             <span className="badge-sme badge-secondary-sme">
-              <span className="id-of-solicitation-dre">
-                # {inclusaoDeAlimentacao.id_externo}
-              </span>
+              <span className="id-of-solicitation-dre"># {id_externo}</span>
               <br />{" "}
               <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
             </span>
@@ -117,66 +125,60 @@ export class CorpoRelatorio extends Component {
           <div className="pl-2 my-auto offset-1 col-5">
             <span className="requester">Escola Solicitante</span>
             <br />
-            <span className="dre-name">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.nome}
-            </span>
+            <span className="dre-name">{escola && escola.nome}</span>
           </div>
           <div className="my-auto col-4">
             <span className="requester">Código EOL</span>
             <br />
-            <span className="dre-name">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.codigo_eol}
-            </span>
+            <span className="dre-name">{escola && escola.codigo_eol}</span>
           </div>
         </div>
         <div className="row">
           <div className="col-2 report-label-value">
             <p>DRE</p>
-            <p className="value-important">
-              {inclusaoDeAlimentacao.escola.diretoria_regional.nome}
-            </p>
+            <p className="value-important">{escola.diretoria_regional.nome}</p>
           </div>
           <div className="col-2 report-label-value">
             <p>Lote</p>
             <p className="value-important">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.lote &&
-                inclusaoDeAlimentacao.escola.lote.nome}
+              {escola && escola.lote && escola.lote.nome}
             </p>
           </div>
           <div className="col-2 report-label-value">
             <p>Tipo de Gestão</p>
             <p className="value-important">
-              {inclusaoDeAlimentacao.escola &&
-                inclusaoDeAlimentacao.escola.tipo_gestao &&
-                inclusaoDeAlimentacao.escola.tipo_gestao.nome}
+              {escola && escola.tipo_gestao && escola.tipo_gestao.nome}
             </p>
           </div>
         </div>
         <hr />
-        {inclusaoDeAlimentacao.logs && (
+        {logs && (
           <div className="row">
-            <FluxoDeStatus
-              listaDeStatus={inclusaoDeAlimentacao.logs}
-              fluxo={fluxoPartindoEscola}
-            />
+            <FluxoDeStatus listaDeStatus={logs} fluxo={fluxoPartindoEscola} />
           </div>
         )}
         <hr />
-        {ehInclusaoContinua
+        {ehInclusaoContinua(tipoSolicitacao)
           ? this.renderParteContinua()
-          : this.renderParteAvulsa()}
-        <table className="table-report mt-3">
-          <tbody>
-            <tr>
-              <th>Período</th>
-              <th>Tipos de Alimentação</th>
-              <th>Nº de Alunos</th>
-            </tr>
-            {inclusaoDeAlimentacao.quantidades_periodo.map(
-              (quantidade_por_periodo, key) => {
+          : this.renderParteAvulsa(
+              inclusoes || [
+                {
+                  data,
+                  motivo,
+                  outro_motivo
+                }
+              ]
+            )}
+
+        {!ehInclusaoCei(tipoSolicitacao) && (
+          <table className="table-report mt-3">
+            <tbody>
+              <tr>
+                <th>Período</th>
+                <th>Tipos de Alimentação</th>
+                <th>Nº de Alunos</th>
+              </tr>
+              {quantidades_periodo.map((quantidade_por_periodo, key) => {
                 return (
                   <tr key={key}>
                     <td>
@@ -192,17 +194,20 @@ export class CorpoRelatorio extends Component {
                     <td>{quantidade_por_periodo.numero_alunos}</td>
                   </tr>
                 );
-              }
-            )}
-          </tbody>
-        </table>
+              })}
+            </tbody>
+          </table>
+        )}
+        {ehInclusaoCei(tipoSolicitacao) && (
+          <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
+        )}
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Observações</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: inclusaoDeAlimentacao.descricao
+                __html: descricao
               }}
             />
           </div>

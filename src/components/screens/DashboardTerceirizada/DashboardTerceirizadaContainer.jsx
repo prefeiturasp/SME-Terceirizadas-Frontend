@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import DashboardTerceirizada from "./DashboardTerceirizada";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../constants";
+import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/shared";
 import { formatarLotesParaVisao } from "../../../helpers/utilities";
 
 class DashboardTerceirizadaContainer extends Component {

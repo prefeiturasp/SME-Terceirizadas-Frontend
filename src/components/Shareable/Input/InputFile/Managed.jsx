@@ -6,7 +6,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Botao/constants";
 import { readerFile } from "./helper";
 import { toastSuccess, toastError } from "../../Toast/dialogs";
 import { truncarString } from "../../../../helpers/utilities";
-import { DEZ_MB } from "../../../../constants";
+import { DEZ_MB } from "../../../../constants/shared";
 
 export class InputFileManaged extends Component {
   openFile(file) {
@@ -33,7 +33,8 @@ export class InputFileManaged extends Component {
       value,
       onChange,
       concatenarNovosArquivos,
-      nomeNovoArquivo
+      nomeNovoArquivo,
+      toastSuccessMessage
     } = this.props;
     const files = event.target.files;
     let valido = true;
@@ -64,7 +65,9 @@ export class InputFileManaged extends Component {
           })
           .then(() => {
             if (filesBase64.length === QUANTIDADE_ARQUIVOS) {
-              toastSuccess("Protocolo incluso com sucesso");
+              toastSuccess(
+                toastSuccessMessage || "Protocolo incluso com sucesso"
+              );
               onChange(
                 !concatenarNovosArquivos || value === ""
                   ? filesBase64
@@ -89,7 +92,7 @@ export class InputFileManaged extends Component {
     } = this.props;
     const files = value === "" ? [] : value;
     return (
-      <div className={`input input-file ${icone && "icon"}`}>
+      <div className={`input input-file`}>
         <input
           accept={accept}
           ref={i => (this.inputRef = i)}

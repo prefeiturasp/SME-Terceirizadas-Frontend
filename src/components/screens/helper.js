@@ -9,6 +9,7 @@ import {
   SUSPENSAO_ALIMENTACAO
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
@@ -18,6 +19,9 @@ const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
 const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
+const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
+const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
+const KIT_LANCHE_AVULSA_CEI = "KIT_LANCHE_AVULSA_CEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -46,9 +50,11 @@ export const ajustarFormatoLog = logs => {
     let tamanhoString = 48;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
+    let tipo = "";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
         solicitacao = ALTERACAO_CARDAPIO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
       case DIETA_ESP:
@@ -59,27 +65,49 @@ export const ajustarFormatoLog = logs => {
 
       case KIT_LANCHE_AVULSA:
         solicitacao = SOLICITACAO_KIT_LANCHE;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
       case INV_CARDAPIO:
         solicitacao = INVERSAO_CARDAPIO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
       case INC_ALIMENTA:
         solicitacao = INCLUSAO_ALIMENTACAO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
       case SUSP_ALIMENTACAO:
         solicitacao = SUSPENSAO_ALIMENTACAO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
       case KIT_LANCHE_UNIFICADA:
         solicitacao = SOLICITACAO_KIT_LANCHE_UNIFICADA;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
         break;
+
+      case INC_ALIMENTA_CEI:
+        solicitacao = INCLUSAO_ALIMENTACAO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        break;
+
+      case ALT_CARDAPIO_CEI:
+        solicitacao = ALTERACAO_CARDAPIO;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        break;
+
+      case KIT_LANCHE_AVULSA_CEI:
+        solicitacao = SOLICITACAO_KIT_LANCHE;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        break;
+
       default:
-        solicitacao = "FALTA_IMPLEMENTAR";
+        solicitacao = "NAO_ENCONTRADO";
         break;
     }
     return {
@@ -87,7 +115,8 @@ export const ajustarFormatoLog = logs => {
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      }&ehInclusaoContinua=${log.tipo_doc ===
+        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}`
     };
   });
 };

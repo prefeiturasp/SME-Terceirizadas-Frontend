@@ -1,26 +1,49 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
   PENDENTE: "card-pending",
   AUTORIZADO: "card-authorized",
-  NEGADO: "card-denied"
+  NEGADO: "card-denied",
+  RECLAMACAO: "card-complained",
+  AGUARDANDO_ANALISE_SENSORIAL: "card-awaiting-sensory",
+  CORRECAO: "card-product-correction",
+  AGUARDANDO_ANALISE_RECLAMACAO: "card-awaiting-complain"
 };
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
-  NEGADO: "fa-ban"
+  NEGADO: "fa-ban",
+  RECLAMACAO: "fa-bullhorn",
+  AGUARDANDO_ANALISE_SENSORIAL: "fa-search",
+  SUSPENSO: "fa-hand-paper",
+  CORRECAO: "fa-pencil-alt",
+  AGUARDANDO_ANALISE_RECLAMACAO: "fa-history"
 };
 
 export const CardStatusDeSolicitacao = props => {
-  const { cardTitle, cardType, solicitations, icon, href, loading } = props;
+  const {
+    cardTitle,
+    cardType,
+    solicitations,
+    icon,
+    href,
+    loading,
+    hrefCard
+  } = props;
+  let history = useHistory();
   return (
-    <div className={"card card-panel " + cardType}>
-      <div className="card-title-status ajuste-icones">
+    <div className={`card card-panel card-colored ${cardType}`}>
+      <div
+        className={`card-title-status ajuste-icones ${
+          hrefCard ? "card-com-href" : undefined
+        }`}
+        onClick={() => hrefCard && history.push(hrefCard)}
+      >
         <div>
           <i className={"fas " + icon} />
           {cardTitle}
@@ -45,7 +68,7 @@ export const CardStatusDeSolicitacao = props => {
           </NavLink>
         );
       })}
-      {solicitations.length > 3 && (
+      {solicitations.length > 5 && (
         <div className="container-link">
           <NavLink
             to={`${href}`}

@@ -1,0 +1,116 @@
+.resultados-busca-produtos {
+  border-radius: 4px;
+  border: 0.5px solid #f0f0f0;
+
+  .tabela-produto {
+    display: grid;
+    grid-template-columns: 32% 17% 21% 13% 16%;
+  }
+
+  .tabela-header-produto {
+    background: #f5f6f8;
+    height: 48px;
+
+    div {
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: #42474a;
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .tabela-body-produto {
+    height: 48px;
+  }
+
+  .item-produto > div {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 5px 10px;
+
+    display: flex;
+    align-items: center;
+
+    color: #686868;
+
+    border: 1px solid #e9eaea;
+  }
+
+  .com-botao {
+    display: flex;
+    justify-content: space-between;
+
+    i {
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 18px;
+      text-align: center;
+      letter-spacing: 0.01em;
+      color: #42474a;
+
+      cursor: pointer;
+    }
+
+    .editar {
+      font-size: 12px;
+    }
+
+    .botoes-produto {
+      width: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .detalhe-produto {
+    padding: 5px 10px;
+
+    .label-item {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 16px;
+      color: #686868;
+      margin-bottom: 0.5em;
+    }
+    .value-item {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 16px;
+      text-transform: uppercase;
+
+      color: #42474a;
+    }
+
+    .contatos-terceirizada {
+      display: grid;
+      grid-template-columns: 40% 60%;
+      margin-bottom: 1em;
+
+      .telefone-email {
+        display: flex;
+      }
+      .telefone-email > div {
+        margin-right: 3em;
+      }
+    }
+
+    .componentes-produto {
+      margin-bottom: 1em;
+    }
+  }
+
+  .botao-reclamacao {
+    display: flex;
+    padding-right: 1em;
+    padding-left: 1em;
+    margin-bottom: 2em;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}

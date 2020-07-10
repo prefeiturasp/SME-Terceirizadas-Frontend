@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
-import { TIPOS_SOLICITACAO_LISTA_DRE } from "../../../constants";
+import { TIPOS_SOLICITACAO_LISTA_DRE } from "../../../constants/shared";
 import { formatarLotesParaVisao } from "../../../helpers/utilities";
 import DashboardDRE from ".";
 

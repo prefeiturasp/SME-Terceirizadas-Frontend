@@ -6,7 +6,7 @@ import PainelPedidosKitLancheDRE from "../../components/SolicitacaoDeKitLanche/D
 import PainelPedidosKitLancheCODAE from "../../components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";
 import PainelPedidosKitLancheTerceirizada from "../../components/SolicitacaoDeKitLanche/Terceirizada/PainelPedidos/Container";
 import { meusDados } from "../../services/perfil.service";
-import { HOME } from "../../constants/config.constants";
+import { HOME } from "../../constants/config";
 import {
   SOLICITACAO_KIT_LANCHE,
   ESCOLA,

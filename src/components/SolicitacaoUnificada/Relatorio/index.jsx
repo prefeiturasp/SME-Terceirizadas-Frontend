@@ -5,12 +5,12 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getSolicitacaoUnificada } from "../../../services/solicitacaoUnificada.service";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
+import { visualizaBotoesDoFluxoSolicitacaoUnificada } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE } from "../../../configs/constants";
@@ -209,7 +209,9 @@ class Relatorio extends Component {
                 <RelatorioHistoricoQuestionamento
                   solicitacao={solicitacaoUnificada}
                 />
-                {visualizaBotoesDoFluxo(solicitacaoUnificada) && (
+                {visualizaBotoesDoFluxoSolicitacaoUnificada(
+                  solicitacaoUnificada
+                ) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
@@ -220,19 +222,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() =>
-                          EXIBIR_MODAL_AUTORIZACAO
-                            ? this.showAutorizarModal()
-                            : this.handleSubmit()
-                        }
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" && (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={

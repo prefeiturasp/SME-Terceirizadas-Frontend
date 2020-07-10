@@ -1,0 +1,7 @@
+.ant-select-selection--multiple {
+  min-height: 32px;
+}
+
+.ant-select-selection {
+  height: 38px !important;
+}

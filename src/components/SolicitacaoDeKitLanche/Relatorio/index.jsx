@@ -4,13 +4,13 @@ import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getDetalheKitLancheAvulsa } from "../../../services/solicitacaoDeKitLanche.service";
+import { getDetalheKitLancheAvulsa } from "../../../services/kitLanche";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants";
-import { statusEnum } from "../../../constants";
+import { TIPO_PERFIL } from "../../../constants/shared";
+import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE } from "../../../configs/constants";
@@ -37,11 +37,14 @@ class Relatorio extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const tipoSolicitacao = urlParams.get("tipoSolicitacao");
+
     if (uuid) {
-      getDetalheKitLancheAvulsa(uuid).then(response => {
+      getDetalheKitLancheAvulsa(uuid, tipoSolicitacao).then(response => {
         this.setState({
           solicitacaoKitLanche: response,
           uuid,
+          tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
         });
       });
@@ -73,29 +76,38 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getDetalheKitLancheAvulsa(uuid).then(response => {
-      this.setState({
-        solicitacaoKitLanche: response
-      });
-    });
+    getDetalheKitLancheAvulsa(uuid, this.state.tipoSolicitacao).then(
+      response => {
+        this.setState({
+          solicitacaoKitLanche: response
+        });
+      }
+    );
   }
 
   handleSubmit() {
-    const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
+    const {
+      toastAprovaMensagem,
+      toastAprovaMensagemErro,
+      justificativa
+    } = this.props;
     const uuid = this.state.uuid;
-    this.props.endpointAprovaSolicitacao(uuid).then(
-      response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess(toastAprovaMensagem);
-          this.loadSolicitacao(uuid);
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+    const tipoSolicitacao = this.state.tipoSolicitacao;
+    this.props
+      .endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao)
+      .then(
+        response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(toastAprovaMensagem);
+            this.loadSolicitacao(uuid, tipoSolicitacao);
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(toastAprovaMensagemErro);
+          }
+        },
+        function() {
           toastError(toastAprovaMensagemErro);
         }
-      },
-      function() {
-        toastError(toastAprovaMensagemErro);
-      }
-    );
+      );
   }
 
   render() {
@@ -126,6 +138,7 @@ class Relatorio extends Component {
         solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
         solicitacaoKitLanche.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
+    // TODO:  Rever se essa lógica ainda está sendo usada
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
@@ -167,6 +180,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -178,6 +192,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+            tipoSolicitacao={this.state.tipoSolicitacao}
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -192,6 +207,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
+                tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
@@ -202,6 +218,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   solicitacaoKitLanche={solicitacaoKitLanche}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  tipoSolicitacao={this.state.tipoSolicitacao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={solicitacaoKitLanche}
@@ -220,19 +237,21 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
-                    {EXIBIR_BOTAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoAprova}
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() =>
-                          EXIBIR_MODAL_AUTORIZACAO
-                            ? this.showAutorizarModal()
-                            : this.handleSubmit()
-                        }
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" && (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={

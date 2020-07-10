@@ -1,6 +1,6 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -9,9 +9,10 @@ import {
 } from "../../../Shareable/Botao/constants";
 import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
-  const { alteracaoDeCardapio, prazoDoPedidoMensagem } = props;
+  const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
   return (
     <div>
       <div className="row">
@@ -106,7 +107,9 @@ export const CorpoRelatorio = props => {
           <td>{alteracaoDeCardapio.motivo.nome}</td>
           {alteracaoDeCardapio.data_inicial ===
           alteracaoDeCardapio.data_final ? (
-            <td>{alteracaoDeCardapio.data_inicial}</td>
+            <td>
+              {alteracaoDeCardapio.data_inicial || alteracaoDeCardapio.data}
+            </td>
           ) : (
             [
               <td key={0}>{alteracaoDeCardapio.data_inicial}</td>,
@@ -122,16 +125,30 @@ export const CorpoRelatorio = props => {
           <th>Alteração alimentação para:</th>
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
-          (quantidade_por_periodo, key) => {
+          (
+            {
+              periodo_escolar,
+              tipo_alimentacao_de,
+              tipo_alimentacao_para,
+              faixas_etarias
+            },
+            key
+          ) => {
             return (
-              <tr key={key}>
-                <td>
-                  {quantidade_por_periodo.periodo_escolar &&
-                    quantidade_por_periodo.periodo_escolar.nome}
-                </td>
-                <td>{quantidade_por_periodo.tipo_alimentacao_de.label}</td>
-                <td>{quantidade_por_periodo.tipo_alimentacao_para.label}</td>
-              </tr>
+              <Fragment key={key}>
+                <tr>
+                  <td>{periodo_escolar && periodo_escolar.nome}</td>
+                  <td>{tipo_alimentacao_de.label}</td>
+                  <td>{tipo_alimentacao_para.label}</td>
+                </tr>
+                {ehInclusaoCei(tipoSolicitacao) && (
+                  <tr>
+                    <td className="faixas-etarias" colSpan="3">
+                      <TabelaFaixaEtaria faixas={faixas_etarias} />
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
             );
           }
         )}

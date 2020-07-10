@@ -18,12 +18,6 @@ export const fluxoPartindoEscola = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
@@ -36,12 +30,6 @@ export const fluxoDietaEspecialPartindoEscola = [
   },
   {
     titulo: "CODAE",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "Terceirizada",
     status: "",
     criado_em: "",
     usuario: null
@@ -78,12 +66,6 @@ export const fluxoDietaEspecialComInativacao = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
@@ -99,12 +81,6 @@ export const fluxoPartindoDRE = [
     status: "",
     criado_em: "",
     usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
   }
 ];
 
@@ -114,9 +90,18 @@ export const fluxoInformativoPartindoEscola = [
     status: "",
     criado_em: "",
     usuario: null
+  }
+];
+
+export const fluxoPartindoTerceirizada = [
+  {
+    titulo: "Solicitação Realizada",
+    status: "",
+    criado_em: "",
+    usuario: null
   },
   {
-    titulo: "Terceirizada",
+    titulo: "CODAE",
     status: "",
     criado_em: "",
     usuario: null
@@ -129,7 +114,15 @@ export const tipoDeStatus = status => {
     case "Escola revisou":
     case "DRE validou":
     case "DRE revisou":
-    case "CODAE autorizou":
+    case "Homologado":
+    case "Terceirizada respondeu a análise":
+      return "prosseguiu";
+    case "CODAE homologou":
+      return "prosseguiu";
+    case "CODAE não homologou":
+      return "cancelado";
+    case "CODAE pediu correção":
+      return "questionado";
     case "Terceirizada tomou ciência":
     case "Escola solicitou inativação":
     case "CODAE autorizou inativação":
@@ -145,6 +138,8 @@ export const tipoDeStatus = status => {
     case "Terceirizada recusou":
       return "reprovado";
     case "Questionamento pela CODAE":
+      return "questionado";
+    case "CODAE pediu análise sensorial":
       return "questionado";
     default:
       return "";

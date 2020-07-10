@@ -1,0 +1,51 @@
+@import "styles/variables.scss";
+
+.componente-informacao-de-reclamante {
+  hr {
+    margin: 2rem 0;
+  }
+
+  div.title {
+    color: $blackInput;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .grid-detalhe {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 1rem;
+
+    .template-contatos-terc {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
+  .label-empresa {
+    color: #686868;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .value-empresa {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    color: #353535;
+    margin: 6px 0 0 0;
+  }
+
+  .responder-reclamacao-anexos {
+    margin-left: 1rem;
+
+    .report-label-value {
+      margin-top: 0 !important;
+    }
+    .col-12 {
+      padding-left: 0 !important;
+    }
+  }
+}

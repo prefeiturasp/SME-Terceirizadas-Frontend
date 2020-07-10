@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Select } from "../../Shareable/Select";
 import { Botao } from "../../Shareable/Botao";
+import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import { Field, formValueSelector, reduxForm, FormSection } from "redux-form";
@@ -24,27 +25,33 @@ import {
 import { InputComData } from "../../Shareable/DatePicker";
 import { construirPeriodosECombos } from "../helper";
 import { agregarDefault } from "../../../helpers/utilities";
-import { faixaToString } from "../../../helpers/faixasEtarias";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
 import "../style.scss";
 import "./style.scss";
 import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import InputText from "../../Shareable/Input/InputText";
-import { enviarAlteracaoCardapio } from "../../../services/alteracaoDecardapio.service";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  getMeusRascunhosAlteracoesCardapioCei,
+  // FIXME: remove unused imports
+  /*   getMeusRascunhosAlteracoesCardapioCei,
   criaAlteracaoCardapioCei,
   iniciaFluxoAlteracaoCardapioCei,
   atualizaAlteracaoCardapioCei,
-  deleteAlteracaoCardapioCei
-} from "../../../services/alteracaoDeCardapioCEI.service";
+  deleteAlteracaoCardapioCei */
+  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio
+} from "services/alteracaoDeCardapio";
 import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
 import moment from "moment";
 import { parseFormValues } from "./helper";
 import CheckboxPeriodo from "./CheckboxPeriodo";
+import { TIPO_SOLICITACAO } from "constants/shared";
+
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const ENTER = 13;
 
@@ -192,7 +199,9 @@ class AlteracaoCardapio extends Component {
   refresh = async () => {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
     try {
-      const response = await getMeusRascunhosAlteracoesCardapioCei();
+      const response = await escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+        SOLICITACAO_CEI
+      );
       if (response.status === HTTP_STATUS.OK) {
         alteracaoCardapioList =
           response.data.results.length > 0 ? response.data.results : [];
@@ -224,7 +233,10 @@ class AlteracaoCardapio extends Component {
   }
 
   enviaAlteracaoCardapio(uuid) {
-    enviarAlteracaoCardapio(uuid).then(
+    escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio enviada com sucesso");
@@ -254,16 +266,24 @@ class AlteracaoCardapio extends Component {
 
       if (values.uuid) {
         parsedValues.uuid = values.uuid;
-        response = await atualizaAlteracaoCardapioCei(parsedValues);
+        response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
+          values.uuid,
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.OK;
       } else {
-        response = await criaAlteracaoCardapioCei(parsedValues);
+        response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+          parsedValues,
+          SOLICITACAO_CEI
+        );
         statusOk = HTTP_STATUS.CREATED;
       }
 
       if (response.status === statusOk && !rascunho) {
-        const responseInicia = await iniciaFluxoAlteracaoCardapioCei(
-          response.data.uuid
+        const responseInicia = await escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+          response.data.uuid,
+          SOLICITACAO_CEI
         );
         if (responseInicia.status === HTTP_STATUS.OK) {
           toastSuccess("Alteração de Cardápio salva com sucesso");
@@ -305,7 +325,10 @@ class AlteracaoCardapio extends Component {
   OnDeleteButtonClicked = async (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       try {
-        const response = await deleteAlteracaoCardapioCei(uuid);
+        const response = await escolaExcluirSolicitacaoDeAlteracaoCardapio(
+          uuid,
+          SOLICITACAO_CEI
+        );
         if (response.status === HTTP_STATUS.NO_CONTENT) {
           toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
           this.refresh();
@@ -377,7 +400,7 @@ class AlteracaoCardapio extends Component {
     if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
       this.props.change(
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-        null
+        ""
       );
     }
   }
@@ -454,6 +477,9 @@ class AlteracaoCardapio extends Component {
                       onBlur={event => this.onAlterarDiaChanged(event)}
                       name="data_alteracao"
                       minDate={proximos_dois_dias_uteis}
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
                       label="Alterar dia"
                       required
                     />
@@ -544,42 +570,12 @@ class AlteracaoCardapio extends Component {
                         />
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
-                        <div>
-                          <table className="table tabela-substituicao">
-                            <thead className="thead-light">
-                              <tr>
-                                <th>Faixa Etária</th>
-                                <th>Alunos Matriculados</th>
-                                <th>Quantidade</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {periodo.alunosPorFaixaEtaria.map(
-                                (faixa, key) => (
-                                  <tr key={key}>
-                                    <td>{faixaToString(faixa.faixa_etaria)}</td>
-                                    <td>{faixa.count}</td>
-                                    <td>
-                                      <Field
-                                        component={InputText}
-                                        name={`qtde-faixa-${
-                                          faixa.faixa_etaria.uuid
-                                        }`}
-                                        validate={faixa.validators}
-                                        type="number"
-                                      />
-                                    </td>
-                                  </tr>
-                                )
-                              )}
-                              <tr>
-                                <th>Total{" >>"}</th>
-                                <th>{totalAlunos}</th>
-                                <th>{totalSelecionados}</th>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                        <TabelaQuantidadePorFaixaEtaria
+                          alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
+                          escondeTotalAlunos={periodo.nome === "PARCIAL"}
+                          totalAlunos={totalAlunos}
+                          totalSelecionados={totalSelecionados}
+                        />
                       )}
                     </FormSection>
                   );
@@ -652,10 +648,12 @@ const AlteracaoCardapioForm = reduxForm({
       for (let [chave, valor] of Object.entries(dadosPeriodo)) {
         if (chave === "check") {
           aoMenosUmPeriodoSelecionado = true;
-        } else if (chave.startsWith("qtde-faixa")) {
-          totais[chave] = totais[chave]
-            ? totais[chave] + parseInt(valor)
-            : parseInt(valor);
+        } else if (chave.startsWith("faixas_etarias")) {
+          for (let [uuid, total] of Object.entries(valor)) {
+            totais[uuid] = totais[uuid]
+              ? totais[uuid] + parseInt(total)
+              : parseInt(total);
+          }
         } else if (chave === "alunosPorFaixaEtaria") {
           alunosPorFaixaEtaria = valor;
         }
@@ -675,22 +673,27 @@ const AlteracaoCardapioForm = reduxForm({
 
     if (alunosPorFaixaEtaria) {
       alunosPorFaixaEtaria.forEach(faixaEtaria => {
-        const totalFaixaEtaria =
-          totais[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`];
+        const totalFaixaEtaria = totais[faixaEtaria.faixa_etaria.uuid];
         if (totalFaixaEtaria && totalFaixaEtaria > faixaEtaria.count) {
           for (let periodo of Object.keys(periodos)) {
             const erroCampo = {
-              [`qtde-faixa-${
-                faixaEtaria.faixa_etaria.uuid
-              }`]: "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
+              [faixaEtaria.faixa_etaria.uuid]:
+                "A soma das substituições nessa faixa etária não pode exceder a quantidade de alunos nessa faixa etária"
             };
             errors[periodo] = errors[periodo]
-              ? Object.assign({}, errors[periodo], erroCampo)
-              : erroCampo;
+              ? {
+                  faixas_etarias: Object.assign(
+                    {},
+                    errors[periodo].faixas_etarias,
+                    erroCampo
+                  )
+                }
+              : { faixas_etarias: erroCampo };
           }
         }
       });
     }
+
     return errors;
   }
 })(AlteracaoCardapio);

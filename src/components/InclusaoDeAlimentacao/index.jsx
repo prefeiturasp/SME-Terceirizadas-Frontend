@@ -1,6 +1,7 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, reduxForm } from "redux-form";
@@ -22,18 +23,6 @@ import {
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
-import {
-  atualizarInclusaoDeAlimentacaoNormal,
-  criarInclusaoDeAlimentacaoNormal,
-  getInclusoesNormaisSalvas,
-  inicioPedidoNormal
-} from "../../services/inclusaoDeAlimentacaoAvulsa.service";
-import {
-  atualizarInclusaoDeAlimentacaoContinua,
-  criarInclusaoDeAlimentacaoContinua,
-  getInclusoesContinuasSalvas,
-  inicioPedidoContinua
-} from "../../services/inclusaoDeAlimentacaoContinua.service";
 import { Botao } from "../Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -57,6 +46,14 @@ import {
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validarSubmissao } from "./validacao";
+import {
+  escolaCriarSolicitacaoDeInclusaoDeAlimentacao,
+  escolaAlterarSolicitacaoDeInclusaoDeAlimentacao,
+  escolaIniciarSolicitacaoDeInclusaoDeAlimentacao,
+  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao,
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
+} from "services/inclusaoDeAlimentacao";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 const ENTER = 13;
 class InclusaoDeAlimentacao extends Component {
@@ -232,9 +229,12 @@ class InclusaoDeAlimentacao extends Component {
     );
   };
 
-  removerRascunho(id_externo, uuid, removerInclusaoDeAlimentacao) {
+  removerRascunho(id_externo, uuid, tipoSolicitacao) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removerInclusaoDeAlimentacao(uuid).then(
+      escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        tipoSolicitacao
+      ).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -457,13 +457,18 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   refresh() {
+    // FIXME: Usar Promise.all()
     let rascunhosInclusaoDeAlimentacao = [];
-    getInclusoesContinuasSalvas().then(
+    obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+    ).then(
       response => {
         rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
           response.results
         );
-        getInclusoesNormaisSalvas().then(
+        obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+          TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+        ).then(
           responseNormais => {
             rascunhosInclusaoDeAlimentacao = rascunhosInclusaoDeAlimentacao.concat(
               responseNormais.results
@@ -485,8 +490,8 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
-  iniciarPedido(uuid, inicioPedidoEndpointCorreto) {
-    inicioPedidoEndpointCorreto(uuid).then(
+  iniciarPedido(uuid, tipoInclusao) {
+    escolaIniciarSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoInclusao).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Inclusão de Alimentação enviada com sucesso!");
@@ -509,17 +514,24 @@ class InclusaoDeAlimentacao extends Component {
     );
   }
 
+  // FIXME: Esses dois fluxos na verdade são um só
+  // Ele só precisa ser parametrizado para suportar os dois casos
   fluxoSolicitacaoContinua(values) {
+    const payload = JSON.stringify(
+      formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
+    );
     if (!values.uuid) {
-      criarInclusaoDeAlimentacaoContinua(
-        JSON.stringify(
-          formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
-        )
+      escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
+        payload,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+              );
             } else {
               toastSuccess("Rascunho salvo com sucesso");
               this.resetForm();
@@ -536,16 +548,18 @@ class InclusaoDeAlimentacao extends Component {
         }
       );
     } else {
-      atualizarInclusaoDeAlimentacaoContinua(
+      escolaAlterarSolicitacaoDeInclusaoDeAlimentacao(
         values.uuid,
-        JSON.stringify(
-          formatarSubmissaoSolicitacaoContinua(values, this.props.meusDados)
-        )
+        payload,
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, inicioPedidoContinua);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+              );
             } else {
               toastSuccess("Rascunho atualizado com sucesso");
               this.resetForm();
@@ -571,16 +585,22 @@ class InclusaoDeAlimentacao extends Component {
   }
 
   fluxoSolicitacaoNormal(values) {
+    const payload = JSON.stringify(
+      formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
+    );
+    // Criacao
     if (!values.uuid) {
-      criarInclusaoDeAlimentacaoNormal(
-        JSON.stringify(
-          formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
-        )
+      escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
+        payload,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       ).then(
         res => {
           if (res.status === HTTP_STATUS.CREATED) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+              );
             } else {
               toastSuccess("Rascunho salvo com sucesso");
               this.resetForm();
@@ -597,16 +617,19 @@ class InclusaoDeAlimentacao extends Component {
         }
       );
     } else {
-      atualizarInclusaoDeAlimentacaoNormal(
+      // Edicao
+      escolaAlterarSolicitacaoDeInclusaoDeAlimentacao(
         values.uuid,
-        JSON.stringify(
-          formatarSubmissaoSolicitacaoNormal(values, this.props.meusDados)
-        )
+        payload,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       ).then(
         res => {
           if (res.status === HTTP_STATUS.OK) {
             if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(res.data.uuid, inicioPedidoNormal);
+              this.iniciarPedido(
+                res.data.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+              );
             } else {
               toastSuccess("Rascunho atualizado com sucesso");
               this.resetForm();
@@ -753,6 +776,9 @@ class InclusaoDeAlimentacao extends Component {
                                 this.onDataChanged(event.target.value)
                               }
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                               label="Dia"
                               required
                               validate={required}
@@ -796,6 +822,9 @@ class InclusaoDeAlimentacao extends Component {
                               required
                               validate={required}
                               minDate={proximos_dois_dias_uteis}
+                              maxDate={moment()
+                                .endOf("year")
+                                .toDate()}
                             />
                             <div>
                               <Field
@@ -808,6 +837,9 @@ class InclusaoDeAlimentacao extends Component {
                                   )
                                 }
                                 minDate={getDataObj(dataInicialContinua)}
+                                maxDate={moment()
+                                  .endOf("year")
+                                  .toDate()}
                                 disabled={!dataInicialContinua}
                                 name="data_final"
                                 label="Até"

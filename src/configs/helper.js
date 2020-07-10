@@ -2,8 +2,12 @@ import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
+import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
+import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
+import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
+import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
 import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
@@ -15,7 +19,7 @@ import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
 import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
-import { PERFIL, TIPO_PERFIL } from "../constants";
+import { PERFIL, TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 
 export const painelGestaoAlimentacao = () => {
@@ -162,12 +166,19 @@ export const StatusSolicitacoesDietaEspecial = () => {
 
 export const painelInicial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIETA_ESPECIAL:
-      return DashBoardDietaEspecial.DietaEspecialCODAE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return DashboardCODAEPage;
     default:
       return PainelInicialPage;
+  }
+};
+
+export const inclusaoCardapio = () => {
+  switch (localStorage.getItem("perfil")) {
+    case PERFIL.DIRETOR_CEI:
+      return InclusaoDeAlimentacaoCEIPage;
+    default:
+      return InclusaoDeAlimentacaoPage;
   }
 };
 
@@ -177,5 +188,14 @@ export const alteracaoCardapio = () => {
       return AlteracaoDeCardapioCEIPage;
     default:
       return AlteracaoDeCardapioPage;
+  }
+};
+
+export const suspensaoAlimentacao = () => {
+  switch (localStorage.getItem("perfil")) {
+    case PERFIL.DIRETOR_CEI:
+      return SuspensaoDeAlimentacaoDeCEI;
+    default:
+      return SuspensaoDeAlimentacaoPage;
   }
 };

@@ -1,31 +1,41 @@
 import React, { Component } from "react";
+import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
-import { SidebarCODAE } from "./SidebarCODAE";
-import { SidebarDRE } from "./SidebarDRE";
-import { SidebarEscola } from "./SidebarEscola";
-import { SidebarTerceirizada } from "./SidebarTerceirizada";
+import { SidebarContent } from "./SidebarContent";
+import { SidebarContentDRE } from "./__legacy/SideBarContentDRE";
 import { AvatarEscola } from "../Avatar/AvatarEscola";
 import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import {
-  usuarioCODAEGestaoAlimentacao,
-  usuarioCODAEDietaEspecial,
-  usuarioDiretoriaRegional,
-  usuarioEscola,
-  usuarioTerceirizada
+  usuarioEhQualquerCODAE,
+  usuarioEhEscola,
+  usuarioEhTerceirizada,
+  usuarioEhDRE
 } from "../../../helpers/utilities";
+import { getAPIVersion } from "../../../services/api.service";
 
 export class Sidebar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggled: false
+      toggled: false,
+      API_VERSION: ""
     };
   }
 
+  async componentDidMount() {
+    try {
+      const response = await getAPIVersion();
+      this.setState({ API_VERSION: response.API_Version });
+    } catch (error) {
+      // keep going
+    }
+  }
+
   render() {
+    const { API_VERSION } = this.state;
     const {
       nome,
       toggle,
@@ -57,11 +67,10 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {(usuarioCODAEDietaEspecial() ||
-                usuarioCODAEGestaoAlimentacao()) && <AvatarCODAE />}
-              {usuarioDiretoriaRegional() && <AvatarDRE />}
-              {usuarioEscola() && <AvatarEscola />}
-              {usuarioTerceirizada() && <AvatarTerceirizada />}
+              {usuarioEhQualquerCODAE() && <AvatarCODAE />}
+              {usuarioEhDRE() && <AvatarDRE />}
+              {usuarioEhEscola() && <AvatarEscola />}
+              {usuarioEhTerceirizada() && <AvatarTerceirizada />}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
@@ -92,22 +101,32 @@ export class Sidebar extends Component {
             </div>
           )}
           <div className="sidebar-wrapper div-submenu">
-            {(usuarioCODAEDietaEspecial() ||
-              usuarioCODAEGestaoAlimentacao()) && <SidebarCODAE />}
-            {usuarioDiretoriaRegional() && <SidebarDRE />}
-            {usuarioEscola() && <SidebarEscola />}
-            {usuarioTerceirizada() && <SidebarTerceirizada />}
+            {(usuarioEhQualquerCODAE() ||
+              usuarioEhTerceirizada() ||
+              usuarioEhEscola()) && <SidebarContent />}
+            {usuarioEhDRE() && <SidebarContentDRE />}
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
-              {/*<img
+              <img
                 src="/assets/image/logo-sme-branco.svg"
                 className="rounded"
                 alt="SME Educação"
-              />*/}
-              <p>
-                SME-SP-SGA - Distribuído sob <br />a Licença AGPL V3
-              </p>
+              />
+              <div className="sidebar-wrapper">
+                <div className="text-center mx-auto justify-content-center p-2 conteudo-detalhes">
+                  <span className="text-bold text-white small detalhes-licenca">
+                    SME-SP-SGA - Distribuído sob a Licença AGPL V3
+                  </span>
+                </div>
+              </div>
+              <div className="sidebar-wrapper">
+                <div className="text-center mx-auto justify-content-center p-2">
+                  <span className="text-bold text-white small">
+                    {version} (API: {API_VERSION})
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </ul>

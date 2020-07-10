@@ -3,11 +3,11 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import StatusSolicitacoes from "../../../components/screens/DashboardCODAE/StatusSolicitacoes";
 import Page from "../../../components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { CODAE, SOLICITACOES_RECUSADAS } from "../../../configs/constants";
+import { CODAE, SOLICITACOES_NEGADAS } from "../../../configs/constants";
 import { STATUS } from "../../../components/screens/const";
 
 const atual = {
-  href: `/${CODAE}/${SOLICITACOES_RECUSADAS}`,
+  href: `/${CODAE}/${SOLICITACOES_NEGADAS}`,
   titulo: "Solicitações Negadas"
 };
 

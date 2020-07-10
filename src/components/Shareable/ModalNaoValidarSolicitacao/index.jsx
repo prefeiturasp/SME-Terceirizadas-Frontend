@@ -16,22 +16,22 @@ export class ModalNaoValidarSolicitacao extends Component {
   }
   async naoValidarSolicitacao(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
-    const { endpoint } = this.props;
+    const { endpoint, tipoSolicitacao } = this.props;
     const resp = await endpoint(
       uuid,
-      `${motivoCancelamento} - ${justificativa}`
+      `${motivoCancelamento} - ${justificativa}`,
+      tipoSolicitacao
     );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação não validada com sucesso!");
       if (this.props.loadSolicitacao) {
-        this.props.loadSolicitacao(uuid);
+        this.props.loadSolicitacao(uuid, tipoSolicitacao);
       }
     } else {
       toastError(resp.detail);
     }
   }
-
   componentDidUpdate(prevProps) {
     if (prevProps.justificativa !== this.props.justificativa) {
       this.setState({ justificativa: this.props.justificativa });

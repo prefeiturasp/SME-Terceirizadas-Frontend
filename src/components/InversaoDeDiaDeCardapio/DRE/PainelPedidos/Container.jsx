@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PainelPedidos from ".";
-import { visaoPorComboSomenteDatas } from "../../../../constants";
+import { visaoPorComboSomenteDatas } from "../../../../constants/shared";
 
 class Container extends Component {
   constructor(props) {

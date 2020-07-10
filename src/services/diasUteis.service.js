@@ -1,4 +1,4 @@
-import { API_URL } from "../constants/config.constants";
+import { API_URL } from "../constants/config";
 
 export const getDiasUteis = () => {
   const url = `${API_URL}/dias-uteis/`;
