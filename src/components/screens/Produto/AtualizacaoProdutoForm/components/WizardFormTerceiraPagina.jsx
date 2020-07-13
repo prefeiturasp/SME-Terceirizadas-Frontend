@@ -4,7 +4,6 @@ import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
-import InputFile from "../../../../Shareable/Input/InputFile";
 import {
   updateProduto,
   excluirImagemDoProduto
@@ -18,6 +17,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
+import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
@@ -60,9 +60,13 @@ class WizardFormTerceiraPagina extends Component {
   }
 
   setFiles(files) {
-    let { arquivos } = this.state;
-    arquivos = files;
-    this.setState({ arquivos });
+    const img = files.map(imagem => {
+      return {
+        arquivo: imagem.base64,
+        nome: imagem.nome
+      };
+    });
+    this.setState({ arquivos: img });
   }
 
   onSubmit = values => {
@@ -211,32 +215,34 @@ class WizardFormTerceiraPagina extends Component {
           </div>
         </div>
 
-        <div className="row pt-3 pb-3">
-          <div className="col-9 produto">
-            <label>
-              <span>* </span>Foto do produto
-            </label>
-            <div className="explicacao pt-2">
-              Anexar uma ou mais fotos do produto.
+        <section className="row attachments">
+          <div className="col-9">
+            <div className="card-title font-weight-bold cinza-escuro mt-4">
+              Imagens do Produto
+            </div>
+            <div className="text">Anexe uma ou mais imagens do produto.</div>
+            <div className="card-warning mt-2">
+              <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
+              .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br />
             </div>
           </div>
           <div className="col-3 btn">
             <Field
-              component={InputFile}
+              component={ManagedInputFileField}
+              concatenarNovosArquivos
               className="inputfile"
               texto="Anexar"
-              name="files"
+              name="anexos"
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-              setFiles={this.setFiles}
-              removeFile={this.removeFile}
-              toastSuccess={"Imagem do produto incluída com sucesso!"}
-              multiple
+              onChange={this.props.setFiles}
+              removeFile={this.props.removeFile}
             />
           </div>
+        </section>
 
+        <div className="row pt-3 pb-3">
           {produto.imagens !== null && produto.imagens.length > 0 && (
             <div className="section-cards-imagens">
-              <div>Imagens do produto</div>
               {produto.imagens
                 .filter(anexo => anexo.arquivo.includes("media"))
                 .map((anexo, key) => {
