@@ -1,6 +1,7 @@
 @import "styles/variables.scss";
 
 .page-relatorio-quantitativo-por-terceirizada {
+  min-height: 400px;
   .header-busca-produto {
     font-style: normal;
     font-weight: bold;
@@ -15,6 +16,9 @@
   }
   .col-botoes {
     padding-right: 1.15em;
+  }
+  .row-botoes {
+    margin-top: 1em;
   }
 }
 
