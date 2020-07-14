@@ -71,11 +71,11 @@ const TabelaQuantitativoPorTerceirizada = ({ dadosRelatorio }) => {
                   <div>{item.qtdePorStatus.PRODUTOS_NAO_HOMOLOGADOS}</div>{" "}
                 </div>
                 <div className="status-flex-container">
-                  <div>Produtos pendentes de homolog.</div>
+                  <div>Produtos pendentes de homologação</div>
                   <div>{item.qtdePorStatus.PRODUTOS_PENDENTES_HOMOLOGACAO}</div>
                 </div>
                 <div className="status-flex-container">
-                  <div>Produtos aguardando a. sensorial</div>
+                  <div>Produtos aguardando análise sensorial</div>
                   <div>
                     {item.qtdePorStatus.PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL}
                   </div>
@@ -84,7 +84,7 @@ const TabelaQuantitativoPorTerceirizada = ({ dadosRelatorio }) => {
               <div className="row-quantitativo-status">
                 <div className="status-flex-container">
                   <div>Produtos aguardando correção</div>
-                  <div>{"0"}</div>
+                  <div>{item.qtdePorStatus.PRODUTOS_AGUARDANDO_CORRECAO}</div>
                 </div>
                 <div className="status-flex-container">
                   <div>Reclamação de produto</div>
@@ -153,7 +153,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
       <div className="card mt-3 page-relatorio-quantitativo-por-terceirizada">
         <div className="card-body">
           <h3 className="font-weight-bold">
-            Relatório quantitativo por terceirizada
+            Relatório quantitativo de produtos por terceirizadas
           </h3>
           <Form
             onSubmit={onSubmitForm}
@@ -175,20 +175,28 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                   <Col md={24} lg={6} xl={4}>
                     <Field
                       component={InputComData}
-                      label="Início do Período"
+                      label="Período"
                       name="data_inicial"
                       labelClassName="datepicker-fixed-padding"
+                      placeholder="De"
                       minDate={null}
+                      maxDate={
+                        values.data_final
+                          ? moment(values.data_final, "DD/MM/YYYY")._d
+                          : null
+                      }
                       validate={required}
+                      required
                     />
                   </Col>
                   <Col md={24} lg={6} xl={4}>
                     <Field
                       component={InputComData}
-                      label={"Até"}
+                      label="&nbsp;"
                       name="data_final"
                       labelClassName="datepicker-fixed-padding"
                       popperPlacement="bottom-end"
+                      placeholder="Até"
                       minDate={
                         values.data_inicial
                           ? moment(values.data_inicial, "DD/MM/YYYY")._d

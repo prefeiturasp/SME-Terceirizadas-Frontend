@@ -253,8 +253,14 @@ class cadastroProduto extends Component {
   }
 
   setFiles(imagens) {
+    const img = imagens.map(imagem => {
+      return {
+        arquivo: imagem.base64,
+        nome: imagem.nome
+      };
+    });
     let { payload } = this.state;
-    payload.imagens = imagens;
+    payload.imagens = img;
     this.setState({ payload });
   }
 
