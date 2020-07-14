@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 
@@ -94,4 +96,15 @@ export const getRelatorioQuantitativo = async params => {
     return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });
   }
   return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO);
+};
+
+export const getPdfRelatorioQuantitativo = async params => {
+  const { data } = await axios.get(
+    "/terceirizadas/imprimir-relatorio-quantitativo/",
+    {
+      responseType: "blob",
+      params
+    }
+  );
+  saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
 };

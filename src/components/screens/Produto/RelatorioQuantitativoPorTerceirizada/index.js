@@ -17,6 +17,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import { getNomesTerceirizadas } from "services/produto.service";
+import { getPdfRelatorioQuantitativo } from "services/terceirizada.service";
 
 import "./style.scss";
 
@@ -255,6 +256,14 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               setDadosRelatorio(null);
             }}
             className="float-right"
+          />
+          <Botao
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            texto="Imprimir"
+            onClick={() => getPdfRelatorioQuantitativo(filtros)}
+            type={BUTTON_TYPE.BUTTON}
+            className="float-right mr-2"
           />
         </section>
       </Modal>
