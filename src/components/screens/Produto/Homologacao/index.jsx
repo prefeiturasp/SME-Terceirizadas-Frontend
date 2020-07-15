@@ -131,7 +131,13 @@ class HomologacaoProduto extends Component {
       tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
     ) {
       return (
-        <FluxoDeStatus listaDeStatus={logs} fluxo={fluxoPartindoTerceirizada} />
+        <Fragment>
+          <FluxoDeStatus
+            listaDeStatus={logs}
+            fluxo={fluxoPartindoTerceirizada}
+          />
+          <hr />
+        </Fragment>
       );
     } else {
       return false;
@@ -229,6 +235,8 @@ class HomologacaoProduto extends Component {
                   <MotivoHomologacao logs={logs} />
                 </Fragment>
               )}
+              {ultima_homologacao &&
+                this.renderFluxoAnaliseSensorial(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
@@ -246,9 +254,7 @@ class HomologacaoProduto extends Component {
                   <p className="value">{terceirizada.contatos[0].email}</p>
                 </div>
               </div>
-              <hr />
-              {ultima_homologacao &&
-                this.renderFluxoAnaliseSensorial(ultima_homologacao)}
+
               <hr />
               <div className="title">Identificação do Produto</div>
               <div className="row">
