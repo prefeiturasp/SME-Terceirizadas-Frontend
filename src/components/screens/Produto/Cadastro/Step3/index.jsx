@@ -109,6 +109,7 @@ class Step3 extends Component {
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
               validate={[required]}
+              toastSuccessMessage="Imagem do produto inclusa com sucesso"
             />
           </div>
         </section>
