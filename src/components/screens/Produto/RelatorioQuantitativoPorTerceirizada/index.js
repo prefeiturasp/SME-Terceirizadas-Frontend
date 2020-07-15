@@ -3,6 +3,7 @@ import moment from "moment";
 import React, { Fragment, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
+import { Link } from "react-router-dom";
 
 import { required } from "helpers/fieldValidators";
 import { obterRelatorioQuantitativo } from "helpers/terceirizadas";
@@ -178,6 +179,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                       component={InputComData}
                       label="Período"
                       name="data_inicial"
+                      className="data-inicial"
                       labelClassName="datepicker-fixed-padding"
                       placeholder="De"
                       minDate={null}
@@ -209,14 +211,16 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                 </Row>
                 <div className="row row-botoes">
                   <div className="col-12 text-right col-botoes">
-                    <Botao
-                      texto="Limpar Filtros"
-                      type={BUTTON_TYPE.BUTTON}
-                      className="mr-3"
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      onClick={() => form.reset()}
-                      disabled={submitting}
-                    />
+                    <Link to="/">
+                      <Botao
+                        texto="voltar"
+                        titulo="voltar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                        icon={BUTTON_ICON.ARROW_LEFT}
+                        className="mr-3"
+                      />
+                    </Link>
                     <Botao
                       texto="Consultar"
                       type={BUTTON_TYPE.SUBMIT}
@@ -244,7 +248,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
       >
         <section className="m-3">
           <h4 className="font-weight-normal text-secondary">
-            Relatório quantitativo por terceirizada
+            Relatório quantitativo de produtos por terceirizadas
           </h4>
           <p className="text-black font-weight-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
