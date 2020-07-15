@@ -236,6 +236,7 @@ class WizardFormTerceiraPagina extends Component {
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
+              toastSuccessMessage="Imagem do produto inclusa com sucesso"
             />
           </div>
         </section>
