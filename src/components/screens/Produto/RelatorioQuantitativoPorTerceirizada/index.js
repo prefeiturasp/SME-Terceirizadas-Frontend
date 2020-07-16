@@ -186,7 +186,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                       maxDate={
                         values.data_final
                           ? moment(values.data_final, "DD/MM/YYYY")._d
-                          : null
+                          : moment()._d
                       }
                       validate={required}
                       required
@@ -205,6 +205,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                           ? moment(values.data_inicial, "DD/MM/YYYY")._d
                           : null
                       }
+                      maxDate={moment()._d}
                       validate={required}
                     />
                   </Col>
