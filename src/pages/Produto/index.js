@@ -92,7 +92,7 @@ const atual = {
 
 export const RelatorioQuantitativoPorTerceirizadaPage = () => {
   return (
-    <Page>
+    <Page botaoVoltar voltarPara="/">
       <Breadcrumb home={"/"} atual={atual} />
       <RelatorioQuantitativoPorTerceirizada />
     </Page>
