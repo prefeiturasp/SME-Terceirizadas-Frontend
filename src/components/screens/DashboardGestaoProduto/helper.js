@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import {
   truncarString,
   usuarioEhTerceirizada,
@@ -63,8 +65,21 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
 };
 
+export const ordenaPorLogMaisRecente = (a, b) => {
+  const formats = ["DD/MM/YYYY", "DD/MM/YYYY HH:mm"];
+  const data_a = moment(a.log_mais_recente, formats);
+  const data_b = moment(b.log_mais_recente, formats);
+  if (data_a.isBefore(data_b)) {
+    return -1;
+  }
+  if (data_b.isBefore(data_a)) {
+    return 1;
+  }
+  return 0;
+};
+
 export const formataCards = (items, apontaParaEdicao) => {
-  return items.map(item => ({
+  return items.sort(ordenaPorLogMaisRecente).map(item => ({
     text: `${item.id_externo} - ${truncarString(item.nome_produto, 48)}`,
     date: item.log_mais_recente,
     link: gerarLinkDoItem(item, apontaParaEdicao)

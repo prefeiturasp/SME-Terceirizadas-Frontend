@@ -79,7 +79,7 @@ export default class DashboardGestaoProduto extends Component {
         return true;
       case "Reclamação de produto":
         return true;
-      case "Correção de produto":
+      case "Correções de Produtos":
         return true;
       case "Homologados":
         return true;

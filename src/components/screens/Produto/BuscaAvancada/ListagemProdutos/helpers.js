@@ -7,11 +7,11 @@ export const retornaStatusFormatado = status => {
     case "CODAE_SUSPENDEU":
       return "Produtos Suspensos";
     case "CODAE_QUESTIONADO":
-      return "Correção de produto";
+      return "Correções de Produtos";
     case "CODAE_PEDIU_ANALISE_RECLAMACAO":
-      return "Aguardando análise de reclamação";
+      return "Aguardando análise das reclamações";
     case "CODAE_PEDIU_ANALISE_SENSORIAL":
-      return "Aguardando análise sensorial";
+      return "Aguardando análise sensoriais";
     case "CODAE_PENDENTE_HOMOLOGACAO":
       return "Pendente de homologação";
     case "CODAE_HOMOLOGADO":
