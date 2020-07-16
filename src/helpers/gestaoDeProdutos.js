@@ -17,7 +17,7 @@ const {
 
 const CARD_RECLAMACAO_DE_PRODUTO = {
   id: CARD_ID.RECLAMACAO_DE_PRODUTO,
-  titulo: "Reclamação de produto",
+  titulo: "Reclamações de produto",
   icon: "fa-bullhorn",
   style: "card-complained",
   rota: ROTA.RECLAMACAO_DE_PRODUTO,
@@ -49,8 +49,8 @@ const CARD_NAO_HOMOLOGADOS = {
 };
 const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   id: CARD_ID.AGUARDANDO_ANALISE_RECLAMACAO,
-  titulo: "Aguardando análise de reclamação",
-  titulo_menu: "Ag. análise de reclamação", // FIXME: Confirmar nome no menu
+  titulo: "Aguardando análise das reclamações",
+  titulo_menu: "Ag. análise das reclamações", // FIXME: Confirmar nome no menu
   icon: "fa-history",
   style: "card-awaiting-complain",
   rota: ROTA.AGUARDANDO_ANALISE_RECLAMACAO,
@@ -61,8 +61,8 @@ const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
-  titulo: "Aguardando análise sensorial",
-  titulo_menu: "Ag. análise sensorial",
+  titulo: "Aguardando análise sensoriais",
+  titulo_menu: "Ag. análise sensoriais",
   icon: "fa-search",
   style: "card-awaiting-sensory",
   rota: ROTA.AGUARDANDO_ANALISE_SENSORIAL,
@@ -70,7 +70,7 @@ const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
 };
 const CARD_PENDENTE_HOMOLOGACAO = {
   id: CARD_ID.PENDENTE_HOMOLOGACAO,
-  titulo: "Pendente homologação",
+  titulo: "Pendentes de homologação",
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.SOLICITACOES_PENDENTE_HOMOLOGACAO,
@@ -79,7 +79,7 @@ const CARD_PENDENTE_HOMOLOGACAO = {
 
 const CARD_CORRECAO_DE_PRODUTO = {
   id: CARD_ID.CORRECAO_DE_PRODUTO,
-  titulo: "Correção de produto",
+  titulo: "Correções de Produtos",
   icon: "fa-pencil-alt",
   style: "card-product-correction",
   rota: ROTA.CORRECAO_DE_PRODUTO,

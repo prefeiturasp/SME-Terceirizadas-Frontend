@@ -51,12 +51,12 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
 };
 
 export const GESTAO_PRODUTO_CARDS = {
-  RECLAMACAO_DE_PRODUTO: "Reclamação de produto",
+  RECLAMACAO_DE_PRODUTO: "Reclamações de produtos",
   PRODUTOS_SUSPENSOS: "Produtos suspensos",
-  CORRECAO_DE_PRODUTO: "Correção de produto",
-  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise de reclamação",
-  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensorial",
-  PENDENTE_HOMOLOGACAO: "Pendente homologação",
+  CORRECAO_DE_PRODUTO: "Correções de produtos",
+  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise das reclamações",
+  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensoriais",
+  PENDENTE_HOMOLOGACAO: "Pendentes de homologação",
   HOMOLOGADOS: "Homologados",
   NAO_HOMOLOGADOS: "Não homologados"
 };
