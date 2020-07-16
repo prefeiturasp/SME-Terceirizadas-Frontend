@@ -3,7 +3,6 @@ import moment from "moment";
 import React, { Fragment, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import { Link } from "react-router-dom";
 
 import { required } from "helpers/fieldValidators";
 import { obterRelatorioQuantitativo } from "helpers/terceirizadas";
@@ -24,24 +23,24 @@ import "./style.scss";
 
 const gerarLabelPorFiltro = filtros => {
   if (filtros.data_inicial && filtros.data_final) {
-    return `Veja resultados período "${moment(
+    return `Veja os resultados para o período "${moment(
       filtros.data_inicial,
       "DD/MM/YYYY"
     ).format("DD/MM/YYYY")} à ${moment(filtros.data_final, "DD/MM/YYYY").format(
       "DD/MM/YYYY"
     )}":`;
   } else if (filtros.data_inicial) {
-    return `Veja resultados apartir de "${moment(
+    return `Veja os resultados apartir de "${moment(
       filtros.data_inicial,
       "DD/MM/YYYY"
     ).format("DD/MM/YYYY")}":`;
   } else if (filtros.data_final) {
-    return `Veja resultados até "${moment(
+    return `Veja os resultados até "${moment(
       filtros.data_final,
       "DD/MM/YYYY"
     ).format("DD/MM/YYYY")}":`;
   } else {
-    return "Veja resultados da busca:";
+    return "Veja os resultados da busca:";
   }
 };
 
@@ -169,7 +168,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                     <Field
                       component={AutoCompleteField}
                       dataSource={terceirizadasFiltrado}
-                      label="Nome da terceirizada"
+                      label="Nome da empresa solicitante (terceirizada)"
                       onSearch={onSearch}
                       name="nome_terceirizada"
                     />
@@ -212,16 +211,14 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                 </Row>
                 <div className="row row-botoes">
                   <div className="col-12 text-right col-botoes">
-                    <Link to="/">
-                      <Botao
-                        texto="voltar"
-                        titulo="voltar"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.BLUE_OUTLINE}
-                        icon={BUTTON_ICON.ARROW_LEFT}
-                        className="mr-3"
-                      />
-                    </Link>
+                    <Botao
+                      texto="Limpar Filtros"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      disabled={submitting}
+                      onClick={form.reset}
+                      className="mr-3"
+                    />
                     <Botao
                       texto="Consultar"
                       type={BUTTON_TYPE.SUBMIT}

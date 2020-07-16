@@ -1,19 +1,17 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
-import { PERFIL } from "constants/shared";
+import {
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhCODAEGestaoAlimentacao
+} from "helpers/utilities";
 import * as constants from "configs/constants";
 
 const MenuRelatorios = () => {
-  const exibirProdutosHomologados = [
-    PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA,
-    PERFIL.COORDENADOR_DIETA_ESPECIAL,
-    PERFIL.ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
-  ];
+  const exibirProdutosHomologados =
+    usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();
 
-  const exibirQuantitativoPorTerceirizada = [
-    PERFIL.ADMINISTRADOR_GESTAO_PRODUTO,
-    PERFIL.COORDENADOR_GESTAO_PRODUTO
-  ];
+  const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
