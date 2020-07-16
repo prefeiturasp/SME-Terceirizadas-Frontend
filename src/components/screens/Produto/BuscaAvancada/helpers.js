@@ -43,11 +43,11 @@ export const retornaArrayDeAcordoComPerfil = () => {
   ) {
     return [
       "Todos",
-      "Reclamação de produto",
+      "Reclamações de produtos",
       "Produtos Suspensos",
-      "Correção de produto",
-      "Aguardando análise de reclamação",
-      "Aguardando análise sensorial",
+      "Correções de Produtos",
+      "Aguardando análise das reclamações",
+      "Aguardando análise sensoriais",
       "Pendente de homologação",
       "Homologado",
       "Não homologado"
@@ -55,10 +55,10 @@ export const retornaArrayDeAcordoComPerfil = () => {
   } else if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
     return [
       "Todos",
-      "Reclamação de produto",
+      "Reclamações de produtos",
       "Produtos Suspensos",
-      "Aguardando análise de reclamação",
-      "Aguardando análise sensorial",
+      "Aguardando análise das reclamações",
+      "Aguardando análise sensoriais",
       "Pendente de homologação",
       "Homologado",
       "Não homologado"
@@ -69,22 +69,22 @@ export const retornaArrayDeAcordoComPerfil = () => {
       "Homologado",
       "Não homologado",
       "Produtos Suspensos",
-      "Reclamação de produto"
+      "Reclamações de produtos"
     ];
   }
 };
 
 const retornaStatusBackend = status => {
   switch (status) {
-    case "Reclamação de produto":
+    case "Reclamações de produtos":
       return "CODAE_AUTORIZOU_RECLAMACAO";
     case "Produtos Suspensos":
       return "CODAE_SUSPENDEU";
-    case "Correção de produto":
+    case "Correções de Produtos":
       return "CODAE_QUESTIONADO";
-    case "Aguardando análise de reclamação":
+    case "Aguardando análise das reclamações":
       return "CODAE_PEDIU_ANALISE_RECLAMACAO";
-    case "Aguardando análise sensorial":
+    case "Aguardando análise sensoriais":
       return "CODAE_PEDIU_ANALISE_SENSORIAL";
     case "Pendente de homologação":
       return "CODAE_PENDENTE_HOMOLOGACAO";
