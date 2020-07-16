@@ -17,7 +17,7 @@ const {
 
 const CARD_RECLAMACAO_DE_PRODUTO = {
   id: CARD_ID.RECLAMACAO_DE_PRODUTO,
-  titulo: "Reclamações de produto",
+  titulo: "Reclamações de produtos",
   icon: "fa-bullhorn",
   style: "card-complained",
   rota: ROTA.RECLAMACAO_DE_PRODUTO,
