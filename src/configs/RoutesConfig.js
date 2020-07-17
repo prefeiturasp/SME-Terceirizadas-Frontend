@@ -79,7 +79,8 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhQualquerCODAE
+  usuarioEhQualquerCODAE,
+  usuarioEhNutricionistaSupervisao
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -646,6 +647,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -746,7 +748,10 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
     component: ReclamacaoDeProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${

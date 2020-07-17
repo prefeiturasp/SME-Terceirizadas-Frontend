@@ -4,14 +4,21 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuDietaEspecial = () => {
   const exibePainelInicial = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
   const exibeNovaSolicitacao = usuarioEhEscola();
-  const exibeConsultaDieta = usuarioEhTerceirizada() || usuarioEhEscola();
-  const exibeAtivasInativas = usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
+  const exibeConsultaDieta =
+    usuarioEhTerceirizada() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhEscola();
+  const exibeAtivasInativas =
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhDRE();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>

@@ -11,7 +11,8 @@ import {
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const PainelInicial = ({ history }) => {
@@ -32,6 +33,7 @@ const PainelInicial = ({ history }) => {
       )}
       {(usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhCODAEDietaEspecial() ||
+        usuarioEhNutricionistaSupervisao ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscola()) && (
