@@ -43,6 +43,7 @@ export const TIPO_PERFIL = {
   ESCOLA: `"escola"`,
   DIRETORIA_REGIONAL: `"diretoriaregional"`,
   GESTAO_ALIMENTACAO_TERCEIRIZADA: `"gestao_alimentacao_terceirizada"`,
+  SUPERVISAO_NUTRICAO: `"supervisao_nutricao"`,
   DIETA_ESPECIAL: `"dieta_especial"`,
   GESTAO_PRODUTO: `"gestao_produto"`,
   TERCEIRIZADA: `"terceirizada"`

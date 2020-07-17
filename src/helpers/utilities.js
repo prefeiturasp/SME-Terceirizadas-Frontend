@@ -303,6 +303,12 @@ export const usuarioEhCODAEDietaEspecial = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
+export const usuarioEhNutricionistaSupervisao = () => {
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.SUPERVISAO_NUTRICAO
+  );
+};
+
 export const usuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
 };
