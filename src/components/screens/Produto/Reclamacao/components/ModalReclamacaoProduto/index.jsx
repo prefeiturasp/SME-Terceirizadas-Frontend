@@ -41,7 +41,8 @@ export default class ModalReclamacaoProduto extends Component {
     return meusDados
       ? {
           reclamante_registro_funcional: meusDados.registro_funcional,
-          reclamante_nome: meusDados.nome
+          reclamante_nome: meusDados.nome,
+          reclamante_cargo: meusDados.cargo || ""
         }
       : {};
   };
@@ -104,6 +105,7 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="Cargo"
                       name="reclamante_cargo"
+                      disabled={true}
                       required
                       validate={required}
                     />
