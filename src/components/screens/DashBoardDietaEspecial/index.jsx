@@ -8,7 +8,7 @@ import {
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
-import { dataAtual } from "../../../helpers/utilities";
+import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
 
 import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
 
@@ -136,6 +136,8 @@ class DashBoardDietaEspecial extends Component {
       canceladasListFiltered,
       instituicao
     } = this.state;
+
+    const podeIncluirDietaEspecial = usuarioEhEscola();
     return (
       <div>
         <CardMatriculados
@@ -200,17 +202,19 @@ class DashBoardDietaEspecial extends Component {
               </div>
             </CardBody>
           )}
-        <div className="row row-shortcuts">
-          <div className="col-3">
-            <CardAtalho
-              titulo={"Inclusão de Dieta Especial"}
-              nome="card-inclusao"
-              texto={TEXTO_ATALHO_DIETA}
-              textoLink={"Novo pedido"}
-              href={"/escola/dieta-especial"}
-            />
+        {podeIncluirDietaEspecial() && (
+          <div className="row row-shortcuts">
+            <div className="col-3">
+              <CardAtalho
+                titulo={"Inclusão de Dieta Especial"}
+                nome="card-inclusao"
+                texto={TEXTO_ATALHO_DIETA}
+                textoLink={"Novo pedido"}
+                href={"/escola/dieta-especial"}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
