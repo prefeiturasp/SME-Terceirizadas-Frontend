@@ -4,6 +4,7 @@ import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
+import { ordenaPorDate } from "./helper";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -82,6 +83,7 @@ export class StatusSolicitacoes extends Component {
           formatarDadosSolicitacao(retorno.data.results)
         ))
     );
+    solicitacoes = solicitacoes.sort(ordenaPorDate);
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes

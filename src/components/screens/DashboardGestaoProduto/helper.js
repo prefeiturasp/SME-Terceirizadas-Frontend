@@ -1,9 +1,9 @@
-import moment from "moment";
-
 import {
   truncarString,
   usuarioEhTerceirizada,
-  usuarioEhCODAEGestaoProduto
+  usuarioEhCODAEGestaoProduto,
+  parseDataHoraBrToMoment,
+  comparaObjetosMoment
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -66,16 +66,9 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
 };
 
 export const ordenaPorLogMaisRecente = (a, b) => {
-  const formats = ["DD/MM/YYYY", "DD/MM/YYYY HH:mm"];
-  const data_a = moment(a.log_mais_recente, formats);
-  const data_b = moment(b.log_mais_recente, formats);
-  if (data_a.isBefore(data_b)) {
-    return -1;
-  }
-  if (data_b.isBefore(data_a)) {
-    return 1;
-  }
-  return 0;
+  const data_a = parseDataHoraBrToMoment(a.log_mais_recente);
+  const data_b = parseDataHoraBrToMoment(b.log_mais_recente);
+  return comparaObjetosMoment(data_a, data_b);
 };
 
 export const formataCards = (items, apontaParaEdicao) => {
