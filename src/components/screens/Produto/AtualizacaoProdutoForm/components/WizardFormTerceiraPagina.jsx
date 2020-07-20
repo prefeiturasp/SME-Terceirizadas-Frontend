@@ -70,12 +70,16 @@ class WizardFormTerceiraPagina extends Component {
   }
 
   onSubmit = values => {
-    const { arquivos } = this.state;
     const { valoresSegundoForm, produto } = this.props;
     values["uuid"] = produto.uuid;
     values["cadastro_atualizado"] = true;
     values["cadastro_finalizado"] = false;
-    values["imagens"] = arquivos;
+    values["imagens"] = values.anexos.map(imagem => {
+      return {
+        arquivo: imagem.base64,
+        nome: imagem.nome
+      };
+    });
     values["informacoes_nutricionais"] =
       valoresSegundoForm["informacoes_nutricionais"];
     const arrayKeys = Object.keys(values);
@@ -237,6 +241,7 @@ class WizardFormTerceiraPagina extends Component {
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
+              toastErrorMessage="Arquivo superior a 10 MB não é possível fazer o upload"
             />
           </div>
         </section>

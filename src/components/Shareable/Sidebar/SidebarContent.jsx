@@ -42,6 +42,7 @@ export const SidebarContent = () => {
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirCadastros =
