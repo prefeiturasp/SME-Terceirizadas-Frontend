@@ -33,6 +33,7 @@ const PainelInicial = ({ history }) => {
       )}
       {(usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhCODAEDietaEspecial() ||
+        usuarioEhNutricionistaSupervisao() ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscola()) && (
