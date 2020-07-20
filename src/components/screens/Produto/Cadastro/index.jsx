@@ -253,15 +253,17 @@ class cadastroProduto extends Component {
   }
 
   setFiles(imagens) {
-    const img = imagens.map(imagem => {
-      return {
-        arquivo: imagem.base64,
-        nome: imagem.nome
-      };
-    });
-    let { payload } = this.state;
-    payload.imagens = img;
-    this.setState({ payload });
+    if (imagens.length > 0) {
+      const img = imagens.map(imagem => {
+        return {
+          arquivo: imagem.base64,
+          nome: imagem.nome
+        };
+      });
+      let { payload } = this.state;
+      payload.imagens = img;
+      this.setState({ payload });
+    }
   }
 
   setaAtributosPrimeiroStep = ({
