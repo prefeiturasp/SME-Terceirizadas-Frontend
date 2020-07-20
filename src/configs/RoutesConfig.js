@@ -529,6 +529,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -741,6 +742,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
       usuarioEhEscola()
   },

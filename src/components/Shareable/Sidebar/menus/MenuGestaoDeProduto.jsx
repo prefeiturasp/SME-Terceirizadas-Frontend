@@ -19,7 +19,6 @@ import {
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
-  const exibirPainelSolicitacoes = !usuarioEhNutricionistaSupervisao();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
@@ -32,11 +31,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
-      {exibirPainelSolicitacoes && (
-        <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
-          Painel de Solicitações
-        </LeafItem>
-      )}
+      <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
+        Painel de Solicitações
+      </LeafItem>
       {exibirCadastro && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/produto`}>
           Cadastro de Produto
@@ -74,21 +71,19 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           Responder Reclamação
         </LeafItem>
       )}
-      {exibirPainelSolicitacoes && (
-        <SubMenu
-          icon="fa-chevron-down"
-          path="consulta-solicitacoes-gp"
-          onClick={onSubmenuClick}
-          title="Consulta de Solicitações"
-          activeMenu={activeMenu}
-        >
-          {menuItems.map((item, index) => (
-            <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
-              {item.titulo_menu || item.titulo}
-            </LeafItem>
-          ))}
-        </SubMenu>
-      )}
+      <SubMenu
+        icon="fa-chevron-down"
+        path="consulta-solicitacoes-gp"
+        onClick={onSubmenuClick}
+        title="Consulta de Solicitações"
+        activeMenu={activeMenu}
+      >
+        {menuItems.map((item, index) => (
+          <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
+            {item.titulo_menu || item.titulo}
+          </LeafItem>
+        ))}
+      </SubMenu>
     </Menu>
   );
 };
