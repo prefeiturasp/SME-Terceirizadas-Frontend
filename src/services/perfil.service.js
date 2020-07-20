@@ -101,7 +101,7 @@ export const atualizarCargo = () => {
       return result.json();
     })
     .catch(error => {
-      console.log(error)
+      console.log(error);
       return error;
     });
 };
