@@ -202,7 +202,7 @@ class DashBoardDietaEspecial extends Component {
               </div>
             </CardBody>
           )}
-        {podeIncluirDietaEspecial() && (
+        {podeIncluirDietaEspecial && (
           <div className="row row-shortcuts">
             <div className="col-3">
               <CardAtalho
