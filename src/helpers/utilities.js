@@ -4,6 +4,12 @@ import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { TIPO_PERFIL } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 
+// TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
+//       Dá pra separar por tipo de helper:
+//         - manupular data
+//         - lidar com tipo de usuário ou perfil
+//       Os que não tiverem categoria definida podem ficar aqui
+
 export const showResults = values =>
   new Promise(resolve => {
     setTimeout(() => {
@@ -418,4 +424,19 @@ export const safeConcatOn = (propName, a, b, c) => {
     return a[propName].concat(b[propName]);
   }
   return a[propName].concat(b[propName], c[propName]);
+};
+
+export const comparaObjetosMoment = (a, b) => {
+  if (a.isBefore(b)) {
+    return -1;
+  }
+  if (b.isBefore(a)) {
+    return 1;
+  }
+  return 0;
+};
+
+export const parseDataHoraBrToMoment = dataHoraString => {
+  const formats = ["DD/MM/YYYY", "DD/MM/YYYY HH:mm"];
+  return moment(dataHoraString, formats);
 };
