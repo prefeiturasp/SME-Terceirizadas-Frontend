@@ -22,7 +22,8 @@ import "./style.scss";
 import { meusDados } from "services/perfil.service";
 import {
   usuarioEhNutricionistaSupervisao,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEhCODAEDietaEspecial
 } from "helpers/utilities";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 //import { CODAENegaDietaEspecial } from "services/produto.service";
@@ -87,6 +88,8 @@ export default class ModalReclamacaoProduto extends Component {
     const { showModal, closeModal } = this.props;
     const { meusDados, escolas } = this.state;
     const escola = meusDados ? meusDados.vinculo_atual.instituicao : undefined;
+    const deveEscolherUmaEscola =
+      usuarioEhNutricionistaSupervisao() || usuarioEhCODAEDietaEspecial();
     return (
       <Modal
         dialogClassName="modal-reclamacao-produto modal-90w"
@@ -154,7 +157,7 @@ export default class ModalReclamacaoProduto extends Component {
                     )}
                   </div>
                 )}
-                {usuarioEhNutricionistaSupervisao() && (
+                {deveEscolherUmaEscola && (
                   <div className="form-row">
                     <div className="col-12">
                       <Field
