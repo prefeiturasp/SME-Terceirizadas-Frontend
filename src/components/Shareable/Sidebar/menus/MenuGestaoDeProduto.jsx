@@ -13,7 +13,6 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhCODAEDietaEspecial,
   usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
