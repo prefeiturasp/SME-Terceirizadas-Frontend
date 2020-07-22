@@ -5,6 +5,16 @@ export default class DetalheProduto extends Component {
     super(props);
   }
 
+  exibir_protocolo_dieta = (protocolo, posicao, lista) => {
+    const ultimo_item = lista.length === posicao + 1;
+    return (
+      <b>
+        {protocolo.nome}
+        {ultimo_item ? "." : "; "}
+      </b>
+    );
+  };
+
   render() {
     const { homologacao } = this.props;
     const { produto } = homologacao;
@@ -19,10 +29,12 @@ export default class DetalheProduto extends Component {
             </label>
             <p>{produto.eh_para_alunos_com_dieta ? "SIM" : "NÃO"}</p>
           </div>
-          <div>
-            <label>Nome do protocolo de dieta especial</label>
-            <p>{homologacao.protocolo_analise_sensorial}</p>
-          </div>
+          {produto.eh_para_alunos_com_dieta && (
+            <div>
+              <label>Nome dos protocolos de dieta especial</label>
+              {produto.protocolos.map(this.exibir_protocolo_dieta)}
+            </div>
+          )}
         </section>
 
         <section>
@@ -80,7 +92,7 @@ export default class DetalheProduto extends Component {
 
         <hr />
 
-        <section>
+        <section className="duas-colunas">
           <div>
             <label>Solicitação de análise sensorial </label>
             <p
@@ -89,6 +101,11 @@ export default class DetalheProduto extends Component {
                 __html: justificativa
               }}
             />
+          </div>
+
+          <div>
+            <label>Protocolo de análise sensorial</label>
+            <p>{homologacao.protocolo_analise_sensorial}</p>
           </div>
         </section>
 
