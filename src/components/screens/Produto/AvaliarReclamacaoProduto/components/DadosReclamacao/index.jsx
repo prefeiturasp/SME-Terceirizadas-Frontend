@@ -10,16 +10,14 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
           <p>Nome da Escola</p>
           <p className="value">
             {produto.ultima_homologacao.reclamacoes &&
-              produto.ultima_homologacao.reclamacoes[0].vinculo.instituicao
-                .nome}
+              produto.ultima_homologacao.reclamacoes[0].escola.nome}
           </p>
         </div>
         <div className="col-7 report-label-value">
           <p>Código EOL</p>
           <p className="value">
             {produto.ultima_homologacao.reclamacoes &&
-              produto.ultima_homologacao.reclamacoes[0].vinculo.instituicao
-                .codigo_eol}
+              produto.ultima_homologacao.reclamacoes[0].escola.codigo_eol}
           </p>
         </div>
       </div>

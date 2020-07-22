@@ -50,17 +50,18 @@ export default class ModalReclamacaoProduto extends Component {
 
   getDadosIniciais = () => {
     const meusDados = this.state.meusDados;
-    const dadosIniciais = meusDados
-      ? {
-          reclamante_registro_funcional: meusDados.registro_funcional,
-          reclamante_nome: meusDados.nome,
-          reclamante_cargo: meusDados.cargo || ""
-        }
-      : {};
-    if (!usuarioEhEscola) {
-      dadosIniciais.escola = meusDados.vinculo_atual.instituicao.uuid;
+    if (meusDados) {
+      const dadosIniciais = {
+        reclamante_registro_funcional: meusDados.registro_funcional,
+        reclamante_nome: meusDados.nome,
+        reclamante_cargo: meusDados.cargo || ""
+      };
+      if (usuarioEhEscola()) {
+        dadosIniciais.escola = meusDados.vinculo_atual.instituicao.uuid;
+      }
+      return dadosIniciais;
     }
-    return dadosIniciais;
+    return {};
   };
 
   onSubmit = async values => {

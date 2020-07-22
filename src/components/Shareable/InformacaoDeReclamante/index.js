@@ -11,7 +11,7 @@ const InformacaoDeReclamante = ({ reclamacao, questionamento, showTitle }) => {
         <div className="grid-detalhe-cell label-empresa">Código EOL</div>
         <div className="grid-detalhe-cell label-empresa" />
         <div className="grid-detalhe-cell value-empresa">
-          {reclamacao.vinculo.instituicao.nome}
+          {reclamacao.escola.nome}
         </div>
         <div className="grid-detalhe-cell value-empresa">XXXX</div>
         <div className="grid-detalhe-cell value-empresa" />
