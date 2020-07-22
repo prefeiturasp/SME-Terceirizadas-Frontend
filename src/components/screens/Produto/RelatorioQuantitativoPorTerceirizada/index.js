@@ -88,7 +88,7 @@ const TabelaQuantitativoPorTerceirizada = ({ dadosRelatorio }) => {
                   <div>{item.qtdePorStatus.PRODUTOS_AGUARDANDO_CORRECAO}</div>
                 </div>
                 <div className="status-flex-container">
-                  <div>Reclamação de produto</div>
+                  <div>Reclamações de produtos</div>
                   <div>{item.qtdePorStatus.RECLAMACAO_DE_PRODUTO}</div>
                 </div>
                 <div className="status-flex-container">
