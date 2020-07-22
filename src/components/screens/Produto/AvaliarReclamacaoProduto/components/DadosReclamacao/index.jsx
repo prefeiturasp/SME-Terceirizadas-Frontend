@@ -10,6 +10,7 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
           <p>Nome da Escola</p>
           <p className="value">
             {produto.ultima_homologacao.reclamacoes &&
+              produto.ultima_homologacao.reclamacoes[0].escola &&
               produto.ultima_homologacao.reclamacoes[0].escola.nome}
           </p>
         </div>
@@ -17,6 +18,7 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
           <p>Código EOL</p>
           <p className="value">
             {produto.ultima_homologacao.reclamacoes &&
+              produto.ultima_homologacao.reclamacoes[0].escola &&
               produto.ultima_homologacao.reclamacoes[0].escola.codigo_eol}
           </p>
         </div>
