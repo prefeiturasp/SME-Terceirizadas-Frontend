@@ -77,6 +77,16 @@ class RelatorioAnaliseSensorial extends Component {
     this.setState({ informacoes });
   };
 
+  exibir_protocolo_dieta = (protocolo, posicao, lista) => {
+    const ultimo_item = lista.length === posicao + 1;
+    return (
+      <b>
+        {protocolo.nome}
+        {ultimo_item ? "." : "; "}
+      </b>
+    );
+  };
+
   render() {
     const { homologacao, informacoes, showModal } = this.state;
     const justificativa =
@@ -174,10 +184,14 @@ class RelatorioAnaliseSensorial extends Component {
                     </p>
                   </div>
 
-                  <div>
-                    <label>Nome do protocolo de dieta especial</label>
-                    <p>{homologacao.protocolo_analise_sensorial}</p>
-                  </div>
+                  {homologacao.produto.eh_para_alunos_com_dieta && (
+                    <div>
+                      <label>Nome dos protocolos de dieta especial</label>
+                      {homologacao.produto.protocolos.map(
+                        this.exibir_protocolo_dieta
+                      )}
+                    </div>
+                  )}
                 </section>
 
                 <section className="duas-colunas">
@@ -385,7 +399,7 @@ class RelatorioAnaliseSensorial extends Component {
               <hr />
 
               <article>
-                <section>
+                <section className="duas-colunas">
                   <div>
                     <label>Solicitação de análise sensorial</label>
                     <p
@@ -393,6 +407,11 @@ class RelatorioAnaliseSensorial extends Component {
                         __html: justificativa
                       }}
                     />
+                  </div>
+
+                  <div>
+                    <label>Número do protocolo</label>
+                    <p>{homologacao.protocolo_analise_sensorial}</p>
                   </div>
                 </section>
               </article>
