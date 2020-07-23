@@ -4,6 +4,7 @@ import { Modal, Button } from "antd";
 import { Field } from "redux-form";
 import { required } from "../../../../../helpers/fieldValidators";
 import InputText from "../../../../Shareable/Input/InputText";
+import "./style.scss";
 
 export default class ModalMarca extends React.Component {
   constructor(props) {
@@ -49,17 +50,19 @@ export default class ModalMarca extends React.Component {
           </Button>
         ]}
       >
-        <Field
-          component={InputText}
-          label="Nome do marca"
-          name="nome_marca"
-          type="text"
-          required
-          validate={required}
-          onChange={event => {
-            this.setaMarca(event.target.value);
-          }}
-        />
+        <div className="field-modal-produto">
+          <Field
+            component={InputText}
+            label="Nome do marca"
+            name="nome_marca"
+            type="text"
+            required
+            validate={required}
+            onChange={event => {
+              this.setaMarca(event.target.value);
+            }}
+          />
+        </div>
       </Modal>
     );
   }
