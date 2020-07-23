@@ -24,7 +24,8 @@ class BuscaProdutoAnaliseSensorial extends Component {
       homologacoes: [],
       page: 0,
       totalItens: 0,
-      showModal: false
+      showModal: false,
+      homologacao: {}
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -65,8 +66,8 @@ class BuscaProdutoAnaliseSensorial extends Component {
     await flegarHomologacaoPDF(uuid);
   };
 
-  showModal() {
-    this.setState({ ...this.state, showModal: true });
+  showModal(homologacao) {
+    this.setState({ ...this.state, showModal: true, homologacao: homologacao });
   }
 
   closeModal() {
@@ -74,7 +75,13 @@ class BuscaProdutoAnaliseSensorial extends Component {
   }
 
   render() {
-    const { homologacoes, page, totalItens, showModal } = this.state;
+    const {
+      homologacoes,
+      page,
+      totalItens,
+      showModal,
+      homologacao
+    } = this.state;
     return (
       <div className="card">
         <div className="card-body">
@@ -144,20 +151,20 @@ class BuscaProdutoAnaliseSensorial extends Component {
                           texto={"Responder"}
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN}
-                          onClick={() => this.showModal()}
+                          onClick={() => this.showModal(homologacao)}
                         />
                       </article>
                     )}
-                    <ModalResponderAnaliseSensorial
-                      showModal={showModal}
-                      closeModal={this.closeModal}
-                      homologacao={homologacao}
-                    />
                   </Fragment>
                 );
               })}
           </section>
 
+          <ModalResponderAnaliseSensorial
+            showModal={showModal}
+            closeModal={this.closeModal}
+            homologacao={homologacao}
+          />
           <Paginacao defaultCurrent={1} total={totalItens} pageSize={10} />
         </div>
       </div>
