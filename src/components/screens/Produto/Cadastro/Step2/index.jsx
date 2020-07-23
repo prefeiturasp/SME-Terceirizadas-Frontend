@@ -105,6 +105,16 @@ class Step2 extends Component {
     this.setState({ informacoesAgrupadas });
   };
 
+  retornaNomesFormatados = ({ nome }) => {
+    if (nome === "PROTEINAS") {
+      return "PROTEÍNAS";
+    } else if (nome === "CALORIA") {
+      return "CALORIAS";
+    } else {
+      return nome;
+    }
+  };
+
   render() {
     const { informacoesAgrupadas } = this.state;
     const { handleSubmit } = this.props;
@@ -136,13 +146,18 @@ class Step2 extends Component {
               />
             </div>
           </div>
+          <div className="row card-title font-weight-bold ml-2">
+            É obrigatório informar um dos campos de informação nutricional
+          </div>
           {informacoesAgrupadas &&
             informacoesAgrupadas.map((informacao, key) => {
               return (
                 <div className="pb-2" key={key}>
                   <div className="school-container col-md-12 mr-4">
                     <div className="row pt-2 pb-2 title">
-                      <div className="title col-4">{informacao.nome}</div>
+                      <div className="title col-4">
+                        {this.retornaNomesFormatados(informacao)}
+                      </div>
                       <div className="col-8 text-right">
                         <ToggleExpandir
                           onClick={() => this.activateInformacao(key)}

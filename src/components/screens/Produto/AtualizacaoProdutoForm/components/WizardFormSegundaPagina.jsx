@@ -236,6 +236,16 @@ class WizardFormSegundaPagina extends React.Component {
     });
   };
 
+  retornaNomesFormatados = ({ nome }) => {
+    if (nome === "PROTEINAS") {
+      return "PROTEÍNAS";
+    } else if (nome === "CALORIA") {
+      return "CALORIAS";
+    } else {
+      return nome;
+    }
+  };
+
   render() {
     const { handleSubmit, previousPage, valuesForm } = this.props;
     const { informacoes, temCamposPreenchidos } = this.state;
@@ -262,13 +272,16 @@ class WizardFormSegundaPagina extends React.Component {
             validate={required}
           />
         </section>
+        <header className="mt-3">
+          É obrigatório informar um dos campos de informação nutricional
+        </header>
         <section className="secao-informacoes-nutricionais">
           {informacoes.length > 0 &&
             informacoes.map((informacao, index) => {
               return (
                 <div key={index}>
                   <div className="header-tipo-informacao">
-                    <div>{informacao.nome}</div>
+                    <div>{this.retornaNomesFormatados(informacao)}</div>
                     <ToggleExpandir
                       onClick={() => this.checkInformacao(informacao)}
                       ativo={informacao.ativo}
