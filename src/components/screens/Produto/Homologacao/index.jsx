@@ -122,13 +122,27 @@ class HomologacaoProduto extends Component {
     });
   };
 
-  renderFluxoAnaliseSensorial = homologacao => {
+  renderFluxo = homologacao => {
     const { logs } = homologacao;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const ultimoLog = logs[logs.length - 1].status_evento_explicacao;
     if (
       ultimoLog === "CODAE pediu análise sensorial" &&
       tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
+    ) {
+      return (
+        <Fragment>
+          <FluxoDeStatus
+            listaDeStatus={logs}
+            fluxo={fluxoPartindoTerceirizada}
+          />
+          <hr />
+        </Fragment>
+      );
+    } else if (
+      (ultimoLog === "Solicitação Realizada" &&
+        tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) ||
+      tipoPerfil === TIPO_PERFIL.TERCEIRIZADA
     ) {
       return (
         <Fragment>
@@ -235,8 +249,7 @@ class HomologacaoProduto extends Component {
                   <MotivoHomologacao logs={logs} />
                 </Fragment>
               )}
-              {ultima_homologacao &&
-                this.renderFluxoAnaliseSensorial(ultima_homologacao)}
+              {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
