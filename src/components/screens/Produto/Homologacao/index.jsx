@@ -123,7 +123,7 @@ class HomologacaoProduto extends Component {
   };
 
   renderFluxo = homologacao => {
-    const { logs } = homologacao;
+    const { logs, status } = homologacao;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const ultimoLog = logs[logs.length - 1].status_evento_explicacao;
     if (
@@ -140,10 +140,10 @@ class HomologacaoProduto extends Component {
         </Fragment>
       );
     } else if (
-      (ultimoLog === "Solicitação Realizada" &&
-        tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) ||
-      (ultimoLog === "Solicitação Realizada" &&
-        tipoPerfil === TIPO_PERFIL.TERCEIRIZADA)
+      status === "CODAE_PENDENTE_HOMOLOGACAO" &&
+      [TIPO_PERFIL.GESTAO_PRODUTO, TIPO_PERFIL.TERCEIRIZADA].includes(
+        tipoPerfil
+      )
     ) {
       return (
         <Fragment>
