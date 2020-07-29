@@ -234,3 +234,21 @@ export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
       a.click();
     });
 };
+
+export const getRelatorioProdutosSuspensos = payload => {
+  const url = `${API_URL}/homologacoes-produtos/relatorio-produtos-suspensos/`;
+  fetch(url, {
+    method: "POST",
+    headers: authToken,
+    responseType: "blob",
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `relatorio_produtos_suspensos.pdf`;
+      a.click();
+    });
+};
