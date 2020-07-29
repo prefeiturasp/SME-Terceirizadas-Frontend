@@ -44,13 +44,14 @@ class ListagemProdutos extends Component {
     });
   };
 
-  detalhesProduto = (index, ativo) => {
+  detalhesProduto = (uuid, ativo) => {
     let { produtos } = this.state;
     produtos.forEach(produto => {
       if (produto.ativo) {
         produto.ativo = false;
       }
     });
+    const index = produtos.findIndex(produto => produto.uuid === uuid);
     produtos[index].ativo = !ativo;
     this.setState({ produtos });
   };
@@ -99,7 +100,7 @@ class ListagemProdutos extends Component {
                   <div>
                     <i
                       className={`fas fa-${icone}`}
-                      onClick={() => this.detalhesProduto(index, ativo)}
+                      onClick={() => this.detalhesProduto(produto.uuid, ativo)}
                     />
                   </div>
                 </div>
