@@ -4,7 +4,9 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhTerceirizada,
+  usuarioEhEscola
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -15,6 +17,12 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
+
+  const exibirMenuTodosPerfis =
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhTerceirizada() ||
+    usuarioEhEscola();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
@@ -32,6 +40,13 @@ const MenuRelatorios = () => {
           }/relatorios/quantitativo-por-terceirizada`}
         >
           Quantitativo Por Terceirizada
+        </LeafItem>
+      )}
+      {exibirMenuTodosPerfis && (
+        <LeafItem
+          to={`/${constants.GESTAO_PRODUTO}/relatorio-produtos-suspensos`}
+        >
+          Produtos suspensos
         </LeafItem>
       )}
     </Menu>
