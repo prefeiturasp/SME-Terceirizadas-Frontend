@@ -52,7 +52,8 @@ class FormBuscaProduto extends Component {
       nomesMarcas,
       nomesFabricantes,
       nomesProdutos,
-      minDate
+      minDate,
+      maxDate
     } = this.props;
     return (
       <form className="form-busca-avancada">
@@ -70,12 +71,14 @@ class FormBuscaProduto extends Component {
               component={InputComData}
               name="data-de"
               minDate={minDate}
+              maxDate={maxDate}
             />
             <Field
               className="input-data"
               component={InputComData}
               name="data-ate"
               minDate={minDate}
+              maxDate={maxDate}
             />
           </div>
           <div>
@@ -167,7 +170,7 @@ class FormBuscaProduto extends Component {
         <div className="botoes-de-pesquisa-produto">
           <Botao
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            texto="Cancelar"
+            texto="Limpar Filtro"
             onClick={() => {
               this.onClear();
             }}

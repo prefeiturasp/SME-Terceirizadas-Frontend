@@ -7,7 +7,8 @@ import {
   tranformaEmobjetoDeBusca,
   retornaArrayDeAcordoComPerfil,
   filtrarProdutosNaListagem,
-  MIN_DATE
+  MIN_DATE,
+  MAX_DATE
 } from "./helpers";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -198,6 +199,7 @@ class BuscaAvancada extends Component {
                 nomesFabricantes={nomesFabricantes}
                 nomesProdutos={nomesProdutos}
                 minDate={MIN_DATE}
+                maxDate={MAX_DATE}
                 handleChange={this.handleChange}
                 onDeselectStatus={this.onDeselectStatus}
                 onSelectStatus={this.onSelectStatus}
