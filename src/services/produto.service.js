@@ -426,3 +426,10 @@ export const getRelatorioProdutosHomologados = filtros => {
   }
   return url;
 };
+
+export const getProdutosSuspensos = async payload => {
+  return await axios.post(
+    `/homologacoes-produtos/homologacoes_suspensas/`,
+    payload
+  );
+};

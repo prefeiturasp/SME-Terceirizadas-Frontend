@@ -92,6 +92,7 @@ import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProd
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
 import {
   ReclamacaoDeProdutoPage,
   ConsultaAtivacaoDeProdutoPage,
@@ -758,6 +759,16 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
+    component: BuscaProdutosSuspensos,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
