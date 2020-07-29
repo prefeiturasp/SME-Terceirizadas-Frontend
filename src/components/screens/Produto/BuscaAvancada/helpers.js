@@ -2,6 +2,7 @@ import { TIPO_PERFIL } from "../../../../constants/shared";
 import moment from "moment";
 
 export const MIN_DATE = moment("01/01/1960", "DD/MM/YYYY")["_d"];
+export const MAX_DATE = moment(new Date(), "DD/MM/YYYY")["_d"];
 
 const retornaTodosOsLogs = homologacoes => {
   let logs = [];
