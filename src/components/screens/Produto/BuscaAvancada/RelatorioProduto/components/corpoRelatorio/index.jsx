@@ -379,7 +379,14 @@ export default class CorpoRelatorio extends Component {
                 </div>
                 <div className="info-sem-grid justificativa-logs">
                   <div className="label-relatorio">Justificativa</div>
-                  <div className="value-relatorio">{justificativa}</div>
+                  <div className="value-relatorio">
+                    <p
+                      className="value"
+                      dangerouslySetInnerHTML={{
+                        __html: justificativa
+                      }}
+                    />
+                  </div>
                 </div>
               </Fragment>
             );
