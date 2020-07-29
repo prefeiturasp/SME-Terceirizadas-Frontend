@@ -9,14 +9,16 @@ import {
   RELATORIO,
   GESTAO_PRODUTO,
   EDITAR,
-  PESQUISA_DESENVOLVIMENTO
+  PESQUISA_DESENVOLVIMENTO,
+  ATIVACAO_DE_PRODUTO
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 const {
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-  CODAE_PEDIU_ANALISE_SENSORIAL
+  CODAE_PEDIU_ANALISE_SENSORIAL,
+  CODAE_SUSPENDEU
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
@@ -59,6 +61,11 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
   ) {
     return `/${GESTAO_PRODUTO}/avaliar-reclamacao-produto?uuid=${item.uuid}
       `;
+  } else if (
+    usuarioEhCODAEGestaoProduto() &&
+    item.status.toLowerCase() === CODAE_SUSPENDEU
+  ) {
+    return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   }
   return apontaParaEdicao
     ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`
