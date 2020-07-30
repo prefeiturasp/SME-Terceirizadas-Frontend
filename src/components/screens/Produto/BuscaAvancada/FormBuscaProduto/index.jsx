@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CheckboxField from "components/Shareable/Checkbox/Field";
 import { InputText } from "components/Shareable/Input/InputText";
+import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import { AAutoComplete } from "components/Shareable/MakeField";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
@@ -11,7 +12,10 @@ import { SelectWithHideOptions } from "../../../../Shareable/SelectWithHideOptio
 class FormBuscaProduto extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      dataInicialSelecionada: null,
+      dataFinalSelecionada: null
+    };
   }
 
   handleChange = selectedItems => {
@@ -32,6 +36,14 @@ class FormBuscaProduto extends Component {
 
   checkProdutoAlergenico = () => {
     this.props.checkProdutoAlergenico();
+  };
+
+  onChangeDataFinal = (event, newValue) => {
+    this.setState({ dataFinalSelecionada: newValue });
+  };
+
+  onChangeDataInicial = (event, newValue) => {
+    this.setState({ dataInicialSelecionada: newValue });
   };
 
   onClear = () => {
@@ -67,18 +79,30 @@ class FormBuscaProduto extends Component {
 
           <div className="input-datas-inicio-termino">
             <Field
-              className="input-data"
               component={InputComData}
               name="data-de"
+              className="input-data"
+              labelClassName="datepicker-fixed-padding"
+              placeholder="De"
               minDate={minDate}
-              maxDate={maxDate}
+              maxDate={
+                this.state.dataFinalSelecionada
+                  ? moment(this.state.dataFinalSelecionada, "DD/MM/YYYY")._d
+                  : maxDate
+              }
+              onChange={this.onChangeDataInicial}
             />
             <Field
-              className="input-data"
               component={InputComData}
               name="data-ate"
-              minDate={minDate}
+              labelClassName="datepicker-fixed-padding"
+              popperPlacement="bottom-end"
+              placeholder="Até"
+              minDate={
+                moment(this.state.dataInicialSelecionada, "DD/MM/YYYY")._d
+              }
               maxDate={maxDate}
+              onChange={this.onChangeDataFinal}
             />
           </div>
           <div>
