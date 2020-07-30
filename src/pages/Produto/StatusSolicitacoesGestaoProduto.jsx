@@ -11,6 +11,7 @@ import { GESTAO_PRODUTO_CARDS } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
 import { escolheStatusPendenteHomologacao } from "./helpers";
+import { usuarioEhTerceirizada } from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
@@ -86,14 +87,22 @@ export const PendenteHomologacao = () => (
   />
 );
 
-export const Homologados = () => (
-  <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_HOMOLOGADO}
-    tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
-    icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-    titulo={GESTAO_PRODUTO_CARDS.HOMOLOGADOS}
-  />
-);
+export const Homologados = () => {
+  const status = [ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_HOMOLOGADO];
+  if (!usuarioEhTerceirizada()) {
+    status.push(
+      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    );
+  }
+  return (
+    <StatusSolicitacoesBase
+      status={status}
+      tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
+      icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+      titulo={GESTAO_PRODUTO_CARDS.HOMOLOGADOS}
+    />
+  );
+};
 
 export const NaoHomologados = () => (
   <StatusSolicitacoesBase

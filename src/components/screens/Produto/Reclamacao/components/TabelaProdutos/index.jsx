@@ -90,7 +90,7 @@ export default class TabelaProdutos extends Component {
                       ];
                     }
                   )}
-                  <div className="botao-reclamacao">
+                  <div className="botao-reclamacao mt-4">
                     <Link
                       to={`/gestao-produto/relatorio?uuid=${
                         produto.ultima_homologacao.uuid

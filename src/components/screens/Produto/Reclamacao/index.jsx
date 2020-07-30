@@ -45,12 +45,11 @@ export default class ReclamacaoProduto extends Component {
     }
   };
   render() {
-    const { listaProdutos } = this.state;
+    const { listaProdutos, formValues } = this.state;
     return (
       <Spin tip="Carregando..." spinning={this.state.loading}>
         <div className="card mt-3 page-reclamacao-produto">
           <div className="card-body">
-            <h1>Reclamação de produto</h1>
             <section className="header-busca-produto">
               Confira se produto já está cadastrado no sistema
             </section>
@@ -62,10 +61,22 @@ export default class ReclamacaoProduto extends Component {
             />
 
             {listaProdutos.length > 0 && (
-              <TabelaProdutos
-                listaProdutos={listaProdutos}
-                onAtualizarProduto={this.onAtualizarProduto}
-              />
+              <>
+                <div className="label-resultados-busca">
+                  {formValues.nome_produto
+                    ? `Veja os resultados para: "${formValues.nome_produto}"`
+                    : "Veja os resultados para a busca:"}
+                </div>
+                <TabelaProdutos
+                  listaProdutos={listaProdutos}
+                  onAtualizarProduto={this.onAtualizarProduto}
+                />
+              </>
+            )}
+            {listaProdutos.length === 0 && formValues !== undefined && (
+              <div className="text-center mt-5">
+                A consulta retornou 0 resultados.
+              </div>
             )}
           </div>
         </div>
