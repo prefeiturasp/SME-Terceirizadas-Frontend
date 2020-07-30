@@ -47,14 +47,14 @@ class FormBuscaProduto extends Component {
   };
 
   onClear = () => {
-    this.props.onClear();
-  };
-
-  onSearch = values => {
     this.setState({
       dataInicialSelecionada: null,
       dataFinalSelecionada: null
     });
+    this.props.onClear();
+  };
+
+  onSearch = values => {
     this.props.onSearch(values);
   };
 
