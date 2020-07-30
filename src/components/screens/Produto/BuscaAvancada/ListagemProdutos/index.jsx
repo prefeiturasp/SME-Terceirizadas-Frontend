@@ -69,7 +69,7 @@ class ListagemProdutos extends Component {
     const paginacao = indexPaginacao - 1;
     return pesquisado === true && produtos.length > 0 ? (
       <section className="resultado-busca-produto-avancada">
-        <header>Veja o resultado para busca</header>
+        <header>Veja os resultados para busca</header>
         <article>
           <div className="grid-produto-table header-table-produtos">
             <div>Tipo</div>
