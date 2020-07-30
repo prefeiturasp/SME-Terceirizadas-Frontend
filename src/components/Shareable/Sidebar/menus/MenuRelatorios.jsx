@@ -22,7 +22,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    usuarioEhEscola();
+    usuarioEhEscola() ||
+    usuarioEhCODAEDietaEspecial();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>

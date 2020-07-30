@@ -768,7 +768,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${

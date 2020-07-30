@@ -47,7 +47,6 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirCadastros =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
-  const exibirRelatorios = !usuarioEhTerceirizada() && !usuarioEhEscola();
 
   const _props = {
     activeMenu,
@@ -62,7 +61,7 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
-    exibirRelatorios && <MenuRelatorios key={6} />,
+    <MenuRelatorios key={6} />,
     <MenuConfiguracoes key={8} />
   ];
 };
