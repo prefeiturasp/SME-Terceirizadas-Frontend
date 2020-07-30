@@ -30,7 +30,8 @@ import {
   condicaoDeDatas,
   retornaUltimaHomologacao,
   retornUltimoLog,
-  retornaData
+  retornaData,
+  ultimoLogItem
 } from "./helpers";
 import "./styles.scss";
 import { getRelatorioProdutosSuspensos } from "services/relatorios";
@@ -355,6 +356,7 @@ class BuscaProdutoSuspensos extends Component {
                         const ultimoLog = retornUltimoLog(ultimaHomologacao);
                         const dataSuspensao = retornaData(ultimoLog);
                         const dataCadastro = retornaData(item.produto);
+                        const UltimoLogComAnexos = ultimoLogItem(item);
                         return (
                           <Fragment key={index}>
                             <div className="item-grid-produto item-prod-detalhe">
@@ -392,7 +394,7 @@ class BuscaProdutoSuspensos extends Component {
                               <div>
                                 <label>Anexo</label>
                                 <p>
-                                  {item.produto.imagens.length > 0
+                                  {UltimoLogComAnexos.anexos.length > 0
                                     ? "Sim"
                                     : "Não"}
                                 </p>
