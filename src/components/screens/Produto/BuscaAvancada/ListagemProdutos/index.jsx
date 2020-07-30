@@ -34,7 +34,11 @@ class ListagemProdutos extends Component {
       const produtosOrdenadosPage = retornaArrayDeProdutosParaPaginacao(
         this.props.produtos
       );
-      this.setState({ produtos: produtosOrdenados, produtosOrdenadosPage });
+      this.setState({
+        produtos: produtosOrdenados,
+        produtosOrdenadosPage,
+        indexPaginacao: 1
+      });
     }
   };
 
@@ -65,7 +69,7 @@ class ListagemProdutos extends Component {
     const paginacao = indexPaginacao - 1;
     return pesquisado === true && produtos.length > 0 ? (
       <section className="resultado-busca-produto-avancada">
-        <header>Resultados da busca</header>
+        <header>Veja o resultado para busca</header>
         <article>
           <div className="grid-produto-table header-table-produtos">
             <div>Tipo</div>
