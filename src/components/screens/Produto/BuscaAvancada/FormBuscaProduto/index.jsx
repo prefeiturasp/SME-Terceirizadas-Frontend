@@ -51,6 +51,10 @@ class FormBuscaProduto extends Component {
   };
 
   onSearch = values => {
+    this.setState({
+      dataInicialSelecionada: null,
+      dataFinalSelecionada: null
+    });
     this.props.onSearch(values);
   };
 
