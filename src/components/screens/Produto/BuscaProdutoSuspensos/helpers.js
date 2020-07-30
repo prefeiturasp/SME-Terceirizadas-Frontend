@@ -60,3 +60,8 @@ export const retornaData = item => {
   const { criado_em } = item;
   return criado_em.split(" ")[0];
 };
+
+export const ultimoLogItem = item => {
+  const { logs } = item;
+  return logs[logs.length - 1];
+};
