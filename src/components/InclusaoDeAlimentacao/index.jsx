@@ -668,7 +668,7 @@ class InclusaoDeAlimentacao extends Component {
       }
       this.closeModal();
     } else {
-      toastError(getError(error));
+      toastError(error);
     }
   }
 
