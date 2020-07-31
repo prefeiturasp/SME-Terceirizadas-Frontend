@@ -113,6 +113,7 @@ class BuscaProdutoSuspensos extends Component {
 
   handleCancel = () => {
     this.setState({ visible: false });
+    this.onClear();
   };
 
   retornaListaDeNomes = arrayObjetos => {
