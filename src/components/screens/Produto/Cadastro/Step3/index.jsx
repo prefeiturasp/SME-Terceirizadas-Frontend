@@ -12,7 +12,16 @@ class Step3 extends Component {
     this.state = {};
   }
 
+  ehRascunho = ({ ultima_homologacao }) => {
+    return ultima_homologacao && ultima_homologacao.status === "RASCUNHO";
+  };
+
+  temImagensSalvas = ({ imagens_salvas }) => {
+    return imagens_salvas && imagens_salvas.length > 0;
+  };
+
   render() {
+    const { payload } = this.props;
     return (
       <div className="cadastro-produto-step3">
         <div className="card-title">Informação do Produto (classificação)</div>
@@ -108,11 +117,50 @@ class Step3 extends Component {
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
-              validate={[required]}
+              validate={
+                payload &&
+                this.ehRascunho(payload) &&
+                this.temImagensSalvas(payload)
+                  ? []
+                  : [required]
+              }
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
             />
           </div>
         </section>
+        {payload && this.ehRascunho(payload) && (
+          <div className="row pt-3 pb-3">
+            {payload.imagens_salvas !== null &&
+              payload.imagens_salvas.length > 0 && (
+                <div className="section-cards-imagens">
+                  {payload.imagens_salvas
+                    .filter(anexo => anexo.arquivo.includes("media"))
+                    .map((anexo, key) => {
+                      return (
+                        <div key={key} className="pt-2">
+                          <a
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            href={anexo.arquivo}
+                            className="link"
+                          >
+                            {anexo.nome}
+                          </a>
+                          <span
+                            onClick={() =>
+                              this.props.removerAnexo(anexo.uuid, key)
+                            }
+                            className="delete"
+                          >
+                            x
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
+          </div>
+        )}
       </div>
     );
   }
