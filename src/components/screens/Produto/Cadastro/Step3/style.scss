@@ -22,18 +22,6 @@ div.cadastro-produto-step3 {
       color: $gray;
     }
   }
-  span.delete {
-    margin-left: 2em;
-    font-weight: bold;
-    background-color: $blue;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    &:hover {
-      background-color: $blue;
-    }
-  }
 }
 
 .attachments {
@@ -51,5 +39,37 @@ div.cadastro-produto-step3 {
     display: flex;
     margin-top: 2em;
     justify-content: flex-end;
+  }
+}
+
+.section-cards-imagens {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  margin: 20px 0 0 0;
+
+  span {
+    margin: 0 0 0 10px;
+
+    cursor: pointer;
+  }
+
+  .link {
+    font-size: 14px;
+    font-weight: bold;
+    color: $blue;
+  }
+}
+
+.delete {
+  margin-left: 2em;
+  font-weight: bold;
+  background-color: $blue;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: $blue;
   }
 }
