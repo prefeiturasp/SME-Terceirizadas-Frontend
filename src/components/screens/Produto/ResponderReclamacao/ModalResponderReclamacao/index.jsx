@@ -26,18 +26,19 @@ export default class ModalResponderReclamacao extends Component {
   onSubmit = async values => {
     try {
       const response = await responderReclamacaoProduto(
-        this.props.idHomologacao,
+        this.props.reclamacao.uuid,
         values
       );
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Resposta de reclamação enviada com sucesso.");
-        this.props.atualizarDados(this.props.idHomologacao);
+        this.props.atualizarReclamacao();
+        this.props.closeModal();
       } else {
         toastError("Houve um erro ao responder a reclamação de produto");
         this.props.closeModal();
       }
     } catch (err) {
-      toastError("Houve um erro ao responder a reclamação de produto");
+      toastError("Houve um erro ao responder a reclamação de produto" + err);
       this.props.closeModal();
     }
   };

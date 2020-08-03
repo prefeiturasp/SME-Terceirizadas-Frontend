@@ -6,14 +6,11 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalResponderReclamacao from "./ModalResponderReclamacao";
 import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
-
-const { CODAE_PEDIU_ANALISE_RECLAMACAO } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [produto, setProduto] = useState(null);
@@ -46,12 +43,6 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
     fetchData();
   }, []);
 
-  const desabilitarAcao =
-    produto &&
-    (produto.respondido ||
-      produto.ultima_homologacao.status.toLowerCase() !==
-        CODAE_PEDIU_ANALISE_RECLAMACAO.toLowerCase());
-
   return (
     <Spin tip="Carregando..." spinning={!produto}>
       <>
@@ -77,14 +68,6 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                   onClick={() => history.goBack()}
                   type={BUTTON_TYPE.BUTTON}
                 />
-                <Botao
-                  texto="Responder"
-                  className="mr-3"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  disabled={desabilitarAcao}
-                  onClick={() => setExibirModal(true)}
-                />
               </div>
             </div>
             {!!produto && (
@@ -103,14 +86,6 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                       icon={BUTTON_ICON.ARROW_LEFT}
                       onClick={() => history.goBack()}
                       type={BUTTON_TYPE.BUTTON}
-                    />
-                    <Botao
-                      texto={"Responder"}
-                      className="mr-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={desabilitarAcao}
-                      onClick={() => setExibirModal(true)}
                     />
                   </div>
                 </div>

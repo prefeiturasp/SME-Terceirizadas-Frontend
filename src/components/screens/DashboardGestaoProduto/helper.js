@@ -84,9 +84,24 @@ export const ordenaPorLogMaisRecente = (a, b) => {
   return comparaObjetosMoment(data_a, data_b);
 };
 
+const getText = item => {
+  if (
+    [CODAE_PEDIU_ANALISE_RECLAMACAO, ESCOLA_OU_NUTRICIONISTA_RECLAMOU].includes(
+      item.status.toLowerCase()
+    ) &&
+    usuarioEhTerceirizada()
+  ) {
+    return `${item.id_externo} - ${truncarString(item.nome_produto, 48)} (${
+      item.qtde_reclamacoes
+    })`;
+  } else {
+    return `${item.id_externo} - ${truncarString(item.nome_produto, 48)}`;
+  }
+};
+
 export const formataCards = (items, apontaParaEdicao) => {
   return items.sort(ordenaPorLogMaisRecente).map(item => ({
-    text: `${item.id_externo} - ${truncarString(item.nome_produto, 48)}`,
+    text: getText(item),
     date: item.log_mais_recente,
     link: gerarLinkDoItem(item, apontaParaEdicao)
   }));

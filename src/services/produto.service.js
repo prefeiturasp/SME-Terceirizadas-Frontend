@@ -94,6 +94,13 @@ export const getProdutosPorParametros = async parametros => {
   );
 };
 
+export const getReclamacoesTerceirizadaPorFiltro = async filtros => {
+  return await axios.post(
+    `/produtos/filtro-reclamacoes-terceirizada/`,
+    filtros
+  );
+};
+
 export const getProdutosPorFiltro = async filtro => {
   return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
 };
@@ -398,9 +405,13 @@ export const getHomologacoesDeProdutoAnaliseSensorial = async () => {
 
 export const responderReclamacaoProduto = async (uuid, payload) => {
   return await axios.patch(
-    `/homologacoes-produtos/${uuid}/terceirizada-responde-reclamacao/`,
+    `/reclamacoes-produtos/${uuid}/terceirizada-responde/`,
     payload
   );
+};
+
+export const getReclamacao = async uuid => {
+  return await axios.get(`/reclamacoes-produtos/${uuid}/`);
 };
 
 export const flegarHomologacaoPDF = async uuid => {
