@@ -22,11 +22,8 @@ import {
 
 const {
   AGUARDANDO_AVALIACAO,
-  AGUARDANDO_RESPOSTA_TERCEIRIZADA,
   CODAE_ACEITOU,
-  CODAE_RECUSOU,
   CODAE_RESPONDEU,
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
   RESPONDIDO_TERCEIRIZADA
 } = RECLAMACAO_PRODUTO_STATUS;
 
@@ -139,7 +136,7 @@ export default class TabelaProdutos extends Component {
       if (response.status === 200) {
         this.props.atualizar();
         this.fechaModalJustificativa();
-        this.mostraToastSucesso()
+        this.mostraToastSucesso();
         resolve();
       } else {
         toastError(response.errors);
@@ -150,7 +147,6 @@ export default class TabelaProdutos extends Component {
   render() {
     const { listaProdutos } = this.props;
     const { indiceProdutoAtivo, mostraModalJustificativa } = this.state;
-    console.log("mostraModalJustificativa", mostraModalJustificativa);
     return (
       <section className="resultados-busca-produtos">
         <section>
@@ -210,7 +206,6 @@ export default class TabelaProdutos extends Component {
                   <hr />
                   {produto.ultima_homologacao.reclamacoes.map(
                     (reclamacao, indice) => {
-                      console.log("reclamacao.status", reclamacao.status);
                       const desabilitaAceitarReclamar =
                         produtoTemReclacaoAceita ||
                         (reclamacao.status !== AGUARDANDO_AVALIACAO &&

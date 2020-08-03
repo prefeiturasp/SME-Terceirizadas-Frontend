@@ -51,28 +51,30 @@ const ModalJustificativa = ({
                   />
                 </div>
               </div>
-              {comAnexo && (<section className="form-row attachments">
-                <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro">
-                    Anexar
+              {comAnexo && (
+                <section className="form-row attachments">
+                  <div className="col-9">
+                    <div className="card-title font-weight-bold cinza-escuro">
+                      Anexar
+                    </div>
+                    <div className="text">
+                      Anexar fotos, documentos ou relatórios relacionados.
+                    </div>
                   </div>
-                  <div className="text">
-                    Anexar fotos, documentos ou relatórios relacionados.
+                  <div className="col-3 btn">
+                    <Field
+                      component={ManagedInputFileField}
+                      className="inputfile"
+                      texto="Anexar"
+                      name="anexos"
+                      accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
+                      icone={BUTTON_ICON.ATTACH}
+                      toastSuccessMessage="Anexo incluso com sucesso"
+                      concatenarNovosArquivos
+                    />
                   </div>
-                </div>
-                <div className="col-3 btn">
-                  <Field
-                    component={ManagedInputFileField}
-                    className="inputfile"
-                    texto="Anexar"
-                    name="anexos"
-                    accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                    icone={BUTTON_ICON.ATTACH}
-                    toastSuccessMessage="Anexo incluso com sucesso"
-                    concatenarNovosArquivos
-                  />
-                </div>
-              </section>)}
+                </section>
+              )}
             </Modal.Body>
             <Modal.Footer>
               <div className="row mt-4">
