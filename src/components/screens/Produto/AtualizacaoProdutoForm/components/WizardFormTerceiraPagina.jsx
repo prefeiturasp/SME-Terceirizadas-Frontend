@@ -74,12 +74,14 @@ class WizardFormTerceiraPagina extends Component {
     values["uuid"] = produto.uuid;
     values["cadastro_atualizado"] = true;
     values["cadastro_finalizado"] = false;
-    values["imagens"] = values.anexos.map(imagem => {
-      return {
-        arquivo: imagem.base64,
-        nome: imagem.nome
-      };
-    });
+    if (values.anexos) {
+      values["imagens"] = values.anexos.map(imagem => {
+        return {
+          arquivo: imagem.base64,
+          nome: imagem.nome
+        };
+      });
+    }
     values["informacoes_nutricionais"] =
       valoresSegundoForm["informacoes_nutricionais"];
     const arrayKeys = Object.keys(values);
