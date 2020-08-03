@@ -2,7 +2,7 @@ import React from "react";
 import { DadosReclamacaoProduto } from "../DadosReclamacao";
 import { DadosProduto } from "../DadosProduto";
 import { Botoes } from "../Botoes";
-import { NOME_STATUS } from "../TabelaProdutos/helpers";
+import { NOME_STATUS } from "../TabelaProdutos_old/helpers";
 import "./style.scss";
 import { DadosEmpresa } from "../DadosEmpresa";
 
