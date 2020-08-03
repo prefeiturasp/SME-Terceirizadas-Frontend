@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer } from "react";
-import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
@@ -157,4 +156,4 @@ const FormBuscaProduto = ({ onSubmit, exibirStatus = true }) => {
   );
 };
 
-export default withRouter(FormBuscaProduto);
+export default FormBuscaProduto;
