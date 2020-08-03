@@ -18,7 +18,8 @@ const {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
   CODAE_PEDIU_ANALISE_SENSORIAL,
-  CODAE_SUSPENDEU
+  CODAE_SUSPENDEU,
+  CODAE_HOMOLOGADO
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
@@ -66,6 +67,11 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     item.status.toLowerCase() === CODAE_SUSPENDEU
   ) {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
+  } else if (
+    usuarioEhTerceirizada &&
+    item.status.toLowerCase() === CODAE_HOMOLOGADO
+  ) {
+    return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   }
   return apontaParaEdicao
     ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`
