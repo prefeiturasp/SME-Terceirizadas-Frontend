@@ -126,11 +126,7 @@ const Reclamacao = ({
           </div>
         </div>
         {reclamacao.logs.map((log, index) => {
-          return (
-            <Fragment key={index}>
-              <LogReclamacao log={log} />
-            </Fragment>
-          );
+          return <LogReclamacao key={index} log={log} />;
         })}
       </div>
       <div className="text-right">
