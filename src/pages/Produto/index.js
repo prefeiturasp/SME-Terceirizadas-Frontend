@@ -64,7 +64,7 @@ export const ConsultaResponderReclamacaoPage = () => {
   };
 
   return (
-    <Page titulo={atual.titulo}>
+    <Page titulo={atual.titulo} botaoVoltar voltarPara={"/"}>
       <Breadcrumb home={"/"} atual={atual} />
       <ResponderReclamacao />
     </Page>

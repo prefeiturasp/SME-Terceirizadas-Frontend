@@ -47,6 +47,7 @@ class BuscaProdutoSuspensos extends Component {
       nomesFabricantes: null,
       optionsFabricantes: [],
       dataMinima: null,
+      dataMaxima: null,
       payload: null,
       ehPorData: false,
       visible: false,
@@ -112,6 +113,7 @@ class BuscaProdutoSuspensos extends Component {
 
   handleCancel = () => {
     this.setState({ visible: false });
+    this.onClear();
   };
 
   retornaListaDeNomes = arrayObjetos => {
@@ -186,15 +188,19 @@ class BuscaProdutoSuspensos extends Component {
     change("data_final", "");
     this.setState({
       dataMinima: null,
+      dataMaxima: null,
       payload: null
     });
   };
 
   setaDataInicial = value => {
-    const { change } = this.props;
     const dataMinima = retornaDataMinima(value);
-    change("data_final", "");
     this.setState({ dataMinima });
+  };
+
+  setaDataFinal = value => {
+    const dataMaxima = retornaDataMinima(value);
+    this.setState({ dataMaxima });
   };
 
   render() {
@@ -204,6 +210,7 @@ class BuscaProdutoSuspensos extends Component {
       optionsMarcas,
       optionsFabricantes,
       dataMinima,
+      dataMaxima,
       payload,
       visible,
       payload_auxiliar
@@ -243,7 +250,7 @@ class BuscaProdutoSuspensos extends Component {
             </div>
 
             <div className="row">
-              <div className="col-md-7">
+              <div className="col-md-6">
                 <div>
                   <label>Fabricante do produto</label>
                   <Field
@@ -257,27 +264,29 @@ class BuscaProdutoSuspensos extends Component {
                 </div>
               </div>
 
-              <div className="col-md-5 inputs-com-data">
-                <div>
-                  <label>Data de Suspensão</label>
-                  <Field
-                    component={InputComData}
-                    name="data_inicial"
-                    minDate={DATA_MINIMA}
-                    maxDate={DATA_MAXIMA}
-                    onChange={value => {
-                      this.setaDataInicial(value);
-                    }}
-                  />
-                </div>
-                <div className="input-data-sem-label">
-                  <Field
-                    component={InputComData}
-                    name="data_final"
-                    minDate={dataMinima === null ? DATA_MINIMA : dataMinima}
-                    maxDate={DATA_MAXIMA}
-                  />
-                </div>
+              <div className="col-md-3">
+                <label>Data de Suspensão</label>
+                <Field
+                  component={InputComData}
+                  name="data_inicial"
+                  minDate={DATA_MINIMA}
+                  maxDate={dataMaxima ? dataMaxima : DATA_MAXIMA}
+                  onChange={value => {
+                    this.setaDataInicial(value);
+                  }}
+                />
+              </div>
+
+              <div className="input-data-sem-label col-md-3">
+                <Field
+                  component={InputComData}
+                  name="data_final"
+                  minDate={dataMinima === null ? DATA_MINIMA : dataMinima}
+                  maxDate={DATA_MAXIMA}
+                  onChange={value => {
+                    this.setaDataFinal(value);
+                  }}
+                />
               </div>
             </div>
 
@@ -302,7 +311,7 @@ class BuscaProdutoSuspensos extends Component {
             </div>
           </form>
 
-          <div>
+          <div className="margin-da-pagina">
             {payload === null
               ? ""
               : payload.length > 0
@@ -337,7 +346,9 @@ class BuscaProdutoSuspensos extends Component {
             ]}
           >
             <div className="body-modal">
-              <div className="header-modal">Veja resultados da pesquisa</div>
+              <div className="header-modal">
+                Veja os resultados para a busca
+              </div>
               <div className="section-produtos-itens">
                 <div className="item-produto-modal">
                   <div className="item-header-produto-modal">
