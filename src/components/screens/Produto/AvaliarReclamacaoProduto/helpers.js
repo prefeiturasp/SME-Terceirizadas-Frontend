@@ -11,7 +11,8 @@ export const formatarValues = values => {
     values.status = [
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
       "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
+      "CODAE_AUTORIZOU_RECLAMACAO"
     ];
   }
   return values;
