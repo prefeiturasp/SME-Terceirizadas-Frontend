@@ -31,7 +31,7 @@ export default class TabelaProdutos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      indiceProdutoAtivo: undefined,
+      indiceProdutoAtivo: props.uuidForncecido ? undefined : 0,
       mostraModalReclamacao: false,
       uuidReclamacao: undefined,
       acao: undefined,
@@ -108,6 +108,17 @@ export default class TabelaProdutos extends Component {
         return toastSuccess("Solicitação enviada com sucesso");
     }
   };
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.listaProdutos.length === 1 &&
+      this.props.listaProdutos.length > 1
+    ) {
+      this.setState({
+        indiceProdutoAtivo: undefined
+      });
+    }
+  }
 
   setIndiceProdutoAtivo = indice => {
     this.setState({

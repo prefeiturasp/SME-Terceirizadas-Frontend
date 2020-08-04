@@ -9,10 +9,10 @@ import "./style.scss";
 
 export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
   const [produtos, setProdutos] = useState([]);
-  const [verProduto, setVerProduto] = useState(null);
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
   const [formValues, setFormValues] = useState(null);
+  const [uuidForncecido, setUuidFornecido] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -22,7 +22,8 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
         .then(response => {
           setLoading(false);
           setPropsPageProduto(response.data.produto);
-          setVerProduto(response.data.produto);
+          setProdutos([response.data.produto]);
+          setUuidFornecido(true);
         })
         .catch(() => {
           setLoading(false);
@@ -52,34 +53,29 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
           )}
           {!erroNaAPI && (
             <Fragment>
-              {!verProduto && (
+              <h2>
+                Consulte cadastro completo de produto antes de avaliar
+                reclamação
+              </h2>
+              <FormBuscaProduto onSubmit={onSubmit} />
+              {produtos.length > 0 && (
                 <Fragment>
-                  <h2>
-                    Consulte cadastro completo de produto antes de avaliar
-                    reclamação
-                  </h2>
-                  <FormBuscaProduto onSubmit={onSubmit} />
-                  {produtos.length > 0 && (
-                    <Fragment>
-                      <div className="label-resultados-busca">
-                        {formValues.nome_produto
-                          ? `Veja os resultados para: "${
-                              formValues.nome_produto
-                            }"`
-                          : "Veja os resultados para a busca:"}
-                      </div>
-                      <TabelaProdutos
-                        listaProdutos={produtos}
-                        atualizar={() => onSubmit(formValues)}
-                      />
-                    </Fragment>
-                  )}
-                  {produtos.length === 0 && formValues !== null && (
-                    <div className="text-center mt-5">
-                      A consulta retornou 0 resultados.
-                    </div>
-                  )}
+                  <div className="label-resultados-busca">
+                    {formValues && formValues.nome_produto
+                      ? `Veja os resultados para: "${formValues.nome_produto}"`
+                      : "Veja os resultados para a busca:"}
+                  </div>
+                  <TabelaProdutos
+                    listaProdutos={produtos}
+                    atualizar={() => onSubmit(formValues)}
+                    uuidForncecido={uuidForncecido}
+                  />
                 </Fragment>
+              )}
+              {produtos.length === 0 && formValues !== null && (
+                <div className="text-center mt-5">
+                  A consulta retornou 0 resultados.
+                </div>
               )}
             </Fragment>
           )}
