@@ -14,6 +14,7 @@ import {
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 const {
+  CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
@@ -86,10 +87,12 @@ export const ordenaPorLogMaisRecente = (a, b) => {
 
 const getText = item => {
   if (
-    [CODAE_PEDIU_ANALISE_RECLAMACAO, ESCOLA_OU_NUTRICIONISTA_RECLAMOU].includes(
-      item.status.toLowerCase()
-    ) &&
-    usuarioEhTerceirizada()
+    [
+      CODAE_AUTORIZOU_RECLAMACAO,
+      CODAE_PEDIU_ANALISE_RECLAMACAO,
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    ].includes(item.status.toLowerCase()) &&
+    (usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto())
   ) {
     return `${item.id_externo} - ${truncarString(item.nome_produto, 48)} (${
       item.qtde_reclamacoes
