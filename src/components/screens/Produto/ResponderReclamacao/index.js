@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { Spin } from "antd";
 import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
@@ -8,18 +8,11 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { GESTAO_PRODUTO } from "configs/constants";
 import Reclamacao from "./Reclamacao";
 import FormBuscaProduto from "./FormBuscaProduto";
 import "./style.scss";
 
-const TabelaProdutos = ({
-  produtos,
-  history,
-  filtros,
-  setProdutos,
-  setCarregando
-}) => {
+const TabelaProdutos = ({ produtos, filtros, setProdutos, setCarregando }) => {
   const [ativos, setAtivos] = useState([]);
 
   if (!produtos) return false;
@@ -76,19 +69,18 @@ const TabelaProdutos = ({
               {ativos.includes(indexProduto) && (
                 <Fragment key={indexProduto}>
                   <div className="mt-2 text-right">
-                    <Botao
-                      texto="Ver produto"
-                      onClick={() =>
-                        history.push(
-                          `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${
-                            produto.ultima_homologacao.uuid
-                          }`
-                        )
-                      }
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3 mr-3"
-                    />
+                    <Link
+                      to={`/gestao-produto/relatorio?uuid=${
+                        produto.ultima_homologacao.uuid
+                      }`}
+                    >
+                      <Botao
+                        texto="Ver produto"
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="ml-3 mr-3"
+                      />
+                    </Link>
                   </div>
                   <hr />
 
@@ -141,7 +133,7 @@ const ResponderReclamacaoProduto = ({ history }) => {
   }, [filtros]);
 
   const onSubmitForm = formValues => {
-    setFiltros({ ...formValues, status: ["CODAE_PEDIU_ANALISE_RECLAMACAO"] });
+    setFiltros({ ...formValues });
   };
 
   return (

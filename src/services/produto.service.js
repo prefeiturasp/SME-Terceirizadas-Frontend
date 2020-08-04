@@ -94,8 +94,11 @@ export const getProdutosPorParametros = async parametros => {
   );
 };
 
-export const getReclamacoesTerceirizadaPorFiltro = async () => {
-  return await axios.get(`/produtos/filtro-reclamacoes-terceirizada/`);
+export const getReclamacoesTerceirizadaPorFiltro = async filtros => {
+  return await axios.post(
+    `/produtos/filtro-reclamacoes-terceirizada/`,
+    filtros
+  );
 };
 
 export const getProdutosPorFiltro = async filtro => {
