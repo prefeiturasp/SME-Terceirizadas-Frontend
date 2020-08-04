@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu, SubMenu, LeafItem } from "./shared";
 import {
-  CODAE,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
@@ -11,12 +10,14 @@ import {
   ALTERACAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  TERCEIRIZADA
 } from "configs/constants";
 import { usuarioEhEscola } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibeMenuNovasSolicitacoes = usuarioEhEscola();
+  const PERFIL = usuarioEhEscola() ? ESCOLA : TERCEIRIZADA;
   return (
     <Menu
       id="GestaoAlimentacao"
@@ -56,14 +57,14 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         title="Consulta de Solicitações"
         activeMenu={activeMenu}
       >
-        <LeafItem to={`/${CODAE}/${SOLICITACOES_PENDENTES}`}>
+        <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
           Aguardando autorização
         </LeafItem>
-        <LeafItem to={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}>
+        <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
           Autorizadas
         </LeafItem>
-        <LeafItem to={`/${CODAE}/${SOLICITACOES_NEGADAS}`}>Negadas</LeafItem>
-        <LeafItem to={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}>
+        <LeafItem to={`/${PERFIL}/${SOLICITACOES_NEGADAS}`}>Negadas</LeafItem>
+        <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
           Canceladas
         </LeafItem>
       </SubMenu>
