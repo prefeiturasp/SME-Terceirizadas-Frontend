@@ -80,7 +80,7 @@ export class StatusSolicitacoes extends Component {
     retornos.forEach(
       retorno =>
         (solicitacoes = solicitacoes.concat(
-          formatarDadosSolicitacao(retorno.data.results)
+          formatarDadosSolicitacao(retorno.results)
         ))
     );
     solicitacoes = solicitacoes.sort(ordenaPorDate);
