@@ -14,7 +14,6 @@ import {
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 const {
-  CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
@@ -86,20 +85,23 @@ export const ordenaPorLogMaisRecente = (a, b) => {
 };
 
 const getText = item => {
+  const TAMANHO_MAXIMO = 48;
+  let appendix = "";
   if (
-    [
-      CODAE_AUTORIZOU_RECLAMACAO,
-      CODAE_PEDIU_ANALISE_RECLAMACAO,
-      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
-    ].includes(item.status.toLowerCase()) &&
-    (usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto())
+    [CODAE_PEDIU_ANALISE_RECLAMACAO, ESCOLA_OU_NUTRICIONISTA_RECLAMOU].includes(
+      item.status.toLowerCase()
+    )
   ) {
-    return `${item.id_externo} - ${truncarString(item.nome_produto, 48)} (${
-      item.qtde_reclamacoes
-    })`;
-  } else {
-    return `${item.id_externo} - ${truncarString(item.nome_produto, 48)}`;
+    if (usuarioEhTerceirizada()) {
+      appendix = ` (${item.qtde_questionamentos})`;
+    } else if (usuarioEhCODAEGestaoProduto()) {
+      appendix = ` (${item.qtde_reclamacoes})`;
+    }
   }
+  return `${item.id_externo} - ${truncarString(
+    item.nome_produto,
+    TAMANHO_MAXIMO - appendix.length
+  )}${appendix}`;
 };
 
 export const formataCards = (items, apontaParaEdicao) => {

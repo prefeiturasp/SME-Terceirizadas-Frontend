@@ -10,7 +10,7 @@ const {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
 
-const Reclamacao = ({ reclamacao, indice }) => {
+const Reclamacao = ({ reclamacao }) => {
   const logQuestionamentoCodae = reclamacao.logs.find(
     log => log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA
   );
@@ -29,9 +29,7 @@ const Reclamacao = ({ reclamacao, indice }) => {
     <div className="detalhes-reclamacao">
       <div className="linha linha-1">
         <div className="item">
-          <div className="label-item">
-            Reclamaçao {indice.toString().padStart(2, "0")}
-          </div>
+          <div className="label-item">Reclamação #{reclamacao.id_externo}</div>
         </div>
         <div className="item item-horizontal">
           <div className="label-item">Status Reclamação:</div>
