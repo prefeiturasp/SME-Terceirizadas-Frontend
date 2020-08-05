@@ -41,11 +41,11 @@ export default class TabelaProdutos extends Component {
       <section className="resultados-busca-produtos">
         <section>
           <div className="tabela-produto tabela-header-produto">
-            <div>Data de cadastro</div>
             <div>Nome do Produto</div>
             <div>Marca</div>
             <div>Tipo</div>
             <div>Qtde. Reclamações</div>
+            <div>Data de cadastro</div>
           </div>
         </section>
         {listaProdutos.map((produto, indice) => {
