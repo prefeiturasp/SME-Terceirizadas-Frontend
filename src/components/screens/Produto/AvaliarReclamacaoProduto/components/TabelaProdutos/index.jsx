@@ -19,6 +19,7 @@ import {
   CODAEQuestionaTerceirizada,
   CODAERespondeReclamante
 } from "services/reclamacaoProduto.service";
+import { ordenaPorCriadoEm } from "./helpers";
 
 const {
   AGUARDANDO_AVALIACAO,
@@ -215,8 +216,9 @@ export default class TabelaProdutos extends Component {
                     </Link>
                   </div>
                   <hr />
-                  {produto.ultima_homologacao.reclamacoes.map(
-                    (reclamacao, indice) => {
+                  {produto.ultima_homologacao.reclamacoes
+                    .sort(ordenaPorCriadoEm)
+                    .map((reclamacao, indice) => {
                       const desabilitaAceitarReclamar =
                         produtoTemReclacaoAceita ||
                         (reclamacao.status !== AGUARDANDO_AVALIACAO &&
@@ -233,11 +235,7 @@ export default class TabelaProdutos extends Component {
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
-                        <Reclamacao
-                          key={0}
-                          indice={indice + 1}
-                          reclamacao={reclamacao}
-                        />,
+                        <Reclamacao key={0} reclamacao={reclamacao} />,
                         <div key={1} className="botao-reclamacao mt-4">
                           <Botao
                             texto="Responder"
@@ -294,8 +292,7 @@ export default class TabelaProdutos extends Component {
                         </div>,
                         deveMostrarBarraHorizontal && <hr />
                       ];
-                    }
-                  )}
+                    })}
                 </>
               )}
             </div>

@@ -81,11 +81,7 @@ export default class TabelaProdutos extends Component {
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
-                        <Reclamacao
-                          key={indice}
-                          indice={indice + 1}
-                          reclamacao={reclamacao}
-                        />,
+                        <Reclamacao key={indice} reclamacao={reclamacao} />,
                         deveMostrarBarraHorizontal && <hr />
                       ];
                     }
