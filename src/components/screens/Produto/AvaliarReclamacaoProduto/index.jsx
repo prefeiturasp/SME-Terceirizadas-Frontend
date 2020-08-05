@@ -41,6 +41,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
     getProdutosPorFiltro(formatarValues(values_)).then(response => {
       setProdutos(response.data.results);
       setLoading(false);
+      setUuidFornecido(undefined);
     });
   };
 
