@@ -12,7 +12,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
   const [formValues, setFormValues] = useState(null);
-  const [uuidForncecido, setUuidFornecido] = useState(false);
+  const [indiceProdutoAtivo, setIndiceProdutoAtivo] = useState(undefined);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -23,7 +23,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
           setLoading(false);
           setPropsPageProduto(response.data.produto);
           setProdutos([response.data.produto]);
-          setUuidFornecido(true);
+          setIndiceProdutoAtivo(0);
         })
         .catch(() => {
           setLoading(false);
@@ -41,6 +41,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
     getProdutosPorFiltro(formatarValues(values_)).then(response => {
       setProdutos(response.data.results);
       setLoading(false);
+      setIndiceProdutoAtivo(undefined);
     });
   };
 
@@ -68,7 +69,8 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
                   <TabelaProdutos
                     listaProdutos={produtos}
                     atualizar={() => onSubmit(formValues)}
-                    uuidForncecido={uuidForncecido}
+                    indiceProdutoAtivo={indiceProdutoAtivo}
+                    setIndiceProdutoAtivo={setIndiceProdutoAtivo}
                   />
                 </Fragment>
               )}

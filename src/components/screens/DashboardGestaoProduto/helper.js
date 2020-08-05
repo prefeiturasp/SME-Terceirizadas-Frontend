@@ -88,9 +88,11 @@ const getText = item => {
   const TAMANHO_MAXIMO = 48;
   let appendix = "";
   if (
-    [CODAE_PEDIU_ANALISE_RECLAMACAO, ESCOLA_OU_NUTRICIONISTA_RECLAMOU].includes(
-      item.status.toLowerCase()
-    )
+    [
+      CODAE_PEDIU_ANALISE_RECLAMACAO,
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+      TERCEIRIZADA_RESPONDEU_RECLAMACAO
+    ].includes(item.status.toLowerCase())
   ) {
     if (usuarioEhTerceirizada()) {
       appendix = ` (${item.qtde_questionamentos})`;

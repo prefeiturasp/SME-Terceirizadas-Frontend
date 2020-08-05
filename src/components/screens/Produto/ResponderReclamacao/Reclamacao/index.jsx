@@ -81,7 +81,9 @@ const Reclamacao = ({
         <div className="linha linha-1">
           <div className="item">
             <div className="label-item">
-              Reclamaçao {indexReclamacao.toString().padStart(2, "0")}
+              <div className="label-item">
+                Reclamação #{reclamacao.id_externo}
+              </div>
             </div>
           </div>
           <div className="item item-horizontal">
