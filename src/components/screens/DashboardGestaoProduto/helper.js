@@ -44,7 +44,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
     usuarioEhTerceirizada()
   ) {
-    return `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe?id=${item.uuid}`;
+    return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
   } else if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_SENSORIAL &&
     usuarioEhTerceirizada()
