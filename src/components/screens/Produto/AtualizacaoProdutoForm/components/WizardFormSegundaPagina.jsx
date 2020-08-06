@@ -273,7 +273,7 @@ class WizardFormSegundaPagina extends React.Component {
           />
         </section>
         <header className="mt-3">
-          É obrigatório informar um dos campos de informação nutricional
+          Necessário o preenchimento das informações nutricionais abaixo
         </header>
         <section className="secao-informacoes-nutricionais">
           {informacoes.length > 0 &&
