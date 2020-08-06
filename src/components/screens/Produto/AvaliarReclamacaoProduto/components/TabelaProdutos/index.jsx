@@ -178,7 +178,9 @@ export default class TabelaProdutos extends Component {
                         isProdutoAtivo ? "up" : "down"
                       }`}
                       onClick={() => {
-                        setIndiceProdutoAtivo(indice);
+                        setIndiceProdutoAtivo(
+                          indice === indiceProdutoAtivo ? undefined : indice
+                        );
                       }}
                     />
                   </div>

@@ -8,6 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalResponderReclamacao from "../ModalResponderReclamacao";
 import { getReclamacao } from "services/produto.service";
+import { RECLAMACAO_PRODUTO_STATUS_EXPLICACAO } from "constants/shared";
 
 const obterTituloLog = status_evento => {
   switch (status_evento) {
@@ -22,12 +23,21 @@ const obterTituloLog = status_evento => {
   }
 };
 
+const obterRotuloDataLog = log => {
+  if (
+    log.status_evento_explicacao ===
+    RECLAMACAO_PRODUTO_STATUS_EXPLICACAO.CODAE_QUESTIONOU_TERCEIRIZADA
+  )
+    return "Data quest. CODAE";
+  return "Data reclamação";
+};
+
 const LogReclamacao = ({ log }) => {
   return (
     <div className="linha linha-3">
       <div />
       <div className="item">
-        <div className="label-item">Data reclamação</div>
+        <div className="label-item">{obterRotuloDataLog(log)}</div>
         <div className="value-item">{log.criado_em.split(" ")[0]}</div>
       </div>
       <div className="item">
