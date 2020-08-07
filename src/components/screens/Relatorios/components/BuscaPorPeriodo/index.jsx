@@ -68,7 +68,7 @@ class BuscaPorPeriodo extends Component {
   render() {
     const { escolas } = this.state;
     return (
-      <div>
+      <div className="busca-por-produto">
         {!escolas ? (
           <div>Carregando filtros...</div>
         ) : (

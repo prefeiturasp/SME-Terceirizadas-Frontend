@@ -1,13 +1,8 @@
 import { Spin } from "antd";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import {
-  getProdutosPorTerceirizada,
-  getRelatorioProdutosHomologados
-} from "services/produto.service";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -15,30 +10,15 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
-import "./style.scss";
 
-const gerarLabelPorFiltro = filtros => {
-  if (filtros.data_inicial && filtros.data_final) {
-    return `Veja resultados período "${moment(
-      filtros.data_inicial,
-      "DD/MM/YYYY"
-    ).format("DD/MM/YYYY")} à ${moment(filtros.data_final, "DD/MM/YYYY").format(
-      "DD/MM/YYYY"
-    )}":`;
-  } else if (filtros.data_inicial) {
-    return `Veja resultados apartir de "${moment(
-      filtros.data_inicial,
-      "DD/MM/YYYY"
-    ).format("DD/MM/YYYY")}":`;
-  } else if (filtros.data_final) {
-    return `Veja resultados até "${moment(
-      filtros.data_final,
-      "DD/MM/YYYY"
-    ).format("DD/MM/YYYY")}":`;
-  } else {
-    return "Veja resultados da busca:";
-  }
-};
+import { gerarLabelPorFiltro } from "helpers/produto";
+
+import {
+  getProdutosPorTerceirizada,
+  getRelatorioProdutosHomologados
+} from "services/produto.service";
+
+import "./style.scss";
 
 const gerarLabelTotal = filtros => {
   if (filtros.data_inicial || filtros.data_final) return " no período";
