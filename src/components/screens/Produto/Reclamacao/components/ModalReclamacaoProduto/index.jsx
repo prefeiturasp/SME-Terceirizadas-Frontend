@@ -69,7 +69,8 @@ export default class ModalReclamacaoProduto extends Component {
       const homologacaoAtiva = this.props.produto.homologacoes.find(
         h =>
           h.status === "CODAE_HOMOLOGADO" ||
-          h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+          h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU" ||
+          h.status === "CODAE_PEDIU_ANALISE_RECLAMACAO"
       );
       const response = await escolaOuNutriReclamaDoProduto(
         homologacaoAtiva.uuid,
