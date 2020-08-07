@@ -48,7 +48,7 @@ const TabelaProdutos = ({ produtos, filtros, setProdutos, setCarregando }) => {
                     {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
                   </div>
                   <div className={`table-body-cell ${bordas}`}>
-                    {produto.ultima_homologacao.reclamacoes.length}
+                    {produto.ultima_homologacao.qtde_questionamentos}
                   </div>
 
                   <div
