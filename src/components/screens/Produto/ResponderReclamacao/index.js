@@ -12,8 +12,18 @@ import Reclamacao from "./Reclamacao";
 import FormBuscaProduto from "./FormBuscaProduto";
 import "./style.scss";
 
-const TabelaProdutos = ({ produtos, filtros, setProdutos, setCarregando }) => {
+const TabelaProdutos = ({
+  produtos,
+  filtros,
+  setProdutos,
+  setCarregando,
+  padraoAtivos
+}) => {
   const [ativos, setAtivos] = useState([]);
+
+  useEffect(() => {
+    if (padraoAtivos) setAtivos(padraoAtivos);
+  }, []);
 
   if (!produtos) return false;
 
@@ -119,13 +129,25 @@ const ResponderReclamacaoProduto = ({ history }) => {
   const [produtos, setProdutos] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [filtrarUUID, setFiltrarUUID] = useState(true);
+  const [padraoAtivos, setPadraoAtivos] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuid = urlParams.get("uuid");
 
   useEffect(() => {
-    if (!filtros) return;
+    if (!filtros && !uuid) return;
     async function fetchData() {
       setCarregando(true);
       setProdutos(null);
-      const response = await getReclamacoesTerceirizadaPorFiltro(filtros);
+      let response = {};
+      if (filtrarUUID) {
+        setFiltrarUUID(false);
+        response = await getReclamacoesTerceirizadaPorFiltro({ uuid: uuid });
+        setPadraoAtivos([0]);
+      } else {
+        response = await getReclamacoesTerceirizadaPorFiltro(filtros);
+        setPadraoAtivos(false);
+      }
       setProdutos(response.data.results);
       setCarregando(false);
     }
@@ -160,6 +182,7 @@ const ResponderReclamacaoProduto = ({ history }) => {
               filtros={filtros}
               setProdutos={setProdutos}
               setCarregando={setCarregando}
+              padraoAtivos={padraoAtivos}
             />
           </div>
         )}
