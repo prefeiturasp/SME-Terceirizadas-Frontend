@@ -147,7 +147,7 @@ class Step2 extends Component {
             </div>
           </div>
           <div className="row card-title font-weight-bold ml-2">
-            É obrigatório informar um dos campos de informação nutricional
+            Necessário o preenchimento das informações nutricionais abaixo
           </div>
           {informacoesAgrupadas &&
             informacoesAgrupadas.map((informacao, key) => {
