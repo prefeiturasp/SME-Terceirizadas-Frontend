@@ -85,34 +85,4 @@ form.homologacao-produto {
       }
     }
   }
-
-  .descricao-suspensao {
-    margin-bottom: 1em;
-
-    .motivo-data-suspensao {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 1em;
-
-      div {
-        color: $blackInput;
-        font-weight: bold;
-      }
-    }
-
-    .box-detalhe-suspensao {
-      border: 1px solid $blackInput;
-      border-radius: 4px;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0 1em;
-
-      p {
-        margin: 0;
-        padding: 0;
-        color: $gray;
-      }
-    }
-  }
 }
