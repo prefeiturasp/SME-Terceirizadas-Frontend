@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { FluxoDeStatus } from "../../../../../../Shareable/FluxoDeStatus";
-import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
 import { fluxoPartindoTerceirizada } from "../../../../../../Shareable/FluxoDeStatus/helper";
 import "../styles.scss";
 import Botao from "components/Shareable/Botao";
@@ -10,6 +9,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 
 import "antd/dist/antd.css";
 import { Modal } from "antd";
@@ -118,8 +118,6 @@ export default class CorpoRelatorio extends Component {
   render() {
     const { produto, historico } = this.props;
     const { informacoes, logs, logSelecionado } = this.state;
-    const ultimoLog = logs[logs.length - 1];
-    const { status } = produto.ultima_homologacao;
     return (
       <section className="corpo-reatorio-produto">
         <article className="flex-botoes-relatorio">
@@ -140,7 +138,10 @@ export default class CorpoRelatorio extends Component {
           />
         </article>
         {!!logs.length && (
-          <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+          <>
+            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+            <MotivoSuspensao logs={historico.logs || []} />
+          </>
         )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
@@ -165,27 +166,6 @@ export default class CorpoRelatorio extends Component {
           />
           <hr />
         </article>
-
-        {status === STATUS_CODAE_SUSPENDEU && (
-          <>
-            <article className="informacoes-gerais">
-              <div className="grid-suspensao-info">
-                <div className="label-relatorio">Motivo da suspensão</div>
-                <div className="label-relatorio">Data</div>
-                <div
-                  className="value-relatorio"
-                  dangerouslySetInnerHTML={{ __html: ultimoLog.justificativa }}
-                />
-
-                <div className="value-relatorio">
-                  {ultimoLog.criado_em.split(" ")[0]}
-                </div>
-              </div>
-            </article>
-            <hr />
-          </>
-        )}
-
         <article className="informacoes-gerais">
           <div className="header-informacao">
             Informação de empresa solicitante (Terceirizada)

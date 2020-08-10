@@ -26,6 +26,7 @@ import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
+import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
@@ -179,7 +180,6 @@ class HomologacaoProduto extends Component {
       justificativa
     } = this.props;
     const { ultima_homologacao } = produto !== null && produto;
-    const ultimoLog = logs !== null && logs[logs.length - 1];
     return (
       <div className="card">
         <div className="card-body">
@@ -246,20 +246,8 @@ class HomologacaoProduto extends Component {
                     </article>
                   </section>
                 )}
-              {status === STATUS_CODAE_SUSPENDEU && (
-                <section className="descricao-suspensao">
-                  <article className="motivo-data-suspensao">
-                    <div>Motivo da suspensão:</div>
-                    <div>Data: {ultimoLog.criado_em.split(" ")[0]}</div>
-                  </article>
-                  <article className="box-detalhe-suspensao">
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: ultimoLog.justificativa
-                      }}
-                    />
-                  </article>
-                </section>
+              {!!logs.length && status === STATUS_CODAE_SUSPENDEU && (
+                <MotivoSuspensao logs={logs} />
               )}
 
               {!!logs.length && status !== STATUS_CODAE_SUSPENDEU && (
