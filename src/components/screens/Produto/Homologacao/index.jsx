@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import HTTP_STATUS from "http-status-codes";
+import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
@@ -178,6 +179,7 @@ class HomologacaoProduto extends Component {
       justificativa
     } = this.props;
     const { ultima_homologacao } = produto !== null && produto;
+    const ultimoLog = logs !== null && logs[logs.length - 1];
     return (
       <div className="card">
         <div className="card-body">
@@ -244,7 +246,23 @@ class HomologacaoProduto extends Component {
                     </article>
                   </section>
                 )}
-              {!!logs.length && (
+              {status === STATUS_CODAE_SUSPENDEU && (
+                <section className="descricao-suspensao">
+                  <article className="motivo-data-suspensao">
+                    <div>Motivo da suspensão:</div>
+                    <div>Data: {ultimoLog.criado_em.split(" ")[0]}</div>
+                  </article>
+                  <article className="box-detalhe-suspensao">
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: ultimoLog.justificativa
+                      }}
+                    />
+                  </article>
+                </section>
+              )}
+
+              {!!logs.length && status !== STATUS_CODAE_SUSPENDEU && (
                 <Fragment>
                   <MotivoDaRecusaDeHomologacao logs={logs} />
                   <MotivoHomologacao logs={logs} />

@@ -64,6 +64,11 @@
       margin: 20px 0 10px 0;
     }
 
+    .grid-suspensao-info {
+      display: grid;
+      grid-template-columns: 40% 20%;
+    }
+
     .grid-marca-fabricante-info {
       display: grid;
       grid-template-columns: 50% 50%;
