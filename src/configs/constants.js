@@ -104,6 +104,7 @@ export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
 export const STATUS_RASCUNHO = "RASCUNHO";
 
 export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
+export const STATUS_CODAE_SUSPENDEU = "CODAE_SUSPENDEU";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";

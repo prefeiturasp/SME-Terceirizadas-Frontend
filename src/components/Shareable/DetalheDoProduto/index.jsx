@@ -10,6 +10,8 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
   const [ativos, setAtivos] = useState([]);
   const infoNutri = formataInformacoesNutricionais(produto);
   const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
+  const { logs } = produto.ultima_homologacao;
+  const ultimoLog = logs[logs.length - 1];
 
   return (
     <div className="shareable-detalhe-produto">
@@ -31,8 +33,33 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       {!!status && (
         <>
           <hr />
-          <span className="label-relatorio">Status do produto: </span>
-          <span className="value-relatorio"> {status} </span>
+          <div className="row">
+            <div className="col-4 report-label-value value-uppercase">
+              <p>Status do produto </p>
+              <p className="value text-uppercase"> {status} </p>
+            </div>
+            {status === "suspenso" && (
+              <>
+                <div className="col-4 report-label-value">
+                  <p>Motivo da supensão</p>
+                  <p className="value">
+                    <div
+                      className="value-item value-uppercase"
+                      dangerouslySetInnerHTML={{
+                        __html: ultimoLog.justificativa
+                      }}
+                    />
+                  </p>
+                </div>
+
+                <div className="col-4 report-label-value">
+                  <p>Data</p>
+
+                  <p className="value">{ultimoLog.criado_em.split(" ")[0]}</p>
+                </div>
+              </>
+            )}
+          </div>
           <hr />
         </>
       )}

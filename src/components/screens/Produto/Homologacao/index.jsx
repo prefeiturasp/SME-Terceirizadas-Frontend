@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import HTTP_STATUS from "http-status-codes";
+import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
@@ -25,6 +26,7 @@ import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
+import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
@@ -244,7 +246,11 @@ class HomologacaoProduto extends Component {
                     </article>
                   </section>
                 )}
-              {!!logs.length && (
+              {!!logs.length && status === STATUS_CODAE_SUSPENDEU && (
+                <MotivoSuspensao logs={logs} />
+              )}
+
+              {!!logs.length && status !== STATUS_CODAE_SUSPENDEU && (
                 <Fragment>
                   <MotivoDaRecusaDeHomologacao logs={logs} />
                   <MotivoHomologacao logs={logs} />
