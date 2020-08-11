@@ -68,11 +68,12 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
   ) {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
-    usuarioEhTerceirizada &&
+    usuarioEhTerceirizada() &&
     item.status.toLowerCase() === CODAE_HOMOLOGADO
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   }
+
   return apontaParaEdicao
     ? `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`
     : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
