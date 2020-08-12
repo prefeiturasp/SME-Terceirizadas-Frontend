@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Select, Spin } from "antd";
 import "antd/dist/antd.css";
 import "./styles.scss";
+import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
 import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
 import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
 import WizardFormTerceiraPagina from "./components/WizardFormTerceiraPagina";
@@ -20,6 +21,7 @@ import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
 import { produtoEhReclamacao, retornaData } from "../Homologacao/helper";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
+import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 
 const { Option } = Select;
 
@@ -219,6 +221,7 @@ class AtualizacaoProdutoForm extends Component {
       reclamacaoProduto,
       logs
     } = this.state;
+    const status = produto ? produto.ultima_homologacao.status : null;
     return (
       <div className="card">
         <div className="card-body">
@@ -241,7 +244,14 @@ class AtualizacaoProdutoForm extends Component {
                     </article>
                   </section>
                 )}
-              {!!logs.length && (
+
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_CODAE_SUSPENDEU && (
+                  <MotivoSuspensao logs={logs} />
+                )}
+
+              {!!logs.length && !!status && status !== STATUS_CODAE_SUSPENDEU && (
                 <Fragment>
                   <MotivoDaRecusaDeHomologacao logs={logs} />
                   <MotivoHomologacao logs={logs} />

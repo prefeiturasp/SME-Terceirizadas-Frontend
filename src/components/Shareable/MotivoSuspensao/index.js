@@ -19,7 +19,7 @@ const MotivoSuspensao = ({ logs }) => {
     <div className="componente-motivo-da-suspensao row">
       <div className="col-12">
         <div className="titulo-suspensao">
-          <p className="mb-1">{`Motivo da suspensao (Data: ${
+          <p className="mb-1">{`Motivo da suspensão (Data: ${
             suspensao.criado_em.split(" ")[0]
           }): `}</p>
           <p
