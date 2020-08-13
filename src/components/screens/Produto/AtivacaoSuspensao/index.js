@@ -81,17 +81,13 @@ const AtivacaoSuspencaoProduto = () => {
     const status = [];
     switch (formValues.status) {
       case "ativo":
-        status.push("CODAE_HOMOLOGADO", "ESCOLA_OU_NUTRICIONISTA_RECLAMOU");
+        status.push("CODAE_HOMOLOGADO");
         break;
       case "suspenso":
         status.push("CODAE_SUSPENDEU");
         break;
       default:
-        status.push(
-          "CODAE_HOMOLOGADO",
-          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-          "CODAE_SUSPENDEU"
-        );
+        status.push("CODAE_HOMOLOGADO", "CODAE_SUSPENDEU");
     }
     setFiltros({ ...formValues, status });
   };
