@@ -252,3 +252,21 @@ export const getRelatorioProdutosSuspensos = payload => {
       a.click();
     });
 };
+
+export const getRelatorioEmAnaliseSensorial = payload => {
+  const url = `${API_URL}/produtos/relatorio-em-analise-sensorial/`;
+  fetch(url, {
+    method: "POST",
+    headers: authToken,
+    responseType: "blob",
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `relatorio_produtos_suspensos.pdf`;
+      a.click();
+    });
+};
