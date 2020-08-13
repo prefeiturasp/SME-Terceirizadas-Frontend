@@ -30,7 +30,7 @@ const BuscaAvancadaProdutoAnaliseSensorial = () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 margin-da-pagina">
+      <div className="card mt-3 margem-da-pagina">
         <div className="card-body ">
           <FormBuscaProduto
             onSubmit={onSubmitForm}
