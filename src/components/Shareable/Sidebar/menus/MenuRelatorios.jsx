@@ -60,7 +60,7 @@ const MenuRelatorios = () => {
           Produtos em a. sensorial
         </LeafItem>
       )}
-      
+
       {exibirMenuTodosPerfis && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/${
