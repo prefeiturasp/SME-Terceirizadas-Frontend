@@ -52,10 +52,14 @@ export default ({ dadosRelatorio }) => {
                 <div className="status-flex-container">
                   <div>Tempo Aguardando ação</div>
                   <div>
-                    {item.ultima_homologacao.tempo_aguardando_acao_em_dias &&
-                      `${
-                        item.ultima_homologacao.tempo_aguardando_acao_em_dias
-                      } dias`}
+                    {`${
+                      item.ultima_homologacao.tempo_aguardando_acao_em_dias
+                    } ${
+                      item.ultima_homologacao.tempo_aguardando_acao_em_dias ===
+                      1
+                        ? "dia"
+                        : "dias"
+                    }`}
                   </div>
                 </div>
               </div>
