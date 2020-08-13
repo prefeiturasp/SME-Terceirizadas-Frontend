@@ -7,8 +7,7 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import {
   getNomesProdutos,
@@ -48,7 +47,6 @@ function reducer(state, { type: actionType, payload }) {
 const FormBuscaProduto = ({
   onSubmit,
   exibirBotaoVoltar,
-  history,
   exibirStatus = true
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -149,12 +147,12 @@ const FormBuscaProduto = ({
             />
             {!!exibirBotaoVoltar && (
               <Botao
+                texto="Limpar Filtro"
                 type={BUTTON_TYPE.BUTTON}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                texto={"Voltar"}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                onClick={() => history.push("/")}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3"
+                onClick={() => form.reset()}
+                disabled={submitting}
               />
             )}
           </div>
