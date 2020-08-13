@@ -36,7 +36,7 @@ export const ConsultaAtivacaoDeProdutoPage = () => {
   };
 
   return (
-    <Page titulo={atual.titulo}>
+    <Page titulo={atual.titulo} botaoVoltar voltarPara="/">
       <Breadcrumb home={"/"} atual={atual} />
       <AtivacaoSuspensao />
     </Page>
