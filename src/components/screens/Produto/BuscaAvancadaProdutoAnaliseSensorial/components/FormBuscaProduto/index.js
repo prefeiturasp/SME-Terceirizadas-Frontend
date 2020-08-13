@@ -14,7 +14,6 @@ import {
   getNomesTerceirizadas
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
-import { retornaDataMinima } from "./helpers";
 import "./style.scss";
 
 const initialState = {
@@ -39,14 +38,7 @@ function reducer(state, { type: actionType, payload }) {
       const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
-    case "setaDataInicial": {
-      const dataMinima = retornaDataMinima(payload.dataMinima);
-      return { ...state, dataMinima: dataMinima };
-    }
-    case "setaDataFinal": {
-      const dataMaxima = retornaDataMinima(payload.dataMaxima);
-      return { ...state, dataMaxima: dataMaxima };
-    }
+
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
