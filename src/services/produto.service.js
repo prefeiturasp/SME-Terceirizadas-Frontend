@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import axios from "./_base";
@@ -450,4 +452,12 @@ export const getProdutosSuspensos = async payload => {
     `/homologacoes-produtos/homologacoes_suspensas/`,
     payload
   );
+};
+
+export const getPdfRelatorioSituacaoProduto = async params => {
+  const { data } = await axios.get("/produtos/relatorio-situacao-produto/", {
+    responseType: "blob",
+    params
+  });
+  saveAs(data, "relatorio_situacao_produto.pdf");
 };

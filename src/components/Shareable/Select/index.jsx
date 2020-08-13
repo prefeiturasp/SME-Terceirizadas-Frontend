@@ -7,6 +7,7 @@ import { HelpText } from "../../Shareable/HelpText";
 export const Select = props => {
   const {
     className,
+    labelClassName,
     disabled,
     helpText,
     input,
@@ -27,7 +28,11 @@ export const Select = props => {
             *
           </span>
         ),
-        <label key={1} htmlFor={name} className="col-form-label">
+        <label
+          key={1}
+          htmlFor={name}
+          className={`${labelClassName || "col-form-label"}`}
+        >
           {label}
         </label>
       ]}

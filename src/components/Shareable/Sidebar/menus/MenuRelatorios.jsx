@@ -52,11 +52,22 @@ const MenuRelatorios = () => {
           Produtos suspensos
         </LeafItem>
       )}
+
       {exibirRelatorioAnaliseSensorial && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorio-analise-sensorial`}
         >
           Produtos em a. sensorial
+        </LeafItem>
+      )}
+      
+      {exibirMenuTodosPerfis && (
+        <LeafItem
+          to={`/${constants.GESTAO_PRODUTO}/${
+            constants.RELATORIO_SITUACAO_PRODUTO
+          }`}
+        >
+          Relatório Situação Produto
         </LeafItem>
       )}
     </Menu>
