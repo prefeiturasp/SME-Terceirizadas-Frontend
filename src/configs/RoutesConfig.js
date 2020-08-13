@@ -52,6 +52,7 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
+import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 
 import * as constants from "./constants";
 import {
@@ -630,6 +631,14 @@ const routesConfig = [
       constants.RELATORIO_PRODUTO
     }`,
     component: RelatorioProduto,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_SITUACAO_PRODUTO
+    }`,
+    component: RelatorioSituacaoProduto,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
