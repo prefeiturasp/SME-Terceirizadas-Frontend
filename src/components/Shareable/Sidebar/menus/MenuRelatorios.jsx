@@ -17,6 +17,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
+  const exibirRelatorioAnaliseSensorial =
+    usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto();
 
   const exibirMenuTodosPerfis =
     usuarioEhCODAEGestaoProduto() ||
@@ -50,6 +52,15 @@ const MenuRelatorios = () => {
           Produtos suspensos
         </LeafItem>
       )}
+
+      {exibirRelatorioAnaliseSensorial && (
+        <LeafItem
+          to={`/${constants.GESTAO_PRODUTO}/relatorio-analise-sensorial`}
+        >
+          Produtos em a. sensorial
+        </LeafItem>
+      )}
+
       {exibirMenuTodosPerfis && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/${

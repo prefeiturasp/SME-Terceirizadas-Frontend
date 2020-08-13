@@ -107,6 +107,13 @@ export const getProdutosPorFiltro = async filtro => {
   return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
 };
 
+export const getProdutosRelatorioAnaliseSensorial = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-relatorio-em-analise-sensorial/`,
+    filtro
+  );
+};
+
 export const getProtocolosDietaEspecial = async () => {
   return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
 };
