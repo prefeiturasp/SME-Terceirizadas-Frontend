@@ -94,6 +94,7 @@ import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
+import BuscaAvancadaProdutoAnaliseSensorial from "../pages/Produto/BuscaAvancadaProdutoAnaliseSensorial";
 import {
   ReclamacaoDeProdutoPage,
   ConsultaAtivacaoDeProdutoPage,
@@ -617,6 +618,14 @@ const routesConfig = [
     component: BuscaProdutoAnaliseSensorial,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_ANALISE_SENSORIAL
+    }`,
+    component: BuscaAvancadaProdutoAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
