@@ -89,8 +89,8 @@ const FormBuscaProduto = ({ onSubmit }) => {
       onSubmit={onSubmit}
       render={({ form, handleSubmit, pristine, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
-          <div className="row">
-            <div className="col-6">
+          <div className="form-row">
+            <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.produtos}
@@ -101,19 +101,19 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_produto"
               />
             </div>
-            <div className="col-6">
+            <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.terceirizadas}
-                label="Nome de empresa solicitante (Terceirizada)"
+                label="Nome da empresa solicitante (Terceirizada)"
                 placeholder="Digite nome da terceirizada"
                 onSearch={v => onSearch("terceirizadas", v)}
                 name="nome_terceirizada"
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col-4">
+          <div className="form-row">
+            <div className="col-md-4 col-xl-4">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
@@ -124,7 +124,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_marca"
               />
             </div>
-            <div className="col-4">
+            <div className="col-md-4 col-xl-4">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
@@ -135,37 +135,42 @@ const FormBuscaProduto = ({ onSubmit }) => {
               />
             </div>
 
-            <div className="col-2">
-              <label>Data análise sensorial</label>
-
-              <Field
-                component={InputComData}
-                name="data_analise_inicial"
-                className="data-inicial"
-                labelClassName="datepicker-fixed-padding"
-                placeholder="De"
-                minDate={null}
-                maxDate={
-                  values.data_analise_final
-                    ? moment(values.data_analise_final, "DD/MM/YYYY")._d
-                    : moment()._d
-                }
-              />
-            </div>
-            <div className="col-2 input-data-sem-label">
-              <Field
-                component={InputComData}
-                name="data_analise_final"
-                labelClassName="datepicker-fixed-padding"
-                popperPlacement="bottom-end"
-                placeholder="Até"
-                minDate={
-                  values.data_analise_inicial
-                    ? moment(values.data_analise_inicial, "DD/MM/YYYY")._d
-                    : null
-                }
-                maxDate={moment()._d}
-              />
+            <div className="col-12 col-md-4 col-xl-4">
+              <div className="row">
+                <label className="ml-3">Data análise sensorial</label>
+              </div>
+              <div className="row">
+                <div className="col mt-1">
+                  <Field
+                    component={InputComData}
+                    name="data_analise_inicial"
+                    className="data-inicial"
+                    labelClassName="datepicker-fixed-padding"
+                    placeholder="De"
+                    minDate={null}
+                    maxDate={
+                      values.data_analise_final
+                        ? moment(values.data_analise_final, "DD/MM/YYYY")._d
+                        : moment()._d
+                    }
+                  />
+                </div>
+                <div className="col mt-1">
+                  <Field
+                    component={InputComData}
+                    name="data_analise_final"
+                    labelClassName="datepicker-fixed-padding"
+                    popperPlacement="bottom-end"
+                    placeholder="Até"
+                    minDate={
+                      values.data_analise_inicial
+                        ? moment(values.data_analise_inicial, "DD/MM/YYYY")._d
+                        : null
+                    }
+                    maxDate={moment()._d}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-4 mb-4">
@@ -178,7 +183,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
             />
 
             <Botao
-              texto="Limpar Filtro"
+              texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               className="float-right ml-3"

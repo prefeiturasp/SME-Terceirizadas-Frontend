@@ -32,6 +32,9 @@ const BuscaAvancadaProdutoAnaliseSensorial = () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 margem-da-pagina">
         <div className="card-body ">
+          <label className="card-title">
+            Consulte por empresas, período ou produtos no sistema
+          </label>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}

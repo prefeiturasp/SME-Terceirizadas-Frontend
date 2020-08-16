@@ -8,6 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { getRelatorioEmAnaliseSensorial } from "services/relatorios";
+import { getTituloRelatorio } from "./helpers";
 
 const ModalRelatorioAnaliseSensorial = ({
   showModal,
@@ -46,7 +47,9 @@ const ModalRelatorioAnaliseSensorial = ({
       ]}
     >
       <div className="body-modal">
-        <div className="header-modal">Veja os resultados para a busca</div>
+        <div className="header-modal">
+          {filtros && getTituloRelatorio(filtros)}
+        </div>
         <div className="section-produtos-itens">
           <div className="item-produto-modal">
             <div className="item-header-produto-modal">
@@ -155,14 +158,6 @@ const ModalRelatorioAnaliseSensorial = ({
                               produto.ultima_homologacao.resposta_analise.criado_em.split(
                                 " "
                               )[0]
-                            }
-                          </b>
-                          <br />
-                          <b>
-                            {
-                              produto.ultima_homologacao.resposta_analise.criado_em.split(
-                                " "
-                              )[1]
                             }
                           </b>
                         </div>
