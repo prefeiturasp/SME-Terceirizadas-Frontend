@@ -3,6 +3,14 @@ import React, { Fragment } from "react";
 import { parseDataHoraBrToMoment } from "helpers/utilities";
 
 import "./style.scss";
+import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+
+const obtemTituloDoCardAPartirDoStatus = status => {
+  const card = listarCardsPermitidos().find(c =>
+    c.incluir_status.includes(status.toLowerCase())
+  );
+  return card.titulo;
+};
 
 export default ({ dadosRelatorio }) => {
   if (!dadosRelatorio) return false;
@@ -24,7 +32,11 @@ export default ({ dadosRelatorio }) => {
               <div>
                 {parseDataHoraBrToMoment(item.criado_em).format("DD/MM/YYYY")}
               </div>
-              <div>{item.ultima_homologacao.status_titulo}</div>
+              <div>
+                {obtemTituloDoCardAPartirDoStatus(
+                  item.ultima_homologacao.status
+                )}
+              </div>
               <div>
                 {parseDataHoraBrToMoment(
                   item.ultima_homologacao.ultimo_log.criado_em
@@ -48,19 +60,6 @@ export default ({ dadosRelatorio }) => {
                   <div>
                     {item.tem_aditivos_alergenicos ? "Sim" : "Não"}
                   </div>{" "}
-                </div>
-                <div className="status-flex-container">
-                  <div>Tempo Aguardando ação</div>
-                  <div>
-                    {`${
-                      item.ultima_homologacao.tempo_aguardando_acao_em_dias
-                    } ${
-                      item.ultima_homologacao.tempo_aguardando_acao_em_dias ===
-                      1
-                        ? "dia"
-                        : "dias"
-                    }`}
-                  </div>
                 </div>
               </div>
             </div>
