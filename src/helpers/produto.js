@@ -3,13 +3,13 @@ import { listarCardsPermitidos } from "./gestaoDeProdutos";
 
 export const gerarLabelPorFiltro = filtros => {
   if (filtros.nome_produto) {
-    return `Veja os resultados para ${filtros.nome_produto}`;
+    return `Veja os resultados para *${filtros.nome_produto}*`;
   }
   if (filtros.nome_marca) {
-    return `Veja os resultados para ${filtros.nome_marca}`;
+    return `Veja os resultados para *${filtros.nome_marca}*`;
   }
   if (filtros.nome_fabricante) {
-    return `Veja os resultados para ${filtros.nome_fabricante}`;
+    return `Veja os resultados para *${filtros.nome_fabricante}*`;
   }
   if (filtros.situacao) {
     const card = listarCardsPermitidos().find(
