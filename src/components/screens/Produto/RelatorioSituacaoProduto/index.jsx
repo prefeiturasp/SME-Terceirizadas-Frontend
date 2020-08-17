@@ -87,39 +87,44 @@ export default () => {
       <Modal
         dialogClassName="modal-90w"
         show={Boolean(dadosRelatorio && dadosRelatorio.length)}
-        onHide={() => {}}
+        onHide={() => {
+          setDadosRelatorio(null);
+        }}
       >
-        <section className="m-3">
-          <h4 className="font-weight-normal text-secondary">
-            Relatório de situação do produto
-          </h4>
-          <p className="text-black font-weight-bold mb-1">
-            {filtros && gerarLabelPorFiltro(filtros)}
-          </p>
-          <TabelaSituacaoProduto dadosRelatorio={dadosRelatorio} />
-        </section>
+        <Modal.Header closeButton>
+          <Modal.Title>Relatório de situação do produto</Modal.Title>
+        </Modal.Header>
 
-        <section className="m-3">
-          <Botao
-            texto="voltar"
-            titulo="voltar"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            icon={BUTTON_ICON.ARROW_LEFT}
-            onClick={() => {
-              setDadosRelatorio(null);
-            }}
-            className="float-right"
-          />
-          <Botao
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            texto="Imprimir"
-            onClick={onImprimir}
-            type={BUTTON_TYPE.BUTTON}
-            className="float-right mr-2"
-          />
-        </section>
+        <Modal.Body>
+          <section className="m-3">
+            <p className="text-black font-weight-bold mb-1">
+              {filtros && gerarLabelPorFiltro(filtros)}
+            </p>
+            <TabelaSituacaoProduto dadosRelatorio={dadosRelatorio} />
+          </section>
+
+          <section className="m-3">
+            <Botao
+              texto="voltar"
+              titulo="voltar"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE_OUTLINE}
+              icon={BUTTON_ICON.ARROW_LEFT}
+              onClick={() => {
+                setDadosRelatorio(null);
+              }}
+              className="float-right"
+            />
+            <Botao
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              texto="Imprimir"
+              onClick={onImprimir}
+              type={BUTTON_TYPE.BUTTON}
+              className="float-right mr-2"
+            />
+          </section>
+        </Modal.Body>
       </Modal>
     </Spin>
   );
