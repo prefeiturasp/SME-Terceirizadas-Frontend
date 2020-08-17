@@ -12,7 +12,7 @@ import {
 import { gerarLabelPorFiltro } from "helpers/produto";
 
 import {
-  getProdutosPorFiltro,
+  getProdutosRelatorioSituacao,
   getPdfRelatorioSituacaoProduto
 } from "services/produto.service";
 
@@ -46,7 +46,7 @@ export default () => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosPorFiltro(
+      const response = await getProdutosRelatorioSituacao(
         processaFiltrosSituacao(filtros)
       );
       setCarregando(false);
