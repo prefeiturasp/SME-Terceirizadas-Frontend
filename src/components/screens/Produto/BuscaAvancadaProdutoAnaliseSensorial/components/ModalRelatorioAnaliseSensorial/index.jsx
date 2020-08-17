@@ -140,7 +140,7 @@ const ModalRelatorioAnaliseSensorial = ({
                       <div className="row mt-3">
                         <div className="col-3">
                           <div className="ml-3">
-                            <label>Número de protocólo AS.</label>
+                            <label>Número de protocolo AS.</label>
                             <br />
                             <b>
                               {
