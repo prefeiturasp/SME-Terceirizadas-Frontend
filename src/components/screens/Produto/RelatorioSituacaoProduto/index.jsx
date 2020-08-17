@@ -22,6 +22,21 @@ import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import { deepCopy } from "helpers/utilities";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
+const processaFiltrosSituacao = filtros => {
+  const params = deepCopy(filtros);
+  if (filtros.situacao) {
+    const card = listarCardsPermitidos().find(
+      card => card.style === filtros.situacao
+    );
+    params.status = card.incluir_status.map(status =>
+      Object.keys(ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS).find(
+        key => ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS[key] === status
+      )
+    );
+  }
+  return params;
+};
+
 export default () => {
   const [dadosRelatorio, setDadosRelatorio] = useState(null);
   const [filtros, setFiltros] = useState(null);
@@ -31,18 +46,9 @@ export default () => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const params = deepCopy(filtros);
-      if (filtros.situacao) {
-        const card = listarCardsPermitidos().find(
-          card => card.style === filtros.situacao
-        );
-        params.status = card.incluir_status.map(status =>
-          Object.keys(ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS).find(
-            key => ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS[key] === status
-          )
-        );
-      }
-      const response = await getProdutosPorFiltro(params);
+      const response = await getProdutosPorFiltro(
+        processaFiltrosSituacao(filtros)
+      );
       setCarregando(false);
       setDadosRelatorio(response.data.results);
     }
@@ -51,6 +57,17 @@ export default () => {
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
+  };
+
+  const onImprimir = () => {
+    const params = processaFiltrosSituacao(filtros);
+    if (filtros.situacao) {
+      const card = listarCardsPermitidos().find(
+        card => card.style === filtros.situacao
+      );
+      params.situacao = card.titulo;
+    }
+    getPdfRelatorioSituacaoProduto(params);
   };
 
   return (
@@ -98,7 +115,7 @@ export default () => {
             style={BUTTON_STYLE.BLUE}
             icon={BUTTON_ICON.PRINT}
             texto="Imprimir"
-            onClick={() => getPdfRelatorioSituacaoProduto(filtros)}
+            onClick={onImprimir}
             type={BUTTON_TYPE.BUTTON}
             className="float-right mr-2"
           />
