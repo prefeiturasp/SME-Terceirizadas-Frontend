@@ -1,11 +1,15 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
   getNomesProdutos,
@@ -13,14 +17,14 @@ import {
   getNomesFabricantes
 } from "services/produto.service";
 
-import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-
 const initialState = {
   dados: {},
   produtos: [],
   marcas: [],
   fabricantes: []
 };
+
+const FORM_NAME = "formBuscaProduto";
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
@@ -41,7 +45,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit }) => {
+const FormBuscaProduto = ({ onSubmit, history, initialValues }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -77,9 +81,10 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
-          <FinalFormToRedux form="example" />
+          <FinalFormToRedux form={FORM_NAME} />
           <Field
             component={AutoCompleteField}
             dataSource={state.produtos}
@@ -127,4 +132,10 @@ const FormBuscaProduto = ({ onSubmit }) => {
   );
 };
 
-export default FormBuscaProduto;
+const mapStateToProps = state => {
+  return {
+    initialValues: state.finalForm[FORM_NAME]
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));
