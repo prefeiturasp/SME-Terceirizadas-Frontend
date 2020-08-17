@@ -57,16 +57,13 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-quantitativo-por-terceirizada">
         <div className="card-body">
-          <h3 className="font-weight-bold">
-            Relatório quantitativo de produtos por terceirizadas
-          </h3>
           <FormBuscaProduto onSubmit={onSubmitForm} />
         </div>
       </div>
 
       {dadosRelatorio && !dadosRelatorio.length && (
         <div className="text-center mt-5">
-          A consulta retornou 0 resultados.
+          Produto não foi encontrado para filtragem realizada.
         </div>
       )}
 

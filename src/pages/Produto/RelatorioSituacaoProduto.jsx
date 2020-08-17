@@ -14,7 +14,7 @@ const atual = {
 
 export default () => (
   <Page
-    titulo={"Relatorio de Situação do Produto"}
+    titulo={"Relatório de Situação do Produto"}
     botaoVoltar
     voltarPara={"/"}
   >

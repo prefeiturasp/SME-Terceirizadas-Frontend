@@ -129,7 +129,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
             <div className="col-12 col-md-6 col-xl-3">
               <Field
                 component={InputComData}
-                label="Período"
+                label="Data Cadastro"
                 name="data_inicial"
                 className="data-inicial"
                 labelClassName="datepicker-fixed-padding"
