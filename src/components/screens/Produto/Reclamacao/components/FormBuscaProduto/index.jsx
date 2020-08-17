@@ -13,6 +13,8 @@ import {
   getNomesFabricantes
 } from "services/produto.service";
 
+import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
+
 const initialState = {
   dados: {},
   produtos: [],
@@ -77,6 +79,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
       onSubmit={onSubmit}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+          <FinalFormToRedux form="example" />
           <Field
             component={AutoCompleteField}
             dataSource={state.produtos}

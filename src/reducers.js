@@ -13,6 +13,7 @@ import loadFiltroBusca from "./reducers/loadFiltroBusca";
 import loadProduto from "./reducers/produto.reducer";
 import kitLancheReducer from "./reducers/kitLanche.reducer";
 import { produtoReducer } from "./reducers/produtoReducer";
+import finalFormReducer from "./reducers/finalForm";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
   FiltrosDeBuscaForm: loadFiltroBusca,
   kitLanche: kitLancheReducer,
   cadastroProduto: loadProduto,
-  produtos: produtoReducer
+  produtos: produtoReducer,
+  finalForm: finalFormReducer
 });
 
 export default rootReducer;
