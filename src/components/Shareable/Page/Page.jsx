@@ -4,6 +4,7 @@ import { Sidebar } from "../Sidebar";
 import BotaoVoltar from "./BotaoVoltar";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import "./style.scss";
+import BotaoVoltarGoBack from "./BotaoVoltarGoBack";
 
 export default class Page extends Component {
   constructor(props) {
@@ -64,9 +65,10 @@ export default class Page extends Component {
             {children.length ? children[0] : children}
             <h1 className="page-title">
               {titulo}
-              {botaoVoltar && (
+              {botaoVoltar && voltarPara && (
                 <BotaoVoltar location={this.props.location} to={voltarPara} />
               )}
+              {botaoVoltar && voltarPara === undefined && <BotaoVoltarGoBack />}
             </h1>
             {children.map((child, key) => {
               return <div key={key}>{key > 0 && child}</div>;
