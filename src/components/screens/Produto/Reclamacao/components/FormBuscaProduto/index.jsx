@@ -24,8 +24,6 @@ const initialState = {
   fabricantes: []
 };
 
-const FORM_NAME = "formBuscaProduto";
-
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
     case "popularDados":
@@ -45,8 +43,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = props => {
-  const { onSubmit, history, initialValues } = props;
+const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -85,7 +82,7 @@ const FormBuscaProduto = props => {
       initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
-          <FinalFormToRedux form={FORM_NAME} />
+          <FinalFormToRedux form={formName} />
           <Field
             component={AutoCompleteField}
             dataSource={state.produtos}
@@ -139,9 +136,9 @@ const FormBuscaProduto = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[ownProps.formName]
   };
 };
 

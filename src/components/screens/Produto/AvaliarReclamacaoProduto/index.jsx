@@ -79,7 +79,10 @@ export const AvaliarReclamacaoProduto = ({
                 Consulte cadastro completo de produto antes de avaliar
                 reclamação
               </h2>
-              <FormBuscaProduto onSubmit={onSubmit} />
+              <FormBuscaProduto
+                onSubmit={onSubmit}
+                formName="avaliarReclamacaoProduto"
+              />
               {produtos && produtos.length > 0 && (
                 <Fragment>
                   <div className="label-resultados-busca">
