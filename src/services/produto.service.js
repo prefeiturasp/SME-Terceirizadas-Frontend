@@ -462,9 +462,12 @@ export const getProdutosSuspensos = async payload => {
 };
 
 export const getPdfRelatorioSituacaoProduto = async params => {
-  const { data } = await axios.get("/produtos/relatorio-situacao-produto/", {
-    responseType: "blob",
-    params
-  });
+  const { data } = await axios.post(
+    "/produtos/relatorio-situacao-produto/",
+    params,
+    {
+      responseType: "blob"
+    }
+  );
   saveAs(data, "relatorio_situacao_produto.pdf");
 };
