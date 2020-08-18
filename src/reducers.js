@@ -14,6 +14,7 @@ import loadProduto from "./reducers/produto.reducer";
 import kitLancheReducer from "./reducers/kitLanche.reducer";
 import { produtoReducer } from "./reducers/produtoReducer";
 import finalFormReducer from "./reducers/finalForm";
+import avaliarReclamacaoProdutoReducer from "./reducers/avaliarReclamacaoProduto";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
   kitLanche: kitLancheReducer,
   cadastroProduto: loadProduto,
   produtos: produtoReducer,
-  finalForm: finalFormReducer
+  finalForm: finalFormReducer,
+  avaliarReclamacaoProduto: avaliarReclamacaoProdutoReducer
 });
 
 export default rootReducer;

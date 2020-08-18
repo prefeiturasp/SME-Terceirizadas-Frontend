@@ -45,7 +45,8 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, history, initialValues }) => {
+const FormBuscaProduto = props => {
+  const { onSubmit, history, initialValues } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {

@@ -1,22 +1,43 @@
+import { Spin } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import FormBuscaProduto from "components/screens/Produto/Reclamacao/components/FormBuscaProduto";
-import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
 import TabelaProdutos from "./components/TabelaProdutos";
+
 import { deepCopy } from "helpers/utilities";
 import { formatarValues } from "./helpers";
-import { Spin } from "antd";
+
+import {
+  reset,
+  setProdutos,
+  setIndiceProdutoAtivo
+} from "reducers/avaliarReclamacaoProduto";
+
+import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
 import "./style.scss";
 
-export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
-  const [produtos, setProdutos] = useState([]);
+export const AvaliarReclamacaoProduto = ({
+  setPropsPageProduto,
+  history,
+  reset,
+  produtos,
+  setProdutos,
+  indiceProdutoAtivo,
+  setIndiceProdutoAtivo
+}) => {
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
   const [formValues, setFormValues] = useState(null);
-  const [indiceProdutoAtivo, setIndiceProdutoAtivo] = useState(undefined);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    if (history && history.action === "PUSH") {
+      reset();
+    }
     if (uuid) {
       getHomologacao(uuid)
         .then(response => {
@@ -59,7 +80,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
                 reclamação
               </h2>
               <FormBuscaProduto onSubmit={onSubmit} />
-              {produtos.length > 0 && (
+              {produtos && produtos.length > 0 && (
                 <Fragment>
                   <div className="label-resultados-busca">
                     {formValues && formValues.nome_produto
@@ -74,7 +95,7 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
                   />
                 </Fragment>
               )}
-              {produtos.length === 0 && formValues !== null && (
+              {produtos && produtos.length === 0 && formValues !== null && (
                 <div className="text-center mt-5">
                   A consulta retornou 0 resultados.
                 </div>
@@ -87,4 +108,26 @@ export const AvaliarReclamacaoProduto = ({ setPropsPageProduto }) => {
   );
 };
 
-export default AvaliarReclamacaoProduto;
+const mapStateToProps = state => {
+  return {
+    indiceProdutoAtivo: state.avaliarReclamacaoProduto.indiceProdutoAtivo,
+    produtos: state.avaliarReclamacaoProduto.produtos
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setIndiceProdutoAtivo,
+      setProdutos,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AvaliarReclamacaoProduto)
+);
