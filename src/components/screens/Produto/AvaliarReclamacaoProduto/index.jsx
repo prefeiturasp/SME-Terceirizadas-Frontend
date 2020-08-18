@@ -1,8 +1,8 @@
 import { Spin } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
-import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
 import FormBuscaProduto from "components/screens/Produto/Reclamacao/components/FormBuscaProduto";
 import TabelaProdutos from "./components/TabelaProdutos";
