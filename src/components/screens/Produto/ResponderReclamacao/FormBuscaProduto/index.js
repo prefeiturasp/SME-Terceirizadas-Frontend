@@ -161,7 +161,14 @@ const FormBuscaProduto = ({
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               className="float-right ml-3"
-              onClick={() => form.reset()}
+              onClick={() =>
+                form.reset({
+                  status: undefined,
+                  nome_fabricante: undefined,
+                  nome_marca: undefined,
+                  nome_produto: undefined
+                })
+              }
               disabled={submitting}
             />
           </div>

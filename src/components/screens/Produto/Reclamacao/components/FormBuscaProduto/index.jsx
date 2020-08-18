@@ -122,7 +122,13 @@ const FormBuscaProduto = props => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              onClick={() => form.reset()}
+              onClick={() =>
+                form.reset({
+                  nome_fabricante: undefined,
+                  nome_marca: undefined,
+                  nome_produto: undefined
+                })
+              }
               className="float-right ml-3"
               disabled={submitting}
             />
