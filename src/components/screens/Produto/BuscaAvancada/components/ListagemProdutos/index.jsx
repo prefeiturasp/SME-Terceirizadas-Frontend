@@ -22,8 +22,12 @@ const ListagemProdutos = ({ produtos }) => {
         </div>
         {produtos.map((produto, index) => {
           const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
-          const bordas = produto.ativo ? "desativar-borda" : "";
-          const icone = produto.ativo ? "angle-up" : "angle-down";
+          const urlDetalhes = `/pesquisa-desenvolvimento/relatorio-produto?uuid=${
+            produto.uuid
+          }`;
+          const status = produto.ultima_homologacao.status;
+          const bordas = ativos.includes(index) ? "desativar-borda" : "";
+          const icone = ativos.includes(index) ? "angle-up" : "angle-down";
           return (
             <Fragment key={index}>
               <div className="grid-produto-table body-table-produtos">
@@ -31,7 +35,7 @@ const ListagemProdutos = ({ produtos }) => {
                   {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
                 </div>
                 <div className={`${bordas}`}>
-                  {retornaStatusFormatado(produto.status)}
+                  {retornaStatusFormatado(status)}
                 </div>
                 <div className={`${bordas}`}>
                   {produto.criado_em.split(" ")[0]}
@@ -91,13 +95,15 @@ const ListagemProdutos = ({ produtos }) => {
                     <div className="value-empresa">{produto.aditivos}</div>
                   </div>
                   <div className="grid-do-produto botao-produto-visualizar">
+                    {/* <NavLink
+                        activeClassName="active"
+                        className="botao-visualizar-produto"
+                        to={urlDetalhes}
+                      > */}
                     <NavLink
                       activeClassName="active"
                       className="botao-visualizar-produto"
-                      to="/pesquisa-desenvolvimento/relatorio-produto"
-                      onClick={() => {
-                        this.setaProdutoParaVisualizar(produto);
-                      }}
+                      to={urlDetalhes}
                     >
                       Visualizar
                     </NavLink>

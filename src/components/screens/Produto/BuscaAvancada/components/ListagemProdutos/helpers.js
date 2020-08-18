@@ -16,7 +16,11 @@ export const retornaStatusFormatado = status => {
       return "Homologado";
     case "CODAE_NAO_HOMOLOGADO":
       return "Não homologado";
+    case "ESCOLA_OU_NUTRICIONISTA_RECLAMOU":
+      return "Escola ou nutricionista reclamou";
+    case "TERCEIRIZADA_RESPONDEU_RECLAMACAO":
+      return "Terceirizada respondeu a reclamação";
     default:
-      return "TODOS";
+      return "Todos";
   }
 };
