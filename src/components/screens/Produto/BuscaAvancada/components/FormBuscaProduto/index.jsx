@@ -18,7 +18,11 @@ import {
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import "./style.scss";
-import { getOpecoesStatus, retornaStatusBackend } from "./helpers";
+import {
+  getOpecoesStatus,
+  retornaStatusBackend,
+  getTodasOpcoesStatusPorPerfil
+} from "./helpers";
 
 const initialState = {
   dados: {},
@@ -124,13 +128,25 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
       formValues.eh_para_alunos_com_dieta = true;
     }
 
-    if (formValues.status) {
-      formValues.status.map((status, index) => {
-        if (status !== "" && status !== "Todos")
-          formValues.status[index] = retornaStatusBackend(status);
-      });
-      formValues.status.splice(0, 1);
+    if (formValues.status && formValues.status.length !== 0) {
+      if (
+        formValues.status[0] === "Todos" ||
+        formValues.status[1] === "Todos"
+      ) {
+        formValues.status = getTodasOpcoesStatusPorPerfil();
+      } else if (formValues.status.length === 1 && formValues.status[0] === "")
+        formValues.status = getTodasOpcoesStatusPorPerfil();
+      else {
+        formValues.status.map((status, index) => {
+          if (status !== "")
+            formValues.status[index] = retornaStatusBackend(status);
+        });
+      }
+      if (formValues.status[0] === "") formValues.status.splice(0, 1);
+    } else {
+      formValues.status = getTodasOpcoesStatusPorPerfil();
     }
+
     setFiltros({ ...formValues });
     setPage(1);
   };
