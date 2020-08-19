@@ -72,7 +72,7 @@ test("test mesesForaDasFaixas", () => {
     { inicio: 7, fim: 10 },
     { inicio: 12, fim: 17 }
   ];
-  const mesesForaDasFaixas2 = [0, 4, 5, 6, 10, 11, 17, 18, 19, 20, 21, 22, 23];
+  const mesesForaDasFaixas2 = [0, 4, 5, 6, 10, 11, 17, 18, 19, 20, 21, 22];
   expect(mesesForaDasFaixas(faixas2, 24)).toEqual(mesesForaDasFaixas2);
   const faixas3 = [{ inicio: 0, fim: 59 }];
   expect(mesesForaDasFaixas(faixas3)).toEqual([]);
