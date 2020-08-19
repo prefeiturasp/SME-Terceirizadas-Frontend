@@ -2,6 +2,16 @@ import moment from "moment";
 import { listarCardsPermitidos } from "./gestaoDeProdutos";
 
 export const gerarLabelPorFiltro = filtros => {
+  let qtdeFiltros = 0;
+
+  for (let valor of Object.values(filtros)) {
+    if (valor !== undefined) {
+      qtdeFiltros += 1;
+    }
+  }
+  if (qtdeFiltros !== 1) {
+    return "Veja os resultados da busca";
+  }
   if (filtros.nome_produto) {
     return `Veja os resultados para "${filtros.nome_produto}"`;
   }
