@@ -71,7 +71,7 @@ const CARD_PENDENTE_HOMOLOGACAO = {
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.SOLICITACOES_PENDENTE_HOMOLOGACAO,
-  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO, CODAE_QUESTIONADO]
+  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO]
 };
 
 const CARD_CORRECAO_DE_PRODUTO = {
@@ -80,7 +80,7 @@ const CARD_CORRECAO_DE_PRODUTO = {
   icon: "fa-pencil-alt",
   style: "card-product-correction",
   rota: ROTA.CORRECAO_DE_PRODUTO,
-  incluir_status: []
+  incluir_status: [CODAE_QUESTIONADO]
 };
 
 export const listarCardsPermitidos = () => {
