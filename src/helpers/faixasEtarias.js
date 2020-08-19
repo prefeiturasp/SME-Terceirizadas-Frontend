@@ -5,13 +5,17 @@ export const mesesToMesEAnoString = totalMeses => {
   let saida = "";
 
   if (anos > 0) {
-    saida = `${anos} ${anos === 1 ? "ano" : "anos"}`;
+    saida = `${anos.toString().padStart(2, "0")} ${
+      anos === 1 ? "ano" : "anos"
+    }`;
     if (meses > 0) {
       saida += " e ";
     }
   }
   if (anos === 0 || meses > 0) {
-    saida += `${meses} ${meses === 1 ? "mês" : "meses"}`;
+    saida += `${meses.toString().padStart(2, "0")} ${
+      meses === 1 ? "mês" : "meses"
+    }`;
   }
 
   return saida;
@@ -58,14 +62,10 @@ export const mesesForaDasFaixas = (faixas, totalDeMeses = 60) => {
 
   // Ordena faixas
   const meses = [];
-  const ultimoMes = faixas.find(m => m.fim === totalDeMeses - 1);
   for (let mes of range(totalDeMeses - 1)) {
     if (!mesEstaDentroDeAlgumaFaixa(mes, faixas)) {
       meses.push(mes);
     }
-  }
-  if (!ultimoMes) {
-    meses.push(totalDeMeses - 1);
   }
   return meses;
 };
@@ -92,6 +92,16 @@ export const mesesFinaisValidos = (mesInicial, faixasEtarias, limite = 60) => {
   return mesesValidos;
 };
 
-export const faixaToString = ({ inicio, fim }) =>
-  mesesToMesEAnoString(inicio) +
-  (fim - inicio === 1 ? "" : " - " + mesesToMesEAnoString(fim));
+export const faixaToString = ({ inicio, fim }) => {
+  if (inicio === 0 && fim === 1) {
+    return "0 meses a 1 mês (antes de)";
+  }
+  if (fim - inicio === 1) {
+    return mesesToMesEAnoString(inicio);
+  }
+  return `${
+    inicio >= 12
+      ? mesesToMesEAnoString(inicio)
+      : inicio.toString().padStart(2, "0")
+  } a ${fim === 72 ? "06 anos" : mesesToMesEAnoString(fim - 1)}`;
+};
