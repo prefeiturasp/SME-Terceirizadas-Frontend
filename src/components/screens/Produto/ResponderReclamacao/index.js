@@ -1,15 +1,27 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { withRouter, Link } from "react-router-dom";
 import { Spin } from "antd";
-import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
+import React, { useEffect, useState, Fragment } from "react";
+import { connect } from "react-redux";
+import { withRouter, Link } from "react-router-dom";
+import { bindActionCreators } from "redux";
+
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+
+import {
+  reset,
+  setProdutos,
+  setAtivos
+} from "reducers/responderReclamacaoProduto";
+
+import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
+
 import Reclamacao from "./Reclamacao";
 import FormBuscaProduto from "./FormBuscaProduto";
+
 import "./style.scss";
 
 const TabelaProdutos = ({
@@ -17,14 +29,9 @@ const TabelaProdutos = ({
   filtros,
   setProdutos,
   setCarregando,
-  padraoAtivos
+  ativos,
+  setAtivos
 }) => {
-  const [ativos, setAtivos] = useState([]);
-
-  useEffect(() => {
-    if (padraoAtivos) setAtivos(padraoAtivos);
-  }, []);
-
   if (!produtos) return false;
 
   return (
@@ -125,16 +132,24 @@ const TabelaProdutos = ({
   );
 };
 
-const ResponderReclamacaoProduto = ({ history }) => {
-  const [produtos, setProdutos] = useState(null);
+const ResponderReclamacaoProduto = ({
+  history,
+  produtos,
+  setProdutos,
+  ativos,
+  setAtivos,
+  reset
+}) => {
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [filtrarUUID, setFiltrarUUID] = useState(true);
-  const [padraoAtivos, setPadraoAtivos] = useState(false);
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
 
   useEffect(() => {
+    if (history && history.action === "PUSH") {
+      reset();
+    }
     if (!filtros && !uuid) return;
     async function fetchData() {
       setCarregando(true);
@@ -143,10 +158,10 @@ const ResponderReclamacaoProduto = ({ history }) => {
       if (filtrarUUID) {
         setFiltrarUUID(false);
         response = await getReclamacoesTerceirizadaPorFiltro({ uuid: uuid });
-        setPadraoAtivos([0]);
+        setAtivos([0]);
       } else {
         response = await getReclamacoesTerceirizadaPorFiltro(filtros);
-        setPadraoAtivos(false);
+        setAtivos([]);
       }
       setProdutos(response.data.results);
       setCarregando(false);
@@ -182,7 +197,8 @@ const ResponderReclamacaoProduto = ({ history }) => {
               filtros={filtros}
               setProdutos={setProdutos}
               setCarregando={setCarregando}
-              padraoAtivos={padraoAtivos}
+              ativos={ativos}
+              setAtivos={setAtivos}
             />
           </div>
         )}
@@ -191,4 +207,26 @@ const ResponderReclamacaoProduto = ({ history }) => {
   );
 };
 
-export default withRouter(ResponderReclamacaoProduto);
+const mapStateToProps = state => {
+  return {
+    ativos: state.avaliarReclamacaoProduto.ativos,
+    produtos: state.avaliarReclamacaoProduto.produtos
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setAtivos,
+      setProdutos,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ResponderReclamacaoProduto)
+);

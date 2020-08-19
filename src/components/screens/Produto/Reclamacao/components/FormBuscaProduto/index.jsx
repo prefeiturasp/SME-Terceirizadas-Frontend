@@ -1,11 +1,15 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
   getNomesProdutos,
@@ -39,7 +43,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit }) => {
+const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -75,8 +79,10 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+          <FinalFormToRedux form={formName} />
           <Field
             component={AutoCompleteField}
             dataSource={state.produtos}
@@ -113,7 +119,13 @@ const FormBuscaProduto = ({ onSubmit }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              onClick={() => form.reset()}
+              onClick={() =>
+                form.reset({
+                  nome_fabricante: undefined,
+                  nome_marca: undefined,
+                  nome_produto: undefined
+                })
+              }
               className="float-right ml-3"
               disabled={submitting}
             />
@@ -124,4 +136,10 @@ const FormBuscaProduto = ({ onSubmit }) => {
   );
 };
 
-export default FormBuscaProduto;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    initialValues: state.finalForm[ownProps.formName]
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));

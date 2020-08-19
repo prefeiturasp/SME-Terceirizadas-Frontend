@@ -15,16 +15,9 @@ export default class TabelaProdutos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      indiceProdutoAtivo: undefined,
       mostraModalReclamacao: false
     };
   }
-  setIndiceProdutoAtivo = indice => {
-    this.setState({
-      indiceProdutoAtivo:
-        this.state.indiceProdutoAtivo === indice ? undefined : indice
-    });
-  };
 
   abreModalReclamacao = () => {
     this.setState({ mostraModalReclamacao: true });
@@ -35,8 +28,13 @@ export default class TabelaProdutos extends Component {
   };
 
   render() {
-    const { listaProdutos, onAtualizarProduto } = this.props;
-    const { indiceProdutoAtivo, mostraModalReclamacao } = this.state;
+    const {
+      listaProdutos,
+      onAtualizarProduto,
+      indiceProdutoAtivo,
+      setIndiceProdutoAtivo
+    } = this.props;
+    const { mostraModalReclamacao } = this.state;
     return (
       <section className="resultados-busca-produtos">
         <section>
@@ -67,7 +65,7 @@ export default class TabelaProdutos extends Component {
                         isProdutoAtivo ? "up" : "down"
                       }`}
                       onClick={() => {
-                        this.setIndiceProdutoAtivo(indice);
+                        setIndiceProdutoAtivo(indice);
                       }}
                     />
                   </div>

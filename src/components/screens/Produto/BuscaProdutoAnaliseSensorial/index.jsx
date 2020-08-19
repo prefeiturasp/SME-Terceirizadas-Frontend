@@ -1,106 +1,121 @@
+import { Spin } from "antd";
 import React, { Component, Fragment } from "react";
-import {
-  getHomologacoesDeProdutoAnaliseSensorial,
-  flegarHomologacaoPDF
-} from "../../../../services/produto.service";
-import { Paginacao } from "../../../Shareable/Paginacao";
-import DetalheProduto from "./components/DetalheProduto";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
-import "./styles.scss";
-import { retornaHomologacoesComContadorDePaginacoes } from "./helpers";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-import { Link } from "react-router-dom";
-import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+import { Paginacao } from "components/Shareable/Paginacao";
+
+import {
+  reset,
+  setHomologacoes,
+  setPage,
+  setUuidHomologacaoAtiva
+} from "reducers/responderAnaliseSensorial";
+
+import {
+  getHomologacoesDeProdutoAnaliseSensorial,
+  flegarHomologacaoPDF
+} from "services/produto.service";
 import { getRelatorioProdutoAnaliseSensorialRecebimento } from "services/relatorios";
+
+import DetalheProduto from "./components/DetalheProduto";
+import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+
+import "./styles.scss";
 
 class BuscaProdutoAnaliseSensorial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      homologacoes: [],
-      page: 0,
-      totalItens: 0,
       showModal: false,
-      homologacao: {}
+      loading: false
     };
-    this.showModal = this.showModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.pageSize = 3;
   }
 
-  componentDidMount = async () => {
-    const response = await getHomologacoesDeProdutoAnaliseSensorial();
-
-    const arrayHomolog = retornaHomologacoesComContadorDePaginacoes(
-      response.data
-    );
-    this.setState({
-      homologacoes: arrayHomolog,
-      totalItens: response.data.length
-    });
-  };
-
-  showItem = ({ uuid }) => {
-    let { homologacoes, page } = this.state;
-    homologacoes[page].forEach(homolog => {
-      if (uuid === homolog.uuid) {
-        homolog.ativo = !homolog.ativo;
-      } else {
-        homolog.ativo = false;
-      }
-    });
-    this.setState({ homologacoes });
+  componentDidMount = () => {
+    const { history, reset } = this.props;
+    if (history && history.action === "PUSH") {
+      reset();
+      this.refresh();
+    }
   };
 
   pdfGerado = async ({ uuid }) => {
-    let { homologacoes, page } = this.state;
-    homologacoes[page].forEach(homolog => {
-      if (uuid === homolog.uuid) {
-        homolog.pdf_gerado = true;
-      }
-    });
-    this.setState({ homologacoes });
+    let { homologacoes, setHomologacoes } = this.props;
     await flegarHomologacaoPDF(uuid);
+    setHomologacoes(
+      homologacoes.map(hom => {
+        if (hom.uuid === uuid) {
+          hom.pdf_gerado = true;
+        }
+        return hom;
+      })
+    );
   };
 
-  showModal(homologacao) {
-    this.setState({ ...this.state, showModal: true, homologacao: homologacao });
-  }
+  showModal = () => {
+    this.setState({ showModal: true });
+  };
 
-  closeModal() {
-    this.setState({ ...this.state, showModal: false });
-  }
+  closeModal = () => {
+    this.setState({ showModal: false });
+  };
+
+  ativaDesativaHomologacao = uuid => {
+    const { uuidHomologacaoAtiva, setUuidHomologacaoAtiva } = this.props;
+    setUuidHomologacaoAtiva(uuidHomologacaoAtiva === uuid ? undefined : uuid);
+  };
+
+  homologacoesPaginaAtual = () => {
+    const { homologacoes } = this.props;
+    const pageSize = this.pageSize;
+    const page = this.props.page || 0;
+    if (homologacoes) {
+      return homologacoes.slice(page * pageSize, (page + 1) * pageSize);
+    }
+    return [];
+  };
+
+  refresh = async () => {
+    this.setState({ loading: true });
+    const response = await getHomologacoesDeProdutoAnaliseSensorial();
+    this.props.setHomologacoes(response.data);
+    this.setState({
+      loading: false
+    });
+  };
 
   render() {
-    const {
-      homologacoes,
-      page,
-      totalItens,
-      showModal,
-      homologacao
-    } = this.state;
+    const { showModal, loading } = this.state;
+    const { uuidHomologacaoAtiva, homologacoes, page, setPage } = this.props;
     return (
-      <div className="card">
-        <div className="card-body">
-          <header className="cabecalho-page">
-            Últimas solicitações de análise sensorial recebidas:
-          </header>
-          <section className="tabela-produtos">
-            <article className="item-produto">
-              <div>Nome Produto</div>
-              <div>Marca</div>
-              <div>Fabricante</div>
-              <div>Data pedido de análise</div>
-              <div>Documento de Entrega</div>
-              <div />
-            </article>
+      <Spin tip="Carregando..." spinning={loading}>
+        <div className="card">
+          <div className="card-body">
+            <header className="cabecalho-page">
+              Últimas solicitações de análise sensorial recebidas:
+            </header>
+            <section className="tabela-produtos">
+              <article className="item-produto">
+                <div>Nome Produto</div>
+                <div>Marca</div>
+                <div>Fabricante</div>
+                <div>Data pedido de análise</div>
+                <div>Documento de Entrega</div>
+                <div />
+              </article>
 
-            {homologacoes.length > 0 &&
-              homologacoes[page].map((homologacao, index) => {
-                const icone = homologacao.ativo ? "angle-up" : "angle-down";
+              {this.homologacoesPaginaAtual().map((homologacao, index) => {
+                const homologacaoAtiva =
+                  homologacao.uuid === uuidHomologacaoAtiva;
+                const icone = homologacaoAtiva ? "angle-up" : "angle-down";
                 const produto = homologacao.produto;
                 const dataPedido = homologacao.logs[
                   homologacao.logs.length - 1
@@ -116,60 +131,97 @@ class BuscaProdutoAnaliseSensorial extends Component {
                       <div>
                         <i
                           className={`fas fa-${icone}`}
-                          onClick={() => this.showItem(homologacao)}
+                          onClick={() =>
+                            this.ativaDesativaHomologacao(homologacao.uuid)
+                          }
                         />
                       </div>
                     </article>
-                    {homologacao.ativo && (
-                      <DetalheProduto homologacao={homologacao} />
-                    )}
-                    {homologacao.ativo && (
-                      <article className="rodape-com-botoes">
-                        <Botao
-                          texto={"Documento de entrega"}
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          onClick={() => {
-                            this.pdfGerado(homologacao);
-                            getRelatorioProdutoAnaliseSensorialRecebimento(
-                              homologacao.produto
-                            );
-                          }}
-                        />
-                        <Link
-                          to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${
-                            homologacao.uuid
-                          }`}
-                        >
+                    {homologacaoAtiva && (
+                      <Fragment>
+                        <DetalheProduto homologacao={homologacao} />
+                        <article className="rodape-com-botoes">
                           <Botao
-                            texto="Ver produto"
-                            icon={undefined}
+                            texto={"Documento de entrega"}
+                            type={BUTTON_TYPE.SUBMIT}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => {
+                              this.pdfGerado(homologacao);
+                              getRelatorioProdutoAnaliseSensorialRecebimento(
+                                homologacao.produto
+                              );
+                            }}
                           />
-                        </Link>
-                        <Botao
-                          texto={"Responder"}
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN}
-                          onClick={() => this.showModal(homologacao)}
-                        />
-                      </article>
+                          <Link
+                            to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${
+                              homologacao.uuid
+                            }`}
+                          >
+                            <Botao
+                              texto="Ver produto"
+                              icon={undefined}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                          </Link>
+                          <Botao
+                            texto={"Responder"}
+                            type={BUTTON_TYPE.SUBMIT}
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={this.showModal}
+                          />
+                        </article>
+                      </Fragment>
                     )}
                   </Fragment>
                 );
               })}
-          </section>
+            </section>
 
-          <ModalResponderAnaliseSensorial
-            showModal={showModal}
-            closeModal={this.closeModal}
-            homologacao={homologacao}
-          />
-          <Paginacao defaultCurrent={1} total={totalItens} pageSize={10} />
+            <ModalResponderAnaliseSensorial
+              showModal={showModal}
+              closeModal={this.closeModal}
+              homologacao={
+                homologacoes
+                  ? homologacoes.find(hom => hom.uuid === uuidHomologacaoAtiva)
+                  : undefined
+              }
+              onSend={this.refresh}
+            />
+            <Paginacao
+              defaultCurrent={page === undefined ? 1 : page}
+              total={homologacoes ? homologacoes.length : 0}
+              pageSize={this.pageSize}
+              onChange={page => setPage(page - 1)}
+            />
+          </div>
         </div>
-      </div>
+      </Spin>
     );
   }
 }
 
-export default BuscaProdutoAnaliseSensorial;
+const mapStateToProps = state => {
+  return {
+    uuidHomologacaoAtiva: state.responderAnaliseSensorial.uuidHomologacaoAtiva,
+    homologacoes: state.responderAnaliseSensorial.homologacoes,
+    page: state.responderAnaliseSensorial.page
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setHomologacoes,
+      setPage,
+      setUuidHomologacaoAtiva,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BuscaProdutoAnaliseSensorial)
+);

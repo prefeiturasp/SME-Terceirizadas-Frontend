@@ -1,32 +1,61 @@
-import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
+
+import {
+  reset,
+  setProdutos,
+  setProdutosCount,
+  setAtivos,
+  setFiltros,
+  setPage
+} from "reducers/buscaAvancadaProduto";
+
 import { getProdutosListagem } from "services/produto.service";
+
 import FormBuscaProduto from "./components/FormBuscaProduto";
 import ListagemProdutos from "./components/ListagemProdutos";
-import "./style.scss";
+
 import { ordenaProdutos } from "./helpers";
-import "antd/dist/antd.css";
+
 import "./style.scss";
 import "antd/dist/antd.css";
 
-const BuscaAvancada = () => {
-  const [produtos, setProdutos] = useState(null);
-  const [produtosCount, setProdutosCount] = useState(0);
+const BuscaAvancada = ({
+  produtos,
+  setProdutos,
+  produtosCount,
+  setProdutosCount,
+  page,
+  setPage,
+  ativos,
+  setAtivos,
+  filtros,
+  setFiltros,
+  history,
+  reset
+}) => {
   const [carregando, setCarregando] = useState(false);
-  const [filtros, setFiltros] = useState(null);
-  const [page, setPage] = useState(1);
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  const PAGE_SIZE = 3;
+
+  const fetchData = async () => {
+    setCarregando(true);
+    const params = { ...filtros, page: page, page_size: PAGE_SIZE };
+    const response = await getProdutosListagem(params);
+    setProdutos(ordenaProdutos(response.data.results));
+    setProdutosCount(response.data.count);
+    setCarregando(false);
+  };
 
   useEffect(() => {
-    if (!filtros) return;
-    async function fetchData() {
-      setCarregando(true);
-      const params = { ...filtros, page: page, page_size: 10 };
-      const response = await getProdutosListagem(params);
-      setProdutos(ordenaProdutos(response.data.results));
-      setProdutosCount(response.data.count);
-      setCarregando(false);
-    }
-    fetchData();
+    if (firstLoad) {
+      if (history && history.action === "PUSH") reset();
+      setFirstLoad(false);
+    } else if (filtros) fetchData();
   }, [filtros, page]);
 
   return (
@@ -48,16 +77,20 @@ const BuscaAvancada = () => {
           )}
           {produtos && !!produtos.length && (
             <>
-              <ListagemProdutos produtos={produtos} />
+              <ListagemProdutos
+                produtos={produtos}
+                ativos={ativos}
+                setAtivos={setAtivos}
+              />
 
               <Pagination
-                defaultCurrent={1}
-                current={page}
+                current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}
                 onChange={page => {
                   setPage(page);
                 }}
+                pageSize={PAGE_SIZE}
               />
             </>
           )}
@@ -67,4 +100,32 @@ const BuscaAvancada = () => {
   );
 };
 
-export default BuscaAvancada;
+const mapStateToProps = state => {
+  return {
+    ativos: state.buscaAvancadaProduto.ativos,
+    filtros: state.buscaAvancadaProduto.filtros,
+    produtos: state.buscaAvancadaProduto.produtos,
+    produtosCount: state.buscaAvancadaProduto.produtosCount,
+    page: state.buscaAvancadaProduto.page
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setAtivos,
+      setFiltros,
+      setPage,
+      setProdutos,
+      setProdutosCount,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BuscaAvancada)
+);

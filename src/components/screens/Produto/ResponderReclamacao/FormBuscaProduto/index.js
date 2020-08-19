@@ -1,6 +1,9 @@
+import { Row, Col } from "antd";
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
-import { Row, Col } from "antd";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
@@ -8,11 +11,14 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
+
 import {
   getNomesProdutos,
   getNomesMarcas,
   getNomesFabricantes
 } from "services/produto.service";
+
 import "./style.scss";
 
 const initialState = {
@@ -22,6 +28,8 @@ const initialState = {
   marcas: [],
   fabricantes: []
 };
+
+const FORM_NAME = "formBuscaProduto";
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
@@ -43,7 +51,12 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, exibirStatus = true }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  exibirStatus = true,
+  initialValues,
+  history
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -79,8 +92,10 @@ const FormBuscaProduto = ({ onSubmit, exibirStatus = true }) => {
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
+          <FinalFormToRedux form={FORM_NAME} />
           <Row>
             <Col>
               <Field
@@ -146,7 +161,14 @@ const FormBuscaProduto = ({ onSubmit, exibirStatus = true }) => {
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               className="float-right ml-3"
-              onClick={() => form.reset()}
+              onClick={() =>
+                form.reset({
+                  status: undefined,
+                  nome_fabricante: undefined,
+                  nome_marca: undefined,
+                  nome_produto: undefined
+                })
+              }
               disabled={submitting}
             />
           </div>
@@ -156,4 +178,10 @@ const FormBuscaProduto = ({ onSubmit, exibirStatus = true }) => {
   );
 };
 
-export default FormBuscaProduto;
+const mapStateToProps = state => {
+  return {
+    initialValues: state.finalForm[FORM_NAME]
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));

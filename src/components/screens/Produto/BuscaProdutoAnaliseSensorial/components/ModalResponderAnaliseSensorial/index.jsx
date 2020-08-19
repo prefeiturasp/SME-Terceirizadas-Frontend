@@ -96,8 +96,8 @@ class ModalResponderAnaliseSensorial extends Component {
   };
 
   resetForm = () => {
-    const { closeModal } = this.props;
-    this.props.reset();
+    const { closeModal, onSend } = this.props;
+    onSend();
     closeModal();
     this.setState({ arquivos: [] });
   };

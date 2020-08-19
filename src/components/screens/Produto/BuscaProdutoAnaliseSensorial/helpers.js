@@ -10,7 +10,7 @@ export const retornaHomologacoesComContadorDePaginacoes = homologacoes => {
       listagemTemp = [homolog];
     }
   });
-  if (listagemTemp.length <= 10) {
+  if (listagemTemp.length > 1) {
     listagemPaginacao.push(listagemTemp);
   }
   return listagemPaginacao;
