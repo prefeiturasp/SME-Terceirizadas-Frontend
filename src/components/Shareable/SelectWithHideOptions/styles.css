@@ -1,7 +1,9 @@
 .ant-select-selection--multiple {
-  min-height: 32px;
-}
+  min-height: min-content;
+  overflow: auto;
+  max-height: max-content;
 
+}
 .ant-select-selection {
   height: 38px !important;
 }
