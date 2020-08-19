@@ -78,10 +78,16 @@ export default class FaixasEtariasEditar extends Component {
   selecionaMes(mes) {
     if (isNaN(mes)) return;
     if (this.state.mesEdicaoAtual !== undefined) {
+      let segundoClique;
+      if (this.state.mesEdicaoAtual === 0 && (mes === 0 || mes === 1)) {
+        segundoClique = 1;
+      } else {
+        segundoClique = mes + 1;
+      }
       const faixasEtarias = ordenaFaixas(
         this.state.faixasEtarias.concat({
           inicio: this.state.mesEdicaoAtual,
-          fim: mes === this.state.mesEdicaoAtual ? mes + 1 : mes
+          fim: segundoClique
         })
       );
       this.setState({
