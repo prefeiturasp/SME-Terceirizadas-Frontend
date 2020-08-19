@@ -7,7 +7,7 @@ describe("test gerarLabelPorFiltro", () => {
         nome_produto: "ASDF",
         nome_marca: "QweR"
       })
-    ).toEqual("Veja os resultados da busca");
+    ).toEqual("Veja os resultados para a busca");
   });
   test("apenas nome_produto 01", () => {
     expect(

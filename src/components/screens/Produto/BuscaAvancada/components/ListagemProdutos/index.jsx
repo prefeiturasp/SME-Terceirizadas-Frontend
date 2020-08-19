@@ -1,12 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { retornaStatusFormatado } from "./helpers";
 
-const ListagemProdutos = ({ produtos }) => {
-  const [ativos, setAtivos] = useState([]);
-
+const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
   return (
     <section className="resultado-busca-produto-avancada">
       <header>Veja os resultados para busca</header>
@@ -26,8 +24,10 @@ const ListagemProdutos = ({ produtos }) => {
             produto.uuid
           }`;
           const status = produto.ultima_homologacao.status;
-          const bordas = ativos.includes(index) ? "desativar-borda" : "";
-          const icone = ativos.includes(index) ? "angle-up" : "angle-down";
+          const bordas =
+            ativos && ativos.includes(produto.uuid) ? "desativar-borda" : "";
+          const icone =
+            ativos && ativos.includes(produto.uuid) ? "angle-up" : "angle-down";
           return (
             <Fragment key={index}>
               <div className="grid-produto-table body-table-produtos">
@@ -47,14 +47,16 @@ const ListagemProdutos = ({ produtos }) => {
                   <i
                     className={`fas fa-${icone}`}
                     onClick={() => {
-                      ativos.includes(index)
-                        ? setAtivos(ativos.filter(el => el !== index))
-                        : setAtivos([...ativos, index]);
+                      ativos && ativos.includes(produto.uuid)
+                        ? setAtivos(ativos.filter(el => el !== produto.uuid))
+                        : setAtivos(
+                            ativos ? [...ativos, produto.uuid] : [produto.uuid]
+                          );
                     }}
                   />
                 </div>
               </div>
-              {ativos.includes(index) && (
+              {ativos && ativos.includes(produto.uuid) && (
                 <section className="resultado-busca-detalhe-produto">
                   <div className="grid-contatos-terceirizada">
                     <div className="label-empresa">
@@ -95,11 +97,6 @@ const ListagemProdutos = ({ produtos }) => {
                     <div className="value-empresa">{produto.aditivos}</div>
                   </div>
                   <div className="grid-do-produto botao-produto-visualizar">
-                    {/* <NavLink
-                        activeClassName="active"
-                        className="botao-visualizar-produto"
-                        to={urlDetalhes}
-                      > */}
                     <NavLink
                       activeClassName="active"
                       className="botao-visualizar-produto"
