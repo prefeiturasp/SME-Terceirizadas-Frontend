@@ -20,7 +20,8 @@ const BuscaAvancada = () => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosListagem({ ...filtros, page: page });
+      const params = { ...filtros, page: page, page_size: 10 };
+      const response = await getProdutosListagem(params);
       setProdutos(ordenaProdutos(response.data.results));
       setProdutosCount(response.data.count);
       setCarregando(false);
