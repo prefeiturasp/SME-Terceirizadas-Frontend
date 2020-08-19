@@ -40,7 +40,7 @@ const BuscaAvancada = ({
   const [carregando, setCarregando] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const PAGE_SIZE = 3;
+  const PAGE_SIZE = 10;
 
   const fetchData = async () => {
     setCarregando(true);

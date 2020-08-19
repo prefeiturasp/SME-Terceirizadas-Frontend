@@ -65,8 +65,10 @@ function reducer(state, { type: actionType, payload }) {
 
 const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [statusSelecionados, setStatusSelecionados] = useState([]);
-  const [opcoesStatus, setOpcoesStatus] = useState(getOpecoesStatus());
+  const [status, setStatus] = useState({
+    opcoesStatus: getOpecoesStatus(),
+    statusSelecionados: []
+  });
 
   useEffect(() => {
     async function fetchData() {
@@ -104,20 +106,24 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
 
   const onSelectStatus = value => {
     if (value === "Todos") {
-      setOpcoesStatus(["Todos"]);
-      setStatusSelecionados(["Todos"]);
+      setStatus({ opcoesStatus: [], statusSelecionados: ["Todos"] });
     } else {
-      setStatusSelecionados([...statusSelecionados, value]);
+      setStatus({
+        opcoesStatus: getOpecoesStatus(),
+        statusSelecionados: [...status.statusSelecionados, value]
+      });
     }
   };
 
   const onDeselectStatus = value => {
     if (value === "Todos") {
-      setOpcoesStatus(getOpecoesStatus());
-      setStatusSelecionados([]);
+      setStatus({ opcoesStatus: getOpecoesStatus(), statusSelecionados: [] });
     } else {
-      const filtered = statusSelecionados.filter(item => item !== value);
-      setStatusSelecionados(filtered);
+      const filtered = status.statusSelecionados.filter(item => item !== value);
+      setStatus({
+        opcoesStatus: getOpecoesStatus(),
+        statusSelecionados: filtered
+      });
     }
   };
 
@@ -131,10 +137,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
     }
 
     if (formValues.status && formValues.status.length !== 0) {
-      if (
-        formValues.status[0] === "Todos" ||
-        formValues.status[1] === "Todos"
-      ) {
+      if (formValues.status.includes("Todos")) {
         formValues.status = getTodasOpcoesStatusPorPerfil();
       } else if (formValues.status.length === 1 && formValues.status[0] === "")
         formValues.status = getTodasOpcoesStatusPorPerfil();
@@ -175,8 +178,8 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                     placeholder="De"
                     minDate={null}
                     maxDate={
-                      values.data_analise_final
-                        ? moment(values.data_analise_final, "DD/MM/YYYY")._d
+                      values.data_final
+                        ? moment(values.data_final, "DD/MM/YYYY")._d
                         : moment()._d
                     }
                   />
@@ -189,8 +192,8 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                     popperPlacement="bottom-end"
                     placeholder="Até"
                     minDate={
-                      values.data_analise_inicial
-                        ? moment(values.data_analise_inicial, "DD/MM/YYYY")._d
+                      values.data_inicial
+                        ? moment(values.data_inicial, "DD/MM/YYYY")._d
                         : null
                     }
                     maxDate={moment()._d}
@@ -202,9 +205,9 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
               <label>Status</label>
               <Field
                 component={SelectWithHideOptions}
-                options={opcoesStatus}
+                options={status.opcoesStatus}
                 name="status"
-                selectedItems={statusSelecionados}
+                selectedItems={status.statusSelecionados}
                 onSelect={value => onSelectStatus(value)}
                 onDeselect={value => onDeselectStatus(value)}
               />
@@ -323,6 +326,10 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                   status: undefined,
                   data_final: undefined,
                   data_inicial: undefined
+                });
+                setStatus({
+                  opcoesStatus: getOpecoesStatus(),
+                  statusSelecionados: []
                 });
               }}
             />
