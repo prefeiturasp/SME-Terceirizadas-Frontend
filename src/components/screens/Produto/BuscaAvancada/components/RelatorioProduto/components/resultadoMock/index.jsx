@@ -1,7 +1,7 @@
 import React from "react";
 import { produto, informacoesNutricionais, logs } from "../helpers";
-import { FluxoDeStatus } from "../../../../../../Shareable/FluxoDeStatus";
-import { fluxoPartindoTerceirizada } from "../../../../../../Shareable/FluxoDeStatus/helper";
+import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
+import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 import { Component } from "react";
 import "../styles.scss";
 import Botao from "components/Shareable/Botao";
