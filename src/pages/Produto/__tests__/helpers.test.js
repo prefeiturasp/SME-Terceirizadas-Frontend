@@ -9,7 +9,7 @@ describe("Test escolheStatusPendenteHomologacao", () => {
     localStorage.setItem("tipo_perfil", TIPO_PERFIL.GESTAO_PRODUTO);
     expect(escolheStatusPendenteHomologacao()).toEqual([
       ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO,
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_AUTORIZOU_RECLAMACAO
+      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO
     ]);
   });
   test("retorna um único status nos outros perfis", () => {

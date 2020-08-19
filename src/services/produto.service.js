@@ -471,3 +471,9 @@ export const getPdfRelatorioSituacaoProduto = async params => {
   );
   saveAs(data, "relatorio_situacao_produto.pdf");
 };
+
+export const getProdutosListagem = async params => {
+  return await axios.get(`/produtos/`, {
+    params: params
+  });
+};
