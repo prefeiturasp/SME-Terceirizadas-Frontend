@@ -10,7 +10,7 @@ export const gerarLabelPorFiltro = filtros => {
     }
   }
   if (qtdeFiltros !== 1) {
-    return "Veja os resultados da busca";
+    return "Veja os resultados para a busca";
   }
   if (filtros.nome_produto) {
     return `Veja os resultados para "${filtros.nome_produto}"`;
@@ -25,7 +25,7 @@ export const gerarLabelPorFiltro = filtros => {
     const card = listarCardsPermitidos().find(
       c => c.style === filtros.situacao
     );
-    return `Veja os resultados para ${card.titulo}`;
+    return `Veja os resultados para "${card.titulo}"`;
   }
   if (filtros.data_inicial && filtros.data_final) {
     return `Veja os resultados para o período "${moment(
@@ -45,6 +45,6 @@ export const gerarLabelPorFiltro = filtros => {
       "DD/MM/YYYY"
     ).format("DD/MM/YYYY")}":`;
   } else {
-    return "Veja os resultados da busca:";
+    return "Veja os resultados para a busca:";
   }
 };
