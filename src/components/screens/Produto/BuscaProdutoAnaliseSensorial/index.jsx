@@ -1,29 +1,38 @@
+import { Spin } from "antd";
 import React, { Component, Fragment } from "react";
-import {
-  getHomologacoesDeProdutoAnaliseSensorial,
-  flegarHomologacaoPDF
-} from "../../../../services/produto.service";
-import { Paginacao } from "../../../Shareable/Paginacao";
-import DetalheProduto from "./components/DetalheProduto";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
-import "./styles.scss";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-import { Link } from "react-router-dom";
-import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+import { Paginacao } from "components/Shareable/Paginacao";
+
+import {
+  reset,
+  setHomologacoes,
+  setPage,
+  setUuidHomologacaoAtiva
+} from "reducers/responderAnaliseSensorial";
+
+import {
+  getHomologacoesDeProdutoAnaliseSensorial,
+  flegarHomologacaoPDF
+} from "services/produto.service";
 import { getRelatorioProdutoAnaliseSensorialRecebimento } from "services/relatorios";
-import { Spin } from "antd";
+
+import DetalheProduto from "./components/DetalheProduto";
+import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+
+import "./styles.scss";
 
 class BuscaProdutoAnaliseSensorial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      homologacoes: [],
-      page: 0,
-      uuidHomologacaoAtiva: undefined,
       showModal: false,
       loading: false
     };
@@ -31,20 +40,24 @@ class BuscaProdutoAnaliseSensorial extends Component {
   }
 
   componentDidMount = () => {
-    this.refresh();
+    const { history, reset } = this.props;
+    if (history && history.action === "PUSH") {
+      reset();
+      this.refresh();
+    }
   };
 
   pdfGerado = async ({ uuid }) => {
-    let { homologacoes } = this.state;
+    let { homologacoes, setHomologacoes } = this.props;
     await flegarHomologacaoPDF(uuid);
-    this.setState({
-      homologacoes: homologacoes.map(hom => {
+    setHomologacoes(
+      homologacoes.map(hom => {
         if (hom.uuid === uuid) {
           hom.pdf_gerado = true;
         }
         return hom;
       })
-    });
+    );
   };
 
   showModal = () => {
@@ -56,29 +69,32 @@ class BuscaProdutoAnaliseSensorial extends Component {
   };
 
   ativaDesativaHomologacao = uuid => {
-    this.setState({
-      uuidHomologacaoAtiva:
-        this.state.uuidHomologacaoAtiva === uuid ? undefined : uuid
-    });
+    const { uuidHomologacaoAtiva, setUuidHomologacaoAtiva } = this.props;
+    setUuidHomologacaoAtiva(uuidHomologacaoAtiva === uuid ? undefined : uuid);
   };
 
   homologacoesPaginaAtual = () => {
-    const { homologacoes, page } = this.state;
+    const { homologacoes } = this.props;
     const pageSize = this.pageSize;
-    return homologacoes.slice(page * pageSize, (page + 1) * pageSize);
+    const page = this.props.page || 0;
+    if (homologacoes) {
+      return homologacoes.slice(page * pageSize, (page + 1) * pageSize);
+    }
+    return [];
   };
 
   refresh = async () => {
     this.setState({ loading: true });
     const response = await getHomologacoesDeProdutoAnaliseSensorial();
+    this.props.setHomologacoes(response.data);
     this.setState({
-      homologacoes: response.data,
       loading: false
     });
   };
 
   render() {
-    const { showModal, uuidHomologacaoAtiva, loading } = this.state;
+    const { showModal, loading } = this.state;
+    const { uuidHomologacaoAtiva, homologacoes, page, setPage } = this.props;
     return (
       <Spin tip="Carregando..." spinning={loading}>
         <div className="card">
@@ -164,16 +180,18 @@ class BuscaProdutoAnaliseSensorial extends Component {
             <ModalResponderAnaliseSensorial
               showModal={showModal}
               closeModal={this.closeModal}
-              homologacao={this.state.homologacoes.find(
-                hom => hom.uuid === this.state.uuidHomologacaoAtiva
-              )}
+              homologacao={
+                homologacoes
+                  ? homologacoes.find(hom => hom.uuid === uuidHomologacaoAtiva)
+                  : undefined
+              }
               onSend={this.refresh}
             />
             <Paginacao
-              defaultCurrent={1}
-              total={this.state.homologacoes.length}
+              defaultCurrent={page === undefined ? 1 : page}
+              total={homologacoes ? homologacoes.length : 0}
               pageSize={this.pageSize}
-              onChange={page => this.setState({ page: page - 1 })}
+              onChange={page => setPage(page - 1)}
             />
           </div>
         </div>
@@ -182,4 +200,28 @@ class BuscaProdutoAnaliseSensorial extends Component {
   }
 }
 
-export default BuscaProdutoAnaliseSensorial;
+const mapStateToProps = state => {
+  return {
+    uuidHomologacaoAtiva: state.responderAnaliseSensorial.uuidHomologacaoAtiva,
+    homologacoes: state.responderAnaliseSensorial.homologacoes,
+    page: state.responderAnaliseSensorial.page
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setHomologacoes,
+      setPage,
+      setUuidHomologacaoAtiva,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BuscaProdutoAnaliseSensorial)
+);
