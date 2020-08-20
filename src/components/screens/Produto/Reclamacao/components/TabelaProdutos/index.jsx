@@ -65,7 +65,9 @@ export default class TabelaProdutos extends Component {
                         isProdutoAtivo ? "up" : "down"
                       }`}
                       onClick={() => {
-                        setIndiceProdutoAtivo(indice);
+                        setIndiceProdutoAtivo(
+                          isProdutoAtivo ? undefined : indice
+                        );
                       }}
                     />
                   </div>

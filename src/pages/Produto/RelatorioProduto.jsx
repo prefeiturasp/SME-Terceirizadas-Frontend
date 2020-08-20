@@ -4,8 +4,7 @@ import RelatorioProduto from "../../components/screens/Produto/BuscaAvancada/com
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  RELATORIO_PRODUTO,
-  BUSCA_PRODUTO
+  RELATORIO_PRODUTO
 } from "../../configs/constants";
 
 const atual = {
@@ -14,11 +13,7 @@ const atual = {
 };
 
 export default () => (
-  <Page
-    titulo={"Consultar Produto"}
-    botaoVoltar
-    voltarPara={`/${PESQUISA_DESENVOLVIMENTO}/${BUSCA_PRODUTO}`}
-  >
+  <Page titulo={"Consultar Produto"} botaoVoltar>
     <Breadcrumb home={"/"} atual={atual} />
     <RelatorioProduto />
   </Page>
