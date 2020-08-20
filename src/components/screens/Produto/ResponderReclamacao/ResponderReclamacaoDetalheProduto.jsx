@@ -23,7 +23,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
         setProduto(null);
         setExibirModal(false);
         const response = await getHomologacaoProduto(_uuid || uuid);
-        const _produto = response.data.produto;
+        const _produto = response.data.results;
         const logOrdenado = ordenaLogs(_produto.ultima_homologacao.logs);
         _produto.logOrdenado = logOrdenado;
         setProduto(_produto);

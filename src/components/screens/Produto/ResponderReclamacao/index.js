@@ -209,8 +209,8 @@ const ResponderReclamacaoProduto = ({
 
 const mapStateToProps = state => {
   return {
-    ativos: state.avaliarReclamacaoProduto.ativos,
-    produtos: state.avaliarReclamacaoProduto.produtos
+    ativos: state.responderReclamacaoProduto.ativos,
+    produtos: state.responderReclamacaoProduto.produtos
   };
 };
 
