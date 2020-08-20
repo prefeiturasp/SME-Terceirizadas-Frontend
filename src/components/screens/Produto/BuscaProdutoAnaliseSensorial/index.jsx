@@ -36,7 +36,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
       showModal: false,
       loading: false
     };
-    this.pageSize = 3;
+    this.pageSize = 10;
   }
 
   componentDidMount = () => {
