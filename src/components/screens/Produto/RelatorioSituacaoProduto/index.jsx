@@ -110,7 +110,7 @@ export default () => {
               texto="Imprimir"
               onClick={onImprimir}
               type={BUTTON_TYPE.BUTTON}
-              className="float-right mr-2"
+              className="float-right"
             />
             <Botao
               texto="voltar"
@@ -121,7 +121,7 @@ export default () => {
               onClick={() => {
                 setDadosRelatorio(null);
               }}
-              className="float-right"
+              className="float-right mr-2"
             />
           </section>
         </Modal.Body>
