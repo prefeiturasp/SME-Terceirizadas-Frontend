@@ -39,13 +39,11 @@ class BuscaProdutoAnaliseSensorial extends Component {
     this.pageSize = 10;
   }
 
-  componentDidMount = () => {
-    const { history, reset } = this.props;
-    if (history && history.action === "PUSH") {
-      reset();
-      this.refresh();
-    }
-  };
+  componentWillMount() {
+    const { history, reset, homologacoes } = this.props;
+    if (history && history.action === "PUSH") reset();
+    if (homologacoes === undefined || history.action === "PUSH") this.refresh();
+  }
 
   pdfGerado = async ({ uuid }) => {
     let { homologacoes, setHomologacoes } = this.props;
@@ -76,9 +74,9 @@ class BuscaProdutoAnaliseSensorial extends Component {
   homologacoesPaginaAtual = () => {
     const { homologacoes } = this.props;
     const pageSize = this.pageSize;
-    const page = this.props.page || 0;
+    const page = this.props.page || 1;
     if (homologacoes) {
-      return homologacoes.slice(page * pageSize, (page + 1) * pageSize);
+      return homologacoes.slice((page - 1) * pageSize, page * pageSize);
     }
     return [];
   };
@@ -191,7 +189,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
               defaultCurrent={page === undefined ? 1 : page}
               total={homologacoes ? homologacoes.length : 0}
               pageSize={this.pageSize}
-              onChange={page => setPage(page - 1)}
+              onChange={setPage}
             />
           </div>
         </div>
