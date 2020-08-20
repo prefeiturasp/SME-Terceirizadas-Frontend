@@ -155,7 +155,7 @@ const ResponderReclamacaoProduto = ({
       setCarregando(true);
       setProdutos(null);
       let response = {};
-      if (filtrarUUID) {
+      if (filtrarUUID && uuid) {
         setFiltrarUUID(false);
         response = await getReclamacoesTerceirizadaPorFiltro({ uuid: uuid });
         setAtivos([0]);
