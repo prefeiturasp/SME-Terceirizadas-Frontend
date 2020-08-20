@@ -105,6 +105,14 @@ export default () => {
 
           <section className="m-3">
             <Botao
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              texto="Imprimir"
+              onClick={onImprimir}
+              type={BUTTON_TYPE.BUTTON}
+              className="float-right mr-2"
+            />
+            <Botao
               texto="voltar"
               titulo="voltar"
               type={BUTTON_TYPE.BUTTON}
@@ -114,14 +122,6 @@ export default () => {
                 setDadosRelatorio(null);
               }}
               className="float-right"
-            />
-            <Botao
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              texto="Imprimir"
-              onClick={onImprimir}
-              type={BUTTON_TYPE.BUTTON}
-              className="float-right mr-2"
             />
           </section>
         </Modal.Body>

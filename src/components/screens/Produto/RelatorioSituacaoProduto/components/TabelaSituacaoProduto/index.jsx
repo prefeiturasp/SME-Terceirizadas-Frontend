@@ -3,10 +3,10 @@ import React, { Fragment } from "react";
 import { parseDataHoraBrToMoment } from "helpers/utilities";
 
 import "./style.scss";
-import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+import { TODOS_OS_CARDS } from "helpers/gestaoDeProdutos";
 
 const obtemTituloDoCardAPartirDoStatus = status => {
-  const card = listarCardsPermitidos().find(c =>
+  const card = TODOS_OS_CARDS.find(c =>
     c.incluir_status.includes(status.toLowerCase())
   );
   return card.titulo;
