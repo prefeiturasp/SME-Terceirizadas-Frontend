@@ -1,259 +1,131 @@
-import React, { Component, Fragment } from "react";
-import { reduxForm } from "redux-form";
-import "antd/dist/antd.css";
-import "./style.scss";
-
-import {
-  tranformaEmobjetoDeBusca,
-  retornaArrayDeAcordoComPerfil,
-  filtrarProdutosNaListagem,
-  MIN_DATE
-} from "./helpers";
+import { Spin, Pagination } from "antd";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
+
 import {
-  buscaProdutos,
-  buscaNomesProduto,
-  buscaNomesMarcas,
-  buscaNomesFabricantes,
-  setaProdutosFiltrados,
-  buscaInformacoesNutricionais
-} from "./produtoAction";
+  reset,
+  setProdutos,
+  setProdutosCount,
+  setAtivos,
+  setFiltros,
+  setPage
+} from "reducers/buscaAvancadaProduto";
+
+import { getProdutosListagem } from "services/produto.service";
+
+import FormBuscaProduto from "./components/FormBuscaProduto";
+import ListagemProdutos from "./components/ListagemProdutos";
+
+import { ordenaProdutos } from "./helpers";
+
+import "./style.scss";
 import "antd/dist/antd.css";
-import { Spin } from "antd";
-import ListagemProdutos from "./ListagemProdutos";
-import FormBuscaProduto from "./FormBuscaProduto";
 
-class BuscaAvancada extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      statusOptions: [],
-      tipos_produto: [
-        { nome: "comum", check: false, label: "Comum" },
-        { nome: "dieta_especial", check: false, label: "Dieta especial" }
-      ],
-      produtoComum: false,
-      produtoDieta: false,
-      produto_alergenico: false,
-      selectedItems: [],
-      loading: true,
-      pesquisado: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.onSelectStatus = this.onSelectStatus.bind(this);
-    this.onDeselectStatus = this.onDeselectStatus.bind(this);
-    this.checkTipoProduto = this.checkTipoProduto.bind(this);
-    this.checkProdutoAlergenico = this.checkProdutoAlergenico.bind(this);
-    this.onClear = this.onClear.bind(this);
-    this.onSearch = this.onSearch.bind(this);
-  }
+const BuscaAvancada = ({
+  produtos,
+  setProdutos,
+  produtosCount,
+  setProdutosCount,
+  page,
+  setPage,
+  ativos,
+  setAtivos,
+  filtros,
+  setFiltros,
+  history,
+  reset
+}) => {
+  const [carregando, setCarregando] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
 
-  checkTipoProduto = (indice, check, nome) => {
-    let { tipos_produto } = this.state;
-    tipos_produto[indice].check = !check;
-    this.setState({ tipos_produto });
-    if (nome === "comum") {
-      this.setState({ produtoComum: !check });
-    } else {
-      this.setState({ produtoDieta: !check });
-    }
+  const PAGE_SIZE = 10;
+
+  const fetchData = async () => {
+    setCarregando(true);
+    const params = { ...filtros, page: page, page_size: PAGE_SIZE };
+    const response = await getProdutosListagem(params);
+    setProdutos(ordenaProdutos(response.data.results));
+    setProdutosCount(response.data.count);
+    setCarregando(false);
   };
 
-  checkProdutoAlergenico = () => {
-    const { produto_alergenico } = this.state;
-    this.setState({ produto_alergenico: !produto_alergenico });
-  };
+  useEffect(() => {
+    if (firstLoad) {
+      if (history && history.action === "PUSH") reset();
+      setFirstLoad(false);
+    } else if (filtros) fetchData();
+  }, [filtros, page]);
 
-  onSearch = values => {
-    const {
-      selectedItems,
-      produtoComum,
-      produtoDieta,
-      produto_alergenico
-    } = this.state;
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3">
+        <div className="card-body ">
+          <FormBuscaProduto
+            onAtualizaProdutos={() => {}}
+            exibirBotaoVoltar
+            exibirStatus={false}
+            setFiltros={setFiltros}
+            setPage={setPage}
+          />
 
-    const { produtos } = this.props;
-
-    values["status"] = tranformaEmobjetoDeBusca(selectedItems);
-
-    values["check_comum"] = produtoComum;
-    values["check_dieta_especial"] = produtoDieta;
-    values["produtos_alergenicos"] = produto_alergenico;
-
-    const retornoProdutos = filtrarProdutosNaListagem(values, produtos);
-
-    retornoProdutos.forEach(produto => {
-      produto["ativo"] = false;
-    });
-    this.props.setaProdutosFiltrados(retornoProdutos);
-
-    this.setState({ pesquisado: true });
-  };
-
-  onClear = () => {
-    const { change } = this.props;
-    let { tipos_produto } = this.state;
-
-    tipos_produto.forEach(tipo => {
-      tipo.check = false;
-    });
-
-    change("data-de", null);
-    change("data-ate", null);
-    change("aditivos", null);
-    change("nome", null);
-    change("marca", null);
-    change("fabricante", null);
-    change("status", null);
-
-    this.setState({
-      tipos_produto,
-      selectedItems: [],
-      produto_alergenico: false,
-      produtoComum: false,
-      produtoDieta: false,
-      statusOptions: retornaArrayDeAcordoComPerfil(),
-      pesquisado: false
-    });
-  };
-
-  handleChange = selectedItems => {
-    this.setState({ selectedItems });
-  };
-
-  componentDidMount() {
-    let { statusOptions } = this.state;
-
-    this.props.buscaNomesProduto();
-    this.props.buscaNomesMarcas();
-    this.props.buscaNomesFabricantes();
-    this.props.buscaProdutos();
-    this.props.buscaInformacoesNutricionais();
-
-    statusOptions = retornaArrayDeAcordoComPerfil();
-    this.setState({ statusOptions });
-  }
-
-  componentDidUpdate() {
-    const { statusOptions } = this.state;
-    const { produtos } = this.props;
-    if (statusOptions.length > 0 && produtos.length > 0) {
-      setTimeout(() => {
-        this.setState({ loading: false });
-      }, 500);
-    }
-  }
-
-  onSelectStatus = value => {
-    let { selectedItems, statusOptions } = this.state;
-    if (value === "Todos") {
-      statusOptions = ["Todos"];
-      selectedItems = ["Todos"];
-      this.setState({ statusOptions, selectedItems });
-    } else {
-      selectedItems.push(value);
-      this.setState({ statusOptions, selectedItems });
-    }
-  };
-
-  onDeselectStatus = value => {
-    let { selectedItems, statusOptions } = this.state;
-    if (value === "Todos") {
-      statusOptions = retornaArrayDeAcordoComPerfil();
-      this.setState({ statusOptions, selectedItems: [] });
-    } else {
-      const filtered = selectedItems.filter(item => item !== value);
-      this.setState({ selectedItems: filtered });
-    }
-  };
-
-  render() {
-    const {
-      handleSubmit,
-      nomesMarcas,
-      nomesFabricantes,
-      nomesProdutos
-    } = this.props;
-    const {
-      statusOptions,
-      tipos_produto,
-      produto_alergenico,
-      selectedItems,
-      loading,
-      pesquisado
-    } = this.state;
-    return (
-      <div className="card">
-        <div className="card-body">
-          {!loading ? (
-            <Fragment>
-              <FormBuscaProduto
-                statusOptions={statusOptions}
-                tipos_produto={tipos_produto}
-                produto_alergenico={produto_alergenico}
-                selectedItems={selectedItems}
-                handleSubmit={handleSubmit}
-                nomesMarcas={nomesMarcas}
-                nomesFabricantes={nomesFabricantes}
-                nomesProdutos={nomesProdutos}
-                minDate={MIN_DATE}
-                handleChange={this.handleChange}
-                onDeselectStatus={this.onDeselectStatus}
-                onSelectStatus={this.onSelectStatus}
-                checkTipoProduto={this.checkTipoProduto}
-                checkProdutoAlergenico={this.checkProdutoAlergenico}
-                onClear={this.onClear}
-                onSearch={this.onSearch}
+          {produtos && !produtos.length && (
+            <section className="resultado-busca-produto-avancada">
+              <header>Nenhum resultado encontrado</header>
+            </section>
+          )}
+          {produtos && !!produtos.length && (
+            <>
+              <ListagemProdutos
+                produtos={produtos}
+                ativos={ativos}
+                setAtivos={setAtivos}
               />
-              <ListagemProdutos pesquisado={pesquisado} />
-            </Fragment>
-          ) : (
-            <Spin tip="Carregando...">
-              <FormBuscaProduto
-                statusOptions={statusOptions}
-                tipos_produto={tipos_produto}
-                produto_alergenico={produto_alergenico}
-                selectedItems={selectedItems}
-                handleSubmit={handleSubmit}
-                nomesMarcas={nomesMarcas}
-                nomesFabricantes={nomesFabricantes}
-                nomesProdutos={nomesProdutos}
-                minDate={MIN_DATE}
+
+              <Pagination
+                current={page || 1}
+                total={produtosCount}
+                showSizeChanger={false}
+                onChange={page => {
+                  setPage(page);
+                }}
+                pageSize={PAGE_SIZE}
               />
-            </Spin>
+            </>
           )}
         </div>
       </div>
-    );
-  }
-}
+    </Spin>
+  );
+};
 
-const mapStateToProps = state => ({
-  produtos: state.produtos.list,
-  nomesProdutos: state.produtos.nomesProdutos,
-  nomesMarcas: state.produtos.nomesMarcas,
-  nomesFabricantes: state.produtos.nomesFabricantes
-});
+const mapStateToProps = state => {
+  return {
+    ativos: state.buscaAvancadaProduto.ativos,
+    filtros: state.buscaAvancadaProduto.filtros,
+    produtos: state.buscaAvancadaProduto.produtos,
+    produtosCount: state.buscaAvancadaProduto.produtosCount,
+    page: state.buscaAvancadaProduto.page
+  };
+};
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      buscaProdutos,
-      buscaNomesProduto,
-      buscaNomesMarcas,
-      buscaNomesFabricantes,
-      setaProdutosFiltrados,
-      buscaInformacoesNutricionais
+      setAtivos,
+      setFiltros,
+      setPage,
+      setProdutos,
+      setProdutosCount,
+      reset
     },
     dispatch
   );
 
-BuscaAvancada = reduxForm({
-  form: "buscaAvancadaDeProduto"
-})(BuscaAvancada);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BuscaAvancada);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(BuscaAvancada)
+);

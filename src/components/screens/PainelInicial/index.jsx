@@ -11,7 +11,8 @@ import {
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const PainelInicial = ({ history }) => {
@@ -32,6 +33,7 @@ const PainelInicial = ({ history }) => {
       )}
       {(usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhCODAEDietaEspecial() ||
+        usuarioEhNutricionistaSupervisao() ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscola()) && (
@@ -47,6 +49,7 @@ const PainelInicial = ({ history }) => {
 
       {(usuarioEhQualquerCODAE() ||
         usuarioEhTerceirizada() ||
+        usuarioEhNutricionistaSupervisao() ||
         usuarioEhEscola()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo

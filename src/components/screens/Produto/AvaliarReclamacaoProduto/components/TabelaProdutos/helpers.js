@@ -1,7 +1,10 @@
-export const NOME_STATUS = {
-  CODAE_PEDIU_ANALISE_RECLAMACAO: "Aguardando resposta terceirizada",
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "Aguardando avaliação CODAE",
-  TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Respondido terceirizada",
-  CODAE_HOMOLOGADO: "Produto homologado",
-  CODAE_AUTORIZOU_RECLAMACAO: "Produto com reclamação autorizada"
+import {
+  parseDataHoraBrToMoment,
+  comparaObjetosMoment
+} from "helpers/utilities";
+
+export const ordenaPorCriadoEm = (a, b) => {
+  const data_a = parseDataHoraBrToMoment(a.criado_em);
+  const data_b = parseDataHoraBrToMoment(b.criado_em);
+  return comparaObjetosMoment(data_a, data_b);
 };

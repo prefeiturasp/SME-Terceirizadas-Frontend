@@ -15,41 +15,62 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
+import { getEscolasSimplissima } from "services/escola.service";
 
 import "./style.scss";
 
 import { meusDados } from "services/perfil.service";
+import {
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhEscola,
+  usuarioEhCODAEDietaEspecial
+} from "helpers/utilities";
+import SelectSelecione from "components/Shareable/SelectSelecione";
 //import { CODAENegaDietaEspecial } from "services/produto.service";
 
 export default class ModalReclamacaoProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: undefined
+      meusDados: undefined,
+      escolas: undefined
     };
   }
 
   componentWillMount = async () => {
-    const resposta = await meusDados();
+    const meusDadosResposta = await meusDados();
+    const escolasResposta = await getEscolasSimplissima();
     this.setState({
-      meusDados: resposta
+      meusDados: meusDadosResposta,
+      escolas: escolasResposta.results.sort((a, b) =>
+        a.nome > b.nome ? 1 : -1
+      )
     });
   };
 
   getDadosIniciais = () => {
     const meusDados = this.state.meusDados;
-    return meusDados
-      ? {
-          reclamante_registro_funcional: meusDados.registro_funcional,
-          reclamante_nome: meusDados.nome
-        }
-      : {};
+    if (meusDados) {
+      const dadosIniciais = {
+        reclamante_registro_funcional: meusDados.registro_funcional,
+        reclamante_nome: meusDados.nome,
+        reclamante_cargo: meusDados.cargo || ""
+      };
+      if (usuarioEhEscola()) {
+        dadosIniciais.escola = meusDados.vinculo_atual.instituicao.uuid;
+      }
+      return dadosIniciais;
+    }
+    return {};
   };
 
   onSubmit = async values => {
     return new Promise(async (resolve, reject) => {
       const homologacaoAtiva = this.props.produto.homologacoes.find(
-        h => h.status === "CODAE_HOMOLOGADO"
+        h =>
+          h.status === "CODAE_HOMOLOGADO" ||
+          h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU" ||
+          h.status === "CODAE_PEDIU_ANALISE_RECLAMACAO"
       );
       const response = await escolaOuNutriReclamaDoProduto(
         homologacaoAtiva.uuid,
@@ -69,10 +90,10 @@ export default class ModalReclamacaoProduto extends Component {
 
   render() {
     const { showModal, closeModal } = this.props;
-    const { meusDados } = this.state;
-    const instituicao = meusDados
-      ? meusDados.vinculo_atual.instituicao
-      : undefined;
+    const { meusDados, escolas } = this.state;
+    const escola = meusDados ? meusDados.vinculo_atual.instituicao : undefined;
+    const deveEscolherUmaEscola =
+      usuarioEhNutricionistaSupervisao() || usuarioEhCODAEDietaEspecial();
     return (
       <Modal
         dialogClassName="modal-reclamacao-produto modal-90w"
@@ -104,6 +125,7 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="Cargo"
                       name="reclamante_cargo"
+                      disabled={true}
                       required
                       validate={required}
                     />
@@ -121,22 +143,36 @@ export default class ModalReclamacaoProduto extends Component {
                     />
                   </div>
                 </div>
-                {instituicao && (
+                {usuarioEhEscola() && escola && (
                   <div className="form-row">
                     <div className="col-6">
-                      <label htmlFor="vinculo" className="col-form-label">
-                        Instituição
+                      <label htmlFor="escola" className="col-form-label">
+                        Escola
                       </label>
-                      <div>{instituicao.nome}</div>
+                      <div>{escola.nome}</div>
                     </div>
-                    {instituicao.codigo_eol && (
+                    {escola.codigo_eol && (
                       <div className="col-6">
                         <label htmlFor="vinculo" className="col-form-label">
                           Código EOL
                         </label>
-                        <div>{instituicao.codigo_eol}</div>
+                        <div>{escola.codigo_eol}</div>
                       </div>
                     )}
+                  </div>
+                )}
+                {deveEscolherUmaEscola && (
+                  <div className="form-row">
+                    <div className="col-12">
+                      <Field
+                        component={SelectSelecione}
+                        label="Escola"
+                        name="escola"
+                        required
+                        validate={required}
+                        options={escolas}
+                      />
+                    </div>
                   </div>
                 )}
                 <div className="form-row row-reclamacao">

@@ -7,23 +7,17 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 
-import DetalheProduto from "../DetalheProduto";
 import ModalReclamacaoProduto from "../ModalReclamacaoProduto";
+import Reclamacao from "../Reclamacao";
+import { Link } from "react-router-dom";
 
 export default class TabelaProdutos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      indiceProdutoAtivo: undefined,
       mostraModalReclamacao: false
     };
   }
-  setIndiceProdutoAtivo = indice => {
-    this.setState({
-      indiceProdutoAtivo:
-        this.state.indiceProdutoAtivo === indice ? undefined : indice
-    });
-  };
 
   abreModalReclamacao = () => {
     this.setState({ mostraModalReclamacao: true });
@@ -34,43 +28,46 @@ export default class TabelaProdutos extends Component {
   };
 
   render() {
-    const { listaProdutos, onAtualizarProduto } = this.props;
-    const { indiceProdutoAtivo, mostraModalReclamacao } = this.state;
+    const {
+      listaProdutos,
+      onAtualizarProduto,
+      indiceProdutoAtivo,
+      setIndiceProdutoAtivo
+    } = this.props;
+    const { mostraModalReclamacao } = this.state;
     return (
       <section className="resultados-busca-produtos">
         <section>
           <div className="tabela-produto tabela-header-produto">
             <div>Nome do Produto</div>
             <div>Marca</div>
-            <div>Fabricante</div>
             <div>Tipo</div>
-            <div>Data</div>
+            <div>Qtde. Reclamações</div>
+            <div>Data de cadastro</div>
           </div>
         </section>
         {listaProdutos.map((produto, indice) => {
           const isProdutoAtivo = indice === indiceProdutoAtivo;
-          const produtoPossuiReclamacao =
-            produto.homologacoes.find(
-              h => h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
-            ) !== undefined;
           return (
             <div key={indice}>
               <div className="tabela-produto tabela-body-produto item-produto">
                 <div>{produto.nome}</div>
                 <div>{produto.marca.nome}</div>
-                <div>{produto.fabricante.nome}</div>
                 <div>
                   {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
                 </div>
+                <div>{produto.ultima_homologacao.reclamacoes.length}</div>
                 <div className="com-botao">
-                  {produto.criado_em}
+                  {produto.criado_em.split(" ")[0]}
                   <div className="botoes-produto">
                     <i
                       className={`fas fa-angle-${
                         isProdutoAtivo ? "up" : "down"
                       }`}
                       onClick={() => {
-                        this.setIndiceProdutoAtivo(indice);
+                        setIndiceProdutoAtivo(
+                          isProdutoAtivo ? undefined : indice
+                        );
                       }}
                     />
                   </div>
@@ -78,21 +75,36 @@ export default class TabelaProdutos extends Component {
               </div>
               {isProdutoAtivo && (
                 <>
-                  <DetalheProduto produto={produto} />
-                  <div className="botao-reclamacao">
-                    {produtoPossuiReclamacao && (
-                      <span>
-                        Este produto já possui uma análise de reclamação em
-                        andamento
-                      </span>
-                    )}
+                  {produto.ultima_homologacao.reclamacoes.map(
+                    (reclamacao, indice) => {
+                      const deveMostrarBarraHorizontal =
+                        indice <
+                        produto.ultima_homologacao.reclamacoes.length - 1;
+                      return [
+                        <Reclamacao key={indice} reclamacao={reclamacao} />,
+                        deveMostrarBarraHorizontal && <hr />
+                      ];
+                    }
+                  )}
+                  <div className="botao-reclamacao mt-4">
+                    <Link
+                      to={`/gestao-produto/relatorio?uuid=${
+                        produto.ultima_homologacao.uuid
+                      }`}
+                    >
+                      <Botao
+                        texto="Ver produto"
+                        className="ml-3"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    </Link>
                     <Botao
                       texto="Reclamação"
                       className="ml-3"
                       onClick={this.abreModalReclamacao}
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      disabled={produtoPossuiReclamacao}
                     />
                   </div>
                 </>

@@ -43,6 +43,7 @@ export const TIPO_PERFIL = {
   ESCOLA: `"escola"`,
   DIRETORIA_REGIONAL: `"diretoriaregional"`,
   GESTAO_ALIMENTACAO_TERCEIRIZADA: `"gestao_alimentacao_terceirizada"`,
+  SUPERVISAO_NUTRICAO: `"supervisao_nutricao"`,
   DIETA_ESPECIAL: `"dieta_especial"`,
   GESTAO_PRODUTO: `"gestao_produto"`,
   TERCEIRIZADA: `"terceirizada"`
@@ -252,6 +253,9 @@ ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
 
 export { ENDPOINT };
 
+export const ENDPOINT_RELATORIO_QUANTITATIVO =
+  "/terceirizadas/relatorio-quantitativo/";
+
 export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   CODAE_AUTORIZOU_RECLAMACAO: "codae_autorizou_reclamacao",
   CODAE_SUSPENDEU: "codae_suspendeu",
@@ -263,6 +267,24 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   CODAE_NAO_HOMOLOGADO: "codae_nao_homologado",
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "escola_ou_nutricionista_reclamou",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "terceirizada_respondeu_reclamacao"
+};
+
+export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
+  CODAE_AUTORIZOU_RECLAMACAO: "CODAE autorizou reclamação",
+  CODAE_RECUSOU_RECLAMACAO: "CODAE recusou reclamação",
+  CODAE_QUESTIONOU_TERCEIRIZADA:
+    "CODAE questionou terceirizada sobre reclamação",
+  CODAE_RESPONDEU_RECLAMACAO: "CODAE respondeu ao reclamante da reclamação",
+  TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Terceirizada respondeu a reclamação"
+};
+
+export const RECLAMACAO_PRODUTO_STATUS = {
+  AGUARDANDO_AVALIACAO: "AGUARDANDO_AVALIACAO",
+  AGUARDANDO_RESPOSTA_TERCEIRIZADA: "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
+  RESPONDIDO_TERCEIRIZADA: "RESPONDIDO_TERCEIRIZADA",
+  CODAE_ACEITOU: "CODAE_ACEITOU",
+  CODAE_RECUSOU: "CODAE_RECUSOU",
+  CODAE_RESPONDEU: "CODAE_RESPONDEU"
 };
 
 export const STATUS_RECLAMACAO_PRODUTO = [

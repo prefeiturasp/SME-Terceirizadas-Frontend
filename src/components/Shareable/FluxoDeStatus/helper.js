@@ -115,6 +115,8 @@ export const tipoDeStatus = status => {
     case "DRE validou":
     case "DRE revisou":
     case "Homologado":
+    case "Terceirizada respondeu a análise":
+      return "prosseguiu";
     case "CODAE homologou":
       return "prosseguiu";
     case "CODAE não homologou":
@@ -136,6 +138,8 @@ export const tipoDeStatus = status => {
     case "Terceirizada recusou":
       return "reprovado";
     case "Questionamento pela CODAE":
+      return "questionado";
+    case "CODAE pediu análise sensorial":
       return "questionado";
     default:
       return "";

@@ -49,7 +49,7 @@ export class InputFileManaged extends Component {
         toastError(`Extensão do arquivo não suportada: ${extensao}`);
         valido = false;
       } else if (file.size > DEZ_MB) {
-        toastError(`Tamanho máximo: 10MB`);
+        toastError(`Arquivo superior a 10 MB não é possível fazer o upload`);
         valido = false;
       }
     });

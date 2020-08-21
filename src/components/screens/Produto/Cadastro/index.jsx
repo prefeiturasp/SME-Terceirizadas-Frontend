@@ -94,6 +94,7 @@ class cadastroProduto extends Component {
     this.setFiles = this.setFiles.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
     this.setBlockProximo = this.setBlockProximo.bind(this);
+    this.resetModal = this.resetModal.bind(this);
   }
 
   setaValoresStep2 = ({
@@ -176,15 +177,6 @@ class cadastroProduto extends Component {
       renderizaFormDietaEspecial: produtoRaw.eh_para_alunos_com_dieta,
       renderizaFormAlergenicos: produtoRaw.tem_aditivos_alergenicos
     });
-    /*
-    this.setState({
-      status: inversaoDeDiaDeCardapio.status,
-      title: `Inversão de dia de Cardápio # ${
-        inversaoDeDiaDeCardapio.id_externo
-      }`,
-      salvarAtualizarLbl: "Atualizar"
-    });
-    */
   }
 
   removerAnexo = async (uuid, index) => {
@@ -253,9 +245,17 @@ class cadastroProduto extends Component {
   }
 
   setFiles(imagens) {
-    let { payload } = this.state;
-    payload.imagens = imagens;
-    this.setState({ payload });
+    if (imagens.length > 0) {
+      const img = imagens.map(imagem => {
+        return {
+          arquivo: imagem.base64,
+          nome: imagem.nome
+        };
+      });
+      let { payload } = this.state;
+      payload.imagens = img;
+      this.setState({ payload });
+    }
   }
 
   setaAtributosPrimeiroStep = ({
@@ -386,6 +386,11 @@ class cadastroProduto extends Component {
     }
   }
 
+  resetModal = () => {
+    this.props.change("nome_marca", null);
+    this.props.change("nome_fabricante", null);
+  };
+
   validarFormulario = () => {
     const { payload, currentStep } = this.state;
 
@@ -460,6 +465,7 @@ class cadastroProduto extends Component {
                     defaultMarcaStep1={defaultMarcaStep1}
                     setDefaultFabricanteStep1={this.setDefaultFabricanteStep1}
                     defaultFabricanteStep1={defaultFabricanteStep1}
+                    resetModal={this.resetModal}
                   />
                 )}
                 {currentStep === 1 && (

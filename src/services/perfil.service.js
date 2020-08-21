@@ -91,6 +91,21 @@ export const meusDados = () => {
     });
 };
 
+export const atualizarCargo = () => {
+  const url = `${API_URL}/usuarios/atualizar-cargo/`;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      console.log(error);
+      return error;
+    });
+};
+
 export const atualizarEmail = payload => {
   const url = `${API_URL}/usuarios/atualizar-email/`;
   let status = 0;

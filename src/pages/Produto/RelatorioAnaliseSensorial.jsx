@@ -4,8 +4,7 @@ import RelatorioAnaliseSensorial from "../../components/screens/Produto/Relatori
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  RELATORIO_ANALISE_SENSORIAL,
-  BUSCA_PRODUTO_ANALISE_SENSORIAL
+  RELATORIO_ANALISE_SENSORIAL
 } from "../../configs/constants";
 
 const atual = {
@@ -14,11 +13,7 @@ const atual = {
 };
 
 export default () => (
-  <Page
-    titulo={"Responder análise sensorial"}
-    botaoVoltar
-    voltarPara={`/${PESQUISA_DESENVOLVIMENTO}/${BUSCA_PRODUTO_ANALISE_SENSORIAL}`}
-  >
+  <Page titulo={"Responder análise sensorial"} botaoVoltar>
     <Breadcrumb home={"/"} atual={atual} />
     <RelatorioAnaliseSensorial />
   </Page>

@@ -12,7 +12,8 @@ import {
   usuarioEhQualquerCODAE,
   usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhNutricionistaSupervisao
 } from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
 
@@ -67,7 +68,8 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {usuarioEhQualquerCODAE() && <AvatarCODAE />}
+              {(usuarioEhQualquerCODAE() ||
+                usuarioEhNutricionistaSupervisao()) && <AvatarCODAE />}
               {usuarioEhDRE() && <AvatarDRE />}
               {usuarioEhEscola() && <AvatarEscola />}
               {usuarioEhTerceirizada() && <AvatarTerceirizada />}
@@ -103,6 +105,7 @@ export class Sidebar extends Component {
           <div className="sidebar-wrapper div-submenu">
             {(usuarioEhQualquerCODAE() ||
               usuarioEhTerceirizada() ||
+              usuarioEhNutricionistaSupervisao() ||
               usuarioEhEscola()) && <SidebarContent />}
             {usuarioEhDRE() && <SidebarContentDRE />}
           </div>

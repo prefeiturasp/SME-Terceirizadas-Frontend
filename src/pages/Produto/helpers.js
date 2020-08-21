@@ -1,15 +1,22 @@
+import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "../../constants/shared";
 import {
-  TIPO_PERFIL,
-  ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS
-} from "../../constants/shared";
+  usuarioEhTerceirizada,
+  usuarioEhCODAEGestaoProduto
+} from "helpers/utilities";
 
 export const escolheStatusPendenteHomologacao = () => {
-  const perfil = localStorage.getItem("tipo_perfil");
-  if (perfil === TIPO_PERFIL.GESTAO_PRODUTO) {
+  if (usuarioEhCODAEGestaoProduto()) {
     return [
       ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO,
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_AUTORIZOU_RECLAMACAO
+      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO
     ];
   }
   return ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO;
+};
+
+export const escolheStatusAguardandoAnaliseReclamacao = () => {
+  if (usuarioEhTerceirizada()) {
+    return ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO;
+  }
+  return ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO;
 };

@@ -51,12 +51,12 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
 };
 
 export const GESTAO_PRODUTO_CARDS = {
-  RECLAMACAO_DE_PRODUTO: "Reclamação de produto",
+  RECLAMACAO_DE_PRODUTO: "Reclamações de produtos",
   PRODUTOS_SUSPENSOS: "Produtos suspensos",
-  CORRECAO_DE_PRODUTO: "Correção de produto",
-  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise de reclamação",
-  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensorial",
-  PENDENTE_HOMOLOGACAO: "Pendente homologação",
+  CORRECAO_DE_PRODUTO: "Correções de produtos",
+  AGUARDANDO_ANALISE_RECLAMACAO: "Aguardando análise das reclamações",
+  AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensoriais",
+  PENDENTE_HOMOLOGACAO: "Pendentes de homologação",
   HOMOLOGADOS: "Homologados",
   NAO_HOMOLOGADOS: "Não homologados"
 };
@@ -76,11 +76,15 @@ export const PRODUTO = "produto";
 export const BUSCA_PRODUTO = "busca-produto";
 export const BUSCA_PRODUTO_ANALISE_SENSORIAL =
   "busca-produto-analise-sensorial";
+export const BUSCA_AVANCADA_ANALISE_SENSORIAL =
+  "busca-avancada-analise-sensorial";
 export const RELATORIO_ANALISE_SENSORIAL = "relatorio-analise-sensorial";
 export const AVALIAR_RECLAMACAO_PRODUTO = "avaliar-reclamacao-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
+export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
+export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
 export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";
@@ -103,8 +107,17 @@ export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
 export const STATUS_RASCUNHO = "RASCUNHO";
 
 export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
+export const STATUS_CODAE_SUSPENDEU = "CODAE_SUSPENDEU";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
 
 export const QUALQUER_USUARIO = true;
+
+export const STATUS_RECLAMACAO = {
+  AGUARDANDO_AVALIACAO: "AGUARDANDO_AVALIACAO",
+  AGUARDANDO_RESPOSTA_TERCEIRIZADA: "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
+  RESPONDIDO_TERCEIRIZADA: "RESPONDIDO_TERCEIRIZADA",
+  CODAE_ACEITOU: "CODAE_ACEITOU",
+  CODAE_RECUSOU: "CODAE_RECUSOU"
+};

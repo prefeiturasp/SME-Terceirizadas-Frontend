@@ -52,6 +52,7 @@ import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAl
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
+import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 
 import * as constants from "./constants";
 import {
@@ -79,7 +80,8 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhQualquerCODAE
+  usuarioEhQualquerCODAE,
+  usuarioEhNutricionistaSupervisao
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -91,12 +93,15 @@ import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProd
 import RelatorioProduto from "../pages/Produto/RelatorioProduto";
 import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
+import BuscaAvancadaProdutoAnaliseSensorial from "../pages/Produto/BuscaAvancadaProdutoAnaliseSensorial";
 import {
   ReclamacaoDeProdutoPage,
   ConsultaAtivacaoDeProdutoPage,
   AtivacaoDeProdutoPage,
   ConsultaResponderReclamacaoPage,
-  ResponderReclamacaoPage
+  ResponderReclamacaoPage,
+  RelatorioQuantitativoPorTerceirizadaPage
 } from "../pages/Produto";
 
 const routesConfig = [
@@ -527,6 +532,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -614,6 +620,14 @@ const routesConfig = [
     tipoUsuario: usuarioEhTerceirizada()
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_ANALISE_SENSORIAL
+    }`,
+    component: BuscaAvancadaProdutoAnaliseSensorial,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+  },
+  {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
       constants.RELATORIO_ANALISE_SENSORIAL
     }`,
@@ -626,6 +640,14 @@ const routesConfig = [
       constants.RELATORIO_PRODUTO
     }`,
     component: RelatorioProduto,
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_SITUACAO_PRODUTO
+    }`,
+    component: RelatorioSituacaoProduto,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
@@ -645,6 +667,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -657,6 +680,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -669,6 +693,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -716,6 +741,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -729,6 +755,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
   {
@@ -738,6 +765,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
       usuarioEhEscola()
   },
@@ -745,7 +773,21 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
     component: ReclamacaoDeProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhCODAEDietaEspecial() || usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
+    component: BuscaProdutosSuspensos,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -764,7 +806,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoProduto
   },
   {
-    path: "/relatorio-produtos-homologados",
+    path: `/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`,
     component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
@@ -781,6 +823,14 @@ const routesConfig = [
     component: ResponderReclamacaoPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${
+      constants.GESTAO_PRODUTO
+    }/relatorios/quantitativo-por-terceirizada`,
+    component: RelatorioQuantitativoPorTerceirizadaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
   }
 ];
 

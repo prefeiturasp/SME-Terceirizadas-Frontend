@@ -17,7 +17,7 @@ const {
 
 const CARD_RECLAMACAO_DE_PRODUTO = {
   id: CARD_ID.RECLAMACAO_DE_PRODUTO,
-  titulo: "Reclamação de produto",
+  titulo: "Reclamações de produtos",
   icon: "fa-bullhorn",
   style: "card-complained",
   rota: ROTA.RECLAMACAO_DE_PRODUTO,
@@ -49,20 +49,17 @@ const CARD_NAO_HOMOLOGADOS = {
 };
 const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   id: CARD_ID.AGUARDANDO_ANALISE_RECLAMACAO,
-  titulo: "Aguardando análise de reclamação",
-  titulo_menu: "Ag. análise de reclamação", // FIXME: Confirmar nome no menu
+  titulo: "Aguardando análise das reclamações",
+  titulo_menu: "Ag. análise das reclamações", // FIXME: Confirmar nome no menu
   icon: "fa-history",
   style: "card-awaiting-complain",
   rota: ROTA.AGUARDANDO_ANALISE_RECLAMACAO,
-  incluir_status: [
-    CODAE_PEDIU_ANALISE_RECLAMACAO,
-    ESCOLA_OU_NUTRICIONISTA_RECLAMOU
-  ]
+  incluir_status: [CODAE_PEDIU_ANALISE_RECLAMACAO]
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
-  titulo: "Aguardando análise sensorial",
-  titulo_menu: "Ag. análise sensorial",
+  titulo: "Aguardando análise sensoriais",
+  titulo_menu: "Ag. análise sensoriais",
   icon: "fa-search",
   style: "card-awaiting-sensory",
   rota: ROTA.AGUARDANDO_ANALISE_SENSORIAL,
@@ -70,21 +67,32 @@ const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
 };
 const CARD_PENDENTE_HOMOLOGACAO = {
   id: CARD_ID.PENDENTE_HOMOLOGACAO,
-  titulo: "Pendente homologação",
+  titulo: "Pendentes de homologação",
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.SOLICITACOES_PENDENTE_HOMOLOGACAO,
-  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO, CODAE_QUESTIONADO]
+  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO]
 };
 
 const CARD_CORRECAO_DE_PRODUTO = {
   id: CARD_ID.CORRECAO_DE_PRODUTO,
-  titulo: "Correção de produto",
+  titulo: "Correções de Produtos",
   icon: "fa-pencil-alt",
   style: "card-product-correction",
   rota: ROTA.CORRECAO_DE_PRODUTO,
-  incluir_status: []
+  incluir_status: [CODAE_QUESTIONADO]
 };
+
+export const TODOS_OS_CARDS = [
+  CARD_RECLAMACAO_DE_PRODUTO,
+  CARD_PRODUTOS_SUSPENSOS,
+  CARD_CORRECAO_DE_PRODUTO,
+  CARD_AGUARDANDO_ANALISE_RECLAMACAO,
+  CARD_AGUARDANDO_ANALISE_SENSORIAL,
+  CARD_PENDENTE_HOMOLOGACAO,
+  CARD_HOMOLOGADOS,
+  CARD_NAO_HOMOLOGADOS
+];
 
 export const listarCardsPermitidos = () => {
   const perfil = localStorage.getItem("tipo_perfil");
@@ -100,6 +108,9 @@ export const listarCardsPermitidos = () => {
     );
     cardAguardandoAnaliseReclamacao.incluir_status.push(
       TERCEIRIZADA_RESPONDEU_RECLAMACAO
+    );
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
     return [
       cardPendenteHomologacao,

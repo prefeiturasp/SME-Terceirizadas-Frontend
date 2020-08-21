@@ -1,5 +1,10 @@
+import { saveAs } from "file-saver";
+
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+
+import axios from "./_base";
+import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -84,4 +89,22 @@ export const updateTerceirizada = (uuid, payload) => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const getRelatorioQuantitativo = async params => {
+  if (params) {
+    return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });
+  }
+  return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO);
+};
+
+export const getPdfRelatorioQuantitativo = async params => {
+  const { data } = await axios.get(
+    "/terceirizadas/imprimir-relatorio-quantitativo/",
+    {
+      responseType: "blob",
+      params
+    }
+  );
+  saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
 };

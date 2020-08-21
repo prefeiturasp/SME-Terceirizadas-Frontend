@@ -13,7 +13,7 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhCODAEDietaEspecial
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -21,7 +21,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
-  const exibirReclamacao = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
+  const exibirReclamacao =
+    usuarioEhNutricionistaSupervisao() || usuarioEhEscola();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
 

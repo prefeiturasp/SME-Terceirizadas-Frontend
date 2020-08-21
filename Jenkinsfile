@@ -1,42 +1,42 @@
 pipeline {
     agent {
-      node { 
+      node {
         label 'sme-nodes10'
 	    }
     }
-    
+
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
       disableConcurrentBuilds()
-      skipDefaultCheckout()  
+      skipDefaultCheckout()
     }
-           
+
     stages {
-        
+
 
        stage('CheckOut') {
         steps {
-          checkout scm	
+          checkout scm
         }
        }
-      
+
        stage('Testes') {
           steps {
                 sh 'npm install'
                 sh 'npm run-script coverage'
                 sh 'npm run-script eslint'
                 sh 'npm run-script prettier'
-                
+
                 sh 'npm install -g jshint'
                 sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
                 checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
-                
+
             }
         }
-       
+
        stage('Analise codigo') {
           when {
-              branch 'developmet'
+              branch 'development'
             }
             steps {
                 sh 'sonar-scanner \
@@ -46,14 +46,14 @@ pipeline {
                     -Dsonar.login=c7cbf75fc22122f6c4a4cad32f625978a738cd18'
             }
         }
-      
+
        stage('Build DEV') {
          when {
            branch 'development'
          }
         steps {
           sh 'echo build docker image desenvolvimento'
-          
+
           script {
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
@@ -71,16 +71,16 @@ pipeline {
               tailLog: true])
            }
         }
-       }        
-       
+       }
+
        stage('Deploy DEV') {
          when {
            branch 'development'
          }
         steps {
-       
-       
-            
+
+
+
           sh 'echo Deploy ambiente desenvolvimento'
           script {
             step([$class: "RundeckNotifier",
@@ -98,18 +98,18 @@ pipeline {
               tags: "",
               tailLog: true])
           }
-        } 
+        }
        }
-       
-        
-          
+
+
+
         stage('Build HOM') {
          when {
            branch 'homolog'
          }
-        steps {  
-           
-         
+        steps {
+
+
           script {
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
@@ -136,16 +136,16 @@ pipeline {
         steps {
           timeout(time: 24, unit: "HOURS") {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marcos_nastri, calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marcos_nastri, calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter, rodolfo_lima'
           }
          sh 'echo Deploying ambiente homologacao'
-                
-          
-      
+
+
+
           script {
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
-                             
+
               //JOB DE BUILD
               jobId: "a38d1b78-9461-4ed2-a3cb-a316e3cb5b04",
               nodeFilters: "",
@@ -163,13 +163,13 @@ pipeline {
         }
        }
 
-        
+
         stage('Build PROD') {
          when {
            branch 'master'
          }
         steps {
-        
+
           script {
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
@@ -196,15 +196,15 @@ pipeline {
         steps {
           timeout(time: 24, unit: "HOURS") {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marcos_nastri, calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marcos_nastri, calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter, rodolfo_lima'
           }
             sh 'echo Build image docker Produção'
-          
-      
+
+
           script {
             step([$class: "RundeckNotifier",
               includeRundeckLogs: true,
-                             
+
               //JOB DE DEPLOY
               jobId: "71be6128-4100-4d65-b0a5-b4dd45d91a14",
               nodeFilters: "",
@@ -221,8 +221,8 @@ pipeline {
           }
         }
        }
-    } 
-  	   
+    }
+
   post {
     always {
       echo 'One way or another, I have finished'

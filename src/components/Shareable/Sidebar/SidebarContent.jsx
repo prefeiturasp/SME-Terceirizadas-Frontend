@@ -4,7 +4,8 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhCODAEGestaoProduto
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -29,21 +30,23 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirCadastros =
-    usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
+  const exibirDietaEspecial =
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
-  const exibirDietaEspecial =
-    usuarioEhCODAEDietaEspecial() ||
-    usuarioEhEscola() ||
-    usuarioEhTerceirizada();
+  const exibirCadastros =
+    usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
 
   const _props = {
     activeMenu,

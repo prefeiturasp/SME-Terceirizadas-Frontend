@@ -24,6 +24,7 @@ import ModalFabricante from "./ModalFabricante";
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
 import { required } from "helpers/fieldValidators";
 import { ASelect } from "components/Shareable/MakeField";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const { Option } = Select;
 
@@ -52,7 +53,9 @@ class Step1 extends Component {
 
       dafaultArrayProtocolo: [],
       retornadoAoStep: false,
-      marcaDefault: null
+      marcaDefault: null,
+      fabricantesNomes: [],
+      marcasNomes: []
     };
     this.enviaMarca = this.enviaMarca.bind(this);
     this.closeModalMarca = this.closeModalMarca.bind(this);
@@ -105,19 +108,38 @@ class Step1 extends Component {
   };
 
   enviaMarca = async value => {
-    const { marcasArray } = this.state;
-    if (value !== null) {
-      if (value !== "") {
+    const { marcasArray, marcasNomes } = this.state;
+    const { nome } = value;
+    const listaNomes = marcasNomes.map(marca => {
+      return marca.nome.toUpperCase();
+    });
+    const nulo = nome === null;
+    const vazio = nome === "";
+    if (!nulo && !vazio) {
+      const existeNome = listaNomes.includes(nome.toUpperCase());
+      if (existeNome) {
+        setTimeout(() => {
+          this.setState({
+            loadingDefault: false,
+            showModalMarca: false
+          });
+          this.props.resetModal();
+        }, 1000);
+        toastError("Marca do produto já cadastrada");
+      } else {
         const response = await criarMarcaProduto(value);
         const { nome, uuid } = response.data;
         marcasArray.push(<Option key={`${nome}+${uuid}`}>{nome}</Option>);
+        marcasNomes.push({ nome: nome });
         this.setState({ loadingDefault: true });
         setTimeout(() => {
           this.setState({
             loadingDefault: false,
             showModalMarca: false,
-            marcasArray
+            marcasArray,
+            marcasNomes
           });
+          this.props.resetModal();
         }, 1000);
       }
     }
@@ -136,20 +158,41 @@ class Step1 extends Component {
   };
 
   enviaFabricante = async value => {
-    const { fabricantesArray } = this.state;
+    const { fabricantesArray, fabricantesNomes } = this.state;
+    const listaNomes = fabricantesNomes.map(fabricante => {
+      return fabricante.nome.toUpperCase();
+    });
+    const { nome } = value;
+    const existeNome = listaNomes.includes(nome.toUpperCase());
     if (value !== null) {
       if (value !== "") {
-        const response = await criarFabricanteProduto(value);
-        const { nome, uuid } = response.data;
-        fabricantesArray.push(<Option key={`${nome}+${uuid}`}>{nome}</Option>);
-        this.setState({ loadingDefault: true });
-        setTimeout(() => {
-          this.setState({
-            loadingDefault: false,
-            showModalFabricante: false,
-            fabricantesArray
-          });
-        }, 1000);
+        if (existeNome) {
+          setTimeout(() => {
+            this.setState({
+              loadingDefault: false,
+              showModalFabricante: false
+            });
+            this.props.resetModal();
+          }, 1000);
+          toastError("Fabricante do produto já cadastrado");
+        } else {
+          const response = await criarFabricanteProduto(value);
+          const { nome, uuid } = response.data;
+          fabricantesArray.push(
+            <Option key={`${nome}+${uuid}`}>{nome}</Option>
+          );
+          this.setState({ loadingDefault: true });
+          fabricantesNomes.push({ nome: nome });
+          setTimeout(() => {
+            this.setState({
+              loadingDefault: false,
+              showModalFabricante: false,
+              fabricantesArray,
+              fabricantesNomes
+            });
+            this.props.resetModal();
+          }, 1000);
+        }
       }
     }
   };
@@ -193,7 +236,9 @@ class Step1 extends Component {
       this.setState({
         marcasArray: listaMarcas,
         fabricantesArray: listaFabricantes,
-        loading: false
+        loading: false,
+        marcasNomes: responseMarcas.data.results,
+        fabricantesNomes: responseFabricantes.data.results
       });
     }
   };

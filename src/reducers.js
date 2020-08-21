@@ -13,6 +13,12 @@ import loadFiltroBusca from "./reducers/loadFiltroBusca";
 import loadProduto from "./reducers/produto.reducer";
 import kitLancheReducer from "./reducers/kitLanche.reducer";
 import { produtoReducer } from "./reducers/produtoReducer";
+import finalFormReducer from "./reducers/finalForm";
+import avaliarReclamacaoProdutoReducer from "./reducers/avaliarReclamacaoProduto";
+import reclamacaoProdutoReducer from "./reducers/reclamacaoProduto";
+import responderAnaliseSensorialReducer from "./reducers/responderAnaliseSensorial";
+import buscaAvancadaProdutoReducer from "./reducers/buscaAvancadaProduto";
+import responderReclamacaoProdutoReducer from "./reducers/responderReclamacaoProduto";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -29,7 +35,13 @@ const rootReducer = combineReducers({
   FiltrosDeBuscaForm: loadFiltroBusca,
   kitLanche: kitLancheReducer,
   cadastroProduto: loadProduto,
-  produtos: produtoReducer
+  produtos: produtoReducer,
+  finalForm: finalFormReducer,
+  avaliarReclamacaoProduto: avaliarReclamacaoProdutoReducer,
+  reclamacaoProduto: reclamacaoProdutoReducer,
+  responderAnaliseSensorial: responderAnaliseSensorialReducer,
+  buscaAvancadaProduto: buscaAvancadaProdutoReducer,
+  responderReclamacaoProduto: responderReclamacaoProdutoReducer
 });
 
 export default rootReducer;

@@ -1,3 +1,5 @@
+import { saveAs } from "file-saver";
+
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import axios from "./_base";
@@ -94,8 +96,29 @@ export const getProdutosPorParametros = async parametros => {
   );
 };
 
+export const getReclamacoesTerceirizadaPorFiltro = async filtros => {
+  return await axios.post(
+    `/produtos/filtro-reclamacoes-terceirizada/`,
+    filtros
+  );
+};
+
 export const getProdutosPorFiltro = async filtro => {
   return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
+};
+
+export const getProdutosRelatorioSituacao = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-relatorio-situacao-produto/`,
+    filtro
+  );
+};
+
+export const getProdutosRelatorioAnaliseSensorial = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-relatorio-em-analise-sensorial/`,
+    filtro
+  );
 };
 
 export const getProtocolosDietaEspecial = async () => {
@@ -398,9 +421,13 @@ export const getHomologacoesDeProdutoAnaliseSensorial = async () => {
 
 export const responderReclamacaoProduto = async (uuid, payload) => {
   return await axios.patch(
-    `/homologacoes-produtos/${uuid}/terceirizada-responde-reclamacao/`,
+    `/reclamacoes-produtos/${uuid}/terceirizada-responde/`,
     payload
   );
+};
+
+export const getReclamacao = async uuid => {
+  return await axios.get(`/reclamacoes-produtos/${uuid}/`);
 };
 
 export const flegarHomologacaoPDF = async uuid => {
@@ -425,4 +452,28 @@ export const getRelatorioProdutosHomologados = filtros => {
     return `${url}?${urlParams.toString()}`;
   }
   return url;
+};
+
+export const getProdutosSuspensos = async payload => {
+  return await axios.post(
+    `/homologacoes-produtos/homologacoes_suspensas/`,
+    payload
+  );
+};
+
+export const getPdfRelatorioSituacaoProduto = async params => {
+  const { data } = await axios.post(
+    "/produtos/relatorio-situacao-produto/",
+    params,
+    {
+      responseType: "blob"
+    }
+  );
+  saveAs(data, "relatorio_situacao_produto.pdf");
+};
+
+export const getProdutosListagem = async params => {
+  return await axios.get(`/produtos/`, {
+    params: params
+  });
 };

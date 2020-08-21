@@ -1,5 +1,7 @@
 import { VISAO } from "../constants/shared";
 import { API_URL } from "../constants/config";
+import axios from "./_base";
+import { saveAs } from "file-saver";
 import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";
 import { getPath as getInclusaoPath } from "services/inclusaoDeAlimentacao/helper";
@@ -233,4 +235,33 @@ export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
       a.download = `relatorio_produto_${id_externo}.pdf`;
       a.click();
     });
+};
+
+export const getRelatorioProdutosSuspensos = payload => {
+  const url = `${API_URL}/homologacoes-produtos/relatorio-produtos-suspensos/`;
+  fetch(url, {
+    method: "POST",
+    headers: authToken,
+    responseType: "blob",
+    body: JSON.stringify(payload)
+  })
+    .then(response => response.blob())
+    .then(data => {
+      let a = document.createElement("a");
+      const fileURL = URL.createObjectURL(data);
+      a.href = fileURL;
+      a.download = `relatorio_produtos_suspensos.pdf`;
+      a.click();
+    });
+};
+
+export const getRelatorioEmAnaliseSensorial = async payload => {
+  const { data } = await axios.post(
+    `${API_URL}/produtos/relatorio-em-analise-sensorial/`,
+    payload,
+    {
+      responseType: "blob"
+    }
+  );
+  saveAs(data, "relatorio_analise_sensorial.pdf");
 };

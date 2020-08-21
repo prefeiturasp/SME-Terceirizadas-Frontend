@@ -21,7 +21,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import "antd/dist/antd.css";
 import moment from "moment";
 import "./styles.scss";
-import { formataData, DATA_MINIMA } from "./helper";
+import { formataData, DATA_MINIMA, DATA_MAXIMA } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
@@ -96,8 +96,8 @@ class ModalResponderAnaliseSensorial extends Component {
   };
 
   resetForm = () => {
-    const { closeModal } = this.props;
-    this.props.reset();
+    const { closeModal, onSend } = this.props;
+    onSend();
     closeModal();
     this.setState({ arquivos: [] });
   };
@@ -147,6 +147,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   name="data_resp"
                   validate={required}
                   minDate={DATA_MINIMA}
+                  maxDate={DATA_MAXIMA}
                 />
               </article>
 

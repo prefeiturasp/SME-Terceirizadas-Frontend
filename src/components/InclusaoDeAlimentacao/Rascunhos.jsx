@@ -57,7 +57,11 @@ export class Rascunhos extends Component {
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final
                     })`
-                  : `${inclusaoDeAlimentacao.inclusoes.length} dia(s)`}
+                  : `${
+                      inclusaoDeAlimentacao.inclusoes
+                        ? inclusaoDeAlimentacao.inclusoes.length
+                        : 0
+                    } dia(s)`}
               </p>
             </div>
           </div>

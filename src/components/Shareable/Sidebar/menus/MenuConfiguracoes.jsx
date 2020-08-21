@@ -5,14 +5,16 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
-  usuarioEhTerceirizada
+  usuarioEhTerceirizada,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
     usuarioEhEscola() ||
     usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhCODAEDietaEspecial();
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||

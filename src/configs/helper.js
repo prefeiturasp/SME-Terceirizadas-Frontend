@@ -66,6 +66,8 @@ export const dashBoardDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return DashBoardDietaEspecial.DietaEspecialDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
+    case TIPO_PERFIL.DIETA_ESPECIAL:
       return DashBoardDietaEspecial.DietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return DashBoardDietaEspecial.DietaEspecialTerceirizada;

@@ -18,6 +18,15 @@ const login = async (email, password) => {
     const isValid = isValidResponse(json);
     if (isValid) {
       localStorage.setItem(TOKEN_ALIAS, json.token);
+
+      await fetch(`${CONFIG.API_URL}/usuarios/atualizar-cargo/`, {
+        method: "GET",
+        headers: {
+          Authorization: `JWT ${json.token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
       await fetch(`${CONFIG.API_URL}/usuarios/meus-dados/`, {
         method: "GET",
         headers: {

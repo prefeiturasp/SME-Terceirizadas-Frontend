@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { FluxoDeStatus } from "../../../../../../Shareable/FluxoDeStatus";
-import { fluxoPartindoTerceirizada } from "../../../../../../Shareable/FluxoDeStatus/helper";
+import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
+import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 import "../styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
@@ -9,6 +9,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 
 import "antd/dist/antd.css";
 import { Modal } from "antd";
@@ -137,7 +138,10 @@ export default class CorpoRelatorio extends Component {
           />
         </article>
         {!!logs.length && (
-          <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+          <>
+            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+            <MotivoSuspensao logs={historico.logs || []} />
+          </>
         )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
@@ -162,7 +166,6 @@ export default class CorpoRelatorio extends Component {
           />
           <hr />
         </article>
-
         <article className="informacoes-gerais">
           <div className="header-informacao">
             Informação de empresa solicitante (Terceirizada)
@@ -379,7 +382,14 @@ export default class CorpoRelatorio extends Component {
                 </div>
                 <div className="info-sem-grid justificativa-logs">
                   <div className="label-relatorio">Justificativa</div>
-                  <div className="value-relatorio">{justificativa}</div>
+                  <div className="value-relatorio">
+                    <p
+                      className="value"
+                      dangerouslySetInnerHTML={{
+                        __html: justificativa
+                      }}
+                    />
+                  </div>
                 </div>
               </Fragment>
             );

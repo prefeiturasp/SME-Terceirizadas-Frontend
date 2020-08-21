@@ -13,11 +13,7 @@ const atual = {
 };
 
 export default () => (
-  <Page
-    titulo={"Ficha de identificação de Produto"}
-    botaoVoltar
-    voltarPara={"/"}
-  >
+  <Page titulo={"Ficha de identificação de Produto"} botaoVoltar>
     <Breadcrumb home={"/"} atual={atual} />
     <HomologacaoProduto />
   </Page>

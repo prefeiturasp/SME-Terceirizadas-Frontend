@@ -1,11 +1,10 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import RelatorioProduto from "../../components/screens/Produto/BuscaAvancada/RelatorioProduto";
+import RelatorioProduto from "../../components/screens/Produto/BuscaAvancada/components/RelatorioProduto";
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  RELATORIO_PRODUTO,
-  BUSCA_PRODUTO
+  RELATORIO_PRODUTO
 } from "../../configs/constants";
 
 const atual = {
@@ -14,11 +13,7 @@ const atual = {
 };
 
 export default () => (
-  <Page
-    titulo={"Consultar Produto"}
-    botaoVoltar
-    voltarPara={`/${PESQUISA_DESENVOLVIMENTO}/${BUSCA_PRODUTO}`}
-  >
+  <Page titulo={"Consultar Produto"} botaoVoltar>
     <Breadcrumb home={"/"} atual={atual} />
     <RelatorioProduto />
   </Page>

@@ -22,16 +22,54 @@ div.cadastro-produto-step3 {
       color: $gray;
     }
   }
-  span.delete {
-    margin-left: 2em;
-    font-weight: bold;
-    background-color: $blue;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: white;
+}
+
+.attachments {
+  .text {
+    font-size: 14px;
+    color: #686868;
+  }
+  .card-warning {
+    border: 1px solid $red;
+    color: $red;
+    font-size: 10px;
+    padding: 10px;
+  }
+  .btn {
+    display: flex;
+    margin-top: 2em;
+    justify-content: flex-end;
+  }
+}
+
+.section-cards-imagens {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15px;
+  margin: 20px 0 0 0;
+
+  span {
+    margin: 0 0 0 10px;
+
     cursor: pointer;
-    &:hover {
-      background-color: $blue;
-    }
+  }
+
+  .link {
+    font-size: 14px;
+    font-weight: bold;
+    color: $blue;
+  }
+}
+
+.delete {
+  margin-left: 2em;
+  font-weight: bold;
+  background-color: $blue;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: $blue;
   }
 }
