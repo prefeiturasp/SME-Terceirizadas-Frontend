@@ -18,13 +18,16 @@ import {
 } from "components/Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
+import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
     super(props);
     this.state = {
       produto: null,
-      arquivos: []
+      arquivos: [],
+      mostraModalConfimacao: false,
+      formValues: undefined
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -70,6 +73,13 @@ class WizardFormTerceiraPagina extends Component {
   }
 
   onSubmit = values => {
+    this.setState({
+      mostraModalConfimacao: true,
+      formValues: values
+    });
+  };
+
+  enviaDados = values => {
     const { valoresSegundoForm, produto } = this.props;
     values["uuid"] = produto.uuid;
     values["cadastro_atualizado"] = true;
@@ -145,8 +155,20 @@ class WizardFormTerceiraPagina extends Component {
       valuesForm,
       produto
     } = this.props;
+    const { mostraModalConfimacao } = this.state;
     return (
       <form onSubmit={handleSubmit} className="cadastro-produto-step3">
+        <ModalConfirmacaoSimNao
+          showModal={mostraModalConfimacao}
+          closeModal={() => this.setState({ mostraModalConfimacao: false })}
+          corpo={
+            <p>
+              Atenção, ao realizar alterações no cadastro um novo processo de
+              homologação será criado. Deseja continuar?
+            </p>
+          }
+          onSimClick={() => this.enviaDados(this.state.formValues)}
+        />
         <div className="header-card-title">
           Informação do Produto (classificação)
         </div>
