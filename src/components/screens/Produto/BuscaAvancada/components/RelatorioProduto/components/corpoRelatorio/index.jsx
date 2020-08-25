@@ -1,7 +1,8 @@
+import { Modal } from "antd";
 import React, { Component, Fragment } from "react";
+
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
-import "../styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -11,9 +12,12 @@ import {
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 
-import "antd/dist/antd.css";
-import { Modal } from "antd";
+import { truncarString } from "helpers/utilities";
+
 import { getRelatorioProduto } from "services/relatorios";
+
+import "antd/dist/antd.css";
+import "../styles.scss";
 
 export default class CorpoRelatorio extends Component {
   constructor(props) {
@@ -431,8 +435,11 @@ export default class CorpoRelatorio extends Component {
                           <div>{iniciais}</div>
                         </div>
                         <div className="descricao">
-                          <div className="descicao-titulo">
-                            {log.status_evento_explicacao}
+                          <div
+                            className="descicao-titulo"
+                            title={log.status_evento_explicacao}
+                          >
+                            {truncarString(log.status_evento_explicacao, 19)}
                           </div>
                           <div className="descicao-entidade">{tipoUsuario}</div>
                         </div>
@@ -487,11 +494,15 @@ export default class CorpoRelatorio extends Component {
                             </article>
                             <article>
                               <div>Justificativa:</div>
-                              <div>
-                                {logSelecionado.justificativa === ""
-                                  ? "SEM JUSTIFICATIVA"
-                                  : logSelecionado.justificativa}
-                              </div>
+                              {logSelecionado.justificativa === "" ? (
+                                <div>SEM JUSTIFICATIVA</div>
+                              ) : (
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: logSelecionado.justificativa
+                                  }}
+                                />
+                              )}
                             </article>
                           </section>
                         </div>
