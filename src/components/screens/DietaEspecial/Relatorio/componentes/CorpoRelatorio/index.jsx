@@ -14,6 +14,7 @@ import {
   formatarFluxoDietaEspecial
 } from "../../../../../Shareable/FluxoDeStatus/helper";
 import { statusEnum } from "../../../../../../constants/shared";
+import "./styles.scss";
 
 export const CorpoRelatorio = props => {
   const {
@@ -36,7 +37,8 @@ export const CorpoRelatorio = props => {
       substituicoes,
       informacoes_adicionais,
       registro_funcional_nutricionista,
-      data_termino
+      data_termino,
+      tem_solicitacao_cadastro_produto
     },
     solicitacoesVigentes,
     uuid
@@ -123,9 +125,18 @@ export const CorpoRelatorio = props => {
       )}
       <hr />
       <div className="row">
-        <div className="col-8 report-label-value">
+        <div className="col report-label-value">
           <p className="value">Descrição da Dieta Especial</p>
         </div>
+        {tem_solicitacao_cadastro_produto && (
+          <div className="col-5 report-label-value">
+            <p className="value">
+              <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
+              Há solicitação de cadastro de produto em andamento
+            </p>
+          </div>
+        )}
+
         <div className="col-4 report-label-value">
           <p className="value">
             <i

@@ -13,7 +13,14 @@ import "./style.scss";
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, addOption, removeOption, name, meta } = this.props;
+    const {
+      alimentos,
+      produtos,
+      addOption,
+      removeOption,
+      name,
+      meta
+    } = this.props;
     return (
       <div className="row">
         <div className="col-3">
@@ -45,9 +52,9 @@ export default class SubstituicoesField extends Component {
             component={MultiSelect}
             type="select-multi"
             name={`${name}.substitutos`}
-            options={alimentos.map(a => {
+            options={produtos.map(a => {
               return {
-                value: a.id,
+                value: a.uuid,
                 label: a.nome
               };
             })}

@@ -9,7 +9,7 @@ import { validateSubstituicao } from "../../../FormAutorizaDietaEspecial/helper"
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos } = this.props;
+    const { alimentos, produtos } = this.props;
     return (
       <div className="substituicoes-field">
         <div className="row">
@@ -25,6 +25,7 @@ export default class SubstituicoesField extends Component {
                 name={name}
                 key={index}
                 alimentos={alimentos}
+                produtos={produtos}
                 addOption={() => fields.push({})}
                 removeOption={() => {
                   fields.swap(index, fields.length - 1);

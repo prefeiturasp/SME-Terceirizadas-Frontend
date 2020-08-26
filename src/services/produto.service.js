@@ -477,3 +477,11 @@ export const getProdutosListagem = async params => {
     params: params
   });
 };
+
+export const solicitarCadastroProdutoDieta = async payload => {
+  return await axios.post(`/solicitacao-cadastro-produto-dieta/`, payload);
+};
+
+export const getNomeProdutosHomologados = async () => {
+  return await axios.get(`/produtos/lista-nomes-homologados/`);
+};

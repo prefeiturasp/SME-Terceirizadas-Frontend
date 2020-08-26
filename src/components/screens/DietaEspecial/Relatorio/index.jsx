@@ -68,6 +68,15 @@ export default class Relatorio extends Component {
     });
   };
 
+  setTemSolicitacaoCadastroProduto = () => {
+    this.setState({
+      dietaEspecial: {
+        ...this.state.dietaEspecial,
+        tem_solicitacao_cadastro_produto: true
+      }
+    });
+  };
+
   render() {
     const { dietaEspecial, solicitacoesVigentes } = this.state;
     const { visao } = this.props;
@@ -101,6 +110,9 @@ export default class Relatorio extends Component {
                   dietaEspecial={dietaEspecial}
                   onAutorizarOuNegar={() =>
                     this.loadSolicitacao(dietaEspecial.uuid)
+                  }
+                  setTemSolicitacaoCadastroProduto={
+                    this.setTemSolicitacaoCadastroProduto
                   }
                 />
               )}
