@@ -5,9 +5,6 @@ import {
 } from "helpers/utilities";
 
 export const escolheStatusPendenteHomologacao = () => {
-  if (usuarioEhCODAEGestaoProduto()) {
-    return [ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO];
-  }
   return ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO;
 };
 
