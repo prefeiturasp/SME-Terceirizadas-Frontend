@@ -253,7 +253,12 @@ export const CorpoRelatorio = props => {
           {justificativa_negacao && (
             <div className="report-label-value">
               <p>Justificativa da Negação</p>
-              <div className="texto-wysiwyg">{justificativa_negacao}</div>
+              <div
+                className="texto-wysiwyg"
+                dangerouslySetInnerHTML={{
+                  __html: justificativa_negacao
+                }}
+              />
             </div>
           )}
           {nome_protocolo && (
