@@ -172,7 +172,8 @@ export default class FormAutorizaDietaEspecial extends Component {
     } = values;
     let { nome_protocolo } = values;
     if (nome_protocolo)
-      nome_protocolo = nome_protocolo.toString().replace(",", ", ");
+      if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
+    nome_protocolo = nome_protocolo.toString().replace(/,/gi, ", ");
     return new Promise((resolve, reject) => {
       atualizaDietaEspecial(this.props.dietaEspecial.uuid, {
         alergias_intolerancias,
