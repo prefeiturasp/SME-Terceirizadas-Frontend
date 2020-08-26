@@ -134,7 +134,7 @@ const ModalSolicitacaoCadastroProduto = ({
                     className="input-busca-produto"
                     label="Marca do Produto"
                     placeholder="Digite marca do produto"
-                    name="nome_marca"
+                    name="marca_produto"
                   />
                 </div>
                 <div className="col-md-4 col-xl-4">
@@ -142,7 +142,7 @@ const ModalSolicitacaoCadastroProduto = ({
                     component={InputText}
                     label="Fabricante do Produto"
                     placeholder="Digite fabricante do produto"
-                    name="nome_fabricante"
+                    name="fabricante_produto"
                   />
                 </div>
               </div>
