@@ -8,8 +8,7 @@ describe("Test escolheStatusPendenteHomologacao", () => {
   test("retorna lista se perfil é gpcodae", () => {
     localStorage.setItem("tipo_perfil", TIPO_PERFIL.GESTAO_PRODUTO);
     expect(escolheStatusPendenteHomologacao()).toEqual([
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO,
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO
+      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO
     ]);
   });
   test("retorna um único status nos outros perfis", () => {
