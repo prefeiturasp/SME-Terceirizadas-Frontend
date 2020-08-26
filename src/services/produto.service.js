@@ -485,3 +485,9 @@ export const solicitarCadastroProdutoDieta = async payload => {
 export const getNomeProdutosHomologados = async () => {
   return await axios.get(`/produtos/lista-nomes-homologados/`);
 };
+
+export const getNomesProdutosSolicitacaoInclusao = async () =>
+  await axios.get("/solicitacao-cadastro-produto-dieta/nomes-produtos/");
+
+export const getSolicitacoesCadastroProdutoDieta = async params =>
+  await axios.get("/solicitacao-cadastro-produto-dieta/", { params });

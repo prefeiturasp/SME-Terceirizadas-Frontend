@@ -81,6 +81,8 @@ export const BUSCA_AVANCADA_ANALISE_SENSORIAL =
   "busca-avancada-analise-sensorial";
 export const RELATORIO_ANALISE_SENSORIAL = "relatorio-analise-sensorial";
 export const AVALIAR_RECLAMACAO_PRODUTO = "avaliar-reclamacao-produto";
+export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
+  "avaliar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
