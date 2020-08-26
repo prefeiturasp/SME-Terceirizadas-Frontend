@@ -14,7 +14,6 @@ import {
   escolheStatusPendenteHomologacao,
   escolheStatusAguardandoAnaliseReclamacao
 } from "./helpers";
-import { usuarioEhTerceirizada } from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
