@@ -228,3 +228,11 @@ export const getSolicitacaoDietaEspecial = async uuid => {
   const url = `${SOLICITACOES_DIETA}/${uuid}/`;
   return axios.get(url);
 };
+
+export const getProtocolosDietaEspecial = async () => {
+  return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
+};
+
+export const cadastraProtocoloDietaEspecial = async payload => {
+  return await axios.post(`/protocolo-dieta-especial/`, payload);
+};

@@ -11,6 +11,7 @@ export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
