@@ -92,11 +92,6 @@ export const PendenteHomologacao = () => (
 
 export const Homologados = () => {
   const status = [ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_HOMOLOGADO];
-  if (!usuarioEhTerceirizada()) {
-    status.push(
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.ESCOLA_OU_NUTRICIONISTA_RECLAMOU
-    );
-  }
   return (
     <StatusSolicitacoesBase
       status={status}
