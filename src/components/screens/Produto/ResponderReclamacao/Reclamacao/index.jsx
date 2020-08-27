@@ -7,8 +7,8 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalResponderReclamacao from "../ModalResponderReclamacao";
-import { getReclamacao } from "services/produto.service";
 import { RECLAMACAO_PRODUTO_STATUS_EXPLICACAO } from "constants/shared";
+import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
 
 const obterTituloLog = status_evento => {
   switch (status_evento) {
@@ -55,7 +55,6 @@ const LogReclamacao = ({ log }) => {
 
 const Reclamacao = ({
   reclamacao,
-  indexReclamacao,
   indexProduto,
   setAtivos,
   produtos,
@@ -64,14 +63,17 @@ const Reclamacao = ({
 }) => {
   const [exibirModal, setExibirModal] = useState(null);
 
-  const atualizarReclamacao = () => {
+  const atualizarProduto = () => {
     async function fetchData() {
       setAtivos([]);
       setCarregando(true);
-      const response = await getReclamacao(reclamacao.uuid);
-      produtos[indexProduto].ultima_homologacao.reclamacoes[
-        indexReclamacao - 1
-      ] = response.data;
+      const uuid = produtos[indexProduto].ultima_homologacao.uuid;
+      const response = await getReclamacoesTerceirizadaPorFiltro({
+        uuid: uuid
+      });
+      if (response.data.results.length)
+        produtos[indexProduto] = response.data.results[0];
+      else produtos.splice(indexProduto, 1);
       setProdutos(produtos);
       setCarregando(false);
     }
@@ -84,7 +86,7 @@ const Reclamacao = ({
         showModal={exibirModal}
         closeModal={() => setExibirModal(null)}
         reclamacao={reclamacao}
-        atualizarReclamacao={() => atualizarReclamacao()}
+        atualizarProduto={() => atualizarProduto()}
       />
 
       <div className="detalhes-reclamacao">
