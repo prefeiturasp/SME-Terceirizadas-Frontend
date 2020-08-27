@@ -35,12 +35,18 @@ export default () => {
             nomesProdutos={nomesProdutos}
             onSubmit={onSubmit}
           />
-          {solicitacoes && (
+          {solicitacoes && solicitacoes.length > 0 && (
             <ListagemProdutos
               solicitacoes={solicitacoes}
+              setSolicitacoes={setSolicitacoes}
               ativos={ativos}
               setAtivos={setAtivos}
             />
+          )}
+          {solicitacoes && solicitacoes.length === 0 && (
+            <div className="text-center mt-5">
+              A consulta retornou 0 resultados.
+            </div>
           )}
         </div>
       </div>

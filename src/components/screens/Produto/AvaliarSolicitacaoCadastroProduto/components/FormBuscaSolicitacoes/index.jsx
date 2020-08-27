@@ -55,10 +55,10 @@ const FormBuscaSolicitacao = ({
                 options={[
                   { uuid: "", nome: "Todos" },
                   {
-                    uuid: "SOLICITACAO_REALIZADA",
+                    uuid: "AGUARDANDO_CONFIRMACAO",
                     nome: "Aguardando confirmação"
                   },
-                  { uuid: "SOLICITACAO_ATENDIDA", nome: "Confirmado" }
+                  { uuid: "CONFIRMADA", nome: "Confirmada" }
                 ]}
                 label="Situação do Pedido"
                 name="status"
@@ -127,7 +127,6 @@ const FormBuscaSolicitacao = ({
               }}
             />
           </div>
-          <pre>{JSON.stringify(values, null, 4)}</pre>
         </form>
       )}
     />

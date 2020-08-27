@@ -1,0 +1,33 @@
+.form-previsao-cadastro {
+  display: flex;
+  border-top: 1px solid black;
+  margin-top: 1em;
+  div.datepicker {
+    span.required-asterisk {
+      position: absolute;
+      margin-top: 1em;
+    }
+    .col-form-label {
+      margin-left: 0.6em;
+    }
+  }
+  div#react-wysiwyg {
+    height: initial;
+    flex: 1 1 auto;
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  .form-row:first-child {
+    border-top: 1px solid black;
+    margin-top: 1em;
+  }
+  .datepicker {
+    max-width: 150px;
+  }
+  .general-button {
+    align-self: center;
+  }
+  .col-form-label {
+    font-size: 16px;
+  }
+}

@@ -89,6 +89,11 @@
         }
       }
 
+      .grid-confirmacao {
+        display: grid;
+        grid-template-columns: 25% 75%;
+      }
+
       .grid-do-produto {
         display: grid;
         grid-template-columns: 1fr;

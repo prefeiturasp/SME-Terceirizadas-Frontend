@@ -491,3 +491,9 @@ export const getNomesProdutosSolicitacaoInclusao = async () =>
 
 export const getSolicitacoesCadastroProdutoDieta = async params =>
   await axios.get("/solicitacao-cadastro-produto-dieta/", { params });
+
+export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
+  await axios.patch(
+    `/solicitacao-cadastro-produto-dieta/${uuid}/confirma-previsao/`,
+    params
+  );
