@@ -50,6 +50,17 @@ export const CorpoRelatorio = props => {
   ];
   return (
     <div>
+      {tem_solicitacao_cadastro_produto && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p className="value">
+              <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
+              Há solicitação de cadastro de produto em andamento
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="row">
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">
@@ -128,15 +139,6 @@ export const CorpoRelatorio = props => {
         <div className="col report-label-value">
           <p className="value">Descrição da Dieta Especial</p>
         </div>
-        {tem_solicitacao_cadastro_produto && (
-          <div className="col-5 report-label-value">
-            <p className="value">
-              <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
-              Há solicitação de cadastro de produto em andamento
-            </p>
-          </div>
-        )}
-
         <div className="col-4 report-label-value">
           <p className="value">
             <i
