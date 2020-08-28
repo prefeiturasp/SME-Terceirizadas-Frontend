@@ -27,7 +27,7 @@ const ListagemProdutos = ({
     );
   };
   return (
-    <section className="resultado-busca-produto-avancada">
+    <section className="resultado-busca-solic-cad-produto">
       <header>Veja os resultados para busca</header>
       <article>
         <div className="grid-produto-table header-table-produtos">
