@@ -55,7 +55,7 @@ export const CorpoRelatorio = props => {
           <div className="col-12 report-label-value">
             <p className="value">
               <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
-              Há solicitação de cadastro de produto em andamento
+              HÁ SOLICITAÇÂO DE CADASTRO DE PRODUTO EM ANDAMENTO
             </p>
           </div>
         </div>
