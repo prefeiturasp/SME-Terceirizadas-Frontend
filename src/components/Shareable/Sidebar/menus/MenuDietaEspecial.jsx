@@ -1,6 +1,10 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
+  GESTAO_PRODUTO,
+  AVALIAR_SOLICITACAO_CADASTRO_PRODUTO
+} from "configs/constants";
+import {
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
@@ -19,6 +23,7 @@ const MenuDietaEspecial = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhDRE();
+  const exibeAvaliarSolicitacaoCadastroProduto = usuarioEhTerceirizada();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
@@ -34,6 +39,13 @@ const MenuDietaEspecial = () => {
       {exibeAtivasInativas && (
         <LeafItem to={`/dieta-especial/ativas-inativas`}>
           Aguardando autorização
+        </LeafItem>
+      )}
+      {exibeAvaliarSolicitacaoCadastroProduto && (
+        <LeafItem
+          to={`/${GESTAO_PRODUTO}/${AVALIAR_SOLICITACAO_CADASTRO_PRODUTO}`}
+        >
+          Avaliar solic. cad. produto
         </LeafItem>
       )}
     </Menu>

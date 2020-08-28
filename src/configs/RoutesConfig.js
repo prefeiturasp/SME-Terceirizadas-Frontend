@@ -103,6 +103,7 @@ import {
   ResponderReclamacaoPage,
   RelatorioQuantitativoPorTerceirizadaPage
 } from "../pages/Produto";
+import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 
 const routesConfig = [
   {
@@ -831,6 +832,14 @@ const routesConfig = [
     component: RelatorioQuantitativoPorTerceirizadaPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AVALIAR_SOLICITACAO_CADASTRO_PRODUTO
+    }`,
+    component: AvaliarSolicitacaoCadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   }
 ];
 

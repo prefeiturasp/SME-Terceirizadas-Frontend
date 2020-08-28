@@ -1,0 +1,145 @@
+.resultado-busca-produto-avancada {
+  margin-top: 10px;
+
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-produto-table {
+      height: 48px;
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 2fr 0.3fr;
+    }
+
+    .header-table-produtos {
+      background: #f5f6f8;
+      color: #42474a;
+      font-weight: bold;
+    }
+
+    .body-table-produtos {
+      font-weight: 500;
+      color: #686868;
+      border-top: 1px solid #e9eaea;
+
+      .desativar-borda {
+        border-left: 0px solid #e9eaea;
+        color: #42474a;
+        font-weight: 900;
+      }
+
+      .fas {
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 16px;
+        line-height: 18px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        letter-spacing: 0.01em;
+
+        /* $neutral/dark */
+
+        color: #42474a;
+      }
+
+      div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        border-left: 1px solid #e9eaea;
+      }
+
+      div:first-child {
+        border-left: 0px solid #e9eaea;
+      }
+
+      div:last-child {
+        border-left: 0px solid #e9eaea;
+      }
+    }
+
+    .resultado-busca-detalhe-produto {
+      margin: 1em 2em;
+
+      .grid-escola {
+        display: grid;
+        grid-template-columns: 50% 25% 25%;
+
+        .template-contatos-terc {
+          display: flex;
+          flex-wrap: wrap;
+        }
+      }
+
+      .grid-confirmacao {
+        display: grid;
+        grid-template-columns: 25% 75%;
+      }
+
+      .grid-do-produto {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 10px;
+
+        .botao-visualizar-produto {
+          width: 100px;
+          height: 35px;
+          border: 1px solid #198459;
+          color: #198459;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 3px;
+        }
+      }
+
+      .botao-produto-visualizar {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .label-empresa {
+        color: #686868;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 16px;
+        margin-top: 0.5em;
+      }
+      .value-empresa {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+        color: #353535;
+        margin: 6px 0 0 0;
+      }
+      .cabecalho-empresa {
+        font-weight: 900;
+      }
+      .cabecalho-empresa:not(:first-child) {
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 1px solid black;
+      }
+    }
+  }
+}
