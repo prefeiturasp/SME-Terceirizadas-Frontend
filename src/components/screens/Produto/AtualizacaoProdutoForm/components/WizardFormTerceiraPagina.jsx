@@ -19,6 +19,7 @@ import {
 import { withRouter } from "react-router-dom";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
+import { obtemBase64DaUrl } from "./helpers";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class WizardFormTerceiraPagina extends Component {
     this.removeFile = this.removeFile.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
     if (this.props.produto !== this.state.produto) {
       this.setState({ produto: this.props.produto });
     }
@@ -53,8 +54,18 @@ class WizardFormTerceiraPagina extends Component {
       change("prazo_validade", produto.prazo_validade);
       change("info_armazenamento", produto.info_armazenamento);
       change("outras_informacoes", produto.outras_informacoes);
+      if (produto.imagens) {
+        const imagens = [];
+        for (let imagem of produto.imagens) {
+          imagens.push({
+            nome: imagem.nome,
+            base64: await obtemBase64DaUrl(imagem.arquivo)
+          });
+        }
+        change("anexos", imagens);
+      }
     }
-  }
+  };
 
   removeFile(index) {
     let { arquivos } = this.state;
@@ -152,8 +163,7 @@ class WizardFormTerceiraPagina extends Component {
       pristine,
       previousPage,
       submitting,
-      valuesForm,
-      produto
+      valuesForm
     } = this.props;
     const { mostraModalConfimacao } = this.state;
     return (
@@ -262,42 +272,12 @@ class WizardFormTerceiraPagina extends Component {
               texto="Anexar"
               name="anexos"
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-              onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
               toastErrorMessage="Arquivo superior a 10 MB não é possível fazer o upload"
             />
           </div>
         </section>
-
-        <div className="row pt-3 pb-3">
-          {produto.imagens !== null && produto.imagens.length > 0 && (
-            <div className="section-cards-imagens">
-              {produto.imagens
-                .filter(anexo => anexo.arquivo.includes("media"))
-                .map((anexo, key) => {
-                  return (
-                    <div key={key} className="pt-2">
-                      <a
-                        rel="noopener noreferrer"
-                        target="_blank"
-                        href={anexo.arquivo}
-                        className="link"
-                      >
-                        {anexo.nome}
-                      </a>
-                      <span
-                        onClick={() => this.removerAnexo(anexo.uuid, key)}
-                        className="delete"
-                      >
-                        x
-                      </span>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
-        </div>
 
         <div className="section-botoes">
           <Botao
