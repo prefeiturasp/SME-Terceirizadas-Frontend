@@ -136,7 +136,7 @@ export default class CorpoRelatorio extends Component {
           />
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="historico"
+            texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={this.showModal}
           />

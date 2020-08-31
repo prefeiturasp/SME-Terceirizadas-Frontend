@@ -1,7 +1,19 @@
 import axios from "axios";
+import process from "process";
+
+export const httpTohttps = url => {
+  if (url.startsWith("http://")) {
+    return url.replace(/^http:\/\//, "https://");
+  }
+  return url;
+};
 
 export const obtemBase64DaUrl = async url => {
-  const resposta = await axios.get(url, {
+  const realUrl =
+    !process.env.NODE_ENV || process.env.NODE_ENV === "development"
+      ? url
+      : httpTohttps(url);
+  const resposta = await axios.get(realUrl, {
     responseType: "arraybuffer"
   });
   // eslint-disable-next-line no-undef
