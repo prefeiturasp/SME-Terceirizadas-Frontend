@@ -7,6 +7,7 @@ import {
   getNomesProdutosSolicitacaoInclusao,
   getSolicitacoesCadastroProdutoDieta
 } from "services/produto.service";
+import "./styles.scss";
 
 export default () => {
   const [ativos, setAtivos] = useState(undefined);
@@ -29,7 +30,7 @@ export default () => {
   }, []);
   return (
     <Spin tip="Carregando..." spinning={false}>
-      <div className="card mt-3">
+      <div className="card mt-3 avaliar-solicitacao-cadastro-produto">
         <div className="card-body ">
           <FormBuscaSolicitacao
             nomesProdutos={nomesProdutos}
