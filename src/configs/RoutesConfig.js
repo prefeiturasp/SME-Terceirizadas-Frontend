@@ -104,6 +104,7 @@ import {
   RelatorioQuantitativoPorTerceirizadaPage
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
+import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
 
 const routesConfig = [
   {
@@ -840,6 +841,14 @@ const routesConfig = [
     component: AvaliarSolicitacaoCadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO
+    }`,
+    component: AcompanharSolicitacaoCadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
   }
 ];
 

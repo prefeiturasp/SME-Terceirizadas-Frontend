@@ -15,7 +15,7 @@
     box-sizing: border-box;
     margin: 10px 0 15px 0;
 
-    .grid-produto-table {
+    .grid-table-solicitacoes-terceirizada {
       height: 48px;
       font-size: 14px;
       line-height: 16px;
@@ -26,10 +26,27 @@
       grid-template-columns: 2fr 1fr 1fr 1fr 2fr 0.3fr;
     }
 
+    .grid-table-solicitacoes-nutricodae {
+      height: 48px;
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 2fr 1fr;
+    }
+
     .header-table-produtos {
       background: #f5f6f8;
       color: #42474a;
       font-weight: bold;
+    }
+
+    .body-table-produtos-terceirizada {
+      div:last-child {
+        border-left: 0px solid #e9eaea;
+      }
     }
 
     .body-table-produtos {
@@ -68,10 +85,6 @@
       }
 
       div:first-child {
-        border-left: 0px solid #e9eaea;
-      }
-
-      div:last-child {
         border-left: 0px solid #e9eaea;
       }
     }
