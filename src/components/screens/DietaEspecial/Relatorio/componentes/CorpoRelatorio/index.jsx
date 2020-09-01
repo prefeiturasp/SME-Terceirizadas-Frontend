@@ -298,7 +298,12 @@ export const CorpoRelatorio = props => {
                   ))}
                 </tbody>
               </table>
-              <div className="value">{justificativa_negacao}</div>
+              <div
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativa_negacao
+                }}
+              />
             </div>
           )}
           {statusDietaAutorizada.includes(status_solicitacao) && (
