@@ -19,7 +19,6 @@ import {
 import { withRouter } from "react-router-dom";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
-import { obtemBase64DaUrl } from "./helpers";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
@@ -54,16 +53,7 @@ class WizardFormTerceiraPagina extends Component {
       change("prazo_validade", produto.prazo_validade);
       change("info_armazenamento", produto.info_armazenamento);
       change("outras_informacoes", produto.outras_informacoes);
-      if (produto.imagens) {
-        const imagens = [];
-        for (let imagem of produto.imagens) {
-          imagens.push({
-            nome: imagem.nome,
-            base64: await obtemBase64DaUrl(imagem.arquivo)
-          });
-        }
-        change("anexos", imagens);
-      }
+      change("anexos", produto.imagens);
     }
   };
 
@@ -97,10 +87,13 @@ class WizardFormTerceiraPagina extends Component {
     values["cadastro_finalizado"] = false;
     if (values.anexos) {
       values["imagens"] = values.anexos.map(imagem => {
-        return {
-          arquivo: imagem.base64,
-          nome: imagem.nome
-        };
+        if (imagem.base64) {
+          return {
+            arquivo: imagem.base64,
+            nome: imagem.nome
+          };
+        }
+        return imagem;
       });
     }
     values["informacoes_nutricionais"] =
