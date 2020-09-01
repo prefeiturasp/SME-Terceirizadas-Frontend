@@ -34,12 +34,12 @@ const MenuDietaEspecial = () => {
         <LeafItem to={`/escola/dieta-especial`}>Nova Solicitação</LeafItem>
       )}
       {exibeConsultaDieta && (
-        <LeafItem to={`/painel-dieta-especial`}>
+        <LeafItem to={`/dieta-especial/ativas-inativas`}>
           Consulta Dieta de Alunos
         </LeafItem>
       )}
       {exibeAtivasInativas && (
-        <LeafItem to={`/dieta-especial/ativas-inativas`}>
+        <LeafItem to={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}>
           Aguardando autorização
         </LeafItem>
       )}
