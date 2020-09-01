@@ -85,6 +85,7 @@ export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
   "avaliar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
+export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
