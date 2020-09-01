@@ -1,13 +1,17 @@
 @import "../../../../styles/variables.scss";
 
 form.special-diet {
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
   .cinza-escuro {
     color: $gray;
   }
   .grid-container {
     margin-top: 1em;
     display: grid;
-    grid-template-columns: 20% 50% 30%;
+    grid-template-columns: 20% 50% 26%;
     column-gap: 2%;
     row-gap: 0.5em;
   }
