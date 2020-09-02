@@ -32,7 +32,7 @@ const RelatorioReclamacaoProduto = () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3">
+      <div className="card card-relatorio-reclamacao mt-3">
         <div className="card-body ">
           <FormBuscaProduto
             onAtualizaProdutos={() => {}}
