@@ -136,7 +136,7 @@ export default class CorpoRelatorio extends Component {
           />
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="historico"
+            texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={this.showModal}
           />
@@ -364,158 +364,120 @@ export default class CorpoRelatorio extends Component {
         </article>
         <hr />
 
-        <article className="informacoes-gerais">
-          {historico.logs.map((log, index) => {
-            const tipoUsuario =
-              log.usuario.tipo_usuario === "terceirizada"
-                ? "TERCEIRIZADA"
-                : "CODAE";
-            const justificativa =
-              log.justificativa === ""
-                ? "SEM JUSTIFICATIVA"
-                : log.justificativa;
-            return (
-              <Fragment key={index}>
-                <div className="label-relatorio">
-                  {log.status_evento_explicacao}
-                </div>
-                <div className="log-justificativa">
-                  <div className="value-relatorio">{log.criado_em}</div>
-                  <div className="spaco-log value-relatorio">{" - "}</div>
-                  <div className="value-relatorio">{`${tipoUsuario}`}</div>
-                </div>
-                <div className="info-sem-grid justificativa-logs">
-                  <div className="label-relatorio">Justificativa</div>
-                  <div className="value-relatorio">
-                    <p
-                      className="value"
-                      dangerouslySetInnerHTML={{
-                        __html: justificativa
+        <Modal
+          title="Histórico"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          okText={"Fechar"}
+          onCancel={this.handleCancel}
+          width={800}
+          maskClosable={false}
+        >
+          <section className="body-modal-produto">
+            <div>Usuario</div>
+            <div>Ações</div>
+            <article className="list-logs">
+              <section className="body-logs">
+                {logs.map((log, index) => {
+                  const { ativo } = log;
+                  const iniciais = this.retornaIniciais(log);
+                  const tipoUsuario =
+                    log.usuario.tipo_usuario === "terceirizada"
+                      ? "TERCEIRIZADA"
+                      : "CODAE";
+
+                  return (
+                    <div
+                      key={index}
+                      className={`${ativo && "ativo-item"} grid-item-log`}
+                      onClick={() => {
+                        this.itemLogAtivo(index, ativo);
                       }}
-                    />
-                  </div>
-                </div>
-              </Fragment>
-            );
-          })}
-        </article>
+                    >
+                      <div className="usuario">
+                        <div>{iniciais}</div>
+                      </div>
+                      <div className="descricao">
+                        <div
+                          className="descicao-titulo"
+                          title={log.status_evento_explicacao}
+                        >
+                          {truncarString(log.status_evento_explicacao, 19)}
+                        </div>
+                        <div className="descicao-entidade">{tipoUsuario}</div>
+                      </div>
+                      <div className="descricao">
+                        <div className="hora">
+                          {log.criado_em.split(" ")[0]}
+                        </div>
+                        <div className="hora">
+                          {log.criado_em.split(" ")[1]}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </section>
+            </article>
+            <article className="detail-log">
+              <div />
 
-        <div>
-          <Modal
-            title="Histórico"
-            visible={this.state.visible}
-            onOk={this.handleOk}
-            okText={"Fechar"}
-            onCancel={this.handleCancel}
-            width={800}
-            maskClosable={false}
-          >
-            <section className="body-modal-produto">
-              <div>Usuario</div>
-              <div>Ações</div>
-              <article className="list-logs">
-                <section className="body-logs">
-                  {logs.map((log, index) => {
-                    const { ativo } = log;
-                    const iniciais = this.retornaIniciais(log);
-                    const tipoUsuario =
-                      log.usuario.tipo_usuario === "terceirizada"
-                        ? "TERCEIRIZADA"
-                        : "CODAE";
-
-                    return (
-                      <div
-                        key={index}
-                        className={`${ativo && "ativo-item"} grid-item-log`}
-                        onClick={() => {
-                          this.itemLogAtivo(index, ativo);
-                        }}
-                      >
+              <div>
+                <header>
+                  <div />
+                  {logSelecionado !== null ? (
+                    <div className="descricao-do-log">
+                      <div className="header-log">
                         <div className="usuario">
-                          <div>{iniciais}</div>
+                          <div>{this.retornaIniciais(logSelecionado)}</div>
                         </div>
-                        <div className="descricao">
-                          <div
-                            className="descicao-titulo"
-                            title={log.status_evento_explicacao}
-                          >
-                            {truncarString(log.status_evento_explicacao, 19)}
-                          </div>
-                          <div className="descicao-entidade">{tipoUsuario}</div>
+                        <div className="nome-fantasia-empresa">
+                          {logSelecionado.empresa}
                         </div>
-                        <div className="descricao">
-                          <div className="hora">
-                            {log.criado_em.split(" ")[0]}
-                          </div>
-                          <div className="hora">
-                            {log.criado_em.split(" ")[1]}
-                          </div>
+                        <div>
+                          <div>{logSelecionado.criado_em.split(" ")[0]}</div>
+                          <div>{logSelecionado.criado_em.split(" ")[1]}</div>
                         </div>
                       </div>
-                    );
-                  })}
-                </section>
-              </article>
-              <article className="detail-log">
-                <div />
-
-                <div>
-                  <header>
-                    <div />
-                    {logSelecionado !== null ? (
-                      <div className="descricao-do-log">
-                        <div className="header-log">
-                          <div className="usuario">
-                            <div>{this.retornaIniciais(logSelecionado)}</div>
-                          </div>
-                          <div className="nome-fantasia-empresa">
-                            {logSelecionado.empresa}
-                          </div>
-                          <div>
-                            <div>{logSelecionado.criado_em.split(" ")[0]}</div>
-                            <div>{logSelecionado.criado_em.split(" ")[1]}</div>
-                          </div>
-                        </div>
-                        <div className="body-log-item">
-                          <header>
-                            {logSelecionado.status_evento_explicacao}
-                          </header>
-                          <section>
-                            <article>
+                      <div className="body-log-item">
+                        <header>
+                          {logSelecionado.status_evento_explicacao}
+                        </header>
+                        <section>
+                          <article>
+                            <div>
+                              RF: {logSelecionado.usuario.registro_funcional}
+                            </div>
+                            <div className="criado-em">
+                              <div>Data:</div>
                               <div>
-                                RF: {logSelecionado.usuario.registro_funcional}
+                                {logSelecionado.criado_em.split(" ")[0]}
                               </div>
-                              <div className="criado-em">
-                                <div>Data:</div>
-                                <div>
-                                  {logSelecionado.criado_em.split(" ")[0]}
-                                </div>
-                              </div>
-                            </article>
-                            <article>
-                              <div>Justificativa:</div>
-                              {logSelecionado.justificativa === "" ? (
-                                <div>SEM JUSTIFICATIVA</div>
-                              ) : (
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html: logSelecionado.justificativa
-                                  }}
-                                />
-                              )}
-                            </article>
-                          </section>
-                        </div>
+                            </div>
+                          </article>
+                          <article>
+                            <div>Justificativa:</div>
+                            {logSelecionado.justificativa === "" ? (
+                              <div>SEM JUSTIFICATIVA</div>
+                            ) : (
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: logSelecionado.justificativa
+                                }}
+                              />
+                            )}
+                          </article>
+                        </section>
                       </div>
-                    ) : (
-                      <div />
-                    )}
-                  </header>
-                </div>
-              </article>
-            </section>
-          </Modal>
-        </div>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                </header>
+              </div>
+            </article>
+          </section>
+        </Modal>
       </section>
     );
   }

@@ -223,6 +223,7 @@ class solicitacaoDietaEspecial extends Component {
           <section className="row attachments">
             <div className="col-9">
               <div className="card-title font-weight-bold cinza-escuro mt-4">
+                <span className="required-asterisk">*</span>
                 Laudo
               </div>
               <div className="text">
