@@ -15,5 +15,9 @@ export const formatarValues = values => {
       "CODAE_AUTORIZOU_RECLAMACAO"
     ];
   }
+  values.status_reclamacao = [
+    "AGUARDANDO_AVALIACAO",
+    "RESPONDIDO_TERCEIRIZADA"
+  ];
   return values;
 };

@@ -500,3 +500,6 @@ export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
 
 export const getProdutosRelatorioReclamacao = async params =>
   await axios.get("/produtos/filtro-relatorio-reclamacoes/", { params });
+
+export const getProdutosAvaliacaoReclamacao = async params =>
+  await axios.get("/produtos/filtro-avaliar-reclamacoes/", { params });
