@@ -251,12 +251,16 @@ class AtualizacaoProdutoForm extends Component {
                   <MotivoSuspensao logs={logs} />
                 )}
 
-              {!!logs.length && !!status && status !== STATUS_CODAE_SUSPENDEU && (
-                <Fragment>
-                  <MotivoDaRecusaDeHomologacao logs={logs} />
-                  <MotivoHomologacao logs={logs} />
-                </Fragment>
-              )}
+              {!!logs.length &&
+                !!status &&
+                status !== STATUS_CODAE_SUSPENDEU &&
+                produto &&
+                !produto.eh_reclamacao && (
+                  <Fragment>
+                    <MotivoDaRecusaDeHomologacao logs={logs} />
+                    <MotivoHomologacao logs={logs} />
+                  </Fragment>
+                )}
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}
