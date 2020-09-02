@@ -53,6 +53,7 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
+import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
 import {
@@ -652,6 +653,19 @@ const routesConfig = [
     component: RelatorioSituacaoProduto,
     exact: true,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_RECLAMACAO_PRODUTO
+    }`,
+    component: RelatorioReclamacaoProduto,
+    exact: true,
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${

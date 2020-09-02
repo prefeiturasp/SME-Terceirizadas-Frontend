@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 import {
   reset,
@@ -44,7 +45,11 @@ const BuscaAvancada = ({
 
   const fetchData = async () => {
     setCarregando(true);
-    const params = { ...filtros, page: page, page_size: PAGE_SIZE };
+    const params = gerarParametrosConsulta({
+      ...filtros,
+      page: page,
+      page_size: PAGE_SIZE
+    });
     const response = await getProdutosListagem(params);
     setProdutos(ordenaProdutos(response.data.results));
     setProdutosCount(response.data.count);

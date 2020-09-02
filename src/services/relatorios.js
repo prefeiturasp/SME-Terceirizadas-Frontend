@@ -265,3 +265,14 @@ export const getRelatorioEmAnaliseSensorial = async payload => {
   );
   saveAs(data, "relatorio_analise_sensorial.pdf");
 };
+
+export const getRelatorioReclamacao = async payload => {
+  const { data } = await axios.post(
+    `${API_URL}/produtos/relatorio-reclamacao/`,
+    payload,
+    {
+      responseType: "blob"
+    }
+  );
+  saveAs(data, "relatorio_reclamacao.pdf");
+};

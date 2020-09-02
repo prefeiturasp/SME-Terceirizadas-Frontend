@@ -497,3 +497,6 @@ export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
     `/solicitacao-cadastro-produto-dieta/${uuid}/confirma-previsao/`,
     params
   );
+
+export const getProdutosRelatorioReclamacao = async params =>
+  await axios.get("/produtos/filtro-relatorio-reclamacoes/", { params });
