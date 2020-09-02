@@ -18,7 +18,11 @@ import {
   getNomesFabricantes
 } from "services/produto.service";
 
-import { getOpcoesStatusReclamacao, getTodosStatusReclamacao } from "./helpers";
+import {
+  getOpcoesStatusReclamacao,
+  getTodosStatusReclamacao,
+  getStatusHomologacao
+} from "./helpers";
 import "./styles.scss";
 
 const initialState = {
@@ -105,7 +109,8 @@ const FormBuscaProduto = ({ setFiltros }) => {
       formValues = { ...values, status_reclamacao: getTodosStatusReclamacao() };
     else
       formValues = { ...values, status_reclamacao: [values.status_reclamacao] };
-    setFiltros(formValues);
+
+    setFiltros({ ...formValues, status: getStatusHomologacao() });
   };
 
   return (

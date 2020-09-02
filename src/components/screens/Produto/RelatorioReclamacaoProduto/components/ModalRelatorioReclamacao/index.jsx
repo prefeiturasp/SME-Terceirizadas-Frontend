@@ -63,8 +63,7 @@ const ModalRelatorioReclamacao = ({
 
               {produtos !== null &&
                 produtos.map((produto, index) => {
-                  const ultimaHomologacao =
-                    produto.homologacoes[produto.homologacoes.length - 1];
+                  const ultimaHomologacao = produto.homologacoes[0];
                   const reclamacoes = ultimaHomologacao.reclamacoes;
                   return (
                     <Fragment key={index}>
