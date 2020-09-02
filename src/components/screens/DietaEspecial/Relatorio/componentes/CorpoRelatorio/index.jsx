@@ -223,29 +223,101 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
-      {status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR && (
-        <>
-          {alergias_intolerancias && alergias_intolerancias.length > 0 && (
-            <Fragment>
-              <hr />
+      {status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR &&
+        status_solicitacao !== statusEnum.CODAE_NEGOU_PEDIDO && (
+          <>
+            {alergias_intolerancias && alergias_intolerancias.length > 0 && (
+              <Fragment>
+                <hr />
+                <div className="report-label-value">
+                  <p>Relação por Diagnóstico</p>
+                  {alergias_intolerancias.map((alergia, key) => {
+                    return (
+                      <div className="value" key={key}>
+                        {alergia.descricao}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Fragment>
+            )}
+            {classificacao && (
               <div className="report-label-value">
-                <p>Relação por Diagnóstico</p>
-                {alergias_intolerancias.map((alergia, key) => {
-                  return (
-                    <div className="value" key={key}>
-                      {alergia.descricao}
-                    </div>
-                  );
-                })}
+                <p>Classificação da Dieta</p>
+                <div className="value">{classificacao.nome}</div>
               </div>
-            </Fragment>
-          )}
-          {classificacao && (
-            <div className="report-label-value">
-              <p>Classificação da Dieta</p>
-              <div className="value">{classificacao.nome}</div>
-            </div>
-          )}
+            )}
+            {nome_protocolo && (
+              <div className="report-label-value">
+                <p>Nome do Protocolo</p>
+                <div className="value">{nome_protocolo}</div>
+              </div>
+            )}
+            {substituicoes.length > 0 && (
+              <div className="report-label-value">
+                <p>Substituições</p>
+                <table className="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Alimento</th>
+                      <th scope="col">Tipo</th>
+                      <th scope="col">Isenções / Substituições</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {substituicoes.map((substituicao, key) => (
+                      <tr key={key}>
+                        <td className="value">{substituicao.alimento.nome}</td>
+                        <td className="value">
+                          {substituicao.tipo === "I"
+                            ? "Isento"
+                            : "Substituição"}
+                        </td>
+                        <td className="value">
+                          <ul>
+                            {substituicao.substitutos.map(
+                              (substituto, key2) => (
+                                <li key={key2}>{substituto.nome}</li>
+                              )
+                            )}
+                          </ul>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div
+                  className="value"
+                  dangerouslySetInnerHTML={{
+                    __html: justificativa_negacao
+                  }}
+                />
+              </div>
+            )}
+            {statusDietaAutorizada.includes(status_solicitacao) && (
+              <div className="report-label-value">
+                <p>Data de término</p>
+                <div className="value">
+                  {data_termino || "Sem data de término"}
+                </div>
+              </div>
+            )}
+
+            {informacoes_adicionais && (
+              <div className="report-label-value">
+                <p>Informações Adicionais</p>
+                <div
+                  className="texto-wysiwyg"
+                  dangerouslySetInnerHTML={{
+                    __html: informacoes_adicionais
+                  }}
+                />
+              </div>
+            )}
+          </>
+        )}
+      {status_solicitacao === statusEnum.CODAE_NEGOU_PEDIDO && (
+        <>
           {motivo_negacao && (
             <div className="report-label-value">
               <p>Motivo da Negação</p>
@@ -263,76 +335,13 @@ export const CorpoRelatorio = props => {
               />
             </div>
           )}
-          {nome_protocolo && (
-            <div className="report-label-value">
-              <p>Nome do Protocolo</p>
-              <div className="value">{nome_protocolo}</div>
-            </div>
-          )}
-          {substituicoes.length > 0 && (
-            <div className="report-label-value">
-              <p>Substituições</p>
-              <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">Alimento</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Isenções / Substituições</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {substituicoes.map((substituicao, key) => (
-                    <tr key={key}>
-                      <td className="value">{substituicao.alimento.nome}</td>
-                      <td className="value">
-                        {substituicao.tipo === "I" ? "Isento" : "Substituição"}
-                      </td>
-                      <td className="value">
-                        <ul>
-                          {substituicao.substitutos.map((substituto, key2) => (
-                            <li key={key2}>{substituto.nome}</li>
-                          ))}
-                        </ul>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div
-                className="value"
-                dangerouslySetInnerHTML={{
-                  __html: justificativa_negacao
-                }}
-              />
-            </div>
-          )}
-          {statusDietaAutorizada.includes(status_solicitacao) && (
-            <div className="report-label-value">
-              <p>Data de término</p>
-              <div className="value">
-                {data_termino || "Sem data de término"}
-              </div>
-            </div>
-          )}
-
-          {informacoes_adicionais && (
-            <div className="report-label-value">
-              <p>Informações Adicionais</p>
-              <div
-                className="texto-wysiwyg"
-                dangerouslySetInnerHTML={{
-                  __html: informacoes_adicionais
-                }}
-              />
-            </div>
-          )}
-          {registro_funcional_nutricionista && (
-            <div className="report-label-value">
-              <p>Identificação do Nutricionista</p>
-              <div className="value">{registro_funcional_nutricionista}</div>
-            </div>
-          )}
         </>
+      )}
+      {registro_funcional_nutricionista && (
+        <div className="report-label-value">
+          <p>Identificação do Nutricionista</p>
+          <div className="value">{registro_funcional_nutricionista}</div>
+        </div>
       )}
       {anexos.filter(anexo => anexo.eh_laudo_alta).length > 0 && (
         <Fragment>
