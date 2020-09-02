@@ -6,6 +6,7 @@ import { getProdutosRelatorioReclamacao } from "services/produto.service";
 
 import FormBuscaProduto from "./components/FormBuscaProduto";
 import ModalRelatorioReclamacao from "./components/ModalRelatorioReclamacao";
+import { getStatusHomologacao } from "./helpers";
 
 import "./styles.scss";
 import "antd/dist/antd.css";
@@ -21,7 +22,10 @@ const RelatorioReclamacaoProduto = () => {
     async function fetchData() {
       setCarregando(true);
       setProdutos(null);
-      const params = gerarParametrosConsulta(filtros);
+      const params = gerarParametrosConsulta({
+        ...filtros,
+        status: getStatusHomologacao()
+      });
       const response = await getProdutosRelatorioReclamacao(params);
       setProdutos(response.data);
       if (response.data.length > 0) setExibirModal(true);
