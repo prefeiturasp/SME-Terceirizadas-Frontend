@@ -2,6 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
   DIETA_ESPECIAL,
@@ -34,6 +35,9 @@ import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
 import { formatarSolicitacoesVigentes } from "./helper";
+
+import { loadSolicitacoesVigentes } from "reducers/incluirDietaEspecialReducer";
+
 import "./style.scss";
 
 const minLength6 = minLength(6);
@@ -48,8 +52,7 @@ class solicitacaoDietaEspecial extends Component {
       quantidadeAlunos: "...",
       files: null,
       submitted: false,
-      resumo: null,
-      solicitacoesVigentes: null
+      resumo: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -99,11 +102,9 @@ class solicitacaoDietaEspecial extends Component {
       getDietasEspeciaisVigentesDeUmAluno(
         event.target.value.padStart(6, "0")
       ).then(response => {
-        this.setState({
-          solicitacoesVigentes: formatarSolicitacoesVigentes(
-            response.data.results
-          )
-        });
+        this.props.loadSolicitacoesVigentes(
+          formatarSolicitacoesVigentes(response.data.results)
+        );
       });
     }
   };
@@ -123,9 +124,9 @@ class solicitacaoDietaEspecial extends Component {
           submitted: !this.state.submitted,
           resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
             response.data.uuid
-          }`,
-          solicitacoesVigentes: null
+          }`
         });
+        this.props.loadSolicitacoesVigentes(null);
         this.resetForm();
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -145,8 +146,13 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const { quantidadeAlunos, solicitacoesVigentes } = this.state;
-    const { handleSubmit, pristine, submitting } = this.props;
+    const { quantidadeAlunos } = this.state;
+    const {
+      handleSubmit,
+      pristine,
+      submitting,
+      solicitacoesVigentes
+    } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
         <CardMatriculados numeroAlunos={quantidadeAlunos} />
@@ -261,7 +267,10 @@ class solicitacaoDietaEspecial extends Component {
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"
-              onClick={() => this.props.reset()}
+              onClick={() => {
+                this.props.reset();
+                this.props.loadSolicitacoesVigentes(null);
+              }}
               disabled={pristine || submitting}
               style={BUTTON_STYLE.GREEN_OUTLINE}
             />
@@ -285,6 +294,8 @@ class solicitacaoDietaEspecial extends Component {
 
 const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial",
+  keepDirtyOnReinitialize: true,
+  destroyOnUnmount: false,
   validate: ({ nome, data_nascimento }) => {
     const errors = {};
     if (nome === undefined && data_nascimento === undefined) {
@@ -298,8 +309,19 @@ const componentNameForm = reduxForm({
 const selector = formValueSelector("solicitacaoDietaEspecial");
 const mapStateToProps = state => {
   return {
-    files: selector(state, "files")
+    files: selector(state, "files"),
+    solicitacoesVigentes: state.incluirDietaEspecial.solicitacoesVigentes
   };
 };
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      loadSolicitacoesVigentes
+    },
+    dispatch
+  );
 
-export default connect(mapStateToProps)(componentNameForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(componentNameForm);
