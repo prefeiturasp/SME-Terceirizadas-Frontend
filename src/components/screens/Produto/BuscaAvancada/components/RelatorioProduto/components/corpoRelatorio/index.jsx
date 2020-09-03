@@ -9,6 +9,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 
@@ -143,6 +144,7 @@ export default class CorpoRelatorio extends Component {
         </article>
         {!!logs.length && (
           <>
+            <MotivoDaCorrecaoDeHomologacao logs={historico.logs || []} />
             <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
             <MotivoSuspensao logs={historico.logs || []} />
           </>
