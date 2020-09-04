@@ -391,16 +391,16 @@ class cadastroProduto extends Component {
     this.props.change("nome_fabricante", null);
   };
 
-  validarFormulario = () => {
+  validarFormulario = async () => {
     const { payload, currentStep } = this.state;
 
     let erros = [];
     if (currentStep === 0) {
-      erros = validaFormularioStep1(payload);
+      erros = await validaFormularioStep1(payload);
     }
 
     if (erros.length > 0) {
-      toastError("Preencha todos os campos corretamente");
+      toastError(erros.join(" - "));
     } else {
       this.setState({ currentStep: currentStep + 1 });
     }

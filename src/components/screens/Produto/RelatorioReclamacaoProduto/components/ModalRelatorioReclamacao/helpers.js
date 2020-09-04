@@ -41,7 +41,7 @@ export const getConfigCabecario = (filtros, produtos) => {
       return config;
     }
     if (filtros.data_inicial_reclamacao) {
-      const dataInicial = filtros.data_incial_reclamacao;
+      const dataInicial = filtros.data_inicial_reclamacao;
       config.cabecario_tipo = "CABECARIO_POR_DATA";
       config.data_inicial = dataInicial;
       config.data_final = moment().format("DD/MM/YYYY");
@@ -52,9 +52,9 @@ export const getConfigCabecario = (filtros, produtos) => {
     if (filtros.data_final_reclamacao) {
       const dataFinal = filtros.data_final_reclamacao;
       config.cabecario_tipo = "CABECARIO_POR_DATA";
-      config.data_inicial = getProdutoDataInicial(produtos);
+      if (produtos.lengh) config.data_inicial = getProdutoDataInicial(produtos);
       config.data_final = dataFinal;
-      config.titulo = `Veja os resultados a partir de "${dataFinal}":`;
+      config.titulo = `Veja os resultados até "${dataFinal}":`;
       return config;
     }
   }

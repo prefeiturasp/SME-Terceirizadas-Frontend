@@ -10,6 +10,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import { STATUS_CODAE_AUTORIZOU_RECLAMACAO } from "configs/constants";
+import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
@@ -153,7 +154,13 @@ export default class CorpoRelatorio extends Component {
             onClick={this.showModal}
           />
         </article>
-
+        {!!logs.length && (
+          <>
+            <MotivoDaCorrecaoDeHomologacao logs={historico.logs || []} />
+            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+            <MotivoSuspensao logs={historico.logs || []} />
+          </>
+        )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>

@@ -6,7 +6,6 @@ const {
   CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_SUSPENDEU,
   CODAE_QUESTIONADO,
-  CODAE_PEDIU_ANALISE_RECLAMACAO,
   CODAE_PEDIU_ANALISE_SENSORIAL,
   CODAE_PENDENTE_HOMOLOGACAO,
   CODAE_HOMOLOGADO,
@@ -54,7 +53,7 @@ const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   icon: "fa-history",
   style: "card-awaiting-complain",
   rota: ROTA.AGUARDANDO_ANALISE_RECLAMACAO,
-  incluir_status: [CODAE_PEDIU_ANALISE_RECLAMACAO]
+  incluir_status: [TERCEIRIZADA_RESPONDEU_RECLAMACAO]
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
@@ -106,15 +105,14 @@ export const listarCardsPermitidos = () => {
       {},
       CARD_AGUARDANDO_ANALISE_RECLAMACAO
     );
-    cardAguardandoAnaliseReclamacao.incluir_status.push(
-      TERCEIRIZADA_RESPONDEU_RECLAMACAO
-    );
+
     cardAguardandoAnaliseReclamacao.incluir_status.push(
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
     return [
       cardPendenteHomologacao,
       CARD_RECLAMACAO_DE_PRODUTO,
+      CARD_CORRECAO_DE_PRODUTO,
       CARD_AGUARDANDO_ANALISE_SENSORIAL,
       CARD_PRODUTOS_SUSPENSOS,
       CARD_HOMOLOGADOS,

@@ -79,10 +79,6 @@ export const AvaliarReclamacaoProduto = ({
           )}
           {!erroNaAPI && (
             <Fragment>
-              <h2>
-                Consulte cadastro completo de produto antes de avaliar
-                reclamação
-              </h2>
               <FormBuscaProduto
                 onSubmit={onSubmit}
                 formName="avaliarReclamacaoProduto"

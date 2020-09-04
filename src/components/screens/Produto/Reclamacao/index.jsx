@@ -72,9 +72,6 @@ class ReclamacaoProduto extends Component {
       <Spin tip="Carregando..." spinning={this.state.loading}>
         <div className="card mt-3 page-reclamacao-produto">
           <div className="card-body">
-            <section className="header-busca-produto">
-              Confira se produto já está cadastrado no sistema
-            </section>
             <FormBuscaProduto
               formName="reclamacao"
               onSubmit={this.onSubmitFormBuscaProduto}
