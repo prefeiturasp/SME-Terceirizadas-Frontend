@@ -1,7 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import HTTP_STATUS from "http-status-codes";
-import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
+import {
+  STATUS_CODAE_SUSPENDEU,
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+} from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
@@ -11,22 +14,18 @@ import {
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
-  CODAEPedeCorrecao,
-  getReclamacaoDeProduto
+  CODAEPedeCorrecao
 } from "../../../../services/produto.service";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
-import {
-  formataInformacoesNutricionais,
-  produtoEhReclamacao,
-  retornaData
-} from "./helper";
+import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
+import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 import {
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
@@ -74,22 +73,10 @@ class HomologacaoProduto extends Component {
   };
 
   componentDidUpdate = async () => {
-    const { qualModal, protocoloAnalise, produto, verificado } = this.state;
+    const { qualModal, protocoloAnalise } = this.state;
     if (qualModal === "analise" && protocoloAnalise === null) {
       let response = await getNumeroProtocoloAnaliseSensorial();
       this.setState({ protocoloAnalise: response.data });
-    }
-
-    if (produto !== null && !verificado) {
-      if (produtoEhReclamacao(produto)) {
-        produto["eh_reclamacao"] = true;
-        const { uuid } = produto.ultima_homologacao;
-        let response = await getReclamacaoDeProduto(uuid);
-        this.setState({ reclamacaoProduto: response.data });
-      } else {
-        produto["eh_reclamacao"] = false;
-      }
-      this.setState({ verificado: true, produto });
     }
   };
 
@@ -171,7 +158,6 @@ class HomologacaoProduto extends Component {
       status,
       terceirizada,
       protocoloAnalise,
-      reclamacaoProduto,
       logs
     } = this.state;
     const {
@@ -229,33 +215,25 @@ class HomologacaoProduto extends Component {
                     : undefined
                 }
               />
-              {reclamacaoProduto !== null &&
-                produto !== null &&
-                produto.eh_reclamacao && (
-                  <section className="descricao-reclamação">
-                    <article className="motivo-data-reclamacao">
-                      <div>Motivo da reclamação:</div>
-                      <div>Data: {retornaData(reclamacaoProduto)}</div>
-                    </article>
-                    <article className="box-detalhe-reclamacao">
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: reclamacaoProduto.reclamacao
-                        }}
-                      />
-                    </article>
-                  </section>
-                )}
-              {!!logs.length && status === STATUS_CODAE_SUSPENDEU && (
-                <MotivoSuspensao logs={logs} />
+              {!!status && status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
+                <InformativoReclamacao homologacao={ultima_homologacao} />
               )}
 
-              {!!logs.length && status !== STATUS_CODAE_SUSPENDEU && (
-                <Fragment>
-                  <MotivoDaRecusaDeHomologacao logs={logs} />
-                  <MotivoHomologacao logs={logs} />
-                </Fragment>
-              )}
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_CODAE_SUSPENDEU && (
+                  <MotivoSuspensao logs={logs} />
+                )}
+
+              {!!logs.length &&
+                !!status &&
+                status !== STATUS_CODAE_SUSPENDEU &&
+                status !== STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
+                  <Fragment>
+                    <MotivoDaRecusaDeHomologacao logs={logs} />
+                    <MotivoHomologacao logs={logs} />
+                  </Fragment>
+                )}
               {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)

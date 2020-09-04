@@ -9,8 +9,10 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import { STATUS_CODAE_AUTORIZOU_RECLAMACAO } from "configs/constants";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
+import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 
 import { truncarString } from "helpers/utilities";
 
@@ -122,8 +124,18 @@ export default class CorpoRelatorio extends Component {
   render() {
     const { produto, historico } = this.props;
     const { informacoes, logs, logSelecionado } = this.state;
+    const status = produto.ultima_homologacao.status;
     return (
       <section className="corpo-reatorio-produto">
+        {!!logs.length && (
+          <>
+            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
+            <MotivoSuspensao logs={historico.logs || []} />
+          </>
+        )}
+        {status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
+          <InformativoReclamacao homologacao={produto.ultima_homologacao} />
+        )}
         <article className="flex-botoes-relatorio">
           <Botao
             type={BUTTON_TYPE.BUTTON}
@@ -141,12 +153,7 @@ export default class CorpoRelatorio extends Component {
             onClick={this.showModal}
           />
         </article>
-        {!!logs.length && (
-          <>
-            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
-            <MotivoSuspensao logs={historico.logs || []} />
-          </>
-        )}
+
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
