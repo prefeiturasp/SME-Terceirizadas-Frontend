@@ -2,6 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
@@ -71,6 +72,11 @@ class solicitacaoDietaEspecial extends Component {
         quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos
       });
     });
+    const { history, loadSolicitacoesVigentes, reset } = this.props;
+    if (history && history.action === "PUSH") {
+      loadSolicitacoesVigentes(null);
+      reset();
+    }
   }
 
   removeFile(index) {
@@ -321,7 +327,9 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(componentNameForm);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(componentNameForm)
+);
