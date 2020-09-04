@@ -115,6 +115,7 @@ export const listarCardsPermitidos = () => {
     return [
       cardPendenteHomologacao,
       CARD_RECLAMACAO_DE_PRODUTO,
+      CARD_CORRECAO_DE_PRODUTO,
       CARD_AGUARDANDO_ANALISE_SENSORIAL,
       CARD_PRODUTOS_SUSPENSOS,
       CARD_HOMOLOGADOS,
