@@ -41,7 +41,7 @@ export const getConfigCabecario = (filtros, produtos) => {
       return config;
     }
     if (filtros.data_inicial_reclamacao) {
-      const dataInicial = filtros.data_incial_reclamacao;
+      const dataInicial = filtros.data_inicial_reclamacao;
       config.cabecario_tipo = "CABECARIO_POR_DATA";
       config.data_inicial = dataInicial;
       config.data_final = moment().format("DD/MM/YYYY");
