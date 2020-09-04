@@ -503,3 +503,6 @@ export const getProdutosRelatorioReclamacao = async params =>
 
 export const getProdutosAvaliacaoReclamacao = async params =>
   await axios.get("/produtos/filtro-avaliar-reclamacoes/", { params });
+
+export const produtoJaExiste = async params =>
+  await axios.get("/produtos/ja-existe/", { params });
