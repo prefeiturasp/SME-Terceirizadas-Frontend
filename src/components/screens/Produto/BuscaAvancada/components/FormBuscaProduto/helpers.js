@@ -33,22 +33,13 @@ export const getTodasOpcoesStatusPorPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (
     tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA
+    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ||
+    tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
   ) {
     return [
       "CODAE_AUTORIZOU_RECLAMACAO",
       "CODAE_SUSPENDEU",
       "CODAE_QUESTIONADO",
-      "CODAE_PEDIU_ANALISE_RECLAMACAO",
-      "CODAE_PEDIU_ANALISE_SENSORIAL",
-      "CODAE_PENDENTE_HOMOLOGACAO",
-      "CODAE_HOMOLOGADO",
-      "CODAE_NAO_HOMOLOGADO"
-    ];
-  } else if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
-    return [
-      "CODAE_AUTORIZOU_RECLAMACAO",
-      "CODAE_SUSPENDEU",
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
       "CODAE_PEDIU_ANALISE_SENSORIAL",
       "CODAE_PENDENTE_HOMOLOGACAO",
