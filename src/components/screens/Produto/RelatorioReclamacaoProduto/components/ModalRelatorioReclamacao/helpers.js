@@ -54,7 +54,7 @@ export const getConfigCabecario = (filtros, produtos) => {
       config.cabecario_tipo = "CABECARIO_POR_DATA";
       config.data_inicial = getProdutoDataInicial(produtos);
       config.data_final = dataFinal;
-      config.titulo = `Veja os resultados a partir de "${dataFinal}":`;
+      config.titulo = `Veja os resultados até "${dataFinal}":`;
       return config;
     }
   }

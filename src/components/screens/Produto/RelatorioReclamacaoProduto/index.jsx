@@ -47,7 +47,7 @@ const RelatorioReclamacaoProduto = () => {
 
           {produtos && !produtos.length && (
             <div className="text-center mt-5">
-              A consulta retornou 0 resultados.
+              Não existe dados para filtragem informada
             </div>
           )}
           {produtos && (
