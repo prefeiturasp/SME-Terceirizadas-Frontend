@@ -1,4 +1,8 @@
-export const validaFormularioStep1 = ({
+import HTTP_STATUS from "http-status-codes";
+
+import { produtoJaExiste } from "services/produto.service";
+
+export const validaFormularioStep1 = async ({
   eh_para_alunos_com_dieta,
   protocolos,
   nome,
@@ -35,6 +39,20 @@ export const validaFormularioStep1 = ({
   } else if (tem_aditivos_alergenicos !== null) {
     if (tem_aditivos_alergenicos && aditivos === null) {
       arrayValidacao.push("Informe os aditivos alergenicos.");
+    }
+  }
+  if (arrayValidacao.length === 0) {
+    const resposta = await produtoJaExiste({
+      nome,
+      marca,
+      fabricante
+    });
+    if (resposta.status !== HTTP_STATUS.OK) {
+      arrayValidacao.push("Erro ao consultar se produto já existe.");
+    } else if (resposta.data.produto_existe) {
+      arrayValidacao.push(
+        "Produto já existente, não é permitido cadastro em duplicidade."
+      );
     }
   }
   return arrayValidacao;
