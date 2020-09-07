@@ -130,6 +130,7 @@ export default class CorpoRelatorio extends Component {
       <section className="corpo-reatorio-produto">
         {!!logs.length && (
           <>
+            <MotivoDaCorrecaoDeHomologacao logs={historico.logs || []} />
             <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
             <MotivoSuspensao logs={historico.logs || []} />
           </>
@@ -154,13 +155,6 @@ export default class CorpoRelatorio extends Component {
             onClick={this.showModal}
           />
         </article>
-        {!!logs.length && (
-          <>
-            <MotivoDaCorrecaoDeHomologacao logs={historico.logs || []} />
-            <MotivoDaRecusaDeHomologacao logs={historico.logs || []} />
-            <MotivoSuspensao logs={historico.logs || []} />
-          </>
-        )}
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
