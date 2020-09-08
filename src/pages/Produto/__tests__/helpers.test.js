@@ -5,14 +5,7 @@ import {
 import { escolheStatusPendenteHomologacao } from "../helpers";
 
 describe("Test escolheStatusPendenteHomologacao", () => {
-  test("retorna lista se perfil é gpcodae", () => {
-    localStorage.setItem("tipo_perfil", TIPO_PERFIL.GESTAO_PRODUTO);
-    expect(escolheStatusPendenteHomologacao()).toEqual([
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PENDENTE_HOMOLOGACAO,
-      ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONADO
-    ]);
-  });
-  test("retorna um único status nos outros perfis", () => {
+  test("retorna um único status", () => {
     for (let tipoPerfil of Object.values(TIPO_PERFIL)) {
       if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
         continue;

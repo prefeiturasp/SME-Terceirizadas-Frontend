@@ -7,7 +7,7 @@ import { bindActionCreators } from "redux";
 import FormBuscaProduto from "components/screens/Produto/Reclamacao/components/FormBuscaProduto";
 import TabelaProdutos from "./components/TabelaProdutos";
 
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, gerarParametrosConsulta } from "helpers/utilities";
 import { formatarValues } from "./helpers";
 
 import {
@@ -16,7 +16,10 @@ import {
   setIndiceProdutoAtivo
 } from "reducers/avaliarReclamacaoProduto";
 
-import { getProdutosPorFiltro, getHomologacao } from "services/produto.service";
+import {
+  getProdutosAvaliacaoReclamacao,
+  getHomologacao
+} from "services/produto.service";
 import "./style.scss";
 
 export const AvaliarReclamacaoProduto = ({
@@ -59,8 +62,9 @@ export const AvaliarReclamacaoProduto = ({
     setLoading(true);
     setFormValues(values);
     const values_ = deepCopy(values);
-    getProdutosPorFiltro(formatarValues(values_)).then(response => {
-      setProdutos(response.data.results);
+    const params = gerarParametrosConsulta(formatarValues(values_));
+    getProdutosAvaliacaoReclamacao(params).then(response => {
+      setProdutos(response.data);
       setLoading(false);
       setIndiceProdutoAtivo(undefined);
     });
@@ -75,10 +79,6 @@ export const AvaliarReclamacaoProduto = ({
           )}
           {!erroNaAPI && (
             <Fragment>
-              <h2>
-                Consulte cadastro completo de produto antes de avaliar
-                reclamação
-              </h2>
               <FormBuscaProduto
                 onSubmit={onSubmit}
                 formName="avaliarReclamacaoProduto"

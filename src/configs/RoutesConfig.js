@@ -53,6 +53,7 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
+import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
 import {
@@ -103,6 +104,8 @@ import {
   ResponderReclamacaoPage,
   RelatorioQuantitativoPorTerceirizadaPage
 } from "../pages/Produto";
+import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
+import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
 
 const routesConfig = [
   {
@@ -652,6 +655,19 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.RELATORIO_RECLAMACAO_PRODUTO
+    }`,
+    component: RelatorioReclamacaoProduto,
+    exact: true,
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
+  },
+  {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
       constants.HOMOLOGACAO_PRODUTO
     }`,
@@ -831,6 +847,22 @@ const routesConfig = [
     component: RelatorioQuantitativoPorTerceirizadaPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.AVALIAR_SOLICITACAO_CADASTRO_PRODUTO
+    }`,
+    component: AvaliarSolicitacaoCadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO
+    }`,
+    component: AcompanharSolicitacaoCadastroProdutoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
   }
 ];
 

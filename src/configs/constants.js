@@ -11,6 +11,7 @@ export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const GESTAO_PRODUTO = "gestao-produto";
 
 export const CODAE = "codae";
@@ -80,8 +81,13 @@ export const BUSCA_AVANCADA_ANALISE_SENSORIAL =
   "busca-avancada-analise-sensorial";
 export const RELATORIO_ANALISE_SENSORIAL = "relatorio-analise-sensorial";
 export const AVALIAR_RECLAMACAO_PRODUTO = "avaliar-reclamacao-produto";
+export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
+  "avaliar-solicitacao-cadastro-produto";
+export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
+  "acompanhar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
+export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
@@ -108,6 +114,7 @@ export const STATUS_RASCUNHO = "RASCUNHO";
 
 export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
 export const STATUS_CODAE_SUSPENDEU = "CODAE_SUSPENDEU";
+export const STATUS_CODAE_AUTORIZOU_RECLAMACAO = "CODAE_AUTORIZOU_RECLAMACAO";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";

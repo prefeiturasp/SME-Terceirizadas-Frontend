@@ -477,3 +477,32 @@ export const getProdutosListagem = async params => {
     params: params
   });
 };
+
+export const solicitarCadastroProdutoDieta = async payload => {
+  return await axios.post(`/solicitacao-cadastro-produto-dieta/`, payload);
+};
+
+export const getNomeProdutosHomologados = async () => {
+  return await axios.get(`/produtos/lista-nomes-homologados/`);
+};
+
+export const getNomesProdutosSolicitacaoInclusao = async () =>
+  await axios.get("/solicitacao-cadastro-produto-dieta/nomes-produtos/");
+
+export const getSolicitacoesCadastroProdutoDieta = async params =>
+  await axios.get("/solicitacao-cadastro-produto-dieta/", { params });
+
+export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
+  await axios.patch(
+    `/solicitacao-cadastro-produto-dieta/${uuid}/confirma-previsao/`,
+    params
+  );
+
+export const getProdutosRelatorioReclamacao = async params =>
+  await axios.get("/produtos/filtro-relatorio-reclamacoes/", { params });
+
+export const getProdutosAvaliacaoReclamacao = async params =>
+  await axios.get("/produtos/filtro-avaliar-reclamacoes/", { params });
+
+export const produtoJaExiste = async params =>
+  await axios.get("/produtos/ja-existe/", { params });

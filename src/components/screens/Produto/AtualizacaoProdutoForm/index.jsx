@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { Select, Spin } from "antd";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
+import {
+  STATUS_CODAE_SUSPENDEU,
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+} from "configs/constants";
 import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
 import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
 import WizardFormTerceiraPagina from "./components/WizardFormTerceiraPagina";
@@ -14,14 +17,13 @@ import {
   getHomologacao,
   getMarcasProdutos,
   getFabricantesProdutos,
-  getInformacoesGrupo,
-  getReclamacaoDeProduto
+  getInformacoesGrupo
 } from "../../../../services/produto.service";
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
-import { produtoEhReclamacao, retornaData } from "../Homologacao/helper";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
+import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 
 const { Option } = Select;
 
@@ -118,7 +120,7 @@ class AtualizacaoProdutoForm extends Component {
   };
 
   componentDidMount = async () => {
-    let { produto, informacoesNutricionais, logs, verificado } = this.state;
+    let { produto, informacoesNutricionais, logs } = this.state;
     let homologacao = null;
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -151,18 +153,6 @@ class AtualizacaoProdutoForm extends Component {
       logs,
       informacoesNutricionais
     });
-
-    if (produto !== null && !verificado) {
-      if (produtoEhReclamacao(produto)) {
-        produto["eh_reclamacao"] = true;
-        const { uuid } = produto.ultima_homologacao;
-        let response = await getReclamacaoDeProduto(uuid);
-        this.setState({ reclamacaoProduto: response.data });
-      } else {
-        produto["eh_reclamacao"] = false;
-      }
-      this.setState({ verificado: true, produto });
-    }
   };
 
   componentDidUpdate() {
@@ -218,31 +208,21 @@ class AtualizacaoProdutoForm extends Component {
       segundoStep,
       valoresterceiroForm,
       terceiroStep,
-      reclamacaoProduto,
       logs
     } = this.state;
     const status = produto ? produto.ultima_homologacao.status : null;
+
     return (
       <div className="card">
         <div className="card-body">
           {!loading && !erro ? (
             <Fragment>
-              {reclamacaoProduto !== null &&
-                produto !== null &&
-                produto.eh_reclamacao && (
-                  <section className="descricao-reclamação">
-                    <article className="motivo-data-reclamacao">
-                      <div>Motivo da reclamação:</div>
-                      <div>Data: {retornaData(reclamacaoProduto)}</div>
-                    </article>
-                    <article className="box-detalhe-reclamacao">
-                      <p
-                        dangerouslySetInnerHTML={{
-                          __html: reclamacaoProduto.reclamacao
-                        }}
-                      />
-                    </article>
-                  </section>
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
+                  <InformativoReclamacao
+                    homologacao={produto.ultima_homologacao}
+                  />
                 )}
 
               {!!logs.length &&
@@ -251,12 +231,15 @@ class AtualizacaoProdutoForm extends Component {
                   <MotivoSuspensao logs={logs} />
                 )}
 
-              {!!logs.length && !!status && status !== STATUS_CODAE_SUSPENDEU && (
-                <Fragment>
-                  <MotivoDaRecusaDeHomologacao logs={logs} />
-                  <MotivoHomologacao logs={logs} />
-                </Fragment>
-              )}
+              {!!logs.length &&
+                !!status &&
+                status !== STATUS_CODAE_SUSPENDEU &&
+                status !== STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
+                  <Fragment>
+                    <MotivoDaRecusaDeHomologacao logs={logs} />
+                    <MotivoHomologacao logs={logs} />
+                  </Fragment>
+                )}
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}

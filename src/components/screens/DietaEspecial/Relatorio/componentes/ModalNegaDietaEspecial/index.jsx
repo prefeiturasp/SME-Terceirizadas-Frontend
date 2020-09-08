@@ -2,10 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import {
-  peloMenosUmCaractere,
-  required
-} from "../../../../../../helpers/fieldValidators";
+import { required } from "../../../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastError,
@@ -80,16 +77,6 @@ export default class ModalNegarSolicitacao extends Component {
                       component={TextAreaWYSIWYG}
                       label="Justificativa"
                       name="justificativa_negacao"
-                      required
-                      validate={value => {
-                        for (let validator of [
-                          peloMenosUmCaractere,
-                          required
-                        ]) {
-                          const erro = validator(value);
-                          if (erro) return erro;
-                        }
-                      }}
                     />
                   </div>
                 </div>

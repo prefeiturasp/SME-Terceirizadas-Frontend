@@ -440,3 +440,15 @@ export const parseDataHoraBrToMoment = dataHoraString => {
   const formats = ["DD/MM/YYYY", "DD/MM/YYYY HH:mm"];
   return moment(dataHoraString, formats);
 };
+
+export const gerarParametrosConsulta = data => {
+  const params = new URLSearchParams();
+  Object.entries(data).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      for (const item of value) params.append(key, item);
+    } else {
+      params.append(key, value);
+    }
+  });
+  return params;
+};

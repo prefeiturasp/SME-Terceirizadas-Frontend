@@ -10,8 +10,11 @@ import {
   getAlergiasIntolerancias,
   getAlimentos,
   getClassificacoesDietaEspecial,
-  getDietasEspeciaisVigentesDeUmAluno
+  getDietasEspeciaisVigentesDeUmAluno,
+  getProtocolosDietaEspecial
 } from "../../../../../../services/dietaEspecial.service";
+import { getNomeProdutosHomologados } from "services/produto.service";
+import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 
 import { required } from "../../../../../../helpers/fieldValidators";
 import { obtemIdentificacaoNutricionista } from "../../../../../../helpers/utilities";
@@ -36,6 +39,8 @@ import SubstituicoesField from "./componentes/SubstituicoesField";
 import DataOpcional from "./componentes/DataOpcional";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
+import ModalAdicionaProtocolo from "./componentes/ModalAdicionaProtocolo";
+import ModalSolicitacaoCadastroProduto from "./componentes/ModalSolicitacaoCadastroProduto";
 
 export default class FormAutorizaDietaEspecial extends Component {
   constructor(props) {
@@ -43,7 +48,12 @@ export default class FormAutorizaDietaEspecial extends Component {
     this.state = {
       diagnosticos: null,
       classificacoesDieta: null,
-      alimentos: []
+      alimentos: [],
+      protocolosDietaEspecial: [],
+      produtos: [],
+      exibirModalAdicionaProtocoloDieta: false,
+      showModalAdicionaProtocolo: false,
+      showModalSolicitacaoCadastroProduto: false
     };
   }
 
@@ -51,18 +61,49 @@ export default class FormAutorizaDietaEspecial extends Component {
     const { aluno, uuid } = this.props.dietaEspecial;
     const alergiasIntolerancias = await getAlergiasIntolerancias();
     const alimentos = await getAlimentos();
+    const produtos = await getNomeProdutosHomologados();
+    const protocolosDietaEspecial = await getProtocolosDietaEspecial();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
     const solicitacoesVigentes = await getDietasEspeciaisVigentesDeUmAluno(
       aluno.codigo_eol
     );
     this.setState({
+      protocolosDietaEspecial: protocolosDietaEspecial.data.results.map(
+        ({ nome }) => nome
+      ),
       diagnosticos: alergiasIntolerancias.results,
       classificacoesDieta: classificacoesDieta.results,
       alimentos: alimentos.data,
+      produtos: produtos.data.results,
       solicitacoesVigentes: formatarSolicitacoesVigentes(
         solicitacoesVigentes.data.results.filter(
           solicitacaoVigente => solicitacaoVigente.uuid !== uuid
         )
+      )
+    });
+  };
+
+  showModalAdicionaProtocolo = () => {
+    this.setState({ showModalAdicionaProtocolo: true });
+  };
+
+  closeModalAdicionaProtocolo = () => {
+    this.setState({ showModalAdicionaProtocolo: false });
+  };
+
+  showModalSolicitacaoCadastroProduto = () => {
+    this.setState({ showModalSolicitacaoCadastroProduto: true });
+  };
+
+  closeModalSolicitacaoCadastroProduto = () => {
+    this.setState({ showModalSolicitacaoCadastroProduto: false });
+  };
+
+  atualizaProtocolos = async () => {
+    const protocolosDietaEspecial = await getProtocolosDietaEspecial();
+    this.setState({
+      protocolosDietaEspecial: protocolosDietaEspecial.data.results.map(
+        ({ nome }) => nome
       )
     });
   };
@@ -91,7 +132,7 @@ export default class FormAutorizaDietaEspecial extends Component {
               : undefined,
             tipo: substituicao.tipo === "" ? undefined : substituicao.tipo,
             substitutos: substituicao.substitutos
-              ? substituicao.substitutos.map(substituto => substituto.id)
+              ? substituicao.substitutos.map(substituto => substituto.uuid)
               : undefined
           };
         })
@@ -103,9 +144,10 @@ export default class FormAutorizaDietaEspecial extends Component {
       classificacao,
       data_termino,
       informacoes_adicionais,
-      nome_protocolo,
       substituicoes
     } = this.props.dietaEspecial;
+    let { nome_protocolo } = this.props.dietaEspecial;
+    nome_protocolo = nome_protocolo.split(", ");
     return {
       alergias_intolerancias:
         alergias_intolerancias.length > 0
@@ -125,10 +167,13 @@ export default class FormAutorizaDietaEspecial extends Component {
       alergias_intolerancias,
       classificacao,
       data_termino,
-      nome_protocolo,
       informacoes_adicionais,
       substituicoes
     } = values;
+    let { nome_protocolo } = values;
+    if (nome_protocolo)
+      if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
+    nome_protocolo = nome_protocolo.toString().replace(/,/gi, ", ");
     return new Promise((resolve, reject) => {
       atualizaDietaEspecial(this.props.dietaEspecial.uuid, {
         alergias_intolerancias,
@@ -170,8 +215,15 @@ export default class FormAutorizaDietaEspecial extends Component {
       this.closeAutorizarModal();
     }
     const { dietaEspecial } = this.props;
+    let { nome_protocolo } = values;
+    if (nome_protocolo)
+      if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
+    nome_protocolo = nome_protocolo.toString().replace(/,/gi, ", ");
     return new Promise((resolve, reject) => {
-      CODAEAutorizaDietaEspecial(dietaEspecial.uuid, values).then(
+      CODAEAutorizaDietaEspecial(dietaEspecial.uuid, {
+        ...values,
+        nome_protocolo: nome_protocolo
+      }).then(
         response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess(
@@ -197,10 +249,14 @@ export default class FormAutorizaDietaEspecial extends Component {
       diagnosticos,
       classificacoesDieta,
       alimentos,
+      produtos,
       showNaoAprovaModal,
-      showAutorizarModal
+      showAutorizarModal,
+      protocolosDietaEspecial,
+      showModalAdicionaProtocolo,
+      showModalSolicitacaoCadastroProduto
     } = this.state;
-    const { dietaEspecial } = this.props;
+    const { dietaEspecial, setTemSolicitacaoCadastroProduto } = this.props;
     return (
       <div>
         <Form
@@ -232,16 +288,43 @@ export default class FormAutorizaDietaEspecial extends Component {
                 )}
                 <div className="card mt-3">
                   <div className="card-body">
-                    <div className="pt-2 title">
-                      Nome do Protocolo de Dieta Especial
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="row">
+                          <div className="col-12">
+                            <div className="title">
+                              Nome do Protocolo de Dieta Especial
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-10">
+                            {protocolosDietaEspecial && (
+                              <Field
+                                component={SelectWithHideOptions}
+                                options={protocolosDietaEspecial}
+                                name="nome_protocolo"
+                                selectedItems={[]}
+                              />
+                            )}
+                          </div>
+                          <div className="col-2 text-center">
+                            <Botao
+                              texto="Adicionar"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.BLUE_OUTLINE}
+                              onClick={() => this.showModalAdicionaProtocolo()}
+                              disabled={submitting}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <Field
-                      component={InputText}
-                      name="nome_protocolo"
-                      validate={required}
-                    />
                     <div className="pt-2 title">Substituições de Alimentos</div>
-                    <SubstituicoesField alimentos={alimentos} />
+                    <SubstituicoesField
+                      alimentos={alimentos}
+                      produtos={produtos}
+                    />
                     <div className="row">
                       <div className="col-12">
                         <Field
@@ -281,6 +364,14 @@ export default class FormAutorizaDietaEspecial extends Component {
                 </div>
                 <div className="form-group row float-right mt-4">
                   <Botao
+                    texto="Solicitar Novo Produto"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                    onClick={() => this.showModalSolicitacaoCadastroProduto()}
+                    className="ml-3"
+                    disabled={submitting}
+                  />
+                  <Botao
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.BLUE}
@@ -319,6 +410,17 @@ export default class FormAutorizaDietaEspecial extends Component {
           closeModal={this.closeNaoAprovaModal}
           onNegar={this.props.onAutorizarOuNegar}
           uuid={dietaEspecial.uuid}
+        />
+        <ModalAdicionaProtocolo
+          showModal={showModalAdicionaProtocolo}
+          closeModal={this.closeModalAdicionaProtocolo}
+          atualizaProtocolos={this.atualizaProtocolos}
+        />
+        <ModalSolicitacaoCadastroProduto
+          showModal={showModalSolicitacaoCadastroProduto}
+          closeModal={this.closeModalSolicitacaoCadastroProduto}
+          dietaEspecial={dietaEspecial}
+          setTemSolicitacaoCadastroProduto={setTemSolicitacaoCadastroProduto}
         />
       </div>
     );

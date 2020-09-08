@@ -156,7 +156,7 @@ export class SolicitacaoVigente extends Component {
                             <div className="col-4 report-label-value">
                               <p>Anexos</p>
                               {solicitacaoVigente.anexos
-                                .filter(anexo => anexo.eh_laudo_medico)
+                                .filter(anexo => !anexo.eh_laudo_alta)
                                 .map((anexo, key) => {
                                   return (
                                     <div key={key}>
@@ -182,16 +182,14 @@ export class SolicitacaoVigente extends Component {
                               }}
                             />
                           </div>
-                          <div className="report-label-value">
+                          <div className="report-label-value mb-3">
                             <p>Relação por Diagnóstico</p>
                             {solicitacaoVigente.alergias_intolerancias.map(
-                              (alergia, key) => {
-                                return (
-                                  <div className="value" key={key}>
-                                    {alergia.descricao}
-                                  </div>
-                                );
-                              }
+                              (alergia, key) => (
+                                <div className="value" key={key}>
+                                  {alergia.descricao}
+                                </div>
+                              )
                             )}
                           </div>
                           <div className="row pb-3">

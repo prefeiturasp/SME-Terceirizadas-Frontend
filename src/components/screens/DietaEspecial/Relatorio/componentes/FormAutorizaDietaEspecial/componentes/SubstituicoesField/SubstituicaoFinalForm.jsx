@@ -36,6 +36,7 @@ export default class SubstituicoesField extends Component {
   render() {
     const {
       alimentos,
+      produtos,
       addOption,
       removeOption,
       input: { name },
@@ -71,9 +72,9 @@ export default class SubstituicoesField extends Component {
             component={MultiSelect}
             type="select-multi"
             name={`${name}.substitutos`}
-            options={alimentos.map(a => {
+            options={produtos.map(a => {
               return {
-                value: a.id,
+                value: a.uuid,
                 label: a.nome
               };
             })}

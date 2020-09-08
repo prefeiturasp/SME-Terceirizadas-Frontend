@@ -186,7 +186,6 @@
 }
 
 .body-modal-produto {
-  height: 350px;
   margin: 10px;
   display: grid;
   grid-template-columns: 39% 59%;
@@ -268,6 +267,8 @@
 
   .body-log-item {
     margin: 10px;
+    max-height: 250px;
+    overflow-y: auto;
     header {
       font-style: normal;
       font-weight: bold;
