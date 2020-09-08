@@ -36,16 +36,15 @@ export default class TabelaProdutos extends Component {
     } = this.props;
     const { mostraModalReclamacao } = this.state;
     return (
-      <section className="resultados-busca-produtos">
-        <section>
-          <div className="tabela-produto tabela-header-produto">
-            <div>Nome do Produto</div>
-            <div>Marca</div>
-            <div>Tipo</div>
-            <div>Qtde. Reclamações</div>
-            <div>Data de cadastro</div>
-          </div>
-        </section>
+      <section className="resultados-busca-produtos-reclamacao">
+        <div className="tabela-produto tabela-header-produto">
+          <div>Nome do Produto</div>
+          <div>Marca</div>
+          <div>Tipo</div>
+          <div>Qtde. Reclamações</div>
+          <div>Data de cadastro</div>
+          <div />
+        </div>
         {listaProdutos.map((produto, indice) => {
           const isProdutoAtivo = indice === indiceProdutoAtivo;
           return (
@@ -57,20 +56,16 @@ export default class TabelaProdutos extends Component {
                   {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
                 </div>
                 <div>{produto.ultima_homologacao.reclamacoes.length}</div>
-                <div className="com-botao">
-                  {produto.criado_em.split(" ")[0]}
-                  <div className="botoes-produto">
-                    <i
-                      className={`fas fa-angle-${
-                        isProdutoAtivo ? "up" : "down"
-                      }`}
-                      onClick={() => {
-                        setIndiceProdutoAtivo(
-                          isProdutoAtivo ? undefined : indice
-                        );
-                      }}
-                    />
-                  </div>
+                <div>{produto.criado_em.split(" ")[0]}</div>
+                <div className="botoes-produto">
+                  <i
+                    className={`fas fa-angle-${isProdutoAtivo ? "up" : "down"}`}
+                    onClick={() => {
+                      setIndiceProdutoAtivo(
+                        isProdutoAtivo ? undefined : indice
+                      );
+                    }}
+                  />
                 </div>
               </div>
               {isProdutoAtivo && (
