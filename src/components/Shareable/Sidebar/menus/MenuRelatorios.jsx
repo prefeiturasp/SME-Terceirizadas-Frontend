@@ -6,7 +6,8 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEhDRE
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -26,6 +27,12 @@ const MenuRelatorios = () => {
     usuarioEhTerceirizada() ||
     usuarioEhEscola() ||
     usuarioEhCODAEDietaEspecial();
+
+  const exibirRelatorioQuantitativoSolicDietaEsp =
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhDRE() ||
+    usuarioEhEscola();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
@@ -77,6 +84,15 @@ const MenuRelatorios = () => {
           }`}
         >
           Relatório de reclamação de produto
+        </LeafItem>
+      )}
+      {exibirRelatorioQuantitativoSolicDietaEsp && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
+          }`}
+        >
+          Relatório quant. solic. dieta esp.
         </LeafItem>
       )}
     </Menu>

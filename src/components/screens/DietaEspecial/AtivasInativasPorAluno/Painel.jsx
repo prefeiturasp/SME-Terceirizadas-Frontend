@@ -100,7 +100,7 @@ export default class Painel extends Component {
   render() {
     const { dadosDietaPorAluno } = this.props;
     const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
-    if (solicitacoes.length === 0) {
+    if (solicitacoes === undefined || solicitacoes.length === 0) {
       return <div>Não há dados para os filtros utilizados</div>;
     }
     return (
