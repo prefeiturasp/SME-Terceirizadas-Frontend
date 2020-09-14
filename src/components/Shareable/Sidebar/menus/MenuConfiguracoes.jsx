@@ -6,12 +6,13 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao, usuarioEhDRE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
     usuarioEhEscola() ||
+    usuarioEhDRE() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao();

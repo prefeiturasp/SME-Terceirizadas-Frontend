@@ -103,11 +103,7 @@ export class Sidebar extends Component {
             </div>
           )}
           <div className="sidebar-wrapper div-submenu">
-            {(usuarioEhQualquerCODAE() ||
-              usuarioEhTerceirizada() ||
-              usuarioEhNutricionistaSupervisao() ||
-              usuarioEhEscola()) && <SidebarContent />}
-            {usuarioEhDRE() && <SidebarContentDRE />}
+            <SidebarContent />
           </div>
           {!toggled && (
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">

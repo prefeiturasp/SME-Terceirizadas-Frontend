@@ -19,11 +19,11 @@ const MenuDietaEspecial = () => {
   const exibeConsultaDieta =
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhEscola();
+    usuarioEhEscola() ||
+    usuarioEhDRE();
   const exibeAtivasInativas =
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhNutricionistaSupervisao() ||
-    usuarioEhDRE();
+    usuarioEhNutricionistaSupervisao();
   const exibeAvaliarSolicitacaoCadastroProduto = usuarioEhTerceirizada();
   const exibeAcompanharSolicitacaoCadastroProduto = usuarioEhCODAEDietaEspecial();
 

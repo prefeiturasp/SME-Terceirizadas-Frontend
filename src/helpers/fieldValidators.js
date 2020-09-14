@@ -7,6 +7,9 @@ export const required = value =>
 export const requiredMultiselect = array =>
   array !== [] ? undefined : "Campo obrigatório";
 
+export const requiredMultiselectKhan = array =>
+  (array === undefined || array.length === 0) && "Campo obrigatório";
+
 export const deveSerNoAnoCorrente = value => {
   const dataSelecionada = moment(value, "DD/MM/YYYY").year();
   const dataAtual = moment().year();

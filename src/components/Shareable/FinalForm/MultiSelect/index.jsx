@@ -15,7 +15,7 @@ export default ({
   pluralFeminino,
   ...props
 }) => {
-  console.log({ input, props });
+  console.log({ input, meta, props });
 
   const allItemsAreSelectedText = `${
     pluralFeminino ? "Todas as" : "Todos os"
@@ -53,8 +53,8 @@ export default ({
         overrideStrings={{
           selectAll: pluralFeminino ? "Todas" : "Todos",
           allItemsAreSelected:
-            input.value.length === props.options.length
-              ? props.options.find(i => i.value === input.value[0]).label
+            input.value.length === 1
+              ? props.options[0].label
               : allItemsAreSelectedText
         }}
         valueRenderer={(selected, options) => {

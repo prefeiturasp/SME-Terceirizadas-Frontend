@@ -25,6 +25,7 @@ import { ASelect } from "components/Shareable/MakeField";
 import { reset } from "locutus/php/array";
 
 import "./styles.scss";
+import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 
 const Filtros = ({
   change,
@@ -45,6 +46,8 @@ const Filtros = ({
   ]);
   const [escolasFiltrado, setEscolasFiltrado] = useState(escolas);
 
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
+
   useEffect(async () => {
     await formFiltrosObtemDreEEscolasNovo(
       setEscolas,
@@ -55,30 +58,51 @@ const Filtros = ({
   }, []);
 
   useEffect(() => {
+    console.log("useEffect1");
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
-      tipoUsuario === TIPO_PERFIL.ESCOLA ||
-      dre === undefined
+      tipoUsuario === TIPO_PERFIL.ESCOLA
     ) {
       setEscolasFiltrado(escolas);
     } else if (dre) {
-      setEscolasFiltrado(
-        escolas.filter(e => e.value === "" || dre.includes(e.dre.uuid))
-      );
+      if (dre.length === 0) {
+        setEscolasFiltrado(escolas);
+        change("escola", "");
+      } else {
+        const dadosEscolasFiltrado = escolas.filter(e =>
+          dre.includes(e.dre.uuid)
+        );
+        setEscolasFiltrado(dadosEscolasFiltrado);
+        change("escola", dadosEscolasFiltrado.map(e => e.value));
+      }
     }
-  }, [escolas, dre]);
-
-  useEffect(() => {
-    change("escola", "");
   }, [dre]);
 
+  // useEffect(() => {
+  //   console.log('useEffect2')
+  //   if (
+  //     tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+  //     tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL
+  //   ) {
+  //     if (dre === undefined) return;
+  //     const dadosEscolasFiltrado = escolas.filter(e =>
+  //       dre.includes(e.dre.uuid)
+  //     );
+  //     setEscolasFiltrado(dadosEscolasFiltrado);
+  //     change("escola", dadosEscolasFiltrado.map(e => e.value));
+  //   }
+  // }, [dre]);
+
   console.log("dre", dre);
-  console.log("escolas", escolas);
+  console.log("diretoriasRegionais", diretoriasRegionais);
+  //console.log("escolas", escolas);
   console.log("escolasFiltrado", escolasFiltrado);
 
-  const tipoUsuario = localStorage.getItem("tipo_perfil");
   return (
-    <form onSubmit={handleSubmit} className="form-filtros-rel-quant-solic-dieta-esp">
+    <form
+      onSubmit={handleSubmit}
+      className="form-filtros-rel-quant-solic-dieta-esp"
+    >
       <div className="row">
         <div className="col-5">
           <Field
@@ -96,6 +120,8 @@ const Filtros = ({
             options={diretoriasRegionais}
             nomeDoItemNoPlural="diretorias regionais"
             pluralFeminino
+            required
+            validate={requiredMultiselectKhan}
             //onChange={() => change("escola", "")}
           />
         </div>
@@ -106,7 +132,11 @@ const Filtros = ({
             showSearch
             name="escola"
             multiple
-            disabled={loading || tipoUsuario === TIPO_PERFIL.ESCOLA}
+            disabled={
+              loading ||
+              tipoUsuario === TIPO_PERFIL.ESCOLA ||
+              (dre && dre.length > 1)
+            }
             isLoading={loading}
             options={escolasFiltrado}
             nomeDoItemNoPlural="escolas"
@@ -141,6 +171,8 @@ const Filtros = ({
             maxDate={
               data_final ? moment(data_final, "DD/MM/YYYY")._d : moment()._d
             }
+            required
+            validate={required}
           />
         </div>
         <div className="col-3">
@@ -155,6 +187,7 @@ const Filtros = ({
               data_inicial ? moment(data_inicial, "DD/MM/YYYY")._d : null
             }
             maxDate={moment()._d}
+            validate={required}
           />
         </div>
         <div className="col-4 botoes-envio">
@@ -164,7 +197,7 @@ const Filtros = ({
             style={BUTTON_STYLE.GREEN_OUTLINE}
             disabled={submitting}
             onClick={reset}
-            />
+          />
           <Botao
             style={BUTTON_STYLE.GREEN}
             texto="Consultar"

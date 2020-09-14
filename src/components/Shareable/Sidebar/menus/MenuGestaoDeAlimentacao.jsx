@@ -11,13 +11,13 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
-  TERCEIRIZADA
+  TERCEIRIZADA, DRE, SOLICITACAO_KIT_LANCHE_UNIFICADA
 } from "configs/constants";
-import { usuarioEhEscola } from "helpers/utilities";
+import { usuarioEhDRE, usuarioEhEscola } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
-  const exibeMenuNovasSolicitacoes = usuarioEhEscola();
-  const PERFIL = usuarioEhEscola() ? ESCOLA : TERCEIRIZADA;
+  const exibeMenuNovasSolicitacoes = usuarioEhEscola() || usuarioEhDRE();
+  const PERFIL = usuarioEhEscola() ? ESCOLA : usuarioEhDRE() ? DRE : TERCEIRIZADA;
   return (
     <Menu
       id="GestaoAlimentacao"
@@ -33,7 +33,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           title="Novas Solicitações"
           activeMenu={activeMenu}
         >
-          <LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
+          {!usuarioEhDRE() && (<><LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
             Inclusão de Alimentação
           </LeafItem>
           <LeafItem to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}>
@@ -47,7 +47,10 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
           <LeafItem to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}>
             Suspensão de Alimentação
-          </LeafItem>
+          </LeafItem></>)}
+          {usuarioEhDRE() && (<LeafItem to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+            Solicitação Unificada
+          </LeafItem>)}
         </SubMenu>
       )}
       <SubMenu

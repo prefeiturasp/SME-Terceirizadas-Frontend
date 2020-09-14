@@ -1,3 +1,7 @@
 .relatorio-quantitativo-solic-dieta-esp {
   min-height: 64vh;
+  .row-botao-imprimir {
+    justify-content: flex-end;
+    padding: 0.80em;
+  }
 }

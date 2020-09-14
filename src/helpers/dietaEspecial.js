@@ -61,10 +61,10 @@ export const formFiltrosObtemDreEEscolasNovo = async (
   if (dadosUsuario.tipo_usuario === "escola") {
     let { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
     const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
-    setEscolas([{ uuid, nome, diretoria_regional: dre }]);
-    setDiretoriasRegionais([{ uuid: dre.uuid, nome: dre.nome }]);
-    change("escola", uuid);
-    change("dre", dre.uuid);
+    setEscolas([{ value: uuid, label: nome, diretoria_regional: dre }]);
+    setDiretoriasRegionais([{ value: dre.uuid, label: dre.nome }]);
+    change("escola", [uuid]);
+    change("dre", [dre.uuid]);
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
