@@ -241,8 +241,13 @@ export const cadastraProtocoloDietaEspecial = async payload => {
   return await axios.post(`/protocolo-dieta-especial/`, payload);
 };
 
-export const getRelatorioQuantitativoSolicDietaEsp = async params =>
-  axios.post(
+export const getRelatorioQuantitativoSolicDietaEsp = async (filtros, page) => {
+  console.log("getRelatorioQuantitativoSolicDietaEsp", { filtros, page });
+  return axios.post(
     `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
-    params
+    filtros,
+    {
+      params: { page }
+    }
   );
+};

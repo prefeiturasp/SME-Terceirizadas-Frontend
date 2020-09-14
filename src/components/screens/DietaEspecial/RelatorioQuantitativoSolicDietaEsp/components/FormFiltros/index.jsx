@@ -1,4 +1,3 @@
-import { Select } from "antd";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, reduxForm, formValueSelector } from "redux-form";
@@ -9,20 +8,14 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import InputText from "components/Shareable/Input/InputText";
 import SSelect from "components/Shareable/Select";
-import { toastError } from "components/Shareable/Toast/dialogs";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 
 import { TIPO_PERFIL } from "constants/shared";
 
 import { formFiltrosObtemDreEEscolasNovo } from "helpers/dietaEspecial";
 
-import { obtemDadosAlunoPeloEOL } from "services/perfil.service";
 import { InputComData } from "components/Shareable/DatePicker";
-import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
-import { ASelect } from "components/Shareable/MakeField";
-import { reset } from "locutus/php/array";
 
 import "./styles.scss";
 import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
@@ -58,7 +51,6 @@ const Filtros = ({
   }, []);
 
   useEffect(() => {
-    console.log("useEffect1");
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -77,26 +69,6 @@ const Filtros = ({
       }
     }
   }, [dre]);
-
-  // useEffect(() => {
-  //   console.log('useEffect2')
-  //   if (
-  //     tipoUsuario !== TIPO_PERFIL.ESCOLA &&
-  //     tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL
-  //   ) {
-  //     if (dre === undefined) return;
-  //     const dadosEscolasFiltrado = escolas.filter(e =>
-  //       dre.includes(e.dre.uuid)
-  //     );
-  //     setEscolasFiltrado(dadosEscolasFiltrado);
-  //     change("escola", dadosEscolasFiltrado.map(e => e.value));
-  //   }
-  // }, [dre]);
-
-  console.log("dre", dre);
-  console.log("diretoriasRegionais", diretoriasRegionais);
-  //console.log("escolas", escolas);
-  console.log("escolasFiltrado", escolasFiltrado);
 
   return (
     <form

@@ -1,6 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
-import axios from "./_base"
+import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -78,4 +78,4 @@ export const getDiretoriaregionalSimplissima = () => {
 };
 
 export const getDiretoriaregionalSimplissimaAxios = async () =>
-  axios.get('diretorias-regionais-simplissima/')
+  axios.get("diretorias-regionais-simplissima/");

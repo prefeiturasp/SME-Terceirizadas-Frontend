@@ -3,7 +3,10 @@ import { Field, reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "components/Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -16,21 +19,18 @@ import { obtemDadosAlunoPeloEOL } from "services/perfil.service";
 
 import "./FormFiltros.scss";
 
-const Filtros = ({
-  change,
-  dre,
-  handleSubmit,
-  loading,
-  setLoading
-}) => {
+const Filtros = ({ change, dre, handleSubmit, loading, setLoading }) => {
   const [loadingNomeAluno, setLoadingNomeAluno] = useState(false);
-  const [diretoriasRegionais, setDiretoriasRegionais] = useState([{ uuid: "", nome: "Carregando..." }])
-  const [escolas, setEscolas] = useState([{ uuid: "", nome: "Carregando...", dre: {uuid: ""} }])
+  const [diretoriasRegionais, setDiretoriasRegionais] = useState([
+    { uuid: "", nome: "Carregando..." }
+  ]);
+  const [escolas, setEscolas] = useState([
+    { uuid: "", nome: "Carregando...", dre: { uuid: "" } }
+  ]);
   useEffect(async () => {
     formFiltrosObtemDreEEscolas(setEscolas, setDiretoriasRegionais, change);
     setLoading(false);
   }, []);
-
 
   const onEolBlur = async event => {
     change("nome_aluno", "Buscando...");

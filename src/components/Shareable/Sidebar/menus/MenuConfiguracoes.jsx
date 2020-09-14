@@ -6,7 +6,8 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhNutricionistaSupervisao, usuarioEhDRE
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhDRE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {

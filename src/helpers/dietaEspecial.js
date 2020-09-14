@@ -1,6 +1,13 @@
 import { meusDados } from "services/perfil.service";
-import { getEscolasSimplissimaComDRE, getEscolasSimplissimaComDREUnpaginated, getEscolasSimplissimaPorDiretoriaRegional } from "services/escola.service";
-import { getDiretoriaregionalSimplissima, getDiretoriaregionalSimplissimaAxios } from "services/diretoriaRegional.service";
+import {
+  getEscolasSimplissimaComDRE,
+  getEscolasSimplissimaComDREUnpaginated,
+  getEscolasSimplissimaPorDiretoriaRegional
+} from "services/escola.service";
+import {
+  getDiretoriaregionalSimplissima,
+  getDiretoriaregionalSimplissimaAxios
+} from "services/diretoriaRegional.service";
 
 export const formFiltrosObtemDreEEscolas = async (
   setEscolas,
@@ -73,21 +80,12 @@ export const formFiltrosObtemDreEEscolasNovo = async (
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
       change("dre", [uuid]);
     } else {
-      console.log('1')
       const respostaDre = await getDiretoriaregionalSimplissimaAxios();
-      console.log('5')
-      const respostaEscola= await getEscolasSimplissimaComDREUnpaginated();
-      // const [respostaDre, respostaEscola] = await Promise.all(
-      //   getDiretoriaregionalSimplissimaAxios(),
-      //   getEscolasSimplissimaComDREUnpaginated()
-      // );
-      console.log('2')
+      const respostaEscola = await getEscolasSimplissimaComDREUnpaginated();
       setDiretoriasRegionais(
         formataUuidNomeParaMultiSelect(respostaDre.data.results)
       );
-      console.log('3')
       setEscolas(formataUuidNomeParaMultiSelect(respostaEscola.data));
-      console.log('4')
     }
   }
 };

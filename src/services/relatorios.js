@@ -7,6 +7,10 @@ import authService from "./auth";
 import { getPath as getInclusaoPath } from "services/inclusaoDeAlimentacao/helper";
 import { getPath as getAlteracaoPath } from "services/alteracaoDeCardapio/helper";
 import { getPath as getKitLanchePath } from "services/kitLanche/helper";
+import {
+  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
+  SOLICITACOES_DIETA_ESPECIAL
+} from "configs/constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -275,4 +279,15 @@ export const getRelatorioReclamacao = async payload => {
     }
   );
   saveAs(data, "relatorio_reclamacao.pdf");
+};
+
+export const imprimeRelatorioQuantitativoSolicDietaEsp = async payload => {
+  const { data } = await axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
+    payload,
+    {
+      responseType: "blob"
+    }
+  );
+  saveAs(data, "relatorio_quantitativo_solicitacoes_dieta_especial.pdf");
 };

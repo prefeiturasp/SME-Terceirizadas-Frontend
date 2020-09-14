@@ -37,13 +37,7 @@ const MenuRelatorios = () => {
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
-      {exibirPainel && (
-        <LeafItem
-          to="/relatorios"
-        >
-          Painel
-        </LeafItem>
-      )}
+      {exibirPainel && <LeafItem to="/relatorios">Painel</LeafItem>}
       {exibirProdutosHomologados && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`}

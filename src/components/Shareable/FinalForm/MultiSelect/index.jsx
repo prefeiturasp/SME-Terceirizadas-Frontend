@@ -15,8 +15,6 @@ export default ({
   pluralFeminino,
   ...props
 }) => {
-  console.log({ input, meta, props });
-
   const allItemsAreSelectedText = `${
     pluralFeminino ? "Todas as" : "Todos os"
   } ${nomeDoItemNoPlural} estão ${

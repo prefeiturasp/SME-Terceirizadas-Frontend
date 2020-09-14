@@ -5,7 +5,8 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao, usuarioEhDRE
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhDRE
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {

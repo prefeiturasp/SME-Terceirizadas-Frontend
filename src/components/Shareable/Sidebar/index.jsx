@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
 import { SidebarContent } from "./SidebarContent";
-import { SidebarContentDRE } from "./__legacy/SideBarContentDRE";
 import { AvatarEscola } from "../Avatar/AvatarEscola";
 import { AvatarDRE } from "../Avatar/AvatarDRE";
 import { AvatarCODAE } from "../Avatar/AvatarCODAE";

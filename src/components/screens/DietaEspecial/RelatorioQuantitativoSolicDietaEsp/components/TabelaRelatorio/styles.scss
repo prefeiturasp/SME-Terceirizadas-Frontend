@@ -1,15 +1,26 @@
 .tabela-relatorio-quant-solic-dieta-esp {
-
-  .grid-nutri {
+  .grid-nutri-todos {
     grid-template-columns: 40% 30% 10% 10% 10%;
   }
 
-  .grid-dre {
+  .grid-dre-todos {
     grid-template-columns: 50% 16.66% 16.66% 16.67%;
   }
 
-  .grid-escola {
+  .grid-escola-todos {
     grid-template-columns: 33.33% 33.33% 33.34%;
+  }
+
+  .grid-nutri-unico {
+    grid-template-columns: 42% 42% 16%;
+  }
+
+  .grid-dre-unico {
+    grid-template-columns: 70% 30%;
+  }
+
+  .grid-escola-unico {
+    grid-template-columns: 100%;
   }
 
   .row-quantitativo-card {
