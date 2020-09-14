@@ -5,7 +5,8 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhDRE
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -32,12 +33,14 @@ export const SidebarContent = () => {
   // criterios de exibicao abaixo
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirDietaEspecial =
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoProduto() ||

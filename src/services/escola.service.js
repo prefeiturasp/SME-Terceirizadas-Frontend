@@ -1,3 +1,4 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 
@@ -81,6 +82,9 @@ export const getEscolasSimplissimaComDRE = () => {
       return error.json();
     });
 };
+
+export const getEscolasSimplissimaComDREUnpaginated = async () =>
+  axios.get("escolas-simplissima-com-dre-unpaginated/");
 
 export const getEscolasSimplissimaPorDiretoriaRegional = dre_uuid => {
   const url = `${API_URL}/escolas-simplissima/${dre_uuid}/`;

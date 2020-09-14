@@ -106,6 +106,8 @@ import {
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
+import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
+import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 
 const routesConfig = [
   {
@@ -863,6 +865,14 @@ const routesConfig = [
     component: AcompanharSolicitacaoCadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
+    }`,
+    component: RelatorioQuantitativoSolicDietaEspPage,
+    exact: true,
+    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp
   }
 ];
 

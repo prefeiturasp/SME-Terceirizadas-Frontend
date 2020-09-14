@@ -1,0 +1,98 @@
+.tabela-relatorio-quant-solic-dieta-esp {
+  .grid-nutri-todos {
+    grid-template-columns: 40% 30% 10% 10% 10%;
+  }
+
+  .grid-dre-todos {
+    grid-template-columns: 50% 16.66% 16.66% 16.67%;
+  }
+
+  .grid-escola-todos {
+    grid-template-columns: 33.33% 33.33% 33.34%;
+  }
+
+  .grid-nutri-unico {
+    grid-template-columns: 42% 42% 16%;
+  }
+
+  .grid-dre-unico {
+    grid-template-columns: 70% 30%;
+  }
+
+  .grid-escola-unico {
+    grid-template-columns: 100%;
+  }
+
+  .row-quantitativo-card {
+    border: 1px solid #dfdfdf;
+    padding: 10px 15px 30px 15px;
+  }
+
+  .header-quantitativo-por-terceirizada {
+    display: grid;
+    background: #f5f6f8;
+    height: 52px;
+
+    div {
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: #42474a;
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .row-quantitativo-nome {
+    display: grid;
+    height: 48px;
+    background-color: #f9f9f9;
+
+    div {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 5px 10px;
+
+      display: flex;
+      align-items: center;
+
+      color: #686868;
+
+      border: 1px solid #e9eaea;
+    }
+  }
+
+  .row-quantitativo-status {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    height: 68px;
+
+    .status-flex-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      div {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 18px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        color: #686868;
+
+        &:first-child {
+          font-weight: bold;
+          color: #42474a;
+        }
+      }
+    }
+
+    > div {
+      border-bottom: 1px solid #e9eaea;
+    }
+  }
+}

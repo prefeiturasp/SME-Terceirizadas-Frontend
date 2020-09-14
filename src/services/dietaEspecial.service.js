@@ -4,6 +4,10 @@ import { SOLICITACOES_DIETA } from "./constants";
 import authService from "./auth";
 
 import axios from "./_base";
+import {
+  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
+  SOLICITACOES_DIETA_ESPECIAL
+} from "configs/constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -235,4 +239,15 @@ export const getProtocolosDietaEspecial = async () => {
 
 export const cadastraProtocoloDietaEspecial = async payload => {
   return await axios.post(`/protocolo-dieta-especial/`, payload);
+};
+
+export const getRelatorioQuantitativoSolicDietaEsp = async (filtros, page) => {
+  console.log("getRelatorioQuantitativoSolicDietaEsp", { filtros, page });
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
+    filtros,
+    {
+      params: { page }
+    }
+  );
 };
