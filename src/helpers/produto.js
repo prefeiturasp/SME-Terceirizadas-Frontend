@@ -1,5 +1,4 @@
 import moment from "moment";
-import { listarCardsPermitidos } from "./gestaoDeProdutos";
 
 export const gerarLabelPorFiltro = filtros => {
   let qtdeFiltros = 0;
@@ -22,10 +21,7 @@ export const gerarLabelPorFiltro = filtros => {
     return `Veja os resultados para "${filtros.nome_fabricante}"`;
   }
   if (filtros.situacao) {
-    const card = listarCardsPermitidos().find(
-      c => c.style === filtros.situacao
-    );
-    return `Veja os resultados para "${card.titulo}"`;
+    return `Veja os resultados para "${filtros.situacao}"`;
   }
   if (filtros.data_inicial && filtros.data_final) {
     return `Veja os resultados para o período "${moment(

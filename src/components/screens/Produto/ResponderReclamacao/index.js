@@ -1,8 +1,9 @@
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
@@ -14,7 +15,9 @@ import {
 import {
   reset,
   setProdutos,
-  setAtivos
+  setAtivos,
+  setPage,
+  setProdutosCount
 } from "reducers/responderReclamacaoProduto";
 
 import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
@@ -22,6 +25,7 @@ import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
 import Reclamacao from "./Reclamacao";
 import FormBuscaProduto from "./FormBuscaProduto";
 
+import { getStatus } from "./helpers.js";
 import "./style.scss";
 
 const TabelaProdutos = ({
@@ -37,7 +41,7 @@ const TabelaProdutos = ({
   return (
     <>
       <LabelResultadoDaBusca filtros={filtros} />
-      <section className="tabela-resultado-consultar-reclamacao-produto">
+      <section className="tabela-resultado-consultar-reclamacao-produto mb-3">
         <div className="table-grid table-header">
           <div className="table-header-cell">Nome do Produto</div>
           <div className="table-header-cell">Marca</div>
@@ -65,7 +69,7 @@ const TabelaProdutos = ({
                     {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
                   </div>
                   <div className={`table-body-cell ${bordas}`}>
-                    {produto.ultima_homologacao.qtde_questionamentos}
+                    {produto.qtde_questionamentos}
                   </div>
 
                   <div
@@ -138,13 +142,18 @@ const ResponderReclamacaoProduto = ({
   setProdutos,
   ativos,
   setAtivos,
-  reset
+  reset,
+  page,
+  produtosCount,
+  setProdutosCount,
+  setPage
 }) => {
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [filtrarUUID, setFiltrarUUID] = useState(true);
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     if (history && history.action === "PUSH") {
@@ -155,22 +164,36 @@ const ResponderReclamacaoProduto = ({
       setCarregando(true);
       setProdutos(null);
       let response = {};
+
       if (filtrarUUID && uuid) {
         setFiltrarUUID(false);
-        response = await getReclamacoesTerceirizadaPorFiltro({ uuid: uuid });
+        const params = gerarParametrosConsulta({
+          ...getStatus(filtros),
+          page: 1,
+          uuid: uuid,
+          page_size: PAGE_SIZE
+        });
+        response = await getReclamacoesTerceirizadaPorFiltro(params);
         setAtivos([0]);
       } else {
-        response = await getReclamacoesTerceirizadaPorFiltro(filtros);
+        const params = gerarParametrosConsulta({
+          ...getStatus(filtros),
+          page: page,
+          page_size: PAGE_SIZE
+        });
+        response = await getReclamacoesTerceirizadaPorFiltro(params);
         setAtivos([]);
       }
       setProdutos(response.data.results);
+      setProdutosCount(response.data.count);
       setCarregando(false);
     }
     fetchData();
-  }, [filtros]);
+  }, [filtros, page]);
 
   const onSubmitForm = formValues => {
     setFiltros({ ...formValues });
+    setPage(1);
   };
 
   return (
@@ -191,15 +214,26 @@ const ResponderReclamacaoProduto = ({
         )}
         {produtos && produtos.length > 0 && (
           <div className="container-tabela">
-            <TabelaProdutos
-              produtos={produtos}
-              history={history}
-              filtros={filtros}
-              setProdutos={setProdutos}
-              setCarregando={setCarregando}
-              ativos={ativos}
-              setAtivos={setAtivos}
-            />
+            <>
+              <TabelaProdutos
+                produtos={produtos}
+                history={history}
+                filtros={filtros}
+                setProdutos={setProdutos}
+                setCarregando={setCarregando}
+                ativos={ativos}
+                setAtivos={setAtivos}
+              />
+              <Pagination
+                current={page || 1}
+                total={produtosCount}
+                showSizeChanger={false}
+                onChange={page => {
+                  setPage(page);
+                }}
+                pageSize={PAGE_SIZE}
+              />
+            </>
           </div>
         )}
       </div>
@@ -210,7 +244,9 @@ const ResponderReclamacaoProduto = ({
 const mapStateToProps = state => {
   return {
     ativos: state.responderReclamacaoProduto.ativos,
-    produtos: state.responderReclamacaoProduto.produtos
+    produtos: state.responderReclamacaoProduto.produtos,
+    produtosCount: state.responderReclamacaoProduto.produtosCount,
+    page: state.responderReclamacaoProduto.page
   };
 };
 
@@ -218,6 +254,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setAtivos,
+      setPage,
+      setProdutosCount,
       setProdutos,
       reset
     },

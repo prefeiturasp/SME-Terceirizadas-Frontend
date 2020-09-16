@@ -237,42 +237,18 @@ export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
     });
 };
 
-export const getRelatorioProdutosSuspensos = payload => {
-  const url = `${API_URL}/homologacoes-produtos/relatorio-produtos-suspensos/`;
-  fetch(url, {
-    method: "POST",
-    headers: authToken,
-    responseType: "blob",
-    body: JSON.stringify(payload)
-  })
-    .then(response => response.blob())
-    .then(data => {
-      let a = document.createElement("a");
-      const fileURL = URL.createObjectURL(data);
-      a.href = fileURL;
-      a.download = `relatorio_produtos_suspensos.pdf`;
-      a.click();
-    });
-};
-
-export const getRelatorioEmAnaliseSensorial = async payload => {
-  const { data } = await axios.post(
+export const getRelatorioEmAnaliseSensorial = async params => {
+  const { data } = await axios.get(
     `${API_URL}/produtos/relatorio-em-analise-sensorial/`,
-    payload,
-    {
-      responseType: "blob"
-    }
+    { params, responseType: "blob" }
   );
   saveAs(data, "relatorio_analise_sensorial.pdf");
 };
 
-export const getRelatorioReclamacao = async payload => {
-  const { data } = await axios.post(
-    `${API_URL}/produtos/relatorio-reclamacao/`,
-    payload,
-    {
-      responseType: "blob"
-    }
+export const getRelatorioProdutoSuspenso = async params => {
+  const { data } = await axios.get(
+    `${API_URL}/produtos/relatorio-produto-suspenso/`,
+    { params, responseType: "blob" }
   );
-  saveAs(data, "relatorio_reclamacao.pdf");
+  saveAs(data, "relatorio_produto_suspenso.pdf");
 };
