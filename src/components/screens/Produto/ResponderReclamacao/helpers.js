@@ -28,9 +28,11 @@ export const getQuestionamentoCodae = logs => {
 };
 
 export const getStatus = values => {
-  values.status = [
-    "CODAE_PEDIU_ANALISE_RECLAMACAO",
-    "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
-  ];
-  return values;
+  return {
+    ...values,
+    status: [
+      "CODAE_PEDIU_ANALISE_RECLAMACAO",
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+    ]
+  };
 };

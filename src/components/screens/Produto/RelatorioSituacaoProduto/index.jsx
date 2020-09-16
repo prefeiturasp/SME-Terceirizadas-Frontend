@@ -86,7 +86,7 @@ export default () => {
 
           {dadosRelatorio && !dadosRelatorio.length && (
             <div className="text-center mt-5">
-              Não existe dados para filtragem informada
+              Não existem dados para filtragem informada
             </div>
           )}
         </div>
