@@ -90,6 +90,8 @@ export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
+export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
+  "relatorio-quantitativo-diag-dieta-esp";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
