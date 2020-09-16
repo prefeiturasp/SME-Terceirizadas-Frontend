@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -9,8 +9,10 @@ import TabelaProdutos from "./components/TabelaProdutos";
 
 import {
   reset,
+  setIndiceProdutoAtivo,
+  setPage,
   setProdutos,
-  setIndiceProdutoAtivo
+  setProdutosCount
 } from "reducers/reclamacaoProduto";
 
 import { getProdutosPorParametros } from "services/produto.service";
@@ -25,6 +27,7 @@ class ReclamacaoProduto extends Component {
       error: "",
       formValues: undefined
     };
+    this.TAMANHO_PAGINA = 10;
   }
   componentWillMount() {
     const { history, reset } = this.props;
@@ -32,16 +35,25 @@ class ReclamacaoProduto extends Component {
       reset();
     }
   }
-  onAtualizarProduto = () => {
-    this.atualizaListaProdutos(this.state.formValues);
+  onAtualizarProduto = page => {
+    this.setState({
+      loading: true,
+      error: ""
+    });
+    this.atualizaListaProdutos(this.state.formValues, page);
   };
 
-  atualizaListaProdutos = formValues => {
+  atualizaListaProdutos = (formValues, page) => {
     return new Promise(async (resolve, reject) => {
-      const response = await getProdutosPorParametros(formValues);
+      const response = await getProdutosPorParametros(
+        formValues,
+        page,
+        this.TAMANHO_PAGINA
+      );
       this.setState({ loading: false });
       if (response.status === 200) {
         this.props.setProdutos(response.data.results);
+        this.props.setProdutosCount(response.data.count);
         resolve();
       } else {
         reject(response.errors);
@@ -51,22 +63,27 @@ class ReclamacaoProduto extends Component {
 
   onSubmitFormBuscaProduto = formValues => {
     this.setState({
-      formValues
+      formValues,
+      loading: true,
+      error: ""
     });
-    this.setState({ loading: true, error: "" });
     try {
       this.atualizaListaProdutos(formValues);
     } catch (e) {
       this.setState({ error: "Erro ao consultar a lista de produtos." });
     }
   };
+
   render() {
     const {
       produtos,
+      produtosCount,
       setProdutos,
       indiceProdutoAtivo,
       setIndiceProdutoAtivo,
-      formValues
+      formValues,
+      page,
+      setPage
     } = this.props;
     return (
       <Spin tip="Carregando..." spinning={this.state.loading}>
@@ -91,6 +108,16 @@ class ReclamacaoProduto extends Component {
                   indiceProdutoAtivo={indiceProdutoAtivo}
                   setIndiceProdutoAtivo={setIndiceProdutoAtivo}
                 />
+                <Pagination
+                  current={page || 1}
+                  total={produtosCount}
+                  showSizeChanger={false}
+                  onChange={page => {
+                    setPage(page);
+                    this.onAtualizarProduto(page);
+                  }}
+                  pageSize={this.TAMANHO_PAGINA}
+                />
               </>
             )}
             {produtos && produtos.length === 0 && formValues !== undefined && (
@@ -109,6 +136,8 @@ const mapStateToProps = state => {
   return {
     indiceProdutoAtivo: state.reclamacaoProduto.indiceProdutoAtivo,
     produtos: state.reclamacaoProduto.produtos,
+    produtosCount: state.reclamacaoProduto.produtosCount,
+    page: state.reclamacaoProduto.page,
     formValues: state.finalForm.reclamacao
   };
 };
@@ -117,7 +146,9 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setIndiceProdutoAtivo,
+      setPage,
       setProdutos,
+      setProdutosCount,
       reset
     },
     dispatch

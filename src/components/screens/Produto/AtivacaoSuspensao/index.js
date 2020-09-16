@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import { Link } from "react-router-dom";
-import { getProdutosPorFiltro } from "services/produto.service";
+import { getProdutosListagem } from "services/produto.service";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
@@ -19,7 +20,7 @@ const checaStatus = obj =>
 const TabelaProdutos = ({ produtos }) => {
   if (!produtos) return false;
   return (
-    <section>
+    <section className="mb-3">
       <section>
         <div className="tabela-ativacao-suspensao-produto tabela-header-ativacao-suspensao-produto">
           <div>Nome do Produto</div>
@@ -65,14 +66,24 @@ const AtivacaoSuspencaoProduto = () => {
   const [produtos, setProdutos] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [page, setPage] = useState(1);
+  const [produtosCount, setProdutosCount] = useState(0);
+
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosPorFiltro(filtros);
+      const params = gerarParametrosConsulta({
+        ...filtros,
+        page: page,
+        page_size: PAGE_SIZE
+      });
+      const response = await getProdutosListagem(params);
       setCarregando(false);
       setProdutos(response.data.results);
+      setProdutosCount(response.data.count);
     }
     fetchData();
   }, [filtros, setProdutos]);
@@ -104,14 +115,23 @@ const AtivacaoSuspencaoProduto = () => {
         </div>
         {produtos && !produtos.length && (
           <div className="text-center mt-5">
-            A consulta retornou 0 resultados.
+            Não existem dados para filtragem informada
           </div>
         )}
 
-        {produtos && produtos.length && (
+        {produtos && produtosCount > 0 && (
           <div className="container-tabela">
             <LabelResultadoDaBusca filtros={filtros} />
             <TabelaProdutos produtos={produtos} />
+            <Pagination
+              current={page}
+              total={produtosCount}
+              showSizeChanger={false}
+              onChange={page => {
+                setPage(page);
+              }}
+              pageSize={PAGE_SIZE}
+            />
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const getConfigCabecario = (filtros, produtos) => {
+export const getConfigCabecario = filtros => {
   const qtde_filtros = Object.keys(filtros).length;
   const qtde_filtro_status = filtros.status_reclamacao.length;
 
@@ -43,8 +43,7 @@ export const getConfigCabecario = (filtros, produtos) => {
     if (filtros.data_inicial_reclamacao) {
       const dataInicial = filtros.data_inicial_reclamacao;
       config.cabecario_tipo = "CABECARIO_POR_DATA";
-      config.data_inicial = dataInicial;
-      config.data_final = moment().format("DD/MM/YYYY");
+      config.data_final_reclamacao = moment().format("DD/MM/YYYY");
       config.titulo = `Veja os resultados a partir de "${dataInicial}":`;
       return config;
     }
@@ -52,8 +51,6 @@ export const getConfigCabecario = (filtros, produtos) => {
     if (filtros.data_final_reclamacao) {
       const dataFinal = filtros.data_final_reclamacao;
       config.cabecario_tipo = "CABECARIO_POR_DATA";
-      if (produtos.lengh) config.data_inicial = getProdutoDataInicial(produtos);
-      config.data_final = dataFinal;
       config.titulo = `Veja os resultados até "${dataFinal}":`;
       return config;
     }
@@ -63,8 +60,6 @@ export const getConfigCabecario = (filtros, produtos) => {
     const dataInicial = filtros.data_inicial_reclamacao;
     const dataFinal = filtros.data_final_reclamacao;
     config.cabecario_tipo = "CABECARIO_POR_DATA";
-    config.data_inicial = dataInicial;
-    config.data_final = dataFinal;
     config.titulo = `Veja os resultados para o período de ${dataInicial} à ${dataFinal}:`;
     return config;
   } else {
@@ -89,19 +84,4 @@ const retornaStatusFrontend = status => {
     case "CODAE_RESPONDEU":
       return "CODAE respondeu";
   }
-};
-
-const getProdutoDataInicial = produtos => {
-  produtos.sort(function(a, b) {
-    const dataA = moment(a.criado_em, "DD/MM/YYYY");
-    const dataB = moment(b.criado_em, "DD/MM/YYYY");
-    if (dataA < dataB) {
-      return -1;
-    }
-    if (dataA > dataB) {
-      return 1;
-    }
-    return 0;
-  });
-  return produtos[0].criado_em;
 };

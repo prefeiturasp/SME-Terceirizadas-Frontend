@@ -1,27 +1,29 @@
-import moment from "moment";
 import React, { useEffect, useReducer } from "react";
+import moment from "moment";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-
 import {
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes
+  getNomesFabricantes,
+  getNomesTerceirizadas
 } from "services/produto.service";
-import SelectSelecione from "components/Shareable/SelectSelecione";
-import { getOpecoesStatus } from "./helpers";
+import { InputComData } from "components/Shareable/DatePicker";
+import "./style.scss";
 
 const initialState = {
   dados: {},
+  status: ["Ativo", "Suspenso"],
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
+  dataMinima: null,
+  dataMaxima: null
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -36,10 +38,12 @@ function reducer(state, { type: actionType, payload }) {
       const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
+
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
-      throw new Error("Invalid action type: ", actionType);
+      // eslint-disable-next-line no-console
+      console.error("Invalid action type: ", actionType);
   }
 }
 
@@ -51,14 +55,18 @@ const FormBuscaProduto = ({ onSubmit }) => {
       Promise.all([
         getNomesProdutos(),
         getNomesMarcas(),
-        getNomesFabricantes()
-      ]).then(([produtos, marcas, fabricantes]) => {
+        getNomesFabricantes(),
+        getNomesTerceirizadas()
+      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
         dispatch({
           type: "popularDados",
           payload: {
             produtos: produtos.data.results.map(el => el.nome),
             marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
+            fabricantes: fabricantes.data.results.map(el => el.nome),
+            terceirizadas: terceirizadas.data.results.map(
+              el => el.nome_fantasia
+            )
           }
         });
       });
@@ -79,84 +87,80 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, submitting, values }) => (
-        <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+      render={({ form, handleSubmit, pristine, submitting, values }) => (
+        <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
           <div className="form-row">
-            <div className="col-12 col-md-6">
+            <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.produtos}
                 label="Nome do Produto"
+                placeholder="Digite nome do produto"
                 className="input-busca-produto"
                 onSearch={v => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>
-            <div className="col-12 col-md-6">
+            <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.marcas}
+                className="input-busca-produto"
                 label="Marca do Produto"
+                placeholder="Digite marca do produto"
                 onSearch={v => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
           </div>
           <div className="form-row">
-            <div className="col-12 col-md-6 col-xl-3">
+            <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
+                placeholder="Digite fabricante do produto"
                 onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </div>
-            <div className="col-12 col-md-6 col-xl-3">
-              <Field
-                component={SelectSelecione}
-                label="Situação"
-                labelClassName="mb-1"
-                name="situacao"
-                options={getOpecoesStatus().map(status => {
-                  return {
-                    uuid: status,
-                    nome: status
-                  };
-                })}
-              />
-            </div>
-            <div className="col-12 col-md-6 col-xl-3 mb-3">
-              <Field
-                component={InputComData}
-                label="Data Cadastro"
-                name="data_inicial"
-                className="data-inicial"
-                labelClassName="datepicker-fixed-padding"
-                placeholder="De"
-                minDate={null}
-                maxDate={
-                  values.data_final
-                    ? moment(values.data_final, "DD/MM/YYYY")._d
-                    : moment()._d
-                }
-              />
-            </div>
-            <div className="col-12 col-md-6 col-xl-3 mb-3">
-              <Field
-                component={InputComData}
-                label="&nbsp;"
-                name="data_final"
-                labelClassName="datepicker-fixed-padding"
-                popperPlacement="bottom-end"
-                placeholder="Até"
-                minDate={
-                  values.data_inicial
-                    ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                    : null
-                }
-                maxDate={moment()._d}
-              />
+
+            <div className="col-12 col-md-6 col-xl-6">
+              <div className="row">
+                <label className="ml-3">Data de Suspensão</label>
+              </div>
+              <div className="row">
+                <div className="col mt-1">
+                  <Field
+                    component={InputComData}
+                    name="data_suspensao_inicial"
+                    className="data-inicial"
+                    labelClassName="datepicker-fixed-padding"
+                    placeholder="De"
+                    minDate={null}
+                    maxDate={
+                      values.data_suspensao_final
+                        ? moment(values.data_suspensao_final, "DD/MM/YYYY")._d
+                        : moment()._d
+                    }
+                  />
+                </div>
+                <div className="col mt-1">
+                  <Field
+                    component={InputComData}
+                    name="data_suspensao_final"
+                    labelClassName="datepicker-fixed-padding"
+                    popperPlacement="bottom-end"
+                    placeholder="Até"
+                    minDate={
+                      values.data_suspensao_inicial
+                        ? moment(values.data_suspensao_inicial, "DD/MM/YYYY")._d
+                        : null
+                    }
+                    maxDate={moment()._d}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-4 mb-4">
@@ -165,15 +169,16 @@ const FormBuscaProduto = ({ onSubmit }) => {
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
               className="float-right ml-3"
-              disabled={submitting}
+              disabled={pristine | submitting}
             />
+
             <Botao
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              onClick={() => form.reset()}
               className="float-right ml-3"
-              disabled={submitting}
+              onClick={() => form.reset()}
+              disabled={pristine | submitting}
             />
           </div>
         </form>

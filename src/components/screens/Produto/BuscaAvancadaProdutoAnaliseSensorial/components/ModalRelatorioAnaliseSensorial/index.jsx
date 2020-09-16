@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
-import { Modal } from "antd";
+import React, { Fragment, useState } from "react";
+import { Modal, Spin, Pagination } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -8,14 +8,35 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { getRelatorioEmAnaliseSensorial } from "services/relatorios";
+import { getProdutosRelatorioAnaliseSensorial } from "services/produto.service";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import { getTituloRelatorio } from "./helpers";
 
 const ModalRelatorioAnaliseSensorial = ({
   showModal,
   closeModal,
   produtos,
-  filtros
+  setProdutos,
+  filtros,
+  produtosCount,
+  pageSize
 }) => {
+  const [carregando, setCarregando] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const nextPage = page => {
+    setCarregando(true);
+    setPage(page);
+    const params = gerarParametrosConsulta({
+      ...filtros,
+      page: page,
+      page_size: pageSize
+    });
+    getProdutosRelatorioAnaliseSensorial(params).then(response => {
+      setProdutos(response.data.results);
+      setCarregando(false);
+    });
+  };
   return (
     <Modal
       visible={showModal}
@@ -23,6 +44,17 @@ const ModalRelatorioAnaliseSensorial = ({
       onCancel={closeModal}
       width={"95%"}
       footer={[
+        <Pagination
+          key={0}
+          current={page}
+          total={produtosCount}
+          className="float-left"
+          showSizeChanger={false}
+          onChange={page => {
+            nextPage(page);
+          }}
+          pageSize={pageSize}
+        />,
         <Botao
           key={0}
           texto="Voltar"
@@ -38,148 +70,148 @@ const ModalRelatorioAnaliseSensorial = ({
           style={BUTTON_STYLE.BLUE}
           icon={BUTTON_ICON.PRINT}
           onClick={() => {
-            getRelatorioEmAnaliseSensorial({
-              produtos: produtos,
-              filtros: filtros
-            });
+            const params = gerarParametrosConsulta({ ...filtros });
+            getRelatorioEmAnaliseSensorial(params);
           }}
         />
       ]}
     >
-      <div className="body-modal">
-        <div className="header-modal">
-          {filtros && getTituloRelatorio(filtros)}
-        </div>
-        <div className="section-produtos-itens">
-          <div className="item-produto-modal">
-            <div className="item-header-produto-modal">
-              <div className="item-grid-produto">
-                <div>Nome do Produto</div>
-                <div>Marca</div>
-                <div>Fabricante</div>
-                <div>Data de cadastro do produto</div>
-                <div>Data solicitação análise sensorial</div>
+      <Spin tip="Carregando..." spinning={carregando}>
+        <div className="body-modal">
+          <div className="header-modal">
+            {filtros && getTituloRelatorio(filtros)}
+          </div>
+          <div className="section-produtos-itens">
+            <div className="item-produto-modal">
+              <div className="item-header-produto-modal">
+                <div className="item-grid-produto">
+                  <div>Nome do Produto</div>
+                  <div>Marca</div>
+                  <div>Fabricante</div>
+                  <div>Data de cadastro do produto</div>
+                  <div>Data solicitação análise sensorial</div>
+                </div>
+
+                {produtos !== null &&
+                  produtos.map((produto, index) => {
+                    const dataSolicitacao = produto.ultima_homologacao.log_solicitacao_analise.criado_em.split(
+                      " "
+                    )[0];
+                    const infoAdicionais =
+                      produto.ultima_homologacao.log_solicitacao_analise
+                        .justificativa;
+                    return (
+                      <Fragment key={index}>
+                        <div className="item-grid-produto item-prod-detalhe">
+                          <div>{produto.nome}</div>
+                          <div>{produto.marca.nome}</div>
+                          <div>{produto.fabricante.nome}</div>
+                          <div>{produto.criado_em.split(" ")[0]}</div>
+                          <div>{dataSolicitacao}</div>
+                        </div>
+
+                        <div className="row mt-3">
+                          <div className="col">
+                            <div className="ml-3">
+                              <label>Empresa solicitante (Terceirizada)</label>
+                              <br />
+                              <b>
+                                {
+                                  produto.ultima_homologacao.rastro_terceirizada
+                                    .nome_fantasia
+                                }
+                              </b>
+                            </div>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row mt-3">
+                          <div className="col-6">
+                            <div className="ml-3">
+                              <label>Informações adicionais</label>
+                              <br />
+                              <b
+                                dangerouslySetInnerHTML={{
+                                  __html: infoAdicionais
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <div className="col-3">
+                            <label>Data / Hora entrega do produto</label>
+                            <br />
+                            <b>
+                              {produto.ultima_homologacao.resposta_analise.data}
+                            </b>
+                            <br />
+                            <b>
+                              {produto.ultima_homologacao.resposta_analise.hora}
+                            </b>
+                          </div>
+                          <div className="col-3">
+                            <label>Amostra(s) recebidas por:</label>
+                            <br />
+                            <b>
+                              {
+                                produto.ultima_homologacao.resposta_analise
+                                  .responsavel_produto
+                              }
+                            </b>
+                            <br />
+                            <b>
+                              RF:{" "}
+                              {
+                                produto.ultima_homologacao.resposta_analise
+                                  .registro_funcional
+                              }
+                            </b>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row mt-3">
+                          <div className="col-3">
+                            <div className="ml-3">
+                              <label>Número de protocolo AS.</label>
+                              <br />
+                              <b>
+                                {
+                                  produto.ultima_homologacao
+                                    .protocolo_analise_sensorial
+                                }
+                              </b>
+                            </div>
+                          </div>
+                          <div className="col-3">
+                            <label>Data resposta terceirizada</label>
+                            <br />
+                            <b>
+                              {
+                                produto.ultima_homologacao.resposta_analise.criado_em.split(
+                                  " "
+                                )[0]
+                              }
+                            </b>
+                          </div>
+                          <div className="col-6">
+                            <label>Observação</label>
+                            <br />
+                            <b>
+                              {
+                                produto.ultima_homologacao.resposta_analise
+                                  .observacao
+                              }
+                            </b>
+                          </div>
+                        </div>
+                        <hr />
+                      </Fragment>
+                    );
+                  })}
               </div>
-
-              {produtos !== null &&
-                produtos.map((produto, index) => {
-                  const dataSolicitacao = produto.ultima_homologacao.log_solicitacao_analise.criado_em.split(
-                    " "
-                  )[0];
-                  const infoAdicionais =
-                    produto.ultima_homologacao.log_solicitacao_analise
-                      .justificativa;
-                  return (
-                    <Fragment key={index}>
-                      <div className="item-grid-produto item-prod-detalhe">
-                        <div>{produto.nome}</div>
-                        <div>{produto.marca.nome}</div>
-                        <div>{produto.fabricante.nome}</div>
-                        <div>{produto.criado_em.split(" ")[0]}</div>
-                        <div>{dataSolicitacao}</div>
-                      </div>
-
-                      <div className="row mt-3">
-                        <div className="col">
-                          <div className="ml-3">
-                            <label>Empresa solicitante (Terceirizada)</label>
-                            <br />
-                            <b>
-                              {
-                                produto.ultima_homologacao.rastro_terceirizada
-                                  .nome_fantasia
-                              }
-                            </b>
-                          </div>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row mt-3">
-                        <div className="col-6">
-                          <div className="ml-3">
-                            <label>Informações adicionais</label>
-                            <br />
-                            <b
-                              dangerouslySetInnerHTML={{
-                                __html: infoAdicionais
-                              }}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-3">
-                          <label>Data / Hora entrega do produto</label>
-                          <br />
-                          <b>
-                            {produto.ultima_homologacao.resposta_analise.data}
-                          </b>
-                          <br />
-                          <b>
-                            {produto.ultima_homologacao.resposta_analise.hora}
-                          </b>
-                        </div>
-                        <div className="col-3">
-                          <label>Amostra(s) recebidas por:</label>
-                          <br />
-                          <b>
-                            {
-                              produto.ultima_homologacao.resposta_analise
-                                .responsavel_produto
-                            }
-                          </b>
-                          <br />
-                          <b>
-                            RF:{" "}
-                            {
-                              produto.ultima_homologacao.resposta_analise
-                                .registro_funcional
-                            }
-                          </b>
-                        </div>
-                      </div>
-                      <hr />
-                      <div className="row mt-3">
-                        <div className="col-3">
-                          <div className="ml-3">
-                            <label>Número de protocolo AS.</label>
-                            <br />
-                            <b>
-                              {
-                                produto.ultima_homologacao
-                                  .protocolo_analise_sensorial
-                              }
-                            </b>
-                          </div>
-                        </div>
-                        <div className="col-3">
-                          <label>Data resposta terceirizada</label>
-                          <br />
-                          <b>
-                            {
-                              produto.ultima_homologacao.resposta_analise.criado_em.split(
-                                " "
-                              )[0]
-                            }
-                          </b>
-                        </div>
-                        <div className="col-6">
-                          <label>Observação</label>
-                          <br />
-                          <b>
-                            {
-                              produto.ultima_homologacao.resposta_analise
-                                .observacao
-                            }
-                          </b>
-                        </div>
-                      </div>
-                      <hr />
-                    </Fragment>
-                  );
-                })}
             </div>
           </div>
         </div>
-      </div>
+      </Spin>
     </Modal>
   );
 };

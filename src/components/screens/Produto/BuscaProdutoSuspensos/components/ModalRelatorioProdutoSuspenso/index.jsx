@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import { Spin, Pagination } from "antd";
-import { Modal } from "antd";
+import React, { Fragment, useState } from "react";
+import { Modal, Spin, Pagination } from "antd";
 import Botao from "components/Shareable/Botao";
-import { gerarParametrosConsulta } from "helpers/utilities";
-import { getProdutosReclamacoes } from "services/produto.service";
-import { getStatusHomologacao } from "../../helpers";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import "./styles.scss";
-import { getRelatorioReclamacao } from "services/relatorios.service";
+import { getRelatorioProdutoSuspenso } from "services/relatorios";
+import { getProdutosRelatorioSuspenso } from "services/produto.service";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import { getConfigCabecario } from "./helpers";
-import Reclamacao from "./Reclamacao";
 
-const ModalRelatorioReclamacao = ({
+const ModalRelatorioProdutoSuspenso = ({
   showModal,
   closeModal,
   produtos,
   setProdutos,
-  produtosCount,
   filtros,
+  produtosCount,
   pageSize
 }) => {
-  const configCabecario = getConfigCabecario(filtros, produtos);
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -33,20 +28,18 @@ const ModalRelatorioReclamacao = ({
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
-      status: getStatusHomologacao(),
       page: page,
       page_size: pageSize
     });
-    getProdutosReclamacoes(params).then(response => {
+    getProdutosRelatorioSuspenso(params).then(response => {
       setProdutos(response.data.results);
       setCarregando(false);
     });
   };
-
   return (
     <Modal
       visible={showModal}
-      title="Relatório de acompanhamento de reclamação de produto"
+      title="Relatório de análise de produtos suspensos"
       onCancel={closeModal}
       width={"95%"}
       footer={[
@@ -78,58 +71,66 @@ const ModalRelatorioReclamacao = ({
           onClick={() => {
             const params = gerarParametrosConsulta({
               ...filtros,
-              status: getStatusHomologacao(),
-              ...configCabecario
+              ...getConfigCabecario(filtros)
             });
-            getRelatorioReclamacao(params);
+            getRelatorioProdutoSuspenso(params);
           }}
         />
       ]}
     >
       <Spin tip="Carregando..." spinning={carregando}>
         <div className="body-modal">
-          <div className="header-modal">{configCabecario.titulo}</div>
-          <div className="section-produtos-itens-relatorio">
+          <div className="header-modal">Veja os resultados para a busca</div>
+          <div className="section-produtos-itens">
             <div className="item-produto-modal">
               <div className="item-header-produto-modal">
                 <div className="item-grid-produto">
                   <div>Nome do Produto</div>
                   <div>Marca</div>
                   <div>Fabricante</div>
-                  <div>Data de cadastro </div>
-                  <div>Qtde. Reclamações </div>
+                  <div>Data de cadastro</div>
+                  <div>Data suspensão de produto</div>
                 </div>
-
                 {produtos !== null &&
-                  produtos.map(produto => {
+                  produtos.map((produto, index) => {
+                    const ultimoLog = produto.ultima_homologacao.ultimo_log;
                     return (
-                      <>
+                      <Fragment key={index}>
                         <div className="item-grid-produto item-prod-detalhe">
                           <div>{produto.nome}</div>
                           <div>{produto.marca.nome}</div>
                           <div>{produto.fabricante.nome}</div>
                           <div>{produto.criado_em.split(" ")[0]}</div>
+                          <div>{ultimoLog.criado_em.split(" ")[0]}</div>
+                        </div>
+                        <div className="item-grid-detalhe-produto">
                           <div>
-                            {produto.ultima_homologacao.reclamacoes.length}
+                            <label>Nome</label>
+                            <p>{ultimoLog.usuario.nome}</p>
+                            <p>RF: {ultimoLog.usuario.registro_funcional}</p>
+                          </div>
+                          <div>
+                            <label>Cargo</label>
+                            <p>{ultimoLog.usuario.cargo}</p>
+                          </div>
+                          <div>
+                            <label>Justificativa de suspensão de produto</label>
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: ultimoLog.justificativa
+                              }}
+                            />
                           </div>
                         </div>
-                        {produto.ultima_homologacao.reclamacoes.map(
-                          (reclamacao, index, arr) => {
-                            const deveMostrarBarraHorizontal =
-                              index < arr.length - 1;
-                            return (
-                              <>
-                                <Reclamacao
-                                  key={index}
-                                  reclamacao={reclamacao}
-                                />
-                                {deveMostrarBarraHorizontal && <hr />}
-                              </>
-                            );
-                          }
-                        )}
                         <hr />
-                      </>
+                        <div className="item-grid-detalhe-produto">
+                          <div>
+                            <label>Anexo</label>
+                            <p>{ultimoLog.anexos.length > 0 ? "Sim" : "Não"}</p>
+                          </div>
+                        </div>
+                        <hr />
+                      </Fragment>
                     );
                   })}
               </div>
@@ -141,4 +142,4 @@ const ModalRelatorioReclamacao = ({
   );
 };
 
-export default ModalRelatorioReclamacao;
+export default ModalRelatorioProdutoSuspenso;

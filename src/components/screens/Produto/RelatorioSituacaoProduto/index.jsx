@@ -1,6 +1,7 @@
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
+import { gerarParametrosConsulta, deepCopy } from "helpers/utilities";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -11,6 +12,8 @@ import {
 
 import { gerarLabelPorFiltro } from "helpers/produto";
 
+import "./styles.scss";
+
 import {
   getProdutosRelatorioSituacao,
   getPdfRelatorioSituacaoProduto
@@ -18,21 +21,14 @@ import {
 
 import FormBuscaProduto from "./components/FormBuscaProduto";
 import TabelaSituacaoProduto from "./components/TabelaSituacaoProduto";
-import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
-import { deepCopy } from "helpers/utilities";
-import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
+import { getTodasOpcoesStatusPorPerfil, retornaStatusBackend } from "./helpers";
 
 const processaFiltrosSituacao = filtros => {
   const params = deepCopy(filtros);
   if (filtros.situacao) {
-    const card = listarCardsPermitidos().find(
-      card => card.style === filtros.situacao
-    );
-    params.status = card.incluir_status.map(status =>
-      Object.keys(ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS).find(
-        key => ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS[key] === status
-      )
-    );
+    params.status = retornaStatusBackend(filtros.situacao);
+  } else {
+    params.status = getTodasOpcoesStatusPorPerfil();
   }
   return params;
 };
@@ -41,54 +37,66 @@ export default () => {
   const [dadosRelatorio, setDadosRelatorio] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
+  const [carregandoPagina, setCarregandoPagina] = useState(false);
+  const [produtosCount, setProdutosCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [exibirModal, setExibirModal] = useState(null);
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosRelatorioSituacao(
-        processaFiltrosSituacao(filtros)
-      );
+      const params = gerarParametrosConsulta({
+        ...processaFiltrosSituacao(filtros),
+        page: page,
+        page_size: PAGE_SIZE
+      });
+      const response = await getProdutosRelatorioSituacao(params);
       setCarregando(false);
+      setCarregandoPagina(false);
       setDadosRelatorio(response.data.results);
+      if (response.data.count > 0) setExibirModal(true);
+      setProdutosCount(response.data.count);
     }
     fetchData();
-  }, [filtros, setDadosRelatorio]);
+  }, [filtros, page]);
 
   const onSubmitForm = formValues => {
-    setFiltros(formValues);
+    setFiltros({ ...formValues });
+  };
+
+  const nextPage = page => {
+    setPage(page);
+    setCarregandoPagina(true);
   };
 
   const onImprimir = () => {
-    const params = processaFiltrosSituacao(filtros);
-    if (filtros.situacao) {
-      const card = listarCardsPermitidos().find(
-        card => card.style === filtros.situacao
-      );
-      params.situacao = card.titulo;
-    }
+    const params = gerarParametrosConsulta({
+      ...processaFiltrosSituacao(filtros)
+    });
     getPdfRelatorioSituacaoProduto(params);
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 page-relatorio-quantitativo-por-terceirizada">
+      <div className="card mt-3 card-relatorio-situtacao">
         <div className="card-body">
           <FormBuscaProduto onSubmit={onSubmitForm} />
+
+          {dadosRelatorio && !dadosRelatorio.length && (
+            <div className="text-center mt-5">
+              Não existem dados para filtragem informada
+            </div>
+          )}
         </div>
       </div>
 
-      {dadosRelatorio && !dadosRelatorio.length && (
-        <div className="text-center mt-5">
-          Produto não foi encontrado para filtragem realizada.
-        </div>
-      )}
-
       <Modal
         dialogClassName="modal-90w"
-        show={Boolean(dadosRelatorio && dadosRelatorio.length)}
+        show={exibirModal}
         onHide={() => {
-          setDadosRelatorio(null);
+          setExibirModal(null);
         }}
       >
         <Modal.Header closeButton>
@@ -96,35 +104,46 @@ export default () => {
         </Modal.Header>
 
         <Modal.Body>
-          <section className="m-3">
-            <p className="text-black font-weight-bold mb-1">
-              {filtros && gerarLabelPorFiltro(filtros)}
-            </p>
-            <TabelaSituacaoProduto dadosRelatorio={dadosRelatorio} />
-          </section>
-
-          <section className="m-3">
-            <Botao
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              texto="Imprimir"
-              onClick={onImprimir}
-              type={BUTTON_TYPE.BUTTON}
-              className="float-right"
-            />
-            <Botao
-              texto="voltar"
-              titulo="voltar"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
-              icon={BUTTON_ICON.ARROW_LEFT}
-              onClick={() => {
-                setDadosRelatorio(null);
-              }}
-              className="float-right mr-2"
-            />
-          </section>
+          <Spin tip="Carregando..." spinning={carregandoPagina}>
+            <section className="m-3">
+              <p className="text-black font-weight-bold mb-1">
+                {filtros && gerarLabelPorFiltro(filtros)}
+              </p>
+              <TabelaSituacaoProduto dadosRelatorio={dadosRelatorio} />
+            </section>
+          </Spin>
         </Modal.Body>
+        <Modal.Footer className="modal-rodape-situacao">
+          <Pagination
+            current={page}
+            total={produtosCount}
+            className="float-left"
+            showSizeChanger={false}
+            onChange={page => {
+              nextPage(page);
+            }}
+            pageSize={PAGE_SIZE}
+          />
+          <Botao
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            texto="Imprimir"
+            onClick={onImprimir}
+            type={BUTTON_TYPE.BUTTON}
+            className="float-right mr-2"
+          />
+          <Botao
+            texto="voltar"
+            titulo="voltar"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE_OUTLINE}
+            icon={BUTTON_ICON.ARROW_LEFT}
+            onClick={() => {
+              setDadosRelatorio(null);
+            }}
+            className="float-right mr-2"
+          />
+        </Modal.Footer>
       </Modal>
     </Spin>
   );

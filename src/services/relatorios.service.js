@@ -1,4 +1,6 @@
 import { API_URL } from "../constants/config";
+import axios from "./_base";
+import { saveAs } from "file-saver";
 import authService from "./auth";
 
 const authToken = {
@@ -261,4 +263,15 @@ export const getPedidosESolicitacoesFiltroPaginacaoCODAE = (
     .catch(error => {
       return error.json();
     });
+};
+
+export const getRelatorioReclamacao = async params => {
+  const { data } = await axios.get(
+    `${API_URL}/produtos/relatorio-reclamacao/`,
+    {
+      responseType: "blob",
+      params
+    }
+  );
+  saveAs(data, "relatorio_reclamacao.pdf");
 };
