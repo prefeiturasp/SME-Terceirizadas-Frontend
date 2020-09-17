@@ -15,6 +15,7 @@ const BuscaProdutoSuspensos = () => {
   const [filtros, setFiltros] = useState(null);
   const [exibirModal, setExibirModal] = useState(null);
   const [produtosCount, setProdutosCount] = useState(0);
+  const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const BuscaProdutoSuspensos = () => {
       setProdutos(null);
       const params = gerarParametrosConsulta({
         ...filtros,
-        page: 1,
+        page: page,
         page_size: PAGE_SIZE
       });
       const response = await getProdutosRelatorioSuspenso(params);
@@ -37,6 +38,7 @@ const BuscaProdutoSuspensos = () => {
   }, [filtros]);
 
   const onSubmitForm = formValues => {
+    setPage(1);
     setFiltros({ ...formValues, status: STATUS_CODAE_SUSPENDEU });
   };
 
@@ -59,6 +61,8 @@ const BuscaProdutoSuspensos = () => {
           filtros={filtros}
           produtosCount={produtosCount}
           pageSize={PAGE_SIZE}
+          setPage={setPage}
+          page={page}
         />
       </div>
     </Spin>

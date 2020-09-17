@@ -22,11 +22,12 @@ const ModalRelatorioReclamacao = ({
   setProdutos,
   produtosCount,
   filtros,
-  pageSize
+  pageSize,
+  page,
+  setPage
 }) => {
   const configCabecario = getConfigCabecario(filtros, produtos);
   const [carregando, setCarregando] = useState(false);
-  const [page, setPage] = useState(1);
 
   const nextPage = page => {
     setCarregando(true);

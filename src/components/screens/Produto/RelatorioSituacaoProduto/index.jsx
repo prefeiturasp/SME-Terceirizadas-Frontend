@@ -133,8 +133,8 @@ export default () => {
             className="float-right mr-2"
           />
           <Botao
-            texto="voltar"
-            titulo="voltar"
+            texto="Voltar"
+            titulo="Voltar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.BLUE_OUTLINE}
             icon={BUTTON_ICON.ARROW_LEFT}

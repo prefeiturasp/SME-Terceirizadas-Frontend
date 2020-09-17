@@ -18,10 +18,11 @@ const ModalRelatorioProdutoSuspenso = ({
   setProdutos,
   filtros,
   produtosCount,
-  pageSize
+  pageSize,
+  setPage,
+  page
 }) => {
   const [carregando, setCarregando] = useState(false);
-  const [page, setPage] = useState(1);
 
   const nextPage = page => {
     setCarregando(true);

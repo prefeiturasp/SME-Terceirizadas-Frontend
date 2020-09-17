@@ -86,7 +86,7 @@ const AtivacaoSuspencaoProduto = () => {
       setProdutosCount(response.data.count);
     }
     fetchData();
-  }, [filtros, setProdutos]);
+  }, [filtros, setProdutos, page]);
 
   const onSubmitForm = formValues => {
     const status = [];

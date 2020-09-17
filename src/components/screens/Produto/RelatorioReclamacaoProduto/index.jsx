@@ -17,6 +17,7 @@ const RelatorioReclamacaoProduto = () => {
   const [exibirModal, setExibirModal] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [produtosCount, setProdutosCount] = useState(0);
+  const [page, setPage] = useState(1);
 
   const PAGE_SIZE = 10;
 
@@ -28,7 +29,7 @@ const RelatorioReclamacaoProduto = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         status: getStatusHomologacao(),
-        page: 1,
+        page: page,
         page_size: PAGE_SIZE
       });
       const response = await getProdutosReclamacoes(params);
@@ -49,6 +50,7 @@ const RelatorioReclamacaoProduto = () => {
             exibirBotaoVoltar
             exibirStatus={false}
             setFiltros={setFiltros}
+            setPage={setPage}
           />
 
           {produtos && !produtos.length && (
@@ -65,6 +67,8 @@ const RelatorioReclamacaoProduto = () => {
               setProdutos={setProdutos}
               filtros={filtros}
               pageSize={PAGE_SIZE}
+              page={page}
+              setPage={setPage}
             />
           )}
         </div>
