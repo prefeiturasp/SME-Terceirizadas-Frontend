@@ -28,7 +28,10 @@ export const CorpoRelatorio = props => {
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {
-              getRelatorioAlteracaoCardapio(alteracaoDeCardapio.uuid);
+              getRelatorioAlteracaoCardapio(
+                alteracaoDeCardapio.uuid,
+                tipoSolicitacao
+              );
             }}
           />
         </p>

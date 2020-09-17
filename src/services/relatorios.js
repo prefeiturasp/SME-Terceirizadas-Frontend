@@ -36,9 +36,7 @@ export const getRelatorioKitLancheUnificado = uuid => {
 };
 
 export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
-  const url = `${API_URL}/${getAlteracaoPath(
-    tipoSolicitacao
-  )}/${uuid}/relatorio/`;
+  const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
