@@ -16,6 +16,7 @@ import FormFiltros from "./components/FormFiltros";
 import TabelaRelatorio from "./components/TabelaRelatorio";
 
 import "./styles.scss";
+import { getCabecalhoPorFiltros } from "helpers/dietaEspecial";
 
 export default () => {
   const [loading, setLoading] = useState(true);
@@ -62,6 +63,7 @@ export default () => {
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
+              <div className="row">{getCabecalhoPorFiltros(formValues)}</div>
               <TabelaRelatorio
                 dadosRelatorio={dadosRelatorio}
                 filtros={formValues}

@@ -2,29 +2,30 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import Select from "components/Shareable/Select";
+import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import Select from "components/Shareable/Select";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 import { TIPO_PERFIL } from "constants/shared";
 
 import {
   formFiltrosObtemDreEEscolasNovo,
-  getDadosIniciais
+  getDadosIniciais,
+  validateFormDreEscola
 } from "helpers/dietaEspecial";
-
-import { InputComData } from "components/Shareable/DatePicker";
-
-import "./styles.scss";
-import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
+import { required } from "helpers/fieldValidators";
 
 import { getAlergiasIntoleranciasAxios } from "services/dietaEspecial.service";
-import { toastError } from "components/Shareable/Toast/dialogs";
+
+import "./styles.scss";
 
 export default ({ onSubmit, loading, setLoading }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([
@@ -89,12 +90,17 @@ export default ({ onSubmit, loading, setLoading }) => {
     <Form
       onSubmit={onSubmit}
       initialValues={dadosIniciais}
+      subscription={{ submitting: true, values: true }}
+      validate={validateFormDreEscola}
       render={({ handleSubmit, form, submitting, values }) => {
         return (
           <form
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-diag-dieta-esp"
           >
+            {tipoUsuario !== TIPO_PERFIL.ESCOLA && (
+              <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
+            )}
             <div className="row">
               <div className="col-5">
                 <Field
@@ -112,8 +118,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                   options={diretoriasRegionais}
                   nomeDoItemNoPlural="diretorias regionais"
                   pluralFeminino
-                  required
-                  validate={requiredMultiselectKhan}
+                  required={
+                    tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA
+                  }
                 />
               </div>
               <div className="col-7">
@@ -132,6 +140,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                   options={getEscolasFiltrado(values.dre)}
                   nomeDoItemNoPlural="escolas"
                   pluralFeminino
+                  required={
+                    tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA
+                  }
                 />
               </div>
             </div>

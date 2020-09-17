@@ -1,22 +1,25 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
-import { Form, Field } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-import Select from "components/Shareable/Select";
-import {
-  formFiltrosObtemDreEEscolasNovo,
-  getDadosIniciais
-} from "helpers/dietaEspecial";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { TIPO_PERFIL } from "constants/shared";
-import { requiredMultiselectKhan } from "helpers/fieldValidators";
-import { InputComData } from "components/Shareable/DatePicker";
-import { required } from "helpers/fieldValidators";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { InputComData } from "components/Shareable/DatePicker";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import Select from "components/Shareable/Select";
+
+import { TIPO_PERFIL } from "constants/shared";
+
+import {
+  formFiltrosObtemDreEEscolasNovo,
+  getDadosIniciais,
+  validateFormDreEscola
+} from "helpers/dietaEspecial";
+import { required } from "helpers/fieldValidators";
 
 import "./styles.scss";
 
@@ -69,17 +72,16 @@ export default ({ onSubmit, loading, setLoading }) => {
       onSubmit={onSubmit}
       initialValues={dadosIniciais}
       subscription={{ submitting: true, values: true }}
+      validate={validateFormDreEscola}
       render={({ handleSubmit, form, submitting, values }) => {
-        const escolaDisabled =
-          loading ||
-          tipoUsuario === TIPO_PERFIL.ESCOLA ||
-          (values.dre && values.dre.length > 1);
         return (
           <form
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-solic-dieta-esp"
           >
-            <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
+            {tipoUsuario !== TIPO_PERFIL.ESCOLA && (
+              <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
+            )}
             <div className="row">
               <div className="col-6">
                 <Field
@@ -97,8 +99,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                   options={diretoriasRegionais}
                   nomeDoItemNoPlural="diretorias regionais"
                   pluralFeminino
-                  required
-                  validate={requiredMultiselectKhan}
+                  required={
+                    tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA
+                  }
                 />
               </div>
               <div className="col-6">
@@ -108,20 +112,19 @@ export default ({ onSubmit, loading, setLoading }) => {
                   showSearch
                   name="escola"
                   multiple
-                  disabled={escolaDisabled}
-                  isLoading={loading}
-                  options={
-                    tipoUsuario !== TIPO_PERFIL.ESCOLA && escolaDisabled
-                      ? [
-                          {
-                            value: "",
-                            label: ""
-                          }
-                        ]
-                      : getEscolasFiltrado(values.dre)
+                  disabled={
+                    loading ||
+                    tipoUsuario === TIPO_PERFIL.ESCOLA ||
+                    (values.dre && values.dre.length > 1)
                   }
+                  isLoading={loading}
+                  options={getEscolasFiltrado(values.dre)}
                   nomeDoItemNoPlural="escolas"
                   pluralFeminino
+                  required={
+                    tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA
+                  }
                 />
               </div>
             </div>

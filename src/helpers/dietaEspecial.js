@@ -128,3 +128,15 @@ export const getCabecalhoPorFiltros = filtros => {
     return "Veja os resultados para a busca:";
   }
 };
+
+export const validateFormDreEscola = formValues => {
+  if (
+    (formValues.dre === undefined || formValues.dre.length === 0) &&
+    (formValues.escola === undefined || formValues.escola.length === 0)
+  ) {
+    return {
+      dre: "Ao menos uma DRE ou uma Escola deve ser selecionada",
+      escola: "Ao menos uma DRE ou uma Escola deve ser selecionada"
+    };
+  }
+};

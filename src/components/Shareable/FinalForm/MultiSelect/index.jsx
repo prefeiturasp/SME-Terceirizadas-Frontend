@@ -23,6 +23,16 @@ export default ({
     pluralFeminino ? "selecionadas" : "selecionados"
   }`;
 
+  const disabledInputValue = () => {
+    if (input.value[0]) {
+      const matchingOption = props.options.find(
+        e => e.value === input.value[0]
+      );
+      return matchingOption ? matchingOption.label : "";
+    }
+    return "";
+  };
+
   return (
     <div className="select final-form-multi-select">
       {label && [
@@ -79,10 +89,7 @@ export default ({
           disabled={props.disabled}
           data-cy={input.name}
           required={required}
-          value={
-            input.value[0] &&
-            props.options.find(e => e.value === input.value[0]).label
-          }
+          value={disabledInputValue()}
         />
       )}
       <HelpText helpText={helpText} />

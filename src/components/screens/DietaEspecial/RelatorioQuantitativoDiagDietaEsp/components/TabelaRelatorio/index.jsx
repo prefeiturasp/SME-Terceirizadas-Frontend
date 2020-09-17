@@ -14,15 +14,21 @@ export default ({ dadosRelatorio, filtros }) => {
       : tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL
       ? "dre"
       : "nutri";
-  const tipoGrid = filtros.status ? "unico" : "todos";
+  const tipoGrid = filtros.status
+    ? "unico"
+    : primeiroRegistro.escola
+    ? "todos"
+    : "sem-escola";
   const classeGrid = `grid-${perfilGrid}-${tipoGrid}`;
   return (
     <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
-        {primeiroRegistro["dre"] && <div>Diretoria Regional de Educação</div>}
-        {primeiroRegistro["escola"] && <div>Unidade Escolar</div>}
+        {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
+          <div>Diretoria Regional de Educação</div>
+        )}
+        {primeiroRegistro.escola && <div>Unidade Escolar</div>}
         <div>Diagnóstico</div>
-        <div>Ano Nasc. Aluno</div>
+        <div>Ano nasc. aluno</div>
         {[undefined, "pendentes"].includes(filtros.status) && (
           <div>Dietas pendentes</div>
         )}
@@ -37,8 +43,10 @@ export default ({ dadosRelatorio, filtros }) => {
         return (
           <Fragment key={index}>
             <div className={`row-quantitativo-nome ${classeGrid}`}>
-              {item.dre && <div>{item.dre}</div>}
-              {item.escola && <div>{item.escola}</div>}
+              {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
+                <div>{item.dre}</div>
+              )}
+              {primeiroRegistro.escola && <div>{item.escola}</div>}
               <div>{item.diagnostico}</div>
               <div>{item.ano_nasc_aluno}</div>
               {[undefined, "pendentes"].includes(filtros.status) && (
