@@ -139,7 +139,7 @@ export default () => {
             style={BUTTON_STYLE.BLUE_OUTLINE}
             icon={BUTTON_ICON.ARROW_LEFT}
             onClick={() => {
-              setDadosRelatorio(null);
+              setExibirModal(null);
             }}
             className="float-right mr-2"
           />
