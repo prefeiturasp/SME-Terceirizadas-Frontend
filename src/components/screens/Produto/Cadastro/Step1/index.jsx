@@ -431,7 +431,6 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-        <pre>{JSON.stringify(protocolosDieta, null, 4)}</pre>
         {renderizaFormDietaEspecial && (
           <Fragment>
             <div className="row">
