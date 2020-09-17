@@ -790,12 +790,12 @@ class AlteracaoCardapio extends Component {
                   validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
               </div>
-              <article className="card-body footer-button">
+              <div className="card-body footer-button">
                 <Botao
                   texto="Cancelar"
                   onClick={event => this.resetForm(event)}
                   disabled={pristine || submitting}
-                  style={BUTTON_STYLE.OutlinePrimary}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
                   disabled={pristine || submitting}
@@ -804,7 +804,7 @@ class AlteracaoCardapio extends Component {
                     this.exibeModalConfirmacao(values)
                   )}
                   type={BUTTON_TYPE.SUBMIT}
-                  style={BUTTON_STYLE.OutlinePrimary}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
                   texto="Enviar"
@@ -818,7 +818,7 @@ class AlteracaoCardapio extends Component {
                   )}
                   style={BUTTON_STYLE.Primary}
                 />
-              </article>
+              </div>
             </section>
             <ModalDataPrioritaria
               showModal={showModal}
