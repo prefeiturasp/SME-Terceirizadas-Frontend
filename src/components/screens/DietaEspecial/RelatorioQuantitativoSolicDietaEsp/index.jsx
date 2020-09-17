@@ -10,15 +10,14 @@ import {
 import { Paginacao } from "components/Shareable/Paginacao";
 
 import { getRelatorioQuantitativoSolicDietaEsp } from "services/dietaEspecial.service";
-
 import { imprimeRelatorioQuantitativoSolicDietaEsp } from "services/relatorios";
 
 import FormFiltros from "./components/FormFiltros";
-
-import "./styles.scss";
 import TabelaRelatorio from "./components/TabelaRelatorio";
 
-const AtivasInativasContainer = () => {
+import "./styles.scss";
+
+export default () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [pagTotal, setPagTotal] = useState(0);
@@ -57,7 +56,9 @@ const AtivasInativasContainer = () => {
             setLoading={setLoading}
           />
           {!loading && dadosRelatorio && dadosRelatorio.length === 0 && (
-            <div>Não foi encontrado dieta especial para filtragem realizada</div>
+            <div>
+              Não foi encontrado dieta especial para filtragem realizada
+            </div>
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
@@ -88,5 +89,3 @@ const AtivasInativasContainer = () => {
     </Spin>
   );
 };
-
-export default AtivasInativasContainer;

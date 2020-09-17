@@ -10,13 +10,12 @@ import {
 import { Paginacao } from "components/Shareable/Paginacao";
 
 import { getRelatorioQuantitativoDiagDietaEsp } from "services/dietaEspecial.service";
-
 import { imprimeRelatorioQuantitativoDiagDietaEsp } from "services/relatorios";
 
 import FormFiltros from "./components/FormFiltros";
+import TabelaRelatorio from "./components/TabelaRelatorio";
 
 import "./styles.scss";
-import TabelaRelatorio from "./components/TabelaRelatorio";
 
 export default () => {
   const [loading, setLoading] = useState(true);
@@ -57,20 +56,12 @@ export default () => {
             setLoading={setLoading}
           />
           {!loading && dadosRelatorio && dadosRelatorio.length === 0 && (
-            <div>Nâo há dados para o filtro utilizado</div>
+            <div>
+              Não foi encontrado dieta especial para filtragem realizada
+            </div>
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
-              <div className="row row-botao-imprimir">
-                <Botao
-                  type={BUTTON_TYPE.BUTTON}
-                  texto="Imprimir"
-                  style={BUTTON_STYLE.BLUE}
-                  icon={BUTTON_ICON.PRINT}
-                  className="float-right"
-                  onClick={imprimeRelatorio}
-                />
-              </div>
               <TabelaRelatorio
                 dadosRelatorio={dadosRelatorio}
                 filtros={formValues}
@@ -81,6 +72,16 @@ export default () => {
                 current={page}
                 pageSize={10}
               />
+              <div className="row row-botao-imprimir">
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto="Imprimir"
+                  style={BUTTON_STYLE.BLUE}
+                  icon={BUTTON_ICON.PRINT}
+                  className="float-right"
+                  onClick={imprimeRelatorio}
+                />
+              </div>
             </>
           )}
         </div>

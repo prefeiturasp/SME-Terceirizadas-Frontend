@@ -23,12 +23,6 @@
     grid-template-columns: 60% 20% 20%;
   }
 
-  @media only screen and (max-width: 600px) {
-    body {
-      background-color: lightblue;
-    }
-  }
-
   .row-quantitativo-card {
     border: 1px solid #dfdfdf;
     padding: 10px 15px 30px 15px;

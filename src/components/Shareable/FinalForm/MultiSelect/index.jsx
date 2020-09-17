@@ -4,7 +4,7 @@ import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 import { HelpText } from "components/Shareable/HelpText";
 
-import "./styles.scss"
+import "./styles.scss";
 
 export default ({
   input,
@@ -17,17 +17,6 @@ export default ({
   pluralFeminino,
   ...props
 }) => {
-  console.log('MultiSelect', {
-    input,
-    meta,
-    label,
-    required,
-    labelClassName,
-    helpText,
-    nomeDoItemNoPlural,
-    pluralFeminino,
-    props
-  })
   const allItemsAreSelectedText = `${
     pluralFeminino ? "Todas as" : "Todos os"
   } ${nomeDoItemNoPlural} estão ${
@@ -50,49 +39,52 @@ export default ({
           {label}
         </label>
       ]}
-      {!props.disabled && <MultiSelect
-        {...props}
-        {...input}
-        //selected={periodo.tipos_alimentacao_selecionados}
+      {!props.disabled && (
+        <MultiSelect
+          {...props}
+          {...input}
+          onSelectedChanged={input.onChange}
+          disableSearch={props.disabled}
+          selected={input.value}
+          overrideStrings={{
+            selectAll: pluralFeminino ? "Todas" : "Todos",
+            search: "Busca",
+            allItemsAreSelected:
+              input.value.length === 1
+                ? props.options[0].label
+                : allItemsAreSelectedText
+          }}
+          valueRenderer={(selected, options) => {
+            if (selected.length === 0) {
+              return "Selecione...";
+            }
+            if (selected.length === 1) {
+              return selected.value;
+            }
 
-        // options={formatarParaMultiselect(
-        //   periodo.tipos_alimentacao
-        // )}
-        onSelectedChanged={input.onChange}
-        disableSearch={props.disabled}
-        selected={input.value}
-        overrideStrings={{
-          selectAll: pluralFeminino ? "Todas" : "Todos",
-          allItemsAreSelected:
-            input.value.length === 1
-              ? props.options[0].label
-              : allItemsAreSelectedText
-        }}
-        valueRenderer={(selected, options) => {
-          if (selected.length === 0) {
-            return "Selecione...";
-          }
-          if (selected.length === 1) {
-            return selected.value;
-          }
+            if (selected.length === options.length) {
+              return allItemsAreSelectedText;
+            }
 
-          if (selected.length === options.length) {
-            return allItemsAreSelectedText;
+            return `Selecionou ${selected.length} ${nomeDoItemNoPlural}`;
+          }}
+        />
+      )}
+      {props.disabled && (
+        <input
+          className={`form-control ${meta &&
+            meta.touched &&
+            (meta.error || meta.warning) &&
+            "invalid-field"}`}
+          disabled={props.disabled}
+          data-cy={input.name}
+          required={required}
+          value={
+            input.value[0] &&
+            props.options.find(e => e.value === input.value[0]).label
           }
-
-          return `Selecionou ${selected.length} ${nomeDoItemNoPlural}`;
-        }}
-      />}
-      {props.disabled && <input
-        className={`form-control ${meta &&
-          meta.touched &&
-          (meta.error || meta.warning) &&
-          "invalid-field"}`}
-        disabled={props.disabled}
-        data-cy={input.name}
-        required={required}
-        value={input.value[0] && props.options.find(e => e.value === input.value[0]).label}
-      />}
+        />
+      )}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>

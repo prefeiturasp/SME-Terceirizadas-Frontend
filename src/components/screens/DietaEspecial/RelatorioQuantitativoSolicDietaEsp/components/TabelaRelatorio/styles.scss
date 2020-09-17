@@ -31,7 +31,7 @@
   .header-quantitativo-por-terceirizada {
     display: grid;
     background: #f5f6f8;
-    height: 52px;
+    min-height: 52px;
 
     div {
       padding: 5px 10px;
@@ -46,7 +46,7 @@
 
   .row-quantitativo-nome {
     display: grid;
-    height: 48px;
+    min-height: 48px;
     background-color: #f9f9f9;
 
     div {

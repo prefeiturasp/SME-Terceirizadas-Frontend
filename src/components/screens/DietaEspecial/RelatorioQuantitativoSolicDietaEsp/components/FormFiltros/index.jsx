@@ -17,7 +17,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 
-import "./styles.scss"
+import "./styles.scss";
 
 export default ({ onSubmit, loading, setLoading }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([
@@ -32,8 +32,16 @@ export default ({ onSubmit, loading, setLoading }) => {
 
   useEffect(() => {
     async function effect() {
-      await formFiltrosObtemDreEEscolasNovo(setEscolas, setDiretoriasRegionais);
-      setDadosIniciais(await getDadosIniciais());
+      const promiseDreEscolas = formFiltrosObtemDreEEscolasNovo(
+        setEscolas,
+        setDiretoriasRegionais
+      );
+      const promiseDadosIniciais = getDadosIniciais();
+      const [, dadosIniciaisObtidos] = await Promise.all([
+        promiseDreEscolas,
+        promiseDadosIniciais
+      ]);
+      setDadosIniciais(dadosIniciaisObtidos);
       setLoading(false);
     }
     effect();
