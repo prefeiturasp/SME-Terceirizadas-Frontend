@@ -61,8 +61,7 @@ const formataUuidNomeParaMultiSelect = results =>
 
 export const formFiltrosObtemDreEEscolasNovo = async (
   setEscolas,
-  setDiretoriasRegionais,
-  change
+  setDiretoriasRegionais
 ) => {
   const dadosUsuario = await meusDados();
   if (dadosUsuario.tipo_usuario === "escola") {
@@ -70,15 +69,12 @@ export const formFiltrosObtemDreEEscolasNovo = async (
     const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
     setEscolas([{ value: uuid, label: nome, diretoria_regional: dre }]);
     setDiretoriasRegionais([{ value: dre.uuid, label: dre.nome }]);
-    change("escola", [uuid]);
-    change("dre", [dre.uuid]);
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
       const resposta2 = await getEscolasSimplissimaPorDiretoriaRegional(uuid);
       setEscolas(formataUuidNomeParaMultiSelect(resposta2));
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
-      change("dre", [uuid]);
     } else {
       const respostaDre = await getDiretoriaregionalSimplissimaAxios();
       const respostaEscola = await getEscolasSimplissimaComDREUnpaginated();
@@ -88,4 +84,22 @@ export const formFiltrosObtemDreEEscolasNovo = async (
       setEscolas(formataUuidNomeParaMultiSelect(respostaEscola.data));
     }
   }
+};
+
+export const getDadosIniciais = async () => {
+  const dadosUsuario = await meusDados();
+  if (dadosUsuario.tipo_usuario === "escola") {
+    let { uuid } = dadosUsuario.vinculo_atual.instituicao;
+    const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
+    return {
+      escola: [uuid],
+      dre: [dre.uuid]
+    };
+  } else if (dadosUsuario.tipo_usuario === "diretoriaregional") {
+    const { uuid } = dadosUsuario.vinculo_atual.instituicao;
+    return {
+      dre: [uuid]
+    };
+  }
+  return {};
 };

@@ -17,7 +17,7 @@ export default ({ dadosRelatorio, filtros }) => {
   const tipoGrid = filtros.status ? "unico" : "todos";
   const classeGrid = `grid-${perfilGrid}-${tipoGrid}`;
   return (
-    <section className="tabela-relatorio-quant-diag-dieta-esp">
+    <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
         {primeiroRegistro["dre"] && <div>Diretoria Regional</div>}
         {primeiroRegistro["escola"] && <div>Escola</div>}

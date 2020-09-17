@@ -57,20 +57,10 @@ const AtivasInativasContainer = () => {
             setLoading={setLoading}
           />
           {!loading && dadosRelatorio && dadosRelatorio.length === 0 && (
-            <div>Nâo há dados para o filtro utilizado</div>
+            <div>Não foi encontrado dieta especial para filtragem realizada</div>
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
-              <div className="row row-botao-imprimir">
-                <Botao
-                  type={BUTTON_TYPE.BUTTON}
-                  texto="Imprimir"
-                  style={BUTTON_STYLE.BLUE}
-                  icon={BUTTON_ICON.PRINT}
-                  className="float-right"
-                  onClick={imprimeRelatorio}
-                />
-              </div>
               <TabelaRelatorio
                 dadosRelatorio={dadosRelatorio}
                 filtros={formValues}
@@ -81,6 +71,16 @@ const AtivasInativasContainer = () => {
                 current={page}
                 pageSize={10}
               />
+              <div className="row row-botao-imprimir">
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto="Imprimir"
+                  style={BUTTON_STYLE.BLUE}
+                  icon={BUTTON_ICON.PRINT}
+                  className="float-right"
+                  onClick={imprimeRelatorio}
+                />
+              </div>
             </>
           )}
         </div>

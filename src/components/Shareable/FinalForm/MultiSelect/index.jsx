@@ -4,6 +4,8 @@ import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 import { HelpText } from "components/Shareable/HelpText";
 
+import "./styles.scss"
+
 export default ({
   input,
   meta,
@@ -15,6 +17,17 @@ export default ({
   pluralFeminino,
   ...props
 }) => {
+  console.log('MultiSelect', {
+    input,
+    meta,
+    label,
+    required,
+    labelClassName,
+    helpText,
+    nomeDoItemNoPlural,
+    pluralFeminino,
+    props
+  })
   const allItemsAreSelectedText = `${
     pluralFeminino ? "Todas as" : "Todos os"
   } ${nomeDoItemNoPlural} estão ${
@@ -22,7 +35,7 @@ export default ({
   }`;
 
   return (
-    <div className="select">
+    <div className="select final-form-multi-select">
       {label && [
         required && (
           <span key={0} className="required-asterisk">
@@ -37,7 +50,7 @@ export default ({
           {label}
         </label>
       ]}
-      <MultiSelect
+      {!props.disabled && <MultiSelect
         {...props}
         {...input}
         //selected={periodo.tipos_alimentacao_selecionados}
@@ -69,7 +82,17 @@ export default ({
 
           return `Selecionou ${selected.length} ${nomeDoItemNoPlural}`;
         }}
-      />
+      />}
+      {props.disabled && <input
+        className={`form-control ${meta &&
+          meta.touched &&
+          (meta.error || meta.warning) &&
+          "invalid-field"}`}
+        disabled={props.disabled}
+        data-cy={input.name}
+        required={required}
+        value={input.value[0] && props.options.find(e => e.value === input.value[0]).label}
+      />}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>

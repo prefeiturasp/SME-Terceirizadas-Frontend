@@ -48,30 +48,33 @@ const Filtros = ({
 
   const tipoUsuario = localStorage.getItem("tipo_perfil");
 
-  useEffect(async () => {
-    const promiseDreEscola = formFiltrosObtemDreEEscolasNovo(
-      setEscolas,
-      setDiretoriasRegionais,
-      change
-    );
-    const promiseDiagnosticos = getAlergiasIntoleranciasAxios();
-    const [, responseDiagnosticos] = await Promise.all([
-      promiseDreEscola,
-      promiseDiagnosticos
-    ]);
-    if (responseDiagnosticos.status === HTTP_STATUS.OK) {
-      setDiagnosticos(
-        responseDiagnosticos.data.map(d => {
-          return {
-            value: d.id,
-            label: d.descricao
-          };
-        })
+  useEffect(() => {
+    async function effect() {
+      const promiseDreEscola = formFiltrosObtemDreEEscolasNovo(
+        setEscolas,
+        setDiretoriasRegionais,
+        change
       );
-    } else {
-      toastError("Erro ao obter os diagnósticos");
+      const promiseDiagnosticos = getAlergiasIntoleranciasAxios();
+      const [, responseDiagnosticos] = await Promise.all([
+        promiseDreEscola,
+        promiseDiagnosticos
+      ]);
+      if (responseDiagnosticos.status === HTTP_STATUS.OK) {
+        setDiagnosticos(
+          responseDiagnosticos.data.map(d => {
+            return {
+              value: d.id,
+              label: d.descricao
+            };
+          })
+        );
+      } else {
+        toastError("Erro ao obter os diagnósticos");
+      }
+      setLoading(false);
     }
-    setLoading(false);
+    effect();
   }, []);
 
   useEffect(() => {

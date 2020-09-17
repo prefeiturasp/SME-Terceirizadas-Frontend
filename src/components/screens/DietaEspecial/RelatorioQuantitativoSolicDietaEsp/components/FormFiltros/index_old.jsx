@@ -1,23 +1,26 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
-import { Form, Field } from "react-final-form";
-import Select from "components/Shareable/Select";
-import {
-  formFiltrosObtemDreEEscolasNovo,
-  getDadosIniciais
-} from "helpers/dietaEspecial";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { TIPO_PERFIL } from "constants/shared";
-import { requiredMultiselectKhan } from "helpers/fieldValidators";
-import { InputComData } from "components/Shareable/DatePicker";
-import { required } from "helpers/fieldValidators";
+import { Field, Form, FormSpy, useForm } from "react-final-form";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import SSelect from "components/Shareable/Select";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 
-import "./styles.scss"
+import { TIPO_PERFIL } from "constants/shared";
+
+import {
+  formFiltrosObtemDreEEscolasNovo,
+  getDadosIniciais
+} from "helpers/dietaEspecial";
+
+import { InputComData } from "components/Shareable/DatePicker";
+
+import "./styles.scss";
+import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 
 export default ({ onSubmit, loading, setLoading }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([
@@ -26,9 +29,13 @@ export default ({ onSubmit, loading, setLoading }) => {
   const [escolas, setEscolas] = useState([
     { value: "", label: "Carregando...", dre: { uuid: "" } }
   ]);
+  const [escolasFiltrado, setEscolasFiltrado] = useState(escolas);
   const [dadosIniciais, setDadosIniciais] = useState({});
+  const [formApi, setFormApi] = useState()
 
   const tipoUsuario = localStorage.getItem("tipo_perfil");
+
+  console.log({ onSubmit, loading, setLoading });
 
   useEffect(() => {
     async function effect() {
@@ -39,34 +46,50 @@ export default ({ onSubmit, loading, setLoading }) => {
     effect();
   }, []);
 
-  const getEscolasFiltrado = dre => {
+  const mudaEscolasFiltrado = ({ dre }, change) => {
+    console.log("mudaEscolasFiltrado", { dre });
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
     ) {
-      return escolas;
+      setEscolasFiltrado(escolas);
     } else if (dre) {
       if (dre.length === 0) {
-        return escolas;
+        setEscolasFiltrado(escolas);
+        change("escola", "");
       } else {
-        return escolas.filter(e => dre.includes(e.dre.uuid));
+        const dadosEscolasFiltrado = escolas.filter(e =>
+          dre.includes(e.dre.uuid)
+        );
+        setEscolasFiltrado(dadosEscolasFiltrado);
+        change("escola", dadosEscolasFiltrado.map(e => e.value));
       }
     }
-    return escolas;
   };
 
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={dadosIniciais}
-      render={({ handleSubmit, form, submitting, values }) => {
+      //initialValues={dadosIniciais}
+      render={({ form, handleSubmit, submitting, values }) => {
+        const { data_inicial, data_final } = values;
+        if (formApi === undefined) {
+          console.log('setting formApi!')
+          setFormApi(useForm())
+        }
         return (
           <form
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-solic-dieta-esp"
           >
+            <pre>{JSON.stringify(values, null, 4)}</pre>
+            <Field component={InputComData} label="&nbsp;" name="data_final" />
+            {/* <FormSpy subscription={{
+              dre: true
+            }}
+            onChange={props => mudaEscolasFiltrado(props, form.change)}/> */}
             <div className="row">
-              <div className="col-6">
+              <div className="col-5">
                 <Field
                   label="Diretoria Regional de Educação"
                   component={MultiSelect}
@@ -86,7 +109,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   validate={requiredMultiselectKhan}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-7">
                 <Field
                   label="Unidade Escolar"
                   component={MultiSelect}
@@ -99,67 +122,67 @@ export default ({ onSubmit, loading, setLoading }) => {
                     (values.dre && values.dre.length > 1)
                   }
                   isLoading={loading}
-                  options={getEscolasFiltrado(values.dre)}
+                  options={escolasFiltrado}
                   nomeDoItemNoPlural="escolas"
                   pluralFeminino
                 />
               </div>
             </div>
             <div className="row">
-              <div className="col-3">
+              {/* <div className="col-2">
                 <Field
                   label="Status"
-                  component={Select}
+                  component={SSelect}
                   name="status"
                   options={[
                     { uuid: "", nome: "Todos" },
-                    { uuid: "ativas", nome: "Ativa" },
-                    { uuid: "inativas", nome: "Inativa" },
-                    { uuid: "pendentes", nome: "Pendente de aprovação" }
+                    { uuid: "ativas", nome: "Ativas" },
+                    { uuid: "inativas", nome: "Inativas" },
+                    { uuid: "pendentes", nome: "Pendentes" }
                   ]}
                   naoDesabilitarPrimeiraOpcao
                 />
-              </div>
-              <div className="col-3">
+              </div> */}
+              {/* <div className="col-3">
                 <Field
                   component={InputComData}
-                  label="Data da solicitação"
+                  label="Período"
                   name="data_inicial"
                   className="data-inicial"
+                  labelClassName="datepicker-fixed-padding"
                   placeholder="De"
                   minDate={null}
                   maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
+                    data_final
+                      ? moment(data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
                   required
                   validate={required}
                 />
-              </div>
-              <div className="col-3">
+              </div> */}
+              {/* <div className="col-3">
                 <Field
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
+                  labelClassName="datepicker-fixed-padding"
                   popperPlacement="bottom-end"
                   placeholder="Até"
                   minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
+                    data_inicial ? moment(data_inicial, "DD/MM/YYYY")._d : null
                   }
                   maxDate={moment()._d}
                   validate={required}
                 />
-              </div>
-              <div className="col-3 botoes-envio">
+              </div> */}
+              <div className="col-4 botoes-envio">
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={submitting}
-                  onClick={form.reset}
+                  onClick={form.reset()}
                 />
                 <Botao
                   style={BUTTON_STYLE.GREEN}
