@@ -19,8 +19,8 @@ export default ({ dadosRelatorio, filtros }) => {
   return (
     <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
-        {primeiroRegistro["dre"] && <div>Diretoria Regional</div>}
-        {primeiroRegistro["escola"] && <div>Escola</div>}
+        {primeiroRegistro["dre"] && <div>Diretoria Regional de Educação</div>}
+        {primeiroRegistro["escola"] && <div>Unidade Escolar</div>}
         <div>Diagnóstico</div>
         <div>Ano Nasc. Aluno</div>
         {[undefined, "pendentes"].includes(filtros.status) && (

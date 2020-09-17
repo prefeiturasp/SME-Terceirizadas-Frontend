@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import { meusDados } from "services/perfil.service";
 import {
   getEscolasSimplissimaComDRE,
@@ -102,4 +104,27 @@ export const getDadosIniciais = async () => {
     };
   }
   return {};
+};
+
+export const getCabecalhoPorFiltros = filtros => {
+  if (filtros.data_inicial && filtros.data_final) {
+    return `Veja os resultados para o período "${moment(
+      filtros.data_inicial,
+      "DD/MM/YYYY"
+    ).format("DD/MM/YYYY")} à ${moment(filtros.data_final, "DD/MM/YYYY").format(
+      "DD/MM/YYYY"
+    )}":`;
+  } else if (filtros.data_inicial) {
+    return `Veja os resultados a partir de "${moment(
+      filtros.data_inicial,
+      "DD/MM/YYYY"
+    ).format("DD/MM/YYYY")}":`;
+  } else if (filtros.data_final) {
+    return `Veja os resultados até "${moment(
+      filtros.data_final,
+      "DD/MM/YYYY"
+    ).format("DD/MM/YYYY")}":`;
+  } else {
+    return "Veja os resultados para a busca:";
+  }
 };

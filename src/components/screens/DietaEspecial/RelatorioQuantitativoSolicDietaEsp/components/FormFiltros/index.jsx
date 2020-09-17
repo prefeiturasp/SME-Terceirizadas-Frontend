@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 import Select from "components/Shareable/Select";
 import {
   formFiltrosObtemDreEEscolasNovo,
@@ -67,12 +68,18 @@ export default ({ onSubmit, loading, setLoading }) => {
     <Form
       onSubmit={onSubmit}
       initialValues={dadosIniciais}
+      subscription={{ submitting: true, values: true }}
       render={({ handleSubmit, form, submitting, values }) => {
+        const escolaDisabled =
+          loading ||
+          tipoUsuario === TIPO_PERFIL.ESCOLA ||
+          (values.dre && values.dre.length > 1);
         return (
           <form
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-solic-dieta-esp"
           >
+            <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
             <div className="row">
               <div className="col-6">
                 <Field
@@ -101,13 +108,18 @@ export default ({ onSubmit, loading, setLoading }) => {
                   showSearch
                   name="escola"
                   multiple
-                  disabled={
-                    loading ||
-                    tipoUsuario === TIPO_PERFIL.ESCOLA ||
-                    (values.dre && values.dre.length > 1)
-                  }
+                  disabled={escolaDisabled}
                   isLoading={loading}
-                  options={getEscolasFiltrado(values.dre)}
+                  options={
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA && escolaDisabled
+                      ? [
+                          {
+                            value: "",
+                            label: ""
+                          }
+                        ]
+                      : getEscolasFiltrado(values.dre)
+                  }
                   nomeDoItemNoPlural="escolas"
                   pluralFeminino
                 />
@@ -161,7 +173,9 @@ export default ({ onSubmit, loading, setLoading }) => {
                   validate={required}
                 />
               </div>
-              <div className="col-3 botoes-envio">
+            </div>
+            <div className="row">
+              <div className="col-12 botoes-envio">
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
