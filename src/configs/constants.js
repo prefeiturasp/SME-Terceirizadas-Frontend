@@ -13,6 +13,7 @@ export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 export const DIETA_ESPECIAL = "dieta-especial";
 export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const GESTAO_PRODUTO = "gestao-produto";
+export const LANCAMENTO_INICIAL = "lancamento-inicial";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -111,6 +112,8 @@ export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
+
+export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 
 // Status dos pedidos
 
