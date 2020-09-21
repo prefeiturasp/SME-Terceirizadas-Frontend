@@ -94,6 +94,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
 export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
+export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";

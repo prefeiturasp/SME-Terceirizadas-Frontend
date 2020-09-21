@@ -145,3 +145,6 @@ export const getQuantidaDeAlunosPorPeriodoEEscola = uuidEscola => {
       return error.json();
     });
 };
+
+export const updateEscolaSimples = async (uuidEscola, valores) =>
+  axios.patch(`/escolas-simples/${uuidEscola}/`, valores);

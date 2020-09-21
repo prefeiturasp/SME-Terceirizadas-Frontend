@@ -8,7 +8,7 @@ import Page from "components/Shareable/Page/Page";
 import LancamentoMedicaoInicial from "components/screens/LancamentoInicial/LancamentoMedicaoInicial";
 import {
   LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL
 } from "configs/constants";
 
 const atual = {
