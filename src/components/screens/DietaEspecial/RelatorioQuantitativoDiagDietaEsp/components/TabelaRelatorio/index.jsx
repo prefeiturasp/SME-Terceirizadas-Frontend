@@ -14,12 +14,9 @@ export default ({ dadosRelatorio, filtros }) => {
       : tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL
       ? "dre"
       : "nutri";
-  const tipoGrid = filtros.status
-    ? "unico"
-    : primeiroRegistro.escola
-    ? "todos"
-    : "sem-escola";
-  const classeGrid = `grid-${perfilGrid}-${tipoGrid}`;
+  const tipoGrid = filtros.status ? "unico" : "todos";
+  const semEscola = primeiroRegistro.escola === undefined ? "-sem-escola" : "";
+  const classeGrid = `grid-${perfilGrid}-${tipoGrid}${semEscola}`;
   return (
     <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
