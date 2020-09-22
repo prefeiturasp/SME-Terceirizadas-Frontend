@@ -1,7 +1,6 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
-import { formatarDiasMotivosSuspensao, MOTIVOS_SUSPENSAO } from "./helper";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -13,9 +12,6 @@ import { fluxoInformativoPartindoEscola } from "../../../Shareable/FluxoDeStatus
 
 export const CorpoRelatorio = props => {
   const { suspensaoAlimentacao, dadosEscola } = props;
-  const diasMotivosFormatados = formatarDiasMotivosSuspensao(
-    suspensaoAlimentacao.suspensoes_alimentacao
-  );
   return (
     <div>
       <div className="row">
@@ -85,26 +81,20 @@ export const CorpoRelatorio = props => {
       )}
       <hr />
       <table className="table-reasons">
-        {MOTIVOS_SUSPENSAO.map(motivo => {
-          return (
-            diasMotivosFormatados[motivo].length > 0 && [
-              <tr className="row" key={0}>
-                <th className="col-2">Motivo</th>
-                <th className="col-10">Dia(s) de suspensão</th>
-              </tr>,
-              <tr className="row" key={1}>
-                <td className="col-2">{motivo}</td>
-                {diasMotivosFormatados[motivo].map((dia, key) => {
-                  return (
-                    <td key={key} className="col-2">
-                      {dia}
-                    </td>
-                  );
-                })}
-              </tr>
-            ]
-          );
-        })}
+        <tr className="row">
+          <th className="col-4">Motivo</th>
+          <th className="col-8">Dia(s) de suspensão</th>
+        </tr>
+        {suspensaoAlimentacao.suspensoes_alimentacao.map((suspensao, index) => (
+          <tr className="row" key={index}>
+            <td className="col-4">
+              {suspensao.motivo.nome === "Outro"
+                ? `${suspensao.motivo.nome} - ${suspensao.outro_motivo}`
+                : suspensao.motivo.nome}
+            </td>
+            <td className="col-2">{suspensao.data}</td>
+          </tr>
+        ))}
       </table>
       <table className="table-report mt-3">
         <tr>
