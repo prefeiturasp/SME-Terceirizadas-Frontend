@@ -46,6 +46,7 @@
     "locutus": "^2.0.11",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
+    "patch-package": "^6.2.2",
     "prettier": "^1.16.4",
     "ramda": "^0.27.0",
     "react": "^16.8.6",
@@ -83,7 +84,8 @@
     "eslint": "eslint './src/**/**/**/**/*.{jsx,js}'",
     "prettier": "prettier  --check 'src/**/**/**/*.{jsx,js,scss}'",
     "prettier-fix": "prettier  --write 'src/**/**/**/*.{jsx,js,scss}'",
-    "coverage": "react-scripts test --coverage --watchAll=false"
+    "coverage": "react-scripts test --coverage --watchAll=false",
+    "postinstall": "patch-package"
   },
   "eslintConfig": {
     "extends": "react-app"
