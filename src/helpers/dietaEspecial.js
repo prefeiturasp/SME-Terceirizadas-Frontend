@@ -63,9 +63,9 @@ const formataUuidNomeParaMultiSelect = results =>
 
 export const formFiltrosObtemDreEEscolasNovo = async (
   setEscolas,
-  setDiretoriasRegionais
+  setDiretoriasRegionais,
+  dadosUsuario
 ) => {
-  const dadosUsuario = await meusDados();
   if (dadosUsuario.tipo_usuario === "escola") {
     let { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
     const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
@@ -88,8 +88,7 @@ export const formFiltrosObtemDreEEscolasNovo = async (
   }
 };
 
-export const getDadosIniciais = async () => {
-  const dadosUsuario = await meusDados();
+export const getDadosIniciais = async dadosUsuario => {
   if (dadosUsuario.tipo_usuario === "escola") {
     let { uuid } = dadosUsuario.vinculo_atual.instituicao;
     const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
