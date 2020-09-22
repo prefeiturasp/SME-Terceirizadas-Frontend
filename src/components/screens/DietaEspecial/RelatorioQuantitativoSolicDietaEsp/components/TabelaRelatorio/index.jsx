@@ -14,18 +14,13 @@ export default ({ dadosRelatorio, filtros }) => {
       : tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL
       ? "dre"
       : "nutri";
-  const tipoGrid = filtros.status
-    ? "unico"
-    : primeiroRegistro.escola
-    ? "todos"
-    : "sem-escola";
-  const classeGrid = `grid-${perfilGrid}-${tipoGrid}`;
+  const tipoGrid = filtros.status ? "unico" : "todos";
+  const semEscola = primeiroRegistro.escola === undefined ? "-sem-escola" : "";
+  const classeGrid = `grid-${perfilGrid}-${tipoGrid}${semEscola}`;
   return (
     <section className="tabela-relatorio-quant-solic-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
-        {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
-          <div>Diretoria Regional de Educação</div>
-        )}
+        <div>Diretoria Regional de Educação</div>
         {primeiroRegistro.escola && <div>Unidade Escolar</div>}
         {[undefined, "pendentes"].includes(filtros.status) && (
           <div>Dietas pendentes</div>
@@ -41,9 +36,7 @@ export default ({ dadosRelatorio, filtros }) => {
         return (
           <Fragment key={index}>
             <div className={`row-quantitativo-nome ${classeGrid}`}>
-              {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
-                <div>{item.dre}</div>
-              )}
+              <div>{item.dre}</div>
               {primeiroRegistro.escola && <div>{item.escola}</div>}
               {[undefined, "pendentes"].includes(filtros.status) && (
                 <div>{item.qtde_pendentes}</div>

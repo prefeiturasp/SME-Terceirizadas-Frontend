@@ -3,28 +3,40 @@
     grid-template-columns: 40% 30% 10% 10% 10%;
   }
 
-  .grid-nutri-sem-escola {
+  .grid-nutri-todos-sem-escola {
     grid-template-columns: 55% 15% 15% 15%;
-  }
-
-  .grid-dre-todos {
-    grid-template-columns: 50% 16.66% 16.66% 16.67%;
-  }
-
-  .grid-escola-todos {
-    grid-template-columns: 40% 30% 10% 10% 10%;
   }
 
   .grid-nutri-unico {
     grid-template-columns: 42% 42% 16%;
   }
 
-  .grid-dre-unico {
+  .grid-nutri-unico-sem-escola {
     grid-template-columns: 70% 30%;
   }
 
+  .grid-dre-todos {
+    grid-template-columns: 40% 30% 10% 10% 10%;
+  }
+
+  .grid-dre-todos-sem-escola {
+    grid-template-columns: 55% 15% 15% 15%;
+  }
+
+  .grid-dre-unico {
+    grid-template-columns: 42% 42% 16%;
+  }
+
+  .grid-dre-unico-sem-escola {
+    grid-template-columns: 70% 30%;
+  }
+
+  .grid-escola-todos {
+    grid-template-columns: 40% 30% 10% 10% 10%;
+  }
+
   .grid-escola-unico {
-    grid-template-columns: 100%;
+    grid-template-columns: 45% 40% 15%;
   }
 
   .row-quantitativo-card {

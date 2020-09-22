@@ -250,7 +250,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       component={InputComData}
                       name="data_de"
                       label="Referência"
-                      textoLabel="Cardápio dia"
+                      placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
@@ -267,7 +267,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       component={InputComData}
                       name="data_para"
                       label="Aplicar em"
-                      textoLabel="Cardápio dia"
+                      placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}

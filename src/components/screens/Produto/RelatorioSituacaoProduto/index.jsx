@@ -63,6 +63,7 @@ export default () => {
   }, [filtros, page]);
 
   const onSubmitForm = formValues => {
+    setPage(1);
     setFiltros({ ...formValues });
   };
 

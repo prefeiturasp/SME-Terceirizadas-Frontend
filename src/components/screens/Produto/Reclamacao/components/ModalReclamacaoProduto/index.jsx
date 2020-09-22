@@ -66,14 +66,8 @@ export default class ModalReclamacaoProduto extends Component {
 
   onSubmit = async values => {
     return new Promise(async (resolve, reject) => {
-      const homologacaoAtiva = this.props.produto.homologacoes.find(
-        h =>
-          h.status === "CODAE_HOMOLOGADO" ||
-          h.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU" ||
-          h.status === "CODAE_PEDIU_ANALISE_RECLAMACAO"
-      );
       const response = await escolaOuNutriReclamaDoProduto(
-        homologacaoAtiva.uuid,
+        this.props.produto.ultima_homologacao.uuid,
         values
       );
       if (response.status === HTTP_STATUS.OK) {
