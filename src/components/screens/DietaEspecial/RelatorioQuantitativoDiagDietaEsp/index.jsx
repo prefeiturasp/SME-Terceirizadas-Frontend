@@ -57,7 +57,7 @@ export default () => {
             setLoading={setLoading}
           />
           {!loading && dadosRelatorio && dadosRelatorio.length === 0 && (
-            <div>
+            <div className="mensagem-sem-registros mt-3">
               Não foi encontrado dieta especial para filtragem realizada
             </div>
           )}

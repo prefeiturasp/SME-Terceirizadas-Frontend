@@ -23,13 +23,25 @@ export default ({ dadosRelatorio, filtros }) => {
         <div>Diretoria Regional de Educação</div>
         {primeiroRegistro.escola && <div>Unidade Escolar</div>}
         {[undefined, "pendentes"].includes(filtros.status) && (
-          <div>Dietas pendentes</div>
+          <div>
+            Dietas
+            <br />
+            pendentes
+          </div>
         )}
         {[undefined, "ativas"].includes(filtros.status) && (
-          <div>Dietas ativas</div>
+          <div>
+            Dietas
+            <br />
+            ativas
+          </div>
         )}
         {[undefined, "inativas"].includes(filtros.status) && (
-          <div>Dietas inativas</div>
+          <div>
+            Dietas
+            <br />
+            inativas
+          </div>
         )}
       </div>
       {dadosRelatorio.map((item, index) => {
