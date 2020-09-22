@@ -6,6 +6,8 @@ import PanoramaGeral from "./components/PanoramaGeral";
 import * as perfilService from "services/perfil.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
 import SeletorTipoContagem from "./components/SeletorTipoContagem";
+import ProgramasAutorizados from "./components/ProgramasAutorizados";
+import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 
 export default () => {
   const [meusDados, setMeusDados] = useState({});
@@ -26,12 +28,16 @@ export default () => {
   }, []);
 
   return (
-    <div>
-      <InformacoesEscola meusDados={meusDados} />
-      {panoramaGeral && <PanoramaGeral panoramaGeral={panoramaGeral} />}
-      {!loading && (
-        <SeletorTipoContagem escola={meusDados.vinculo_atual.instituicao} />
-      )}
+    <div className="card mt-3">
+      <div className="card-body">
+        <InformacoesEscola meusDados={meusDados} />
+        {panoramaGeral && <PanoramaGeral panoramaGeral={panoramaGeral} />}
+        <ProgramasAutorizados />
+        {!loading && (
+          <SeletorTipoContagem escola={meusDados.vinculo_atual.instituicao} />
+        )}
+        <LancamentoPorPeriodo />
+      </div>
     </div>
   );
 };

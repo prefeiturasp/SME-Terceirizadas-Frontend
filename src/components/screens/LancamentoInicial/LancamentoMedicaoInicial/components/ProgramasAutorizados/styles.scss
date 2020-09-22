@@ -1,0 +1,50 @@
+@import "styles/variables.scss";
+
+.programas-autorizados {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+    grid-template-columns: 40% 10% 10% 20% 20%;
+  }
+  .cabecalho-tabela {
+    min-height: 100px;
+    > div {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: $blackSubtle;
+      background-color: #f5f6f8;
+      border: 1px solid #e9eaea;
+      font-weight: 700;
+      padding: 1em;
+    }
+  }
+  .linha-tabela {
+    min-height: 50px;
+    > div {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: $blackSubtle;
+      border: 1px solid #e9eaea;
+      font-weight: 700;
+      padding: 1em;
+    }
+  }
+  .texto-rodape {
+    font-size: 12px;
+    color: $blackSubtle;
+    font-weight: 700;
+    text-align: right;
+  }
+  .borderless-input {
+    padding: 0px !important;
+    input {
+      border: 0px;
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      font-size: 12px;
+    }
+  }
+}
