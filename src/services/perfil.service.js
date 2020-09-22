@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import axios from "./_base";
 import { AUTH_TOKEN } from "./constants";
 
 const authToken = {
@@ -199,3 +200,6 @@ export const dadosDoAluno = codigoEol => {
       return error.json();
     });
 };
+
+export const getAlunosListagem = async params =>
+  await axios.get(`/alunos/`, { params });

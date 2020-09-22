@@ -1,0 +1,30 @@
+.form-filtros-rel-quant-diag-dieta-esp {
+  .botoes-envio {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 5px;
+    justify-content: flex-end;
+    margin-top: 1em;
+  }
+}
+
+.input-busca-aluno {
+  width: 100%;
+  margin-top: 2px;
+  z-index: 0 !important;
+}
+.input-busca-aluno .ant-input[disabled] {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+}
+
+.input-busca-dre[disabled] {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+}
+
+.input-busca-dre[disabled] {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+  background-image: none !important;
+}

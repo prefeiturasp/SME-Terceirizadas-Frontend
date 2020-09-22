@@ -11,6 +11,7 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Select from "components/Shareable/Select";
+import { meusDados } from "services/perfil.service";
 
 import { TIPO_PERFIL } from "constants/shared";
 
@@ -36,11 +37,13 @@ export default ({ onSubmit, loading, setLoading }) => {
 
   useEffect(() => {
     async function effect() {
+      const dadosUsuario = await meusDados();
       const promiseDreEscolas = formFiltrosObtemDreEEscolasNovo(
         setEscolas,
-        setDiretoriasRegionais
+        setDiretoriasRegionais,
+        dadosUsuario
       );
-      const promiseDadosIniciais = getDadosIniciais();
+      const promiseDadosIniciais = getDadosIniciais(dadosUsuario);
       const [, dadosIniciaisObtidos] = await Promise.all([
         promiseDreEscolas,
         promiseDadosIniciais
