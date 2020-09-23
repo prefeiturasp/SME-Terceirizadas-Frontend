@@ -2,4 +2,13 @@
   i {
     padding-top: 12px;
   }
+  form,
+  p {
+    display: flex;
+    align-items: center;
+  }
+  input {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+  }
 }

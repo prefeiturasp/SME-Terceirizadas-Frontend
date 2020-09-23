@@ -6,28 +6,21 @@ import { getTiposDeContagem } from "services/dietaEspecial.service";
 
 import "./styles.scss";
 import { OK } from "http-status-codes";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import { updateEscolaSimples } from "services/escola.service";
 
 import "./styles.scss";
 
 export default ({ escola }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(false);
   const [dadosIniciais, setDadosIniciais] = useState({});
 
   const onFormUpdate = async tiposContagem => {
-    setSubmitting(true);
     const resposta = await updateEscolaSimples(escola.uuid, {
       tipos_contagem: tiposContagem
     });
-    setSubmitting(false);
-    if (resposta.status === OK) {
-      toastSuccess("Tipo de contagem atualizado!");
-    } else {
+    if (resposta.status !== OK) {
       toastError("Erro ao atualizar o tipo de contagem");
-      setError(true);
     }
   };
 
@@ -56,7 +49,7 @@ export default ({ escola }) => {
       <Form
         onSubmit={() => {}}
         initialValues={dadosIniciais}
-        render={({ pristine }) => (
+        render={() => (
           <div className="row">
             <div className="col-4">
               <form>
@@ -76,23 +69,11 @@ export default ({ escola }) => {
                       name="tipos_contagem"
                       type="checkbox"
                       value={tipoContagem.uuid}
-                      disabled={submitting}
                     />
                     {tipoContagem.nome}
                   </p>
                 ))}
               </form>
-            </div>
-            <div className="col-1">
-              {submitting && (
-                <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
-              )}
-              {!pristine && !submitting && !error && (
-                <i style={{ color: "green" }} className="fas fa-check-circle" />
-              )}
-              {!pristine && !submitting && error && (
-                <i style={{ color: "red" }} className="fas fa-times-circle" />
-              )}
             </div>
           </div>
         )}
