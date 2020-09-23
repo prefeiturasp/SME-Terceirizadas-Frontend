@@ -111,6 +111,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   component={MultiSelect}
                   name="dre"
                   multiple
+                  disableSearch
                   disabled={
                     loading ||
                     (values.escola && values.escola.length > 0) ||
@@ -133,6 +134,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   component={MultiSelect}
                   name="escola"
                   multiple
+                  disableSearch
                   disabled={
                     loading ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA ||

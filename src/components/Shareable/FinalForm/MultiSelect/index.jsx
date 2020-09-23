@@ -7,6 +7,7 @@ import { HelpText } from "components/Shareable/HelpText";
 import "./styles.scss";
 
 export default ({
+  disableSearch,
   input,
   meta,
   label,
@@ -54,7 +55,7 @@ export default ({
           {...props}
           {...input}
           onSelectedChanged={input.onChange}
-          disableSearch={props.disabled}
+          disableSearch={props.disabled || disableSearch}
           selected={input.value}
           overrideStrings={{
             selectAll: pluralFeminino ? "Todas" : "Todos",

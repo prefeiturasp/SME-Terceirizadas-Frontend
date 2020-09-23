@@ -197,7 +197,7 @@ const ModalRelatorioDietaEspecial = ({
                           </div>
                         </div>
                         <div className="col-md-5">
-                          <label>justificativa Negação</label>
+                          <label>Justificativa Negação</label>
                           <br />
                           <b>
                             <b
