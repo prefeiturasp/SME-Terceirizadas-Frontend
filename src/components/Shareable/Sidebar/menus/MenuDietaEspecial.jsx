@@ -33,7 +33,9 @@ const MenuDietaEspecial = () => {
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
-      {exibePainelInicial && <LeafItem to="/">Painel Inicial</LeafItem>}
+      {exibePainelInicial && (
+        <LeafItem to="/painel-dieta-especial">Painel de Solicitações</LeafItem>
+      )}
       {exibeNovaSolicitacao && (
         <LeafItem to={`/escola/dieta-especial`}>Nova Solicitação</LeafItem>
       )}
