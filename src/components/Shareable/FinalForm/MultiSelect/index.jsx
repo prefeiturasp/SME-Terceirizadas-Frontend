@@ -60,7 +60,7 @@ export default ({
             selectAll: pluralFeminino ? "Todas" : "Todos",
             search: "Busca",
             allItemsAreSelected:
-              input.value.length === 1
+              input.value.length === 1 && props.options[0]
                 ? props.options[0].label
                 : allItemsAreSelectedText
           }}
