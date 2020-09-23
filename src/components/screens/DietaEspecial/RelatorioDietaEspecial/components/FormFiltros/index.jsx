@@ -160,6 +160,16 @@ export default ({ onSubmit, setCarregando }) => {
     setCarregandoAluno(false);
   };
 
+  const onReset = (form, values) => {
+    if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL) {
+      form.reset({ dre: values.dre });
+    } else if (tipoUsuario === TIPO_PERFIL.ESCOLA) {
+      form.reset({ dre: values.dre, escola: values.escola });
+    } else {
+      form.reset({ codigo_eol_aluno: undefined });
+    }
+  };
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -188,14 +198,14 @@ export default ({ onSubmit, setCarregando }) => {
                     })
                   )}
                   validate={required}
-                  required={false}
+                  required={true}
                 />
               </div>
               <div className="col-4">
                 <Field
                   label="Unidade Escolar"
                   component={MultiSelect}
-                  showSearch
+                  disableSearch
                   name="escola"
                   multiple
                   disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
@@ -208,7 +218,7 @@ export default ({ onSubmit, setCarregando }) => {
                 <Field
                   label="Diagnóstico"
                   component={MultiSelect}
-                  showSearch
+                  disableSearch
                   name="diagnostico"
                   multiple
                   options={diagnosticos}
@@ -251,7 +261,7 @@ export default ({ onSubmit, setCarregando }) => {
                 <Field
                   label="Classificação da dieta"
                   component={MultiSelect}
-                  showSearch
+                  disableSearch
                   name="classificacao"
                   multiple
                   nomeDoItemNoPlural="classificações"
@@ -263,7 +273,7 @@ export default ({ onSubmit, setCarregando }) => {
                 <Field
                   label="Situação"
                   component={MultiSelect}
-                  showSearch
+                  disableSearch
                   name="status"
                   multiple
                   nomeDoItemNoPlural="Situações"
@@ -309,7 +319,7 @@ export default ({ onSubmit, setCarregando }) => {
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={submitting}
-                  onClick={form.reset}
+                  onClick={() => onReset(form, values)}
                 />
                 <Botao
                   style={BUTTON_STYLE.GREEN}
