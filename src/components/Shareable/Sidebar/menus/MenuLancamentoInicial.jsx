@@ -10,7 +10,11 @@ export default () => {
   const exibirLancamentoMedicaoInicial = usuarioEhEscola();
 
   return (
-    <Menu id="Configuracoes" icon="fa-cog" title={"Lançamento Inicial"}>
+    <Menu
+      id="LancamentoInicial"
+      icon="fas fa-pencil-alt"
+      title={"Lançamento Inicial"}
+    >
       {exibirLancamentoMedicaoInicial && (
         <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
           Lançamento Medição Inicial
