@@ -99,6 +99,7 @@ const ModalRelatorioReclamacao = ({
                   <div>Fabricante</div>
                   <div>Data de cadastro </div>
                   <div>Qtde. Reclamações </div>
+                  <div>Status do produto</div>
                 </div>
 
                 {produtos !== null &&
@@ -113,6 +114,7 @@ const ModalRelatorioReclamacao = ({
                           <div>
                             {produto.ultima_homologacao.reclamacoes.length}
                           </div>
+                          <div>{produto.ultima_homologacao.status_titulo}</div>
                         </div>
                         {produto.ultima_homologacao.reclamacoes.map(
                           (reclamacao, index, arr) => {
