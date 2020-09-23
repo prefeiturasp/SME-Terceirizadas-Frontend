@@ -213,7 +213,6 @@ export class InversaoDeDiaDeCardapio extends Component {
     const {
       handleSubmit,
       pristine,
-      // submitting,
       proximos_dois_dias_uteis,
       meusDados
     } = this.props;
@@ -309,7 +308,6 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
-                      // disabled={submitting}
                       onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -317,7 +315,6 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                     <Botao
                       texto="Enviar"
-                      // disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
