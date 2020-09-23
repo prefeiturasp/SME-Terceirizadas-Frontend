@@ -5,6 +5,7 @@ import authService from "./auth";
 
 import axios from "./_base";
 import {
+  PANORAMA_ESCOLA,
   RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
@@ -270,3 +271,8 @@ export const getSolicitacaoDietaEspecialListagem = async params => {
     params
   });
 };
+
+export const getPanoramaEscola = async filtros =>
+  axios.post(`/${SOLICITACOES_DIETA_ESPECIAL}/${PANORAMA_ESCOLA}/`, filtros);
+
+export const getTiposDeContagem = async () => axios.get("/tipo-contagem/");

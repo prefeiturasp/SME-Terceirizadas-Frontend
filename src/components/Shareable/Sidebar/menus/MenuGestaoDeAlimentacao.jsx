@@ -30,7 +30,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       icon="fa-utensils"
       title={"Gestão de Alimentação"}
     >
-      <LeafItem to="/">Painel de Solicitações</LeafItem>
+      <LeafItem to="/painel-gestao-alimentacao">
+        Painel de Solicitações
+      </LeafItem>
       {exibeMenuNovasSolicitacoes && (
         <SubMenu
           icon="fa-chevron-down"
