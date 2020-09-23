@@ -110,6 +110,7 @@ import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
 
 const routesConfig = [
   {
@@ -896,6 +897,14 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }`,
+    component: LancamentoMedicaoInicialPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscola()
   }
 ];
 

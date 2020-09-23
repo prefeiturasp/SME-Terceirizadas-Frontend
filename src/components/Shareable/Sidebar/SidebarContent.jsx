@@ -15,6 +15,7 @@ import {
   MenuCadastros,
   MenuConfiguracoes,
   MenuGestaoDeProduto,
+  MenuLancamentoInicial,
   MenuRelatorios
 } from "./menus";
 
@@ -50,6 +51,7 @@ export const SidebarContent = () => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
+  const exibirLancamentoInicial = usuarioEhEscola();
   const exibirCadastros =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
 
@@ -66,6 +68,7 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
+    exibirLancamentoInicial && <MenuLancamentoInicial key={7} />,
     <MenuRelatorios key={6} />,
     <MenuConfiguracoes key={8} />
   ];
