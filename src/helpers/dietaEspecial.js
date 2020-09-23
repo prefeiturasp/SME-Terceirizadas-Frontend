@@ -36,10 +36,8 @@ export const formFiltrosObtemDreEEscolas = async (
       setDiretoriasRegionais([{ uuid, nome }]);
       change("dre", uuid);
     } else {
-      const [resposta, resposta2] = await Promise.all(
-        getDiretoriaregionalSimplissima(),
-        getEscolasSimplissimaComDRE()
-      );
+      const resposta = await getDiretoriaregionalSimplissima();
+      const resposta2 = await getEscolasSimplissimaComDRE();
       setDiretoriasRegionais(
         [{ uuid: "", nome: "Todas" }].concat(resposta.data.results)
       );

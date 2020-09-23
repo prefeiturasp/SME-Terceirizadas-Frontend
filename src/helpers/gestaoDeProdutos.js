@@ -123,12 +123,7 @@ export const listarCardsPermitidos = () => {
       CARD_NAO_HOMOLOGADOS,
       cardAguardandoAnaliseReclamacao
     ];
-  } else if (
-    [
-      TIPO_PERFIL.TERCEIRIZADA,
-      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-    ].includes(perfil)
-  ) {
+  } else if ([TIPO_PERFIL.TERCEIRIZADA].includes(perfil)) {
     return [
       CARD_RECLAMACAO_DE_PRODUTO,
       CARD_PRODUTOS_SUSPENSOS,
