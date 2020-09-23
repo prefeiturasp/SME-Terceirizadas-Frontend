@@ -178,6 +178,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 )}`
               );
             });
+            this.resetForm();
           }
         });
       } else {
@@ -200,6 +201,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 )}`
               );
             });
+            this.resetForm();
           }
         });
       }
@@ -301,13 +303,13 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <Botao
                       texto="Cancelar"
                       onClick={event => this.resetForm(event)}
-                      disabled={pristine || submitting}
+                      // disabled={pristine || submitting}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
-                      disabled={submitting}
+                      // disabled={submitting}
                       onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -315,7 +317,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                     <Botao
                       texto="Enviar"
-                      disabled={submitting}
+                      // disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,
