@@ -158,6 +158,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   component={MultiSelect}
                   name="diagnostico"
                   multiple
+                  disableSearch
                   disabled={loading}
                   isLoading={loading}
                   options={diagnosticos}
