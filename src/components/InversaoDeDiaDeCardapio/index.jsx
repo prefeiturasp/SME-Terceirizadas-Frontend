@@ -213,7 +213,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     const {
       handleSubmit,
       pristine,
-      submitting,
+      // submitting,
       proximos_dois_dias_uteis,
       meusDados
     } = this.props;
@@ -303,7 +303,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <Botao
                       texto="Cancelar"
                       onClick={event => this.resetForm(event)}
-                      // disabled={pristine || submitting}
+                      disabled={pristine}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
