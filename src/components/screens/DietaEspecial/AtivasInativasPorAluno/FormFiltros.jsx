@@ -27,9 +27,12 @@ const Filtros = ({ change, dre, handleSubmit, loading, setLoading }) => {
   const [escolas, setEscolas] = useState([
     { uuid: "", nome: "Carregando...", dre: { uuid: "" } }
   ]);
-  useEffect(async () => {
-    formFiltrosObtemDreEEscolas(setEscolas, setDiretoriasRegionais, change);
-    setLoading(false);
+  useEffect(() => {
+    async function fetch() {
+      formFiltrosObtemDreEEscolas(setEscolas, setDiretoriasRegionais, change);
+      setLoading(false);
+    }
+    fetch();
   }, []);
 
   const onEolBlur = async event => {

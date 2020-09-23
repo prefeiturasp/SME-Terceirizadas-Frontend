@@ -37,12 +37,14 @@ export const SidebarContent = () => {
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirDietaEspecial =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||

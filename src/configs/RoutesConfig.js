@@ -539,6 +539,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -685,6 +686,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -783,6 +785,7 @@ const routesConfig = [
     component: DashboardGestaoProdutoPage,
     exact: true,
     tipoUsuario:
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||

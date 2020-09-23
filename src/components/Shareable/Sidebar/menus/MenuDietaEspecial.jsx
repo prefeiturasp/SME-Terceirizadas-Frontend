@@ -10,13 +10,18 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhEscola,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhCODAEGestaoAlimentacao
 } from "helpers/utilities";
 
 const MenuDietaEspecial = () => {
-  const exibePainelInicial = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
+  const exibePainelInicial =
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhEscola();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
