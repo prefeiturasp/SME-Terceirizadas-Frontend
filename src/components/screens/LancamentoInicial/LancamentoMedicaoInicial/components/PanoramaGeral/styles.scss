@@ -3,7 +3,7 @@
 .panorama-geral-escola {
   .cabecalho-tabela {
     display: grid;
-    grid-template-columns: 30% 10% 10% 50%;
+    grid-template-columns: 20% 15% 15% 50%;
     min-height: 100px;
     > div {
       display: flex;
@@ -23,14 +23,24 @@
       width: 100%;
       height: 50%;
     }
+    > div:nth-child(1) {
+      text-align: center;
+      border-bottom: 2px solid #e9eaea;
+    }
   }
   .cabecalho-qtde-dieta {
     display: grid;
     grid-template-columns: 33.33% 33.33% 33.34%;
+    > div {
+      padding: 0.5em;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
   }
   .linha-tabela {
     display: grid;
-    grid-template-columns: 30% 10% 10% 16.66% 16.66% 16.66%;
+    grid-template-columns: 20% 15% 15% 16.66% 16.66% 16.66%;
     min-height: 50px;
     > div {
       display: flex;
@@ -44,7 +54,7 @@
   }
   .rodape-tabela {
     display: grid;
-    grid-template-columns: 40% 10% 16.66% 16.66% 16.66%;
+    grid-template-columns: 35% 15% 16.66% 16.66% 16.66%;
     min-height: 50px;
     > div {
       display: flex;

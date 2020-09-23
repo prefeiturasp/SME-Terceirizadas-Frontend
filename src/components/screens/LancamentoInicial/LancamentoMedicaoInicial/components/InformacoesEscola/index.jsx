@@ -15,11 +15,11 @@ export default ({ meusDados, nomeTerceirizada }) => {
           <p>Código EOL</p>
           <p className="value-important">{escola && escola.codigo_eol}</p>
         </div>
-        <div className="col-6 report-label-value">
+        <div className="col-5 report-label-value">
           <p>Nome</p>
           <p className="value-important">{escola && escola.nome}</p>
         </div>
-        <div className="col-4 report-label-value">
+        <div className="col-5 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {escola && escola.diretoria_regional.nome}
@@ -31,7 +31,7 @@ export default ({ meusDados, nomeTerceirizada }) => {
           <p>CEP</p>
           <p className="value-important">{escola && escola.endereco.cep}</p>
         </div>
-        <div className="col-6 report-label-value">
+        <div className="col-5 report-label-value">
           <p>Endereço</p>
           <p className="value-important">
             {escola && escola.endereco.logradouro}
@@ -41,7 +41,7 @@ export default ({ meusDados, nomeTerceirizada }) => {
           <p>Número</p>
           <p className="value-important">{escola && escola.endereco.numero}</p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Bairro</p>
           <p className="value-important">{escola && escola.endereco.bairro}</p>
         </div>
@@ -56,11 +56,11 @@ export default ({ meusDados, nomeTerceirizada }) => {
             </p>
           )}
         </div>
-        <div className="col-6 report-label-value">
+        <div className="col-5 report-label-value">
           <p>E-mail</p>
           <p className="value-important">{escola && escola.contato.email}</p>
         </div>
-        <div className="col-4 report-label-value">
+        <div className="col-5 report-label-value">
           <p>Nome da empresa terceirizada</p>
           <p className="value-important">{nomeTerceirizada}</p>
         </div>
