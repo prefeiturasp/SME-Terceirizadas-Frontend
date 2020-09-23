@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 
-import { Select } from "components/Shareable/Select";
 import { getTiposDeContagem } from "services/dietaEspecial.service";
 
 import "./styles.scss";
@@ -16,10 +15,13 @@ export default ({ escola }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const [dadosIniciais, setDadosIniciais] = useState({});
 
-  const onFormUpdate = async formValues => {
+  const onFormUpdate = async tiposContagem => {
     setSubmitting(true);
-    const resposta = await updateEscolaSimples(escola.uuid, formValues);
+    const resposta = await updateEscolaSimples(escola.uuid, {
+      tipos_contagem: tiposContagem
+    });
     setSubmitting(false);
     if (resposta.status === OK) {
       toastSuccess("Tipo de contagem atualizado!");
@@ -33,6 +35,13 @@ export default ({ escola }) => {
     async function fetch() {
       const response = await getTiposDeContagem();
       setTiposDeContagem(response.data);
+      setDadosIniciais(
+        escola.tipos_contagem && {
+          tipos_contagem: escola.tipos_contagem.map(
+            tipoContagem => tipoContagem.uuid
+          )
+        }
+      );
     }
     fetch();
   }, []);
@@ -46,29 +55,32 @@ export default ({ escola }) => {
       </div>
       <Form
         onSubmit={() => {}}
-        initialValues={
-          escola.tipo_contagem && {
-            tipo_contagem: escola.tipo_contagem.uuid
-          }
-        }
+        initialValues={dadosIniciais}
         render={({ pristine }) => (
           <div className="row">
             <div className="col-4">
               <form>
-                <OnChange subscription={{ tipo_contagem: true }}>
-                  {onFormUpdate}
-                </OnChange>
-                <Field
-                  component={Select}
-                  name="tipo_contagem"
-                  options={
-                    escola.tipo_contagem
-                      ? tiposDeContagem
-                      : [{ uuid: "", nome: "" }].concat(tiposDeContagem)
-                  }
-                  naoDesabilitarPrimeiraOpcao
-                  disabled={submitting}
-                />
+                {dadosIniciais && (
+                  <OnChange name="tipos_contagem">
+                    {(value, previous) =>
+                      previous !== "" &&
+                      value.length !== previous.length &&
+                      onFormUpdate(value)
+                    }
+                  </OnChange>
+                )}
+                {tiposDeContagem.map((tipoContagem, index) => (
+                  <p key={index}>
+                    <Field
+                      component="input"
+                      name="tipos_contagem"
+                      type="checkbox"
+                      value={tipoContagem.uuid}
+                      disabled={submitting}
+                    />
+                    {tipoContagem.nome}
+                  </p>
+                ))}
               </form>
             </div>
             <div className="col-1">

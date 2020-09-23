@@ -8,11 +8,13 @@ import { getPanoramaEscola } from "services/dietaEspecial.service";
 import SeletorTipoContagem from "./components/SeletorTipoContagem";
 import ProgramasAutorizados from "./components/ProgramasAutorizados";
 import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
+import { getEscolaSimples } from "services/escola.service";
 
 export default () => {
   const [meusDados, setMeusDados] = useState({});
   const [panoramaGeral, setPanoramaGeral] = useState();
   const [loading, setLoading] = useState(true);
+  const [nomeTerceirizada, setNomeTerceirizada] = useState();
 
   useEffect(() => {
     async function fetch() {
@@ -21,6 +23,10 @@ export default () => {
       const escola =
         meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
       const respostaPanorama = await getPanoramaEscola({ escola: escola.uuid });
+      const respostaEscolaSimples = await getEscolaSimples(escola.uuid);
+      setNomeTerceirizada(
+        respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
+      );
       setPanoramaGeral(respostaPanorama.data);
       setLoading(false);
     }
@@ -30,7 +36,10 @@ export default () => {
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <InformacoesEscola meusDados={meusDados} />
+        <InformacoesEscola
+          meusDados={meusDados}
+          nomeTerceirizada={nomeTerceirizada}
+        />
         {panoramaGeral && <PanoramaGeral panoramaGeral={panoramaGeral} />}
         <ProgramasAutorizados />
         {!loading && (
