@@ -278,10 +278,11 @@ export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
   saveAs(data, "relatorio_quantitativo_diagnostico_dieta_especial.pdf");
 };
 
-export const imprimeRelatorioDietaEspecial = async params => {
-  const { data } = await axios.get(
+export const imprimeRelatorioDietaEspecial = async (filtros, params) => {
+  const { data } = await axios.post(
     `${SOLICITACOES_DIETA_ESPECIAL}/imprime-relatorio-dieta-especial/`,
-    { params, responseType: "blob" }
+    filtros,
+    { params: params, responseType: "blob" }
   );
   saveAs(data, "relatorio_dieta_especial.pdf");
 };

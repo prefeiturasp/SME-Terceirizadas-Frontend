@@ -23,7 +23,10 @@ const RelatorioDietaEspecial = () => {
         ...filtros,
         page: page
       });
-      const response = await getSolicitacaoDietaEspecialListagem(params);
+      const response = await getSolicitacaoDietaEspecialListagem(filtros, {
+        ...params,
+        escola: null
+      });
       setDadosRelatorio(response.data.results);
       setTotalResultados(response.data.count);
       if (response.data.count > 0) setExibirModal(true);

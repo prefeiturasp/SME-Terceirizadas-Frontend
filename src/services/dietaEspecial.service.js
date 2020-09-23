@@ -265,8 +265,12 @@ export const getRelatorioQuantitativoDiagDietaEsp = async (filtros, page) => {
   );
 };
 
-export const getSolicitacaoDietaEspecialListagem = async params => {
-  return axios.get(`/${SOLICITACOES_DIETA_ESPECIAL}/`, {
-    params
-  });
+export const getSolicitacaoDietaEspecialListagem = async (filtros, params) => {
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/relatorio-dieta-especial/`,
+    filtros,
+    {
+      params: params
+    }
+  );
 };
