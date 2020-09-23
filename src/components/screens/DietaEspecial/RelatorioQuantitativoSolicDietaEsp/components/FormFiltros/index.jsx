@@ -94,9 +94,11 @@ export default ({ onSubmit, loading, setLoading }) => {
                   multiple
                   disabled={
                     loading ||
+                    (values.escola && values.escola.length > 0) ||
                     tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA
                   }
+                  disableSearch
                   isLoading={loading}
                   options={diretoriasRegionais}
                   nomeDoItemNoPlural="diretorias regionais"
@@ -118,6 +120,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                     tipoUsuario === TIPO_PERFIL.ESCOLA ||
                     (values.dre && values.dre.length > 1)
                   }
+                  disableSearch
                   isLoading={loading}
                   options={getEscolasFiltrado(values.dre)}
                   nomeDoItemNoPlural="escolas"
