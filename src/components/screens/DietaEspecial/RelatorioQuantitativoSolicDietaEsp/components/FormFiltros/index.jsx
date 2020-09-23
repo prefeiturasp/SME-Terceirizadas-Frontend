@@ -90,7 +90,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Field
                   label="Diretoria Regional de Educação"
                   component={MultiSelect}
-                  showSearch
                   name="dre"
                   multiple
                   disabled={
@@ -112,7 +111,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Field
                   label="Unidade Escolar"
                   component={MultiSelect}
-                  showSearch
                   name="escola"
                   multiple
                   disabled={

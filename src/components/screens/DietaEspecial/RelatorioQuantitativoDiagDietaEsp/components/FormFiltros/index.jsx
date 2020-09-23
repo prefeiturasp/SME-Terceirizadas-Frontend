@@ -109,11 +109,11 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Field
                   label="Diretoria Regional de Educação"
                   component={MultiSelect}
-                  showSearch
                   name="dre"
                   multiple
                   disabled={
                     loading ||
+                    (values.escola && values.escola.length > 0) ||
                     tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA
                   }
@@ -131,7 +131,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Field
                   label="Unidade Escolar"
                   component={MultiSelect}
-                  showSearch
                   name="escola"
                   multiple
                   disabled={
@@ -155,7 +154,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Field
                   label="Diagnóstico"
                   component={MultiSelect}
-                  showSearch
                   name="diagnostico"
                   multiple
                   disabled={loading}
