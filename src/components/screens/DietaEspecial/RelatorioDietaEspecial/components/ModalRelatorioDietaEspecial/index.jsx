@@ -29,6 +29,7 @@ const ModalRelatorioDietaEspecial = ({
     const params = gerarParametrosConsulta({
       ...filtros,
       escola: null,
+      diagnostico: null,
       page: page
     });
     getSolicitacaoDietaEspecialListagem(filtros, params).then(response => {
@@ -87,7 +88,8 @@ const ModalRelatorioDietaEspecial = ({
           onClick={() => {
             const params = gerarParametrosConsulta({
               ...filtros,
-              escola: null
+              escola: null,
+              diagnostico: null
             });
             imprimeRelatorioDietaEspecial(filtros, params);
           }}

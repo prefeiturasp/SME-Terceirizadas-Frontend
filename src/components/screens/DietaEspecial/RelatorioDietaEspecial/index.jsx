@@ -22,6 +22,7 @@ const RelatorioDietaEspecial = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         escola: null,
+        diagnostico: null,
         page: page
       });
       const response = await getSolicitacaoDietaEspecialListagem(
