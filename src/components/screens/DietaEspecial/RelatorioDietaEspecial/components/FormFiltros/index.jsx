@@ -40,7 +40,7 @@ export default ({ onSubmit, setCarregando }) => {
   const [carregandoAluno, setCarregandoAluno] = useState(null);
   const [desabilitarAluno, setDesabilitarAluno] = useState(null);
   const [dadosIniciais, setDadosIniciais] = useState({});
-  const [alunos, setAlunos] = useState(["rodolfo"]);
+  const [alunos, setAlunos] = useState([]);
 
   const tipoUsuario = localStorage.getItem("tipo_perfil");
 
