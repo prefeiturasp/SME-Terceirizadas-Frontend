@@ -28,9 +28,10 @@ const ModalRelatorioDietaEspecial = ({
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
+      escola: null,
+      diagnostico: null,
       page: page
     });
-    delete params.escola;
     getSolicitacaoDietaEspecialListagem(filtros, params).then(response => {
       setDadosRelatorio(response.data.results);
       setCarregando(false);
@@ -85,7 +86,11 @@ const ModalRelatorioDietaEspecial = ({
           style={BUTTON_STYLE.BLUE}
           icon={BUTTON_ICON.PRINT}
           onClick={() => {
-            const params = gerarParametrosConsulta({ ...filtros });
+            const params = gerarParametrosConsulta({
+              ...filtros,
+              escola: null,
+              diagnostico: null
+            });
             imprimeRelatorioDietaEspecial(filtros, params);
           }}
         />
