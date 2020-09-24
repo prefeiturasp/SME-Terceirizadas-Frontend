@@ -1,5 +1,6 @@
 import { Spin } from "antd";
 import React, { useState, useEffect } from "react";
+import { TIPO_PERFIL } from "constants/shared";
 
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.service";
@@ -13,6 +14,7 @@ const RelatorioDietaEspecial = () => {
   const [exibirModal, setExibirModal] = useState(null);
   const [dadosRelatorio, setDadosRelatorio] = useState();
   const [filtros, setFiltros] = useState();
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
 
   useEffect(() => {
     if (!filtros) return;
@@ -45,6 +47,14 @@ const RelatorioDietaEspecial = () => {
     setPage(1);
     let filtros = { ...values };
     if (!filtros.status) filtros.status = getTodosStatus();
+
+    if (
+      tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
+      tipoUsuario === TIPO_PERFIL.ESCOLA
+    ) {
+      filtros.dre = values.dre[0];
+    }
+
     setFiltros(filtros);
   };
 
