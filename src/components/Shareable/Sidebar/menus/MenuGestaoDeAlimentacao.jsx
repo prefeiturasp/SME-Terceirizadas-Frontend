@@ -13,9 +13,14 @@ import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA,
   DRE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  CODAE
 } from "configs/constants";
-import { usuarioEhDRE, usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+  usuarioEhEscola
+} from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibeMenuNovasSolicitacoes = usuarioEhEscola() || usuarioEhDRE();
@@ -23,6 +28,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     ? ESCOLA
     : usuarioEhDRE()
     ? DRE
+    : usuarioEhCODAEGestaoAlimentacao()
+    ? CODAE
     : TERCEIRIZADA;
   return (
     <Menu
