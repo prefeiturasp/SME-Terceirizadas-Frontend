@@ -196,7 +196,7 @@ class WizardFormPrimeiraPagina extends React.Component {
             )}
           </section>
 
-          <article className="section-produto-nome">
+          <div className="section-produto-nome">
             <Field
               component={InputText}
               label="Nome do produto"
@@ -206,10 +206,10 @@ class WizardFormPrimeiraPagina extends React.Component {
               required
               validate={required}
             />
-          </article>
+          </div>
 
           <section className="section-marca-fabricante-produto">
-            <article>
+            <div>
               <label className="label-formulario-produto">
                 <nav>*</nav>Marca do produto
               </label>
@@ -227,9 +227,9 @@ class WizardFormPrimeiraPagina extends React.Component {
               >
                 {arrayMarcas}
               </Field>
-            </article>
+            </div>
 
-            <article>
+            <div>
               <label className="label-formulario-produto">
                 <nav>*</nav>Nome do fabricante
               </label>
@@ -247,10 +247,10 @@ class WizardFormPrimeiraPagina extends React.Component {
               >
                 {arrayFabricantes}
               </Field>
-            </article>
+            </div>
           </section>
 
-          <article className="componentes-do-produto">
+          <div className="componentes-do-produto">
             <Field
               component={InputText}
               label="Nome dos componentes do produto"
@@ -259,7 +259,7 @@ class WizardFormPrimeiraPagina extends React.Component {
               placeholder="Digite o nome dos componentes"
               required
             />
-          </article>
+          </div>
 
           <section className="componentes-alergenicos">
             <article>
