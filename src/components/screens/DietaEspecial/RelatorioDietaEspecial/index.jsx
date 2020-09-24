@@ -21,12 +21,13 @@ const RelatorioDietaEspecial = () => {
       setDadosRelatorio(null);
       const params = gerarParametrosConsulta({
         ...filtros,
+        escola: null,
         page: page
       });
-      const response = await getSolicitacaoDietaEspecialListagem(filtros, {
-        ...params,
-        escola: null
-      });
+      const response = await getSolicitacaoDietaEspecialListagem(
+        filtros,
+        params
+      );
       setDadosRelatorio(response.data.results);
       setTotalResultados(response.data.count);
       if (response.data.count > 0) setExibirModal(true);
