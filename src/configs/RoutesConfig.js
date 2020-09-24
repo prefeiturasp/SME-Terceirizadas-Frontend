@@ -554,6 +554,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -566,6 +567,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -578,6 +580,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -586,7 +589,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/ajuda`,
