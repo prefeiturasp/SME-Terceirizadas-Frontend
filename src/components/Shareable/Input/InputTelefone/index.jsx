@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import MaskedInput from "react-text-mask";
+import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
+import { HelpText } from "components/Shareable/HelpText";
+import "../style.scss";
 
 class TelefoneOuCelular extends Component {
   constructor(props) {
@@ -57,7 +60,10 @@ class TelefoneOuCelular extends Component {
       id,
       input,
       label,
-      required
+      required,
+      helpText,
+      meta,
+      className
     } = this.props;
     return (
       <div className="input">
@@ -76,8 +82,12 @@ class TelefoneOuCelular extends Component {
           name={name}
           id={id}
           mask={valor => this.verificaCampo(valor)}
-          className="form-control"
+          className={`form-control ${className} ${meta &&
+            meta.touched &&
+            (meta.error || meta.warning) &&
+            "invalid-field"}`}
           guide={false}
+          required={required}
           onChange={event => {
             cenario === "contatoEmpresa"
               ? setaContatosEmpresa("telefone", event.target.value, indice)
@@ -90,6 +100,8 @@ class TelefoneOuCelular extends Component {
                 );
           }}
         />
+        <HelpText helpText={helpText} />
+        <InputErroMensagem meta={meta} />
       </div>
     );
   }

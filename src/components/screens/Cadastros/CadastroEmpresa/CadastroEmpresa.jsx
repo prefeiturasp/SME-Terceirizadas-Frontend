@@ -23,7 +23,7 @@ import {
   validarSubmissao
 } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-import TelefoneOuCelular from "./InputTelefone";
+import TelefoneOuCelular from "../../../Shareable/Input/InputTelefone";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { Botao } from "../../../Shareable/Botao";
 import { InputText } from "../../../Shareable/Input/InputText";
