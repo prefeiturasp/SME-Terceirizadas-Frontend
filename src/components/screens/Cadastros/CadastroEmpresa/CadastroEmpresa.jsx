@@ -5,6 +5,7 @@ import { Field, reduxForm, FormSection } from "redux-form";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { getError } from "helpers/utilities";
 import { required, tamanhoCnpj } from "../../../../helpers/fieldValidators";
 import "../style.scss";
 import "./style.scss";
@@ -391,8 +392,14 @@ class CadastroEmpresa extends Component {
             toastSuccess("Empresa atualizada com sucesso!");
             this.setRedirect();
             this.resetForm();
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao atualizar cadastro de empresa: ${getError(
+                response.data
+              )}.`
+            );
           } else {
-            toastError("Erro ao atualizar cadastro de empresa");
+            toastError(`Erro ao atualizar cadastro de empresa`);
           }
         });
       } else {
@@ -401,8 +408,12 @@ class CadastroEmpresa extends Component {
             toastSuccess("Empresa cadastrada com sucesso!");
             this.setRedirect();
             this.resetForm();
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao cadastrar empresa: ${getError(response.data)}.`
+            );
           } else {
-            toastError("Erro ao cadastrar empresa");
+            toastError(`Erro ao cadastrar empresa`);
           }
         });
       }
@@ -531,7 +542,8 @@ class CadastroEmpresa extends Component {
                                   setaContatosEmpresa={this.setaContatosEmpresa}
                                   indice={indiceEmpresa}
                                   cenario="contatoEmpresa"
-                                  validador={required}
+                                  validate={required}
+                                  required
                                 />
                               </div>
                               <div>
