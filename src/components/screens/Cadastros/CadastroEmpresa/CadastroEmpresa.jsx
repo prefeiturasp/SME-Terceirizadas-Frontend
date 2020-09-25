@@ -462,6 +462,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="Razão social"
                       name="razao_social"
+                      required
                       validate={required}
                     />
                   </div>
@@ -471,6 +472,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CNPJ"
                       name="cnpj"
+                      required
                       validate={[required, tamanhoCnpj]}
                     />
                   </div>
@@ -482,6 +484,7 @@ class CadastroEmpresa extends Component {
                       label="Nome Fantasia"
                       name="nome_fantasia"
                       validate={required}
+                      required
                     />
                   </div>
                 </div>
@@ -493,6 +496,7 @@ class CadastroEmpresa extends Component {
                       label="Endereço"
                       name="endereco"
                       validate={required}
+                      required
                     />
                   </div>
                   <div className="col-3">
@@ -501,6 +505,7 @@ class CadastroEmpresa extends Component {
                       component={InputText}
                       label="CEP"
                       name="cep"
+                      required
                       validate={required}
                     />
                   </div>
