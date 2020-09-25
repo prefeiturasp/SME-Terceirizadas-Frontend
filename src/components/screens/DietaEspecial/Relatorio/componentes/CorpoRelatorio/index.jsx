@@ -173,15 +173,14 @@ export const CorpoRelatorio = props => {
         {nome_completo_pescritor && (
           <div className="col-8 report-label-value">
             <p>
-              Nome do Prescritor da receita (médico, nutricionista,
-              fonoaudiólogo)
+              Nome do Prescritor do laudo (médico, nutricionista, fonoaudiólogo)
             </p>
             <p className="value-important">{nome_completo_pescritor}</p>
           </div>
         )}
         {registro_funcional_pescritor && (
           <div className="col-4 report-label-value">
-            <p>Registro Funcional (CRM/CRN/CRFa)</p>
+            <p>Registro Funcional (CRM/CRN/CRFa/RMS)</p>
             <p className="value-important">{registro_funcional_pescritor}</p>
           </div>
         )}

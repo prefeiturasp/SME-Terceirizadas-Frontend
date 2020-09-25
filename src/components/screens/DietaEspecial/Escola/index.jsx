@@ -61,7 +61,7 @@ class solicitacaoDietaEspecial extends Component {
     this.onEolBlur = this.onEolBlur.bind(this);
     this.registroFuncionalValidators = [
       numericInteger,
-      maxLength(6),
+      maxLength(7),
       minLength(4)
     ];
   }
@@ -212,7 +212,7 @@ class solicitacaoDietaEspecial extends Component {
             <div className="col-7">
               <Field
                 component={InputText}
-                label="Nome do Prescritor da receita (médico, nutricionista, fonoaudiólogo)"
+                label="Nome do Prescritor do laudo (médico, nutricionista, fonoaudiólogo)"
                 name="nome_completo_pescritor"
                 placeholder="Insira o Nome do Prescritor"
                 className="form-control"
@@ -223,10 +223,10 @@ class solicitacaoDietaEspecial extends Component {
             <div className="col-5">
               <Field
                 component={InputText}
-                label="CRM/CRN/CRFa"
+                label="CRM/CRN/CRFa/RMS"
                 name="registro_funcional_pescritor"
                 className="form-control"
-                helpText={"Tamanho: 4 a 6 caracteres"}
+                helpText={"Tamanho: 4 a 7 caracteres"}
                 validate={this.registroFuncionalValidators}
               />
             </div>
@@ -245,7 +245,7 @@ class solicitacaoDietaEspecial extends Component {
               <div className="card-warning mt-2">
                 <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
                 .docx, .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo
-                deve ter sido emitido há, no máximo, 3 meses. Após a data de
+                deve ter sido emitido há, no máximo, 12 meses. Após a data de
                 aprovação no sistema, o laudo terá validade de 12 meses
               </div>
             </div>
@@ -257,6 +257,7 @@ class solicitacaoDietaEspecial extends Component {
                 name="anexos"
                 accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                 validate={[required]}
+                toastSuccessMessage={"Laudo incluso com sucesso"}
               />
             </div>
           </section>
