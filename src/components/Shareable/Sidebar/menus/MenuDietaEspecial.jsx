@@ -10,26 +10,32 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhEscola,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhCODAEGestaoAlimentacao
 } from "helpers/utilities";
 
 const MenuDietaEspecial = () => {
-  const exibePainelInicial = usuarioEhCODAEDietaEspecial() || usuarioEhEscola();
+  const exibePainelInicial =
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhEscola();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhEscola();
-  const exibeAtivasInativas =
-    usuarioEhCODAEDietaEspecial() ||
-    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhEscola() ||
     usuarioEhDRE();
+  const exibeAtivasInativas =
+    usuarioEhCODAEDietaEspecial() || usuarioEhNutricionistaSupervisao();
   const exibeAvaliarSolicitacaoCadastroProduto = usuarioEhTerceirizada();
   const exibeAcompanharSolicitacaoCadastroProduto = usuarioEhCODAEDietaEspecial();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
-      {exibePainelInicial && <LeafItem to="/">Painel Inicial</LeafItem>}
+      {exibePainelInicial && (
+        <LeafItem to="/painel-dieta-especial">Painel de Solicitações</LeafItem>
+      )}
       {exibeNovaSolicitacao && (
         <LeafItem to={`/escola/dieta-especial`}>Nova Solicitação</LeafItem>
       )}

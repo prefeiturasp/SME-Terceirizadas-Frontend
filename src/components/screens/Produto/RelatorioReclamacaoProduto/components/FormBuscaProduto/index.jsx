@@ -55,7 +55,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ setFiltros }) => {
+const FormBuscaProduto = ({ setFiltros, setPage }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { Option } = Select;
 
@@ -105,7 +105,7 @@ const FormBuscaProduto = ({ setFiltros }) => {
       formValues = { ...values, status_reclamacao: getTodosStatusReclamacao() };
     else
       formValues = { ...values, status_reclamacao: [values.status_reclamacao] };
-
+    setPage(1);
     setFiltros(formValues);
   };
 

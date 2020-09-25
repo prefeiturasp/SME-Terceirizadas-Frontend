@@ -637,7 +637,7 @@ class AlteracaoCardapio extends Component {
               </section>
             )}
             <section className="card  mt-3">
-              <article className="card-body">
+              <div className="card-body">
                 <div
                   className="card-title font-weight-bold descricao"
                   style={this.fontHeader}
@@ -689,9 +689,9 @@ class AlteracaoCardapio extends Component {
                     required
                   />
                 </section>
-              </article>
+              </div>
               <hr />
-              <article className="card-body">
+              <div className="card-body">
                 <header className="descricao-periodos-alimentacao">
                   <div>Período</div>
                   <div>Alterar alimentação de:</div>
@@ -779,9 +779,9 @@ class AlteracaoCardapio extends Component {
                     </FormSection>
                   );
                 })}
-              </article>
+              </div>
               <hr />
-              <article className="card-body">
+              <div className="card-body">
                 <Field
                   component={TextAreaWYSIWYG}
                   label="Observações"
@@ -789,13 +789,13 @@ class AlteracaoCardapio extends Component {
                   required
                   validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
-              </article>
-              <article className="card-body footer-button">
+              </div>
+              <div className="card-body footer-button">
                 <Botao
                   texto="Cancelar"
                   onClick={event => this.resetForm(event)}
                   disabled={pristine || submitting}
-                  style={BUTTON_STYLE.OutlinePrimary}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
                   disabled={pristine || submitting}
@@ -804,7 +804,7 @@ class AlteracaoCardapio extends Component {
                     this.exibeModalConfirmacao(values)
                   )}
                   type={BUTTON_TYPE.SUBMIT}
-                  style={BUTTON_STYLE.OutlinePrimary}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
                   texto="Enviar"
@@ -818,7 +818,7 @@ class AlteracaoCardapio extends Component {
                   )}
                   style={BUTTON_STYLE.Primary}
                 />
-              </article>
+              </div>
             </section>
             <ModalDataPrioritaria
               showModal={showModal}

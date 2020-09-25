@@ -89,36 +89,41 @@ export const getProdutosPorFabricante = async nomeFabricante => {
   return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
 };
 
-export const getProdutosPorParametros = async parametros => {
+export const getProdutosPorParametros = async (parametros, page, pageSize) => {
+  console.log("getProdutosPorParametros", { page, parametros });
   return await axios.post(
     `/produtos/filtro-homologados-por-parametros/`,
-    parametros
+    parametros,
+    { params: { page, page_size: pageSize } }
   );
 };
 
-export const getReclamacoesTerceirizadaPorFiltro = async filtros => {
-  return await axios.post(
-    `/produtos/filtro-reclamacoes-terceirizada/`,
-    filtros
-  );
+export const getReclamacoesTerceirizadaPorFiltro = async params => {
+  return await axios.get(`/produtos/filtro-reclamacoes-terceirizada/`, {
+    params
+  });
 };
 
 export const getProdutosPorFiltro = async filtro => {
   return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
 };
 
-export const getProdutosRelatorioSituacao = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-relatorio-situacao-produto/`,
-    filtro
-  );
+export const getProdutosRelatorioSituacao = async params => {
+  return await axios.get(`/produtos/filtro-relatorio-situacao-produto/`, {
+    params
+  });
 };
 
-export const getProdutosRelatorioAnaliseSensorial = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-relatorio-em-analise-sensorial/`,
-    filtro
-  );
+export const getProdutosRelatorioAnaliseSensorial = async params => {
+  return await axios.get(`/produtos/filtro-relatorio-em-analise-sensorial/`, {
+    params
+  });
+};
+
+export const getProdutosRelatorioSuspenso = async params => {
+  return await axios.get(`/produtos/filtro-relatorio-produto-suspenso/`, {
+    params
+  });
 };
 
 export const getProtocolosDietaEspecial = async () => {
@@ -462,13 +467,10 @@ export const getProdutosSuspensos = async payload => {
 };
 
 export const getPdfRelatorioSituacaoProduto = async params => {
-  const { data } = await axios.post(
-    "/produtos/relatorio-situacao-produto/",
+  const { data } = await axios.get("/produtos/relatorio-situacao-produto/", {
     params,
-    {
-      responseType: "blob"
-    }
-  );
+    responseType: "blob"
+  });
   saveAs(data, "relatorio_situacao_produto.pdf");
 };
 
@@ -498,8 +500,8 @@ export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
     params
   );
 
-export const getProdutosRelatorioReclamacao = async params =>
-  await axios.get("/produtos/filtro-relatorio-reclamacoes/", { params });
+export const getProdutosReclamacoes = async params =>
+  await axios.get("/produtos/filtro-reclamacoes/", { params });
 
 export const getProdutosAvaliacaoReclamacao = async params =>
   await axios.get("/produtos/filtro-avaliar-reclamacoes/", { params });

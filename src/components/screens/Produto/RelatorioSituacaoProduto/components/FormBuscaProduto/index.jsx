@@ -15,7 +15,7 @@ import {
   getNomesFabricantes
 } from "services/produto.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
-import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+import { getOpecoesStatus } from "./helpers";
 
 const initialState = {
   dados: {},
@@ -118,15 +118,15 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 label="Situação"
                 labelClassName="mb-1"
                 name="situacao"
-                options={listarCardsPermitidos().map(card => {
+                options={getOpecoesStatus().map(status => {
                   return {
-                    uuid: card.style,
-                    nome: card.titulo
+                    uuid: status,
+                    nome: status
                   };
                 })}
               />
             </div>
-            <div className="col-12 col-md-6 col-xl-3">
+            <div className="col-12 col-md-6 col-xl-3 mb-3">
               <Field
                 component={InputComData}
                 label="Data Cadastro"
@@ -142,7 +142,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 }
               />
             </div>
-            <div className="col-12 col-md-6 col-xl-3">
+            <div className="col-12 col-md-6 col-xl-3 mb-3">
               <Field
                 component={InputComData}
                 label="&nbsp;"

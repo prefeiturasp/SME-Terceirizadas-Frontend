@@ -4,6 +4,12 @@ import { SOLICITACOES_DIETA } from "./constants";
 import authService from "./auth";
 
 import axios from "./_base";
+import {
+  PANORAMA_ESCOLA,
+  RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
+  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
+  SOLICITACOES_DIETA_ESPECIAL
+} from "configs/constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -109,6 +115,9 @@ export const getAlergiasIntolerancias = async () => {
     })
   };
 };
+
+export const getAlergiasIntoleranciasAxios = async () =>
+  axios.get("/alergias-intolerancias/");
 
 export const getClassificacoesDietaEspecial = async () => {
   const url = `${API_URL}/classificacoes-dieta/`;
@@ -236,3 +245,38 @@ export const getProtocolosDietaEspecial = async () => {
 export const cadastraProtocoloDietaEspecial = async payload => {
   return await axios.post(`/protocolo-dieta-especial/`, payload);
 };
+
+export const getRelatorioQuantitativoSolicDietaEsp = async (filtros, page) => {
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
+    filtros,
+    {
+      params: { page }
+    }
+  );
+};
+
+export const getRelatorioQuantitativoDiagDietaEsp = async (filtros, page) => {
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`,
+    filtros,
+    {
+      params: { page }
+    }
+  );
+};
+
+export const getSolicitacaoDietaEspecialListagem = async (filtros, params) => {
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/relatorio-dieta-especial/`,
+    filtros,
+    {
+      params: params
+    }
+  );
+};
+
+export const getPanoramaEscola = async filtros =>
+  axios.post(`/${SOLICITACOES_DIETA_ESPECIAL}/${PANORAMA_ESCOLA}/`, filtros);
+
+export const getTiposDeContagem = async () => axios.get("/tipo-contagem/");

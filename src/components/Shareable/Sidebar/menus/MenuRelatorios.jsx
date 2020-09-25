@@ -6,11 +6,13 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEhDRE
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
 const MenuRelatorios = () => {
+  const exibirPainel = usuarioEhDRE();
   const exibirProdutosHomologados =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhNutricionistaSupervisao() ||
@@ -27,8 +29,15 @@ const MenuRelatorios = () => {
     usuarioEhEscola() ||
     usuarioEhCODAEDietaEspecial();
 
+  const exibirRelatorioQuantitativoSolicDietaEsp =
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhDRE() ||
+    usuarioEhEscola();
+
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
+      {exibirPainel && <LeafItem to="/relatorios">Painel</LeafItem>}
       {exibirProdutosHomologados && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`}
@@ -77,6 +86,33 @@ const MenuRelatorios = () => {
           }`}
         >
           Relatório de reclamação de produto
+        </LeafItem>
+      )}
+      {exibirRelatorioQuantitativoSolicDietaEsp && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
+          }`}
+        >
+          Relatório quant. solic. dieta esp.
+        </LeafItem>
+      )}
+      {exibirRelatorioQuantitativoSolicDietaEsp && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP
+          }`}
+        >
+          Relatório quant. diag. dieta esp.
+        </LeafItem>
+      )}
+      {exibirRelatorioQuantitativoSolicDietaEsp && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_DIETA_ESPECIAL
+          }`}
+        >
+          Relatório de dieta especial
         </LeafItem>
       )}
     </Menu>

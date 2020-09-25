@@ -1,4 +1,4 @@
-.resultados-busca-produtos {
+.resultados-busca-produtos-reclamacao {
   border-radius: 4px;
   border: 0.5px solid #f0f0f0;
 
@@ -8,7 +8,7 @@
 
   .tabela-produto {
     display: grid;
-    grid-template-columns: 36% 16% 16% 16% 16%;
+    grid-template-columns: 36% 15% 15% 15% 15% 4%;
   }
 
   .tabela-header-produto {
@@ -23,6 +23,15 @@
       align-items: center;
       color: #42474a;
       border: 1px solid #e9eaea;
+      border-bottom: 0px;
+    }
+
+    div:last-child {
+      border-left: 0px;
+    }
+
+    div:nth-last-child(2) {
+      border-right: 0px;
     }
   }
 
@@ -30,18 +39,27 @@
     height: 48px;
   }
 
-  .item-produto > div {
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-    padding: 5px 10px;
+  .item-produto {
+    div {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 5px 10px;
 
-    display: flex;
-    align-items: center;
+      display: flex;
+      align-items: center;
 
-    color: #686868;
+      color: #686868;
 
-    border: 1px solid #e9eaea;
+      border: 1px solid #e9eaea;
+    }
+    div:last-child {
+      border-left: 0px;
+    }
+
+    div:nth-last-child(2) {
+      border-right: 0px;
+    }
   }
 
   .com-botao {

@@ -145,7 +145,7 @@ export default class TabelaProdutos extends Component {
     } = this.props;
     const { mostraModalJustificativa } = this.state;
     return (
-      <section className="resultados-busca-produtos">
+      <section className="resultados-busca-produtos mb-3">
         <section>
           <div className="tabela-produto tabela-header-produto">
             <div>Nome do Produto</div>

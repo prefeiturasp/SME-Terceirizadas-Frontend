@@ -26,3 +26,13 @@ export const getQuestionamentoCodae = logs => {
   );
   return arr[0];
 };
+
+export const getStatus = values => {
+  return {
+    ...values,
+    status: [
+      "CODAE_PEDIU_ANALISE_RECLAMACAO",
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+    ]
+  };
+};

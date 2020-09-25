@@ -6,8 +6,8 @@ import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../Botao/constants";
 
 const BotaoVoltar = ({ history }) => (
   <Botao
-    texto="voltar"
-    titulo="voltar"
+    texto="Voltar"
+    titulo="Voltar"
     type={BUTTON_TYPE.BUTTON}
     style={BUTTON_STYLE.BLUE}
     icon={BUTTON_ICON.ARROW_LEFT}

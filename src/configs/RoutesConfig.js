@@ -106,6 +106,11 @@ import {
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
+import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
+import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
+import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
+import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
 
 const routesConfig = [
   {
@@ -535,6 +540,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -548,6 +554,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -560,6 +567,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -572,6 +580,7 @@ const routesConfig = [
       usuarioEhEscola() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -580,7 +589,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
-    tipoUsuario: !usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/ajuda`,
@@ -681,6 +690,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -694,6 +704,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -707,6 +718,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -755,6 +767,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -769,6 +782,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -779,6 +793,7 @@ const routesConfig = [
     component: DashboardGestaoProdutoPage,
     exact: true,
     tipoUsuario:
+      usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -863,6 +878,40 @@ const routesConfig = [
     component: AcompanharSolicitacaoCadastroProdutoPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
+    }`,
+    component: RelatorioQuantitativoSolicDietaEspPage,
+    exact: true,
+    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP
+    }`,
+    component: RelatorioQuantitativoDiagDietaEspPage,
+    exact: true,
+    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
+    component: RelatorioDietaEspecial,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCODAEDietaEspecial() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
+      usuarioEhEscola()
+  },
+  {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }`,
+    component: LancamentoMedicaoInicialPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscola()
   }
 ];
 

@@ -158,6 +158,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
     case TIPO_PERFIL.DIETA_ESPECIAL:
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialTerceirizada;
@@ -167,12 +168,12 @@ export const StatusSolicitacoesDietaEspecial = () => {
 };
 
 export const painelInicial = () => {
-  switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return DashboardCODAEPage;
-    default:
-      return PainelInicialPage;
-  }
+  // switch (localStorage.getItem("tipo_perfil")) {
+  //   case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+  //     return DashboardCODAEPage;
+  //   default:
+  return PainelInicialPage;
+  //}
 };
 
 export const inclusaoCardapio = () => {

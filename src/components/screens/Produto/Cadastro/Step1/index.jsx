@@ -431,7 +431,6 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-
         {renderizaFormDietaEspecial && (
           <Fragment>
             <div className="row">

@@ -178,6 +178,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 )}`
               );
             });
+            this.resetForm();
           }
         });
       } else {
@@ -200,6 +201,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 )}`
               );
             });
+            this.resetForm();
           }
         });
       }
@@ -211,7 +213,6 @@ export class InversaoDeDiaDeCardapio extends Component {
     const {
       handleSubmit,
       pristine,
-      submitting,
       proximos_dois_dias_uteis,
       meusDados
     } = this.props;
@@ -250,7 +251,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       component={InputComData}
                       name="data_de"
                       label="Referência"
-                      textoLabel="Cardápio dia"
+                      placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
@@ -267,7 +268,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       component={InputComData}
                       name="data_para"
                       label="Aplicar em"
-                      textoLabel="Cardápio dia"
+                      placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
                       onBlur={event => this.validaDiasUteis(event)}
@@ -301,13 +302,12 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <Botao
                       texto="Cancelar"
                       onClick={event => this.resetForm(event)}
-                      disabled={pristine || submitting}
+                      disabled={pristine}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
-                      disabled={submitting}
                       onClick={handleSubmit(values => this.onSubmit(values))}
                       className="ml-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -315,7 +315,6 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                     <Botao
                       texto="Enviar"
-                      disabled={submitting}
                       onClick={handleSubmit(values =>
                         this.onSubmit({
                           ...values,

@@ -13,6 +13,7 @@ export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 export const DIETA_ESPECIAL = "dieta-especial";
 export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const GESTAO_PRODUTO = "gestao-produto";
+export const LANCAMENTO_INICIAL = "lancamento-inicial";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -88,6 +89,12 @@ export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
+export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
+  "relatorio-quantitativo-solic-dieta-esp";
+export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
+  "relatorio-quantitativo-diag-dieta-esp";
+export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
@@ -106,6 +113,8 @@ export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
+
+export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 
 // Status dos pedidos
 

@@ -5,7 +5,8 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhDRE
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -14,6 +15,7 @@ import {
   MenuCadastros,
   MenuConfiguracoes,
   MenuGestaoDeProduto,
+  MenuLancamentoInicial,
   MenuRelatorios
 } from "./menus";
 
@@ -32,19 +34,24 @@ export const SidebarContent = () => {
   // criterios de exibicao abaixo
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
   const exibirDietaEspecial =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
+    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
+  const exibirLancamentoInicial = usuarioEhEscola();
   const exibirCadastros =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
 
@@ -61,6 +68,7 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
+    exibirLancamentoInicial && <MenuLancamentoInicial key={7} />,
     <MenuRelatorios key={6} />,
     <MenuConfiguracoes key={8} />
   ];

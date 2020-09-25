@@ -3,7 +3,6 @@ import { TIPO_PERFIL } from "constants/shared";
 export const getOpecoesStatus = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (
-    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
   ) {
@@ -32,7 +31,6 @@ export const getOpecoesStatus = () => {
 export const getTodasOpcoesStatusPorPerfil = () => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   if (
-    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO
   ) {

@@ -23,7 +23,7 @@ export const Select = props => {
   return (
     <div className="select">
       {label && [
-        required && (
+        required && !disabled && (
           <span key={0} className="required-asterisk">
             *
           </span>
@@ -46,7 +46,6 @@ export const Select = props => {
         data-cy={label}
         onChange={input ? input.onChange : onChange}
         name={name}
-        required={required}
         style={width && { width: width - 12 }}
       >
         {options.map((e, key) => {

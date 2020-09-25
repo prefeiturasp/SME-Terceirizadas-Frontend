@@ -7,6 +7,11 @@ import authService from "./auth";
 import { getPath as getInclusaoPath } from "services/inclusaoDeAlimentacao/helper";
 import { getPath as getAlteracaoPath } from "services/alteracaoDeCardapio/helper";
 import { getPath as getKitLanchePath } from "services/kitLanche/helper";
+import {
+  RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
+  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
+  SOLICITACOES_DIETA_ESPECIAL
+} from "configs/constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -31,9 +36,7 @@ export const getRelatorioKitLancheUnificado = uuid => {
 };
 
 export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
-  const url = `${API_URL}/${getAlteracaoPath(
-    tipoSolicitacao
-  )}/${uuid}/relatorio/`;
+  const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
@@ -237,42 +240,49 @@ export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
     });
 };
 
-export const getRelatorioProdutosSuspensos = payload => {
-  const url = `${API_URL}/homologacoes-produtos/relatorio-produtos-suspensos/`;
-  fetch(url, {
-    method: "POST",
-    headers: authToken,
-    responseType: "blob",
-    body: JSON.stringify(payload)
-  })
-    .then(response => response.blob())
-    .then(data => {
-      let a = document.createElement("a");
-      const fileURL = URL.createObjectURL(data);
-      a.href = fileURL;
-      a.download = `relatorio_produtos_suspensos.pdf`;
-      a.click();
-    });
-};
-
-export const getRelatorioEmAnaliseSensorial = async payload => {
-  const { data } = await axios.post(
+export const getRelatorioEmAnaliseSensorial = async params => {
+  const { data } = await axios.get(
     `${API_URL}/produtos/relatorio-em-analise-sensorial/`,
-    payload,
-    {
-      responseType: "blob"
-    }
+    { params, responseType: "blob" }
   );
   saveAs(data, "relatorio_analise_sensorial.pdf");
 };
 
-export const getRelatorioReclamacao = async payload => {
+export const getRelatorioProdutoSuspenso = async params => {
+  const { data } = await axios.get(
+    `${API_URL}/produtos/relatorio-produto-suspenso/`,
+    { params, responseType: "blob" }
+  );
+  saveAs(data, "relatorio_produto_suspenso.pdf");
+};
+
+export const imprimeRelatorioQuantitativoSolicDietaEsp = async payload => {
   const { data } = await axios.post(
-    `${API_URL}/produtos/relatorio-reclamacao/`,
+    `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
     payload,
     {
       responseType: "blob"
     }
   );
-  saveAs(data, "relatorio_reclamacao.pdf");
+  saveAs(data, "relatorio_quantitativo_solicitacoes_dieta_especial.pdf");
+};
+
+export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
+  const { data } = await axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`,
+    payload,
+    {
+      responseType: "blob"
+    }
+  );
+  saveAs(data, "relatorio_quantitativo_diagnostico_dieta_especial.pdf");
+};
+
+export const imprimeRelatorioDietaEspecial = async (filtros, params) => {
+  const { data } = await axios.post(
+    `${SOLICITACOES_DIETA_ESPECIAL}/imprime-relatorio-dieta-especial/`,
+    filtros,
+    { params: params, responseType: "blob" }
+  );
+  saveAs(data, "relatorio_dieta_especial.pdf");
 };

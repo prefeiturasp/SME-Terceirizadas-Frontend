@@ -11,20 +11,35 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
-  TERCEIRIZADA
+  TERCEIRIZADA,
+  DRE,
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  CODAE
 } from "configs/constants";
-import { usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+  usuarioEhEscola
+} from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
-  const exibeMenuNovasSolicitacoes = usuarioEhEscola();
-  const PERFIL = usuarioEhEscola() ? ESCOLA : TERCEIRIZADA;
+  const exibeMenuNovasSolicitacoes = usuarioEhEscola() || usuarioEhDRE();
+  const PERFIL = usuarioEhEscola()
+    ? ESCOLA
+    : usuarioEhDRE()
+    ? DRE
+    : usuarioEhCODAEGestaoAlimentacao()
+    ? CODAE
+    : TERCEIRIZADA;
   return (
     <Menu
       id="GestaoAlimentacao"
       icon="fa-utensils"
       title={"Gestão de Alimentação"}
     >
-      <LeafItem to="/">Painel de Solicitações</LeafItem>
+      <LeafItem to="/painel-gestao-alimentacao">
+        Painel de Solicitações
+      </LeafItem>
       {exibeMenuNovasSolicitacoes && (
         <SubMenu
           icon="fa-chevron-down"
@@ -33,21 +48,30 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           title="Novas Solicitações"
           activeMenu={activeMenu}
         >
-          <LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
-            Inclusão de Alimentação
-          </LeafItem>
-          <LeafItem to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}>
-            Alteração de Cardápio
-          </LeafItem>
-          <LeafItem to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}>
-            Kit Lanche Passeio
-          </LeafItem>
-          <LeafItem to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}>
-            Inversão de Dia de Cardápio
-          </LeafItem>
-          <LeafItem to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}>
-            Suspensão de Alimentação
-          </LeafItem>
+          {!usuarioEhDRE() && (
+            <>
+              <LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
+                Inclusão de Alimentação
+              </LeafItem>
+              <LeafItem to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}>
+                Alteração de Cardápio
+              </LeafItem>
+              <LeafItem to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}>
+                Kit Lanche Passeio
+              </LeafItem>
+              <LeafItem to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}>
+                Inversão de Dia de Cardápio
+              </LeafItem>
+              <LeafItem to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}>
+                Suspensão de Alimentação
+              </LeafItem>
+            </>
+          )}
+          {usuarioEhDRE() && (
+            <LeafItem to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}>
+              Solicitação Unificada
+            </LeafItem>
+          )}
         </SubMenu>
       )}
       <SubMenu

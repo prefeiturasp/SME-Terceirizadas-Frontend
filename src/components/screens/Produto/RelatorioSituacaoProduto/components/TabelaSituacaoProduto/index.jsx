@@ -3,14 +3,6 @@ import React, { Fragment } from "react";
 import { parseDataHoraBrToMoment } from "helpers/utilities";
 
 import "./style.scss";
-import { TODOS_OS_CARDS } from "helpers/gestaoDeProdutos";
-
-const obtemTituloDoCardAPartirDoStatus = status => {
-  const card = TODOS_OS_CARDS.find(c =>
-    c.incluir_status.includes(status.toLowerCase())
-  );
-  return card.titulo;
-};
 
 export default ({ dadosRelatorio }) => {
   if (!dadosRelatorio) return false;
@@ -32,11 +24,7 @@ export default ({ dadosRelatorio }) => {
               <div>
                 {parseDataHoraBrToMoment(item.criado_em).format("DD/MM/YYYY")}
               </div>
-              <div>
-                {obtemTituloDoCardAPartirDoStatus(
-                  item.ultima_homologacao.status
-                )}
-              </div>
+              <div>{item.ultima_homologacao.status_titulo}</div>
               <div>
                 {parseDataHoraBrToMoment(
                   item.ultima_homologacao.ultimo_log.criado_em

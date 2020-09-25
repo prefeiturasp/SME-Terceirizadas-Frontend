@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -13,7 +13,9 @@ import { formatarValues } from "./helpers";
 import {
   reset,
   setProdutos,
-  setIndiceProdutoAtivo
+  setIndiceProdutoAtivo,
+  setProdutosCount,
+  setPage
 } from "reducers/avaliarReclamacaoProduto";
 
 import {
@@ -28,16 +30,40 @@ export const AvaliarReclamacaoProduto = ({
   reset,
   produtos,
   setProdutos,
+  produtosCount,
+  setProdutosCount,
+  page,
+  setPage,
   indiceProdutoAtivo,
   setIndiceProdutoAtivo
 }) => {
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
   const [formValues, setFormValues] = useState(null);
+  const PAGE_SIZE = 10;
+
+  useEffect(() => {
+    if (formValues) {
+      setLoading(true);
+      const values_ = deepCopy(formValues);
+      const params = gerarParametrosConsulta({
+        ...formatarValues(values_),
+        page_size: PAGE_SIZE,
+        page: page
+      });
+      getProdutosAvaliacaoReclamacao(params).then(response => {
+        setProdutos(response.data.results);
+        setProdutosCount(response.data.count);
+        setLoading(false);
+        setIndiceProdutoAtivo(undefined);
+      });
+    }
+  }, [formValues, page]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+
     if (history && history.action === "PUSH") {
       reset();
     }
@@ -60,14 +86,8 @@ export const AvaliarReclamacaoProduto = ({
 
   const onSubmit = values => {
     setLoading(true);
-    setFormValues(values);
-    const values_ = deepCopy(values);
-    const params = gerarParametrosConsulta(formatarValues(values_));
-    getProdutosAvaliacaoReclamacao(params).then(response => {
-      setProdutos(response.data);
-      setLoading(false);
-      setIndiceProdutoAtivo(undefined);
-    });
+    setFormValues(deepCopy(values));
+    setPage(1);
   };
 
   return (
@@ -96,6 +116,15 @@ export const AvaliarReclamacaoProduto = ({
                     indiceProdutoAtivo={indiceProdutoAtivo}
                     setIndiceProdutoAtivo={setIndiceProdutoAtivo}
                   />
+                  <Pagination
+                    current={page || 1}
+                    total={produtosCount}
+                    showSizeChanger={false}
+                    onChange={page => {
+                      setPage(page);
+                    }}
+                    pageSize={PAGE_SIZE}
+                  />
                 </Fragment>
               )}
               {produtos && produtos.length === 0 && formValues !== null && (
@@ -114,7 +143,9 @@ export const AvaliarReclamacaoProduto = ({
 const mapStateToProps = state => {
   return {
     indiceProdutoAtivo: state.avaliarReclamacaoProduto.indiceProdutoAtivo,
-    produtos: state.avaliarReclamacaoProduto.produtos
+    produtos: state.avaliarReclamacaoProduto.produtos,
+    produtosCount: state.avaliarReclamacaoProduto.produtosCount,
+    page: state.avaliarReclamacaoProduto.page
   };
 };
 
@@ -123,6 +154,8 @@ const mapDispatchToProps = dispatch =>
     {
       setIndiceProdutoAtivo,
       setProdutos,
+      setProdutosCount,
+      setPage,
       reset
     },
     dispatch
