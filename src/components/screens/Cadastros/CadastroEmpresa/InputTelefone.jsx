@@ -56,16 +56,21 @@ class TelefoneOuCelular extends Component {
       name,
       id,
       input,
-      label
+      label,
+      required
     } = this.props;
     return (
       <div className="input">
-        {label && (
-          <label htmlFor={name} className={`col-form-label`}>
-            <span className="required-asterisk">*</span>
+        {label && [
+          required && (
+            <span key={0} className="required-asterisk">
+              *
+            </span>
+          ),
+          <label key={1} htmlFor={name} className={`col-form-label`}>
             {label}
           </label>
-        )}
+        ]}
         <MaskedInput
           {...input}
           name={name}

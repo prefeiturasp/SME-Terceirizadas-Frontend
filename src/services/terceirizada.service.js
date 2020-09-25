@@ -55,7 +55,7 @@ export const createTerceirizada = payload => {
   let status = 0;
   return fetch(url, {
     method: "POST",
-    body: payload,
+    body: JSON.stringify(payload),
     headers: authToken
   })
     .then(res => {
