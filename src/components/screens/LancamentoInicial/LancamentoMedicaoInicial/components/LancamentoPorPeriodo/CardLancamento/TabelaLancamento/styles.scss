@@ -1,0 +1,119 @@
+@import "styles/variables.scss";
+
+.tabela-lancamento {
+  .cabecalho-tabela {
+    min-height: 100px;
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 12px;
+      color: $blackSubtle;
+      background-color: $grayLightHeader;
+      border: 1px solid $grayBorder;
+      font-weight: 700;
+      height: 100%;
+    }
+    > div:nth-child(1) {
+      border-radius: 4px 0px 0px 0px;
+    }
+    > div:nth-last-child(1) {
+      border-radius: 0px 4px 0px 0px;
+    }
+  }
+  .linha-tabela {
+    min-height: 50px;
+    border-radius: 4px 4px 0px 0px;
+    > div {
+      text-align: center;
+      font-size: 12px;
+      color: $blackSubtle;
+      border: 1px solid $grayBorder;
+      font-weight: 700;
+      padding: 1em;
+    }
+    > div:nth-child(1) {
+      border-radius: 0px 0px 0px 4px;
+    }
+    > div:nth-last-child(1) {
+      border-radius: 0px 0px 4px 0px;
+    }
+  }
+}
+
+.tabela-dieta-convencional {
+  span {
+    /* Rotaciona 90 graus anti-horário */
+    transform: rotate(-90deg);
+    /* Legacy vendor prefixes that you probably don't need... */
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+    /* IE */
+    -ms-transform: rotate(-90deg);
+    /* Opera */
+    -o-transform: rotate(-90deg);
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    /* Fim do código de rotação */
+
+    white-space: nowrap;
+  }
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+  }
+}
+
+.tabela-dieta-especial {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+    grid-template-columns: 20% 24% 28% 28%;
+  }
+  .report-label-value {
+    span {
+      color: red;
+    }
+  }
+}
+
+.tabela-dieta-convencional-frequencia {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+    grid-template-columns: 12% 14% 14% 14% 14% 16% 16%;
+  }
+}
+
+.tabela-dieta-especial,
+.tabela-dieta-convencional {
+  .linha-tabela {
+    > div:nth-child(1) {
+      background-color: $greenBackgroundTable;
+    }
+  }
+}
+
+.tabela-campo-unico {
+  .cabecalho-tabela {
+    > div {
+      display: flex;
+      justify-content: end;
+      padding-left: 2em;
+      border-radius: 4px 4px 0px 0px !important;
+    }
+  }
+  .linha-tabela {
+    > div {
+      border-radius: 0px 0px 4px 4px !important;
+    }
+  }
+  span {
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+  }
+}
