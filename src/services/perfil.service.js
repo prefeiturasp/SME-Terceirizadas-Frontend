@@ -2,6 +2,7 @@ import { API_URL } from "../constants/config";
 import authService from "./auth";
 import axios from "./_base";
 import { AUTH_TOKEN } from "./constants";
+import Cookies from "js-cookie";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -25,7 +26,10 @@ export const setUsuario = payload => {
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(values),
-    headers: { "Content-Type": "application/json" }
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": Cookies.get("csrftoken")
+    }
   })
     .then(res => {
       status = res.status;
