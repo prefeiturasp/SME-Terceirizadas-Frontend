@@ -1,4 +1,5 @@
 import React from "react";
+import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
@@ -50,13 +51,27 @@ export default () => (
       </div>
     </div>
     <div className="linha-tabela">
-      <div>999</div>
-      <div>999</div>
-      <div>999</div>
-      <div>999</div>
-      <div>999</div>
-      <div>999</div>
-      <div>999</div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
     </div>
   </div>
 );

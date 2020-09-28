@@ -1,8 +1,9 @@
 import React from "react";
+import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
-export default ({ nome_campo, valor }) => (
+export default ({ nome_campo }) => (
   <div className="tabela-lancamento tabela-campo-unico">
     <div className="cabecalho-tabela">
       <div>
@@ -10,7 +11,9 @@ export default ({ nome_campo, valor }) => (
       </div>
     </div>
     <div className="linha-tabela">
-      <div>{valor}</div>
+      <div>
+        <BorderlessInput />
+      </div>
     </div>
   </div>
 );

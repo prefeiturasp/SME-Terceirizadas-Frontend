@@ -83,8 +83,8 @@ export default ({
             </div>
           </div>
           <div className="row">
-            <div className="col report-label-value">
-              <p className="value">Dieta convencional</p>
+            <div className="col">
+              <label className="col-form-label">Dieta convencional</label>
             </div>
           </div>
           <div className="row">
@@ -96,10 +96,10 @@ export default ({
             </div>
           </div>
           <div className="row">
-            <div className="col report-label-value">
-              <p className="value">
+            <div className="col">
+              <label className="col-form-label">
                 Dieta convencional <span>Grupo A</span>
-              </p>
+              </label>
             </div>
           </div>
           <div className="row">
@@ -120,10 +120,10 @@ export default ({
             </div>
           </div>
           <div className="row">
-            <div className="col report-label-value">
-              <p className="value">
+            <div className="col">
+              <label className="col-form-label">
                 Dieta convencional <span>Grupo B</span>
-              </p>
+              </label>
             </div>
           </div>
           <div className="row">
