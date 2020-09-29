@@ -108,8 +108,10 @@ export class Login extends Component {
                 : ""
             }`
           );
-          this.setState({ bloquearBotao: false });
-          setTimeout(() => (window.location.href = "/login"));
+          this.setState({
+            bloquearBotao: false,
+            componenteAtivo: this.COMPONENTE.LOGIN
+          });
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(response.data.detail);
           this.setState({ bloquearBotao: false });
