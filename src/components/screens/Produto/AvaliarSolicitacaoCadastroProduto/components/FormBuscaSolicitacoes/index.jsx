@@ -1,5 +1,6 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -13,16 +14,24 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
+import { getNomesProdutosSolicitacaoInclusao } from "services/produto.service";
 
 const FORM_NAME = "buscaAvaliarSolicCadProd";
 
-const FormBuscaSolicitacao = ({
-  initialValues,
-  history,
-  nomesProdutos,
-  onSubmit
-}) => {
+const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
   const [nomesProdutosFiltrado, setNomesProdutosFiltrado] = useState([]);
+  const [nomesProdutos, setNomesProdutos] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const resposta = await getNomesProdutosSolicitacaoInclusao();
+      if (resposta.status === HTTP_STATUS.OK) {
+        setNomesProdutos(resposta.data);
+      }
+    };
+    fetchData();
+  }, []);
+
   const onSearch = searchText => {
     if (searchText.length) {
       const reg = new RegExp(searchText, "i");
@@ -64,7 +73,7 @@ const FormBuscaSolicitacao = ({
                 name="status"
               />
             </div>
-            <div className="col col-lg-9 col-xl-7">
+            <div className="col col-lg-9 col-xl-6">
               <div className="row">
                 <label className="ml-3">Data da solicitação</label>
               </div>

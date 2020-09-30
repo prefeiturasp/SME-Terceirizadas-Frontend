@@ -2,10 +2,14 @@
   display: flex;
   border-top: 1px solid black;
   margin-top: 1em;
+  .datepicker-fixed-padding {
+    margin-top: 1.1em !important;
+    margin-bottom: 1em !important;
+  }
   div.datepicker {
     span.required-asterisk {
       position: absolute;
-      margin-top: 1em;
+      margin-top: 1.1em;
     }
     .col-form-label {
       margin-left: 0.6em;
