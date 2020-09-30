@@ -1,8 +1,9 @@
 import React from "react";
+import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
-export default () => (
+export default ({formValues}) => (
   <div className="tabela-lancamento tabela-dieta-convencional">
     <div className="cabecalho-tabela">
       <div>
@@ -34,11 +35,19 @@ export default () => (
       </div>
     </div>
     <div className="linha-tabela">
-      <div>08</div>
-      <div />
-      <div />
-      <div />
-      <div />
+      <div>{formValues.data_lancamento && formValues.data_lancamento.substring(0, 2)}</div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
+      <div>
+        <BorderlessInput />
+      </div>
     </div>
   </div>
 );

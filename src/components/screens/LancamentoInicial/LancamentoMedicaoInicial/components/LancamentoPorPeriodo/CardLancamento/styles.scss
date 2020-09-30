@@ -64,4 +64,11 @@
       color: red;
     }
   }
+  .botoes-envio {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .erros-formulario {
+    color: red;
+  }
 }

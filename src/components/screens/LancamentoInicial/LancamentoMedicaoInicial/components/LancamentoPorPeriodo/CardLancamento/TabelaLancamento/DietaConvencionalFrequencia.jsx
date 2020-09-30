@@ -1,4 +1,5 @@
 import React from "react";
+import { Field } from "react-final-form"
 import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
@@ -52,10 +53,10 @@ export default () => (
     </div>
     <div className="linha-tabela">
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="frequencia" disabled/>
       </div>
       <div>
-        <BorderlessInput />
+      <Field component={BorderlessInput} name="lanche_4h"/>
       </div>
       <div>
         <BorderlessInput />
