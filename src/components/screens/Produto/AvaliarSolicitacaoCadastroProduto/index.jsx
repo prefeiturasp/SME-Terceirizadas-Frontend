@@ -1,48 +1,66 @@
-import { Spin } from "antd";
+import { Spin, Pagination } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import React, { useState, useEffect } from "react";
 import FormBuscaSolicitacao from "./components/FormBuscaSolicitacoes";
 import ListagemProdutos from "./components/ListagemSolicitacoes";
-import {
-  getNomesProdutosSolicitacaoInclusao,
-  getSolicitacoesCadastroProdutoDieta
-} from "services/produto.service";
+import { getSolicitacoesCadastroProdutoDieta } from "services/produto.service";
 import "./styles.scss";
 
 export default () => {
   const [ativos, setAtivos] = useState(undefined);
-  const [nomesProdutos, setNomesProdutos] = useState([]);
   const [solicitacoes, setSolicitacoes] = useState(undefined);
-  const onSubmit = async values => {
-    const resposta = await getSolicitacoesCadastroProdutoDieta(values);
+  const [totalSolicitacoes, setTotalSolicitacoes] = useState(0);
+  const [page, setPage] = useState(1);
+  const [formValues, setFormValues] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+
+  const PAGE_SIZE = 10;
+
+  const fetchData = async () => {
+    setCarregando(true);
+    const resposta = await getSolicitacoesCadastroProdutoDieta({
+      ...formValues,
+      page: page,
+      page_size: PAGE_SIZE
+    });
     if (resposta.status === HTTP_STATUS.OK) {
       setSolicitacoes(resposta.data.results);
+      setTotalSolicitacoes(resposta.data.count);
     }
+    setCarregando(false);
   };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const resposta = await getNomesProdutosSolicitacaoInclusao();
-      if (resposta.status === HTTP_STATUS.OK) {
-        setNomesProdutos(resposta.data);
-      }
-    };
-    fetchData();
-  }, []);
+    if (formValues) fetchData();
+  }, [formValues, page]);
+
+  const onSubmit = async values => {
+    setFormValues({ ...values });
+  };
+
   return (
-    <Spin tip="Carregando..." spinning={false}>
+    <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 avaliar-solicitacao-cadastro-produto">
         <div className="card-body ">
-          <FormBuscaSolicitacao
-            nomesProdutos={nomesProdutos}
-            onSubmit={onSubmit}
-          />
+          <FormBuscaSolicitacao onSubmit={onSubmit} />
           {solicitacoes && solicitacoes.length > 0 && (
-            <ListagemProdutos
-              solicitacoes={solicitacoes}
-              setSolicitacoes={setSolicitacoes}
-              ativos={ativos}
-              setAtivos={setAtivos}
-            />
+            <>
+              <ListagemProdutos
+                solicitacoes={solicitacoes}
+                setSolicitacoes={setSolicitacoes}
+                ativos={ativos}
+                setAtivos={setAtivos}
+              />
+              <Pagination
+                current={page || 1}
+                total={totalSolicitacoes}
+                showSizeChanger={false}
+                onChange={page => {
+                  setPage(page);
+                }}
+                pageSize={PAGE_SIZE}
+              />
+            </>
           )}
           {solicitacoes && solicitacoes.length === 0 && (
             <div className="text-center mt-5">

@@ -34,7 +34,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 2fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr 2fr 1fr 0.3fr;
     }
 
     .header-table-produtos {
@@ -43,7 +43,7 @@
       font-weight: bold;
     }
 
-    .body-table-produtos-terceirizada {
+    .body-table-produtos {
       div:last-child {
         border-left: 0px solid #e9eaea;
       }
