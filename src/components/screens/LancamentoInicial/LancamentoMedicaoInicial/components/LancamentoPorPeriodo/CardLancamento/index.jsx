@@ -4,7 +4,10 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 
 import { Botao } from "components/Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "components/Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import DietaConvencional from "./TabelaLancamento/DietaConvencional";
 import DietaConvencionalFrequencia from "./TabelaLancamento/DietaConvencionalFrequencia";
@@ -12,9 +15,10 @@ import ObservacoesDiarias from "./TabelaLancamento/ObservacoesDiarias";
 import DietaEspecial from "./TabelaLancamento/DietaEspecial";
 
 import "./styles.scss";
+import { validateFormLancamento } from "./TabelaLancamento/helpers";
 
 function deveDesabilitarObservacoesDiarias(values) {
-  console.log('deveDesabilitar', values)
+  console.log("deveDesabilitar", values);
   if (values.lanche_4h) {
     if (parseInt(values.lanche_4h) < parseInt(values.frequencia) / 2) {
       return true;
@@ -71,15 +75,7 @@ export default ({
           initialValues={{
             frequencia: 420
           }}
-          validate={formValues => {
-            console.log('validate.formValues', formValues)
-            if (formValues.lanche_4h && (parseInt(formValues.lanche_4h) < parseInt(formValues.frequencia) / 2) && formValues.obs_diarias_1 === undefined) {
-                return {
-                  FORM_ERROR: "Deve preencher observações diárias",
-                  obs_diarias_1: "Deve preencher observações diárias"
-                };
-            }
-          }}
+          validate={validateFormLancamento}
           render={({ values, pristine, submitting, errors, error }) => (
             <>
               <div className="row">
@@ -133,13 +129,13 @@ export default ({
               <div className="row">
                 <div className="col">
                   <label className="col-form-label">
-                    Dieta convencional <span>Grupo A</span>
+                    Dieta especial <span>Grupo A</span>
                   </label>
                 </div>
               </div>
               <div className="row">
                 <div className="col-4">
-                  <DietaEspecial formValues={values} />
+                  <DietaEspecial formValues={values} prefix="grupoA" />
                 </div>
                 <div className="col-2">
                   <ObservacoesDiarias
@@ -157,13 +153,13 @@ export default ({
               <div className="row">
                 <div className="col">
                   <label className="col-form-label">
-                    Dieta convencional <span>Grupo B</span>
+                    Dieta especial <span>Grupo B</span>
                   </label>
                 </div>
               </div>
               <div className="row">
                 <div className="col-4">
-                  <DietaEspecial formValues={values} />
+                  <DietaEspecial formValues={values} prefix="grupoB" />
                 </div>
                 <div className="col-8">
                   <ObservacoesDiarias
@@ -174,7 +170,7 @@ export default ({
               </div>
               <div className="row mt-3">
                 <div className="col-7 erros-formulario">
-                  {errors.FORM_ERROR}
+                  {errors.FORM_ERROR && errors.FORM_ERROR.map((error, index) => <p key={index}>{error}</p>)}
                 </div>
                 <div className="col-5 botoes-envio">
                   <Botao

@@ -56,22 +56,22 @@ export default () => (
         <Field component={BorderlessInput} name="frequencia" disabled/>
       </div>
       <div>
-      <Field component={BorderlessInput} name="lanche_4h"/>
+        <Field component={BorderlessInput} name="lanche_4h"/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="lanche_5h"/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="refeicao_1a_oferta"/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="refeicao_repeticao"/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="sobremesa_1a_oferta"/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="sobremesa_repeticao"/>
       </div>
     </div>
   </div>

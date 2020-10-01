@@ -14,6 +14,7 @@
     background: #ccc;
   }
   &.borderless-input-error input {
+    outline-color: red;
     border: 2px solid red;
   }
 }

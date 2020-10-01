@@ -1,9 +1,10 @@
 import React from "react";
+import { Field } from "react-final-form";
 import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
-export default ({formValues}) => (
+export default ({formValues, prefix}) => (
   <div className="tabela-lancamento tabela-dieta-especial">
     <div className="cabecalho-tabela">
       <div>
@@ -28,13 +29,13 @@ export default ({formValues}) => (
     <div className="linha-tabela">
       <div>{formValues.data_lancamento && formValues.data_lancamento.substring(0, 2)}</div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name={`${prefix}_frequencia`}/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name={`${prefix}_lanche_4h`}/>
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name={`${prefix}_lanche_5h`}/>
       </div>
     </div>
   </div>
