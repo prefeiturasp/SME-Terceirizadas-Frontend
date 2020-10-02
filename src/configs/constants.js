@@ -89,8 +89,8 @@ export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
 export const RELATORIO_PRODUTO = "relatorio-produto";
 export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
-export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
-  "relatorio-quantitativo-solic-dieta-esp";
+export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP = "relatorio-quantitativo-solic-dieta-esp";
+export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP = "relatorio-quantitativo-classificacao-dieta-esp";
 export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
