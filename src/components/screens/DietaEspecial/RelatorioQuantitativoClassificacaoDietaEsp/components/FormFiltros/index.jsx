@@ -1,4 +1,3 @@
-import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
@@ -12,7 +11,6 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Select from "components/Shareable/Select";
-import { toastError } from "components/Shareable/Toast/dialogs";
 import { meusDados } from "services/perfil.service";
 
 import { TIPO_PERFIL } from "constants/shared";
@@ -52,9 +50,15 @@ export default ({ onSubmit, loading, setLoading }) => {
       );
       const promiseDadosIniciais = getDadosIniciais(dadosUsuario);
       const promiseClassificacoes = getClassificacoesDietaEspecial();
-      const [, responseDadosIniciais, responseClassificacoes] = await Promise.all(
-        [promiseDreEscolas, promiseDadosIniciais, promiseClassificacoes]
-      );
+      const [
+        ,
+        responseDadosIniciais,
+        responseClassificacoes
+      ] = await Promise.all([
+        promiseDreEscolas,
+        promiseDadosIniciais,
+        promiseClassificacoes
+      ]);
       setDadosIniciais(responseDadosIniciais);
       setClassificacoes(
         responseClassificacoes.results.map(d => {

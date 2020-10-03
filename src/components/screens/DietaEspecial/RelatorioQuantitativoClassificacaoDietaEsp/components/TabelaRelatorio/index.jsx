@@ -24,8 +24,7 @@ export default ({ dadosRelatorio, filtros }) => {
           <div>Diretoria Regional de Educação</div>
         )}
         {primeiroRegistro.escola && <div>Unidade Escolar</div>}
-        <div>Diagnóstico</div>
-        <div>Ano nasc. aluno</div>
+        <div>Classificação da Dieta</div>
         {[undefined, "pendentes"].includes(filtros.status) && (
           <div>
             Dietas
@@ -56,7 +55,7 @@ export default ({ dadosRelatorio, filtros }) => {
                 <div>{item.dre}</div>
               )}
               {primeiroRegistro.escola && <div>{item.escola}</div>}
-              <div>{item.diagnostico}</div>
+              <div>{item.classificacao}</div>
               <div>{item.ano_nasc_aluno}</div>
               {[undefined, "pendentes"].includes(filtros.status) && (
                 <div>{item.qtde_pendentes}</div>

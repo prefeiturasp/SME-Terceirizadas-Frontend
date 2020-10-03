@@ -9,7 +9,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Paginacao } from "components/Shareable/Paginacao";
 
-import { getRelatorioQuantitativoDiagDietaEsp } from "services/dietaEspecial.service";
+import { getRelatorioQuantitativoClassificacaoDietaEsp } from "services/dietaEspecial.service";
 import { imprimeRelatorioQuantitativoDiagDietaEsp } from "services/relatorios";
 
 import FormFiltros from "./components/FormFiltros";
@@ -27,7 +27,10 @@ export default () => {
 
   const atualizaDados = async (params, page) => {
     setLoading(true);
-    const response = await getRelatorioQuantitativoDiagDietaEsp(params, page);
+    const response = await getRelatorioQuantitativoClassificacaoDietaEsp(
+      params,
+      page
+    );
     setLoading(false);
     setPagTotal(response.data.count);
     setDadosRelatorio(response.data.results);
