@@ -10,14 +10,19 @@ import {
   getAlergiasIntolerancias,
   getAlimentos,
   getClassificacoesDietaEspecial,
-  getDietasEspeciaisVigentesDeUmAluno,
+  getSolicitacoesDietaEspecial,
   getProtocolosDietaEspecial
 } from "../../../../../../services/dietaEspecial.service";
 import { getNomeProdutosHomologados } from "services/produto.service";
 import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 
 import { required } from "../../../../../../helpers/fieldValidators";
-import { obtemIdentificacaoNutricionista } from "../../../../../../helpers/utilities";
+import {
+  obtemIdentificacaoNutricionista,
+  gerarParametrosConsulta
+} from "../../../../../../helpers/utilities";
+
+import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 
 import Botao from "../../../../../Shareable/Botao";
 import InputText from "../../../../../Shareable/Input/InputText";
@@ -64,9 +69,11 @@ export default class FormAutorizaDietaEspecial extends Component {
     const produtos = await getNomeProdutosHomologados();
     const protocolosDietaEspecial = await getProtocolosDietaEspecial();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
-    const solicitacoesVigentes = await getDietasEspeciaisVigentesDeUmAluno(
-      aluno.codigo_eol
-    );
+    const params = gerarParametrosConsulta({
+      aluno: aluno.uuid,
+      status: getStatusSolicitacoesVigentes()
+    });
+    const solicitacoesVigentes = await getSolicitacoesDietaEspecial(params);
     this.setState({
       protocolosDietaEspecial: protocolosDietaEspecial.data.results.map(
         ({ nome }) => nome
