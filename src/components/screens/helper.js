@@ -33,7 +33,7 @@ export const LOG_PARA = {
 export const ajustaFormatoLogPainelDietaEspecial = logs => {
   if (!logs) return;
   return logs.map(log => {
-    let tamanhoString = 48;
+    let tamanhoString = 53;
     let descricao = log.descricao;
     return {
       text: truncarString(descricao, tamanhoString),

@@ -20,7 +20,9 @@ const {
   CODAE_PEDIU_ANALISE_SENSORIAL,
   CODAE_SUSPENDEU,
   CODAE_HOMOLOGADO,
-  CODAE_AUTORIZOU_RECLAMACAO
+  CODAE_AUTORIZOU_RECLAMACAO,
+  CODAE_NAO_HOMOLOGADO,
+  CODAE_QUESTIONADO
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
@@ -70,12 +72,13 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
     usuarioEhTerceirizada() &&
-    item.status.toLowerCase() === CODAE_HOMOLOGADO
-  ) {
-    return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
-  } else if (
-    usuarioEhTerceirizada() &&
-    item.status.toLowerCase() === CODAE_AUTORIZOU_RECLAMACAO
+    [
+      CODAE_HOMOLOGADO,
+      CODAE_SUSPENDEU,
+      CODAE_NAO_HOMOLOGADO,
+      CODAE_QUESTIONADO,
+      CODAE_AUTORIZOU_RECLAMACAO
+    ].includes(item.status.toLowerCase())
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   }

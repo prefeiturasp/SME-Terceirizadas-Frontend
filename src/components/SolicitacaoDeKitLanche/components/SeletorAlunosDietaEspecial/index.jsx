@@ -55,7 +55,7 @@ export default class SeletorAlunosDietaEspecial extends Component {
                           component={CheckboxField}
                           type="checkbox"
                           name={`alunos_com_dieta_especial_participantes.${
-                            aluno.codigo_eol
+                            aluno.uuid
                           }`}
                         />
                       </td>
