@@ -53,25 +53,25 @@ export default () => (
     </div>
     <div className="linha-tabela">
       <div>
-        <Field component={BorderlessInput} name="frequencia" disabled/>
+        <Field component={BorderlessInput} name="convencional.frequencia" disabled/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="lanche_4h"/>
+        <Field component={BorderlessInput} name="convencional.lanche_4h"/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="lanche_5h"/>
+        <Field component={BorderlessInput} name="convencional.lanche_5h"/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="refeicao_1a_oferta"/>
+        <Field component={BorderlessInput} name="convencional.refeicoes.0.ref_oferta"/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="refeicao_repeticao"/>
+        <Field component={BorderlessInput} name="convencional.refeicoes.0.ref_repet"/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="sobremesa_1a_oferta"/>
+        <Field component={BorderlessInput} name="convencional.refeicoes.0.sob_oferta"/>
       </div>
       <div>
-        <Field component={BorderlessInput} name="sobremesa_repeticao"/>
+        <Field component={BorderlessInput} name="convencional.refeicoes.0.sob_repet"/>
       </div>
     </div>
   </div>

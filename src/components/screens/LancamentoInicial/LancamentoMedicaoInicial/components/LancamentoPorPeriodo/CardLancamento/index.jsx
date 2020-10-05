@@ -15,7 +15,7 @@ import ObservacoesDiarias from "./TabelaLancamento/ObservacoesDiarias";
 import DietaEspecial from "./TabelaLancamento/DietaEspecial";
 
 import "./styles.scss";
-import { validateFormLancamento } from "./TabelaLancamento/helpers";
+import { validateFormLancamento } from "./helpers";
 
 function deveDesabilitarObservacoesDiarias(values) {
   console.log("deveDesabilitar", values);
@@ -73,10 +73,10 @@ export default ({
         <Form
           onSubmit={() => {}}
           initialValues={{
-            frequencia: 420
+            convencional:{frequencia: 420}
           }}
           validate={validateFormLancamento}
-          render={({ values, pristine, submitting, errors, error }) => (
+          render={({ values, pristine, submitting, errors }) => (
             <>
               <div className="row">
                 <pre>{JSON.stringify(errors, null, 4)}</pre>
@@ -140,7 +140,7 @@ export default ({
                 <div className="col-2">
                   <ObservacoesDiarias
                     label="Refeição (somente dieta enteral)"
-                    name="refeicao_enteral"
+                    name="refeicao.0.enteral"
                   />
                 </div>
                 <div className="col-6">

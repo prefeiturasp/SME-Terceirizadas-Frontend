@@ -29,13 +29,13 @@ export default ({formValues, prefix}) => (
     <div className="linha-tabela">
       <div>{formValues.data_lancamento && formValues.data_lancamento.substring(0, 2)}</div>
       <div>
-        <Field component={BorderlessInput} name={`${prefix}_frequencia`}/>
+        <Field component={BorderlessInput} name={`${prefix}.frequencia`}/>
       </div>
       <div>
-        <Field component={BorderlessInput} name={`${prefix}_lanche_4h`}/>
+        <Field component={BorderlessInput} name={`${prefix}.lanche_4h`}/>
       </div>
       <div>
-        <Field component={BorderlessInput} name={`${prefix}_lanche_5h`}/>
+        <Field component={BorderlessInput} name={`${prefix}.lanche_5h`}/>
       </div>
     </div>
   </div>
