@@ -1,4 +1,5 @@
 import moment from "moment";
+import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
 import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { TIPO_PERFIL } from "../constants/shared";
@@ -452,3 +453,9 @@ export const gerarParametrosConsulta = data => {
   });
   return params;
 };
+
+export const cpfMask = createTextMask({
+  pattern: "999.999.999-99",
+  allowEmpty: false,
+  guide: false
+});
