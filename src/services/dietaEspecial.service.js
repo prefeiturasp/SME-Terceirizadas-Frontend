@@ -8,6 +8,7 @@ import {
   PANORAMA_ESCOLA,
   RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
+  RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
 } from "configs/constants";
 
@@ -259,6 +260,19 @@ export const getRelatorioQuantitativoSolicDietaEsp = async (filtros, page) => {
 export const getRelatorioQuantitativoDiagDietaEsp = async (filtros, page) => {
   return axios.post(
     `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`,
+    filtros,
+    {
+      params: { page }
+    }
+  );
+};
+
+export const getRelatorioQuantitativoClassificacaoDietaEsp = async (
+  filtros,
+  page
+) => {
+  return axios.post(
+    `/${SOLICITACOES_DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP}/`,
     filtros,
     {
       params: { page }
