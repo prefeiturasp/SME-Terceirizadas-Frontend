@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Input, AutoComplete } from "antd";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import "./style.scss";
+import { Form, Field } from "react-final-form";
 
 import {
   getNomesProdutos,
@@ -11,6 +13,7 @@ import {
   getProdutosPorMarca,
   getProdutosPorFabricante
 } from "../../../../../services/produto.service";
+import { getProdutosListagem } from "services/produto.service";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
@@ -137,6 +140,11 @@ export default class BuscaProduto extends Component {
     });
   };
 
+  onSubmit = async values => {
+    const response = await getProdutosListagem({ ...values });
+    this.adicionaResponseAoResultadoProduto(response);
+  };
+
   render() {
     const {
       optionsProdutos,
@@ -144,179 +152,199 @@ export default class BuscaProduto extends Component {
       optionsFabricantes,
       resultadosProduto
     } = this.state;
-    const { handleSubmit, exibeFormularioInicial } = this.props;
+    const { exibeFormularioInicial } = this.props;
     return (
-      <form onSubmit={handleSubmit} className="busca-produtos-formulario">
-        <section className="header-busca-produto">
-          Confira se produto já está cadastrado no sistema
-        </section>
-        <div>
-          <label>Nome do Produto</label>
-          <AutoComplete
-            className={"input-busca-produto"}
-            dataSource={optionsProdutos}
-            onSelect={this.onSelectProduto}
-            onSearch={this.onSearchProduto}
-          >
-            <Input.Search size="large" onSearch={this.onSelectProduto} />
-          </AutoComplete>
-        </div>
-        <div className="marca-fabricante-inputs">
-          <div>
-            <label>Marca do Produto</label>
-            <AutoComplete
-              dataSource={optionsMarcas}
-              onSelect={this.onSelectMarca}
-              onSearch={this.onSearchMarca}
-            >
-              <Input.Search size="large" onSearch={this.onSelectMarca} />
-            </AutoComplete>
-          </div>
-          <div>
-            <label>Fabricante do Produto</label>
-            <AutoComplete
-              dataSource={optionsFabricantes}
-              onSelect={this.onSelectFabricante}
-              onSearch={this.onSearchFabricantes}
-            >
-              <Input.Search size="large" onSearch={this.onSelectFabricante} />
-            </AutoComplete>
-          </div>
-        </div>
-
-        {resultadosProduto.length > 0 && (
-          <section className="resultados-busca-produtos">
-            <section className="">
-              <div className="tabela-produto tabela-header-produto">
-                <div>Nome do Produto</div>
-                <div>Marca do Produto</div>
-                <div>Fabricante do Produto</div>
-              </div>
-              {resultadosProduto.map((produto, indice) => {
-                return (
-                  <div key={indice}>
-                    <div className="tabela-produto tabela-body-produto">
-                      <div
-                        className={`item-produto ${
-                          produto.ativo ? "" : "item-inativo"
-                        }`}
-                      >
-                        {produto.nome}
-                      </div>
-                      <div
-                        className={`item-produto ${
-                          produto.ativo ? "" : "item-inativo"
-                        }`}
-                      >
-                        {produto.marca.nome}
-                      </div>
-                      <div
-                        className={`item-produto com-botao ${
-                          produto.ativo ? "" : "item-inativo"
-                        }`}
-                      >
-                        {produto.fabricante.nome}
-                        {produto.ativo ? (
-                          <div className="botoes-produto">
-                            <i className="fas fa-pen editar" />
-                            <i
-                              className="fas fa-angle-up"
-                              onClick={() => {
-                                this.dropDownProduto(indice);
-                              }}
-                            />
-                          </div>
-                        ) : (
-                          <i
-                            className="fas fa-angle-down"
-                            onClick={() => {
-                              this.dropDownProduto(indice);
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                    {produto.ativo && (
-                      <div className="detalhe-produto">
-                        {produto.terceirizada &&
-                          produto.terceirizada.contatos.map(
-                            (contato, indice) => {
-                              return (
-                                <div
-                                  key={indice}
-                                  className="contatos-terceirizada"
-                                >
-                                  <div>
-                                    <div className="label-item">Telefone</div>
-                                    <div className="value-item">
-                                      {contato.telefone}
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <div className="label-item">E-mail</div>
-                                    <div className="value-item">
-                                      {contato.email}
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            }
-                          )}
-
-                        <div className="componentes-produto">
-                          <div className="label-item">
-                            Componentes do produto
-                          </div>
-                          <div className="value-item">
-                            {produto.componentes}
-                          </div>
-                        </div>
-
-                        <div className="componentes-produto">
-                          <div className="label-item">
-                            O produto contém ou pode conter
-                            ingredientes/aditivos alergênicos?
-                          </div>
-                          <div className="value-item">
-                            {produto.tem_aditivos_alergenicos ? "SIM" : "NÃO"}
-                          </div>
-                        </div>
-
-                        {produto.tem_aditivos_alergenicos && (
-                          <div className="componentes-produto">
-                            <div className="label-item">Quais?</div>
-                            <div className="value-item">{produto.aditivos}</div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+      <Form
+        onSubmit={this.onSubmit}
+        render={({ form, values, submitting, handleSubmit }) => (
+          <form onSubmit={handleSubmit} className="busca-produtos-formulario">
+            <section className="header-busca-produto">
+              Confira se produto já está cadastrado no sistema
             </section>
-          </section>
-        )}
+            <div>
+              <label>Nome do Produto</label>
+              <Field
+                component={AutoCompleteField}
+                dataSource={optionsProdutos ? optionsProdutos : []}
+                placeholder="Digite o nome do produto"
+                className="input-busca-produto"
+                onSelect={form.submit}
+                onSearch={this.onSearchProduto}
+                name="nome_produto"
+                disabled={submitting}
+              />
+            </div>
+            <div className="marca-fabricante-inputs">
+              <div>
+                <label>Marca do Produto</label>
+                <Field
+                  component={AutoCompleteField}
+                  dataSource={optionsMarcas ? optionsMarcas : []}
+                  placeholder="Digite a marca do produto"
+                  className="input-busca-produto"
+                  onSelect={form.submit}
+                  onSearch={this.onSearchMarca}
+                  name="nome_marca"
+                  disabled={submitting}
+                />
+              </div>
+              <div>
+                <label>Fabricante do Produto</label>
+                <Field
+                  component={AutoCompleteField}
+                  dataSource={optionsFabricantes ? optionsFabricantes : []}
+                  className="input-busca-produto"
+                  placeholder="Digite o fabricante do produto"
+                  onSelect={form.submit}
+                  onSearch={this.onSearchFabricantes}
+                  name="nome_fabricante"
+                  disabled={submitting}
+                />
+              </div>
+            </div>
 
-        <div className="botoes-busca">
-          <Botao
-            texto={"Cancelar"}
-            className="mr-3"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={() => {
-              this.cancelaPesquisa();
-            }}
-          />
-          <Botao
-            texto={"Cadastrar Alimentos"}
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            onClick={() => {
-              exibeFormularioInicial();
-            }}
-          />
-        </div>
-      </form>
+            {resultadosProduto.length > 0 && (
+              <section className="resultados-busca-produtos">
+                <section className="">
+                  <div className="tabela-produto tabela-header-produto">
+                    <div>Nome do Produto</div>
+                    <div>Marca do Produto</div>
+                    <div>Fabricante do Produto</div>
+                  </div>
+                  {resultadosProduto.map((produto, indice) => {
+                    return (
+                      <div key={indice}>
+                        <div className="tabela-produto tabela-body-produto">
+                          <div
+                            className={`item-produto ${
+                              produto.ativo ? "" : "item-inativo"
+                            }`}
+                          >
+                            {produto.nome}
+                          </div>
+                          <div
+                            className={`item-produto ${
+                              produto.ativo ? "" : "item-inativo"
+                            }`}
+                          >
+                            {produto.marca.nome}
+                          </div>
+                          <div
+                            className={`item-produto com-botao ${
+                              produto.ativo ? "" : "item-inativo"
+                            }`}
+                          >
+                            {produto.fabricante.nome}
+                            {produto.ativo ? (
+                              <div className="botoes-produto">
+                                <i className="fas fa-pen editar" />
+                                <i
+                                  className="fas fa-angle-up"
+                                  onClick={() => {
+                                    this.dropDownProduto(indice);
+                                  }}
+                                />
+                              </div>
+                            ) : (
+                              <i
+                                className="fas fa-angle-down"
+                                onClick={() => {
+                                  this.dropDownProduto(indice);
+                                }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                        {produto.ativo && (
+                          <div className="detalhe-produto">
+                            {produto.terceirizada &&
+                              produto.terceirizada.contatos.map(
+                                (contato, indice) => {
+                                  return (
+                                    <div
+                                      key={indice}
+                                      className="contatos-terceirizada"
+                                    >
+                                      <div>
+                                        <div className="label-item">
+                                          Telefone
+                                        </div>
+                                        <div className="value-item">
+                                          {contato.telefone}
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <div className="label-item">E-mail</div>
+                                        <div className="value-item">
+                                          {contato.email}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                }
+                              )}
+
+                            <div className="componentes-produto">
+                              <div className="label-item">
+                                Componentes do produto
+                              </div>
+                              <div className="value-item">
+                                {produto.componentes}
+                              </div>
+                            </div>
+
+                            <div className="componentes-produto">
+                              <div className="label-item">
+                                O produto contém ou pode conter
+                                ingredientes/aditivos alergênicos?
+                              </div>
+                              <div className="value-item">
+                                {produto.tem_aditivos_alergenicos
+                                  ? "SIM"
+                                  : "NÃO"}
+                              </div>
+                            </div>
+
+                            {produto.tem_aditivos_alergenicos && (
+                              <div className="componentes-produto">
+                                <div className="label-item">Quais?</div>
+                                <div className="value-item">
+                                  {produto.aditivos}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </section>
+              </section>
+            )}
+
+            <div className="botoes-busca">
+              <Botao
+                texto={"Cancelar"}
+                className="mr-3"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={() => {
+                  form.reset();
+                  this.cancelaPesquisa();
+                }}
+              />
+              <Botao
+                texto={"Cadastrar Alimentos"}
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN}
+                onClick={() => {
+                  exibeFormularioInicial();
+                }}
+              />
+            </div>
+          </form>
+        )}
+      />
     );
   }
 }
