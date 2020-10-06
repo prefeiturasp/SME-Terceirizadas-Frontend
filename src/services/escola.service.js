@@ -53,8 +53,9 @@ export const getEscolasSimples = () => {
     });
 };
 
-export const getEscolasSimplissima = () => {
-  const url = `${API_URL}/escolas-simplissima/`;
+export const getEscolasSimplissima = (params = {}) => {
+  let url = new URL(`${API_URL}/escolas-simplissima/`);
+  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
