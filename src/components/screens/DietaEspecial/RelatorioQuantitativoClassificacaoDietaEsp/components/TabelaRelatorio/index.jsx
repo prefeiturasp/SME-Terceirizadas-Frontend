@@ -18,7 +18,7 @@ export default ({ dadosRelatorio, filtros }) => {
   const semEscola = primeiroRegistro.escola === undefined ? "-sem-escola" : "";
   const classeGrid = `grid-${perfilGrid}-${tipoGrid}${semEscola}`;
   return (
-    <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
+    <section className="tabela-relatorio-quant-classificacao-dieta-esp mt-3">
       <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
         {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
           <div>Diretoria Regional de Educação</div>

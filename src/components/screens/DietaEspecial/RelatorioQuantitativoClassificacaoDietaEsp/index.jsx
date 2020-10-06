@@ -10,7 +10,7 @@ import {
 import { Paginacao } from "components/Shareable/Paginacao";
 
 import { getRelatorioQuantitativoClassificacaoDietaEsp } from "services/dietaEspecial.service";
-import { imprimeRelatorioQuantitativoDiagDietaEsp } from "services/relatorios";
+import { imprimeRelatorioQuantitativoClassificacaoDietaEsp } from "services/relatorios";
 
 import FormFiltros from "./components/FormFiltros";
 import TabelaRelatorio from "./components/TabelaRelatorio";
@@ -47,7 +47,7 @@ export default () => {
   };
 
   const imprimeRelatorio = () => {
-    imprimeRelatorioQuantitativoDiagDietaEsp(formValues);
+    imprimeRelatorioQuantitativoClassificacaoDietaEsp(formValues);
   };
 
   return (
