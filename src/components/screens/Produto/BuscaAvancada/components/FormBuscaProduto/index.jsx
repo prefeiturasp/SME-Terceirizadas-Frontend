@@ -143,8 +143,13 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
         formValues.status = getTodasOpcoesStatusPorPerfil();
       else {
         formValues.status.map((status, index) => {
-          if (status !== "")
-            formValues.status[index] = retornaStatusBackend(status);
+          if (status !== "") {
+            const statusBackend = retornaStatusBackend(status);
+            if (Array.isArray(statusBackend)) {
+              statusBackend.map(status => formValues.status.push(status));
+              formValues.status.splice(index, 1);
+            } else formValues.status[index] = statusBackend;
+          }
         });
       }
       if (formValues.status[0] === "") formValues.status.splice(0, 1);

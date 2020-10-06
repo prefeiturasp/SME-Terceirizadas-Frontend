@@ -55,6 +55,7 @@ export const getTodasOpcoesStatusPorPerfil = () => {
 };
 
 export const retornaStatusBackend = status => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
   switch (status) {
     case "Reclamações de produtos":
       return "CODAE_AUTORIZOU_RECLAMACAO";
@@ -63,13 +64,27 @@ export const retornaStatusBackend = status => {
     case "Correções de Produtos":
       return "CODAE_QUESTIONADO";
     case "Aguardando análise das reclamações":
+      if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
+        return [
+          "CODAE_PEDIU_ANALISE_RECLAMACAO",
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+        ];
+      }
       return "CODAE_PEDIU_ANALISE_RECLAMACAO";
     case "Aguardando análise sensoriais":
       return "CODAE_PEDIU_ANALISE_SENSORIAL";
     case "Pendente de homologação":
       return "CODAE_PENDENTE_HOMOLOGACAO";
-    case "Homologado":
+    case "Homologado": {
+      if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+        return [
+          "CODAE_HOMOLOGADO",
+          "CODAE_PEDIU_ANALISE_RECLAMACAO",
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+        ];
+      }
       return "CODAE_HOMOLOGADO";
+    }
     case "Não homologado":
       return "CODAE_NAO_HOMOLOGADO";
   }
