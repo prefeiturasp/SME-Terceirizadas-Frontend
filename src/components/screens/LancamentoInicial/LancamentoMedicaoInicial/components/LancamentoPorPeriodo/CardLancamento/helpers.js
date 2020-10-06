@@ -30,14 +30,11 @@ export const validateFormLancamento = formValues => {
         const valorChave = parseInt(valorCampo);
         if (
           grupo === "convencional" && valorChave < frequencia / 2 &&
-          formValues.obs_diarias_1 === undefined
+          get(formValues[grupo], 'observacoes') === undefined
         ) {
           const msgErro = "Deve preencher observações diárias";
           mensagensDeErro.push(msgErro)
-          erros = {
-            ...erros,
-            obs_diarias_1: msgErro
-          };
+          set(erros, `${grupo}.observacoes`, msgErro)
         }
         if (valorChave > frequencia) {
           const msgErro = `O valor de ${nomeAmigavelCampo} não pode ser maior que a frequencia`;

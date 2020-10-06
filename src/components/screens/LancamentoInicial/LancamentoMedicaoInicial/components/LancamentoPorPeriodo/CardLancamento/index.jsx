@@ -16,6 +16,7 @@ import DietaEspecial from "./TabelaLancamento/DietaEspecial";
 
 import "./styles.scss";
 import { validateFormLancamento } from "./helpers";
+import { toastSuccess } from "components/Shareable/Toast/dialogs";
 
 function deveDesabilitarObservacoesDiarias(values) {
   console.log("deveDesabilitar", values);
@@ -38,6 +39,16 @@ export default ({
   const [lancamentoAberto, setLancamentoAberto] = useState(true);
   const abreFechaLancamento = () => {
     setLancamentoAberto(!lancamentoAberto);
+  };
+
+  const onSubmit = formValues => {
+    console.log("onSubmit", formValues);
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        toastSuccess("Lançamento enviado com sucesso");
+        resolve();
+      }, 1500);
+    });
   };
   return (
     <div className="lancamento-por-periodo-card mt-3" style={{ color: cor }}>
@@ -71,19 +82,29 @@ export default ({
       </div>
       {lancamentoAberto && (
         <Form
-          onSubmit={() => {}}
+          onSubmit={onSubmit}
           initialValues={{
-            convencional:{frequencia: 420}
+            convencional: { frequencia: 420 }
           }}
           validate={validateFormLancamento}
-          render={({ values, pristine, submitting, errors }) => (
-            <>
-              <div className="row">
-                <pre>{JSON.stringify(errors, null, 4)}</pre>
-              </div>
-              <div className="row">
-                <pre>{JSON.stringify(values, null, 4)}</pre>
-              </div>
+          render={({
+            form,
+            handleSubmit,
+            values,
+            pristine,
+            submitting,
+            errors
+          }) => (
+            <form
+              onSubmit={event => {
+                const promise = handleSubmit(event);
+                promise &&
+                  promise.then(() => {
+                    form.reset();
+                  });
+                return promise;
+              }}
+            >
               <div className="row">
                 <div className="col report-label-value">
                   <p className="value">Inserir novo lançamento</p>
@@ -91,28 +112,27 @@ export default ({
               </div>
               <div className="row">
                 <div className="col-3 data-lancamento-container">
-                  <form>
-                    <OnChange name="data_lancamento">
-                      {value => {
-                        // eslint-disable-next-line no-console
-                        console.log("OnChange", value);
-                      }}
-                    </OnChange>
-                    <Field
-                      component={InputComData}
-                      name="data_lancamento"
-                      label="Data do lançamento"
-                      required
-                      minDate={null}
-                      maxDate={
-                        values.data_final
-                          ? moment(values.data_final, "DD/MM/YYYY")._d
-                          : moment()._d
-                      }
-                    />
-                  </form>
+                  <OnChange name="data_lancamento">
+                    {value => {
+                      // eslint-disable-next-line no-console
+                      console.log("OnChange", value);
+                    }}
+                  </OnChange>
+                  <Field
+                    component={InputComData}
+                    name="data_lancamento"
+                    label="Data do lançamento"
+                    required
+                    minDate={null}
+                    maxDate={
+                      values.data_final
+                        ? moment(values.data_final, "DD/MM/YYYY")._d
+                        : moment()._d
+                    }
+                  />
                 </div>
               </div>
+              {values.data_lancamento && <>
               <div className="row">
                 <div className="col">
                   <label className="col-form-label">Dieta convencional</label>
@@ -124,6 +144,14 @@ export default ({
                 </div>
                 <div className="col-8">
                   <DietaConvencionalFrequencia />
+                </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col-12">
+                  <ObservacoesDiarias
+                    label="Observações diárias"
+                    name="convencional.observacoes"
+                  />
                 </div>
               </div>
               <div className="row">
@@ -146,7 +174,7 @@ export default ({
                 <div className="col-6">
                   <ObservacoesDiarias
                     label="Observações diárias"
-                    name="obs_diarias_1"
+                    name="grupoA.observacoes"
                   />
                 </div>
               </div>
@@ -164,13 +192,16 @@ export default ({
                 <div className="col-8">
                   <ObservacoesDiarias
                     label="Observações diárias"
-                    name="obs_diarias_2"
+                    name="grupoA.observacoes"
                   />
                 </div>
               </div>
               <div className="row mt-3">
                 <div className="col-7 erros-formulario">
-                  {errors.FORM_ERROR && errors.FORM_ERROR.map((error, index) => <p key={index}>{error}</p>)}
+                  {errors.FORM_ERROR &&
+                    errors.FORM_ERROR.map((error, index) => (
+                      <p key={index}>{error}</p>
+                    ))}
                 </div>
                 <div className="col-5 botoes-envio">
                   <Botao
@@ -187,7 +218,8 @@ export default ({
                   />
                 </div>
               </div>
-            </>
+              </>}
+            </form>
           )}
         />
       )}
