@@ -109,6 +109,15 @@ const MenuRelatorios = () => {
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
           to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP
+          }`}
+        >
+          Relatório quant. class. dieta esp.
+        </LeafItem>
+      )}
+      {exibirRelatorioQuantitativoSolicDietaEsp && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
             constants.RELATORIO_DIETA_ESPECIAL
           }`}
         >
