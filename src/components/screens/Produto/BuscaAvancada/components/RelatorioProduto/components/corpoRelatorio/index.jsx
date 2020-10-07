@@ -382,7 +382,7 @@ export default class CorpoRelatorio extends Component {
           maskClosable={false}
         >
           <section className="body-modal-produto">
-            <div>Usuario</div>
+            <div>Usuário</div>
             <div>Ações</div>
             <article className="list-logs">
               <section className="body-logs">
