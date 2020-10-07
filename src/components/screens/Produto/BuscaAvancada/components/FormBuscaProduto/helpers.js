@@ -44,6 +44,16 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_HOMOLOGADO",
       "CODAE_NAO_HOMOLOGADO"
     ];
+  } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+    return [
+      "CODAE_HOMOLOGADO",
+      "CODAE_NAO_HOMOLOGADO",
+      "CODAE_SUSPENDEU",
+      "CODAE_AUTORIZOU_RECLAMACAO",
+      "CODAE_HOMOLOGADO",
+      "CODAE_PEDIU_ANALISE_RECLAMACAO",
+      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+    ];
   } else {
     return [
       "CODAE_HOMOLOGADO",
