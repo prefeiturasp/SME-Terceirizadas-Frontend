@@ -52,7 +52,8 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_AUTORIZOU_RECLAMACAO",
       "CODAE_HOMOLOGADO",
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
-      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
     ];
   }
 };
@@ -86,7 +87,8 @@ export const retornaStatusBackend = status => {
         return [
           "CODAE_HOMOLOGADO",
           "CODAE_PEDIU_ANALISE_RECLAMACAO",
-          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+          "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
         ];
       }
       return "CODAE_HOMOLOGADO";
