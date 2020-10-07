@@ -139,7 +139,8 @@ export const listarCardsPermitidos = () => {
   const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
   cardHomologados.incluir_status.push(
     ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-    CODAE_PEDIU_ANALISE_RECLAMACAO
+    CODAE_PEDIU_ANALISE_RECLAMACAO,
+    TERCEIRIZADA_RESPONDEU_RECLAMACAO
   );
   return [
     CARD_RECLAMACAO_DE_PRODUTO,

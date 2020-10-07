@@ -10,7 +10,11 @@ export const retornaStatusFormatado = status => {
     case "CODAE_QUESTIONADO":
       return "Correções de Produtos";
     case "CODAE_PEDIU_ANALISE_RECLAMACAO": {
-      if (tipoPerfil === TIPO_PERFIL.ESCOLA) return "Homologado";
+      if (
+        tipoPerfil !== TIPO_PERFIL.GESTAO_PRODUTO &&
+        tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA
+      )
+        return "Homologado";
       return "Aguardando análise das reclamações";
     }
     case "CODAE_PEDIU_ANALISE_SENSORIAL":
@@ -22,12 +26,21 @@ export const retornaStatusFormatado = status => {
     case "CODAE_NAO_HOMOLOGADO":
       return "Não homologado";
     case "ESCOLA_OU_NUTRICIONISTA_RECLAMOU": {
-      if (tipoPerfil === TIPO_PERFIL.ESCOLA) return "Homologado";
+      if (
+        tipoPerfil !== TIPO_PERFIL.GESTAO_PRODUTO &&
+        tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA
+      )
+        return "Homologado";
       if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO)
         return "Aguardando análise das reclamações";
       return "Escola ou nutricionista reclamou";
     }
     case "TERCEIRIZADA_RESPONDEU_RECLAMACAO":
+      if (
+        tipoPerfil !== TIPO_PERFIL.GESTAO_PRODUTO &&
+        tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA
+      )
+        return "Homologado";
       return "Terceirizada respondeu a reclamação";
     default:
       return "Todos";

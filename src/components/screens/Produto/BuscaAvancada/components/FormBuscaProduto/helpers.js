@@ -44,7 +44,7 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_HOMOLOGADO",
       "CODAE_NAO_HOMOLOGADO"
     ];
-  } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+  } else {
     return [
       "CODAE_HOMOLOGADO",
       "CODAE_NAO_HOMOLOGADO",
@@ -53,13 +53,6 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_HOMOLOGADO",
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
       "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
-    ];
-  } else {
-    return [
-      "CODAE_HOMOLOGADO",
-      "CODAE_NAO_HOMOLOGADO",
-      "CODAE_SUSPENDEU",
-      "CODAE_AUTORIZOU_RECLAMACAO"
     ];
   }
 };
@@ -86,7 +79,10 @@ export const retornaStatusBackend = status => {
     case "Pendente de homologação":
       return "CODAE_PENDENTE_HOMOLOGACAO";
     case "Homologado": {
-      if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+      if (
+        tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA &&
+        tipoPerfil !== TIPO_PERFIL.GESTAO_PRODUTO
+      ) {
         return [
           "CODAE_HOMOLOGADO",
           "CODAE_PEDIU_ANALISE_RECLAMACAO",
