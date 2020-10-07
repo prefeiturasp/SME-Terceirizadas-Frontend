@@ -7,10 +7,7 @@ import { Form, Field } from "react-final-form";
 import {
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes,
-  getProdutosPorNome,
-  getProdutosPorMarca,
-  getProdutosPorFabricante
+  getNomesFabricantes
 } from "../../../../../services/produto.service";
 import { getProdutosListagem } from "services/produto.service";
 import {
@@ -104,21 +101,6 @@ export default class BuscaProduto extends Component {
     this.setState({
       resultadosProduto: response.data.results
     });
-  };
-
-  onSelectProduto = async data => {
-    const response = await getProdutosPorNome(data);
-    this.adicionaResponseAoResultadoProduto(response);
-  };
-
-  onSelectMarca = async data => {
-    const response = await getProdutosPorMarca(data);
-    this.adicionaResponseAoResultadoProduto(response);
-  };
-
-  onSelectFabricante = async data => {
-    const response = await getProdutosPorFabricante(data);
-    this.adicionaResponseAoResultadoProduto(response);
   };
 
   dropDownProduto = indice => {
