@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import HTTP_STATUS from "http-status-codes";
 import {
   STATUS_CODAE_SUSPENDEU,
+  STATUS_CODAE_QUESTIONADO,
   STATUS_CODAE_AUTORIZOU_RECLAMACAO
 } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
@@ -23,6 +24,7 @@ import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
@@ -223,6 +225,12 @@ class HomologacaoProduto extends Component {
                 !!status &&
                 status === STATUS_CODAE_SUSPENDEU && (
                   <MotivoSuspensao logs={logs} />
+                )}
+
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_CODAE_QUESTIONADO && (
+                  <MotivoDaCorrecaoDeHomologacao logs={logs} />
                 )}
 
               {!!logs.length &&
