@@ -10,8 +10,8 @@
       align-items: center;
       font-size: 12px;
       color: $blackSubtle;
-      background-color: #f5f6f8;
-      border: 1px solid #e9eaea;
+      background-color: $grayLightHeader;
+      border: 1px solid $grayBorder;
       font-weight: 700;
       padding: 1em;
     }
@@ -25,7 +25,7 @@
     }
     > div:nth-child(1) {
       text-align: center;
-      border-bottom: 2px solid #e9eaea;
+      border-bottom: 2px solid $grayBorder;
     }
   }
   .cabecalho-qtde-dieta {
@@ -47,7 +47,7 @@
       align-items: center;
       font-size: 12px;
       color: $blackSubtle;
-      border: 1px solid #e9eaea;
+      border: 1px solid $grayBorder;
       font-weight: 700;
       padding: 1em;
     }
@@ -61,8 +61,8 @@
       align-items: center;
       font-size: 12px;
       color: $blackSubtle;
-      background-color: #f5f6f8;
-      border: 1px solid #e9eaea;
+      background-color: $grayLightHeader;
+      border: 1px solid $grayBorder;
       font-weight: 700;
       padding: 1em;
     }
