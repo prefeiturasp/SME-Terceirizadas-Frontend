@@ -97,19 +97,24 @@ export const ordenaPorLogMaisRecente = (a, b) => {
 const getText = item => {
   const TAMANHO_MAXIMO = 48;
   let appendix = "";
+
   if (
+    usuarioEhTerceirizada() &&
+    item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO
+  ) {
+    appendix = ` (${item.qtde_questionamentos})`;
+  }
+  if (
+    usuarioEhCODAEGestaoProduto() &&
     [
       CODAE_PEDIU_ANALISE_RECLAMACAO,
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
       TERCEIRIZADA_RESPONDEU_RECLAMACAO
     ].includes(item.status.toLowerCase())
   ) {
-    if (usuarioEhTerceirizada()) {
-      appendix = ` (${item.qtde_questionamentos})`;
-    } else if (usuarioEhCODAEGestaoProduto()) {
-      appendix = ` (${item.qtde_reclamacoes})`;
-    }
+    appendix = ` (${item.qtde_reclamacoes})`;
   }
+
   return `${item.id_externo} - ${truncarString(
     item.nome_produto,
     TAMANHO_MAXIMO - appendix.length
