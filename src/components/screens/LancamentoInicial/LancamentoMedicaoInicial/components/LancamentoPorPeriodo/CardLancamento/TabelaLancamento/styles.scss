@@ -71,12 +71,8 @@
   }
 }
 
-.tabela-dieta-especial {
-  .cabecalho-tabela,
-  .linha-tabela {
-    display: grid;
-    grid-template-columns: 20% 24% 28% 28%;
-  }
+.tabela-dieta-especial-3col,
+.tabela-dieta-especial-4col {
   .report-label-value {
     span {
       color: red;
@@ -84,15 +80,46 @@
   }
 }
 
-.tabela-dieta-convencional-frequencia {
+.tabela-dieta-especial-4col {
   .cabecalho-tabela,
   .linha-tabela {
     display: grid;
-    grid-template-columns: 12% 14% 14% 14% 14% 16% 16%;
+    grid-template-columns: 20% 24% 28% 28%;
   }
 }
 
-.tabela-dieta-especial,
+.tabela-dieta-especial-3col {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+    grid-template-columns: 30% 30% 40%;
+  }
+}
+
+.tabela-dieta-convencional-frequencia {
+  overflow-x: auto;
+  .cabecalho-tabela {
+    height: 100px;
+    > div:nth-last-child(1) {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+  }
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: flex;
+    > div {
+      min-width: 70px;
+    }
+    > div:nth-last-child(1) {
+      justify-content: flex-start;
+      min-width: 250px;
+    }
+  }
+}
+
+.tabela-dieta-especial-3col,
+.tabela-dieta-especial-4col,
 .tabela-dieta-convencional {
   .linha-tabela {
     > div:nth-child(1) {

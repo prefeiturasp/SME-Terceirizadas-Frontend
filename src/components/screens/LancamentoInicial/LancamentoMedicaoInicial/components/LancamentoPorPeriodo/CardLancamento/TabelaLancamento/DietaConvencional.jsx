@@ -3,7 +3,7 @@ import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
-export default ({formValues}) => (
+export default ({ formValues }) => (
   <div className="tabela-lancamento tabela-dieta-convencional">
     <div className="cabecalho-tabela">
       <div>
@@ -35,7 +35,10 @@ export default ({formValues}) => (
       </div>
     </div>
     <div className="linha-tabela">
-      <div>{formValues.data_lancamento && formValues.data_lancamento.substring(0, 2)}</div>
+      <div>
+        {formValues.data_lancamento &&
+          formValues.data_lancamento.substring(0, 2)}
+      </div>
       <div>
         <BorderlessInput />
       </div>

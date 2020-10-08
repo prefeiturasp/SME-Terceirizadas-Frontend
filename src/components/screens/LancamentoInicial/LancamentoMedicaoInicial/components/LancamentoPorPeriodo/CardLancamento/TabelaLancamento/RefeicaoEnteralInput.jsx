@@ -1,7 +1,9 @@
 import React from "react";
 import { Field } from "react-final-form";
 
-import BorderlessTextarea from "../../../BorderlessTextarea";
+import { numericInteger } from "helpers/fieldValidators";
+
+import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 
@@ -14,7 +16,12 @@ export default ({ name, label, disabled }) => (
     </div>
     <div className="linha-tabela">
       <div>
-        <Field component={BorderlessTextarea} name={name} disabled={disabled} />
+        <Field
+          component={BorderlessInput}
+          name={name}
+          disabled={disabled}
+          validate={numericInteger}
+        />
       </div>
     </div>
   </div>
