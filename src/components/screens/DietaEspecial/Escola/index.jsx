@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import Prescritor from "./componentes/Prescritor";
+import Laudo from "./componentes/Laudo";
 import {
   DIETA_ESPECIAL,
   ESCOLA,
@@ -38,9 +40,7 @@ import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
 import { InputComData } from "../../../Shareable/DatePicker";
-import ManagedInputFileField from "../../../Shareable/Input/InputFile/ManagedField";
 import InputText from "../../../Shareable/Input/InputText";
-import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
 import CheckboxField from "components/Shareable/Checkbox/Field";
@@ -129,11 +129,22 @@ class solicitacaoDietaEspecial extends Component {
   getEscolaPorEOL = async () => {
     const { change, aluno_nao_matriculado } = this.props;
 
-    if (!aluno_nao_matriculado.codigo_eol_escola) return;
+    if (!aluno_nao_matriculado) {
+      change("aluno_nao_matriculado_data.nome_escola", "");
+      return;
+    }
+
+    if (!aluno_nao_matriculado.codigo_eol_escola) {
+      change("aluno_nao_matriculado_data.nome_escola", "");
+      return;
+    }
 
     const codigo_eol_escola = aluno_nao_matriculado.codigo_eol_escola;
 
-    if (!codigo_eol_escola || codigo_eol_escola.length !== 6) return;
+    if (!codigo_eol_escola || codigo_eol_escola.length !== 6) {
+      change("aluno_nao_matriculado_data.nome_escola", "");
+      return;
+    }
 
     const params = { codigo_eol: codigo_eol_escola };
     const resposta = await getEscolasSimplissima(params);
@@ -141,6 +152,7 @@ class solicitacaoDietaEspecial extends Component {
     if (!resposta) return;
 
     if (!resposta.count) {
+      change("aluno_nao_matriculado_data.nome_escola", "");
       toastError("Código EOL informado inválido");
     } else {
       const escola = resposta.results[0];
@@ -150,21 +162,33 @@ class solicitacaoDietaEspecial extends Component {
 
   getSolicitacoesVigentesResponsavel = async () => {
     const { aluno_nao_matriculado } = this.props;
+    if (!aluno_nao_matriculado) {
+      this.props.loadSolicitacoesVigentes(null);
+      return;
+    }
 
-    if (!aluno_nao_matriculado.responsavel.cpf) return;
+    if (!aluno_nao_matriculado.responsavel.cpf || !aluno_nao_matriculado.nome) {
+      this.props.loadSolicitacoesVigentes(null);
+      return;
+    }
 
     const { cpf } = aluno_nao_matriculado.responsavel;
+    const { nome } = aluno_nao_matriculado;
 
     if (validaCPF(cpf)) return;
 
     const params = gerarParametrosConsulta({
       cpf_responsavel: cpf,
+      nome_completo_aluno: nome,
       status: getStatusSolicitacoesVigentes()
     });
     const resposta = await getSolicitacoesDietaEspecial(params);
     this.props.loadSolicitacoesVigentes(
       formatarSolicitacoesVigentes(resposta.data.results)
     );
+    if (resposta.data.count === 0) {
+      this.props.loadSolicitacoesVigentes(null);
+    }
   };
 
   onSubmit(payload) {
@@ -223,11 +247,12 @@ class solicitacaoDietaEspecial extends Component {
                 component={CheckboxField}
                 name="aluno_nao_matriculado"
                 type="checkbox"
-                onChange={() =>
+                onChange={() => {
+                  this.props.reset();
                   this.setState({
                     aluno_nao_matriculado: !this.state.aluno_nao_matriculado
-                  })
-                }
+                  });
+                }}
               />
               <div className="ml-3">
                 Dieta Especial Destina-se à Aluno Não Matriculado na Rede
@@ -240,216 +265,179 @@ class solicitacaoDietaEspecial extends Component {
             Descrição da Solicitação
           </span>
           {!this.state.aluno_nao_matriculado && (
-            <FormSection name="aluno_json">
-              <div className="row">
-                <div className="col-md-3">
-                  <Field
-                    component={InputText}
-                    name="codigo_eol"
-                    label="Cód. EOL do Aluno"
-                    placeholder="Insira o Código"
-                    className="form-control"
-                    type="number"
-                    required
-                    validate={[required, length7]}
-                    onBlur={this.onEolBlur}
-                  />
+            <>
+              <FormSection name="aluno_json">
+                <div className="row">
+                  <div className="col-md-3">
+                    <Field
+                      component={InputText}
+                      name="codigo_eol"
+                      label="Cód. EOL do Aluno"
+                      placeholder="Insira o Código"
+                      className="form-control"
+                      type="number"
+                      required
+                      validate={[required, length7]}
+                      onBlur={this.onEolBlur}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <Field
+                      component={InputText}
+                      name="nome"
+                      label="Nome completo do Aluno"
+                      className="form-control"
+                      disabled
+                      validate={[required, minLength6]}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <Field
+                      component={InputComData}
+                      label="Data de Nascimento"
+                      name="data_nascimento"
+                      className="form-control"
+                      minDate={dateDelta(-360 * 99)}
+                      maxDate={dateDelta(-1)}
+                      showMonthDropdown
+                      showYearDropdown
+                      disabled
+                      validate={required}
+                    />
+                  </div>
                 </div>
-                <div className="col-md-6">
-                  <Field
-                    component={InputText}
-                    name="nome"
-                    label="Nome completo do Aluno"
-                    className="form-control"
-                    required
-                    disabled
-                    validate={[required, minLength6]}
-                  />
-                </div>
-                <div className="col-md-3">
-                  <Field
-                    component={InputComData}
-                    label="Data de Nascimento"
-                    name="data_nascimento"
-                    className="form-control"
-                    minDate={dateDelta(-360 * 99)}
-                    maxDate={dateDelta(-1)}
-                    showMonthDropdown
-                    showYearDropdown
-                    required
-                    disabled
-                    validate={required}
-                  />
-                </div>
-              </div>
-            </FormSection>
+              </FormSection>
+              {solicitacoesVigentes && (
+                <SolicitacaoVigente
+                  solicitacoesVigentes={solicitacoesVigentes}
+                />
+              )}
+
+              <Prescritor
+                registroFuncionalValidators={this.registroFuncionalValidators}
+              />
+
+              <hr />
+
+              <Laudo />
+            </>
           )}
           {this.state.aluno_nao_matriculado && (
-            <FormSection name="aluno_nao_matriculado_data">
-              <div className="row">
-                <div className="col-md-3">
-                  <Field
-                    component={InputText}
-                    name="codigo_eol_escola"
-                    label="Cód. EOL da Escola"
-                    placeholder="Insira o Código"
-                    className="form-control"
-                    type="number"
-                    required
-                    validate={[required, length(6)]}
-                    onBlur={this.getEscolaPorEOL}
-                  />
+            <>
+              <FormSection name="aluno_nao_matriculado_data">
+                <div className="row">
+                  <div className="col-md-3">
+                    <Field
+                      component={InputText}
+                      name="codigo_eol_escola"
+                      label="Cód. EOL da Escola"
+                      placeholder="Insira o Código"
+                      className="form-control"
+                      type="number"
+                      required
+                      validate={[required, length(6)]}
+                      onBlur={this.getEscolaPorEOL}
+                    />
+                  </div>
+                  <div className="col-md-9">
+                    <Field
+                      component={InputText}
+                      name="nome_escola"
+                      label="Nome da Escola"
+                      className="form-control"
+                      disabled
+                      validate={required}
+                    />
+                  </div>
                 </div>
-                <div className="col-md-9">
-                  <Field
-                    component={InputText}
-                    name="nome_escola"
-                    label="Nome da Escola"
-                    className="form-control"
-                    required
-                    disabled
-                    validate={required}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <Field
-                    {...cpfMask}
-                    component={InputText}
-                    name="cpf"
-                    label="CPF do Aluno"
-                    className="form-control"
-                    validate={validaCPF}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <Field
-                    component={InputText}
-                    name="nome"
-                    label="Nome completo do Aluno"
-                    className="form-control"
-                    required
-                    validate={[required, minLength6]}
-                  />
-                </div>
-                <div className="col-md-3">
-                  <Field
-                    component={InputComData}
-                    name="data_nascimento"
-                    label="Data de Nascimento"
-                    className="form-control"
-                    minDate={dateDelta(-360 * 99)}
-                    maxDate={dateDelta(-1)}
-                    showMonthDropdown
-                    showYearDropdown
-                    required
-                    validate={required}
-                  />
-                </div>
-              </div>
-              <FormSection name="responsavel">
                 <div className="row">
                   <div className="col-md-3">
                     <Field
                       {...cpfMask}
                       component={InputText}
                       name="cpf"
-                      label="CPF do Responsável"
+                      label="CPF do Aluno"
                       className="form-control"
-                      required
-                      onBlur={this.getSolicitacoesVigentesResponsavel}
-                      validate={[required, validaCPF]}
+                      validate={validaCPF}
                     />
                   </div>
-                  <div className="col-md-9">
+                  <div className="col-md-6">
                     <Field
                       component={InputText}
                       name="nome"
-                      label="Nome completo do Responsável"
+                      label="Nome completo do Aluno"
                       className="form-control"
+                      required
+                      validate={[required, minLength6]}
+                      onBlur={this.getSolicitacoesVigentesResponsavel}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <Field
+                      component={InputComData}
+                      name="data_nascimento"
+                      label="Data de Nascimento"
+                      className="form-control"
+                      minDate={dateDelta(-360 * 99)}
+                      maxDate={dateDelta(-1)}
+                      showMonthDropdown
+                      showYearDropdown
                       required
                       validate={required}
                     />
                   </div>
                 </div>
+                <FormSection name="responsavel">
+                  <div className="row">
+                    <div className="col-md-3">
+                      <Field
+                        {...cpfMask}
+                        component={InputText}
+                        name="cpf"
+                        label="CPF do Responsável"
+                        className="form-control"
+                        required
+                        onBlur={this.getSolicitacoesVigentesResponsavel}
+                        validate={[required, validaCPF]}
+                      />
+                    </div>
+                    <div className="col-md-9">
+                      <Field
+                        component={InputText}
+                        name="nome"
+                        label="Nome completo do Responsável"
+                        className="form-control"
+                        required
+                        validate={required}
+                      />
+                    </div>
+                  </div>
+                </FormSection>
               </FormSection>
-            </FormSection>
+              {solicitacoesVigentes && (
+                <SolicitacaoVigente
+                  solicitacoesVigentes={solicitacoesVigentes}
+                />
+              )}
+              <hr />
+
+              <Prescritor />
+
+              <hr />
+
+              <Laudo />
+            </>
           )}
 
-          {solicitacoesVigentes && (
-            <SolicitacaoVigente solicitacoesVigentes={solicitacoesVigentes} />
-          )}
           <hr />
-          <section className="row">
-            <div className="col-7">
-              <Field
-                component={InputText}
-                label="Nome do Prescritor do laudo (médico, nutricionista, fonoaudiólogo)"
-                name="nome_completo_pescritor"
-                placeholder="Insira o Nome do Prescritor"
-                className="form-control"
-                validate={minLength6}
-                helpText={"Mínimo 6 caracteres"}
-              />
-            </div>
-            <div className="col-5">
-              <Field
-                component={InputText}
-                label="CRM/CRN/CRFa/RMS"
-                name="registro_funcional_pescritor"
-                className="form-control"
-                helpText={"Tamanho: 4 a 7 caracteres"}
-                validate={this.registroFuncionalValidators}
-              />
-            </div>
-          </section>
-          <hr />
-          <section className="row attachments">
-            <div className="col-9">
-              <div className="card-title font-weight-bold cinza-escuro mt-4">
-                <span className="required-asterisk">*</span>
-                Laudo
-              </div>
-              <div className="text">
-                Anexe o laudo fornecido pelo profissional acima. Sem ele, a
-                solicitação de Dieta Especial será negada.
-              </div>
-              <div className="card-warning mt-2">
-                <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,
-                .docx, .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo
-                deve ter sido emitido há, no máximo, 12 meses. Após a data de
-                aprovação no sistema, o laudo terá validade de 12 meses
-              </div>
-            </div>
-            <div className="col-3 btn">
-              <Field
-                component={ManagedInputFileField}
-                className="inputfile"
-                texto="Anexar"
-                name="anexos"
-                accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                validate={[required]}
-                toastSuccessMessage={"Laudo incluso com sucesso"}
-              />
-            </div>
-          </section>
-          <section className="row mt-5 mb-5">
-            <div className="col-12">
-              <Field
-                component={TextAreaWYSIWYG}
-                label="Observações"
-                name="observacoes"
-                className="form-control"
-              />
-            </div>
-          </section>
+
           <article className="card-body footer-button">
             <Botao
               texto="Cancelar"
               onClick={() => {
                 this.props.reset();
                 this.props.loadSolicitacoesVigentes(null);
+                this.setState({ aluno_nao_matriculado: false });
               }}
               disabled={pristine || submitting}
               style={BUTTON_STYLE.GREEN_OUTLINE}
