@@ -42,7 +42,9 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_PEDIU_ANALISE_SENSORIAL",
       "CODAE_PENDENTE_HOMOLOGACAO",
       "CODAE_HOMOLOGADO",
-      "CODAE_NAO_HOMOLOGADO"
+      "CODAE_NAO_HOMOLOGADO",
+      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
     ];
   } else {
     return [
@@ -71,7 +73,8 @@ export const retornaStatusBackend = status => {
       if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
         return [
           "CODAE_PEDIU_ANALISE_RECLAMACAO",
-          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+          "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
         ];
       }
       return "CODAE_PEDIU_ANALISE_RECLAMACAO";
@@ -80,18 +83,22 @@ export const retornaStatusBackend = status => {
     case "Pendente de homologação":
       return "CODAE_PENDENTE_HOMOLOGACAO";
     case "Homologado": {
-      if (
-        tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA &&
-        tipoPerfil !== TIPO_PERFIL.GESTAO_PRODUTO
-      ) {
+      if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
         return [
           "CODAE_HOMOLOGADO",
-          "CODAE_PEDIU_ANALISE_RECLAMACAO",
           "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
           "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
         ];
       }
-      return "CODAE_HOMOLOGADO";
+      if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
+        return "CODAE_HOMOLOGADO";
+      }
+      return [
+        "CODAE_HOMOLOGADO",
+        "CODAE_PEDIU_ANALISE_RECLAMACAO",
+        "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+        "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+      ];
     }
     case "Não homologado":
       return "CODAE_NAO_HOMOLOGADO";
