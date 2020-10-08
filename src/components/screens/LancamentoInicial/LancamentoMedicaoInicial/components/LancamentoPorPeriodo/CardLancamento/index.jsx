@@ -2,7 +2,6 @@ import { isequal } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 import { Botao } from "components/Shareable/Botao";
 import {
@@ -105,24 +104,12 @@ export default ({
               }}
             >
               <div className="row">
-                <pre>{JSON.stringify(errors, null, 4)}</pre>
-              </div>
-              <div className="row">
-                <pre>{JSON.stringify(values, null, 4)}</pre>
-              </div>
-              <div className="row">
                 <div className="col report-label-value">
                   <p className="value">Inserir novo lançamento</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-3 data-lancamento-container">
-                  <OnChange name="data_lancamento">
-                    {value => {
-                      // eslint-disable-next-line no-console
-                      console.log("OnChange", value);
-                    }}
-                  </OnChange>
                   <Field
                     component={InputComData}
                     name="data_lancamento"
@@ -155,56 +142,64 @@ export default ({
                       <DietaConvencionalFrequencia panorama={panorama} />
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col">
-                      <label className="col-form-label">
-                        Dieta especial <span>Grupo A</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4">
-                      <DietaEspecial
-                        formValues={values}
-                        prefix="grupoA"
-                        panorama={panorama}
-                      />
-                    </div>
-                    <div className="col-2">
-                      <RefeicaoEnteralInput
-                        label="Refeição (somente dieta enteral)"
-                        name="grupoA.ref_enteral"
-                      />
-                    </div>
-                    <div className="col-6">
-                      <ObservacoesDiarias
-                        label="Observações diárias"
-                        name="grupoA.observacoes"
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col">
-                      <label className="col-form-label">
-                        Dieta especial <span>Grupo B</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4">
-                      <DietaEspecial
-                        formValues={values}
-                        prefix="grupoB"
-                        panorama={panorama}
-                      />
-                    </div>
-                    <div className="col-8">
-                      <ObservacoesDiarias
-                        label="Observações diárias"
-                        name="grupoB.observacoes"
-                      />
-                    </div>
-                  </div>
+                  {panorama.qtde_tipo_a > 0 && (
+                    <>
+                      <div className="row">
+                        <div className="col">
+                          <label className="col-form-label">
+                            Dieta especial <span>Grupo A</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-4">
+                          <DietaEspecial
+                            formValues={values}
+                            prefix="grupoA"
+                            panorama={panorama}
+                          />
+                        </div>
+                        <div className="col-2">
+                          <RefeicaoEnteralInput
+                            label="Refeição (somente dieta enteral)"
+                            name="grupoA.ref_enteral"
+                          />
+                        </div>
+                        <div className="col-6">
+                          <ObservacoesDiarias
+                            label="Observações diárias"
+                            name="grupoA.observacoes"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {panorama.qtde_tipo_b > 0 && (
+                    <>
+                      <div className="row">
+                        <div className="col">
+                          <label className="col-form-label">
+                            Dieta especial <span>Grupo B</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-4">
+                          <DietaEspecial
+                            formValues={values}
+                            prefix="grupoB"
+                            panorama={panorama}
+                          />
+                        </div>
+                        <div className="col-8">
+                          <ObservacoesDiarias
+                            label="Observações diárias"
+                            name="grupoB.observacoes"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                   <div className="row mt-3">
                     <div className="col-7 erros-formulario">
                       {errors &&

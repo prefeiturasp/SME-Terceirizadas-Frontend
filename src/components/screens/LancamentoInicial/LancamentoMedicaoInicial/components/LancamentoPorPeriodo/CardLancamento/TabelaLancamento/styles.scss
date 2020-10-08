@@ -108,8 +108,9 @@
   .cabecalho-tabela,
   .linha-tabela {
     display: flex;
+    display: flex;
     > div {
-      min-width: 70px;
+      width: 70px;
     }
     > div:nth-last-child(1) {
       justify-content: flex-start;
