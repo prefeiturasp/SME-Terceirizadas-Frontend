@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 
+import BorderlessInput from "../BorderlessInput";
+
 import "./styles.scss";
 
 export default () => {
@@ -41,13 +43,7 @@ export default () => {
                     <Field
                       key={index2}
                       name={`${programa.uuid}.${periodo.uuid}`}
-                      render={({ input }) => {
-                        return (
-                          <div className="borderless-input">
-                            <input {...input} />
-                          </div>
-                        );
-                      }}
+                      component={BorderlessInput}
                     />
                   ))}
                 </div>

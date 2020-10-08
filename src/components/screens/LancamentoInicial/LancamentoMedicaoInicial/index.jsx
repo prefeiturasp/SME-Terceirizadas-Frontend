@@ -45,7 +45,9 @@ export default () => {
         {!loading && (
           <SeletorTipoContagem escola={meusDados.vinculo_atual.instituicao} />
         )}
-        <LancamentoPorPeriodo />
+        {panoramaGeral && (
+          <LancamentoPorPeriodo panoramaGeral={panoramaGeral} />
+        )}
       </div>
     </div>
   );

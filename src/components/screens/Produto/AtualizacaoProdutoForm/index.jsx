@@ -5,6 +5,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import {
   STATUS_CODAE_SUSPENDEU,
+  STATUS_CODAE_QUESTIONADO,
   STATUS_CODAE_AUTORIZOU_RECLAMACAO
 } from "configs/constants";
 import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
@@ -12,6 +13,7 @@ import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
 import WizardFormTerceiraPagina from "./components/WizardFormTerceiraPagina";
 import Wizard from "components/Shareable/Wizard";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
+import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import {
   getProtocolosDietaEspecial,
   getHomologacao,
@@ -229,6 +231,12 @@ class AtualizacaoProdutoForm extends Component {
                 !!status &&
                 status === STATUS_CODAE_SUSPENDEU && (
                   <MotivoSuspensao logs={logs} />
+                )}
+
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_CODAE_QUESTIONADO && (
+                  <MotivoDaCorrecaoDeHomologacao logs={logs} />
                 )}
 
               {!!logs.length &&
