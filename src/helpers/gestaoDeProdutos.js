@@ -124,6 +124,12 @@ export const listarCardsPermitidos = () => {
       cardAguardandoAnaliseReclamacao
     ];
   } else if ([TIPO_PERFIL.TERCEIRIZADA].includes(perfil)) {
+    const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
+    cardHomologados.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+      TERCEIRIZADA_RESPONDEU_RECLAMACAO
+    );
+
     return [
       CARD_RECLAMACAO_DE_PRODUTO,
       CARD_PRODUTOS_SUSPENSOS,
