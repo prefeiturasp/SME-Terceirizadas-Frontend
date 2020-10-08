@@ -179,9 +179,6 @@ class solicitacaoDietaEspecial extends Component {
     this.props.loadSolicitacoesVigentes(
       formatarSolicitacoesVigentes(resposta.data.results)
     );
-    if (resposta.data.count === 0) {
-      this.props.loadSolicitacoesVigentes(null);
-    }
   };
 
   onSubmit(payload) {
@@ -241,8 +238,8 @@ class solicitacaoDietaEspecial extends Component {
                 name="aluno_nao_matriculado"
                 type="checkbox"
                 onChange={() => {
-                  this.props.reset();
                   this.props.loadSolicitacoesVigentes(null);
+                  this.props.reset();
                   this.setState({
                     aluno_nao_matriculado: !this.state.aluno_nao_matriculado
                   });
