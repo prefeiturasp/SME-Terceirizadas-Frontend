@@ -2,10 +2,15 @@ import React from "react";
 import { Field } from "redux-form";
 import InputText from "../../../../../Shareable/Input/InputText";
 
-import { minLength, required } from "helpers/fieldValidators";
+import {
+  minLength,
+  required,
+  numericInteger,
+  maxLength
+} from "helpers/fieldValidators";
 
 const minLength6 = minLength(6);
-export default ({ registroFuncionalValidators }) => {
+export default () => {
   return (
     <section className="row">
       <div className="col-7">
@@ -28,7 +33,7 @@ export default ({ registroFuncionalValidators }) => {
           required
           className="form-control"
           helpText={"Tamanho: 4 a 7 caracteres"}
-          validate={[required, registroFuncionalValidators]}
+          validate={[required, numericInteger, maxLength(7), minLength(4)]}
         />
       </div>
     </section>

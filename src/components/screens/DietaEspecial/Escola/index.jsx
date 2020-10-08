@@ -16,8 +16,6 @@ import {
   length,
   minLength,
   required,
-  maxLength,
-  numericInteger,
   validaCPF
 } from "../../../../helpers/fieldValidators";
 import {
@@ -70,11 +68,6 @@ class solicitacaoDietaEspecial extends Component {
     this.removeFile = this.removeFile.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.onEolBlur = this.onEolBlur.bind(this);
-    this.registroFuncionalValidators = [
-      numericInteger,
-      maxLength(7),
-      minLength(4)
-    ];
   }
 
   componentDidMount() {
@@ -249,6 +242,7 @@ class solicitacaoDietaEspecial extends Component {
                 type="checkbox"
                 onChange={() => {
                   this.props.reset();
+                  this.props.loadSolicitacoesVigentes(null);
                   this.setState({
                     aluno_nao_matriculado: !this.state.aluno_nao_matriculado
                   });
@@ -313,9 +307,7 @@ class solicitacaoDietaEspecial extends Component {
                 />
               )}
 
-              <Prescritor
-                registroFuncionalValidators={this.registroFuncionalValidators}
-              />
+              <Prescritor />
 
               <hr />
 
