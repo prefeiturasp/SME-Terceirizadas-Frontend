@@ -80,7 +80,6 @@ export default ({
         <Form
           onSubmit={onSubmit}
           initialValues={{
-            convencional: { frequencia: 420 },
             escola_periodo_escolar: panorama.uuid_escola_periodo_escolar
           }}
           initialValuesEqual={isequal}
