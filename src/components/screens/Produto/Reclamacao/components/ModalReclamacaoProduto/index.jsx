@@ -52,9 +52,11 @@ export default class ModalReclamacaoProduto extends Component {
     const meusDados = this.state.meusDados;
     if (meusDados) {
       const dadosIniciais = {
-        reclamante_registro_funcional: meusDados.registro_funcional,
+        reclamante_registro_funcional: meusDados.registro_funcional
+          ? meusDados.registro_funcional
+          : undefined,
         reclamante_nome: meusDados.nome,
-        reclamante_cargo: meusDados.cargo || ""
+        reclamante_cargo: meusDados.cargo ? meusDados.cargo : undefined
       };
       if (usuarioEhEscola()) {
         dadosIniciais.escola = meusDados.vinculo_atual.instituicao.uuid;
