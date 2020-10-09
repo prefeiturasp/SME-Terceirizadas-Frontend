@@ -83,7 +83,9 @@ export default ({
             escola_periodo_escolar: panorama.uuid_escola_periodo_escolar
           }}
           initialValuesEqual={isequal}
-          validate={validateFormLancamento}
+          validate={formValues =>
+            validateFormLancamento(formValues, panorama.qtde_alunos)
+          }
           render={({
             form,
             handleSubmit,
