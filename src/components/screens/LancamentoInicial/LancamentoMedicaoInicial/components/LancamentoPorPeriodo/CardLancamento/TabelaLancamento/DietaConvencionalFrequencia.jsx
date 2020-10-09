@@ -104,7 +104,6 @@ export default ({ panorama }) => (
           component={BorderlessInput}
           name="convencional.frequencia"
           validate={numericInteger}
-          disabled
         />
       </div>
       {panorama.horas_atendimento !== 5 && (
