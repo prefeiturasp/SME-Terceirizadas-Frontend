@@ -19,7 +19,7 @@ export default ({ logs }) => {
     <div className="componente-motivo-da-recusa-de-homologacao row">
       <div className="col-12">
         <div className="titulo-recusa">
-          <p className="mb-1">{`Motivo do pedido de correção do produto (Data: ${
+          <p className="mb-1">{`Motivo da solicitação de correção do produto (Data: ${
             correcao.criado_em.split(" ")[0]
           }): `}</p>
           <p

@@ -80,11 +80,12 @@ export default ({
         <Form
           onSubmit={onSubmit}
           initialValues={{
-            convencional: { frequencia: 420 },
             escola_periodo_escolar: panorama.uuid_escola_periodo_escolar
           }}
           initialValuesEqual={isequal}
-          validate={validateFormLancamento}
+          validate={formValues =>
+            validateFormLancamento(formValues, panorama.qtde_alunos)
+          }
           render={({
             form,
             handleSubmit,
@@ -209,11 +210,6 @@ export default ({
                         )}
                     </div>
                     <div className="col-5 botoes-envio">
-                      <Botao
-                        texto="Solicitar liberação período"
-                        disabled={pristine || submitting}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
                       <Botao
                         texto="Lançar"
                         className="ml-3"

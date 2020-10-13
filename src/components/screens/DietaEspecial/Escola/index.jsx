@@ -160,6 +160,11 @@ class solicitacaoDietaEspecial extends Component {
       return;
     }
 
+    if (!aluno_nao_matriculado.responsavel) {
+      this.props.loadSolicitacoesVigentes(null);
+      return;
+    }
+
     if (!aluno_nao_matriculado.responsavel.cpf || !aluno_nao_matriculado.nome) {
       this.props.loadSolicitacoesVigentes(null);
       return;
