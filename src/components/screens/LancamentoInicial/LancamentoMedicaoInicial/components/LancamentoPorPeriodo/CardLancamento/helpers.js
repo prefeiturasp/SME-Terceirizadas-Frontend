@@ -33,16 +33,17 @@ export const validateFormLancamento = (formValues, totalMatriculados) => {
   let erros = {};
 
   for (let grupo of Object.keys(grupos)) {
+    if (formValues[grupo] === undefined) continue;
     const frequencia = formValues[grupo]
       ? parseInt(formValues[grupo].frequencia)
       : 0;
     if (frequencia <= 0) {
-      set(erros, `${grupo}.frequencia`, "Deve preencher a frequencia");
+      set(erros, `${grupo}.frequencia`, "Deve preencher a frequência");
     } else if (frequencia > totalMatriculados) {
       set(
         erros,
         `${grupo}.frequencia`,
-        `Frequencia não pode ser maior que alunos matriculados nesse período (${totalMatriculados})`
+        `Frequência não pode ser maior que alunos matriculados nesse período (${totalMatriculados})`
       );
     }
     for (let [nomeCampo, nomeAmigavelCampo] of Object.entries(
@@ -70,7 +71,7 @@ export const validateFormLancamento = (formValues, totalMatriculados) => {
           set(
             erros,
             `${grupo}.${nomeCampo}`,
-            `O valor de ${nomeAmigavelCampo} não pode ser maior que a frequencia`
+            `O valor de ${nomeAmigavelCampo} não pode ser maior que a frequência`
           );
         }
       }
