@@ -211,11 +211,6 @@ export default ({
                     </div>
                     <div className="col-5 botoes-envio">
                       <Botao
-                        texto="Solicitar liberação período"
-                        disabled={pristine || submitting}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                      <Botao
                         texto="Lançar"
                         className="ml-3"
                         type={BUTTON_TYPE.SUBMIT}
