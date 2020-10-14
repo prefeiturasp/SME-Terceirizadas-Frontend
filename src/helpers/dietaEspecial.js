@@ -105,12 +105,7 @@ export const getDadosIniciais = async dadosUsuario => {
 
 export const getCabecalhoPorFiltros = filtros => {
   if (filtros.data_inicial && filtros.data_final) {
-    return `Veja os resultados para o período "${moment(
-      filtros.data_inicial,
-      "DD/MM/YYYY"
-    ).format("DD/MM/YYYY")} à ${moment(filtros.data_final, "DD/MM/YYYY").format(
-      "DD/MM/YYYY"
-    )}":`;
+    return "Veja os resultados para a busca ";
   } else if (filtros.data_inicial) {
     return `Veja os resultados a partir de "${moment(
       filtros.data_inicial,
