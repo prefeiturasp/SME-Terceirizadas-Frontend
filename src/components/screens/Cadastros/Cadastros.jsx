@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import CardLogo from "../../Shareable/CardLogo/CardLogo";
-import IconePerfil from "../../Shareable/Icones/Cadastros/IconePerfil";
-import IconeUnidadeEscolar from "../../Shareable/Icones/Cadastros/IconeUnidadeEscolar";
 import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
 import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";
@@ -21,7 +19,6 @@ class Cadastros extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gestaoDeAlimentacao: false,
       hoverLotes: false,
       hoverEmpresas: false,
       hoverEdital: false,
@@ -36,8 +33,7 @@ class Cadastros extends Component {
       hoverEmpresas,
       hoverTipoAlimentacao,
       hoverLotes,
-      hoverHorarios,
-      gestaoDeAlimentacao
+      hoverHorarios
     } = this.state;
     const USUARIO_CODAE =
       usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();
@@ -49,7 +45,7 @@ class Cadastros extends Component {
         )}
         {USUARIO_CODAE && (
           <div className="row mt-3">
-            <div
+            {/* <div
               className="col-4"
               onClick={() =>
                 this.setState({ gestaoDeAlimentacao: !gestaoDeAlimentacao })
@@ -58,20 +54,31 @@ class Cadastros extends Component {
               <CardLogo titulo={"Cadastro de Perfis"} disabled>
                 <IconePerfil />
               </CardLogo>
-            </div>
-            <div className="col-4">
+            </div> */}
+            {/* <div className="col-4">
               <CardLogo titulo={"Cadastro de Unidades Escolares"} disabled>
                 <IconeUnidadeEscolar />
               </CardLogo>
-            </div>
+            </div> */}
             <div
               onMouseEnter={() => this.setState({ hoverLotes: true })}
               onMouseLeave={() => this.setState({ hoverLotes: false })}
-              className="linked-card col-4"
+              className="linked-card col-6"
             >
               <Link to="/configuracoes/cadastros/lote">
                 <CardLogo titulo={"Cadastro de Lotes"}>
                   <IconeLote hover={hoverLotes} />
+                </CardLogo>
+              </Link>
+            </div>
+            <div
+              onMouseEnter={() => this.setState({ hoverEmpresas: true })}
+              onMouseLeave={() => this.setState({ hoverEmpresas: false })}
+              className="linked-card col-6"
+            >
+              <Link to="/configuracoes/cadastros/empresa">
+                <CardLogo titulo={"Cadastro de Empresas"}>
+                  <IconeEmpresa hover={hoverEmpresas} />
                 </CardLogo>
               </Link>
             </div>
@@ -80,20 +87,9 @@ class Cadastros extends Component {
         {USUARIO_CODAE && (
           <div className="row mt-3">
             <div
-              onMouseEnter={() => this.setState({ hoverEmpresas: true })}
-              onMouseLeave={() => this.setState({ hoverEmpresas: false })}
-              className="linked-card col-4"
-            >
-              <Link to="/configuracoes/cadastros/empresa">
-                <CardLogo titulo={"Cadastro de Empresas"}>
-                  <IconeEmpresa hover={hoverEmpresas} />
-                </CardLogo>
-              </Link>
-            </div>
-            <div
               onMouseEnter={() => this.setState({ hoverEdital: true })}
               onMouseLeave={() => this.setState({ hoverEdital: false })}
-              className="linked-card col-4"
+              className="linked-card col-6"
             >
               <Link to="/configuracoes/cadastros/editais-contratos">
                 <CardLogo titulo={"Cadastro de Editais e Contratos"}>
@@ -107,7 +103,7 @@ class Cadastros extends Component {
               onMouseLeave={() =>
                 this.setState({ hoverTipoAlimentacao: false })
               }
-              className="linked-card col-4"
+              className="linked-card col-6"
             >
               <Link to="/configuracoes/cadastros/tipos-alimentacao">
                 <CardLogo titulo={"Cadastro de Tipos de Alimentações"}>
