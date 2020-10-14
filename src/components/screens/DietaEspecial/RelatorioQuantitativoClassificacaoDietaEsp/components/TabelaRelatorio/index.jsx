@@ -26,25 +26,13 @@ export default ({ dadosRelatorio, filtros }) => {
         {primeiroRegistro.escola && <div>Unidade Escolar</div>}
         <div>Classificação da Dieta</div>
         {[undefined, "pendentes"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            pendentes
-          </div>
+          <div className="center-items">Dietas pendentes</div>
         )}
         {[undefined, "ativas"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            ativas
-          </div>
+          <div className="center-items">Dietas ativas</div>
         )}
         {[undefined, "inativas"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            inativas
-          </div>
+          <div className="center-items">Dietas inativas</div>
         )}
       </div>
       {dadosRelatorio.map((item, index) => {
@@ -57,13 +45,13 @@ export default ({ dadosRelatorio, filtros }) => {
               {primeiroRegistro.escola && <div>{item.escola}</div>}
               <div>{item.classificacao}</div>
               {[undefined, "pendentes"].includes(filtros.status) && (
-                <div>{item.qtde_pendentes}</div>
+                <div className="center-items">{item.qtde_pendentes}</div>
               )}
               {[undefined, "ativas"].includes(filtros.status) && (
-                <div>{item.qtde_ativas}</div>
+                <div className="center-items">{item.qtde_ativas}</div>
               )}
               {[undefined, "inativas"].includes(filtros.status) && (
-                <div>{item.qtde_inativas}</div>
+                <div className="center-items">{item.qtde_inativas}</div>
               )}
             </div>
           </Fragment>
