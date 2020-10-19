@@ -1,39 +1,12 @@
 import React from "react";
 import BorderlessInput from "../../../BorderlessInput";
+import CabecalhoDietaConvencional from "./CabecalhoDietaConvencional";
 
 import "./styles.scss";
 
 export default ({ formValues }) => (
   <div className="tabela-lancamento tabela-dieta-convencional">
-    <div className="cabecalho-tabela">
-      <div>
-        <span>Dia</span>
-      </div>
-      <div>
-        <span>
-          Troca
-          <br />
-          (RPL/LPR)
-        </span>
-      </div>
-      <div>
-        <span>
-          Merenda
-          <br />
-          seca
-        </span>
-      </div>
-      <div>
-        <span>Kit lanche</span>
-      </div>
-      <div>
-        <span>
-          Sobremesa
-          <br />
-          doce
-        </span>
-      </div>
-    </div>
+    <CabecalhoDietaConvencional />
     <div className="linha-tabela">
       <div>
         {formValues.data_lancamento &&

@@ -58,7 +58,7 @@ export class InputComData extends Component {
 
   dataSelecionada(data) {
     if (data.length !== 0) {
-      return moment(data, "DD/MM/YYYY")["_d"];
+      return moment(data, this.props.dateFormat)["_d"];
     } else {
       return null;
     }
@@ -84,6 +84,7 @@ export class InputComData extends Component {
       placeholder,
       required,
       showMonthDropdown,
+      showMonthYearPicker,
       showYearDropdown,
       textoLabel,
       popperPlacement,
@@ -121,6 +122,7 @@ export class InputComData extends Component {
             {...input}
             placeholderText={placeholder}
             showMonthDropdown={showMonthDropdown}
+            showMonthYearPicker={showMonthYearPicker}
             showYearDropdown={showYearDropdown}
             dateFormat={dateFormat}
             isClearable={true}
