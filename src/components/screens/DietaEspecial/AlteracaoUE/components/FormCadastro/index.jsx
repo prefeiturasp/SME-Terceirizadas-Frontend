@@ -121,7 +121,8 @@ export default ({
         codigo_eol_aluno: codigoEol,
         ativo: true,
         status: getStatusSolicitacoesVigentes(),
-        escola: meusDadosEscola.uuid
+        escola: meusDadosEscola.uuid,
+        tipo_solicitacao: "COMUM"
       });
 
       const response = await getSolicitacoesDietaEspecial(params);
@@ -196,7 +197,7 @@ export default ({
                   name="codigo_eol_aluno"
                   placeholder="Insira o Código"
                   className="form-control"
-                  type="number"
+                  inputType="number"
                   required
                   disabled={carregandoAluno}
                   validate={composeValidators(required, length(7))}
@@ -315,7 +316,7 @@ export default ({
                   name="codigo_eol_escola"
                   placeholder="Insira o Código"
                   className="form-control"
-                  type="number"
+                  inputType="number"
                   required
                   disabled={carregandoEscola}
                   validate={composeValidators(required, length(6))}
@@ -357,7 +358,7 @@ export default ({
                 style={BUTTON_STYLE.GREEN}
               />
               <Botao
-                texto="Cancelar"
+                texto="Limpar Campos"
                 className="float-right ml-3"
                 onClick={() => {
                   setDadosIniciais(null);

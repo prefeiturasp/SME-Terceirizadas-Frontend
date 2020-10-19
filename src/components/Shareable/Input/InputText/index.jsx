@@ -21,6 +21,7 @@ export const InputText = props => {
     placeholder,
     required,
     type,
+    inputType,
     title,
     maxlength,
     pattern,
@@ -55,7 +56,7 @@ export const InputText = props => {
         data-cy={input.name}
         placeholder={placeholder}
         required={required}
-        type={type}
+        type={inputType ? inputType : type}
         title={title}
         pattern={pattern}
         maxLength={maxlength}
