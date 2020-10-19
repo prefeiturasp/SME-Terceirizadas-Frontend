@@ -140,7 +140,6 @@ export const validateFormDreEscola = formValues => {
 
 export const getStatusSolicitacoesVigentes = () => {
   return [
-    "CODAE_NEGOU_PEDIDO",
     "CODAE_AUTORIZADO",
     "TERCEIRIZADA_TOMOU_CIENCIA",
     "ESCOLA_SOLICITOU_INATIVACAO",

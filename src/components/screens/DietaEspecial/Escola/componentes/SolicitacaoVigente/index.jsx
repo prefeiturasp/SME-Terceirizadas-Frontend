@@ -27,7 +27,8 @@ export class SolicitacaoVigente extends Component {
     this.state = {
       submitted: false,
       files: null,
-      solicitacoesVigentes: null
+      solicitacoesVigentes: null,
+      titulo: "Dietas Ativas/Inativas"
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -91,7 +92,7 @@ export class SolicitacaoVigente extends Component {
 
   render() {
     const { solicitacoesVigentes, submitted } = this.state;
-    const { uuid, handleSubmit, codigoEol } = this.props;
+    const { uuid, handleSubmit, codigoEol, titulo } = this.props;
     return (
       <div className="current-diets">
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
@@ -102,7 +103,7 @@ export class SolicitacaoVigente extends Component {
           )
         ) : (
           <div>
-            <p className="pt-3 title">Dietas Ativas/Inativas</p>
+            <p className="pt-3 title">{titulo ? titulo : this.state.titulo}</p>
             {solicitacoesVigentes.map((solicitacaoVigente, key) => {
               let texto = "";
               let iconClassName = "";

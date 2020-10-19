@@ -213,6 +213,16 @@ class DashBoardDietaEspecial extends Component {
                 href={"/escola/dieta-especial"}
               />
             </div>
+            <div className="col-3">
+              <CardAtalho
+                titulo={"Alterar U.E da Dieta Especial"}
+                nome="card-inclusao"
+                texto={`Quando houver necessidade de alteração de unidade escolar
+                        do aluno para os programas Polo e Recreio nas Férias.`}
+                textoLink={"Alterar U.E"}
+                href={"/escola/dieta-especial-alteracao-ue"}
+              />
+            </div>
           </div>
         )}
       </div>

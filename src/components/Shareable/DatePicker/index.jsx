@@ -86,7 +86,8 @@ export class InputComData extends Component {
       showMonthDropdown,
       showYearDropdown,
       textoLabel,
-      popperPlacement
+      popperPlacement,
+      visitedError
     } = this.props;
     return (
       <div className="datepicker">
@@ -143,7 +144,7 @@ export class InputComData extends Component {
           )}
         </div>
         <HelpText helpText={helpText} />
-        <InputErroMensagem meta={meta} />
+        <InputErroMensagem meta={meta} visitedError={visitedError} />
       </div>
     );
   }
