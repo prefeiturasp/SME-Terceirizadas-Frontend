@@ -12,7 +12,11 @@ const atual = {
 
 const RelatorioProdutosHomologadosPage = () => {
   return (
-    <Page>
+    <Page
+      titulo={"Relatório de Produtos Homologados"}
+      botaoVoltar
+      voltarPara={"/"}
+    >
       <Breadcrumb home={HOME} atual={atual} />
       <RelatorioProdutosHomologados />
     </Page>

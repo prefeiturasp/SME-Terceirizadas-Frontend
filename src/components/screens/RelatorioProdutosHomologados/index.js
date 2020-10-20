@@ -1,7 +1,6 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -105,50 +104,46 @@ const RelatorioProdutosHomologados = () => {
     setFiltros(formValues);
   };
 
+  const handleClose = () => {
+    setGrupos(null);
+    setFiltros(null);
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          <h3 className="font-weight-bold">
-            Relatório de Produtos Homologados
-          </h3>
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
           />
+
+          {grupos && !grupos.length && (
+            <div className="text-center mt-5">
+              Não existem dados para filtragem informada.
+            </div>
+          )}
         </div>
       </div>
-
-      {grupos && !grupos.length && (
-        <div className="text-center mt-5">
-          A consulta retornou 0 resultados.
-        </div>
-      )}
 
       <Modal
         dialogClassName="modal-90w"
         show={Boolean(grupos && grupos.length)}
-        onHide={() => {}}
+        onHide={handleClose}
       >
-        <section className="m-3">
-          <h4 className="font-weight-normal text-secondary">
-            Relatório de Produtos Homologados
-          </h4>
-          <p className="text-black font-weight-bold mb-1">
-            {filtros && gerarLabelPorFiltro(filtros)}
-          </p>
-          <TabelaProdutosHomologados grupos={grupos} filtros={filtros} />
-        </section>
-
-        <section className="m-3">
-          <Link
-            to="route"
-            target="_blank"
-            onClick={event => {
-              event.preventDefault();
-              window.open(getRelatorioProdutosHomologados(filtros));
-            }}
-          >
+        <Modal.Header closeButton>
+          <Modal.Title>Relatório de Produtos Homologados</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <section className="m-3">
+            <p className="text-black font-weight-bold mb-1">
+              {filtros && gerarLabelPorFiltro(filtros)}
+            </p>
+            <TabelaProdutosHomologados grupos={grupos} filtros={filtros} />
+          </section>
+        </Modal.Body>
+        <Modal.Footer>
+          <section>
             <Botao
               type={BUTTON_TYPE.BUTTON}
               titulo="imprimir"
@@ -157,24 +152,21 @@ const RelatorioProdutosHomologados = () => {
               icon={BUTTON_ICON.PRINT}
               className="float-right ml-3"
               onClick={() => {
-                setFiltros(null);
-                setGrupos(null);
+                getRelatorioProdutosHomologados(filtros);
               }}
             />
-          </Link>
-          <Botao
-            texto="voltar"
-            titulo="voltar"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            icon={BUTTON_ICON.ARROW_LEFT}
-            onClick={() => {
-              setFiltros(null);
-              setGrupos(null);
-            }}
-            className="float-right"
-          />
-        </section>
+
+            <Botao
+              texto="voltar"
+              titulo="voltar"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE_OUTLINE}
+              icon={BUTTON_ICON.ARROW_LEFT}
+              onClick={handleClose}
+              className="float-right"
+            />
+          </section>
+        </Modal.Footer>
       </Modal>
     </Spin>
   );
