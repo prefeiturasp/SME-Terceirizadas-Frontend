@@ -207,49 +207,60 @@ export default ({ panorama }) => {
       setCarregando(false);
     });
   };
+
+  const toggleListagemAberta = () => {
+    if (listagemAberta) {
+      setLancamentos([]);
+      setTotaisAbsolutos({});
+      setTotaisPagamento({});
+    }
+    setListagemAberta(!listagemAberta);
+  };
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="row cabecalho-lancamentos-por-mes mt-3">
         <div>Lançamentos por mês</div>
-        <div onClick={() => setListagemAberta(!listagemAberta)}>
+        <div onClick={toggleListagemAberta}>
           {listagemAberta ? "Fechar" : "Abrir"}
         </div>
       </div>
       {listagemAberta && (
-        <Form
-          onSubmit={() => {}}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-3 data-lancamento-container">
-                  <Field
-                    component={InputComData}
-                    name="mes_lancamento"
-                    label="Mês do lançamento"
-                    required
-                    dateFormat="MM/YYYY"
-                    showMonthYearPicker
-                    showFullMonthYearPicker
-                    minDate={null}
-                    maxDate={moment()._d}
-                  />
-                  <OnChange name="mes_lancamento">
-                    {onMesLancamentoChange}
-                  </OnChange>
-                </div>
-              </div>
-            </form>
-          )}
-        />
-      )}
-      {lancamentos.length > 0 && (
         <>
-          <Lancamentos lancamentos={lancamentos} panorama={panorama} />
-          <TotaisAbsolutos
-            totaisAbsolutos={totaisAbsolutos}
-            panorama={panorama}
+          <Form
+            onSubmit={() => {}}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-3 data-lancamento-container">
+                    <Field
+                      component={InputComData}
+                      name="mes_lancamento"
+                      label="Mês do lançamento"
+                      required
+                      dateFormat="MM/YYYY"
+                      showMonthYearPicker
+                      showFullMonthYearPicker
+                      minDate={null}
+                      maxDate={moment()._d}
+                    />
+                    <OnChange name="mes_lancamento">
+                      {onMesLancamentoChange}
+                    </OnChange>
+                  </div>
+                </div>
+              </form>
+            )}
           />
-          <TotaisPagamento totaisPagamento={totaisPagamento} />
+          {lancamentos.length > 0 && (
+            <>
+              <Lancamentos lancamentos={lancamentos} panorama={panorama} />
+              <TotaisAbsolutos
+                totaisAbsolutos={totaisAbsolutos}
+                panorama={panorama}
+              />
+              <TotaisPagamento totaisPagamento={totaisPagamento} />
+            </>
+          )}
         </>
       )}
     </Spin>
