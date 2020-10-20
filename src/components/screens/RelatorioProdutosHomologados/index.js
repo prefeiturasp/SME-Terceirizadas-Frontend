@@ -9,6 +9,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 import { gerarLabelPorFiltro } from "helpers/produto";
 
@@ -152,7 +153,8 @@ const RelatorioProdutosHomologados = () => {
               icon={BUTTON_ICON.PRINT}
               className="float-right ml-3"
               onClick={() => {
-                getRelatorioProdutosHomologados(filtros);
+                const params = gerarParametrosConsulta(filtros);
+                getRelatorioProdutosHomologados(params);
               }}
             />
 

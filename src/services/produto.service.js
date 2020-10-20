@@ -446,11 +446,11 @@ export const getProdutosPorTerceirizada = async filtro => {
   );
 };
 
-export const getRelatorioProdutosHomologados = async filtros => {
+export const getRelatorioProdutosHomologados = async params => {
   const { data } = await axios.get(
     "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
     {
-      filtros,
+      params,
       responseType: "blob"
     }
   );

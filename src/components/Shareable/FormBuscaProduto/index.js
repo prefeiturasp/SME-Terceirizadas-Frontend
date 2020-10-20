@@ -145,6 +145,7 @@ export const FormBuscaProduto = ({
                       ? moment(values.data_inicial, "DD/MM/YYYY")._d
                       : null
                   }
+                  maxDate={moment()._d}
                 />
               </Col>
             </Row>
