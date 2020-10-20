@@ -336,7 +336,7 @@ class ContratosRelacionados extends Component {
                             <Field
                               name={`data_inicial${key}`}
                               component={InputComData}
-                              label="Vigencia"
+                              label="Vigência"
                               required
                               validate={required}
                               minDate={this.obtemDataInicial(key, indice)}
