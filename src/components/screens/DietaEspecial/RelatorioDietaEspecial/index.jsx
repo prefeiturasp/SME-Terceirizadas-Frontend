@@ -23,10 +23,10 @@ const RelatorioDietaEspecial = () => {
       setDadosRelatorio(null);
       const params = gerarParametrosConsulta({
         ...filtros,
-        escola: null,
-        diagnostico: null,
         page: page
       });
+      delete params.escola;
+      delete params.diagnostico;
       const response = await getSolicitacaoDietaEspecialListagem(
         filtros,
         params

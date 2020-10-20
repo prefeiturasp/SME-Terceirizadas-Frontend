@@ -848,7 +848,10 @@ const routesConfig = [
     component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
+      usuarioEhQualquerCODAE() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola() ||
+      usuarioEhNutricionistaSupervisao
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
