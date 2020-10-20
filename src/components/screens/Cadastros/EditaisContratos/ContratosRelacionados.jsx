@@ -265,7 +265,7 @@ class ContratosRelacionados extends Component {
     return (
       <div>
         <div>
-          <article className="card-body contratos-relacionados">
+          <div className="card-body contratos-relacionados">
             <section className="section-inputs">
               {this.renderExcluirNoUltimo(indice) && (
                 <div className="excluir-form">
@@ -555,7 +555,7 @@ class ContratosRelacionados extends Component {
                 </div>
               </div>
             </section>
-          </article>
+          </div>
           <hr />
         </div>
       </div>
