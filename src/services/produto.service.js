@@ -446,17 +446,15 @@ export const getProdutosPorTerceirizada = async filtro => {
   );
 };
 
-export const getRelatorioProdutosHomologados = filtros => {
-  let url = `${API_URL}/produtos/relatorio-por-parametros-agrupado-terceirizada/`;
-  const entries = Object.entries(filtros);
-  if (entries.length) {
-    const urlParams = new URLSearchParams();
-    for (let [key, value] of entries) {
-      urlParams.append(key, value);
+export const getRelatorioProdutosHomologados = async filtros => {
+  const { data } = await axios.get(
+    "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
+    {
+      filtros,
+      responseType: "blob"
     }
-    return `${url}?${urlParams.toString()}`;
-  }
-  return url;
+  );
+  saveAs(data, "relatorio_produtos_homologados.pdf");
 };
 
 export const getProdutosSuspensos = async payload => {
