@@ -420,7 +420,11 @@ class EditaisContratos extends Component {
           edital_contratos={edital_contratos}
           onSubmit={this.onSubmit}
         />
-        <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
+        <form
+          onSubmit={handleSubmit}
+          onKeyPress={this.onKeyPress}
+          noValidate="novalidate"
+        >
           <div className="card">
             <div className="card-body p-0">
               <header className="header-form">
