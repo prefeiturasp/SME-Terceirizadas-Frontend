@@ -12,7 +12,7 @@ import {
 import * as constants from "configs/constants";
 
 const MenuRelatorios = () => {
-  const exibirPainel = usuarioEhDRE();
+  const exibirPainel = usuarioEhCODAEGestaoAlimentacao();
   const exibirProdutosHomologados =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhNutricionistaSupervisao() ||
