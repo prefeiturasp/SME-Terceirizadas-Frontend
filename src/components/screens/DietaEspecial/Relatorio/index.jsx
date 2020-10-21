@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
-import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
+import {
+  getDietaEspecial,
+  CODAEAutorizaInativacaoDietaEspecial
+} from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
+
+import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 
 import Botao from "../../../Shareable/Botao";
 import {
@@ -38,6 +43,27 @@ const BotaoGerarRelatorio = ({ uuid }) => {
           className="ml-3"
         />
       </Link>
+    </div>
+  );
+};
+
+const BotaoAutorizaInativacao = ({ uuid, onAutorizar }) => {
+  return (
+    <div className="form-group row float-right mt-4">
+      <Botao
+        texto="Autorizar Inativação"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN}
+        className="ml-3"
+        onClick={() =>
+          CODAEAutorizaInativacaoDietaEspecial(uuid)
+            .then(() => {
+              toastSuccess("Inativação realizada com sucesso.");
+              onAutorizar();
+            })
+            .catch(() => toastError("Houve um problema ao inativar a dieta."))
+        }
+      />
     </div>
   );
 };
@@ -114,6 +140,16 @@ export default class Relatorio extends Component {
                   setTemSolicitacaoCadastroProduto={
                     this.setTemSolicitacaoCadastroProduto
                   }
+                />
+              )}
+            {dietaEspecial.status_solicitacao ===
+              statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
+              visao === CODAE && (
+                <BotaoAutorizaInativacao
+                  uuid={dietaEspecial.uuid}
+                  onAutorizar={() => {
+                    this.loadSolicitacao(dietaEspecial.uuid);
+                  }}
                 />
               )}
             {dietaEspecial.status_solicitacao ===
