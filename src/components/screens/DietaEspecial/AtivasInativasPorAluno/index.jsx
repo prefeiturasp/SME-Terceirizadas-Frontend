@@ -1,94 +1,122 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
-import FormFiltros from "./FormFiltros";
-import Painel from "./Painel";
+import FormFiltros from "./components/FormFiltros";
+import TabelaResultados from "./components/TabelaResultados";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { bindActionCreators } from "redux";
 
 import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
 
-import { Paginacao } from "../../../Shareable/Paginacao";
+import { Spin, Pagination } from "antd";
 
-export default class AtivasInativasContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dadosDietaPorAluno: undefined,
-      diretoriasRegionais: [{ uuid: "", nome: "Carregando..." }],
-      escolas: [{ uuid: "", nome: "Carregando..." }],
-      loading: true,
-      loadingNomeAluno: false,
-      page: 1
-    };
-    this.submit = this.submit.bind(this);
-    this.onPaginationChange = this.onPaginationChange.bind(this);
-  }
+import {
+  setDadosResultados,
+  setExibirResultados,
+  setTotalResultados,
+  setFiltros,
+  setPage,
+  reset
+} from "reducers/dietasAtivasInativasPorAlunoReducer";
 
-  componentDidMount = async () => {
-    const response3 = await getDietasAtivasInativasPorAluno({});
-    this.setState({
-      dadosDietaPorAluno: response3.data,
-      loading: false
-    });
+const AtivasInativasPorAluno = ({
+  dadosResultados,
+  setDadosResultados,
+  exibirResultados,
+  setExibirResultados,
+  totalResultados,
+  setTotalResultados,
+  filtros,
+  setFiltros,
+  page,
+  setPage,
+  reset,
+  history
+}) => {
+  const [loading, setLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
+
+  useEffect(() => {
+    if (firstLoad) {
+      if (history && history.action === "PUSH") reset();
+      setFirstLoad(false);
+    } else if (filtros) fetchData(filtros);
+  }, [filtros]);
+
+  const fetchData = async filtros => {
+    setLoading(true);
+    setExibirResultados(false);
+    const response = await getDietasAtivasInativasPorAluno({ ...filtros });
+    setDadosResultados(response.data.results);
+    if (response.data.count) {
+      setTotalResultados(response.data.count);
+      setExibirResultados(true);
+    }
+    setLoading(false);
   };
 
-  atualizaDados = async params => {
-    this.setState({
-      loading: true
-    });
-    const response = await getDietasAtivasInativasPorAluno(params);
-    this.setState({
-      dadosDietaPorAluno: response.data,
-      loading: false
-    });
+  const nextPage = page => {
+    fetchData({ ...filtros, page: page });
+    setPage(page);
   };
 
-  submit = async formValues => {
-    this.setState({
-      formValues
-    });
-    this.atualizaDados(formValues);
-  };
+  return (
+    <Spin tip="Carregando..." spinning={loading}>
+      <div className="card mt-3 form-filtros-ativas-inativas">
+        <div className="card-body">
+          <FormFiltros setLoading={setLoading} setFiltros={setFiltros} />
 
-  onPaginationChange = async page => {
-    this.atualizaDados({
-      page,
-      ...this.state.formValues
-    });
-    this.setState({
-      page
-    });
-  };
-
-  setLoading = loading => {
-    this.setState({ loading });
-  };
-
-  render() {
-    const { dadosDietaPorAluno, loading, page } = this.state;
-    const pagTotal = dadosDietaPorAluno ? dadosDietaPorAluno.count : 0;
-    return (
-      <div>
-        <FormFiltros
-          onSubmit={this.submit}
-          loading={loading}
-          setLoading={this.setLoading}
-        />
-        {loading ? (
-          <div>Carregando...</div>
-        ) : (
-          <div>
-            <Painel
-              dadosDietaPorAluno={
-                dadosDietaPorAluno ? dadosDietaPorAluno.results : []
-              }
-            />
-            <Paginacao
-              total={pagTotal}
-              onChange={this.onPaginationChange}
+          {dadosResultados && !dadosResultados.solicitacoes.length && (
+            <div className="text-center mt-5">
+              Não existem dados para filtragem informada.
+            </div>
+          )}
+        </div>
+      </div>
+      {exibirResultados && (
+        <div className="card mt-3">
+          <div className="card-body">
+            <TabelaResultados dadosDietaPorAluno={dadosResultados} />
+            <hr />
+            <Pagination
+              total={totalResultados}
+              onChange={nextPage}
               current={page}
+              pageSize={10}
             />
           </div>
-        )}
-      </div>
-    );
-  }
-}
+        </div>
+      )}
+    </Spin>
+  );
+};
+
+const mapStateToProps = state => {
+  return {
+    dadosResultados: state.dietasAtivasInativasPorAluno.dadosResultados,
+    exibirResultados: state.dietasAtivasInativasPorAluno.exibirResultados,
+    totalResultados: state.dietasAtivasInativasPorAluno.totalResultados,
+    filtros: state.dietasAtivasInativasPorAluno.filtros,
+    page: state.dietasAtivasInativasPorAluno.page
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setDadosResultados,
+      setFiltros,
+      setPage,
+      setExibirResultados,
+      setTotalResultados,
+      reset
+    },
+    dispatch
+  );
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AtivasInativasPorAluno)
+);

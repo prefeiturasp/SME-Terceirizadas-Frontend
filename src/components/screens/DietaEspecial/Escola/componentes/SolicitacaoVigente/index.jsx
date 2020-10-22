@@ -20,6 +20,7 @@ import {
 import { getError } from "../../../../../../helpers/utilities";
 import { escolaInativaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 import { exibirParteInativacao } from "../../helper";
+import { required } from "helpers/fieldValidators";
 
 export class SolicitacaoVigente extends Component {
   constructor(props) {
@@ -255,6 +256,8 @@ export class SolicitacaoVigente extends Component {
                                       component={InputFile}
                                       className="inputfile"
                                       texto="Anexar"
+                                      required
+                                      validate={required}
                                       name="files"
                                       accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                                       setFiles={this.setFiles}
