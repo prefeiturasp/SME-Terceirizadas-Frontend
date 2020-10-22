@@ -35,6 +35,7 @@ const AtivasInativasPorAluno = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
+  const [dadosUsuario, setDadosUsuario] = useState();
 
   useEffect(() => {
     if (firstLoad) {
@@ -64,7 +65,11 @@ const AtivasInativasPorAluno = ({
     <Spin tip="Carregando..." spinning={loading}>
       <div className="card mt-3 form-filtros-ativas-inativas">
         <div className="card-body">
-          <FormFiltros setLoading={setLoading} setFiltros={setFiltros} />
+          <FormFiltros
+            setLoading={setLoading}
+            setFiltros={setFiltros}
+            setDadosUsuario={setDadosUsuario}
+          />
 
           {dadosResultados && !dadosResultados.solicitacoes.length && (
             <div className="text-center mt-5">
@@ -76,7 +81,10 @@ const AtivasInativasPorAluno = ({
       {exibirResultados && (
         <div className="card mt-3">
           <div className="card-body">
-            <TabelaResultados dadosDietaPorAluno={dadosResultados} />
+            <TabelaResultados
+              dadosDietaPorAluno={dadosResultados}
+              dadosUsuario={dadosUsuario}
+            />
             <hr />
             <Pagination
               total={totalResultados}

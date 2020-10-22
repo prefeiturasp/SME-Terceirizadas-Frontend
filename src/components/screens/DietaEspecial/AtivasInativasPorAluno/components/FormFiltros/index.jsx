@@ -29,7 +29,13 @@ import "./styles.scss";
 
 const FORM_NAME = "buscaAvancadaProduto";
 
-const FormFiltros = ({ setLoading, setFiltros, initialValues, history }) => {
+const FormFiltros = ({
+  setLoading,
+  setFiltros,
+  initialValues,
+  history,
+  setDadosUsuario
+}) => {
   const [carregandoAluno, setCarregandoAluno] = useState(false);
   const [dadosIniciais, setDadosIniciais] = useState({});
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([]);
@@ -39,6 +45,7 @@ const FormFiltros = ({ setLoading, setFiltros, initialValues, history }) => {
   useEffect(() => {
     async function fetch() {
       const dadosUsuario = await meusDados();
+      setDadosUsuario(dadosUsuario);
       formFiltrosObtemDreEEscolasNovo(
         setEscolas,
         setDiretoriasRegionais,
