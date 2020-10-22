@@ -20,6 +20,7 @@ import responderAnaliseSensorialReducer from "./reducers/responderAnaliseSensori
 import buscaAvancadaProdutoReducer from "./reducers/buscaAvancadaProduto";
 import responderReclamacaoProdutoReducer from "./reducers/responderReclamacaoProduto";
 import incluirDietaEspecialReducer from "./reducers/incluirDietaEspecialReducer";
+import dietasAtivasInativasPorAlunoReducer from "./reducers/dietasAtivasInativasPorAlunoReducer";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -43,7 +44,8 @@ const rootReducer = combineReducers({
   responderAnaliseSensorial: responderAnaliseSensorialReducer,
   buscaAvancadaProduto: buscaAvancadaProdutoReducer,
   responderReclamacaoProduto: responderReclamacaoProdutoReducer,
-  incluirDietaEspecial: incluirDietaEspecialReducer
+  incluirDietaEspecial: incluirDietaEspecialReducer,
+  dietasAtivasInativasPorAluno: dietasAtivasInativasPorAlunoReducer
 });
 
 export default rootReducer;

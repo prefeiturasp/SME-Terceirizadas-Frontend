@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "components/Shareable/Botao/constants";
 
-import "./Painel.scss";
-import { TIPO_PERFIL } from "../../../../constants/shared";
+import "./styles.scss";
+import { TIPO_PERFIL } from "constants/shared";
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">
@@ -100,28 +103,21 @@ export default class Painel extends Component {
   render() {
     const { dadosDietaPorAluno } = this.props;
     const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
-    if (solicitacoes === undefined || solicitacoes.length === 0) {
-      return <div>Não há dados para os filtros utilizados</div>;
-    }
     return (
-      <div className="card mt-3">
-        <div className="card-body">
-          <form>
-            <CabecalhoPainel
-              totalDietasAtivas={total_ativas}
-              totalDietasInativas={total_inativas}
-            />
-            <hr />
-            <div className="row">
-              <div className="col-12">
-                <p>Unidade Escolar</p>
-                <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
-              </div>
-            </div>
-            <TabelaDietas solicitacoes={solicitacoes} />
-          </form>
+      <form>
+        <CabecalhoPainel
+          totalDietasAtivas={total_ativas}
+          totalDietasInativas={total_inativas}
+        />
+        <hr />
+        <div className="row">
+          <div className="col-12">
+            <p>Unidade Escolar</p>
+            <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
+          </div>
         </div>
-      </div>
+        <TabelaDietas solicitacoes={solicitacoes} />
+      </form>
     );
   }
 }
