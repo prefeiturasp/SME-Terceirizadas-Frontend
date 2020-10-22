@@ -5,8 +5,6 @@ import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { getDietasEspeciaisVigentesDeUmAluno } from "../../../../services/dietaEspecial.service";
 import { dadosDoAluno } from "../../../../services/perfil.service";
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import "./style.scss";
 import { formatarSolicitacoesVigentes } from "../Escola/helper";
 import SolicitacaoVigente from "../Escola/componentes/SolicitacaoVigente";
@@ -64,16 +62,6 @@ class solicitacaoDietaEspecial extends Component {
             <div className="row p-1">
               <div className="col-8">
                 <h4>Detalhe das Dietas Especiais</h4>
-              </div>
-              <div className="col-4 text-right">
-                <Botao
-                  type={BUTTON_TYPE.BUTTON}
-                  texto={"Voltar"}
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                  onClick={() =>
-                    this.props.history.push("/dieta-especial/ativas-inativas")
-                  }
-                />
               </div>
             </div>
             <div>
