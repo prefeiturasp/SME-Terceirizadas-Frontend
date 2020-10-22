@@ -80,14 +80,7 @@ export default function reducer(state = initialValues, action = {}) {
     case RESET:
       return {
         ...state,
-        filtros: undefined,
-        dadosResultados: undefined,
-        exibirResultados: false,
-        totalResultados: 0,
-        page: 1,
-        escolas: [],
-        diretoriasRegionais: [],
-        meusDados: {}
+        ...initialValues
       };
     default:
       return state;
