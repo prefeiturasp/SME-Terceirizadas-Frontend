@@ -1,14 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "components/Shareable/Botao/constants";
+import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
 import "./styles.scss";
 import { TIPO_PERFIL } from "constants/shared";
+
+const tipoPerfil = localStorage.getItem("tipo_perfil");
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">
@@ -20,13 +19,6 @@ const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
       <i className="fas fa-times-circle" />
       <span>Total de Dietas Inativas: {totalDietasInativas}</span>
     </div>
-    <div className="col-4">
-      <Botao
-        texto="Imprimir"
-        icon={BUTTON_ICON.PRINT}
-        style={BUTTON_STYLE.BLUE_OUTLINE}
-      />
-    </div>
   </div>
 );
 
@@ -34,7 +26,6 @@ const TabelaDietas = ({ solicitacoes }) => {
   if (solicitacoes === undefined || solicitacoes.length === 0) {
     return <div>Carregando...</div>;
   }
-  const tipoPerfil = localStorage.getItem("tipo_perfil");
   return (
     <div className="row">
       <div className="col-12">
@@ -99,25 +90,33 @@ const TabelaDietas = ({ solicitacoes }) => {
   );
 };
 
-export default class Painel extends Component {
-  render() {
-    const { dadosDietaPorAluno } = this.props;
-    const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
-    return (
-      <form>
-        <CabecalhoPainel
-          totalDietasAtivas={total_ativas}
-          totalDietasInativas={total_inativas}
-        />
-        <hr />
-        <div className="row">
-          <div className="col-12">
-            <p>Unidade Escolar</p>
-            <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
+export default ({ dadosDietaPorAluno, dadosUsuario }) => {
+  const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
+  const instituicao = dadosUsuario.vinculo_atual.instituicao;
+
+  return (
+    <form>
+      <CabecalhoPainel
+        totalDietasAtivas={total_ativas}
+        totalDietasInativas={total_inativas}
+      />
+
+      {tipoPerfil === TIPO_PERFIL.ESCOLA ? (
+        <>
+          <hr />
+          <div className="row">
+            <div className="col-12">
+              <p>Unidade Escolar</p>
+              <p>
+                {instituicao.codigo_eol} {instituicao.nome}
+              </p>
+            </div>
           </div>
-        </div>
-        <TabelaDietas solicitacoes={solicitacoes} />
-      </form>
-    );
-  }
-}
+        </>
+      ) : (
+        <br />
+      )}
+      <TabelaDietas solicitacoes={solicitacoes} />
+    </form>
+  );
+};
