@@ -16,6 +16,7 @@ import {
   setTotalResultados,
   setFiltros,
   setPage,
+  setMeusDados,
   reset
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
 
@@ -30,12 +31,13 @@ const AtivasInativasPorAluno = ({
   setFiltros,
   page,
   setPage,
+  meusDados,
+  setMeusDados,
   reset,
   history
 }) => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [dadosUsuario, setDadosUsuario] = useState();
 
   useEffect(() => {
     if (firstLoad) {
@@ -68,7 +70,7 @@ const AtivasInativasPorAluno = ({
           <FormFiltros
             setLoading={setLoading}
             setFiltros={setFiltros}
-            setDadosUsuario={setDadosUsuario}
+            setDadosUsuario={setMeusDados}
           />
 
           {dadosResultados && !dadosResultados.solicitacoes.length && (
@@ -83,7 +85,7 @@ const AtivasInativasPorAluno = ({
           <div className="card-body">
             <TabelaResultados
               dadosDietaPorAluno={dadosResultados}
-              dadosUsuario={dadosUsuario}
+              dadosUsuario={meusDados}
             />
             <hr />
             <Pagination
@@ -105,7 +107,8 @@ const mapStateToProps = state => {
     exibirResultados: state.dietasAtivasInativasPorAluno.exibirResultados,
     totalResultados: state.dietasAtivasInativasPorAluno.totalResultados,
     filtros: state.dietasAtivasInativasPorAluno.filtros,
-    page: state.dietasAtivasInativasPorAluno.page
+    page: state.dietasAtivasInativasPorAluno.page,
+    meusDados: state.dietasAtivasInativasPorAluno.meusDados
   };
 };
 
@@ -117,6 +120,7 @@ const mapDispatchToProps = dispatch =>
       setPage,
       setExibirResultados,
       setTotalResultados,
+      setMeusDados,
       reset
     },
     dispatch
