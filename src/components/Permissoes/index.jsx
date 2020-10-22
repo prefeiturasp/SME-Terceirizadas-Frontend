@@ -49,13 +49,24 @@ class Permissoes extends Component {
 
   filterList(registroFuncional) {
     if (registroFuncional.length === TAMANHO_RF) {
-      getDadosUsuarioEOL(registroFuncional).then(response => {
-        if (response.data.detail.length > 0) {
-          this.setState({ registroFuncional, perfisEOL: response.data.detail });
-        } else {
-          toastError(`${response.data.detail}`);
-        }
-      });
+      getDadosUsuarioEOL(registroFuncional)
+        .then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            this.setState({
+              registroFuncional,
+              perfisEOL: response.data.detail
+            });
+          } else {
+            toastError("Erro ao obter dados do funcionário");
+          }
+        })
+        .catch(error => {
+          if (error.response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(`${error.response.data.detail}`);
+          } else {
+            toastError("Erro ao obter dados do funcionário");
+          }
+        });
     } else {
       this.setState({
         registroFuncional: null,
