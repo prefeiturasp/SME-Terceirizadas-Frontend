@@ -30,7 +30,11 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
             <div />
             <div />
             <div />
-            <div />
+            <div>
+              {get(lancamento.lancamento, "eh_dia_de_sobremesa_doce") && (
+                <input style={{ width: "35%" }} type="checkbox" checked />
+              )}
+            </div>
           </div>
         ))}
         <div className="linha-tabela mt-4">

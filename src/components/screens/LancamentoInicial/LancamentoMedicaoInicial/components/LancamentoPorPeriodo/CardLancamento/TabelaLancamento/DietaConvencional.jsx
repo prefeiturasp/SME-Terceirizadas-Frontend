@@ -1,4 +1,6 @@
 import React from "react";
+import { Field } from "react-final-form";
+
 import BorderlessInput from "../../../BorderlessInput";
 import CabecalhoDietaConvencional from "./CabecalhoDietaConvencional";
 
@@ -22,7 +24,12 @@ export default ({ formValues }) => (
         <BorderlessInput />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component="input"
+          name="convencional.eh_dia_de_sobremesa_doce"
+          type="checkbox"
+          style={{ width: "35%" }}
+        />
       </div>
     </div>
   </div>
