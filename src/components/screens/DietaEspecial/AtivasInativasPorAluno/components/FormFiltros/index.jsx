@@ -39,6 +39,7 @@ const FormFiltros = ({
   const [carregandoAluno, setCarregandoAluno] = useState(false);
   const [dadosIniciais, setDadosIniciais] = useState({});
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([]);
+  const [desabilitarAluno, setDesabilitarAluno] = useState(null);
   const [escolas, setEscolas] = useState([]);
   const [alunos, setAlunos] = useState([]);
 
@@ -93,12 +94,14 @@ const FormFiltros = ({
 
   const getAlunoPorEol = async (codigoEol, values) => {
     if (codigoEol.length !== 7) {
+      setDesabilitarAluno(false);
       setDadosIniciais({ ...values, nome_aluno: undefined });
       return;
     }
     setCarregandoAluno(true);
     const resposta = await dadosDoAluno(codigoEol);
     if (resposta.status !== 200) {
+      setDesabilitarAluno(false);
       setDadosIniciais({ ...values, nome_aluno: "" });
       toastError("Não há aluno para o código EOL informado.");
     } else if (resposta.status === 200) {
@@ -107,14 +110,17 @@ const FormFiltros = ({
         resposta.data.escola.uuid !== values.escola[0]
       ) {
         toastError("Código EOL do aluno não pertence a esta unidade escolar.");
+        setDesabilitarAluno(false);
         setDadosIniciais({ ...values, nome_aluno: "" });
       } else if (
         tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL &&
         resposta.data.escola.diretoria_regional.uuid !== values.dre[0]
       ) {
+        setDesabilitarAluno(false);
         toastError("Código EOL do aluno não pertence a esta DRE.");
         setDadosIniciais({ ...values, nome_aluno: "" });
       } else {
+        setDesabilitarAluno(true);
         setDadosIniciais({ ...values, nome_aluno: resposta.data.nome });
       }
     }
@@ -205,7 +211,7 @@ const FormFiltros = ({
                 name="nome_aluno"
                 placeholder="Insira o Nome do Aluno"
                 className="input-busca-aluno"
-                disabled={carregandoAluno}
+                disabled={carregandoAluno | desabilitarAluno}
               />
             </div>
           </div>

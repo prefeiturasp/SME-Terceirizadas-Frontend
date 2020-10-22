@@ -36,3 +36,8 @@
   margin-top: 2px;
   z-index: 0 !important;
 }
+
+.input-busca-aluno .ant-input[disabled] {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+}
