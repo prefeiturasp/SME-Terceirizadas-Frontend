@@ -11,12 +11,12 @@ import { DIETA_ESPECIAL, ATIVAS_ANATIVAS } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${ATIVAS_ANATIVAS}`,
-  titulo: "Consulta de Dieta de Alunos"
+  titulo: "Consulta de Dieta do Aluno"
 };
 
 export default () => {
   return (
-    <Page botaoVoltar voltarPara="/" titulo="Consulta de Dieta de Alunos">
+    <Page botaoVoltar voltarPara="/" titulo="Consulta de Dieta do Aluno">
       <Breadcrumb home={HOME} atual={atual} />
       <AtivasInativas />
     </Page>

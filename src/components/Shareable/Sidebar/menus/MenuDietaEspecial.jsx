@@ -46,7 +46,7 @@ const MenuDietaEspecial = () => {
       )}
       {exibeConsultaDieta && (
         <LeafItem to={`/dieta-especial/ativas-inativas`}>
-          Consulta Dieta de Alunos
+          Consulta de Dieta do Aluno
         </LeafItem>
       )}
       {exibeAtivasInativas && (

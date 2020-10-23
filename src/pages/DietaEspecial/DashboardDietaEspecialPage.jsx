@@ -96,11 +96,11 @@ export const DietaEspecialTerceirizada = () => (
 
 const atualAluno = {
   href: `/${ALUNO}/${DIETA_ESPECIAL}`,
-  titulo: "Consulta de Dieta de Alunos"
+  titulo: "Detalhes de Dieta do Aluno"
 };
 
 export const DietaEspecialAluno = () => (
-  <Page botaoVoltar titulo="Consulta de Dieta Especial">
+  <Page botaoVoltar titulo="Detalhes de Dieta do Aluno">
     <Breadcrumb home={HOME} atual={atualAluno} />
     <SolicitacaoDietaEspecial />
   </Page>

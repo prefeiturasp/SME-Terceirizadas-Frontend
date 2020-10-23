@@ -59,13 +59,7 @@ class solicitacaoDietaEspecial extends Component {
       <div className="card">
         <div className="card-body">
           <form className="special-diet" onSubmit={handleSubmit}>
-            <div className="row p-1">
-              <div className="col-8">
-                <h4>Detalhe das Dietas Especiais</h4>
-              </div>
-            </div>
             <div>
-              <hr />
               <table className="tabela-informacoes-aluno">
                 <tr>
                   <th>Diretoria Regional de Educação</th>
