@@ -87,12 +87,16 @@ export const ResponderReclamacaoPage = () => {
 
 const atual = {
   href: `/${GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
-  titulo: "Relatório quantitativo por terceirizada"
+  titulo: "Relatório quantitativo de produtos por terceirizadas"
 };
 
 export const RelatorioQuantitativoPorTerceirizadaPage = () => {
   return (
-    <Page botaoVoltar voltarPara="/">
+    <Page
+      botaoVoltar
+      voltarPara="/"
+      titulo="Relatório quantitativo de produtos por terceirizadas"
+    >
       <Breadcrumb home={"/"} atual={atual} />
       <RelatorioQuantitativoPorTerceirizada />
     </Page>
