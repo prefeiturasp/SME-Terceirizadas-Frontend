@@ -87,7 +87,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, pristine, submitting, values }) => (
+      render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
           <div className="form-row">
             <div className="col-md-6 col-xl-6">
