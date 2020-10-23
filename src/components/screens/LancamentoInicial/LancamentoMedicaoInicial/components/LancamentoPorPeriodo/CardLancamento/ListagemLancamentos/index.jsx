@@ -14,7 +14,7 @@ import { getLancamentosPorMes } from "services/lancamentoInicial.service";
 import CabecalhoDietaConvencional from "../TabelaLancamento/CabecalhoDietaConvencional";
 import CabecalhoDietaConvencionalFrequencia from "../TabelaLancamento/CabecalhoDietaConvencionalFrequencia";
 
-const Lancamentos = ({ lancamentos, panorama }) => {
+const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
   return (
     <div className="row">
       <div className="tabela-lancamento tabela-dieta-convencional col-4">
@@ -33,6 +33,13 @@ const Lancamentos = ({ lancamentos, panorama }) => {
             <div />
           </div>
         ))}
+        <div className="linha-tabela mt-4">
+          <div>Totais</div>
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
       </div>
       <div className="tabela-lancamento tabela-dieta-convencional-frequencia col-8">
         <CabecalhoDietaConvencionalFrequencia panorama={panorama} />
@@ -67,25 +74,7 @@ const Lancamentos = ({ lancamentos, panorama }) => {
             </div>
           );
         })}
-      </div>
-    </div>
-  );
-};
-
-const TotaisAbsolutos = ({ totaisAbsolutos, panorama }) => {
-  return (
-    <div className="row mt-4">
-      <div className="tabela-lancamento tabela-dieta-convencional col-4">
-        <div className="linha-tabela">
-          <div>Totais</div>
-          <div />
-          <div />
-          <div />
-          <div />
-        </div>
-      </div>
-      <div className="tabela-lancamento tabela-dieta-convencional-frequencia col-8">
-        <div className="linha-tabela">
+        <div className="linha-tabela mt-4">
           <div>{totaisAbsolutos && totaisAbsolutos.frequencia}</div>
           {panorama.horas_atendimento !== 5 && (
             <div>{totaisAbsolutos && totaisAbsolutos.lanche_4h}</div>
@@ -253,10 +242,10 @@ export default ({ panorama }) => {
           />
           {lancamentos.length > 0 && (
             <>
-              <Lancamentos lancamentos={lancamentos} panorama={panorama} />
-              <TotaisAbsolutos
-                totaisAbsolutos={totaisAbsolutos}
+              <Lancamentos
+                lancamentos={lancamentos}
                 panorama={panorama}
+                totaisAbsolutos={totaisAbsolutos}
               />
               <TotaisPagamento totaisPagamento={totaisPagamento} />
             </>
