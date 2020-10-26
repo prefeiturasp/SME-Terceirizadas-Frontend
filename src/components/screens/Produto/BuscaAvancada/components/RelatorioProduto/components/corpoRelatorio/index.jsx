@@ -464,15 +464,15 @@ export default class CorpoRelatorio extends Component {
                             </div>
                           </article>
                           <article>
-                            <div>Justificativa:</div>
-                            {logSelecionado.justificativa === "" ? (
-                              <div>SEM JUSTIFICATIVA</div>
-                            ) : (
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: logSelecionado.justificativa
-                                }}
-                              />
+                            {logSelecionado.justificativa !== "" && (
+                              <>
+                                <div>Justificativa:</div>
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: logSelecionado.justificativa
+                                  }}
+                                />
+                              </>
                             )}
                           </article>
                         </section>
