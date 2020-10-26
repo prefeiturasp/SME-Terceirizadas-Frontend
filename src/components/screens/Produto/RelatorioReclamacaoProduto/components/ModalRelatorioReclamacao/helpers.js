@@ -14,7 +14,7 @@ export const getConfigCabecario = filtros => {
   if (qtde_filtros === 1 && qtde_filtro_status === 1) {
     const status = retornaStatusFrontend(filtros.status_reclamacao[0]);
     config.cabecario_tipo = "CABECARIO_POR_STATUS";
-    config.status = status;
+    config.status_cabecario = status;
     config.titulo = `Veja os resultados para "${status}"`;
     return config;
   }
