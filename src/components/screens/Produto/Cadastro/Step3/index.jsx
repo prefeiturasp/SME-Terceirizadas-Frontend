@@ -99,7 +99,7 @@ class Step3 extends Component {
         <section className="row attachments">
           <div className="col-9">
             <div className="card-title font-weight-bold cinza-escuro mt-4">
-              Imagens do Produto
+              * Imagens do Produto
             </div>
             <div className="text">Anexe uma ou mais imagens do produto.</div>
             <div className="card-warning mt-2">
