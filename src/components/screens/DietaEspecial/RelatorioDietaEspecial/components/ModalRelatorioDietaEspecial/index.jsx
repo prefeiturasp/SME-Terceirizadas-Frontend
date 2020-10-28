@@ -11,6 +11,7 @@ import { imprimeRelatorioDietaEspecial } from "services/relatorios";
 import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getCabecalhoPorFiltros } from "helpers/dietaEspecial";
+import { getStatusSolicitacaoFrontend } from "./helpers";
 
 const ModalRelatorioDietaEspecial = ({
   showModal,
@@ -128,6 +129,25 @@ const ModalRelatorioDietaEspecial = ({
                         <div>{dieta.criado_em.split(" ")[0]}</div>
                         <div>{dieta.ativo ? "Ativa" : "Inativa"}</div>
                       </div>
+
+                      <div className="row mt-3">
+                        <div className="col-md-3">
+                          <div className="ml-3">
+                            <label>Solicitação #{dieta.id_externo}</label>
+                          </div>
+                        </div>
+
+                        <div className="col-md-5">
+                          <label>Status Solicitação: </label>
+                          <b>
+                            {" "}
+                            {getStatusSolicitacaoFrontend(
+                              dieta.status_solicitacao
+                            )}
+                          </b>
+                        </div>
+                      </div>
+
                       <div className="row mt-3">
                         <div className="col-md-3">
                           <div className="ml-3">
@@ -234,6 +254,31 @@ const ModalRelatorioDietaEspecial = ({
                           <label>RF</label>
                           <br />
                           <b>{usuario ? usuario.registro_funcional : ""}</b>
+                        </div>
+                      </div>
+
+                      <div className="row mt-3 mb-3">
+                        <div className="col-md-6">
+                          <div className="ml-3">
+                            <label>Observação da Dieta</label>
+                            <br />
+                            <b
+                              className="value-item"
+                              dangerouslySetInnerHTML={{
+                                __html: dieta.observacoes
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <label>Informações Adicionais</label>
+                          <br />
+                          <b
+                            className="value-item"
+                            dangerouslySetInnerHTML={{
+                              __html: dieta.informacoes_adicionais
+                            }}
+                          />
                         </div>
                       </div>
                     </>
