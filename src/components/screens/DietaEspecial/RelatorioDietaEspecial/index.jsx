@@ -25,8 +25,8 @@ const RelatorioDietaEspecial = () => {
         ...filtros,
         page: page
       });
-      delete params.escola;
-      delete params.diagnostico;
+      params.delete("diagnostico");
+      params.delete("escola");
       const response = await getSolicitacaoDietaEspecialListagem(
         filtros,
         params
