@@ -5,3 +5,11 @@ export const registraLancamentoDiario = async payload =>
 
 export const getLancamentosPorMes = async payload =>
   await axios.get("/lancamento-diario/por-mes/", { params: payload });
+
+export const getLancamentosDeUmDia = async (data, escolaPeriodoEscolarUUID) =>
+  await axios.get("/lancamento-diario/", {
+    params: {
+      data,
+      escola_periodo_escolar: escolaPeriodoEscolarUUID
+    }
+  });

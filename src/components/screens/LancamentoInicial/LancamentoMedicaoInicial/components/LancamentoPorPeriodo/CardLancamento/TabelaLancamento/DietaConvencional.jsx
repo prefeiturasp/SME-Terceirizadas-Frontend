@@ -1,6 +1,8 @@
 import React from "react";
 import { Field } from "react-final-form";
 
+import { numericInteger } from "helpers/fieldValidators";
+
 import BorderlessInput from "../../../BorderlessInput";
 import CabecalhoDietaConvencional from "./CabecalhoDietaConvencional";
 
@@ -18,7 +20,11 @@ export default ({ formValues }) => (
         <BorderlessInput />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component={BorderlessInput}
+          name="convencional.merenda_seca"
+          validate={numericInteger}
+        />
       </div>
       <div>
         <BorderlessInput />

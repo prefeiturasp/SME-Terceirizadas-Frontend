@@ -28,7 +28,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
           >
             <div>{lancamento.dia}</div>
             <div />
-            <div />
+            <div>{get(lancamento.lancamento, "merenda_seca")}</div>
             <div />
             <div>
               {get(lancamento.lancamento, "eh_dia_de_sobremesa_doce") && (
@@ -40,7 +40,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
         <div className="linha-tabela mt-4">
           <div>Totais</div>
           <div />
-          <div />
+          <div>{totaisAbsolutos && totaisAbsolutos.merenda_seca}</div>
           <div />
           <div />
         </div>
@@ -124,6 +124,7 @@ const TotaisPagamento = ({ totaisPagamento }) => {
 
 const camposPossiveis = [
   "frequencia",
+  "merenda_seca",
   "lanche_4h",
   "lanche_5h",
   "refeicoes.0.ref_oferta",
@@ -222,7 +223,7 @@ export default ({ panorama }) => {
           <Form
             onSubmit={() => {}}
             render={({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
+              <form id="myform" onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-3 data-lancamento-container">
                     <Field
