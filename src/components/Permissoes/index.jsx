@@ -79,11 +79,15 @@ class Permissoes extends Component {
     const { minhaInstituicao, perfisEOL, registroFuncional } = this.state;
     const { criarEquipeAdministradora, visao } = this.props;
     let mesmaInstituicao = false;
-    perfisEOL.forEach(perfilEOL => {
-      if (minhaInstituicao.nome.includes(perfilEOL.divisao)) {
+    for (let perfilEOL of perfisEOL) {
+      if (
+        minhaInstituicao.nome.includes(perfilEOL.divisao) ||
+        perfilEOL.divisao.includes(minhaInstituicao.nome)
+      ) {
         mesmaInstituicao = true;
+        break;
       }
-    });
+    }
     if (visao === CODAE || mesmaInstituicao) {
       this.setState({ bloquearBotao: true });
       criarEquipeAdministradora(minhaInstituicao.uuid, registroFuncional)
