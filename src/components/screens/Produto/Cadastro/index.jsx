@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { reduxForm } from "redux-form";
+import { reduxForm, initialize } from "redux-form";
 import Wizard from "../../../Shareable/Wizard";
 import Step1 from "./Step1";
 import Botao from "../../../Shareable/Botao";
@@ -201,7 +201,6 @@ class cadastroProduto extends Component {
 
   componentDidMount = async () => {
     const infoAgrupada = await getInformacoesGrupo();
-
     const response = await getProtocolosDietaEspecial();
     this.setState({
       protocolosDieta: response.data.results,
@@ -211,6 +210,7 @@ class cadastroProduto extends Component {
   };
 
   exibeFormularioInicial = () => {
+    this.props.dispatch(initialize("cadastroProduto", {}));
     this.setState({ renderBuscaProduto: false });
   };
 
@@ -565,7 +565,8 @@ class cadastroProduto extends Component {
 
 const componentNameForm = reduxForm({
   form: "cadastroProduto",
-  enableReinitialize: true
+  enableReinitialize: true,
+  destroyOnUnmount: true
 })(cadastroProduto);
 
 const mapStateToProps = state => {

@@ -341,7 +341,7 @@ class EditaisContratos extends Component {
         contrato.dres === null ||
         contrato.empresas === null
       ) {
-        toastError("Verifique os itens obrigatórios no formulario");
+        toastError("Verifique os itens obrigatórios no formulário");
       } else {
         this.setState({ edital_contratos });
         this.exibirModal();
@@ -420,7 +420,11 @@ class EditaisContratos extends Component {
           edital_contratos={edital_contratos}
           onSubmit={this.onSubmit}
         />
-        <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
+        <form
+          onSubmit={handleSubmit}
+          onKeyPress={this.onKeyPress}
+          noValidate="novalidate"
+        >
           <div className="card">
             <div className="card-body p-0">
               <header className="header-form">

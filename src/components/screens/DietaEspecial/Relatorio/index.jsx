@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
 import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
+
+import { toastSuccess } from "components/Shareable/Toast/dialogs";
 
 import Botao from "../../../Shareable/Botao";
 import {
@@ -16,28 +17,37 @@ import {
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
+import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 
 import "./style.scss";
 
 const BotaoGerarRelatorio = ({ uuid }) => {
   return (
     <div className="form-group row float-right mt-4">
-      <Link
-        to="route"
-        target="_blank"
-        onClick={event => {
-          event.preventDefault();
-          window.open(getProtocoloDietaEspecial(uuid));
+      <Botao
+        texto="Gerar Protocolo"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.BLUE_OUTLINE}
+        icon={BUTTON_ICON.PRINT}
+        className="ml-3"
+        onClick={() => {
+          getProtocoloDietaEspecial(uuid);
         }}
-      >
-        <Botao
-          texto="Gerar Protocolo"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
-          icon={BUTTON_ICON.PRINT}
-          className="ml-3"
-        />
-      </Link>
+      />
+    </div>
+  );
+};
+
+const BotaoAutorizaInativacao = ({ showNaoAprovaModal }) => {
+  return (
+    <div className="form-group row float-right mt-4">
+      <Botao
+        texto="Autorizar Inativação"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN}
+        className="ml-3"
+        onClick={() => showNaoAprovaModal("Não")}
+      />
     </div>
   );
 };
@@ -60,6 +70,16 @@ export default class Relatorio extends Component {
     }
   }
 
+  showNaoAprovaModal = () => {
+    this.setState({ showNaoAprovaModal: true });
+  };
+
+  closeNaoAprovaModal = () => {
+    this.setState({ showNaoAprovaModal: false });
+    toastSuccess("Inativação realizada com sucesso.");
+    window.location.reload();
+  };
+
   loadSolicitacao = uuid => {
     getDietaEspecial(uuid).then(responseDietaEspecial => {
       this.setState({
@@ -78,7 +98,11 @@ export default class Relatorio extends Component {
   };
 
   render() {
-    const { dietaEspecial, solicitacoesVigentes } = this.state;
+    const {
+      dietaEspecial,
+      showNaoAprovaModal,
+      solicitacoesVigentes
+    } = this.state;
     const { visao } = this.props;
     if (!dietaEspecial) {
       return <div>Carregando...</div>;
@@ -117,11 +141,28 @@ export default class Relatorio extends Component {
                 />
               )}
             {dietaEspecial.status_solicitacao ===
+              statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
+              visao === CODAE && (
+                <BotaoAutorizaInativacao
+                  uuid={dietaEspecial.uuid}
+                  showNaoAprovaModal={this.showNaoAprovaModal}
+                  onAutorizar={() => {
+                    this.loadSolicitacao(dietaEspecial.uuid);
+                  }}
+                />
+              )}
+            {dietaEspecial.status_solicitacao ===
               statusEnum.CODAE_AUTORIZADO && (
               <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
             )}
           </div>
         </div>
+        <ModalNegaDietaEspecial
+          showModal={showNaoAprovaModal}
+          closeModal={this.closeNaoAprovaModal}
+          onNegar={this.props.onAutorizarOuNegar}
+          uuid={dietaEspecial.uuid}
+        />
       </>
     );
   }

@@ -1,11 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_ICON } from "../../../Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
-import "./Painel.scss";
-import { TIPO_PERFIL } from "../../../../constants/shared";
+import "./styles.scss";
+import { TIPO_PERFIL } from "constants/shared";
+
+const tipoPerfil = localStorage.getItem("tipo_perfil");
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">
@@ -17,13 +19,6 @@ const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
       <i className="fas fa-times-circle" />
       <span>Total de Dietas Inativas: {totalDietasInativas}</span>
     </div>
-    <div className="col-4">
-      <Botao
-        texto="Imprimir"
-        icon={BUTTON_ICON.PRINT}
-        style={BUTTON_STYLE.BLUE_OUTLINE}
-      />
-    </div>
   </div>
 );
 
@@ -31,7 +26,6 @@ const TabelaDietas = ({ solicitacoes }) => {
   if (solicitacoes === undefined || solicitacoes.length === 0) {
     return <div>Carregando...</div>;
   }
-  const tipoPerfil = localStorage.getItem("tipo_perfil");
   return (
     <div className="row">
       <div className="col-12">
@@ -96,32 +90,33 @@ const TabelaDietas = ({ solicitacoes }) => {
   );
 };
 
-export default class Painel extends Component {
-  render() {
-    const { dadosDietaPorAluno } = this.props;
-    const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
-    if (solicitacoes === undefined || solicitacoes.length === 0) {
-      return <div>Não há dados para os filtros utilizados</div>;
-    }
-    return (
-      <div className="card mt-3">
-        <div className="card-body">
-          <form>
-            <CabecalhoPainel
-              totalDietasAtivas={total_ativas}
-              totalDietasInativas={total_inativas}
-            />
-            <hr />
-            <div className="row">
-              <div className="col-12">
-                <p>Unidade Escolar</p>
-                <p>000108 EMEF JOSÉ ERMIRIO DE MORAIS, SEN</p>
-              </div>
+export default ({ dadosDietaPorAluno, dadosUsuario }) => {
+  const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
+  const instituicao = dadosUsuario.vinculo_atual.instituicao;
+
+  return (
+    <form>
+      <CabecalhoPainel
+        totalDietasAtivas={total_ativas}
+        totalDietasInativas={total_inativas}
+      />
+
+      {tipoPerfil === TIPO_PERFIL.ESCOLA ? (
+        <>
+          <hr />
+          <div className="row">
+            <div className="col-12">
+              <p>Unidade Escolar</p>
+              <p>
+                {instituicao.codigo_eol} {instituicao.nome}
+              </p>
             </div>
-            <TabelaDietas solicitacoes={solicitacoes} />
-          </form>
-        </div>
-      </div>
-    );
-  }
-}
+          </div>
+        </>
+      ) : (
+        <br />
+      )}
+      <TabelaDietas solicitacoes={solicitacoes} />
+    </form>
+  );
+};

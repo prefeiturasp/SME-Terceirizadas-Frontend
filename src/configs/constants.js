@@ -11,7 +11,9 @@ export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const DIETA_ESPECIAL_ALTERACAO_UE = "dieta-especial-alteracao-ue";
 export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
+export const ATIVAS_ANATIVAS = "ativas-inativas";
 export const GESTAO_PRODUTO = "gestao-produto";
 export const LANCAMENTO_INICIAL = "lancamento-inicial";
 

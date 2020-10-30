@@ -115,6 +115,7 @@ export const tipoDeStatus = status => {
     case "DRE validou":
     case "DRE revisou":
     case "Homologado":
+    case "CODAE autorizou":
     case "Terceirizada respondeu a análise":
       return "prosseguiu";
     case "CODAE homologou":

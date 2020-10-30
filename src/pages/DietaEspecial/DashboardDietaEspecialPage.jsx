@@ -3,7 +3,14 @@ import DashBoardDietaEspecial from "../../components/screens/DashBoardDietaEspec
 import SolicitacaoDietaEspecial from "../../components/screens/DietaEspecial/Aluno";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
-import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
+import {
+  CODAE,
+  DRE,
+  ESCOLA,
+  TERCEIRIZADA,
+  ALUNO,
+  DIETA_ESPECIAL
+} from "../../configs/constants";
 import { HOME } from "../../constants/config";
 import {
   getDietaEspecialAutorizadasCODAE,
@@ -87,9 +94,14 @@ export const DietaEspecialTerceirizada = () => (
 
 // Detalhes do aluno
 
+const atualAluno = {
+  href: `/${ALUNO}/${DIETA_ESPECIAL}`,
+  titulo: "Detalhes de Dieta do Aluno"
+};
+
 export const DietaEspecialAluno = () => (
-  <Page titulo="Consulta de Dieta Especial">
-    <Breadcrumb home={HOME} />
+  <Page botaoVoltar titulo="Detalhes de Dieta do Aluno">
+    <Breadcrumb home={HOME} atual={atualAluno} />
     <SolicitacaoDietaEspecial />
   </Page>
 );

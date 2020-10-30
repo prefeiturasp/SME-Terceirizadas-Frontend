@@ -4,6 +4,7 @@ import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
+import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
 import {
   updateProduto,
   excluirImagemDoProduto
@@ -117,7 +118,9 @@ class WizardFormTerceiraPagina extends Component {
     return new Promise(async (resolve, reject) => {
       const response = await updateProduto(values);
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Homologação atualizada com sucesso.");
+        if (produto.ultima_homologacao.status === STATUS_CODAE_QUESTIONADO)
+          toastSuccess("Correção efetuada com sucesso.");
+        else toastSuccess("Homologação atualizada com sucesso.");
         this.props.history.push("/painel-gestao-produto");
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {

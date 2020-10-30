@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { HOME } from "../../constants/config";
 
@@ -7,17 +7,18 @@ import Page from "../../components/Shareable/Page/Page";
 
 import AtivasInativas from "../../components/screens/DietaEspecial/AtivasInativasPorAluno";
 
-export default class RelatorioAlunosDietasAtivasInativasPage extends Component {
-  render() {
-    return (
-      <Page>
-        <Breadcrumb
-          home={HOME}
-          anteriores={this.anteriores}
-          atual={this.atual}
-        />
-        <AtivasInativas />
-      </Page>
-    );
-  }
-}
+import { DIETA_ESPECIAL, ATIVAS_ANATIVAS } from "configs/constants";
+
+const atual = {
+  href: `/${DIETA_ESPECIAL}/${ATIVAS_ANATIVAS}`,
+  titulo: "Consulta de Dieta do Aluno"
+};
+
+export default () => {
+  return (
+    <Page botaoVoltar voltarPara="/" titulo="Consulta de Dieta do Aluno">
+      <Breadcrumb home={HOME} atual={atual} />
+      <AtivasInativas />
+    </Page>
+  );
+};

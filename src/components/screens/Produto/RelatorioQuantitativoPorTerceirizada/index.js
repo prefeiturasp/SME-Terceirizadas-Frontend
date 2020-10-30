@@ -128,13 +128,15 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
     setFiltros(formValues);
   };
 
+  const handleClose = () => {
+    setFiltros(null);
+    setDadosRelatorio(null);
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-quantitativo-por-terceirizada">
         <div className="card-body">
-          <h3 className="font-weight-bold">
-            Relatório quantitativo de produtos por terceirizadas
-          </h3>
           <Form
             onSubmit={onSubmitForm}
             render={({ form, handleSubmit, submitting, values }) => (
@@ -209,52 +211,53 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               </form>
             )}
           />
+
+          {dadosRelatorio && !dadosRelatorio.detalhes.length && (
+            <div className="text-center mt-5">
+              Não existem dados para filtragem informada.
+            </div>
+          )}
         </div>
       </div>
-
-      {dadosRelatorio && !dadosRelatorio.detalhes.length && (
-        <div className="text-center mt-5">
-          A consulta retornou 0 resultados.
-        </div>
-      )}
 
       <Modal
         dialogClassName="modal-90w"
         show={Boolean(dadosRelatorio && dadosRelatorio.detalhes.length)}
-        onHide={() => {}}
+        onHide={handleClose}
       >
-        <section className="m-3">
-          <h4 className="font-weight-normal text-secondary">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {" "}
             Relatório quantitativo de produtos por terceirizadas
-          </h4>
+          </Modal.Title>
+        </Modal.Header>
+        <section className="m-3">
           <p className="text-black font-weight-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
           <TabelaQuantitativoPorTerceirizada dadosRelatorio={dadosRelatorio} />
         </section>
-
-        <section className="m-3">
-          <Botao
-            texto="voltar"
-            titulo="voltar"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            icon={BUTTON_ICON.ARROW_LEFT}
-            onClick={() => {
-              setFiltros(null);
-              setDadosRelatorio(null);
-            }}
-            className="float-right"
-          />
-          <Botao
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            texto="Imprimir"
-            onClick={() => getPdfRelatorioQuantitativo(filtros)}
-            type={BUTTON_TYPE.BUTTON}
-            className="float-right mr-2"
-          />
-        </section>
+        <Modal.Footer>
+          <section>
+            <Botao
+              style={BUTTON_STYLE.BLUE}
+              icon={BUTTON_ICON.PRINT}
+              texto="Imprimir"
+              onClick={() => getPdfRelatorioQuantitativo(filtros)}
+              type={BUTTON_TYPE.BUTTON}
+              className="float-right"
+            />
+            <Botao
+              texto="voltar"
+              titulo="voltar"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE_OUTLINE}
+              icon={BUTTON_ICON.ARROW_LEFT}
+              onClick={handleClose}
+              className="float-right mr-2"
+            />
+          </section>
+        </Modal.Footer>
       </Modal>
     </Spin>
   );

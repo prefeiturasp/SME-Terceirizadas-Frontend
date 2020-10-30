@@ -87,7 +87,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, pristine, submitting, values }) => (
+      render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
           <div className="form-row">
             <div className="col-md-6 col-xl-6">
@@ -169,7 +169,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
               className="float-right ml-3"
-              disabled={pristine | submitting}
+              disabled={submitting}
             />
 
             <Botao
@@ -178,7 +178,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
               style={BUTTON_STYLE.GREEN_OUTLINE}
               className="float-right ml-3"
               onClick={() => form.reset()}
-              disabled={pristine | submitting}
+              disabled={submitting}
             />
           </div>
         </form>

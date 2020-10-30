@@ -1,6 +1,6 @@
 {
   "name": "terceirizadas",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "private": true,
   "husky": {
     "hooks": {
@@ -15,7 +15,7 @@
     "coverageThreshold": {
       "global": {
         "statements": 2.91,
-        "branches": 3.19,
+        "branches": 3.0,
         "functions": 1.28,
         "lines": 2.89
       }
@@ -36,7 +36,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "file-saver": "^2.0.2",
-    "final-form": "^4.19.1",
+    "final-form": "^4.20.1",
     "final-form-arrays": "^3.0.2",
     "history": "^4.9.0",
     "html-to-react": "^1.4.2",

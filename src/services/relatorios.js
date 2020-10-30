@@ -53,14 +53,20 @@ export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
     });
 };
 
-export const getRelatorioDietaEspecial = uuid => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/relatorio/`;
-  return url;
+export const getRelatorioDietaEspecial = async uuid => {
+  const url = `/solicitacoes-dieta-especial/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_dieta_especial.pdf");
 };
 
-export const getProtocoloDietaEspecial = uuid => {
+export const getProtocoloDietaEspecial = async uuid => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/protocolo/`;
-  return url;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "protocolo_dieta_especial.pdf");
 };
 
 export const getRelatorioInclusaoAlimentacao = (uuid, tipoSolicitacao) => {

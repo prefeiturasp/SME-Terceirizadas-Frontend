@@ -27,9 +27,8 @@ const MenuCadastros = () => {
       )}
       {usuarioEhCODAEGestaoAlimentacao() && (
         <>
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}`}>Perfil</LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}`}>
-            Unidades Escolares
+            Painel Inicial
           </LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${LOTE}`}>
             Lotes

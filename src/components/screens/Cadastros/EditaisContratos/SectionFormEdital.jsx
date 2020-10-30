@@ -7,7 +7,7 @@ import { InputText } from "../../../Shareable/Input/InputText";
 export const SectionFormEdital = props => {
   const { adicionaFieldsFormEdital } = props;
   return (
-    <article className="card-body dados-editais">
+    <div className="card-body dados-editais">
       <div className="input-duplo">
         <div>
           <Field
@@ -66,6 +66,6 @@ export const SectionFormEdital = props => {
           />
         </div>
       </div>
-    </article>
+    </div>
   );
 };

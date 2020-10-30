@@ -126,6 +126,11 @@ export const FormBuscaProduto = ({
                   name="data_inicial"
                   labelClassName="datepicker-fixed-padding"
                   minDate={null}
+                  maxDate={
+                    values.data_final
+                      ? moment(values.data_final, "DD/MM/YYYY")._d
+                      : moment()._d
+                  }
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -140,6 +145,7 @@ export const FormBuscaProduto = ({
                       ? moment(values.data_inicial, "DD/MM/YYYY")._d
                       : null
                   }
+                  maxDate={moment()._d}
                 />
               </Col>
             </Row>

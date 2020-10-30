@@ -31,6 +31,7 @@ import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/Statu
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
 import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
+import DietaEspecialAlteracaoUEPage from "../pages/Escola/DietaEspecial/AlteracaoUEPage";
 import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
@@ -161,7 +162,12 @@ const routesConfig = [
     exact: false,
     tipoUsuario: usuarioEhEscola()
   },
-
+  {
+    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL_ALTERACAO_UE}`,
+    component: DietaEspecialAlteracaoUEPage,
+    exact: false,
+    tipoUsuario: usuarioEhEscola()
+  },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
@@ -842,7 +848,10 @@ const routesConfig = [
     component: RelatorioProdutosHomologadosPage,
     exact: true,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhTerceirizada() || usuarioEhEscola()
+      usuarioEhQualquerCODAE() ||
+      usuarioEhTerceirizada() ||
+      usuarioEhEscola() ||
+      usuarioEhNutricionistaSupervisao
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,

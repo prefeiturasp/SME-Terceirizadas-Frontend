@@ -11,7 +11,6 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
 import { ToggleSwitch } from "../../../../../Shareable/ToggleSwitch";
-import InputFile from "../../../../../Shareable/Input/InputFile";
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastSuccess,
@@ -20,6 +19,8 @@ import {
 import { getError } from "../../../../../../helpers/utilities";
 import { escolaInativaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 import { exibirParteInativacao } from "../../helper";
+import { required } from "helpers/fieldValidators";
+import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 
 export class SolicitacaoVigente extends Component {
   constructor(props) {
@@ -27,7 +28,8 @@ export class SolicitacaoVigente extends Component {
     this.state = {
       submitted: false,
       files: null,
-      solicitacoesVigentes: null
+      solicitacoesVigentes: null,
+      titulo: "Dietas Ativas/Inativas"
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -69,7 +71,6 @@ export class SolicitacaoVigente extends Component {
 
   onSubmit(values) {
     this.setState({ submitted: true });
-    values.anexos = this.state.files || [];
     escolaInativaDietaEspecial(values.uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Inativação de solicitação realizada com sucesso.");
@@ -91,7 +92,7 @@ export class SolicitacaoVigente extends Component {
 
   render() {
     const { solicitacoesVigentes, submitted } = this.state;
-    const { uuid, handleSubmit, codigoEol } = this.props;
+    const { uuid, handleSubmit, codigoEol, titulo } = this.props;
     return (
       <div className="current-diets">
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
@@ -102,7 +103,7 @@ export class SolicitacaoVigente extends Component {
           )
         ) : (
           <div>
-            <p className="pt-3 title">Dietas Ativas/Inativas</p>
+            <p className="pt-3 title">{titulo ? titulo : this.state.titulo}</p>
             {solicitacoesVigentes.map((solicitacaoVigente, key) => {
               let texto = "";
               let iconClassName = "";
@@ -251,10 +252,12 @@ export class SolicitacaoVigente extends Component {
                                   </div>
                                   <div className="col-3 btn">
                                     <Field
-                                      component={InputFile}
+                                      component={ManagedInputFileField}
                                       className="inputfile"
                                       texto="Anexar"
-                                      name="files"
+                                      required
+                                      validate={required}
+                                      name="anexos"
                                       accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
                                       setFiles={this.setFiles}
                                       removeFile={this.removeFile}

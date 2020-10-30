@@ -167,21 +167,10 @@ export const escolaInativaDietaEspecial = async (uuid, payload) => {
 
 export const CODAEAutorizaInativacaoDietaEspecial = async uuid => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/codae-autoriza-inativacao/`;
-  let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+  });
 };
 
 export const CODAENegaInativacaoDietaEspecial = async uuid => {
@@ -297,4 +286,12 @@ export const getTiposDeContagem = async () => axios.get("/tipo-contagem/");
 
 export const getSolicitacoesDietaEspecial = async params => {
   return axios.get(`/${SOLICITACOES_DIETA_ESPECIAL}/`, { params });
+};
+
+export const getMotivosAlteracaoUE = async params => {
+  return axios.get("motivo-alteracao-ue/", { params });
+};
+
+export const createSolicitacaoAlteracaoUE = async payload => {
+  return axios.post(`/${SOLICITACOES_DIETA_ESPECIAL}/alteracao-ue/`, payload);
 };
