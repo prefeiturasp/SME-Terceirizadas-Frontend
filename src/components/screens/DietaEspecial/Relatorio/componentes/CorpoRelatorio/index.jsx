@@ -75,13 +75,14 @@ export const CorpoRelatorio = props => {
           <span className="dre-name">{escola && escola.nome}</span>
         </div>
         <div className="col-2 float-right">
-          <a href={getRelatorioDietaEspecial(uuid)}>
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-            />
-          </a>
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            onClick={() => {
+              getRelatorioDietaEspecial(uuid);
+            }}
+          />
         </div>
       </div>
       <div className="row">
