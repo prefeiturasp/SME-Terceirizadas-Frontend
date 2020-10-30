@@ -7,16 +7,19 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhCODAEGestaoProduto
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
-    usuarioEhEscola() ||
-    usuarioEhDRE() ||
-    usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhNutricionistaSupervisao();
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhDRE() ||
+    usuarioEhEscola() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||

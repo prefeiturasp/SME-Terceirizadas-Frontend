@@ -16,7 +16,10 @@ import {
   finalizarVinculoCODAEGestaoAlimentacaoTerceirizada,
   criarEquipeAdministradoraTerceirizadas,
   getEquipeAdministradoraTerceirizadas,
-  finalizarVinculoTerceirizadas
+  finalizarVinculoTerceirizadas,
+  criarEquipeAdministradoraDietaEspecial,
+  getEquipeAdministradoraDietaEspecial,
+  finalizarVinculoDietaEspecial
 } from "../../services/permissoes.service";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 
@@ -69,6 +72,16 @@ export const PermissoesCODAEGestaoAlimentacaoTerceirizada = () => (
       getEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada
     }
     finalizarVinculo={finalizarVinculoCODAEGestaoAlimentacaoTerceirizada}
+    visao={CODAE}
+  />
+);
+
+// CODAE - Gestão de Dieta Especial
+export const PermissoesCODAEGestaoDietaEspecial = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraDietaEspecial}
+    getEquipeAdministradora={getEquipeAdministradoraDietaEspecial}
+    finalizarVinculo={finalizarVinculoDietaEspecial}
     visao={CODAE}
   />
 );

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
@@ -25,22 +24,16 @@ import "./style.scss";
 const BotaoGerarRelatorio = ({ uuid }) => {
   return (
     <div className="form-group row float-right mt-4">
-      <Link
-        to="route"
-        target="_blank"
-        onClick={event => {
-          event.preventDefault();
-          window.open(getProtocoloDietaEspecial(uuid));
+      <Botao
+        texto="Gerar Protocolo"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.BLUE_OUTLINE}
+        icon={BUTTON_ICON.PRINT}
+        className="ml-3"
+        onClick={() => {
+          getProtocoloDietaEspecial(uuid);
         }}
-      >
-        <Botao
-          texto="Gerar Protocolo"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
-          icon={BUTTON_ICON.PRINT}
-          className="ml-3"
-        />
-      </Link>
+      />
     </div>
   );
 };
