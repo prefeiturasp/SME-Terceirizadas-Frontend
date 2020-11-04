@@ -542,28 +542,26 @@ class AlteracaoCardapio extends Component {
       v => v.nome === nomeAlimentacaoDe
     );
     if (refeicao !== undefined) {
-      this.setState({ alimentacaoDe: refeicao }, () => {
+      // Define o valor no campo
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+        refeicao.uuid
+      );
+
+      this.selectSubstituicoesAlimentacaoAPartirDe(refeicao.uuid, indice);
+      const alimentacaoPara = this.state.substituicoesAlimentacao[
+        indice
+      ].substituicoes.find(v => v.nome === nomeAlimentacaoPara);
+
+      if (alimentacaoPara !== undefined) {
         // Define o valor no campo
         this.props.change(
-          `substituicoes_${periodoNome}.tipo_alimentacao_de`,
-          this.state.alimentacaoDe.uuid
+          `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+          alimentacaoPara.uuid
         );
+      }
 
-        this.selectSubstituicoesAlimentacaoAPartirDe(
-          this.state.alimentacaoDe.uuid,
-          indice
-        );
-        const alimentacaoPara = this.state.substituicoesAlimentacao[
-          indice
-        ].substituicoes.find(v => v.nome === nomeAlimentacaoPara);
-        if (alimentacaoPara !== undefined) {
-          // Define o valor no campo
-          this.props.change(
-            `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-            alimentacaoPara.uuid
-          );
-        }
-      });
+      this.setState({ alimentacaoDe: refeicao });
     }
   }
 
@@ -574,7 +572,9 @@ class AlteracaoCardapio extends Component {
       const alimentacaoDe = this.state.periodos.find(
         d => d.nome === periodoNome
       );
-      if (this.state.motivo.nome === "Refeição por lanche") {
+      if (
+        this.state.motivo.nome === "Medição Inicial - RPL - Refeição por lanche"
+      ) {
         this.mudaRefeicao(
           alimentacaoDe,
           indice,
@@ -583,7 +583,9 @@ class AlteracaoCardapio extends Component {
           "lanche"
         );
       }
-      if (this.state.motivo.nome === "Lanche por refeição") {
+      if (
+        this.state.motivo.nome === "Medição Inicial - LPR - Lanche por refeição"
+      ) {
         this.mudaRefeicao(
           alimentacaoDe,
           indice,
@@ -612,8 +614,9 @@ class AlteracaoCardapio extends Component {
     if (motivoSelecionado === undefined) return false;
 
     if (
-      motivoSelecionado.nome === "Refeição por lanche" ||
-      motivoSelecionado.nome === "Lanche por refeição"
+      motivoSelecionado.nome ===
+        "Medição Inicial - RPL - Refeição por lanche" ||
+      motivoSelecionado.nome === "Medição Inicial - LPR - Lanche por refeição"
     ) {
       return true;
     }
@@ -672,10 +675,35 @@ class AlteracaoCardapio extends Component {
 
   onChangeMotivo = uuidMotivo => {
     // passar periodos
-    // console.log('>>> formValues', this.props.formValues);
-    // console.log(this.state.periodos);
     const motivo = this.props.motivos.find(d => d.uuid === uuidMotivo);
     this.setState({ motivo });
+
+    this.state.periodos.forEach((periodo, indice) => {
+      const periodoChecado = this.props.formValues[
+        `substituicoes_${periodo.nome}`
+      ];
+
+      if (periodoChecado && periodoChecado.check) {
+        if (motivo.nome === "Medição Inicial - RPL - Refeição por lanche") {
+          this.mudaRefeicao(
+            periodo,
+            indice,
+            periodo.nome,
+            "refeição",
+            "lanche"
+          );
+        }
+        if (motivo.nome === "Medição Inicial - LPR - Lanche por refeição") {
+          this.mudaRefeicao(
+            periodo,
+            indice,
+            periodo.nome,
+            "lanche",
+            "refeição"
+          );
+        }
+      }
+    });
   };
 
   render() {
@@ -691,7 +719,6 @@ class AlteracaoCardapio extends Component {
     } = this.state;
     const {
       handleSubmit,
-      formValues,
       meusDados,
       proximos_dois_dias_uteis,
       motivos,
