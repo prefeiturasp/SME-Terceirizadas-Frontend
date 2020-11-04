@@ -602,7 +602,22 @@ class AlteracaoCardapio extends Component {
   }
 
   deveDesabilitarSeletorDeAlimentacao = indice => {
-    if (this.state.periodos[indice].checked) return true;
+    const periodoChecado = this.state.periodos[indice];
+    if (!periodoChecado.checked) return true;
+
+    const motivoSelecionado = this.props.motivos.find(
+      d => d.uuid === this.props.formValues.motivo
+    );
+
+    if (motivoSelecionado === undefined) return false;
+
+    if (
+      motivoSelecionado.nome === "Refeição por lanche" ||
+      motivoSelecionado.nome === "Lanche por refeição"
+    ) {
+      return true;
+    }
+    return false;
   };
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
@@ -657,6 +672,8 @@ class AlteracaoCardapio extends Component {
 
   onChangeMotivo = uuidMotivo => {
     // passar periodos
+    // console.log('>>> formValues', this.props.formValues);
+    // console.log(this.state.periodos);
     const motivo = this.props.motivos.find(d => d.uuid === uuidMotivo);
     this.setState({ motivo });
   };
@@ -871,8 +888,6 @@ class AlteracaoCardapio extends Component {
                   required
                   validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
-                <pre>{JSON.stringify(periodos, null, 2)}</pre>
-                <pre>{JSON.stringify(formValues, null, 2)}</pre>
               </div>
               <div className="card-body footer-button">
                 <Botao
