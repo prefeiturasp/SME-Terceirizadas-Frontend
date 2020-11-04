@@ -50,6 +50,8 @@ class AlteracaoCardapio extends Component {
       periodos: [],
       loading: true,
       alteracaoCardapioList: [],
+      motivo: {},
+      alimentacaoDe: {},
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: null,
@@ -531,6 +533,60 @@ class AlteracaoCardapio extends Component {
 
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
+
+    // Procura refeição em alimentacaoDe.
+    if (!periodos[indice].checked) {
+      const alimentacaoDe = this.state.periodos.find(
+        d => d.nome === periodoNome
+      );
+      if (this.state.motivo.nome === "Refeição por lanche") {
+        const refeicao = alimentacaoDe.tipos_alimentacao.find(
+          v => v.nome === "refeição"
+        );
+        if (refeicao !== undefined) {
+          this.setState({ alimentacaoDe: refeicao }, () => {
+            // mudaRefeicao
+            this.props.change(
+              `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+              this.state.alimentacaoDe.uuid
+            );
+            // aqui
+            const alimentacaoPara = this.state.substituicoesAlimentacao[
+              indice
+            ].substituicoes.find(v => v.nome === "lanche");
+            // Define o valor no campo
+            this.props.change(
+              `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+              alimentacaoPara.uuid
+            );
+          });
+        }
+      }
+      if (this.state.motivo.nome === "Lanche por refeição") {
+        const lanche = alimentacaoDe.tipos_alimentacao.find(
+          v => v.nome === "lanche"
+        );
+        if (lanche !== undefined) {
+          this.setState({ alimentacaoDe: lanche }, () => {
+            // mudaRefeicao
+            this.props.change(
+              `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+              this.state.alimentacaoDe.uuid
+            );
+            // aqui
+            const alimentacaoPara = this.state.substituicoesAlimentacao[
+              indice
+            ].substituicoes.find(v => v.nome === "refeição");
+            // Define o valor no campo
+            this.props.change(
+              `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+              alimentacaoPara.uuid
+            );
+          });
+        }
+      }
+    }
+
     this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
     periodos[indice].checked = !periodos[indice].checked;
     this.props.change(input, periodos[indice].checked);
@@ -587,6 +643,12 @@ class AlteracaoCardapio extends Component {
     }
   };
 
+  onChangeMotivo = uuidMotivo => {
+    // passar periodos
+    const motivo = this.props.motivos.find(d => d.uuid === uuidMotivo);
+    this.setState({ motivo });
+  };
+
   render() {
     const {
       loading,
@@ -600,6 +662,7 @@ class AlteracaoCardapio extends Component {
     } = this.state;
     const {
       handleSubmit,
+      formValues,
       meusDados,
       proximos_dois_dias_uteis,
       motivos,
@@ -687,6 +750,9 @@ class AlteracaoCardapio extends Component {
                     options={motivos}
                     validate={required}
                     required
+                    onChange={evt => {
+                      this.onChangeMotivo(evt.target.value, formValues);
+                    }}
                   />
                 </section>
               </div>
@@ -789,6 +855,8 @@ class AlteracaoCardapio extends Component {
                   required
                   validate={[textAreaRequired, peloMenosUmCaractere]}
                 />
+                <pre>{JSON.stringify(periodos, null, 2)}</pre>
+                <pre>{JSON.stringify(formValues, null, 2)}</pre>
               </div>
               <div className="card-body footer-button">
                 <Botao
@@ -846,6 +914,8 @@ const selector = formValueSelector("alteracaoCardapio");
 
 const mapStateToProps = state => {
   return {
+    formValues:
+      state.form.alteracaoCardapio && state.form.alteracaoCardapio.values,
     initialValues: state.alteracaoCardapio.data,
     data_inicial: selector(state, "data_inicial"),
     data_final: selector(state, "data_final"),
