@@ -550,7 +550,10 @@ class AlteracaoCardapio extends Component {
               `substituicoes_${periodoNome}.tipo_alimentacao_de`,
               this.state.alimentacaoDe.uuid
             );
-            // aqui
+            this.selectSubstituicoesAlimentacaoAPartirDe(
+              this.state.alimentacaoDe.uuid,
+              indice
+            );
             const alimentacaoPara = this.state.substituicoesAlimentacao[
               indice
             ].substituicoes.find(v => v.nome === "lanche");
@@ -573,7 +576,10 @@ class AlteracaoCardapio extends Component {
               `substituicoes_${periodoNome}.tipo_alimentacao_de`,
               this.state.alimentacaoDe.uuid
             );
-            // aqui
+            this.selectSubstituicoesAlimentacaoAPartirDe(
+              this.state.alimentacaoDe.uuid,
+              indice
+            );
             const alimentacaoPara = this.state.substituicoesAlimentacao[
               indice
             ].substituicoes.find(v => v.nome === "refeição");
@@ -751,7 +757,7 @@ class AlteracaoCardapio extends Component {
                     validate={required}
                     required
                     onChange={evt => {
-                      this.onChangeMotivo(evt.target.value, formValues);
+                      this.onChangeMotivo(evt.target.value);
                     }}
                   />
                 </section>
