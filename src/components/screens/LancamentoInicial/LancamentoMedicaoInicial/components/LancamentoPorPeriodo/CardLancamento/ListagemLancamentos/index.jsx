@@ -29,7 +29,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
             <div>{lancamento.dia}</div>
             <div />
             <div>{get(lancamento.lancamento, "merenda_seca")}</div>
-            <div />
+            <div>{get(lancamento.lancamento, "kits_lanches")}</div>
             <div>
               {get(lancamento.lancamento, "eh_dia_de_sobremesa_doce") && (
                 <input style={{ width: "35%" }} type="checkbox" checked />

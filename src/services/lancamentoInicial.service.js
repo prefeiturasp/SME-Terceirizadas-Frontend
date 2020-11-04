@@ -13,3 +13,11 @@ export const getLancamentosDeUmDia = async (data, escolaPeriodoEscolarUUID) =>
       escola_periodo_escolar: escolaPeriodoEscolarUUID
     }
   });
+
+export const getDadosDeUmDia = async (data, escolaPeriodoEscolarUUID) =>
+  await axios.get("/lancamento-diario/dados-dia-periodo/", {
+    params: {
+      data,
+      escola_periodo_escolar: escolaPeriodoEscolarUUID
+    }
+  });

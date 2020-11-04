@@ -20,6 +20,7 @@ import { validateFormLancamento, objectFlattener } from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import RefeicaoEnteralInput from "./TabelaLancamento/RefeicaoEnteralInput";
 import {
+  getDadosDeUmDia,
   getLancamentosDeUmDia,
   registraLancamentoDiario
 } from "services/lancamentoInicial.service";
@@ -51,16 +52,24 @@ export default ({
   };
   const atualizaInitialValues = async dia => {
     setLoading(true);
-    const resposta = await getLancamentosDeUmDia(
+    const promiseDados = getDadosDeUmDia(
       dia,
       panorama.uuid_escola_periodo_escolar
     );
-    if (resposta.status === OK) {
+    const promiseLancamentos = await getLancamentosDeUmDia(
+      dia,
+      panorama.uuid_escola_periodo_escolar
+    );
+    const [respostaDados, respostaLancamentos] = await Promise.all([
+      promiseDados,
+      promiseLancamentos
+    ]);
+    if (respostaLancamentos.status === OK && respostaDados.status === OK) {
       const initialValues = {
         data_lancamento: dia,
         escola_periodo_escolar: panorama.uuid_escola_periodo_escolar
       };
-      resposta.data.results.forEach(dadosDoGrupo => {
+      respostaLancamentos.data.results.forEach(dadosDoGrupo => {
         let grupo;
         switch (dadosDoGrupo.tipo_dieta) {
           case null:
@@ -85,13 +94,22 @@ export default ({
             // eslint-disable-next-line no-console
             console.log("Nâo era pra chegar aqui...", dadosDoGrupo.tipo_dieta);
         }
-        initialValues[grupo] = dadosDoGrupo;
+        if (grupo === "convencional") {
+          initialValues[grupo] = Object.assign(
+            {},
+            respostaDados.data,
+            dadosDoGrupo
+          );
+        } else {
+          initialValues[grupo] = dadosDoGrupo;
+        }
       });
+      if (initialValues.convencional === undefined) {
+        initialValues.convencional = respostaDados.data;
+      }
       setInitialValues(initialValues);
     } else {
-      toastError(
-        "Houve um erro ao obter os lançamentos do dia: " + resposta.data
-      );
+      toastError("Houve um erro ao obter os lançamentos do dia");
     }
     setLoading(false);
   };

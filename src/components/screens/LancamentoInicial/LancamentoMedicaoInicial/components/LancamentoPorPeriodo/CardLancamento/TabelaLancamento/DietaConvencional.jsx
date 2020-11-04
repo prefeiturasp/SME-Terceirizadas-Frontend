@@ -17,7 +17,12 @@ export default ({ formValues }) => (
           formValues.data_lancamento.substring(0, 2)}
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component={BorderlessInput}
+          name="convencional.troca"
+          validate={numericInteger}
+          disabled
+        />
       </div>
       <div>
         <Field
@@ -27,7 +32,12 @@ export default ({ formValues }) => (
         />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component={BorderlessInput}
+          name="convencional.kits_lanches"
+          validate={numericInteger}
+          disabled
+        />
       </div>
       <div>
         <Field
