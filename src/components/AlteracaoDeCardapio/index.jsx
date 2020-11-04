@@ -531,65 +531,64 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  mudaRefeicao(
+    alimentacaoDe,
+    indice,
+    periodoNome,
+    nomeAlimentacaoDe,
+    nomeAlimentacaoPara
+  ) {
+    const refeicao = alimentacaoDe.tipos_alimentacao.find(
+      v => v.nome === nomeAlimentacaoDe
+    );
+    if (refeicao !== undefined) {
+      this.setState({ alimentacaoDe: refeicao }, () => {
+        // Define o valor no campo
+        this.props.change(
+          `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+          this.state.alimentacaoDe.uuid
+        );
+
+        this.selectSubstituicoesAlimentacaoAPartirDe(
+          this.state.alimentacaoDe.uuid,
+          indice
+        );
+        const alimentacaoPara = this.state.substituicoesAlimentacao[
+          indice
+        ].substituicoes.find(v => v.nome === nomeAlimentacaoPara);
+        // Define o valor no campo
+        this.props.change(
+          `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+          alimentacaoPara.uuid
+        );
+      });
+    }
+  }
+
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
-
     // Procura refeição em alimentacaoDe.
     if (!periodos[indice].checked) {
       const alimentacaoDe = this.state.periodos.find(
         d => d.nome === periodoNome
       );
       if (this.state.motivo.nome === "Refeição por lanche") {
-        const refeicao = alimentacaoDe.tipos_alimentacao.find(
-          v => v.nome === "refeição"
+        this.mudaRefeicao(
+          alimentacaoDe,
+          indice,
+          periodoNome,
+          "refeição",
+          "lanche"
         );
-        if (refeicao !== undefined) {
-          this.setState({ alimentacaoDe: refeicao }, () => {
-            // mudaRefeicao
-            this.props.change(
-              `substituicoes_${periodoNome}.tipo_alimentacao_de`,
-              this.state.alimentacaoDe.uuid
-            );
-            this.selectSubstituicoesAlimentacaoAPartirDe(
-              this.state.alimentacaoDe.uuid,
-              indice
-            );
-            const alimentacaoPara = this.state.substituicoesAlimentacao[
-              indice
-            ].substituicoes.find(v => v.nome === "lanche");
-            // Define o valor no campo
-            this.props.change(
-              `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-              alimentacaoPara.uuid
-            );
-          });
-        }
       }
       if (this.state.motivo.nome === "Lanche por refeição") {
-        const lanche = alimentacaoDe.tipos_alimentacao.find(
-          v => v.nome === "lanche"
+        this.mudaRefeicao(
+          alimentacaoDe,
+          indice,
+          periodoNome,
+          "lanche",
+          "refeição"
         );
-        if (lanche !== undefined) {
-          this.setState({ alimentacaoDe: lanche }, () => {
-            // mudaRefeicao
-            this.props.change(
-              `substituicoes_${periodoNome}.tipo_alimentacao_de`,
-              this.state.alimentacaoDe.uuid
-            );
-            this.selectSubstituicoesAlimentacaoAPartirDe(
-              this.state.alimentacaoDe.uuid,
-              indice
-            );
-            const alimentacaoPara = this.state.substituicoesAlimentacao[
-              indice
-            ].substituicoes.find(v => v.nome === "refeição");
-            // Define o valor no campo
-            this.props.change(
-              `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-              alimentacaoPara.uuid
-            );
-          });
-        }
       }
     }
 
