@@ -556,11 +556,13 @@ class AlteracaoCardapio extends Component {
         const alimentacaoPara = this.state.substituicoesAlimentacao[
           indice
         ].substituicoes.find(v => v.nome === nomeAlimentacaoPara);
-        // Define o valor no campo
-        this.props.change(
-          `substituicoes_${periodoNome}.tipo_alimentacao_para`,
-          alimentacaoPara.uuid
-        );
+        if (alimentacaoPara !== undefined) {
+          // Define o valor no campo
+          this.props.change(
+            `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+            alimentacaoPara.uuid
+          );
+        }
       });
     }
   }
@@ -593,10 +595,15 @@ class AlteracaoCardapio extends Component {
     }
 
     this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
+
     periodos[indice].checked = !periodos[indice].checked;
     this.props.change(input, periodos[indice].checked);
     this.setState({ periodos });
   }
+
+  deveDesabilitarSeletorDeAlimentacao = indice => {
+    if (this.state.periodos[indice].checked) return true;
+  };
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
     let periodos = this.state.periodos;
@@ -812,7 +819,9 @@ class AlteracaoCardapio extends Component {
                         component={Select}
                         name="tipo_alimentacao_de"
                         options={agregarDefault(periodo.tipos_alimentacao)}
-                        disabled={!periodo.checked}
+                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                          indice
+                        )}
                         onChange={event => {
                           this.resetAlteracaoDoPeriodo(
                             event.target.value,
@@ -831,7 +840,9 @@ class AlteracaoCardapio extends Component {
                       <Field
                         component={Select}
                         name="tipo_alimentacao_para"
-                        disabled={!periodo.checked}
+                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                          indice
+                        )}
                         options={agregarDefault(
                           substituicoesAlimentacao.length > 0
                             ? substituicoesAlimentacao[indice].substituicoes
