@@ -64,7 +64,7 @@ export default () => {
           )}
           {solicitacoes && solicitacoes.length === 0 && (
             <div className="text-center mt-5">
-              A consulta retornou 0 resultados.
+              Não existem dados para filtragem informada.
             </div>
           )}
         </div>
