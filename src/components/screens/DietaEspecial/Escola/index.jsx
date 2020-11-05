@@ -427,7 +427,7 @@ class solicitacaoDietaEspecial extends Component {
 
           <article className="card-body footer-button">
             <Botao
-              texto="Cancelar"
+              texto="Limpar campos"
               onClick={() => {
                 this.props.reset();
                 this.props.loadSolicitacoesVigentes(null);
