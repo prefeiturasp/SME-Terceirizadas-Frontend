@@ -27,7 +27,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
             }`}
           >
             <div>{lancamento.dia}</div>
-            <div />
+            <div>{get(lancamento.lancamento, "troca")}</div>
             <div>{get(lancamento.lancamento, "merenda_seca")}</div>
             <div>{get(lancamento.lancamento, "kits_lanches")}</div>
             <div>
@@ -41,7 +41,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
           <div>Totais</div>
           <div />
           <div>{totaisAbsolutos && totaisAbsolutos.merenda_seca}</div>
-          <div />
+          <div>{totaisAbsolutos && totaisAbsolutos.kits_lanches}</div>
           <div />
         </div>
       </div>
@@ -125,6 +125,7 @@ const TotaisPagamento = ({ totaisPagamento }) => {
 const camposPossiveis = [
   "frequencia",
   "merenda_seca",
+  "kits_lanches",
   "lanche_4h",
   "lanche_5h",
   "refeicoes.0.ref_oferta",

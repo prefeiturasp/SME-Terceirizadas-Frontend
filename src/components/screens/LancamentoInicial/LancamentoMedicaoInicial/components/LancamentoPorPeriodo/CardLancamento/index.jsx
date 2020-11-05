@@ -1,4 +1,4 @@
-import { isequal } from "lodash";
+import { isequal, get } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
@@ -107,6 +107,13 @@ export default ({
       if (initialValues.convencional === undefined) {
         initialValues.convencional = respostaDados.data;
       }
+      // remover nulls
+      if (initialValues.convencional) {
+        for (let chave of Object.keys(initialValues.convencional)) {
+          if (initialValues.convencional[chave] === null)
+            initialValues.convencional[chave] = undefined;
+        }
+      }
       setInitialValues(initialValues);
     } else {
       toastError("Houve um erro ao obter os lançamentos do dia");
@@ -173,7 +180,7 @@ export default ({
               initialValues={initialValues}
               initialValuesEqual={isequal}
               validate={formValues =>
-                validateFormLancamento(formValues, panorama.qtde_alunos)
+                validateFormLancamento(formValues, panorama)
               }
               render={({
                 form,
@@ -194,10 +201,25 @@ export default ({
                     return promise;
                   }}
                 >
+                  <pre>{JSON.stringify(values, null, 4)}</pre>
                   <OnChange name="data_lancamento">
                     {data_lancamento => {
                       data_lancamento !== "" &&
                         atualizaInitialValues(data_lancamento);
+                    }}
+                  </OnChange>
+                  <OnChange name="convencional.eh_dia_de_sobremesa_doce">
+                    {value => {
+                      if (value) {
+                        form.change(
+                          "convencional.refeicoes.0.sob_repet",
+                          undefined
+                        );
+                        form.change(
+                          "convencional.refeicoes.1.sob_repet",
+                          undefined
+                        );
+                      }
                     }}
                   </OnChange>
                   <div className="row">
@@ -236,7 +258,13 @@ export default ({
                           <DietaConvencional formValues={values} />
                         </div>
                         <div className="col-8">
-                          <DietaConvencionalFrequencia panorama={panorama} />
+                          <DietaConvencionalFrequencia
+                            panorama={panorama}
+                            deveDesabilitarRepeticaoSobremesa={get(
+                              values,
+                              "convencional.eh_dia_de_sobremesa_doce"
+                            )}
+                          />
                         </div>
                       </div>
                       {panorama.qtde_tipo_a > 0 && (
