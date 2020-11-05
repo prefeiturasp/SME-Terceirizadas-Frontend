@@ -1,9 +1,8 @@
-import { Spin } from "antd";
 import { OK } from "http-status-codes";
 import { get, set } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 
 import { InputComData } from "components/Shareable/DatePicker";
@@ -178,14 +177,17 @@ const calculaTotaisPagamento = (lancamentos, panorama) => {
   };
 };
 
-export default ({ panorama }) => {
-  const [listagemAberta, setListagemAberta] = useState(false);
+export default ({
+  panorama,
+  listagemAberta,
+  setListagemAberta,
+  setLoading
+}) => {
   const [lancamentos, setLancamentos] = useState([]);
   const [totaisAbsolutos, setTotaisAbsolutos] = useState({});
   const [totaisPagamento, setTotaisPagamento] = useState({});
-  const [carregando, setCarregando] = useState(false);
   const onMesLancamentoChange = value => {
-    setCarregando(true);
+    setLoading(true);
     getLancamentosPorMes({
       escola_periodo_escolar: panorama.uuid_escola_periodo_escolar,
       mes: value
@@ -199,7 +201,7 @@ export default ({ panorama }) => {
           "Erro ao obter os lançamentos do mês: " + response.errorMessage
         );
       }
-      setCarregando(false);
+      setLoading(false);
     });
   };
 
@@ -212,7 +214,7 @@ export default ({ panorama }) => {
     setListagemAberta(!listagemAberta);
   };
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <>
       <div className="row cabecalho-lancamentos-por-mes mt-3">
         <div>Lançamentos por mês</div>
         <div onClick={toggleListagemAberta}>
@@ -221,31 +223,22 @@ export default ({ panorama }) => {
       </div>
       {listagemAberta && (
         <>
-          <Form
-            onSubmit={() => {}}
-            render={({ handleSubmit }) => (
-              <form id="myform" onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-3 data-lancamento-container">
-                    <Field
-                      component={InputComData}
-                      name="mes_lancamento"
-                      label="Mês do lançamento"
-                      required
-                      dateFormat="MM/YYYY"
-                      showMonthYearPicker
-                      showFullMonthYearPicker
-                      minDate={null}
-                      maxDate={moment()._d}
-                    />
-                    <OnChange name="mes_lancamento">
-                      {onMesLancamentoChange}
-                    </OnChange>
-                  </div>
-                </div>
-              </form>
-            )}
-          />
+          <div className="row">
+            <div className="col-3 data-lancamento-container">
+              <Field
+                component={InputComData}
+                name="mes_lancamento"
+                label="Mês do lançamento"
+                required
+                dateFormat="MM/YYYY"
+                showMonthYearPicker
+                showFullMonthYearPicker
+                minDate={null}
+                maxDate={moment()._d}
+              />
+              <OnChange name="mes_lancamento">{onMesLancamentoChange}</OnChange>
+            </div>
+          </div>
           {lancamentos.length > 0 && (
             <>
               <Lancamentos
@@ -258,6 +251,6 @@ export default ({ panorama }) => {
           )}
         </>
       )}
-    </Spin>
+    </>
   );
 };

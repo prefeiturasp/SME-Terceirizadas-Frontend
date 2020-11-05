@@ -40,6 +40,7 @@ export default ({
 }) => {
   const [lancamentoAberto, setLancamentoAberto] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listagemAberta, setListagemAberta] = useState(false);
   const [initialValues, setInitialValues] = useState(
     panorama
       ? {
@@ -192,16 +193,18 @@ export default ({
               }) => (
                 <form
                   onSubmit={event => {
+                    setLoading(true);
                     const promise = handleSubmit(event);
                     promise &&
                       promise.then(() => {
                         form.reset();
                         resetInitialValues();
+                        setListagemAberta(false);
+                        setLoading(false);
                       });
                     return promise;
                   }}
                 >
-                  <pre>{JSON.stringify(values, null, 4)}</pre>
                   <OnChange name="data_lancamento">
                     {data_lancamento => {
                       data_lancamento !== "" &&
@@ -345,10 +348,18 @@ export default ({
                       </div>
                     </>
                   )}
+                  <ListagemLancamentos
+                    {...{
+                      panorama,
+                      loading,
+                      setLoading,
+                      listagemAberta,
+                      setListagemAberta
+                    }}
+                  />
                 </form>
               )}
             />
-            <ListagemLancamentos panorama={panorama} />
           </>
         )}
       </div>

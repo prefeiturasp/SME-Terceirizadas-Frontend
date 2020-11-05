@@ -146,7 +146,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
         <Field
           component={BorderlessInput}
           name="convencional.refeicoes.0.ref_repet"
-          validate={numericInteger}
+          validate={nonRequiredNumericInteger}
         />
       </div>
       <div>
