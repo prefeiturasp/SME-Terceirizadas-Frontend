@@ -160,6 +160,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
     case TIPO_PERFIL.DIETA_ESPECIAL:
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
