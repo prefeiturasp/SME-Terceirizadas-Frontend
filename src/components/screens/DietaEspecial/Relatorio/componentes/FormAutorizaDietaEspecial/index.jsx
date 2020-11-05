@@ -274,7 +274,6 @@ export default class FormAutorizaDietaEspecial extends Component {
           render={({ form, handleSubmit, pristine, submitting, values }) => (
             <form onSubmit={handleSubmit}>
               <div className="information-codae">
-                <div className="pt-2 title">Relação por Diagnóstico</div>
                 {diagnosticos && (
                   <Field
                     component={DiagnosticosField}
@@ -283,7 +282,10 @@ export default class FormAutorizaDietaEspecial extends Component {
                     validate={required}
                   />
                 )}
-                <div className="pt-2 title">Classificação da Dieta</div>
+                <div className="pt-2 input title">
+                  <span className="required-asterisk">*</span>
+                  <label>Classificação da Dieta</label>
+                </div>
                 {classificacoesDieta && (
                   <Field
                     component={ClassificacaoDaDieta}
@@ -327,7 +329,10 @@ export default class FormAutorizaDietaEspecial extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="pt-2 title">Substituições de Alimentos</div>
+                    <div className="pt-2 input title">
+                      <span className="required-asterisk">*</span>
+                      <label>Substituições de Alimentos</label>
+                    </div>
                     <SubstituicoesField
                       alimentos={alimentos}
                       produtos={produtos}

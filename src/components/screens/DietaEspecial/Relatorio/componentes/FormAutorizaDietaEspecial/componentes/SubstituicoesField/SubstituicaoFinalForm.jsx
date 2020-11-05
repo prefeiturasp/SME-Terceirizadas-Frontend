@@ -8,7 +8,6 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../../../Shareable/Botao/constants";
-import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
 
 import "./style.scss";
 
@@ -40,7 +39,6 @@ export default class SubstituicoesField extends Component {
       addOption,
       removeOption,
       input: { name },
-      meta,
       deveHabilitarApagar
     } = this.props;
     return (
@@ -92,7 +90,6 @@ export default class SubstituicoesField extends Component {
             style={BUTTON_STYLE.BLUE_OUTLINE}
           />
         </div>
-        <InputErroMensagem meta={meta} />
       </div>
     );
   }

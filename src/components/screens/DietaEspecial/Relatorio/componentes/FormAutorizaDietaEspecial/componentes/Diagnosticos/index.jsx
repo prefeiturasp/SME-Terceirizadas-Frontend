@@ -22,18 +22,24 @@ export default class Diagnosticos extends Component {
           return (
             <div key={key} className="row" id="diagnosticos">
               <div className="col-8">
-                <Select
-                  naoDesabilitarPrimeiraOpcao
-                  onChange={event =>
-                    this.props.onSelect(key, event.target.value)
-                  }
-                  options={options}
-                  input={{
-                    value: opcao,
-                    onChange: event =>
+                <div className="input title">
+                  <span className="required-asterisk">*</span>
+                  <label className="col-form-label title">
+                    Relação por Diagnóstico
+                  </label>
+                  <Select
+                    naoDesabilitarPrimeiraOpcao
+                    onChange={event =>
                       this.props.onSelect(key, event.target.value)
-                  }}
-                />
+                    }
+                    options={options}
+                    input={{
+                      value: opcao,
+                      onChange: event =>
+                        this.props.onSelect(key, event.target.value)
+                    }}
+                  />
+                </div>
               </div>
               <div className="col-2">
                 {opcao === "" || key < selecionados.length - 1 ? (
