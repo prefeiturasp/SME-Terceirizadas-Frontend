@@ -1,4 +1,8 @@
 import React from "react";
+import { Field } from "react-final-form";
+
+import { nonRequiredNumericInteger } from "helpers/fieldValidators";
+
 import BorderlessInput from "../../../BorderlessInput";
 import CabecalhoDietaConvencional from "./CabecalhoDietaConvencional";
 
@@ -13,16 +17,29 @@ export default ({ formValues }) => (
           formValues.data_lancamento.substring(0, 2)}
       </div>
       <div>
-        <BorderlessInput />
+        <Field component={BorderlessInput} name="convencional.troca" disabled />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component={BorderlessInput}
+          name="convencional.merenda_seca"
+          validate={nonRequiredNumericInteger}
+        />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component={BorderlessInput}
+          name="convencional.kits_lanches"
+          disabled
+        />
       </div>
       <div>
-        <BorderlessInput />
+        <Field
+          component="input"
+          name="convencional.eh_dia_de_sobremesa_doce"
+          type="checkbox"
+          style={{ width: "35%" }}
+        />
       </div>
     </div>
   </div>
