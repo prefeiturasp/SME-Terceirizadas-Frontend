@@ -25,6 +25,7 @@ const MenuDietaEspecial = () => {
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas =
     usuarioEhCODAEDietaEspecial() || usuarioEhNutricionistaSupervisao();
