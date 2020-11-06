@@ -348,7 +348,9 @@ class AlteracaoCardapio extends Component {
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       dataInicial: null,
-      periodos
+      periodos,
+      motivo: {},
+      alimentacaoDe: {}
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
