@@ -93,7 +93,7 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
   if (tipoSolicitacao) {
-    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`);
+    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
   }
 
   return fetch(url, {
