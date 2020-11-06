@@ -332,15 +332,22 @@ class AlteracaoCardapio extends Component {
   resetForm() {
     let { periodos } = this.state;
 
+    this.state.periodos.forEach(periodo => {
+      this.props.change(`substituicoes_${periodo.nome}`, false);
+    });
+
     this.props.loadAlteracaoCardapio(null);
     this.props.change("alterar_dia", null);
     this.props.change("data_inicial", null);
     this.props.change("data_final", null);
     this.props.change("motivo", null);
-    this.props.change("observacao", "<p><p/>\n");
+    this.props.change("observacao", null);
+
     periodos.forEach(periodo => {
       periodo.checked = false;
     });
+
+    this.props.change("periodos", false);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
