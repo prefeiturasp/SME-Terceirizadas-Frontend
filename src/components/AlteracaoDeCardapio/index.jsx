@@ -348,7 +348,9 @@ class AlteracaoCardapio extends Component {
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       dataInicial: null,
-      periodos
+      periodos,
+      motivo: {},
+      alimentacaoDe: {}
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
@@ -482,7 +484,7 @@ class AlteracaoCardapio extends Component {
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       ).then(
         statusCode => {
-          if (statusCode === HTTP_STATUS.NO_CONTENT) {
+          if (statusCode.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
