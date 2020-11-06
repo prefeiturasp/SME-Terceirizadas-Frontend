@@ -186,17 +186,21 @@ class Permissoes extends Component {
               )}
               <div className="table-users">
                 <div className="row titles">
-                  <div className="col-3">Código RF</div>
-                  <div className="col-9">Nome</div>
+                  <div className="col-2">Código RF</div>
+                  <div className="col-3">Nome</div>
+                  <div className="col-3">CPF</div>
+                  <div className="col-3">E-mail</div>
                 </div>
                 {equipeAdministradora.length > 0 &&
                   equipeAdministradora.map((vinculo, key) => {
                     return (
                       <div key={key} className="row values">
-                        <div className="col-3">
+                        <div className="col-2">
                           {vinculo.usuario.registro_funcional}
                         </div>
-                        <div className="col-8">{vinculo.usuario.nome}</div>
+                        <div className="col-3">{vinculo.usuario.nome}</div>
+                        <div className="col-3">{vinculo.usuario.cpf}</div>
+                        <div className="col-3">{vinculo.usuario.email}</div>
                         <div className="col-1 trash">
                           <i
                             onClick={() => this.excluir(vinculo.uuid)}
@@ -206,6 +210,11 @@ class Permissoes extends Component {
                       </div>
                     );
                   })}
+                {equipeAdministradora.length === 0 && (
+                  <div className="text-center mt-5">
+                    Não existem usuários autorizados.
+                  </div>
+                )}
               </div>
             </div>
           </div>
