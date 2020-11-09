@@ -102,7 +102,7 @@ export const PermissoesCODAEGestaoProdutos = () => (
   />
 );
 
-// CODAE - Gestão de Produtos
+// CODAE - Supervisão Nutrição
 export const PermissoesCODAESupervisaoNutricao = () => (
   <PermissoesBase
     criarEquipeAdministradora={criarEquipeAdministradoraSupervisaoNutricao}
