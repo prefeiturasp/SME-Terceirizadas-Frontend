@@ -156,6 +156,11 @@ class PermissoesTerceirizadas extends Component {
                       </div>
                     );
                   })}
+                {equipeAdministradora.length === 0 && (
+                  <div className="text-center mt-5">
+                    Não existem usuários autorizados.
+                  </div>
+                )}
               </div>
             </div>
           </div>
