@@ -112,9 +112,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                   name="somente_dietas_ativas"
                 />
                 <OnChange name="somente_dietas_ativas">
-                  {() =>
-                    form.change("dre", diretoriasRegionais.map(v => v.value))
-                  }
+                  {() => {
+                    form.change("dre", diretoriasRegionais.map(v => v.value));
+                    form.change("status", "ativas");
+                  }}
                 </OnChange>
                 <span className="checkbox-custom" />
                 <label
