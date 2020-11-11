@@ -365,8 +365,8 @@ export default class FormAutorizaDietaEspecial extends Component {
                               labelDesligado="Sem data de término"
                               minDate={moment().add(1, "day")["_d"]}
                               name="data_termino"
-                              format={v => v && moment(v, "YYYY-MM-DD")["_d"]}
-                              parse={v => v && moment(v).format("YYYY-MM-DD")}
+                              format={v => v && moment(v, "DD/MM/YYYY")["_d"]}
+                              parse={v => v && moment(v).format("DD/MM/YYYY")}
                             />
                           </div>
                         )}
