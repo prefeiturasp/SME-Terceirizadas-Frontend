@@ -25,7 +25,12 @@ export default ({
   }`;
 
   const disabledInputValue = () => {
-    if (input.value[0]) {
+    if (
+      Array.isArray(input.value) &&
+      input.value.length === props.options.length
+    ) {
+      return allItemsAreSelectedText;
+    } else if (input.value[0]) {
       const matchingOption = props.options.find(
         e => e.value === input.value[0]
       );

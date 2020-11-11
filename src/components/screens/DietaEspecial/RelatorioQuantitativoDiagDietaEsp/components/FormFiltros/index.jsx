@@ -111,6 +111,11 @@ export default ({ onSubmit, loading, setLoading }) => {
                   type="checkbox"
                   name="somente_dietas_ativas"
                 />
+                <OnChange name="somente_dietas_ativas">
+                  {() =>
+                    form.change("dre", diretoriasRegionais.map(v => v.value))
+                  }
+                </OnChange>
                 <span className="checkbox-custom" />
                 <label
                   htmlFor="somente_dietas_ativas"
@@ -211,8 +216,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
-                  required
-                  validate={required}
+                  required={!values.somente_dietas_ativas}
+                  validate={value => {
+                    if (!values.somente_dietas_ativas) return required(value);
+                  }}
                 />
               </div>
               <div className="col-3">
@@ -228,7 +235,9 @@ export default ({ onSubmit, loading, setLoading }) => {
                       : null
                   }
                   maxDate={moment()._d}
-                  validate={required}
+                  validate={value => {
+                    if (!values.somente_dietas_ativas) return required(value);
+                  }}
                 />
               </div>
             </div>
