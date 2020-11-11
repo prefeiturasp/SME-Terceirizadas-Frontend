@@ -132,9 +132,11 @@ export default ({
     );
   };
 
-  const onSubmit = formValues =>
+  const onSubmit = formValues => {
+    setLoading(true);
     new Promise(async (resolve, reject) => {
       const resposta = await registraLancamentoDiario(formValues);
+      setLoading(false);
       if (resposta.status === OK) {
         toastSuccess("Lançamento gravado com sucesso");
         resolve();
@@ -143,6 +145,7 @@ export default ({
         reject();
       }
     });
+  };
   return (
     <Spin tip="Carregando..." spinning={loading}>
       <div className="lancamento-por-periodo-card mt-3" style={{ color: cor }}>
@@ -193,14 +196,12 @@ export default ({
               }) => (
                 <form
                   onSubmit={event => {
-                    setLoading(true);
                     const promise = handleSubmit(event);
                     promise &&
                       promise.then(() => {
                         form.reset();
                         resetInitialValues();
                         setListagemAberta(false);
-                        setLoading(false);
                       });
                     return promise;
                   }}
@@ -267,6 +268,12 @@ export default ({
                               values,
                               "convencional.eh_dia_de_sobremesa_doce"
                             )}
+                            desabilitarRefeicao={
+                              get(values, "convencional.troca") === "RPL"
+                            }
+                            desabilitarLanche={
+                              get(values, "convencional.troca") === "LPR"
+                            }
                           />
                         </div>
                       </div>
@@ -355,6 +362,12 @@ export default ({
                       setLoading,
                       listagemAberta,
                       setListagemAberta
+                    }}
+                    setListagemAberta={value => {
+                      if (value === false) {
+                        form.change("mes_lancamento", undefined);
+                      }
+                      setListagemAberta(value);
                     }}
                   />
                 </form>
