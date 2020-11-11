@@ -188,9 +188,9 @@ class Permissoes extends Component {
               )}
               <div className="table-users">
                 <div className="row titles">
-                  <div className="col-3">Código RF</div>
-                  <div className="col-4">Nome</div>
-                  <div className="col-4">Cargo</div>
+                  <div className="col-2">Código RF</div>
+                  <div className="col-5">Nome</div>
+                  <div className="col-3">Cargo</div>
                 </div>
                 {equipeAdministradora.length > 0 &&
                   equipeAdministradora.map((vinculo, key) => {
@@ -200,10 +200,10 @@ class Permissoes extends Component {
                         : "chevron-down";
                     return (
                       <div key={key} className="row values">
-                        <div className="col-3">
+                        <div className="col-2">
                           {vinculo.usuario.registro_funcional}
                         </div>
-                        <div className="col-4">{vinculo.usuario.nome}</div>
+                        <div className="col-5">{vinculo.usuario.nome}</div>
                         <div className="col-3">{vinculo.usuario.cargo}</div>
                         <div className="col-1">
                           <i
@@ -231,7 +231,7 @@ class Permissoes extends Component {
                         </div>
                         {ativos && ativos.includes(vinculo.uuid) && (
                           <>
-                            <div className="col-3">
+                            <div className="col-2">
                               <div className="text-muted">CPF</div>
                               <div>{vinculo.usuario.cpf}</div>
                             </div>
