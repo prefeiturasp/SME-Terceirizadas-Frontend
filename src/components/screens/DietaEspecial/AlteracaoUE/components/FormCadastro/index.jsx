@@ -163,12 +163,12 @@ export default ({
 
   const formValidation = values => {
     let errors = {};
-    if (values.data_inicial_alteracao && values.data_final_alteracao) {
-      const data_inicial = moment(values.data_inicial_alteracao, "DD/MM/YYYY");
-      const data_final = moment(values.data_final_alteracao, "DD/MM/YYYY");
+    if (values.data_inicio && values.data_termino) {
+      const data_inicial = moment(values.data_inicio, "DD/MM/YYYY");
+      const data_final = moment(values.data_termino, "DD/MM/YYYY");
       const days = data_final.diff(data_inicial, "days");
       if (days > 45)
-        errors.data_inicial_alteracao =
+        errors.data_inicio =
           "Não é permitido informar um período superior a 45 dias.";
     }
     return errors;
@@ -268,13 +268,13 @@ export default ({
                   <div className="col">
                     <Field
                       component={InputComData}
-                      name="data_inicial_alteracao"
+                      name="data_inicio"
                       className="form-control"
                       placeholder="De"
                       minDate={moment().add(1, "days")._d}
                       maxDate={
-                        values && values.data_final_alteracao
-                          ? moment(values.data_final_alteracao, "DD/MM/YYYY")._d
+                        values && values.data_termino
+                          ? moment(values.data_termino, "DD/MM/YYYY")._d
                           : null
                       }
                       validate={required}
@@ -284,13 +284,12 @@ export default ({
                   <div className="col">
                     <Field
                       component={InputComData}
-                      name="data_final_alteracao"
+                      name="data_termino"
                       className="form-control"
                       placeholder="Até"
                       minDate={
-                        values && values.data_inicial_alteracao
-                          ? moment(values.data_inicial_alteracao, "DD/MM/YYYY")
-                              ._d
+                        values && values.data_inicio
+                          ? moment(values.data_inicio, "DD/MM/YYYY")._d
                           : moment().add(1, "days")._d
                       }
                       maxDate={null}

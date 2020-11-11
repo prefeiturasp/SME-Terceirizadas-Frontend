@@ -13,14 +13,16 @@ import {
   fluxoDietaEspecialPartindoEscola,
   formatarFluxoDietaEspecial
 } from "../../../../../Shareable/FluxoDeStatus/helper";
-import { statusEnum } from "../../../../../../constants/shared";
+import {
+  statusEnum,
+  TIPO_SOLICITACAO_DIETA
+} from "../../../../../../constants/shared";
 import "./styles.scss";
 
 export const CorpoRelatorio = props => {
   const {
     dietaEspecial: {
       id_externo,
-      escola,
       logs,
       ativo,
       aluno,
@@ -38,16 +40,40 @@ export const CorpoRelatorio = props => {
       informacoes_adicionais,
       registro_funcional_nutricionista,
       data_termino,
-      tem_solicitacao_cadastro_produto
+      tem_solicitacao_cadastro_produto,
+      tipo_solicitacao,
+      motivo_alteracao_ue,
+      observacoes_alteracao
     },
     solicitacoesVigentes,
     uuid
   } = props;
+
   const statusDietaAutorizada = [
     statusEnum.CODAE_AUTORIZADO,
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
     statusEnum.ESCOLA_SOLICITOU_INATIVACAO
   ];
+
+  const exibirDadosAutorizacao = () => {
+    if (tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE) return true;
+    if (
+      status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR &&
+      status_solicitacao !== statusEnum.CODAE_NEGOU_PEDIDO
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const getEscola = () => {
+    const { escola, escola_destino } = props.dietaEspecial;
+    if (tipo_solicitacao === TIPO_SOLICITACAO_DIETA.COMUM) return escola;
+    return escola_destino;
+  };
+
+  const escola = getEscola();
+
   return (
     <div>
       {tem_solicitacao_cadastro_produto && (
@@ -69,16 +95,33 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">ID DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="ml-5 col-7">
-          <span className="requester">Escola Solicitante</span>
+        <div className="ml-5 col-4">
+          <span className="requester">
+            {tipo_solicitacao === TIPO_SOLICITACAO_DIETA.COMUM
+              ? "Escola Solicitante"
+              : "Escola onde será realizado o programa"}
+          </span>
           <br />
           <span className="dre-name">{escola && escola.nome}</span>
         </div>
-        <div className="col-2 float-right">
+        {tipo_solicitacao !== TIPO_SOLICITACAO_DIETA.COMUM && (
+          <div className="col-4">
+            <span className="requester">Tipo da Solicitação</span>
+            <br />
+            {tipo_solicitacao ===
+            TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
+              <span className="dre-name">ALUNOS NÂO MATRICULADOS</span>
+            ) : (
+              <span className="dre-name">ALTERAÇÂO DE U.E</span>
+            )}
+          </div>
+        )}
+        <div className="col">
           <Botao
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.BLUE}
             icon={BUTTON_ICON.PRINT}
+            className="float-right"
             onClick={() => {
               getRelatorioDietaEspecial(uuid);
             }}
@@ -152,18 +195,39 @@ export const CorpoRelatorio = props => {
       </div>
       <div className="row">
         <div className="col-3 report-label-value">
-          <p>Cód. EOL do ALuno</p>
-          <p className="value-important">{aluno.codigo_eol}</p>
+          {tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
+            <>
+              <p>CPF do Aluno</p>
+              <p className="value-important">{aluno.cpf}</p>
+            </>
+          ) : (
+            <>
+              <p>Cód. EOL do ALuno</p>
+              <p className="value-important">{aluno.codigo_eol}</p>
+            </>
+          )}
         </div>
         <div className="col-5 report-label-value">
           <p>Nome Completo do Aluno</p>
-          <p className="value-important">{aluno.nome}</p>
+          <p className="value-important text-uppercase">{aluno.nome}</p>
         </div>
         <div className="col-4 report-label-value">
           <p>Data de Nascimento</p>
           <p className="value-important">{aluno.data_nascimento}</p>
         </div>
       </div>
+      {tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO && (
+        <div className="row">
+          <div className="col-3 report-label-value">
+            <p>CPF do Responsável</p>
+            <p className="value-important">{aluno.responsaveis[0].cpf}</p>
+          </div>
+          <div className="col-3 report-label-value">
+            <p>Nome Completo do Responsável</p>
+            <p className="value-important">{aluno.responsaveis[0].nome}</p>
+          </div>
+        </div>
+      )}
       {solicitacoesVigentes && (
         <SolicitacaoVigente
           uuid={uuid}
@@ -223,99 +287,95 @@ export const CorpoRelatorio = props => {
           }}
         />
       </div>
-      {status_solicitacao !== statusEnum.CODAE_A_AUTORIZAR &&
-        status_solicitacao !== statusEnum.CODAE_NEGOU_PEDIDO && (
-          <>
-            {alergias_intolerancias && alergias_intolerancias.length > 0 && (
-              <Fragment>
-                <hr />
-                <div className="report-label-value">
-                  <p>Relação por Diagnóstico</p>
-                  {alergias_intolerancias.map((alergia, key) => {
-                    return (
-                      <div className="value" key={key}>
-                        {alergia.descricao}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Fragment>
-            )}
-            {classificacao && (
-              <div className="report-label-value">
-                <p>Classificação da Dieta</p>
-                <div className="value">{classificacao.nome}</div>
-              </div>
-            )}
-            {nome_protocolo && (
-              <div className="report-label-value">
-                <p>Nome do Protocolo</p>
-                <div className="value">{nome_protocolo}</div>
-              </div>
-            )}
-            {substituicoes.length > 0 && (
-              <div className="report-label-value">
-                <p>Substituições</p>
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Alimento</th>
-                      <th scope="col">Tipo</th>
-                      <th scope="col">Isenções / Substituições</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {substituicoes.map((substituicao, key) => (
-                      <tr key={key}>
-                        <td className="value">{substituicao.alimento.nome}</td>
-                        <td className="value">
-                          {substituicao.tipo === "I"
-                            ? "Isento"
-                            : "Substituição"}
-                        </td>
-                        <td className="value">
-                          <ul>
-                            {substituicao.substitutos.map(
-                              (substituto, key2) => (
-                                <li key={key2}>{substituto.nome}</li>
-                              )
-                            )}
-                          </ul>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div
-                  className="value"
-                  dangerouslySetInnerHTML={{
-                    __html: justificativa_negacao
-                  }}
-                />
-              </div>
-            )}
-            {statusDietaAutorizada.includes(status_solicitacao) && (
-              <div className="report-label-value">
-                <p>Data de término</p>
-                <div className="value">
-                  {data_termino || "Sem data de término"}
-                </div>
-              </div>
-            )}
 
-            {informacoes_adicionais && (
+      {exibirDadosAutorizacao() && (
+        <>
+          {alergias_intolerancias && alergias_intolerancias.length > 0 && (
+            <Fragment>
+              <hr />
               <div className="report-label-value">
-                <p>Informações Adicionais</p>
-                <div
-                  className="texto-wysiwyg"
-                  dangerouslySetInnerHTML={{
-                    __html: informacoes_adicionais
-                  }}
-                />
+                <p>Relação por Diagnóstico</p>
+                {alergias_intolerancias.map((alergia, key) => {
+                  return (
+                    <div className="value" key={key}>
+                      {alergia.descricao}
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </>
-        )}
+            </Fragment>
+          )}
+          {classificacao && (
+            <div className="report-label-value">
+              <p>Classificação da Dieta</p>
+              <div className="value">{classificacao.nome}</div>
+            </div>
+          )}
+          {nome_protocolo && (
+            <div className="report-label-value">
+              <p>Nome do Protocolo</p>
+              <div className="value">{nome_protocolo}</div>
+            </div>
+          )}
+          {substituicoes.length > 0 && (
+            <div className="report-label-value">
+              <p>Substituições</p>
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Alimento</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Isenções / Substituições</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {substituicoes.map((substituicao, key) => (
+                    <tr key={key}>
+                      <td className="value">{substituicao.alimento.nome}</td>
+                      <td className="value">
+                        {substituicao.tipo === "I" ? "Isento" : "Substituição"}
+                      </td>
+                      <td className="value">
+                        <ul>
+                          {substituicao.substitutos.map((substituto, key2) => (
+                            <li key={key2}>{substituto.nome}</li>
+                          ))}
+                        </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativa_negacao
+                }}
+              />
+            </div>
+          )}
+          {statusDietaAutorizada.includes(status_solicitacao) && (
+            <div className="report-label-value">
+              <p>Data de término</p>
+              <div className="value">
+                {data_termino || "Sem data de término"}
+              </div>
+            </div>
+          )}
+
+          {informacoes_adicionais && (
+            <div className="report-label-value">
+              <p>Informações Adicionais</p>
+              <div
+                className="texto-wysiwyg value"
+                dangerouslySetInnerHTML={{
+                  __html: informacoes_adicionais
+                }}
+              />
+            </div>
+          )}
+        </>
+      )}
       {status_solicitacao === statusEnum.CODAE_NEGOU_PEDIDO && (
         <>
           {motivo_negacao && (
@@ -379,6 +439,23 @@ export const CorpoRelatorio = props => {
             />
           </div>
         </Fragment>
+      )}
+      {tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
+        <div className="row">
+          <div className="col-3 report-label-value">
+            <p>Motivo da alteração</p>
+            <p className="value-important">{motivo_alteracao_ue.nome}</p>
+          </div>
+          <div className="col report-label-value">
+            <p>Observacões da alteração</p>
+            <div
+              className="texto-wysiwyg value"
+              dangerouslySetInnerHTML={{
+                __html: observacoes_alteracao
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
