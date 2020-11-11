@@ -225,6 +225,7 @@ export const TIPOS_SOLICITACAO_LISTA_DRE = [
 
 const ENDPOINT = {
   ALIMENTOS: "alimentos",
+  ALTERACOES_CARDAPIO: "alteracoes-cardapio",
   ALTERACOES_CARDAPIO_CEI: "alteracoes-cardapio-cei",
   CATEGORIA_PERGUNTAS_FREQUENTES: "categorias-pergunta-frequente",
   FAIXAS_ETARIAS: "faixas-etarias",

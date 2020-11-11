@@ -96,6 +96,12 @@ export const numericInteger = value =>
   // value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
   value && !/\D/.test(value) ? undefined : "Somente números";
 
+export const nonRequiredNumericInteger = value => {
+  if (value !== undefined && !/^[0-9]+$/.test(value)) {
+    return "Somente números";
+  }
+};
+
 export const phoneNumber = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)
     ? "Invalid phone number, must be 10 digits"

@@ -37,6 +37,12 @@ export const painelGestaoAlimentacao = () => {
 
 export const permissoes = () => {
   switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIETA_ESPECIAL:
+      return PermissoesPage.PermissoesCODAEGestaoDietaEspecial;
+    case TIPO_PERFIL.GESTAO_PRODUTO:
+      return PermissoesPage.PermissoesCODAEGestaoProdutos;
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
+      return PermissoesPage.PermissoesCODAESupervisaoNutricao;
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return PermissoesPage.PermissoesDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
@@ -158,6 +164,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
     case TIPO_PERFIL.DIETA_ESPECIAL:
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:

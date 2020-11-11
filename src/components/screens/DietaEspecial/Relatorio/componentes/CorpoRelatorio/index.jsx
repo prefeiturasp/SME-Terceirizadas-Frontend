@@ -117,13 +117,15 @@ export const CorpoRelatorio = props => {
           </div>
         )}
         <div className="col">
-          <a href={getRelatorioDietaEspecial(uuid)} className="float-right">
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-            />
-          </a>
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            className="float-right"
+            onClick={() => {
+              getRelatorioDietaEspecial(uuid);
+            }}
+          />
         </div>
       </div>
       <div className="row">
