@@ -11,7 +11,12 @@ import BorderlessInput from "../../../BorderlessInput";
 import "./styles.scss";
 import BorderlessTextarea from "../../../BorderlessTextarea";
 
-export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
+export default ({
+  panorama,
+  deveDesabilitarRepeticaoSobremesa,
+  desabilitarLanche,
+  desabilitarRefeicao
+}) => (
   <div className="tabela-lancamento tabela-dieta-convencional-frequencia">
     <div className="cabecalho-tabela">
       <div>
@@ -119,6 +124,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
                 ? nonRequiredNumericInteger
                 : numericInteger
             }
+            disabled={desabilitarLanche}
           />
         </div>
       )}
@@ -128,6 +134,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
             component={BorderlessInput}
             name="convencional.lanche_5h"
             validate={numericInteger}
+            disabled={desabilitarLanche}
           />
         </div>
       )}
@@ -140,6 +147,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
               ? nonRequiredNumericInteger
               : numericInteger
           }
+          disabled={desabilitarRefeicao}
         />
       </div>
       <div>
@@ -147,6 +155,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
           component={BorderlessInput}
           name="convencional.refeicoes.0.ref_repet"
           validate={nonRequiredNumericInteger}
+          disabled={desabilitarRefeicao}
         />
       </div>
       <div>
@@ -171,6 +180,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
               component={BorderlessInput}
               name="convencional.refeicoes.1.ref_oferta"
               validate={numericInteger}
+              disabled={desabilitarRefeicao}
             />
           </div>
           <div>
@@ -178,6 +188,7 @@ export default ({ panorama, deveDesabilitarRepeticaoSobremesa }) => (
               component={BorderlessInput}
               name="convencional.refeicoes.1.ref_repet"
               validate={numericInteger}
+              disabled={desabilitarRefeicao}
             />
           </div>
           <div>
