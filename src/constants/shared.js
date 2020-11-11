@@ -287,3 +287,9 @@ export const STATUS_RECLAMACAO_PRODUTO = [
   "Aguardando avaliação CODAE",
   "Respondido terceirizada"
 ];
+
+export const TIPO_SOLICITACAO_DIETA = {
+  COMUM: "COMUM",
+  ALUNO_NAO_MATRICULADO: "ALUNO_NAO_MATRICULADO",
+  ALTERACAO_UE: "ALTERACAO_UE"
+};
