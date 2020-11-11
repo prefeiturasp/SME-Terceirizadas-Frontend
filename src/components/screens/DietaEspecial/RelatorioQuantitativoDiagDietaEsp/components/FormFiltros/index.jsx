@@ -106,9 +106,16 @@ export default ({ onSubmit, loading, setLoading }) => {
             )}
             <div className="row">
               <div className="col-6">
-                <Field component={"input"} type="checkbox" name="check" />
+                <Field
+                  component={"input"}
+                  type="checkbox"
+                  name="somente_dietas_ativas"
+                />
                 <span className="checkbox-custom" />
-                <label htmlFor="check" className="checkbox-label">
+                <label
+                  htmlFor="somente_dietas_ativas"
+                  className="checkbox-label"
+                >
                   Visualizar somente diagnóstico ativo
                 </label>
               </div>
@@ -123,6 +130,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     (values.escola && values.escola.length > 0) ||
                     tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -146,6 +154,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA ||
                     (values.dre && values.dre.length > 1)
                   }
@@ -179,6 +188,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   label="Status"
                   component={Select}
                   name="status"
+                  disabled={values.somente_dietas_ativas}
                   options={[
                     { uuid: "", nome: "Todos" },
                     { uuid: "ativas", nome: "Ativa" },
