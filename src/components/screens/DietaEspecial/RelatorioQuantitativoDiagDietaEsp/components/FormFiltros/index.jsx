@@ -105,6 +105,15 @@ export default ({ onSubmit, loading, setLoading }) => {
               <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
             )}
             <div className="row">
+              <div className="col-6">
+                <Field component={"input"} type="checkbox" name="check" />
+                <span className="checkbox-custom" />
+                <label htmlFor="check" className="checkbox-label">
+                  Visualizar somente diagnóstico ativo
+                </label>
+              </div>
+            </div>
+            <div className="row">
               <div className="col-5">
                 <Field
                   label="Diretoria Regional de Educação"
