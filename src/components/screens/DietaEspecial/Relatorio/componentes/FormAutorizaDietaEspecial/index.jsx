@@ -225,14 +225,19 @@ export default class FormAutorizaDietaEspecial extends Component {
       this.closeAutorizarModal();
     }
     const { dietaEspecial } = this.props;
-    let { nome_protocolo } = values;
+    let { nome_protocolo, data_termino } = values;
     if (nome_protocolo)
       if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
+    if (data_termino) {
+      let data = moment(data_termino, "YYYY-MM-DD");
+      data_termino = moment(data).format("YYYY-MM-DD");
+    }
     nome_protocolo = nome_protocolo.toString().replace(/,/gi, ", ");
     return new Promise((resolve, reject) => {
       CODAEAutorizaDietaEspecial(dietaEspecial.uuid, {
         ...values,
-        nome_protocolo: nome_protocolo
+        nome_protocolo: nome_protocolo,
+        data_termino: data_termino
       }).then(
         response => {
           if (response.status === HTTP_STATUS.OK) {
@@ -365,8 +370,8 @@ export default class FormAutorizaDietaEspecial extends Component {
                               labelDesligado="Sem data de término"
                               minDate={moment().add(1, "day")["_d"]}
                               name="data_termino"
-                              format={v => v && moment(v, "DD/MM/YYYY")["_d"]}
-                              parse={v => v && moment(v).format("DD/MM/YYYY")}
+                              format={v => v && moment(v, "YYYY-MM-DD")["_d"]}
+                              parse={v => v && moment(v).format("YYYY-MM-DD")}
                             />
                           </div>
                         )}
