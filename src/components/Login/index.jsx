@@ -33,7 +33,7 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA_DRE_CODAE
+      tab: TABS.ESCOLA
     };
     this.emailInput = React.createRef();
   }
@@ -48,7 +48,7 @@ export class Login extends Component {
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get("tab") || TABS.ESCOLA_DRE_CODAE;
+    const tab = urlParams.get("tab") || TABS.ESCOLA;
     this.setState({
       tab,
       componenteAtivo:
@@ -103,7 +103,8 @@ export class Login extends Component {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             `Cadastro efetuado com sucesso!${
-              this.state.tab === TABS.ESCOLA_DRE_CODAE
+              this.state.tab === TABS.ESCOLA ||
+              this.state.tab === TABS.DRE_CODAE
                 ? " Confirme seu e-mail para poder se logar."
                 : ""
             }`
@@ -194,17 +195,25 @@ export class Login extends Component {
         <div className="tabs">
           <div className="row">
             <div
-              onClick={() => this.switchTab("escola/dre/codae")}
-              className={`tab col-6 ${
-                tab === "escola/dre/codae" ? "active" : "inactive"
+              onClick={() => this.switchTab("escola")}
+              className={`tab col-4 ${
+                tab === TABS.ESCOLA ? "active" : "inactive"
               }`}
             >
-              ESCOLA/DRE/CODAE
+              ESCOLA
+            </div>
+            <div
+              onClick={() => this.switchTab("dre/codae")}
+              className={`tab col-4 ${
+                tab === TABS.DRE_CODAE ? "active" : "inactive"
+              }`}
+            >
+              DRE/CODAE
             </div>
             <div
               onClick={() => this.switchTab("terceirizadas")}
-              className={`tab col-6 ${
-                tab === "terceirizadas" ? "active" : "inactive"
+              className={`tab col-4 ${
+                tab === TABS.TERCEIRIZADAS ? "active" : "inactive"
               }`}
             >
               TERCEIRIZADAS
@@ -213,7 +222,7 @@ export class Login extends Component {
         </div>
         <div className="form">
           <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
-            {tab === TABS.ESCOLA_DRE_CODAE && (
+            {tab === TABS.DRE_CODAE && (
               <div className="row">
                 <div className="input-group email-sme">
                   <div ref={this.emailInput} className="col-6">
@@ -241,7 +250,7 @@ export class Login extends Component {
                 </div>
               </div>
             )}
-            {tab === TABS.TERCEIRIZADAS && (
+            {(tab === TABS.TERCEIRIZADAS || tab === TABS.ESCOLA) && (
               <div className="row">
                 <div className="col-12">
                   <Field
@@ -269,7 +278,7 @@ export class Login extends Component {
                   validate={required}
                 />
               </div>
-              {tab === TABS.ESCOLA_DRE_CODAE && (
+              {(tab === TABS.ESCOLA || tab === TABS.DRE_CODAE) && (
                 <div className="col-6">
                   <Field
                     component={InputText}

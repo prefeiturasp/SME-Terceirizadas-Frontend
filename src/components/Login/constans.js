@@ -10,6 +10,7 @@ export const TIPOS_EMAIL_CADASTRO = [
 ];
 
 export const TABS = {
-  ESCOLA_DRE_CODAE: "escola/dre/codae",
+  ESCOLA: "escola",
+  DRE_CODAE: "dre/codae",
   TERCEIRIZADAS: "terceirizadas"
 };
