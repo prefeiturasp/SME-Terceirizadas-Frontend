@@ -16,7 +16,7 @@ export default class DataTermino extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comData: false
+      comData: this.props.comData || false
     };
   }
   handleChange = data => {
