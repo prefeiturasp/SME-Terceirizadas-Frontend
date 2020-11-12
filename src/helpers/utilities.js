@@ -300,9 +300,16 @@ export const usuarioEhDRE = () => {
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {
+  /*
+   * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
+   * Para se adaptar ao perfil da CODAE. (Segundo o Fabricio)
+   * Inicialmente a regra é que o perfil DILOG tenha os mesmo acessos de CODAE.
+   * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
+   */
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
   return (
-    localStorage.getItem("tipo_perfil") ===
-    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
+    tipoPerfil === TIPO_PERFIL.LOGISTICA
   );
 };
 
