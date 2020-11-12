@@ -286,13 +286,11 @@ export const imprimeRelatorioQuantitativoClassificacaoDietaEsp = async payload =
 };
 
 export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
-  const { data } = await axios.post(
-    `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`,
-    payload,
-    {
-      responseType: "blob"
-    }
-  );
+  let url = `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`;
+  if (payload.somente_dietas_ativas) {
+    url += "somente-dietas-ativas/";
+  }
+  const { data } = await axios.post(url, payload, { responseType: "blob" });
   saveAs(data, "relatorio_quantitativo_diagnostico_dieta_especial.pdf");
 };
 
