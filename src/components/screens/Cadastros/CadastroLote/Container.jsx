@@ -37,12 +37,6 @@ class Container extends Component {
       });
     });
 
-    getEscolasSimplissima().then(response => {
-      this.setState({
-        escolas: formatarEscolasParaMultiselect(response.results)
-      });
-    });
-
     getTiposGestao().then(response => {
       this.setState({
         tiposGestao: agregarDefault(response.results)
@@ -56,8 +50,27 @@ class Container extends Component {
     });
   }
 
+  getEscolasPorDre = async dre_uuid => {
+    this.setState({
+      escolas: []
+    });
+    getEscolasSimplissima({ diretoria_regional__uuid: dre_uuid }).then(
+      response => {
+        this.setState({
+          escolas: formatarEscolasParaMultiselect(response.results)
+        });
+      }
+    );
+  };
+
   render() {
-    return <CadastroLote {...this.state} {...this.props} />;
+    return (
+      <CadastroLote
+        {...this.state}
+        {...this.props}
+        getEscolasPorDre={this.getEscolasPorDre}
+      />
+    );
   }
 }
 
