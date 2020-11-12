@@ -55,14 +55,12 @@ class CadastroLote extends Component {
       meusDados,
       lotes,
       diretoriasRegionais,
-      escolas,
       tiposGestao,
       subprefeituras
     } = this.props;
     if (
       lotes !== [] &&
       diretoriasRegionais !== [] &&
-      escolas !== [] &&
       tiposGestao !== [] &&
       subprefeituras !== [] &&
       meusDados !== null &&
@@ -169,13 +167,18 @@ class CadastroLote extends Component {
     }
   }
 
-  onDiretoriaRegionalSelected(value) {
-    let diretoriasRegionais = this.props.diretoriasRegionais;
+  onDiretoriaRegionalSelected = async value => {
+    let { diretoriasRegionais, getEscolasPorDre } = this.props;
     const indice = diretoriasRegionais.findIndex(
       diretoria_regional => diretoria_regional.uuid === value
     );
-    this.setState({ diretoria_regional: diretoriasRegionais[indice].nome });
-  }
+    this.setState({
+      diretoria_regional: diretoriasRegionais[indice].nome,
+      carregandoEscolas: true
+    });
+    await getEscolasPorDre(value);
+    this.setState({ escolasSelecionadas: [], escolasSelecionadasNomes: [] });
+  };
 
   onSubprefeiturasSelected(values) {
     let subprefeituras = this.props.subprefeituras;
@@ -378,6 +381,7 @@ class CadastroLote extends Component {
                     required
                     validate={required}
                     disabled={deactivate}
+                    maxlength={"10"}
                   />
                 </div>
                 <div className="col-4">
@@ -412,29 +416,24 @@ class CadastroLote extends Component {
                     <label className="label font-weight-normal pb-3">
                       Unidades Específicas do Lote
                     </label>
-                    {escolas.length ? (
-                      <Field
-                        component={StatefulMultiSelect}
-                        name="escolas"
-                        selected={escolasSelecionadas}
-                        options={escolas}
-                        valueRenderer={(selected, options) =>
-                          renderizarLabelEscola(selected, options)
-                        }
-                        onSelectedChanged={value =>
-                          this.onEscolasSelected(value)
-                        }
-                        overrideStrings={{
-                          search: "Busca",
-                          selectSomeItems: "Selecione",
-                          allItemsAreSelected:
-                            "Todos os itens estão selecionados",
-                          selectAll: "Todos"
-                        }}
-                      />
-                    ) : (
-                      <div className="col-12">Carregando escolas..</div>
-                    )}
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="escolas"
+                      selected={escolasSelecionadas}
+                      options={escolas}
+                      valueRenderer={(selected, options) =>
+                        renderizarLabelEscola(selected, options)
+                      }
+                      onSelectedChanged={value => this.onEscolasSelected(value)}
+                      overrideStrings={{
+                        search: "Busca",
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected:
+                          "Todos os itens estão selecionados",
+                        selectAll: "Todos"
+                      }}
+                      disabled={escolas.length ? false : true}
+                    />
                   </div>
                 )}
               </div>
