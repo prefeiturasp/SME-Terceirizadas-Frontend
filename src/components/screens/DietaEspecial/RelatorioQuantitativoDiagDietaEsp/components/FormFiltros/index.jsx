@@ -105,6 +105,28 @@ export default ({ onSubmit, loading, setLoading }) => {
               <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
             )}
             <div className="row">
+              <div className="col-6">
+                <Field
+                  component={"input"}
+                  type="checkbox"
+                  name="somente_dietas_ativas"
+                />
+                <OnChange name="somente_dietas_ativas">
+                  {() => {
+                    form.change("dre", diretoriasRegionais.map(v => v.value));
+                    form.change("status", "ativas");
+                  }}
+                </OnChange>
+                <span className="checkbox-custom" />
+                <label
+                  htmlFor="somente_dietas_ativas"
+                  className="checkbox-label"
+                >
+                  Visualizar somente diagnóstico ativo
+                </label>
+              </div>
+            </div>
+            <div className="row">
               <div className="col-5">
                 <Field
                   label="Diretoria Regional de Educação"
@@ -114,6 +136,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     (values.escola && values.escola.length > 0) ||
                     tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -137,6 +160,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA ||
                     (values.dre && values.dre.length > 1)
                   }
@@ -170,6 +194,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   label="Status"
                   component={Select}
                   name="status"
+                  disabled={values.somente_dietas_ativas}
                   options={[
                     { uuid: "", nome: "Todos" },
                     { uuid: "ativas", nome: "Ativa" },
@@ -192,8 +217,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
-                  required
-                  validate={required}
+                  required={!values.somente_dietas_ativas}
+                  validate={value => {
+                    if (!values.somente_dietas_ativas) return required(value);
+                  }}
                 />
               </div>
               <div className="col-3">
@@ -209,7 +236,9 @@ export default ({ onSubmit, loading, setLoading }) => {
                       : null
                   }
                   maxDate={moment()._d}
-                  validate={required}
+                  validate={value => {
+                    if (!values.somente_dietas_ativas) return required(value);
+                  }}
                 />
               </div>
             </div>

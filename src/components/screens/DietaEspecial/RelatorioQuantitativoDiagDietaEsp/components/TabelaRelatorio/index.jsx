@@ -16,58 +16,84 @@ export default ({ dadosRelatorio, filtros }) => {
       : "nutri";
   const tipoGrid = filtros.status ? "unico" : "todos";
   const semEscola = primeiroRegistro.escola === undefined ? "-sem-escola" : "";
-  const classeGrid = `grid-${perfilGrid}-${tipoGrid}${semEscola}`;
+  const classeGrid = filtros.somente_dietas_ativas
+    ? "grid-somente-ativas"
+    : `grid-${perfilGrid}-${tipoGrid}${semEscola}`;
   return (
     <section className="tabela-relatorio-quant-diag-dieta-esp mt-3">
-      <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
-        {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
-          <div>Diretoria Regional de Educação</div>
-        )}
-        {primeiroRegistro.escola && <div>Unidade Escolar</div>}
-        <div>Diagnóstico</div>
-        <div>Ano nasc. aluno</div>
-        {[undefined, "pendentes"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            pendentes
-          </div>
-        )}
-        {[undefined, "ativas"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            ativas
-          </div>
-        )}
-        {[undefined, "inativas"].includes(filtros.status) && (
-          <div>
-            Dietas
-            <br />
-            inativas
-          </div>
-        )}
-      </div>
+      {!filtros.somente_dietas_ativas && (
+        <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
+          {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
+            <div>Diretoria Regional de Educação</div>
+          )}
+          {primeiroRegistro.escola && <div>Unidade Escolar</div>}
+          <div>Diagnóstico</div>
+          <div>Ano nasc. aluno</div>
+          {[undefined, "pendentes"].includes(filtros.status) && (
+            <div>
+              Dietas
+              <br />
+              pendentes
+            </div>
+          )}
+          {[undefined, "ativas"].includes(filtros.status) && (
+            <div>
+              Dietas
+              <br />
+              ativas
+            </div>
+          )}
+          {[undefined, "inativas"].includes(filtros.status) && (
+            <div>
+              Dietas
+              <br />
+              inativas
+            </div>
+          )}
+        </div>
+      )}
+      {filtros.somente_dietas_ativas && (
+        <div className={`header-quantitativo-por-terceirizada ${classeGrid}`}>
+          <div>Diagnóstico</div>
+          {[undefined, "ativas"].includes(filtros.status) && (
+            <div className="center-items">
+              Dietas
+              <br />
+              ativas
+            </div>
+          )}
+        </div>
+      )}
       {dadosRelatorio.map((item, index) => {
         return (
           <Fragment key={index}>
-            <div className={`row-quantitativo-nome ${classeGrid}`}>
-              {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
-                <div>{item.dre}</div>
-              )}
-              {primeiroRegistro.escola && <div>{item.escola}</div>}
-              <div>{item.diagnostico}</div>
-              <div>{item.ano_nasc_aluno}</div>
-              {[undefined, "pendentes"].includes(filtros.status) && (
-                <div>{item.qtde_pendentes}</div>
-              )}
-              {[undefined, "ativas"].includes(filtros.status) && (
-                <div>{item.qtde_ativas}</div>
-              )}
-              {[undefined, "inativas"].includes(filtros.status) && (
-                <div>{item.qtde_inativas}</div>
-              )}
-            </div>
+            {!filtros.somente_dietas_ativas && (
+              <div className={`row-quantitativo-nome ${classeGrid}`}>
+                {tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL && (
+                  <div>{item.dre}</div>
+                )}
+                {primeiroRegistro.escola && <div>{item.escola}</div>}
+                <div>{item.diagnostico}</div>
+                <div>{item.ano_nasc_aluno}</div>
+                {[undefined, "pendentes"].includes(filtros.status) && (
+                  <div>{item.qtde_pendentes}</div>
+                )}
+                {[undefined, "ativas"].includes(filtros.status) && (
+                  <div>{item.qtde_ativas}</div>
+                )}
+                {[undefined, "inativas"].includes(filtros.status) && (
+                  <div>{item.qtde_inativas}</div>
+                )}
+              </div>
+            )}
+            {filtros.somente_dietas_ativas && (
+              <div className={`row-quantitativo-nome ${classeGrid}`}>
+                <div>{item.diagnostico}</div>
+                {[undefined, "ativas"].includes(filtros.status) && (
+                  <div className="center-items">{item.qtde_ativas}</div>
+                )}
+              </div>
+            )}
           </Fragment>
         );
       })}
