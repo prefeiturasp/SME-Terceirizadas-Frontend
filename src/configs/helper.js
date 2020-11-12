@@ -19,8 +19,9 @@ import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
 import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
-import { PERFIL, TIPO_PERFIL } from "../constants/shared";
+import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
+import { escolaEhCei } from "helpers/utilities";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -185,7 +186,7 @@ export const painelInicial = () => {
 
 export const inclusaoCardapio = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return InclusaoDeAlimentacaoCEIPage;
     default:
       return InclusaoDeAlimentacaoPage;
@@ -194,7 +195,7 @@ export const inclusaoCardapio = () => {
 
 export const alteracaoCardapio = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return AlteracaoDeCardapioCEIPage;
     default:
       return AlteracaoDeCardapioPage;
@@ -203,7 +204,7 @@ export const alteracaoCardapio = () => {
 
 export const suspensaoAlimentacao = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return SuspensaoDeAlimentacaoDeCEI;
     default:
       return SuspensaoDeAlimentacaoPage;

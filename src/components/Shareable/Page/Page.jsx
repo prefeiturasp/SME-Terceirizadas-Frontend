@@ -30,13 +30,18 @@ export default class Page extends Component {
           JSON.stringify(meusDados.crn_numero)
         );
       }
+      const nome_instituicao =
+        (meusDados.vinculo_atual &&
+          meusDados.vinculo_atual.instituicao &&
+          meusDados.vinculo_atual.instituicao.nome) ||
+        "Não vinculado à uma instituição";
+      localStorage.setItem(
+        "nome_instituicao",
+        JSON.stringify(nome_instituicao)
+      );
       this.setState({
         nome: meusDados.nome,
-        nome_instituicao:
-          (meusDados.vinculo_atual &&
-            meusDados.vinculo_atual.instituicao &&
-            meusDados.vinculo_atual.instituicao.nome) ||
-          "Não vinculado à uma instituição",
+        nome_instituicao,
         registro_funcional: meusDados.registro_funcional || "N/A"
       });
     } else {

@@ -2,7 +2,7 @@ import moment from "moment";
 import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
 import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
-import { TIPO_PERFIL } from "../constants/shared";
+import { PERFIL, TIPO_PERFIL } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
@@ -291,8 +291,22 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
+export const usuarioEhCoordenadorEscola = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
+};
+
 export const usuarioEhEscola = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
+  return [
+    PERFIL.ADMINISTRADOR_ESCOLA,
+    PERFIL.DIRETOR,
+    PERFIL.DIRETOR_CEI
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const escolaEhCei = () => {
+  return /^"?cei|\scei\s|\scei$/i.test(
+    localStorage.getItem("nome_instituicao")
+  );
 };
 
 export const usuarioEhDRE = () => {
