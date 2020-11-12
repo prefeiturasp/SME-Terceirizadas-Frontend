@@ -234,7 +234,7 @@ export class SolicitacaoVigente extends Component {
                                 <section className="row attachments">
                                   <div className="col-9">
                                     <div className="card-title font-weight-bold cinza-escuro mt-4">
-                                      Laudo
+                                      * Laudo
                                     </div>
                                     <div className="text">
                                       Anexe o laudo fornecido pelo profissional

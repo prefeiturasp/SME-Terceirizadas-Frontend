@@ -147,235 +147,242 @@ export default ({
     });
   };
   return (
-    <Spin tip="Carregando..." spinning={loading}>
-      <div className="lancamento-por-periodo-card mt-3" style={{ color: cor }}>
-        <div className="row">
-          <div className="col-10 periodo-cabecalho">{textoCabecalho}</div>
-          <div className="col-2 link-abrir">
-            <p onClick={abreFechaLancamento}>
-              {lancamentoAberto ? "Fechar" : "Abrir"}
-            </p>
-          </div>
-        </div>
-        <div className="row">
+    <Form
+      onSubmit={onSubmit}
+      initialValues={initialValues}
+      initialValuesEqual={isequal}
+      validate={formValues => validateFormLancamento(formValues, panorama)}
+      render={({
+        form,
+        handleSubmit,
+        values,
+        pristine,
+        submitting,
+        errors
+      }) => (
+        <Spin tip="Carregando..." spinning={loading}>
           <div
-            className="col-2 total-alimentacoes"
-            style={{ backgroundColor: cor }}
+            className="lancamento-por-periodo-card mt-3"
+            style={{ color: cor }}
           >
-            <span>{totalAlimentacoes || "0000"}</span>
-            <span>TOTAL ALIMENTAÇÕES</span>
-          </div>
-          <div className="col-10 alimentacoes-por-tipo">
-            <span>
-              {alimentacoesConvencionais || "000"} alimentações convencionais
-            </span>
-            <span>
-              {alimentacoesDietaA || "00"} alimentações para dieta especial A
-            </span>
-            <span>
-              {alimentacoesDietaB || "00"} alimentações para dieta especial B
-            </span>
-          </div>
-        </div>
-        {lancamentoAberto && (
-          <>
-            <Form
-              onSubmit={onSubmit}
-              initialValues={initialValues}
-              initialValuesEqual={isequal}
-              validate={formValues =>
-                validateFormLancamento(formValues, panorama)
-              }
-              render={({
-                form,
-                handleSubmit,
-                values,
-                pristine,
-                submitting,
-                errors
-              }) => (
-                <form
-                  onSubmit={event => {
-                    const promise = handleSubmit(event);
-                    promise &&
-                      promise.then(() => {
-                        form.reset();
-                        resetInitialValues();
-                        setListagemAberta(false);
-                      });
-                    return promise;
+            <div className="row">
+              <div className="col-10 periodo-cabecalho">{textoCabecalho}</div>
+              <div className="col-2 link-abrir">
+                <p
+                  onClick={() => {
+                    form.change("data_lancamento", undefined);
+                    abreFechaLancamento();
                   }}
                 >
-                  <OnChange name="data_lancamento">
-                    {data_lancamento => {
-                      data_lancamento !== "" &&
-                        atualizaInitialValues(data_lancamento);
-                    }}
-                  </OnChange>
-                  <OnChange name="convencional.eh_dia_de_sobremesa_doce">
-                    {value => {
-                      if (value) {
-                        form.change(
-                          "convencional.refeicoes.0.sob_repet",
-                          undefined
-                        );
-                        form.change(
-                          "convencional.refeicoes.1.sob_repet",
-                          undefined
-                        );
-                      }
-                    }}
-                  </OnChange>
-                  <div className="row">
-                    <div className="col report-label-value">
-                      <p className="value">Inserir novo lançamento</p>
-                    </div>
+                  {lancamentoAberto ? "Fechar" : "Abrir"}
+                </p>
+              </div>
+            </div>
+            <div className="row">
+              <div
+                className="col-2 total-alimentacoes"
+                style={{ backgroundColor: cor }}
+              >
+                <span>{totalAlimentacoes || "0000"}</span>
+                <span>TOTAL ALIMENTAÇÕES</span>
+              </div>
+              <div className="col-10 alimentacoes-por-tipo">
+                <span>
+                  {alimentacoesConvencionais || "000"} alimentações
+                  convencionais
+                </span>
+                <span>
+                  {alimentacoesDietaA || "00"} alimentações para dieta especial
+                  A
+                </span>
+                <span>
+                  {alimentacoesDietaB || "00"} alimentações para dieta especial
+                  B
+                </span>
+              </div>
+            </div>
+            {lancamentoAberto && (
+              <form
+                onSubmit={event => {
+                  const promise = handleSubmit(event);
+                  promise &&
+                    promise.then(() => {
+                      form.reset();
+                      resetInitialValues();
+                      setListagemAberta(false);
+                    });
+                  return promise;
+                }}
+              >
+                <OnChange name="data_lancamento">
+                  {data_lancamento => {
+                    data_lancamento !== "" &&
+                      atualizaInitialValues(data_lancamento);
+                  }}
+                </OnChange>
+                <OnChange name="convencional.eh_dia_de_sobremesa_doce">
+                  {value => {
+                    if (value) {
+                      form.change(
+                        "convencional.refeicoes.0.sob_repet",
+                        undefined
+                      );
+                      form.change(
+                        "convencional.refeicoes.1.sob_repet",
+                        undefined
+                      );
+                    }
+                  }}
+                </OnChange>
+                <div className="row">
+                  <div className="col report-label-value">
+                    <p className="value">Inserir novo lançamento</p>
                   </div>
-                  <div className="row">
-                    <div className="col-3 data-lancamento-container">
-                      <Field
-                        component={InputComData}
-                        name="data_lancamento"
-                        label="Data do lançamento"
-                        required
-                        minDate={null}
-                        maxDate={moment().subtract(1, "days")._d}
-                      />
-                      <Field
-                        component="input"
-                        type="hidden"
-                        name="escola_periodo_escolar"
-                      />
-                    </div>
+                </div>
+                <div className="row">
+                  <div className="col-3 data-lancamento-container">
+                    <Field
+                      component={InputComData}
+                      name="data_lancamento"
+                      label="Data do lançamento"
+                      required
+                      minDate={null}
+                      maxDate={moment().subtract(1, "days")._d}
+                    />
+                    <Field
+                      component="input"
+                      type="hidden"
+                      name="escola_periodo_escolar"
+                    />
                   </div>
-                  {values.data_lancamento && (
-                    <>
-                      <div className="row">
-                        <div className="col">
-                          <label className="col-form-label">
-                            Alimentação convencional
-                          </label>
-                        </div>
+                </div>
+                {values.data_lancamento && (
+                  <>
+                    <div className="row">
+                      <div className="col">
+                        <label className="col-form-label">
+                          Alimentação convencional
+                        </label>
                       </div>
-                      <div className="row">
-                        <div className="col-4">
-                          <DietaConvencional formValues={values} />
-                        </div>
-                        <div className="col-8">
-                          <DietaConvencionalFrequencia
-                            panorama={panorama}
-                            deveDesabilitarRepeticaoSobremesa={get(
-                              values,
-                              "convencional.eh_dia_de_sobremesa_doce"
-                            )}
-                            desabilitarRefeicao={
-                              get(values, "convencional.troca") === "RPL"
-                            }
-                            desabilitarLanche={
-                              get(values, "convencional.troca") === "LPR"
-                            }
-                          />
-                        </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-4">
+                        <DietaConvencional formValues={values} />
                       </div>
-                      {panorama.qtde_tipo_a > 0 && (
-                        <>
-                          <div className="row">
-                            <div className="col">
-                              <label className="col-form-label">
-                                Dieta especial <span>Grupo A</span>
-                              </label>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-4">
-                              <DietaEspecial
-                                formValues={values}
-                                prefix="grupoA"
-                                panorama={panorama}
-                              />
-                            </div>
-                            <div className="col-2">
-                              <RefeicaoEnteralInput
-                                label="Refeição (somente dieta enteral)"
-                                name="grupoA.ref_enteral"
-                              />
-                            </div>
-                            <div className="col-6">
-                              <ObservacoesDiarias
-                                label="Observações diárias"
-                                name="grupoA.observacoes"
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
-                      {panorama.qtde_tipo_b > 0 && (
-                        <>
-                          <div className="row">
-                            <div className="col">
-                              <label className="col-form-label">
-                                Dieta especial <span>Grupo B</span>
-                              </label>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-4">
-                              <DietaEspecial
-                                formValues={values}
-                                prefix="grupoB"
-                                panorama={panorama}
-                              />
-                            </div>
-                            <div className="col-8">
-                              <ObservacoesDiarias
-                                label="Observações diárias"
-                                name="grupoB.observacoes"
-                              />
-                            </div>
-                          </div>
-                        </>
-                      )}
-                      <div className="row mt-3">
-                        <div className="col-7 erros-formulario">
-                          {errors &&
-                            !pristine &&
-                            [...new Set(objectFlattener(errors))].map(
-                              (error, index) => <p key={index}>{error}</p>
-                            )}
-                        </div>
-                        <div className="col-5 botoes-envio">
-                          <Botao
-                            texto="Lançar"
-                            className="ml-3"
-                            type={BUTTON_TYPE.SUBMIT}
-                            disabled={pristine || submitting}
-                            style={BUTTON_STYLE.GREEN}
-                          />
-                        </div>
+                      <div className="col-8">
+                        <DietaConvencionalFrequencia
+                          panorama={panorama}
+                          deveDesabilitarRepeticaoSobremesa={get(
+                            values,
+                            "convencional.eh_dia_de_sobremesa_doce"
+                          )}
+                          desabilitarRefeicao={
+                            get(values, "convencional.troca") === "RPL"
+                          }
+                          desabilitarLanche={
+                            get(values, "convencional.troca") === "LPR"
+                          }
+                        />
                       </div>
-                    </>
-                  )}
-                  <ListagemLancamentos
-                    {...{
-                      panorama,
-                      loading,
-                      setLoading,
-                      listagemAberta,
-                      setListagemAberta
-                    }}
-                    setListagemAberta={value => {
-                      if (value === false) {
-                        form.change("mes_lancamento", undefined);
-                      }
-                      setListagemAberta(value);
-                    }}
-                  />
-                </form>
-              )}
-            />
-          </>
-        )}
-      </div>
-    </Spin>
+                    </div>
+                    {panorama.qtde_tipo_a > 0 && (
+                      <>
+                        <div className="row">
+                          <div className="col">
+                            <label className="col-form-label">
+                              Dieta especial <span>Grupo A</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <DietaEspecial
+                              formValues={values}
+                              prefix="grupoA"
+                              panorama={panorama}
+                            />
+                          </div>
+                          <div className="col-2">
+                            <RefeicaoEnteralInput
+                              label="Refeição (somente dieta enteral)"
+                              name="grupoA.ref_enteral"
+                            />
+                          </div>
+                          <div className="col-6">
+                            <ObservacoesDiarias
+                              label="Observações diárias"
+                              name="grupoA.observacoes"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {panorama.qtde_tipo_b > 0 && (
+                      <>
+                        <div className="row">
+                          <div className="col">
+                            <label className="col-form-label">
+                              Dieta especial <span>Grupo B</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <DietaEspecial
+                              formValues={values}
+                              prefix="grupoB"
+                              panorama={panorama}
+                            />
+                          </div>
+                          <div className="col-8">
+                            <ObservacoesDiarias
+                              label="Observações diárias"
+                              name="grupoB.observacoes"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="row mt-3">
+                      <div className="col-7 erros-formulario">
+                        {errors &&
+                          !pristine &&
+                          [...new Set(objectFlattener(errors))].map(
+                            (error, index) => <p key={index}>{error}</p>
+                          )}
+                      </div>
+                      <div className="col-5 botoes-envio">
+                        <Botao
+                          texto="Lançar"
+                          className="ml-3"
+                          type={BUTTON_TYPE.SUBMIT}
+                          disabled={pristine || submitting}
+                          style={BUTTON_STYLE.GREEN}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+                <ListagemLancamentos
+                  {...{
+                    panorama,
+                    loading,
+                    setLoading,
+                    listagemAberta,
+                    setListagemAberta
+                  }}
+                  setListagemAberta={value => {
+                    if (value === false) {
+                      form.change("mes_lancamento", undefined);
+                    }
+                    setListagemAberta(value);
+                  }}
+                />
+              </form>
+            )}
+          </div>
+        </Spin>
+      )}
+    />
   );
 };

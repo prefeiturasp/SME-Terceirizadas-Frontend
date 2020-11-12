@@ -154,17 +154,24 @@ export default class FormAutorizaDietaEspecial extends Component {
       classificacao,
       data_termino,
       informacoes_adicionais,
-      substituicoes
+      substituicoes,
+      tipo_solicitacao
     } = this.props.dietaEspecial;
     let { nome_protocolo } = this.props.dietaEspecial;
     nome_protocolo = nome_protocolo.split(", ");
+
+    let data_termino_formatada = undefined;
+    if (data_termino && tipo_solicitacao === TIPO_SOLICITACAO_DIETA.COMUM) {
+      let data = moment(data_termino, "DD/MM/YYYY");
+      data_termino_formatada = moment(data).format("YYYY-MM-DD");
+    }
     return {
       alergias_intolerancias:
         alergias_intolerancias.length > 0
           ? alergias_intolerancias.map(a => a.id)
           : undefined,
       classificacao: classificacao ? classificacao.id.toString() : undefined,
-      data_termino: data_termino || undefined,
+      data_termino: data_termino_formatada || data_termino || undefined,
       informacoes_adicionais: informacoes_adicionais || undefined,
       nome_protocolo: nome_protocolo || undefined,
       substituicoes: this.getInitialValuesSubstituicoes(substituicoes),
@@ -225,14 +232,23 @@ export default class FormAutorizaDietaEspecial extends Component {
       this.closeAutorizarModal();
     }
     const { dietaEspecial } = this.props;
-    let { nome_protocolo } = values;
+    let { nome_protocolo, data_termino } = values;
     if (nome_protocolo)
       if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
+    if (
+      data_termino &&
+      dietaEspecial.tipo_solicitacao ===
+        TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO
+    ) {
+      let data = moment(data_termino, "DD/MM/YYYY");
+      data_termino = moment(data).format("YYYY-MM-DD");
+    }
     nome_protocolo = nome_protocolo.toString().replace(/,/gi, ", ");
     return new Promise((resolve, reject) => {
       CODAEAutorizaDietaEspecial(dietaEspecial.uuid, {
         ...values,
-        nome_protocolo: nome_protocolo
+        nome_protocolo: nome_protocolo,
+        data_termino: data_termino
       }).then(
         response => {
           if (response.status === HTTP_STATUS.OK) {
@@ -252,6 +268,12 @@ export default class FormAutorizaDietaEspecial extends Component {
         }
       );
     });
+  };
+
+  temData = () => {
+    const { data_termino } = this.props.dietaEspecial;
+    if (data_termino) return true;
+    return false;
   };
 
   render() {
@@ -365,6 +387,7 @@ export default class FormAutorizaDietaEspecial extends Component {
                               labelDesligado="Sem data de término"
                               minDate={moment().add(1, "day")["_d"]}
                               name="data_termino"
+                              comData={this.temData()}
                               format={v => v && moment(v, "YYYY-MM-DD")["_d"]}
                               parse={v => v && moment(v).format("YYYY-MM-DD")}
                             />

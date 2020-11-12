@@ -12,7 +12,8 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhDRE,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhCoordenadorEscola
 } from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
 
@@ -70,7 +71,8 @@ export class Sidebar extends Component {
               {(usuarioEhQualquerCODAE() ||
                 usuarioEhNutricionistaSupervisao()) && <AvatarCODAE />}
               {usuarioEhDRE() && <AvatarDRE />}
-              {usuarioEhEscola() && <AvatarEscola />}
+              {usuarioEhEscola() ||
+                (usuarioEhCoordenadorEscola() && <AvatarEscola />)}
               {usuarioEhTerceirizada() && <AvatarTerceirizada />}
             </div>
           </Link>

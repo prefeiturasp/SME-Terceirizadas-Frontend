@@ -16,6 +16,7 @@ export const TODOS = "TODOS";
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,
   DIRETOR_CEI: `"DIRETOR CEI"`,
+  COORDENADOR_ESCOLA: `"COORDENADOR_ESCOLA"`,
   ADMINISTRADOR_ESCOLA: `"ADMINISTRADOR_ESCOLA"`,
   SUPLENTE: `"SUPLENTE"`,
   COGESTOR: `"COGESTOR"`,
@@ -45,7 +46,8 @@ export const TIPO_PERFIL = {
   SUPERVISAO_NUTRICAO: `"supervisao_nutricao"`,
   DIETA_ESPECIAL: `"dieta_especial"`,
   GESTAO_PRODUTO: `"gestao_produto"`,
-  TERCEIRIZADA: `"terceirizada"`
+  TERCEIRIZADA: `"terceirizada"`,
+  LOGISTICA: `"coordenador_logistica"`
 };
 
 export const TIPO_USUARIO = {

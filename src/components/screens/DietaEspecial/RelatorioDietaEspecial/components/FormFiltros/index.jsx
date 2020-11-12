@@ -166,7 +166,7 @@ export default ({ onSubmit, setCarregando }) => {
     } else if (tipoUsuario === TIPO_PERFIL.ESCOLA) {
       form.reset({ dre: values.dre, escola: values.escola });
     } else {
-      form.reset({ codigo_eol_aluno: undefined });
+      form.restart({});
     }
   };
 
