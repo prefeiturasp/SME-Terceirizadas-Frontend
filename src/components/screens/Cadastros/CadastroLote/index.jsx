@@ -458,7 +458,7 @@ class CadastroLote extends Component {
                   <div className="col-12 text-right">
                     {!uuid && (
                       <Botao
-                        texto="Cancelar"
+                        texto="Limpar Campos"
                         onClick={() => this.resetForm()}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         type={BUTTON_STYLE.BUTTON}
