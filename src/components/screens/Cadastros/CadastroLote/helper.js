@@ -2,7 +2,9 @@ export const formatarEscolasParaMultiselect = lista => {
   return lista.map(element => {
     return {
       value: element.uuid,
-      label: `${element.codigo_eol} - ${element.nome} - ${element.lote}`
+      label: `${element.codigo_eol} - ${element.nome} - ${
+        element.lote ? element.lote : ""
+      }`
     };
   });
 };
