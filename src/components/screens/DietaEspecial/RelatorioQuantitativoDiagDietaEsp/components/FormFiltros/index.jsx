@@ -116,7 +116,13 @@ export default ({ onSubmit, loading, setLoading }) => {
                       form.change("dre", diretoriasRegionais.map(v => v.value));
                       form.change("status", "ativas");
                     } else {
-                      form.change("status", undefined);
+                      if (
+                        tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+                        tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL
+                      ) {
+                        form.change("dre", undefined);
+                        form.change("status", undefined);
+                      }
                     }
                   }}
                 </OnChange>
