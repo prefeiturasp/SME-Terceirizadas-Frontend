@@ -22,7 +22,6 @@ import {
   getDadosIniciais,
   validateFormDreEscola
 } from "helpers/dietaEspecial";
-import { required } from "helpers/fieldValidators";
 
 import { getAlergiasIntoleranciasAxios } from "services/dietaEspecial.service";
 
@@ -116,6 +115,8 @@ export default ({ onSubmit, loading, setLoading }) => {
                     if (value) {
                       form.change("dre", diretoriasRegionais.map(v => v.value));
                       form.change("status", "ativas");
+                    } else {
+                      form.change("status", undefined);
                     }
                   }}
                 </OnChange>
@@ -208,6 +209,7 @@ export default ({ onSubmit, loading, setLoading }) => {
               </div>
               <div className="col-3">
                 <Field
+                  key={values.somente_dietas_ativas ? 1 : 0}
                   component={InputComData}
                   label="Data da solicitação"
                   name="data_inicial"
@@ -220,13 +222,11 @@ export default ({ onSubmit, loading, setLoading }) => {
                       : moment()._d
                   }
                   required={!values.somente_dietas_ativas}
-                  validate={value => {
-                    if (!values.somente_dietas_ativas) return required(value);
-                  }}
                 />
               </div>
               <div className="col-3">
                 <Field
+                  key={values.somente_dietas_ativas ? 3 : 2}
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
@@ -238,9 +238,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                       : null
                   }
                   maxDate={moment()._d}
-                  validate={value => {
-                    if (!values.somente_dietas_ativas) return required(value);
-                  }}
                 />
               </div>
             </div>
