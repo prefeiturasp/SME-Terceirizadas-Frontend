@@ -301,7 +301,6 @@ export default class FormAutorizaDietaEspecial extends Component {
               {dietaEspecial.tipo_solicitacao !==
                 TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
                 <div className="information-codae">
-                  <div className="pt-2 title">Relação por Diagnóstico</div>
                   {diagnosticos && (
                     <Field
                       component={DiagnosticosField}
@@ -310,7 +309,10 @@ export default class FormAutorizaDietaEspecial extends Component {
                       validate={required}
                     />
                   )}
-                  <div className="pt-2 title">Classificação da Dieta</div>
+                  <div className="pt-2 input title">
+                    <span className="required-asterisk">*</span>
+                    <label>Classificação da Dieta</label>
+                  </div>
                   {classificacoesDieta && (
                     <Field
                       component={ClassificacaoDaDieta}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MultiSelect from "./MultiSelect";
 import { Field } from "react-final-form";
-
+import InputErroMensagem from "../../../../../../../Shareable/Input/InputErroMensagem";
 import Select from "../../../../../../../Shareable/Select";
 import Botao from "../../../../../../../Shareable/Botao";
 import {
@@ -39,6 +39,7 @@ export default class SubstituicoesField extends Component {
       addOption,
       removeOption,
       input: { name },
+      meta,
       deveHabilitarApagar
     } = this.props;
     return (
@@ -90,6 +91,7 @@ export default class SubstituicoesField extends Component {
             style={BUTTON_STYLE.BLUE_OUTLINE}
           />
         </div>
+        <InputErroMensagem meta={meta} />
       </div>
     );
   }
