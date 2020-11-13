@@ -207,7 +207,7 @@ export class Login extends Component {
                 tab === "terceirizadas" ? "active" : "inactive"
               }`}
             >
-              TERCEIRIZADAS
+              EMPRESA
             </div>
           </div>
         </div>
