@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import MultiSelect from "./MultiSelect";
 import { Field } from "react-final-form";
-
+import { required } from "helpers/fieldValidators";
 import Select from "../../../../../../../Shareable/Select";
 import Botao from "../../../../../../../Shareable/Botao";
 import {
@@ -53,6 +53,7 @@ export default class SubstituicoesField extends Component {
               };
             })}
             name={`${name}.alimento`}
+            validate={required}
           />
         </div>
         <div className="col-2">
@@ -63,6 +64,7 @@ export default class SubstituicoesField extends Component {
               { uuid: "S", nome: "Substituir" }
             ]}
             name={`${name}.tipo`}
+            validate={required}
           />
         </div>
         <div className="col-5">
@@ -76,6 +78,7 @@ export default class SubstituicoesField extends Component {
                 label: a.nome
               };
             })}
+            validate={required}
           />
         </div>
         <div className="col-2 col-botoes">

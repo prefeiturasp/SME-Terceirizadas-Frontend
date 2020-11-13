@@ -459,7 +459,10 @@ class CadastroLote extends Component {
                     {!uuid && (
                       <Botao
                         texto="Limpar Campos"
-                        onClick={() => this.resetForm()}
+                        onClick={() => {
+                          this.resetForm();
+                          this.props.reset();
+                        }}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         type={BUTTON_STYLE.BUTTON}
                       />
@@ -474,7 +477,7 @@ class CadastroLote extends Component {
                     )}
                     <Botao
                       texto={"Salvar"}
-                      onClick={this.exibirModal}
+                      onClick={handleSubmit(() => this.exibirModal())}
                       className="ml-3"
                       type={BUTTON_STYLE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
