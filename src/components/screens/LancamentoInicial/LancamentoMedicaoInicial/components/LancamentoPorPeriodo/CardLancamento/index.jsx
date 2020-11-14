@@ -2,7 +2,7 @@ import { isequal, get } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
+import { OnBlur, OnChange } from "react-final-form-listeners";
 
 import { Botao } from "components/Shareable/Botao";
 import {
@@ -28,6 +28,7 @@ import { OK } from "http-status-codes";
 
 import ListagemLancamentos from "./ListagemLancamentos";
 import { Spin } from "antd";
+import ModalConfirmacao from "components/Shareable/ModalConfirmacao";
 
 export default ({
   textoCabecalho,
@@ -48,6 +49,13 @@ export default ({
         }
       : {}
   );
+
+  // Usados no controle do ModalConfirmacao
+  // e da confirmação do valor lançado em repetição de refeição e sobremesa
+  const [showModalConfirmacao, setShowModalConfirmacao] = useState(false);
+  const [mensagemModalConfirmacao, setMensagemModalConfirmacao] = useState("");
+  const [campoSendoValidado, setCampoSendoValidado] = useState();
+
   const abreFechaLancamento = () => {
     setLancamentoAberto(!lancamentoAberto);
   };
@@ -146,6 +154,43 @@ export default ({
       }
     });
   };
+
+  const CAMPO_OFERTA = {
+    sob_repet: "sob_oferta",
+    ref_repet: "ref_oferta"
+  };
+
+  const validaRepeticao = (formValues, campoAValidar) => {
+    const nomeCampoRepeticao = campoAValidar.split(".")[3];
+    const campoOferta = campoAValidar.replace(
+      nomeCampoRepeticao,
+      CAMPO_OFERTA[nomeCampoRepeticao]
+    );
+
+    const soma =
+      parseInt(get(formValues, campoAValidar, 0)) +
+      parseInt(get(formValues, campoOferta, 0));
+    const qtdeAlunosNoPeriodo = get(panorama, "qtde_alunos", 0);
+
+    if (soma > qtdeAlunosNoPeriodo) {
+      const tipoOferta = nomeCampoRepeticao.startsWith("sob")
+        ? "sobremesas"
+        : "refeições";
+      setShowModalConfirmacao(true);
+      setMensagemModalConfirmacao(
+        `Número de ${tipoOferta} 1ª oferta + número de repetições (${soma}) superior ao número de matriculados (${qtdeAlunosNoPeriodo}). Confirma?`
+      );
+      setCampoSendoValidado(campoAValidar);
+    }
+  };
+
+  const onFecharModalConfirmacao = (botaoApertado, form) => {
+    if (botaoApertado !== "Sim") {
+      form.change(campoSendoValidado, undefined);
+      form.focus(campoSendoValidado);
+    }
+    setShowModalConfirmacao(false);
+  };
   return (
     <Form
       onSubmit={onSubmit}
@@ -234,6 +279,38 @@ export default ({
                     }
                   }}
                 </OnChange>
+                <OnBlur name="convencional.refeicoes.0.ref_repet">
+                  {() =>
+                    validaRepeticao(
+                      values,
+                      "convencional.refeicoes.0.ref_repet"
+                    )
+                  }
+                </OnBlur>
+                <OnBlur name="convencional.refeicoes.0.sob_repet">
+                  {() =>
+                    validaRepeticao(
+                      values,
+                      "convencional.refeicoes.0.sob_repet"
+                    )
+                  }
+                </OnBlur>
+                <OnBlur name="convencional.refeicoes.1.ref_repet">
+                  {() =>
+                    validaRepeticao(
+                      values,
+                      "convencional.refeicoes.1.ref_repet"
+                    )
+                  }
+                </OnBlur>
+                <OnBlur name="convencional.refeicoes.1.sob_repet">
+                  {() =>
+                    validaRepeticao(
+                      values,
+                      "convencional.refeicoes.1.sob_repet"
+                    )
+                  }
+                </OnBlur>
                 <div className="row">
                   <div className="col report-label-value">
                     <p className="value">Inserir novo lançamento</p>
@@ -380,6 +457,17 @@ export default ({
                 />
               </form>
             )}
+            <button onClick={() => setShowModalConfirmacao(true)}>
+              Testa modal
+            </button>
+            <ModalConfirmacao
+              closeModal={botaoApertado =>
+                onFecharModalConfirmacao(botaoApertado, form)
+              }
+              mensagem={mensagemModalConfirmacao}
+              showModal={showModalConfirmacao}
+              modalTitle="Confirmação"
+            />
           </div>
         </Spin>
       )}
