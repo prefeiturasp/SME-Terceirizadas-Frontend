@@ -305,6 +305,8 @@ class ContratosRelacionados extends Component {
                       component={InputComData}
                       validate={required}
                       required
+                      minDate="2000/01/01"
+                      maxDate={dateDelta(1825)}
                       onChange={value => {
                         obtemDadosParaSubmit(`data_proposta`, value, indice);
                       }}
