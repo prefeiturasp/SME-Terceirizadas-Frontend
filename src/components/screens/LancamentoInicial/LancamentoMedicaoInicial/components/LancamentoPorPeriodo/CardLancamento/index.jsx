@@ -457,9 +457,6 @@ export default ({
                 />
               </form>
             )}
-            <button onClick={() => setShowModalConfirmacao(true)}>
-              Testa modal
-            </button>
             <ModalConfirmacao
               closeModal={botaoApertado =>
                 onFecharModalConfirmacao(botaoApertado, form)
