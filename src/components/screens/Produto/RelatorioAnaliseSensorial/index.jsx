@@ -96,22 +96,55 @@ class RelatorioAnaliseSensorial extends Component {
       <div className="card">
         <div className="card-body">
           {homologacao !== null && (
-            <article className="botoes-header">
-              <Botao
-                type={BUTTON_TYPE.BUTTON}
-                titulo="imprimir"
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.PRINT}
-                onClick={() => {
-                  getRelatorioProdutoAnaliseSensorial(homologacao.produto);
-                }}
-              />
-              <Botao
-                texto={"Responder"}
-                type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.GREEN}
-                onClick={() => this.showModal()}
-              />
+            <article>
+              <div className="row">
+                <div className="row col-10 ml-0">
+                  <div className="col-6 pl-0">
+                    <p className="text-muted">
+                      Solicitação de análise sensorial
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted">Protocolo Análise Sensorial</p>
+                  </div>
+
+                  <section className="texto-wysiwyg row col-12 ml-0">
+                    <div className="col-6">
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: justificativa
+                        }}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <p>{homologacao.protocolo_analise_sensorial}</p>
+                    </div>
+                  </section>
+                </div>
+
+                <div
+                  className="col-2 d-flex"
+                  style={{ alignItems: "flex-end" }}
+                >
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    titulo="imprimir"
+                    style={BUTTON_STYLE.BLUE}
+                    icon={BUTTON_ICON.PRINT}
+                    onClick={() => {
+                      getRelatorioProdutoAnaliseSensorial(homologacao.produto);
+                    }}
+                  />
+                  <Botao
+                    texto={"Responder"}
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    onClick={() => this.showModal()}
+                    className="ml-2"
+                  />
+                </div>
+              </div>
+              <hr />
             </article>
           )}
 

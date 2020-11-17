@@ -22,6 +22,14 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.ml-0 {
+  margin-left: 0;
+}
+
+.pl-0 {
+  padding-left: 0;
+}
+
 .aviso-importante {
   height: 45px;
   border-radius: 4px;
@@ -33,6 +41,13 @@
   font-weight: bold;
   font-size: 10px;
   line-height: 13px;
+}
+
+.texto-wysiwyg {
+  border: 1px #dddddd solid !important;
+  padding: 0.5rem;
+  font-size: 12px;
+  border-radius: 2px;
 }
 
 .aviso-importante-info {
