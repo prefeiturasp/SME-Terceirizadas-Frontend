@@ -134,13 +134,10 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
     }
   );
 
-export const criarEquipeAdministradoraTerceirizadas = (
-  uuid,
-  registro_funcional
-) =>
+export const criarEquipeAdministradoraTerceirizadas = (uuid, payload) =>
   fetchPost(
     `${API_URL}/vinculos-terceirizadas/${uuid}/criar_equipe_administradora/`,
-    { registro_funcional }
+    payload
   );
 
 export const getEquipeAdministradoraTerceirizadas = uuid =>
