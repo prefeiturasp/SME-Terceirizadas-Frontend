@@ -50,7 +50,10 @@ export const FluxoDeStatus = props => {
                   {novoStatus.usuario && (
                     <span>
                       {novoStatus.usuario.registro_funcional !== undefined &&
-                        `RF: ${novoStatus.usuario.registro_funcional}`}
+                      cloneListaDeStatus[key].usuario.tipo_usuario ===
+                        "terceirizada"
+                        ? `CPF: ${novoStatus.usuario.cpf}`
+                        : `RF: ${novoStatus.usuario.registro_funcional}`}
                       <br />
                       {novoStatus.usuario && novoStatus.usuario.nome}
                     </span>
