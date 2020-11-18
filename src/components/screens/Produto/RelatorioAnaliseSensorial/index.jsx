@@ -105,27 +105,26 @@ class RelatorioAnaliseSensorial extends Component {
                     </p>
                   </div>
                   <div className="col-6">
-                    <p className="text-muted">Protocolo Análise Sensorial</p>
+                    <p>
+                      <span className="text-muted">
+                        Protocolo Análise Sensorial:
+                      </span>{" "}
+                      {homologacao.protocolo_analise_sensorial}
+                    </p>
                   </div>
 
                   <section className="texto-wysiwyg row col-12 ml-0">
-                    <div className="col-6">
+                    <div className="col-12">
                       <p
                         dangerouslySetInnerHTML={{
                           __html: justificativa
                         }}
                       />
                     </div>
-                    <div className="col-6">
-                      <p>{homologacao.protocolo_analise_sensorial}</p>
-                    </div>
                   </section>
                 </div>
 
-                <div
-                  className="col-2 d-flex"
-                  style={{ alignItems: "flex-end" }}
-                >
+                <div className="col-2 a-flex">
                   <Botao
                     type={BUTTON_TYPE.BUTTON}
                     titulo="imprimir"
@@ -425,26 +424,6 @@ class RelatorioAnaliseSensorial extends Component {
                         );
                       })}
                     </div>
-                  </div>
-                </section>
-              </article>
-
-              <hr />
-
-              <article>
-                <section className="duas-colunas">
-                  <div>
-                    <label>Solicitação de análise sensorial</label>
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: justificativa
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Protocolo de Análise sensorial</label>
-                    <p>{homologacao.protocolo_analise_sensorial}</p>
                   </div>
                 </section>
               </article>

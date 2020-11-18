@@ -126,6 +126,11 @@ export default class CorpoRelatorio extends Component {
     const { produto, historico } = this.props;
     const { informacoes, logs, logSelecionado } = this.state;
     const status = produto.ultima_homologacao.status;
+    const logAnaliseSensorial =
+      produto.ultima_homologacao.logs &&
+      produto.ultima_homologacao.logs.find(
+        log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
+      );
     return (
       <section className="corpo-reatorio-produto">
         {!!logs.length && (
@@ -139,21 +144,52 @@ export default class CorpoRelatorio extends Component {
           <InformativoReclamacao homologacao={produto.ultima_homologacao} />
         )}
         <article className="flex-botoes-relatorio">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            onClick={() => {
-              getRelatorioProduto(produto);
-            }}
-            className="mr-2"
-          />
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            texto="Histórico"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={this.showModal}
-          />
+          <div className="row col-12">
+            <div className="row col-10 ml-0">
+              <div className="col-6 pl-0">
+                <p className="text-muted">Solicitação de análise sensorial</p>
+              </div>
+              <div className="col-6">
+                <p>
+                  <span className="text-muted">
+                    Protocolo Análise Sensorial:
+                  </span>{" "}
+                  {produto.ultima_homologacao.protocolo_analise_sensorial}
+                </p>
+              </div>
+
+              <section className="texto-wysiwyg row col-12 ml-0">
+                {logAnaliseSensorial && (
+                  <div className="col-12">
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: logAnaliseSensorial.justificativa
+                      }}
+                    />
+                  </div>
+                )}
+              </section>
+            </div>
+
+            <div className="col-2 d-flex" style={{ alignItems: "flex-end" }}>
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+                onClick={() => {
+                  getRelatorioProduto(produto);
+                }}
+                className="mr-2"
+              />
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                texto="Histórico"
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={this.showModal}
+              />
+            </div>
+          </div>
+          <hr />
         </article>
         <header>
           <div className="label-relatorio">Nome do produto</div>
