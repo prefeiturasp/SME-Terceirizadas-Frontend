@@ -100,22 +100,6 @@ export const retornArrayTerceirizadas = response => {
   return listaTerceirizadas;
 };
 
-export const validarSubmissao = state => {
-  let erro = false;
-  if (state.contatosNutricionista.length > 1) {
-    let aoMenosUmAdministrador = false;
-    state.contatosNutricionista.forEach(contato => {
-      if (contato.super_admin_terceirizadas) {
-        aoMenosUmAdministrador = true;
-      }
-    });
-    if (!aoMenosUmAdministrador) {
-      erro = "É necessário selecionar ao menos um administrador";
-    }
-  }
-  return erro;
-};
-
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
   let contatosNutri = [];
   valoresState.contatosNutricionista.forEach(nutri => {
@@ -134,7 +118,10 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       ]
     });
   });
-
+  const super_admin = { ...valoresForm.super_admin };
+  super_admin.contatos = [
+    { email: super_admin.email, telefone: super_admin.telefone }
+  ];
   return {
     nome_fantasia: valoresForm.nome_fantasia,
     razao_social: valoresForm.razao_social,
@@ -146,6 +133,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     cep: valoresForm.cep,
     contatos: valoresState.contatosEmpresa,
     nutricionistas: contatosNutri,
-    lotes: valoresState.lotesSelecionados
+    lotes: valoresState.lotesSelecionados,
+    super_admin: super_admin
   };
 };
