@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Field, FormSection } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { required } from "../../../../helpers/fieldValidators";
+import { get } from "lodash";
 import moment from "moment";
 import {
   renderizarLabelLote,
@@ -250,8 +252,7 @@ class ContratosRelacionados extends Component {
       empresasNomesSelecionados,
       diretoriasSelecionadas,
       empresasSelecionadas,
-      formVigenciaContratos,
-      vigencias
+      formVigenciaContratos
     } = this.state;
     const {
       lotes,
@@ -260,7 +261,8 @@ class ContratosRelacionados extends Component {
       obtemDadosParaSubmit,
       indice,
       adicionaNumeroContrato,
-      excluirContratoRelacionado
+      excluirContratoRelacionado,
+      formValues
     } = this.props;
     return (
       <div>
@@ -305,7 +307,7 @@ class ContratosRelacionados extends Component {
                       component={InputComData}
                       validate={required}
                       required
-                      minDate="2000/01/01"
+                      minDate={null}
                       maxDate={dateDelta(1825)}
                       onChange={value => {
                         obtemDadosParaSubmit(`data_proposta`, value, indice);
@@ -331,6 +333,14 @@ class ContratosRelacionados extends Component {
                 </div>
                 <section>
                   {formVigenciaContratos.map((formContrato, key) => {
+                    const dataInicial = get(
+                      formValues,
+                      `secaoEdital${indice}.secaoContrato${key}.data_inicial${key}`
+                    );
+                    const dataFinal = get(
+                      formValues,
+                      `secaoEdital${indice}.secaoContrato${key}.data_final${key}`
+                    );
                     return (
                       <FormSection key={key} name={`secaoContrato${key}`}>
                         <div className="colunas">
@@ -341,7 +351,12 @@ class ContratosRelacionados extends Component {
                               label="Vigência"
                               required
                               validate={required}
-                              minDate={this.obtemDataInicial(key, indice)}
+                              minDate={null}
+                              maxDate={
+                                dataFinal
+                                  ? moment(dataFinal, "DD/MM/YYYY")._d
+                                  : null
+                              }
                               onChange={value =>
                                 this.handleField(
                                   `data_inicial`,
@@ -350,7 +365,6 @@ class ContratosRelacionados extends Component {
                                   indice
                                 )
                               }
-                              maxDate={dateDelta(1825)}
                             />
                           </div>
                           <div className="coluna mt-auto">
@@ -358,12 +372,11 @@ class ContratosRelacionados extends Component {
                               name={`data_final${key}`}
                               component={InputComData}
                               minDate={
-                                moment(
-                                  vigencias[key]["data_inicial"],
-                                  "DD/MM/YYYY"
-                                )["_d"]
+                                dataInicial
+                                  ? moment(dataInicial, "DD/MM/YYYY")._d
+                                  : null
                               }
-                              maxDate={dateDelta(1825)}
+                              maxDate={null}
                               required
                               validate={required}
                               onChange={value =>
@@ -565,4 +578,11 @@ class ContratosRelacionados extends Component {
   }
 }
 
-export default ContratosRelacionados;
+const mapStateToProps = state => {
+  return {
+    formValues:
+      state.form.cadastroEditaisForm && state.form.cadastroEditaisForm.values
+  };
+};
+
+export default connect(mapStateToProps)(ContratosRelacionados);
