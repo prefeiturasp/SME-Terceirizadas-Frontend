@@ -7,7 +7,7 @@ export const getEnderecoPorCEP2 = async cep => {
 };
 
 export const getEnderecoPorCEP = async cep => {
-  const url = `https://republicavirtual.com.br/web_cep.php?cep=${cep}&formato=jsonp`;
+  const url = `https://viacep.com.br/ws/${cep}/json/`;
   let status = 0;
   return fetch(url)
     .then(res => {

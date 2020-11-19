@@ -25,7 +25,6 @@ import {
   transformaObjetos,
   fieldCnpj,
   fieldCep,
-  fieldCpf,
   formataJsonParaEnvio
 } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
@@ -312,6 +311,7 @@ class CadastroEmpresa extends Component {
     this.props.change("super_admin.nome", data.super_admin.nome);
     this.props.change("super_admin.email", data.super_admin.email);
     this.props.change("super_admin.cpf", data.super_admin.cpf);
+    this.props.change("super_admin.cargo", data.super_admin.cargo);
     this.props.change(
       "super_admin.telefone",
       super_admin_contato ? super_admin_contato.telefone : undefined
@@ -484,12 +484,12 @@ class CadastroEmpresa extends Component {
     const { dadosEndereco } = this.state;
     if (value.length === 9) {
       const response = await getEnderecoPorCEP(value);
-      if (response.data.resultado_txt === "sucesso - cep completo") {
+      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
         const { data } = response;
         dadosEndereco.desabilitado = true;
         dadosEndereco.bairro = data.bairro;
-        dadosEndereco.cidade = data.cidade;
-        dadosEndereco.endereco = `${data.tipo_logradouro} ${data.logradouro}`;
+        dadosEndereco.cidade = data.localidade;
+        dadosEndereco.endereco = data.logradouro;
         dadosEndereco.estado = data.uf;
         dadosEndereco.request = true;
       } else {
@@ -702,70 +702,73 @@ class CadastroEmpresa extends Component {
                     </div>
                   </div>
 
-                  {ehDistribuidor ? (
-                    <div />
-                  ) : (
-                    <div className="container-fields row">
-                      <div className="col-11">
-                        {contatosEmpresaForm.map(
-                          (contatoEmpresa, indiceEmpresa) => {
-                            return (
-                              <FormSection
-                                nomeForm={`contatoEmpresa_${indiceEmpresa}`}
-                                name={contatoEmpresa}
-                                key={indiceEmpresa}
-                              >
-                                <div className="fields-set">
-                                  <div>
-                                    <Field
-                                      name={`telefone_empresa_${indiceEmpresa}`}
-                                      component={TelefoneOuCelular}
-                                      label="Telefone"
-                                      id={`telefone_empresa_${indiceEmpresa}`}
-                                      setaContatosEmpresa={
-                                        this.setaContatosEmpresa
-                                      }
-                                      indice={indiceEmpresa}
-                                      cenario="contatoEmpresa"
-                                      validate={required}
-                                      required
-                                    />
+                  <div>
+                    {ehDistribuidor ? (
+                      <div />
+                    ) : (
+                      <div className="container-fields row">
+                        <div className="col-11">
+                          {contatosEmpresaForm.map(
+                            (contatoEmpresa, indiceEmpresa) => {
+                              return (
+                                <FormSection
+                                  nomeForm={`contatoEmpresa_${indiceEmpresa}`}
+                                  name={contatoEmpresa}
+                                  key={indiceEmpresa}
+                                >
+                                  <div className="fields-set">
+                                    <div>
+                                      <Field
+                                        name={`telefone_empresa_${indiceEmpresa}`}
+                                        component={TelefoneOuCelular}
+                                        label="Telefone"
+                                        id={`telefone_empresa_${indiceEmpresa}`}
+                                        setaContatosEmpresa={
+                                          this.setaContatosEmpresa
+                                        }
+                                        indice={indiceEmpresa}
+                                        cenario="contatoEmpresa"
+                                        validate={required}
+                                        required
+                                        maxlength="140"
+                                      />
+                                    </div>
+                                    <div>
+                                      <Field
+                                        name={`email_empresa_${indiceEmpresa}`}
+                                        component={InputText}
+                                        label="E-mail"
+                                        validate={email}
+                                        onChange={event =>
+                                          this.setaContatosEmpresa(
+                                            "email",
+                                            event.target.value,
+                                            indiceEmpresa
+                                          )
+                                        }
+                                        maxlength="140"
+                                      />
+                                    </div>
                                   </div>
-                                  <div>
-                                    <Field
-                                      name={`email_empresa_${indiceEmpresa}`}
-                                      component={InputText}
-                                      label="E-mail"
-                                      required
-                                      validate={[required, email]}
-                                      onChange={event =>
-                                        this.setaContatosEmpresa(
-                                          "email",
-                                          event.target.value,
-                                          indiceEmpresa
-                                        )
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </FormSection>
-                            );
-                          }
-                        )}
+                                </FormSection>
+                              );
+                            }
+                          )}
+                        </div>
+                        <div className={`col-1 mt-auto mb-1`}>
+                          <Botao
+                            texto="+"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.BLUE_OUTLINE}
+                            onClick={() => {
+                              this.nomeFormContatoEmpresa();
+                              this.adicionaContatoEmpresa();
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className={`col-1 mt-auto mb-1`}>
-                        <Botao
-                          texto="+"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.BLUE_OUTLINE}
-                          onClick={() => {
-                            this.nomeFormContatoEmpresa();
-                            this.adicionaContatoEmpresa();
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 <hr className="linha-form" />
@@ -785,6 +788,7 @@ class CadastroEmpresa extends Component {
                             type="email"
                             required
                             validate={[required, email]}
+                            maxlength="140"
                           />
                         </div>
                         <div className="col">
@@ -794,6 +798,7 @@ class CadastroEmpresa extends Component {
                             label={"Nome"}
                             validate={required}
                             required
+                            maxlength="140"
                           />
                         </div>
                       </div>
@@ -816,6 +821,18 @@ class CadastroEmpresa extends Component {
                             label={"Telefone"}
                             validate={required}
                             required
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <Field
+                            name={`cargo`}
+                            component={InputText}
+                            label="Cargo"
+                            required
+                            validate={required}
+                            maxlength="50"
                           />
                         </div>
                       </div>
@@ -848,7 +865,7 @@ class CadastroEmpresa extends Component {
                               placeholder="email@exemplo.com"
                               type="email"
                               required
-                              validate={required}
+                              validate={[required, email]}
                               maxlength="150"
                             />
                           </div>
@@ -856,12 +873,12 @@ class CadastroEmpresa extends Component {
                         <div className="row pt-3">
                           <div className="col-4">
                             <Field
-                              {...fieldCpf}
+                              {...cpfMask}
                               component={InputText}
                               label="Responsavel cpf"
                               name="responsavel_cpf"
                               required
-                              validate={required}
+                              validate={[required, validaCPF]}
                             />
                           </div>
                           <div className="col-4">
@@ -896,6 +913,7 @@ class CadastroEmpresa extends Component {
                               name="representante_legal"
                               required
                               validate={required}
+                              maxlength="140"
                             />
                           </div>
                           <div className="col-5">
@@ -917,8 +935,8 @@ class CadastroEmpresa extends Component {
                               component={InputText}
                               label="E-mail"
                               name="email_representante_legal"
-                              required
-                              validate={[required, email]}
+                              validate={email}
+                              maxlength="140"
                             />
                           </div>
                         </div>
@@ -958,6 +976,7 @@ class CadastroEmpresa extends Component {
                                               indiceTerceirizada
                                             )
                                           }
+                                          maxlength="140"
                                         />
                                       </div>
                                       <div>
@@ -974,6 +993,7 @@ class CadastroEmpresa extends Component {
                                           }
                                           required
                                           validate={required}
+                                          maxlength="140"
                                         />
                                       </div>
                                       {contatosNutricionista.length > 1 && (
@@ -1010,8 +1030,7 @@ class CadastroEmpresa extends Component {
                                           label="E-mail"
                                           type={"email"}
                                           component={InputText}
-                                          required
-                                          validate={[required, email]}
+                                          validate={email}
                                           onChange={event =>
                                             this.setaContatosNutricionista(
                                               "email",
@@ -1019,6 +1038,7 @@ class CadastroEmpresa extends Component {
                                               indiceTerceirizada
                                             )
                                           }
+                                          maxlength="140"
                                         />
                                       </div>
                                     </div>
