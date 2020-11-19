@@ -302,6 +302,7 @@ class CadastroEmpresa extends Component {
     this.props.change("super_admin.nome", data.super_admin.nome);
     this.props.change("super_admin.email", data.super_admin.email);
     this.props.change("super_admin.cpf", data.super_admin.cpf);
+    this.props.change("super_admin.cargo", data.super_admin.cargo);
     this.props.change(
       "super_admin.telefone",
       super_admin_contato ? super_admin_contato.telefone : undefined
@@ -637,6 +638,18 @@ class CadastroEmpresa extends Component {
                           label={"Telefone"}
                           validate={required}
                           required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-md-6">
+                        <Field
+                          name={`cargo`}
+                          component={InputText}
+                          label="Cargo"
+                          required
+                          validate={required}
                         />
                       </div>
                     </div>
