@@ -103,7 +103,7 @@ export const retornArrayTerceirizadas = response => {
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
   const { ehDistribuidor } = valoresState;
 
-  if (ehDistribuidor) {
+  if (valoresState.ehDistribuidor) {
     const contatosNutri = [
       {
         nome: "nome",
@@ -117,12 +117,12 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         ]
       }
     ];
-    const contatosEmpresa = [
-      {
-        telefone: valoresForm.responsavel_telefone,
-        email: valoresForm.responsavel_email
-      }
-    ];
+    const contatosEmpresa = valoresState.contatosEmpresa.map(item => {
+      return {
+        telefone: item.telefone,
+        email: item.email
+      };
+    });
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,

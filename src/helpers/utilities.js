@@ -481,5 +481,11 @@ export const cpfMask = createTextMask({
   guide: false
 });
 
+export const cepMask = createTextMask({
+  pattern: "99999-999",
+  allowEmpty: false,
+  guide: true
+});
+
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
